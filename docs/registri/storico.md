@@ -42,3 +42,30 @@
 | 24/09/2026 | Manuel Cucca | RF-07: confermato Should, nella prima fase si separano gli ambiti con le cartelle | Revisione dopo la persona |
 | 24/09/2026 | Manuel Cucca | RNF-03, RNF-05, RNF-07 compilati | Risposta alla domanda sugli ultimi requisiti non funzionali |
 | 24/09/2026 | Manuel Cucca | Rinominato `5-test.md` in `8-test.md` in tutti i moduli; aggiunta nella guida la tabella "Fase → dove scrive" | Il numero del file ora coincide con la fase che lo genera |
+| 24/09/2026 | Manuel Cucca | Aggiunto RF-14 accesso all'installazione (Must) nel modulo sincronizzazione | DEC-05 |
+| 24/09/2026 | Manuel Cucca | RF-14: scenario d'uso; si resta collegati finché non si esce manualmente | Risposta alla domanda su RF-14 |
+| 24/09/2026 | Manuel Cucca | Fase 2: FL-01 nota rapida con RB-01…RB-05; collegamenti dei requisiti Must ai flussi FL-01…FL-08 | Risposta alla domanda su FL-01 |
+| 24/09/2026 | Manuel Cucca | FL-01, RB-04: con una nota rapida già aperta, la scorciatoia la salva lasciandola aperta e ne apre un'altra; SF-04 ora gestita | Risposta alla domanda su RB-04 |
+| 24/09/2026 | Manuel Cucca | RB-06 salvataggio automatico e continuo, senza pulsante Salva; riportato in RF-02 | Risposta alla domanda su FL-02 |
+| 24/09/2026 | Manuel Cucca | FL-02 scrivere e formattare, con RB-07 (incolla come testo semplice) e RB-08 (le note non eseguono codice); RF-02 aggiornato con modalità dell'editor e comandi di formattazione | Risposte alle domande su FL-02; ID-13 |
+| 24/09/2026 | Manuel Cucca | Nuovo flusso FL-09 creare una nota nel programma completo, con RB-09 e RB-10 | Risposta alla domanda su FL-09 |
+| 24/09/2026 | Manuel Cucca | RF-03 diventa "Immagini nelle note": solo immagini fino a 25 MB, orientamento del file, rotazione tra le impostazioni; FL-03 con RB-11…RB-13 | Risposte alle domande su FL-03; ID-14 |
+| 24/09/2026 | Manuel Cucca | RB-14: ritaglio e rotazione reversibili; riportato in RF-03 | Risposta alla domanda aperta su RF-03 |
+| 24/09/2026 | Manuel Cucca | RB-15 note senza titolo mostrano l'inizio del testo; RB-16 titoli duplicati ammessi; riportato in RF-04 | Risposta alla domanda su FL-04 |
+| 24/09/2026 | Manuel Cucca | RB-17…RB-19 creazione, separatore ed eliminazione dei tag; riportato in RF-06 | Risposta alla domanda su FL-04 |
+| 24/09/2026 | Manuel Cucca | FL-04 modificare i metadati, con RB-20 (date libere, senza avvisi) e RB-21 (data di sistema immutabile) | Risposta alla domanda su FL-04 |
+| 24/09/2026 | Manuel Cucca | RB-22 caratteri dei tag; riportato in RF-06 | Risposta alla domanda aperta su RF-06 |
+| 24/09/2026 | Manuel Cucca | RB-23…RB-25 nomi, annidamento ed eliminazione delle cartelle (nel cestino) | Risposta alla domanda su FL-05 |
+| 24/09/2026 | Manuel Cucca | Aggiunto RF-15 cestino (Must) con RB-26…RB-29; RF-08 e RB-10 aggiornati; nuovo termine nel glossario | Risposta alla domanda sul cestino |
+| 24/09/2026 | Manuel Cucca | RF-15: scenario d'uso | Bozza approvata da Manuel Cucca |
+| 24/09/2026 | Manuel Cucca | RB-30: una cartella eliminata altrove torna dal cestino se nel frattempo riceve una nota; FL-09 aggiornato | Risposta alla domanda su SF-20 |
+| 24/09/2026 | Manuel Cucca | FL-05 organizzare nelle cartelle e cestino, con RB-31 e diagramma a stati della posizione | Risposta alla domanda su FL-05 |
+| 24/09/2026 | Manuel Cucca | RB-31 esteso alle sottocartelle nell'unione; RB-32 conferma per svuotare il cestino; confermato lo spostamento delle cartelle per trascinamento | Risposta alla domanda su FL-05 |
+| 24/09/2026 | Manuel Cucca | FL-06 cercare e filtrare, con RB-33…RB-35 | Risposta alla domanda su FL-06 |
+| 24/09/2026 | Manuel Cucca | RB-36 conflitto tra eliminazione e modifica: vince l'azione più recente | Risposta alla domanda su FL-07 |
+| 24/09/2026 | Manuel Cucca | RB-37 spostamenti in conflitto: vince la posizione più recente; RB-38 rinomina in conflitto: nome più recente più cartella vuota come segnale | Risposta alla domanda su FL-07 |
+| 24/09/2026 | Manuel Cucca | RB-39 avviso alla nascita di una nota in conflitto | Risposta alla domanda su FL-07 |
+| 24/09/2026 | Manuel Cucca | FL-07 sincronizzare, con RB-40 (avvisi solo in caso di problemi) | Risposta alla domanda su FL-07 |
+| 24/09/2026 | Manuel Cucca | FL-08: RB-41 uscita cancella la copia di lavoro, RB-42 nessun limite ai tentativi, RB-43 nessun requisito sulla password | DEC-07 |
+| 24/09/2026 | Manuel Cucca | FL-08 accedere, con RB-44 (uscita senza rete) | Risposta alla domanda su FL-08 |
+| 24/09/2026 | Manuel Cucca | RB-45 risultati fermi a card aperta; flussi del modulo interfaccia: mappa delle interazioni rapide di RF-11 | Risposta alla domanda su FL-06 |

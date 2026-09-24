@@ -11,12 +11,31 @@ Il cloud è la fonte di verità. Sul dispositivo resta una copia di lavoro su cu
 
 Se una nota è stata modificata su un solo dispositivo, si salva la versione più aggiornata. Se la stessa nota è stata modificata su due dispositivi c'è un conflitto: il programma salva entrambe le versioni e nessun dato va perso (DEC-06): una resta la nota originale, l'altra diventa una nota indipendente nella stessa cartella, con il titolo seguito da dispositivo e ora (es. "Riunione (conflitto, portatile, 24/09 10:32)").
 
-Per sincronizzare si accede con email e password all'unico account dell'installazione (DEC-05).
+Per sincronizzare si accede con email e password all'unico account dell'installazione (RF-14, DEC-05).
 
-**Collegamenti:** FL-00 · EN-00 · SC-00 · RNF-02
+**Collegamenti:** FL-07 · EN-00 · SC-00 · RNF-02
 
 ### Scenario d'uso
 Lavoro su due dispositivi e ognuno accumula modifiche e nuove note. Se entrambi hanno modificato la stessa nota c'è un conflitto: il programma salva entrambe le versioni. È una soluzione rudimentale, ma la perdita di dati è inconcepibile.
+
+### Criteri di accettazione
+- [Da compilare]
+
+---
+
+## RF-14 – Accesso all'installazione
+**Priorità:** Must · **Origine:** DEC-05 · **Stato:** In progettazione
+
+Come *utente* voglio accedere a Memodu con email e password per sincronizzare le mie note e usarle da ogni dispositivo, anche dal browser.
+
+- L'installazione è personale: esiste un solo account, creato alla prima installazione, e non c'è registrazione pubblica (DEC-05).
+- Dopo l'accesso si resta collegati su ogni dispositivo, browser compreso, finché non si esce manualmente. Così l'avvio resta istantaneo (RNF-01).
+- Il recupero della password è rimandato (vedi domande aperte su RF-10).
+
+**Collegamenti:** FL-08 · EN-00 · SC-00 · RF-10 · RNF-02
+
+### Scenario d'uso
+Installo Memodu sul mio server e, al primo avvio, creo l'unico account con email e password. Poi apro l'app sul PC Windows, inserisco email e password e le mie note si sincronizzano; faccio lo stesso sul Mac. Quando sono su un computer non mio, apro Memodu dal browser e accedo allo stesso modo.
 
 ### Criteri di accettazione
 - [Da compilare]

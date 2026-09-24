@@ -17,3 +17,5 @@
 | RF-09 | Se l'utente dimentica la password di una nota o di un workspace, il contenuto è recuperabile? | | | |
 | RF-05 | Nello scenario, le "note non organizzate" nella barra laterale sono le note nella radice, cioè fuori da ogni cartella? | Manuel Cucca | Sì: sono le note nella radice; escono dalla barra laterale appena spostate in una cartella | |
 | RF-06 | Nello scenario compaiono "tag e categorie": le categorie sono un concetto diverso dai tag e dalle cartelle? | Manuel Cucca | Sinonimo di tag: si usa solo "tag" | |
+| RF-06 | Quali caratteri sono ammessi nei nomi dei tag (spazi, emoji, `/` all'inizio o alla fine, maiuscole e minuscole distinte)? | Manuel Cucca | Maiuscole e minuscole non contano; spazi, accenti ed emoji ammessi; `/` superflui corretti in automatico (RB-22) | |
+| RF-05 | Unendo due cartelle con lo stesso nome, cosa succede alle sottocartelle che hanno a loro volta lo stesso nome? | Manuel Cucca | Per ogni sottocartella doppia ricompare l'avviso con le tre scelte (RB-31) | |

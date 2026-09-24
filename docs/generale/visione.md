@@ -51,5 +51,5 @@ Ciò che si dà per vero senza averlo verificato. Ogni assunzione è un rischio.
 ## Fuori dal progetto
 Le esclusioni sono descritte nel registro idee (`docs/registri/idee.md`). Qui si elencano solo i codici.
 
-- Parcheggiate: ID-01, ID-03, ID-04, ID-05, ID-06, ID-11, ID-12
+- Parcheggiate: ID-01, ID-03, ID-04, ID-05, ID-06, ID-11, ID-12, ID-13, ID-14
 - Rifiutate: ID-02, ID-07, ID-08

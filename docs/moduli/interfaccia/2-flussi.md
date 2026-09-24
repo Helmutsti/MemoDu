@@ -2,49 +2,19 @@
 
 <!-- Fase 2 della guida. I diagrammi si scrivono in Mermaid. -->
 
-## FL-00 – [Titolo]
-**Requisito:** RF-00 · **Attori:** [ruoli coinvolti]
+## RF-11 – Interazioni rapide
+RF-11 non ha un flusso proprio: trascinamento, menu del tasto destro e scorciatoie sono modi di eseguire gli altri flussi.
 
-```mermaid
-flowchart TD
-    A[Inizio] --> B{Condizione?}
-    B -- Sì --> C[Azione]
-    B -- No --> D[Messaggio di errore]
-    C --> E[Fine]
-    D --> A
-```
+| Interazione | Dove si usa |
+|---|---|
+| Scorciatoia globale, personalizzabile | FL-01 Nota rapida |
+| Scorciatoie da tastiera per la formattazione | FL-02 Scrivere e formattare |
+| Menu del tasto destro sul testo | FL-02 Scrivere e formattare |
+| Trascinamento di immagini nel testo | FL-03 Inserire un'immagine |
+| Menu della nota (in alto a destra) | FL-04 Modificare i metadati |
+| Trascinamento di note e cartelle nell'albero | FL-05 Organizzare nelle cartelle |
+| Menu del tasto destro nell'albero | FL-05, FL-09 |
+| Scorciatoia Nuova nota | FL-09 Creare una nota |
 
-### Percorsi alternativi
-- 
-
-### Sfighe gestite
-| Sfiga | Rilevamento | Comunicazione | Via d'uscita |
-|---|---|---|---|
-| SF-01 | | | |
-
-### Sfighe considerate e scartate
-- SF-00: [motivo]
-
----
-
-## Diagrammi a stati
-
-### [Entità] – Stati
-```mermaid
-stateDiagram-v2
-    [*] --> Bozza
-    Bozza --> Confermata: conferma
-    Confermata --> Annullata: annulla
-    Annullata --> [*]
-```
-
-| Transizione | Chi può attivarla | Regola |
-|---|---|---|
-| | | |
-
----
-
-## Regole di business
-| Codice | Regola | Usata in |
-|---|---|---|
-| RB-00 | | FL-00 |
+## RF-12 – Finestre multiple
+Requisito *Should*: il flusso si scrive quando entra in progettazione.

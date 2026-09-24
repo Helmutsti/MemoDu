@@ -11,7 +11,7 @@ Come *utente* voglio usare trascinamento, menu del tasto destro e scorciatoie da
 
 Le scorciatoie interne sono fisse e documentate. Solo la scorciatoia globale della nota rapida (RF-01) si può cambiare, per evitare conflitti con altri programmi.
 
-**Collegamenti:** FL-00 · EN-00 · SC-00 · RF-01
+**Collegamenti:** FL-01 · FL-03 · FL-05 · EN-00 · SC-00 · RF-01
 
 ### Scenario d'uso
 Trascino con il mouse le note da organizzare dalla barra laterale all'albero delle cartelle (vedi lo scenario di RF-05).

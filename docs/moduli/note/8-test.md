@@ -21,3 +21,4 @@
 | RF-02, RF-03 | Quali sono le "impostazioni in stile Word" sull'immagine (dimensione, allineamento, ritaglio, didascalia…)? Attenzione a non sconfinare nell'impaginazione, rifiutata (ID-07) | Manuel Cucca | Dimensione, allineamento, ritaglio | |
 | RF-03 | Il testo alternativo delle immagini non è stato scelto, ma WCAG 2.1 AA (RNF-04) lo richiede: va aggiunto? | Manuel Cucca | Sì: di default il nome del file, modificabile nelle impostazioni dell'immagine | |
 | RF-03 | Dimensione, allineamento e ritaglio non sono previsti dal markdown standard: come si salvano senza rompere l'esportazione (RF-13)? Da decidere in Fase 7 | | | |
+| RF-03 | Il ritaglio e la rotazione modificano l'immagine originale o si possono annullare in seguito? (Principio: nessun dato perso, DEC-06) | Manuel Cucca | No: sono reversibili, l'originale resta intatto | |

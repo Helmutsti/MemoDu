@@ -4,7 +4,7 @@
 
 | Termine | Significato | Da non confondere con |
 |---|---|---|
-| Nota | Un testo in markdown, con eventuali allegati e immagini, e i suoi metadati | Documento impaginato |
+| Nota | Un testo in markdown, con eventuali immagini, e i suoi metadati | Documento impaginato |
 | Nota rapida | Finestra minima aperta con una scorciatoia da tastiera per scrivere subito una nota (RF-01) | |
 | Workspace | Area di lavoro separata che contiene cartelle e note di un ambito (RF-07) | Cartella |
 | Cartella | Contenitore dell'albero che dà a una nota la sua collocazione fisica. Una nota sta in una sola cartella, oppure nella radice (RF-05) | Tag |
@@ -16,3 +16,4 @@
 | Copia di lavoro | Copia delle note sul dispositivo che permette di scrivere anche senza connessione; si sincronizza col cloud appena possibile (DEC-02) | Modalità offline o solo locale (ID-06) |
 | Nota non organizzata | Nota nella radice, fuori da ogni cartella. Compare nella barra laterale finché non viene spostata in una cartella (RF-05) | Nota senza tag |
 | Nota in conflitto | Nota indipendente creata quando la stessa nota è stata modificata su due dispositivi. Sta nella stessa cartella dell'originale, con il titolo seguito da dispositivo e ora (RF-10, DEC-06) | Nota originale |
+| Cestino | Luogo in cui finiscono note e cartelle eliminate; restano finché l'utente non lo svuota e si ripristinano nella radice (RF-15) | Archivio |
