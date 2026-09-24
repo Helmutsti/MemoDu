@@ -18,3 +18,8 @@ RF-11 non ha un flusso proprio: trascinamento, menu del tasto destro e scorciato
 
 ## RF-12 – Finestre multiple
 Requisito *Should*: il flusso si scrive quando entra in progettazione.
+
+## Regole di business
+| Codice | Regola | Usata in |
+|---|---|---|
+| RB-52 | Le impostazioni si sincronizzano e valgono su tutti i dispositivi; la scorciatoia globale si salva separatamente per Windows e per macOS | FL-01, FL-07 |

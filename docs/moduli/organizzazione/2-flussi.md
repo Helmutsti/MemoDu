@@ -137,3 +137,5 @@ stateDiagram-v2
 | RB-34 | I risultati si ordinano per pertinenza: prima le note con la parola nel titolo o nei tag, poi quelle con la parola solo nel testo. La card a discesa li mostra tutti e si scorre | FL-06 |
 | RB-35 | Senza risultati la card resta aperta con il messaggio "Nessuna nota trovata" | FL-06 |
 | RB-45 | Mentre la card è aperta i risultati non si aggiornano; cliccando un risultato si apre sempre la versione aggiornata della nota | FL-06 |
+| RB-48 | Una nuova cartella nasce con il nome "Nuova cartella" (con un numero se il nome esiste già, RB-23), già selezionato per essere cambiato | FL-05 |
+| RB-49 | Un tag continua a esistere anche quando nessuna nota lo usa più, e resta tra i suggerimenti finché l'utente non lo elimina (RB-19) | FL-04 |

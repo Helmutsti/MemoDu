@@ -69,3 +69,11 @@
 | 24/09/2026 | Manuel Cucca | FL-08: RB-41 uscita cancella la copia di lavoro, RB-42 nessun limite ai tentativi, RB-43 nessun requisito sulla password | DEC-07 |
 | 24/09/2026 | Manuel Cucca | FL-08 accedere, con RB-44 (uscita senza rete) | Risposta alla domanda su FL-08 |
 | 24/09/2026 | Manuel Cucca | RB-45 risultati fermi a card aperta; flussi del modulo interfaccia: mappa delle interazioni rapide di RF-11 | Risposta alla domanda su FL-06 |
+| 24/09/2026 | Manuel Cucca | RNF-02: cifratura end-to-end estesa a tutti i dati | DEC-08 |
+| 24/09/2026 | Manuel Cucca | EN-01 Nota ed EN-02 Immagine; RB-46 immagine tolta recuperabile con Annulla, RB-47 immagini copiate indipendenti | Risposta alla domanda su EN-02 |
+| 24/09/2026 | Manuel Cucca | EN-03 Cartella ed EN-04 Tag; RB-48 nome di default delle cartelle, RB-49 tag senza note | Risposta alla domanda su EN-03, EN-04 |
+| 24/09/2026 | Manuel Cucca | EN-05 Account ed EN-06 Dispositivo con diagramma a stati; RB-50 cambio di email e password (anche in RF-14 e FL-08), RB-51 nome del dispositivo | Risposta alla domanda su EN-05, EN-06 |
+| 24/09/2026 | Manuel Cucca | Aggiunto RF-16 elenco dei dispositivi e uscita a distanza (Should) | Risposta alla domanda su EN-06 |
+| 24/09/2026 | Manuel Cucca | EN-07 Impostazioni; RB-52 impostazioni sincronizzate, scorciatoia per piattaforma | Risposta alla domanda su EN-07 |
+| 24/09/2026 | Manuel Cucca | EN-08 Avviso, aggiunto al diagramma ER; RB-53 avvisi sincronizzati | Risposta alla domanda su EN-08 |
+| 24/09/2026 | Manuel Cucca | Collegamenti dei requisiti alle entità EN-01…EN-08 | Fase 3 |

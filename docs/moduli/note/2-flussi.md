@@ -149,6 +149,8 @@ flowchart TD
 ### Percorsi alternativi
 - **Più immagini insieme:** ognuna segue il flusso; quelle non valide vengono rifiutate con il loro messaggio, le altre si inseriscono.
 - **Testo alternativo:** di default è il nome del file e si cambia dalle impostazioni dell'immagine.
+- **Immagine tolta dal testo:** si recupera con Annulla finché la nota è aperta (RB-46).
+- **Immagine copiata in un'altra nota:** diventa indipendente (RB-47).
 
 ### Sfighe gestite
 | Sfiga | Rilevamento | Comunicazione | Via d'uscita |
@@ -246,3 +248,5 @@ La posizione di una nota (radice, cartella, cestino) è descritta nel diagramma 
 | RB-20 | Le date scelte dall'utente (creazione e fine validità) ammettono qualsiasi combinazione, senza avvisi | FL-04 |
 | RB-21 | La data di creazione di sistema non si può cambiare: una data di creazione scelta dall'utente si salva a parte e non la sovrascrive | FL-04 |
 | RB-22 | Nei tag maiuscole e minuscole non contano (`Lavoro` e `lavoro` sono lo stesso tag, mostrato come è stato scritto la prima volta). Spazi, accenti ed emoji sono ammessi. I `/` all'inizio, alla fine o doppi si correggono in automatico | FL-04 |
+| RB-46 | Un'immagine tolta dal testo si recupera con Annulla (Ctrl+Z / Cmd+Z) finché la nota è aperta; chiusa la nota, l'immagine è cancellata definitivamente | FL-03 |
+| RB-47 | Copiando un'immagine da una nota a un'altra nasce un'immagine indipendente, con le sue impostazioni: un'immagine appartiene sempre a una sola nota | FL-03 |

@@ -13,7 +13,7 @@ Se una nota è stata modificata su un solo dispositivo, si salva la versione pi�
 
 Per sincronizzare si accede con email e password all'unico account dell'installazione (RF-14, DEC-05).
 
-**Collegamenti:** FL-07 · EN-00 · SC-00 · RNF-02
+**Collegamenti:** FL-07 · EN-06 · EN-08 · SC-00 · RNF-02
 
 ### Scenario d'uso
 Lavoro su due dispositivi e ognuno accumula modifiche e nuove note. Se entrambi hanno modificato la stessa nota c'è un conflitto: il programma salva entrambe le versioni. È una soluzione rudimentale, ma la perdita di dati è inconcepibile.
@@ -30,9 +30,10 @@ Come *utente* voglio accedere a Memodu con email e password per sincronizzare le
 
 - L'installazione è personale: esiste un solo account, creato alla prima installazione, e non c'è registrazione pubblica (DEC-05).
 - Dopo l'accesso si resta collegati su ogni dispositivo, browser compreso, finché non si esce manualmente. Così l'avvio resta istantaneo (RNF-01).
+- Email e password si possono cambiare dalle impostazioni (RB-50).
 - Il recupero della password è rimandato (vedi domande aperte su RF-10).
 
-**Collegamenti:** FL-08 · EN-00 · SC-00 · RF-10 · RNF-02
+**Collegamenti:** FL-08 · EN-05 · EN-06 · SC-00 · RF-10 · RNF-02
 
 ### Scenario d'uso
 Installo Memodu sul mio server e, al primo avvio, creo l'unico account con email e password. Poi apro l'app sul PC Windows, inserisco email e password e le mie note si sincronizzano; faccio lo stesso sul Mac. Quando sono su un computer non mio, apro Memodu dal browser e accedo allo stesso modo.
@@ -50,6 +51,23 @@ Come *utente* voglio importare ed esportare le mie note in file markdown standar
 Anche se si sviluppa dopo la prima fase, il modo in cui si salvano le note deve renderla possibile fin dall'inizio.
 
 **Collegamenti:** FL-00 · EN-00 · SC-00 · RF-04 · RF-10
+
+### Scenario d'uso
+[Da compilare]
+
+### Criteri di accettazione
+- [Da compilare]
+
+---
+
+## RF-16 – Elenco dei dispositivi e uscita a distanza
+**Priorità:** Should · **Origine:** — · **Stato:** In progettazione
+
+Come *utente* voglio vedere l'elenco dei dispositivi da cui ho accesso e farne uscire uno a distanza, per chiudere un accesso dimenticato aperto, per esempio sul browser di un computer non mio (SF-26).
+
+Nell'elenco: nome, tipo e ultima sincronizzazione di ogni dispositivo (EN-06), con il comando "Fai uscire". Al successivo contatto con il server, quel dispositivo esce e cancella la copia di lavoro (RB-41).
+
+**Collegamenti:** FL-00 · EN-06 · SC-00 · RF-14
 
 ### Scenario d'uso
 [Da compilare]

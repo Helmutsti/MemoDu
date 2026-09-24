@@ -83,6 +83,7 @@ flowchart TD
 ### Percorsi alternativi
 - **Password errata:** si può riprovare senza limiti (RB-42).
 - **Password dimenticata:** il recupero è rimandato (domanda aperta su RF-10).
+- **Cambio di email o password:** dalle impostazioni, inserendo la password attuale; cambiando password gli altri dispositivi devono accedere di nuovo (RB-50).
 
 ### Sfighe gestite
 | Sfiga | Rilevamento | Comunicazione | Via d'uscita |
@@ -114,3 +115,6 @@ flowchart TD
 | RB-42 | Non c'è limite ai tentativi di accesso con password sbagliata (rischio accettato, DEC-07) | FL-08 |
 | RB-43 | La password non ha requisiti di lunghezza o complessità (rischio accettato, DEC-07) | FL-08 |
 | RB-44 | Se all'uscita ci sono modifiche non sincronizzate, l'uscita avviene subito ma la copia di lavoro resta, cifrata e illeggibile senza password, finché le modifiche non si sincronizzano; poi si cancella. Sul web la sincronizzazione può riprendere solo quando Memodu viene riaperto in quel browser | FL-08 |
+| RB-50 | Email e password si cambiano dalle impostazioni inserendo la password attuale. Cambiando password le note vengono ricifrate e gli altri dispositivi devono accedere di nuovo | FL-08 |
+| RB-51 | Il nome di un dispositivo viene preso dal sistema (es. nome del PC, "Chrome su Windows") e si può cambiare dalle impostazioni | FL-07, FL-08 |
+| RB-53 | Gli avvisi si sincronizzano: compaiono su tutti i dispositivi e, visti su uno, non si mostrano più su nessuno | FL-07 |

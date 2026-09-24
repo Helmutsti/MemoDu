@@ -19,7 +19,7 @@ Piattaforme:
 - **Desktop (Windows, macOS):** la scorciatoia è globale, funziona da qualsiasi programma e l'utente può cambiarla (RF-11). Memodu resta attivo in background, con un'icona nell'area di notifica (Windows) o nella barra dei menu (macOS); l'avvio automatico all'accensione è opzionale.
 - **Web:** la nota rapida non esiste; si usa la normale creazione di una nota.
 
-**Collegamenti:** FL-01 · EN-00 · SC-00 · RNF-01
+**Collegamenti:** FL-01 · EN-01 · EN-07 · SC-00 · RNF-01
 
 ### Scenario d'uso
 Premo la scorciatoia e compare la finestra della nota rapida. A quel punto posso decidere di aprire il programma completo senza perdere la nota, oppure salvare e chiudere la finestra. Se nel programma è già aperta un'altra nota, viene semplicemente salvata e messa da parte.
@@ -46,7 +46,7 @@ La nota si vede formattata mentre si scrive: i simboli markdown compaiono solo d
 
 Ogni modifica si salva da sola, senza pulsante Salva (RB-06). Il testo incollato da fuori entra come testo semplice (RB-07).
 
-**Collegamenti:** FL-02 · FL-09 · EN-00 · SC-00
+**Collegamenti:** FL-02 · FL-09 · EN-01 · SC-00
 
 ### Scenario d'uso
 Scrivo la nota e inserisco un'immagine trascinandola nel testo, oppure premendo il pulsante degli allegati. Sull'immagine inserita posso poi aprire delle impostazioni, in stile Word.
@@ -70,7 +70,7 @@ Nella prima fase si possono allegare solo immagini, fino a 25 MB ciascuna; gli a
 
 Ritaglio e rotazione sono reversibili: l'immagine originale resta intatta (RB-14).
 
-**Collegamenti:** FL-03 · EN-00 · SC-00 · RNF-04
+**Collegamenti:** FL-03 · EN-02 · SC-00 · RNF-04
 
 ### Scenario d'uso
 Condiviso con RF-02: vedi lo scenario di RF-02.
@@ -94,7 +94,7 @@ Come *utente* voglio associare dei metadati a ogni nota per descriverla con tito
 | Tag | Utente | Gli stessi tag di `RF-06` |
 | Data di fine validità | Utente | Solo informativa: alla scadenza non succede nulla |
 
-**Collegamenti:** FL-04 · EN-00 · SC-00 · RF-06
+**Collegamenti:** FL-04 · EN-01 · EN-04 · SC-00 · RF-06
 
 ### Scenario d'uso
 Scrivo la nota. Le note non ancora organizzate compaiono in una barra laterale e da lì le trascino nell'albero delle cartelle. Quando apro una nota, dal menu in alto a destra posso aggiungere tag, spostarla in un'altra cartella o modificarne i metadati. Il titolo è l'unico metadato che modifico direttamente nella schermata di scrittura.
