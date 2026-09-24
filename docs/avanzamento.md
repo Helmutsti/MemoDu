@@ -52,4 +52,4 @@ Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui
 | Una volta usciti dal browser senza rete, le modifiche si sincronizzano solo riaprendo Memodu in quel browser | RB-44 | Con RF-16 |
 
 ## Strumenti
-- **Disegni (Fasi 4–6):** Figma (DEC-10), secondo la sezione "Disegni" della guida. Account `manuc.1297@gmail.com`, piano **Il mio team solitario** (posto Dev, l'unico con permessi di scrittura). File di lavoro: [Memodu – Wireframe (Fase 4)](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK).
+- **Disegni (Fasi 4–6):** Figma (DEC-10), secondo la sezione "Disegni" della guida. Account `manuc.1297@gmail.com`, piano **Il mio team solitario** (posto Full, l'unico con permessi di scrittura). File di lavoro: [Memodu – Wireframe (Fase 4)](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK). Componenti da wireframe (solo struttura, niente token): [Memodu – Wireframe UI (libreria)](https://www.figma.com/design/TzpeVsSZCJDBOyb8TkaJ69).

@@ -109,7 +109,7 @@ flowchart TD
 | RB-36 | Se una nota è stata eliminata su un dispositivo e modificata su un altro, vince l'azione più recente: se è la modifica, la nota esce dal cestino con le modifiche; se è l'eliminazione, la nota resta nel cestino con le modifiche comprese | FL-07 |
 | RB-37 | Se una nota è stata spostata in cartelle diverse su due dispositivi, resta nella posizione più recente | FL-07 |
 | RB-38 | Se una cartella è stata rinominata in modo diverso su due dispositivi, prende il nome più recente; accanto nasce una cartella vuota con l'altro nome, come segnale del conflitto | FL-07 |
-| RB-39 | Quando nasce una nota in conflitto (DEC-06) compare un avviso con il collegamento alla nota | FL-07 |
+| RB-39 | Quando nasce una nota in conflitto (DEC-06) compare un avviso con il collegamento alla nota. La nota in conflitto ha lo stesso titolo seguito da "(copia in conflitto)" | FL-07 |
 | RB-40 | La sincronizzazione è invisibile finché va tutto bene. Compare un avviso solo per: errore di sincronizzazione (subito), accesso scaduto o revocato (subito), server irraggiungibile oltre una soglia (valore indicativo 24 ore, da fissare in Fase 7) | FL-07 |
 | RB-41 | Uscendo (logout), le modifiche in attesa vengono sincronizzate e poi la copia di lavoro su quel dispositivo viene cancellata | FL-08 |
 | RB-42 | Non c'è limite ai tentativi di accesso con password sbagliata (rischio accettato, DEC-07) | FL-08 |

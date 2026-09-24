@@ -15,8 +15,7 @@ flowchart TD
     D --> E{Come chiudo?}
     E -- Apri nel programma --> F[La nota aperta nel programma viene salvata e chiusa - RB-05]
     F --> G[La nota rapida si apre nel programma completo]
-    E -- Salva e chiudi --> H{La nota è vuota?}
-    E -- Esc, X o clic altrove --> H
+    E -- Esc, ✕ o clic altrove --> H{La nota è vuota?}
     H -- Sì --> I[Non si crea nessuna nota - RB-03]
     H -- No --> J[Nota salvata sulla copia di lavoro, nella radice - RB-01, RB-02]
     I --> K[Torno a ciò che facevo]
@@ -24,7 +23,7 @@ flowchart TD
 ```
 
 ### Percorsi alternativi
-- **Chiusura senza scelta** (Esc, X, clic fuori dalla finestra): equivale a "Salva e chiudi" (RB-02).
+- **Chiusura** (Esc, ✕, clic fuori dalla finestra): salva e chiude; non esiste un pulsante Salva e chiudi (RB-02, SC-02).
 - **Scorciatoia premuta con una nota rapida già aperta:** la nota aperta viene salvata e resta aperta, e se ne apre una nuova in un'altra finestra (RB-04). Ogni nota rapida si chiude poi per conto suo, seguendo lo stesso flusso.
 - **Apertura nel programma completo:** vedi RB-05.
 
@@ -54,7 +53,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A{Come creo la nota?} -- Pulsante Nuova nota --> B
+    A{Come creo la nota?} -- + accanto a Non organizzate --> B
     A -- Scorciatoia da tastiera --> B
     A -- Tasto destro su una cartella --> C[La cartella su cui ho cliccato diventa quella selezionata]
     C --> B{C'è una cartella selezionata?}
@@ -90,7 +89,7 @@ flowchart TD
     A[Apro una nota] --> B[La nota compare formattata; i simboli markdown si vedono solo dove c'è il cursore]
     B --> C[Scrivo]
     C --> D{Voglio formattare?}
-    D -- Sì --> E[Scrivo i simboli, uso una scorciatoia, la barra degli strumenti o il tasto destro]
+    D -- Sì --> E[Scrivo i simboli, uso una scorciatoia, la pillola degli strumenti o il tasto destro]
     E --> C
     D -- No --> F{Incollo testo da fuori?}
     F -- Sì --> G[Si incolla come testo semplice - RB-07]
@@ -103,7 +102,7 @@ flowchart TD
 ```
 
 ### Percorsi alternativi
-- **Formattazione:** si applica in quattro modi equivalenti: scrivendo i simboli markdown, con le scorciatoie da tastiera, con la barra degli strumenti o con il menu del tasto destro sul testo selezionato.
+- **Formattazione:** si applica in quattro modi equivalenti: scrivendo i simboli markdown, con le scorciatoie da tastiera, con la pillola degli strumenti che compare sopra il testo selezionato (SC-03) o con il menu del tasto destro.
 - **Cambio di nota:** il programma mostra una nota alla volta (RF-01): aprendone un'altra, quella corrente è già salvata (RB-06).
 
 ### Sfighe gestite
@@ -134,7 +133,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A{Come inserisco?} -- Trascino il file nel testo --> B
-    A -- Pulsante degli allegati --> B{È un'immagine leggibile?}
+    A -- Immagine dalla pillola degli strumenti o dal menu / --> B{È un'immagine leggibile?}
     B -- No --> X[Messaggio: si possono inserire solo immagini - RB-11]
     B -- Sì --> C{È al massimo 25 MB?}
     C -- No --> Y[Messaggio: l'immagine supera 25 MB - RB-12]
@@ -195,7 +194,7 @@ flowchart TD
 
 ### Percorsi alternativi
 - **Togliere un tag da una nota:** dal menu della nota; la nota resta intatta.
-- **Eliminare un tag del tutto:** vedi RB-19.
+- **Eliminare un tag del tutto:** tasto destro sul tag tra i suggerimenti, poi Elimina tag… e conferma con il numero di note coinvolte (RB-19).
 - **Data di creazione scelta:** si salva accanto a quella di sistema, che non cambia mai (RB-21). Nelle liste si mostra la data scelta, se c'è (RF-04).
 
 ### Sfighe gestite
@@ -227,7 +226,7 @@ La posizione di una nota (radice, cartella, cestino) è descritta nel diagramma 
 | Codice | Regola | Usata in |
 |---|---|---|
 | RB-01 | Una nota rapida salvata va nella radice e diventa una nota non organizzata (RF-05) | FL-01 |
-| RB-02 | Chiudere la nota rapida senza scegliere (Esc, X, clic altrove) equivale a salvarla | FL-01 |
+| RB-02 | Chiudere la nota rapida (Esc, ✕, clic altrove) la salva: non serve un comando di salvataggio | FL-01 |
 | RB-03 | Una nota rapida chiusa senza testo non crea nessuna nota | FL-01 |
 | RB-04 | Premere la scorciatoia con una nota rapida già aperta salva quella aperta, che resta aperta, e ne apre una nuova in un'altra finestra | FL-01 |
 | RB-05 | Aprendo la nota rapida nel programma completo, la nota aperta nel programma viene salvata e chiusa, e al suo posto compare la nota rapida | FL-01 |
@@ -240,7 +239,7 @@ La posizione di una nota (radice, cartella, cestino) è descritta nel diagramma 
 | RB-12 | Un'immagine può pesare al massimo 25 MB | FL-03 |
 | RB-13 | Un'immagine si mostra con l'orientamento salvato nel file; si raddrizza con la rotazione delle impostazioni | FL-03 |
 | RB-14 | Ritaglio e rotazione di un'immagine sono reversibili: l'originale resta intatto e le impostazioni si possono togliere o cambiare in qualsiasi momento | FL-03 |
-| RB-15 | Se una nota non ha titolo, nelle liste si mostrano le prime parole del testo; il titolo resta vuoto finché l'utente non lo scrive | FL-04 |
+| RB-15 | Se una nota non ha titolo, nelle liste si mostrano le prime parole del testo; il titolo resta vuoto finché l'utente non lo scrive. Una nota senza titolo e senza testo si mostra come "Nota vuota", in grigio chiaro | FL-04 |
 | RB-16 | Più note possono avere lo stesso titolo, anche nella stessa cartella: il titolo non identifica la nota | FL-04 |
 | RB-17 | Un tag nasce scrivendolo: mentre si scrive compaiono i tag esistenti come suggerimento, e un tag nuovo confermato viene creato | FL-04 |
 | RB-18 | I livelli di un tag si separano con `/` (es. `lavoro/clienti/rossi`) | FL-04 |

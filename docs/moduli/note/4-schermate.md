@@ -68,6 +68,29 @@ Stessi tasti fisici sui due sistemi, libere nelle configurazioni di default di e
 | 3 | Strumenti di formattazione | Nessuna barra fissa: compaiono solo quando servono (livello 20), vedi sotto |
 | 4 | Menu `···` | In alto a destra: sopra tag, date, sposta, elimina (FL-04); sotto le voci del programma. Dettaglio in `interfaccia/4-schermate.md` |
 
+### Scrittura, tasto destro e immagini (FL-02, FL-03)
+- **Wireframe:** [tasto destro sul testo](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=30-67) · [simboli markdown sulla riga del cursore](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=30-144) · [trascinamento di un'immagine](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=30-244)
+- **Esportazioni:** `immagini/SC-03-tasto-destro.png`, `immagini/SC-03-markdown.png`, `immagini/SC-03-trascinamento.png`
+
+| Cosa | Come |
+|---|---|
+| Tasto destro sul testo | Taglia, Copia, Incolla; poi grassetto, corsivo, sottolineato, barrato con le scorciatoie accanto; poi Titolo ▸ ed Elenco ▸ (RF-11) |
+| Simboli markdown | Si vedono in grigio solo sulla riga del cursore (es. `## ` davanti a un titolo); sulle altre righe il testo è solo formattato (RF-02) |
+| Trascinamento di un'immagine | Tutta l'area della nota si copre di un bordo tratteggiato con "Rilascia qui l'immagine" e i limiti (solo immagini, fino a 25 MB). File non validi: messaggio in linea (RB-11, RB-12) |
+
+### Metadati (FL-04)
+- **Wireframe:** [tag con suggerimenti](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=27-39) · [tasto destro su un tag](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=27-105) · [conferma eliminazione tag](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=27-175) · [date](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=27-238) · [sposta in](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=27-291)
+- **Esportazioni:** `immagini/SC-03-tag.png`, `immagini/SC-03-tag-tasto-destro.png`, `immagini/SC-03-tag-elimina.png`, `immagini/SC-03-date.png`, `immagini/SC-03-sposta.png`
+
+| Cosa | Dove | Come |
+|---|---|---|
+| Tag | Nella riga sotto il titolo | I tag diventano modificabili: × per toglierli, un campo per aggiungerne con i suggerimenti sotto (livello 20) e "Crea il tag «…»" per uno nuovo (RB-17, RB-18, RB-22). "Tag…" nel menu `···` porta il cursore nel campo |
+| Eliminare un tag del tutto | Tasto destro su un suggerimento | "Elimina tag…", poi finestra di conferma con il numero di note coinvolte (RB-19) |
+| Date | Pannello sotto il `···` (livello 20) | Data di creazione scelta e fine validità, con calendario. Sotto la data di creazione compare quella di sistema, che non cambia (RB-21). Nessun avviso sulle combinazioni (RB-20) |
+| Sposta in | Pannello sotto il `···` (livello 20) | Campo per cercare una cartella, poi la radice e l'albero; la cartella attuale è evidenziata. Clic su una cartella: la nota si sposta e il pannello si chiude |
+
+Il calendario è un componente (date picker) che si disegna in Fase 5.
+
 ### Strumenti di formattazione
 Nessuna barra fissa sopra il testo. Una sola **pillola degli strumenti** compare solo quando serve, **sopra il punto dell'evento** (la selezione o il punto del clic), e cambia contenuto in base al contesto:
 
@@ -85,15 +108,15 @@ Il testo ha una larghezza massima di lettura anche su schermi larghi: oltre una 
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |
 |---|---|---|
-| Vuoto (nessuna nota aperta) | Primo utilizzo o nota appena eliminata: invito a scrivere più pulsante Nuova nota | Testo definitivo in Fase 6 |
+| Vuoto (nessuna nota aperta) | Primo utilizzo o nota appena eliminata: invito a scrivere più pulsante per creare la prima nota | Testo definitivo in Fase 6 |
 | Vuoto (nota nuova) | Nota creata e ancora senza testo: titolo e corpo vuoti con il loro invito. La nota esiste già e resta (RB-10) | Testo definitivo in Fase 6 |
 | Caricamento | Non previsto: la nota arriva dalla copia di lavoro sul dispositivo | — |
 | Errore | Immagine rifiutata: messaggio accanto al punto di inserimento, non bloccante (RB-11, RB-12) | Testo definitivo in Fase 6 |
 | Successo | Non previsto: il salvataggio è silenzioso (RB-06) | — |
-| Contenuto parziale | Immagine in arrivo da un altro dispositivo non ancora sincronizzata: segnaposto al suo posto | Testo definitivo in Fase 6 |
+| Contenuto parziale | Immagine in arrivo da un altro dispositivo non ancora sincronizzata: segnaposto tratteggiato al suo posto ([wireframe](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=32-103), `immagini/SC-03-immagine-in-arrivo.png`) | Testo definitivo in Fase 6 |
 | Contenuto lungo | Nota molto lunga: scorre il solo corpo, il titolo resta fisso | — |
 | Immagine selezionata | Maniglie sull'immagine e pannello impostazioni (dimensione, allineamento, ritaglio, rotazione, testo alternativo) al livello 20 | — |
-| Nota in conflitto | Nota nata da un conflitto (DEC-06): si apre come le altre, riconoscibile dal titolo | Testo definitivo in Fase 6 |
+| Nota in conflitto | Nota nata da un conflitto (DEC-06): stesso titolo seguito da "(copia in conflitto)", nella stessa cartella; all'arrivo compare un avviso con il collegamento (RB-39) ([wireframe](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=32-147), `immagini/SC-03-conflitto.png`) | Testo definitivo in Fase 6 |
 
 ### Messaggi di errore
 | Sfiga | Testo definitivo |
