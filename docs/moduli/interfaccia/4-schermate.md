@@ -43,7 +43,7 @@ L'unico menu della finestra. È diviso in due parti:
 | Parte | Voci |
 |---|---|
 | Sopra: **questa nota** | Tag, Date, Sposta in, Elimina (FL-04, RB-25) |
-| Sotto: **Memodu** | Cestino, Impostazioni (scorciatoia globale EN-07, cestino nella ricerca RB-29), Account e sincronizzazione |
+| Sotto: **Memodu** | Cestino (SC-04), Impostazioni con l'account (SC-06) |
 
 Senza una nota aperta (stato vuoto) il menu mostra solo la parte sotto.
 
@@ -60,7 +60,7 @@ Sono al centro della finestra, con un velo sul resto. L'azione principale sta a 
 | Stato | Descrizione | Testo mostrato |
 |---|---|---|
 | Vuoto | Nessuna nota e nessuna cartella (primo utilizzo): l'area della nota mostra l'invito a scrivere e il pulsante per creare la prima nota; le non organizzate sono vuote | Testo definitivo in Fase 6 |
-| Vuoto (albero) | Albero senza cartelle: si mostra solo la radice | **Rinviato**: aspetto definito nel giro di Fase 4 del modulo organizzazione (SF-16) |
+| Vuoto (albero) | Albero senza cartelle: al posto dell'albero una riga che spiega come crearne una (SF-16), vedi lo stato vuoto | Testo definitivo in Fase 6 |
 | Caricamento | Solo al primo accesso su un dispositivo, mentre arriva la copia di lavoro: l'ossatura resta, le liste e la nota mostrano segnaposto ([wireframe](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=32-192), `immagini/SC-01-caricamento.png`) | Nessun messaggio |
 | Errore | Avviso di sincronizzazione in cima all'area della nota, non bloccante (RB-40) | Testo definitivo in Fase 6 |
 | Successo | Non previsto: la sincronizzazione riuscita è invisibile (RB-40) | — |
@@ -72,6 +72,32 @@ Sono al centro della finestra, con un velo sul resto. L'azione principale sta a 
 | SF-30 Server irraggiungibile oltre la soglia | Fase 6 (RB-40) |
 | SF-25 Accesso scaduto o revocato | Fase 6 (RB-40) |
 | SF-32 Errore di sincronizzazione | Fase 6 (RB-40) |
+
+---
+
+## SC-06 – Impostazioni
+**Flussi:** FL-08 (cambio email e password, uscita) · **Entità:** EN-07 · **Componenti:** riga di impostazione, campo di testo, pulsante
+
+- **Wireframe:** [impostazioni](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-227)
+- **Esportazioni:** `immagini/SC-06.png`
+- **Mockup:** [Fase 6]
+
+Si apre dalla voce Impostazioni del menu `···`, al posto della nota, come il cestino. Una sola schermata con quattro sezioni:
+
+| Sezione | Contenuto |
+|---|---|
+| Generale | Scorciatoia della nota rapida (separata per Windows e macOS, RB-52), avvio all'accensione (solo desktop) |
+| Ricerca | Note del cestino nei risultati (RB-29) |
+| Dispositivo | Nome di questo dispositivo (RB-51) |
+| Account | Email e password con Cambia, che chiede la password attuale (RB-50); Esci (RB-41, RB-44) |
+
+### Stati della schermata
+| Stato | Descrizione | Testo mostrato |
+|---|---|---|
+| Vuoto | Non previsto: ogni impostazione ha un valore di default | — |
+| Caricamento | Non previsto: le impostazioni sono sulla copia di lavoro | — |
+| Errore | Password attuale sbagliata cambiando email o password: messaggio in linea | Testo definitivo in Fase 6 |
+| Successo | Nessun messaggio: il valore cambiato resta visibile | — |
 
 ---
 
@@ -117,24 +143,58 @@ Elementi che si ripetono, notati disegnando i wireframe. Sono l'ingresso della F
 | Campo titolo | Titolo della nota, può restare vuoto (RB-15) | SC-03 |
 | Immagine inline | Immagine nel testo, selezionabile, con il suo pannello impostazioni | SC-03 |
 | Avviso | Comunicazione non bloccante che resta finché non è vista (RB-40) | Tutte |
-| Finestra di conferma | Azioni non reversibili (svuota cestino, elimina tag) | SC-01 |
+| Finestra di conferma | Azioni non reversibili (svuota cestino, elimina tag) | SC-01, SC-04 |
+| Campo nome nell'albero | Crea o rinomina una cartella sul posto, con il nome selezionato (RB-48) | SC-01 |
+| Cestino durante il trascinamento | Zona di rilascio in fondo alla colonna, solo mentre si trascina | SC-01 |
+| Elemento del cestino | Icona, nome, provenienza e data, Ripristina | SC-04 |
+| Modulo di accesso | Email, password e un pulsante, al centro della finestra | SC-05 |
+| Riga di impostazione | Etichetta a sinistra, controllo a destra | SC-06 |
 | Stato vuoto | Spiegazione più azione, al posto di una lista vuota | SC-01, SC-03 |
 | Icona in background | Area di notifica (Windows) o barra dei menu (macOS): apre la nota rapida e il programma | Fuori dalle schermate |
 
 ---
 
-## Wireflow – nucleo note (FL-01, FL-02, FL-09)
-Ogni freccia è un'azione dell'utente o un evento del sistema.
+## Wireflow – prima fase (FL-01 … FL-09)
+Ogni freccia è un'azione dell'utente o un evento del sistema. Lo stesso percorso è cliccabile nel prototipo Figma (modalità Presentazione), con sei punti di partenza: **FL-01 Nota rapida**, **FL-02 · FL-04 · FL-06 · FL-09 Programma** (dalla finestra principale), **FL-03 Immagine** (dal clic sul vuoto), **FL-05 Cartelle e cestino**, **FL-07 Avvisi di sincronizzazione**, **FL-08 Accesso (primo avvio)**.
 
 ```mermaid
 flowchart LR
     Esterno[Un altro programma] -- scorciatoia globale --> SC02[SC-02 Nota rapida]
     SC02 -- Esc, ✕, clic altrove --> Esterno
-    SC02 -- scorciatoia di nuovo --> SC02b[SC-02 Seconda nota rapida]
-    SC02 -- Apri nel programma --> SC03[SC-03 Schermata di scrittura]
-    SC01[SC-01 Finestra principale] -- Nuova nota, scorciatoia, tasto destro su una cartella --> SC03
-    SC01 -- clic su una nota --> SC03
-    SC03 -- la nota è dentro la finestra principale --> SC01
+    SC02 -- scorciatoia di nuovo --> SC02b[SC-02 Più note a cascata]
+    SC02 -- Apri nel programma --> SC01
+    SC02b -- Apri nel programma --> SC01
+
+    SC01[SC-01 Finestra principale con la nota aperta] -- + accanto a Non organizzate --> Nuova[SC-03 Nota nuova vuota]
+    SC01 -- tasto destro su una cartella --> TdC[Menu della cartella] -- Nuova nota qui --> Nuova
+
+    SC01 -- cursore nel testo --> Md[SC-03 Simboli markdown sulla riga]
+    Md -- seleziono testo --> Sel[SC-03 Pillola di formattazione]
+    Sel -- tasto destro --> TdT[Menu del tasto destro sul testo]
+
+    Vuoto[SC-03 Clic sul vuoto: pillola di inserimento] -- Immagine o trascino un file --> Tr[Area di trascinamento]
+    Tr -- rilascio --> Img[SC-03 Immagine inserita e selezionata, o messaggio]
+    SC01 -- clic su un'immagine --> Img
+
+    SC01 -- ··· --> Menu[Menu ···]
+    Menu -- Tag… --> Tag[Tag con suggerimenti]
+    Tag -- tasto destro su un suggerimento --> TdTag[Elimina tag…] --> Conf[Conferma con il numero di note]
+    Menu -- Date… --> Date[Pannello date]
+    Menu -- Sposta in… --> Sposta[Pannello Sposta in]
+
+    SC01 -- scrivo nella ricerca --> Ric[Card dei risultati] -- apro un risultato --> SC01
+
+    SC01 -- + di Cartelle --> NC[Nuova cartella nell'albero] -- nome già presente --> Dup[Tre scelte - RB-31]
+    SC01 -- trascino una nota --> Tr2[Cartella evidenziata, cestino in fondo]
+    SC01 -- trascino una cartella dentro sé stessa --> No[Nessun effetto - RB-24]
+    Menu -- Cestino --> SC04[SC-04 Cestino] -- Svuota cestino --> Conf2[Conferma] --> SC04v[Cestino vuoto]
+    SC04 -- Ripristina --> SC01
+    Menu -- Impostazioni --> SC06[SC-06 Impostazioni] -- Esci --> SC05
+
+    Avv[Avviso di sincronizzazione] -- Accedi --> SC05[SC-05 Accesso]
+    Primo[SC-05 Primo avvio: crea l'account] --> SC01
+    SC05 -- credenziali errate --> SC05e[Messaggio in linea] --> SC05
+    SC05 -- Accedi --> SC01
 ```
 
 `SC-03` non è una finestra a sé: vive dentro l'area della nota di `SC-01`. È una schermata separata perché ha stati propri, e perché la nota rapida ci arriva da fuori (RB-05).

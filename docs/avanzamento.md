@@ -2,7 +2,7 @@
 
 <!-- Stato della documentazione (vedi "Lo stato della documentazione" nella guida). Si sovrascrive; le modifiche non vanno nello storico. Chi riprende il lavoro parte da qui. -->
 
-**Ultimo aggiornamento:** 24/09/2026
+**Ultimo aggiornamento:** 25/09/2026
 
 ## Pacchetti e frammenti
 
@@ -11,7 +11,7 @@ Perimetro: solo cloud, un solo utente, installazione personale (DEC-01, DEC-05);
 
 | Frammento | Requisiti | Fasi complete | Prossima fase | Note |
 |---|---|---|---|---|
-| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3 | 4 – Wireframe | Fase 4 in corso: inventario del nucleo note (SC-01, SC-02, SC-03) fatto, wireframe da disegnare. Restano fuori dal primo giro organizzazione e sincronizzazione |
+| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4 | 5 – Design system | Fase 4 completata: SC-01 … SC-06 con i loro stati e wireflow cliccabile per FL-01 … FL-09 (prototipo Figma). Test rapido non fatto. La Fase 5 parte dal moodboard |
 | Should | RF-07, RF-09, RF-12, RF-13, RF-16 | — | 1 – Requisiti | Mancano gli scenari d'uso |
 
 ### Idee parcheggiate
@@ -23,8 +23,6 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 | Cosa | Riguarda | Da risolvere in | Dove è annotato |
 |---|---|---|---|
 | Recupero della password e della chiave di cifratura | RF-10, RF-14 | Prima della Definition of Ready (Fase 8) | `moduli/sincronizzazione/8-test.md` |
-| Aspetto dei filtri della ricerca | FL-06 | Fase 4 | `moduli/organizzazione/2-flussi.md` |
-| Stato vuoto dell'albero delle cartelle | FL-05 (SF-16) | Fase 4 | `moduli/organizzazione/2-flussi.md` |
 | Testi definitivi di messaggi e avvisi | Tutti i flussi, EN-08 | Fase 6 | Flussi, colonna "Comunicazione" |
 | Come si salva il sottolineato nel markdown | RF-02 | Fase 7 | `moduli/note/8-test.md` |
 | Come si salvano dimensione, allineamento, ritaglio e rotazione delle immagini senza rompere l'esportazione | RF-03, RF-13 | Fase 7 | `moduli/note/8-test.md` |
