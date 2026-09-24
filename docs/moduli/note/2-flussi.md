@@ -32,7 +32,7 @@ flowchart TD
 | Sfiga | Rilevamento | Comunicazione | Via d'uscita |
 |---|---|---|---|
 | SF-01 Doppio invio | Scorciatoia premuta con una nota rapida già aperta | Compare una nuova nota rapida in un'altra finestra | La precedente è salvata e resta aperta (RB-04) |
-| SF-04 Più schede aperte | Più finestre di nota rapida aperte insieme | Ogni finestra è indipendente; la loro disposizione sullo schermo si definisce in Fase 4 | Ognuna si salva e si chiude per conto suo (RB-02) |
+| SF-04 Più schede aperte | Più finestre di nota rapida aperte insieme | Ogni finestra è indipendente e compare a cascata rispetto alla precedente (SC-02) | Ognuna si salva e si chiude per conto suo (RB-02) |
 | SF-02 Abbandono a metà | Finestra chiusa senza scegliere | Nessun messaggio | Salvataggio automatico (RB-02) |
 | SF-08 Connessione che cade a metà | Assenza di rete | Nessun messaggio: la nota rapida non dipende dalla rete | Salvataggio sulla copia di lavoro, sincronizzazione più tardi (DEC-02) |
 | SF-16 Vuoto | Nota rapida chiusa senza testo | Nessun messaggio | Non si crea nessuna nota (RB-03) |

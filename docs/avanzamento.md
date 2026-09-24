@@ -11,7 +11,7 @@ Perimetro: solo cloud, un solo utente, installazione personale (DEC-01, DEC-05);
 
 | Frammento | Requisiti | Fasi complete | Prossima fase | Note |
 |---|---|---|---|---|
-| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3 | 4 – Wireframe | Fase 4 rinviata per scelta, il 24/09/2026 |
+| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3 | 4 – Wireframe | Fase 4 in corso: inventario del nucleo note (SC-01, SC-02, SC-03) fatto, wireframe da disegnare. Restano fuori dal primo giro organizzazione e sincronizzazione |
 | Should | RF-07, RF-09, RF-12, RF-13, RF-16 | — | 1 – Requisiti | Mancano gli scenari d'uso |
 
 ### Idee parcheggiate
@@ -23,8 +23,6 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 | Cosa | Riguarda | Da risolvere in | Dove è annotato |
 |---|---|---|---|
 | Recupero della password e della chiave di cifratura | RF-10, RF-14 | Prima della Definition of Ready (Fase 8) | `moduli/sincronizzazione/8-test.md` |
-| Disposizione sullo schermo di più note rapide | FL-01 (SF-04) | Fase 4 | `moduli/note/2-flussi.md` |
-| Scorciatoia globale di default (Windows e macOS) | EN-07 | Fase 4 | `moduli/interfaccia/3-entita.md` |
 | Aspetto dei filtri della ricerca | FL-06 | Fase 4 | `moduli/organizzazione/2-flussi.md` |
 | Stato vuoto dell'albero delle cartelle | FL-05 (SF-16) | Fase 4 | `moduli/organizzazione/2-flussi.md` |
 | Testi definitivi di messaggi e avvisi | Tutti i flussi, EN-08 | Fase 6 | Flussi, colonna "Comunicazione" |
@@ -54,4 +52,4 @@ Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui
 | Una volta usciti dal browser senza rete, le modifiche si sincronizzano solo riaprendo Memodu in quel browser | RB-44 | Con RF-16 |
 
 ## Strumenti
-- **Disegni (Fasi 4–6):** strumento di design da scegliere alla ripresa della Fase 4. Proposta: Figma, secondo la sezione "Disegni" della guida.
+- **Disegni (Fasi 4–6):** Figma (DEC-10), secondo la sezione "Disegni" della guida. Account `manuc.1297@gmail.com`, piano **Il mio team solitario** (posto Dev, l'unico con permessi di scrittura). File di lavoro: [Memodu – Wireframe (Fase 4)](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK).

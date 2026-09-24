@@ -11,8 +11,8 @@ Il diagramma di tutto il sistema è in `moduli/note/3-entita.md`.
 | Attributo | Tipo | Obbligatorio | Vincoli | Note |
 |---|---|---|---|---|
 | Account | EN-05 | Sì | Una sola serie di impostazioni per account | |
-| Scorciatoia globale su Windows | Combinazione di tasti | Sì | | Nota rapida (RF-01, RF-11). Ha un valore di default, da definire in Fase 4 |
-| Scorciatoia globale su macOS | Combinazione di tasti | Sì | | Come sopra |
+| Scorciatoia globale su Windows | Combinazione di tasti | Sì | | Nota rapida (RF-01, RF-11). Default `Ctrl+Alt+N` (SC-02) |
+| Scorciatoia globale su macOS | Combinazione di tasti | Sì | | Default `Control+Option+N` (SC-02) |
 | Avvio automatico all'accensione | Sì \| No | Sì | Solo app desktop | Opzionale (RF-01) |
 | Note del cestino nella ricerca | Sì \| No | Sì | | Di default Sì (RB-29) |
 

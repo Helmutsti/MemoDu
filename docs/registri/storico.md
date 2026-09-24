@@ -80,3 +80,19 @@
 | 24/09/2026 | Manuel Cucca | Guida: pacchetti e frammenti, fase in ogni requisito, stato della documentazione (`docs/avanzamento.md`), regole per i disegni; aggiornati modello dei requisiti, AGENTS.md, README.md e CONTRIBUTING.md | DEC-09 |
 | 24/09/2026 | Manuel Cucca | Fase indicata in tutti i requisiti (4 per i Must, 1 per gli Should); posizione di ID-09 e ID-10 espressa come codici dei requisiti | DEC-09 |
 | 24/09/2026 | Manuel Cucca | Due deduzioni da confermare aggiunte alle domande aperte del modulo note (EN-02, RF-02) | DEC-09 |
+| 24/09/2026 | Manuel Cucca | Figma scelto come strumento di design per le Fasi 4, 5 e 6 | DEC-10 |
+| 24/09/2026 | Manuel Cucca | Fase 4 avviata sul nucleo note: SC-01 finestra principale, SC-02 nota rapida, SC-03 schermata di scrittura, con stati, scala z-index, inventario dei componenti concettuali e wireflow | Ripresa della Fase 4 (DEC-09, DEC-10) |
+| 24/09/2026 | Manuel Cucca | Impostazione desktop-first per i wireframe, con tre breakpoint (≥1280, 1024–1279, <1024 solo web) | Il pubblico della prima fase è su desktop e web (DEC-04); la nota rapida esiste solo su desktop (RF-01) |
+| 24/09/2026 | Manuel Cucca | SF-04: più note rapide si dispongono a cascata, con scarto di 32 px, sullo schermo del puntatore; nessun affiancamento automatico | Rinvio di Fase 4 risolto (FL-01) |
+| 24/09/2026 | Manuel Cucca | EN-07: scorciatoia globale di default `Ctrl+Alt+N` su Windows e `Control+Option+N` su macOS | Rinvio di Fase 4 risolto: stessi tasti fisici, libere nei default dei due sistemi |
+| 24/09/2026 | Manuel Cucca | DEC-10: verificato il vincolo sull'account Figma; il posto con permessi di scrittura è il Dev sul piano "Il mio team solitario", non il piano MEP | Verifica sull'account `manuc.1297@gmail.com` |
+| 24/09/2026 | Manuel Cucca | SC-01: nella colonna sinistra le non organizzate passano sopra le cartelle e il Cestino esce dalla colonna | Revisione dei wireframe con Manuel Cucca |
+| 25/09/2026 | Manuel Cucca | SC-01: niente barra superiore, colonna sinistra a tutta altezza con ricerca e menu in cima; il pulsante Nuova nota lascia il posto al + delle non organizzate | Revisione dei wireframe con Manuel Cucca |
+| 25/09/2026 | Manuel Cucca | SC-01: disegnati i risultati di ricerca (livello 20), la finestra di conferma con avviso (livelli 40 e 50) e la scala z-index esplosa | Revisione dei wireframe con Manuel Cucca |
+| 25/09/2026 | Manuel Cucca | SC-03: niente barra degli strumenti fissa; barra sulla selezione, comando / e pillola al clic sul vuoto. Scartate le varianti tutto nel tasto destro, + a margine e pillola sempre presente | Revisione dei wireframe con Manuel Cucca |
+| 25/09/2026 | Manuel Cucca | SC-01: tolto il separatore tra non organizzate e cartelle; le non organizzate mostrano solo il titolo, una riga ciascuna | Revisione dei wireframe con Manuel Cucca |
+| 25/09/2026 | Manuel Cucca | SC-03: la barra sopra la selezione diventa la stessa pillola in basso; la pillola mostra la formattazione con testo selezionato e l'inserimento al clic sul vuoto | Revisione dei wireframe con Manuel Cucca |
+| 25/09/2026 | Manuel Cucca | SC-03: la pillola degli strumenti compare sopra la selezione o sopra il punto del clic, non più in basso | Revisione dei wireframe con Manuel Cucca |
+| 25/09/2026 | Manuel Cucca | SC-02: nota rapida senza cornice, barra del titolo e pulsante Salva e chiudi; chiusura con ✕ tenue, Esc o clic altrove (RB-02) | Revisione dei wireframe con Manuel Cucca |
+| 25/09/2026 | Manuel Cucca | SC-01: le sezioni Non organizzate e Cartelle si chiudono con un clic sul titolo; chiuse, le non organizzate mostrano il numero di note | Domanda aperta risolta: preferite alle righe massime |
+| 25/09/2026 | Manuel Cucca | SC-01: tolto il ··· accanto alla ricerca; il ··· in alto a destra diventa l'unico menu, diviso in due: sopra la nota aperta, sotto il programma (Cestino, Impostazioni, Account) | Rinvio risolto: il cestino si raggiunge da quel menu |
