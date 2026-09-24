@@ -3,7 +3,7 @@
 <!-- Fase 1 della guida, con i criteri di accettazione della Fase 8. Copia il blocco per ogni requisito. -->
 
 ## RF-10 – Sincronizzazione cloud cifrata end-to-end
-**Priorità:** Must · **Origine:** DEC-01, DEC-02, DEC-05, DEC-06 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** DEC-01, DEC-02, DEC-05, DEC-06 · **Fase:** 4 · **Stato:** In progettazione
 
 Come *utente* voglio che tutte le mie note siano sincronizzate nel cloud con cifratura end-to-end per avere l'intera struttura a disposizione su ogni dispositivo, senza che altri possano leggerla.
 
@@ -24,7 +24,7 @@ Lavoro su due dispositivi e ognuno accumula modifiche e nuove note. Se entrambi 
 ---
 
 ## RF-14 – Accesso all'installazione
-**Priorità:** Must · **Origine:** DEC-05 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** DEC-05 · **Fase:** 4 · **Stato:** In progettazione
 
 Come *utente* voglio accedere a Memodu con email e password per sincronizzare le mie note e usarle da ogni dispositivo, anche dal browser.
 
@@ -44,7 +44,7 @@ Installo Memodu sul mio server e, al primo avvio, creo l'unico account con email
 ---
 
 ## RF-13 – Importazione ed esportazione delle note
-**Priorità:** Should · **Origine:** ID-09 · **Stato:** In progettazione
+**Priorità:** Should · **Origine:** ID-09 · **Fase:** 1 · **Stato:** In progettazione
 
 Come *utente* voglio importare ed esportare le mie note in file markdown standard, con allegati e metadati, per non restare legato a Memodu e poter portare i miei dati dove voglio.
 
@@ -61,7 +61,7 @@ Anche se si sviluppa dopo la prima fase, il modo in cui si salvano le note deve 
 ---
 
 ## RF-16 – Elenco dei dispositivi e uscita a distanza
-**Priorità:** Should · **Origine:** — · **Stato:** In progettazione
+**Priorità:** Should · **Origine:** — · **Fase:** 1 · **Stato:** In progettazione
 
 Come *utente* voglio vedere l'elenco dei dispositivi da cui ho accesso e farne uscire uno a distanza, per chiudere un accesso dimenticato aperto, per esempio sul browser di un computer non mio (SF-26).
 

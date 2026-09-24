@@ -5,7 +5,7 @@
 L'interfaccia deve essere semplice e intuitiva (`RNF-08`) e favorire velocità e produttività.
 
 ## RF-11 – Interazioni rapide
-**Priorità:** Must · **Origine:** — · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 4 · **Stato:** In progettazione
 
 Come *utente* voglio usare trascinamento, menu del tasto destro e scorciatoie da tastiera per lavorare sulle note senza passare da menu e finestre di dialogo.
 
@@ -22,7 +22,7 @@ Trascino con il mouse le note da organizzare dalla barra laterale all'albero del
 ---
 
 ## RF-12 – Finestre multiple e sganciabili (desktop)
-**Priorità:** Should · **Origine:** DEC-01 · **Stato:** In progettazione
+**Priorità:** Should · **Origine:** DEC-01 · **Fase:** 1 · **Stato:** In progettazione
 
 Come *utente desktop* voglio aprire più note in finestre affiancate, sganciarle dall'applicazione principale e ricollegarle per consultare e scrivere più note contemporaneamente.
 

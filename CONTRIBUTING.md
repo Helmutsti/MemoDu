@@ -1,7 +1,7 @@
 # Come contribuire
 
 ## Prima di iniziare
-Il progetto segue il metodo descritto in `docs/guida-documentazione.md`. Leggi almeno il README della guida.
+Il progetto segue il metodo descritto in `docs/guida-documentazione.md`. Leggi almeno il README della guida. Per sapere a che punto è la documentazione, leggi `docs/avanzamento.md`.
 
 ## Proporre un'idea
 Aggiungi una riga in `docs/registri/idee.md` con stato *Proposta*. Il team la valuta nella revisione periodica del registro.

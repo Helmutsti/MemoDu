@@ -5,7 +5,7 @@
 L'organizzazione è un effetto secondario della scrittura: l'utente ha piena libertà su come organizzare le proprie note.
 
 ## RF-05 – Struttura di cartelle
-**Priorità:** Must · **Origine:** — · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 4 · **Stato:** In progettazione
 
 Come *utente* voglio organizzare le note in un albero di cartelle per dare loro una collocazione fisica.
 
@@ -23,7 +23,7 @@ Condiviso con RF-04 e RF-06: Scrivo la nota. Le note non ancora organizzate comp
 ---
 
 ## RF-06 – Tag
-**Priorità:** Must · **Origine:** — · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 4 · **Stato:** In progettazione
 
 Come *utente* voglio assegnare tag alle note per raggrupparle in modo trasversale alle cartelle.
 
@@ -44,7 +44,7 @@ Condiviso con RF-04 e RF-05: vedi lo scenario di RF-05.
 ---
 
 ## RF-15 – Cestino
-**Priorità:** Must · **Origine:** — · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 4 · **Stato:** In progettazione
 
 Come *utente* voglio che le note e le cartelle eliminate finiscano in un cestino per poterle recuperare se ho sbagliato.
 
@@ -64,7 +64,7 @@ Sistemando l'albero elimino per errore la cartella "Clienti", con dentro note e 
 ---
 
 ## RF-07 – Workspace multipli
-**Priorità:** Should · **Origine:** DEC-01 · **Stato:** In progettazione
+**Priorità:** Should · **Origine:** DEC-01 · **Fase:** 1 · **Stato:** In progettazione
 
 Come *utente* voglio creare più workspace per separare ambiti diversi (per esempio lavoro e vita privata) e non avere tutte le note mischiate.
 
@@ -81,7 +81,7 @@ Nella prima fase la separazione tra ambiti si ottiene con le cartelle principali
 ---
 
 ## RF-08 – Ricerca e filtro
-**Priorità:** Must · **Origine:** — · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 4 · **Stato:** In progettazione
 
 Come *utente* voglio cercare e filtrare le note per trovare subito quella che mi serve.
 
@@ -106,7 +106,7 @@ Inizio a scrivere nella barra di ricerca dell'interfaccia e i risultati compaion
 ---
 
 ## RF-09 – Blocco con password di workspace e note
-**Priorità:** Should · **Origine:** DEC-01 · **Stato:** In progettazione
+**Priorità:** Should · **Origine:** DEC-01 · **Fase:** 1 · **Stato:** In progettazione
 
 Come *utente* voglio proteggere con una password un workspace o una singola nota per impedirne la lettura a chi usa il mio dispositivo.
 

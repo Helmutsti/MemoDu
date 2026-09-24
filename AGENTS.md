@@ -15,6 +15,8 @@ Memodu è un'applicazione di note cross-platform che mette la scrittura al primo
 ## Documentazione: leggila prima di scrivere codice
 Il progetto segue il metodo descritto in `docs/guida-documentazione.md`. Non modificare quel file se non ti viene chiesto esplicitamente.
 
+**Parti da `docs/avanzamento.md`:** dice quali fasi sono complete per quali requisiti, cosa viene dopo, cosa è stato rinviato e quali deduzioni aspettano conferma.
+
 La documentazione ha due parti:
 - **Fotografia**: descrive il sistema come deve essere oggi.
   - `docs/generale/`: visione, destinatari, requisiti non funzionali, glossario, catalogo delle sfighe, Definition of Ready e Done.
@@ -23,6 +25,9 @@ La documentazione ha due parti:
   - `docs/architettura/`: architettura, API, ambienti.
   - `docs/rilascio/`: guida per gli utenti, runbook.
 - **Registri** (`docs/registri/`): idee, decisioni e storico. Raccontano come ci si è arrivati.
+- **Stato della documentazione** (`docs/avanzamento.md`): pacchetti, fasi, rinvii, deduzioni da confermare, rischi accettati.
+
+Ogni requisito indica nella riga di stato la **fase** in cui si trova (la prossima da completare). I criteri di completamento delle fasi si valutano per frammento: vedi "Pacchetti e frammenti" nella guida.
 
 Per creare un nuovo modulo copia `docs/moduli/_modello-modulo/` e rinomina la cartella (minuscole, parole separate da trattini). Per una nuova decisione copia `docs/registri/decisioni/_modello.md` e usa il numero successivo all'ultimo esistente.
 
@@ -35,6 +40,19 @@ Prima di implementare un requisito `RF-`:
 - Non inventare comportamenti, regole o testi non documentati.
 - Fermati e segnala la domanda aperta, indicando il codice dell'elemento coinvolto.
 - Se hai un'idea di miglioramento, aggiungila a `docs/registri/idee.md` con stato *Proposta*. Non cambiare lo stato delle idee esistenti: accettarle o rifiutarle spetta al team.
+
+## Come si conduce una fase della documentazione
+Quando lavori con una persona su una fase della guida:
+1. Ricava dai documenti esistenti tutto ciò che è già deciso; scrivilo senza chiedere.
+2. Chiedi solo ciò che manca, **una domanda alla volta**. Per ogni domanda spiega il contesto (da dove nasce, citando i documenti) e perché la risposta conta.
+3. Distingui sempre ciò che viene dalla persona da ciò che deduci tu. Se completi qualcosa di tua iniziativa, dillo esplicitamente e chiedi conferma.
+4. Una deduzione non confermata non diventa una regola: va nelle domande aperte del modulo (`8-test.md`) e in "Deduzioni da confermare" di `docs/avanzamento.md`.
+5. Dopo ogni risposta aggiorna subito la fotografia coinvolta e aggiungi la riga nello storico.
+6. Se una risposta contraddice una decisione esistente, segnalalo e scrivi una nuova decisione che la supera: non modificare quella vecchia.
+7. Alla chiusura della fase per un frammento verifica il criterio di completamento della guida, aggiorna la fase dei requisiti e `docs/avanzamento.md`, e riepiloga cosa resta sospeso.
+
+## Disegni
+Wireframe, componenti e mockup si disegnano nello strumento di design; nel repository vanno il link al frame, un'esportazione in `docs/moduli/<modulo>/immagini/` e tutte le decisioni. Nessuna decisione vive solo nello strumento di design: vedi "Disegni" nella guida.
 
 ## Regole sui registri
 - Nei registri si aggiunge, non si cancella.

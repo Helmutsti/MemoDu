@@ -26,8 +26,17 @@ A chiunque partecipi al progetto: chi raccoglie i requisiti, chi progetta flussi
 ## Come si applica
 La guida si può applicare all'intero progetto, a un singolo modulo o a un'integrazione con un sistema esterno. Il team decide di volta in volta quali fasi e sezioni ripercorrere e con quale profondità, in base a ciò che il lavoro aggiunge o cambia.
 
+## Pacchetti e frammenti
+Un cambiamento attraversa le fasi come un **pacchetto**: nasce nei registri (un'idea `ID-` o una decisione `DEC-`), diventa uno o più requisiti e da lì percorre la Parte A. Un pacchetto si può dividere in **frammenti**, cioè gruppi di requisiti che attraversano le fasi con tempi diversi: per esempio i requisiti *Must* di una fase del progetto partono subito, i *Should* restano documentati ma si progettano dopo.
+
+- Ogni requisito indica nella sua riga di stato la **fase** in cui si trova, cioè la prossima fase da completare per lui (vedi il modello in Appendice).
+- Il **frammento** è l'unità a cui si applicano i criteri di completamento: una fase si dice completa *per quel frammento*.
+- Lo stato di ogni pacchetto e frammento si riassume in `docs/avanzamento.md` (vedi sotto).
+
 ## Come capire se una fase è completa
-Ogni fase termina con un **criterio di completamento**. Finché il criterio non è soddisfatto, passare alla fase successiva significa costruire su basi incerte. Se si decide di procedere comunque, va annotato cosa resta in sospeso.
+Ogni fase termina con un **criterio di completamento**. Finché il criterio non è soddisfatto, passare alla fase successiva significa costruire su basi incerte. Se si decide di procedere comunque, va annotato cosa resta in sospeso, in `docs/avanzamento.md`.
+
+Il criterio si valuta per frammento, non per tutto il progetto: "ogni requisito Must ha uno scenario" riguarda i requisiti del frammento che sta attraversando la fase.
 
 ## Convenzioni di codifica
 Ogni elemento riceve un codice univoco, da riportare ovunque venga richiamato. I codici rendono i collegamenti precisi, permettono di valutare l'impatto di una modifica, di verificare che nulla resti scoperto e di mantenere riferimenti stabili anche quando i titoli cambiano. Nei progetti molto piccoli possono essere semplificati o omessi.
@@ -55,6 +64,7 @@ Ogni elemento riceve un codice univoco, da riportare ovunque venga richiamato. I
 ├── CONTRIBUTING.md                    ← come si contribuisce
 └── docs/
     ├── guida-documentazione.md        ← questa guida (il metodo)
+    ├── avanzamento.md                 ← stato della documentazione: pacchetti, fasi, rinvii
     ├── generale/                      ← Fase 1 e parti comuni a tutto il progetto
     │   ├── visione.md
     │   ├── destinatari.md
@@ -68,7 +78,8 @@ Ogni elemento riceve un codice univoco, da riportare ovunque venga richiamato. I
     │   │   ├── 2-flussi.md            ← Fase 2
     │   │   ├── 3-entita.md            ← Fase 3
     │   │   ├── 4-schermate.md         ← Fasi 4 e 6 (link a wireframe e mockup)
-    │   │   └── 8-test.md              ← Fase 8 (piano di test, domande aperte)
+    │   │   ├── 8-test.md              ← Fase 8 (piano di test, domande aperte)
+    │   │   └── immagini/              ← esportazioni di wireframe e mockup (Fasi 4 e 6)
     │   └── nome-modulo/
     ├── design-system/                 ← Fase 5
     │   ├── moodboard.md
@@ -96,20 +107,38 @@ Nei moduli il numero del file indica la fase in cui il file nasce. I numeri manc
 | 1 – Requisiti | `generale/` (visione, destinatari, requisiti non funzionali, glossario) e `moduli/*/1-requisiti.md` |
 | 2 – Flussi logici | `moduli/*/2-flussi.md` e `generale/catalogo-sfighe.md` |
 | 3 – Entità | `moduli/*/3-entita.md` |
-| 4 – Wireframe | `moduli/*/4-schermate.md` |
+| 4 – Wireframe | `moduli/*/4-schermate.md`, con le esportazioni in `moduli/*/immagini/` |
 | 5 – Design System | `design-system/` |
-| 6 – Mockup | link in `moduli/*/4-schermate.md` |
+| 6 – Mockup | link ed esportazioni in `moduli/*/4-schermate.md` e `moduli/*/immagini/` |
 | 7 – Architettura | `architettura/` |
 | 8 – Handoff | criteri di accettazione in `moduli/*/1-requisiti.md`, `moduli/*/8-test.md`, `generale/definition-of-ready-done.md` |
 | 9 – Rilascio | `rilascio/` e `CHANGELOG.md` |
 | Parte B – Registri | `registri/` |
+| Stato della documentazione | `avanzamento.md` |
+
+## Lo stato della documentazione
+`docs/avanzamento.md` dice a che punto è la documentazione: per ogni pacchetto e frammento, quali fasi sono complete e quale viene dopo; e l'elenco unico di ciò che è stato **rinviato**, con la fase in cui va risolto e il documento in cui è annotato.
+
+- Non fa parte della fotografia né dei registri: descrive la documentazione, non il sistema. Si sovrascrive e le sue modifiche non si registrano nello storico.
+- Si aggiorna alla chiusura di ogni fase per un frammento, e ogni volta che qualcosa viene rinviato o risolto.
+- Chi riprende il lavoro, persona o agente, parte da qui.
+
+## Disegni: strumento di design e repository
+Wireframe, componenti visivi, mockup e prototipi (Fasi 4, 5 e 6) si disegnano in uno strumento di design (per esempio Figma), dove si possono modificare visivamente. La regola è: **il disegno vive nello strumento, nessuna decisione vive solo lì.**
+
+- Ogni frame riporta il codice della schermata (`SC-`) o del componente (`CMP-`) che rappresenta.
+- `moduli/*/4-schermate.md` contiene, per ogni schermata, il link al frame e tutto ciò che è una decisione: flussi, stati, testi, componenti usati.
+- A ogni revisione, un'esportazione in immagine di ogni schermata si salva in `moduli/*/immagini/` con il nome del codice (`SC-01.png`). Così il repository resta leggibile senza lo strumento e ogni versione resta nello storico di git.
+- I token del design system (Fase 5) vivono in `design-system/tokens.md` e vengono allineati alle variabili dello strumento.
+- Una scelta presa guardando i disegni diventa una regola, una decisione o una domanda aperta, come ogni altra.
 
 ## Cosa non va in questa documentazione
-La documentazione dice *cosa* costruire e *perché*. Chi fa cosa ed entro quando (task, scadenze, avanzamento dello sviluppo) vive nello strumento di gestione del progetto, collegato ai codici `RF-` e `FL-`. Duplicare quelle informazioni qui porta a contraddizioni.
+La documentazione dice *cosa* costruire e *perché*. Chi fa cosa ed entro quando (task, scadenze, avanzamento dello sviluppo) vive nello strumento di gestione del progetto, collegato ai codici `RF-` e `FL-`. Duplicare quelle informazioni qui porta a contraddizioni. Lo stato della *documentazione* (quali fasi sono complete per quali requisiti) è un'altra cosa e vive in `docs/avanzamento.md`.
 
 ## Manutenzione del documento
 - Ogni modifica alla fotografia si registra nei registri secondo le regole della **Parte B**.
 - Il catalogo delle sfighe si arricchisce nel tempo con i problemi incontrati davvero in test o in produzione.
+- `docs/avanzamento.md` si aggiorna alla chiusura di ogni fase e a ogni rinvio.
 
 ---
 
@@ -454,7 +483,7 @@ Raccoglie tutte le proposte, prima che diventino requisiti.
 **Regole**
 - Chiunque può proporre un'idea.
 - Il registro si rivede periodicamente, con una cadenza decisa dal team.
-- Un'idea accettata diventa uno o più `RF-`, e la colonna "posizione" indica in quale fase della Parte A si trova.
+- Un'idea accettata diventa uno o più `RF-`, e la colonna "posizione" ne elenca i codici. La fase in cui si trova ciascuno è indicata nel requisito stesso.
 - Un'idea parcheggiata o rifiutata ha sempre un motivo. Per quelle parcheggiate si indica quando rivalutarle.
 
 **Completato quando:** nessuna idea resta in stato "Proposta" dopo una revisione.
@@ -481,7 +510,7 @@ Una riga per ogni modifica alla fotografia.
 ```markdown
 **RF-00 – Titolo** · Priorità: Must | Should | Could | Won't · Origine: ID-00, DEC-00
 Come *[ruolo]* voglio *[azione]* per *[beneficio]*.
-Flussi: FL-00 · Entità: EN-00 · Stato: In progettazione | Pronto | Implementato
+Flussi: FL-00 · Entità: EN-00 · Fase: 1…9 · Stato: In progettazione | Pronto | Implementato
 ```
 
 ## Registro idee

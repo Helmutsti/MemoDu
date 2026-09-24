@@ -77,3 +77,6 @@
 | 24/09/2026 | Manuel Cucca | EN-07 Impostazioni; RB-52 impostazioni sincronizzate, scorciatoia per piattaforma | Risposta alla domanda su EN-07 |
 | 24/09/2026 | Manuel Cucca | EN-08 Avviso, aggiunto al diagramma ER; RB-53 avvisi sincronizzati | Risposta alla domanda su EN-08 |
 | 24/09/2026 | Manuel Cucca | Collegamenti dei requisiti alle entità EN-01…EN-08 | Fase 3 |
+| 24/09/2026 | Manuel Cucca | Guida: pacchetti e frammenti, fase in ogni requisito, stato della documentazione (`docs/avanzamento.md`), regole per i disegni; aggiornati modello dei requisiti, AGENTS.md, README.md e CONTRIBUTING.md | DEC-09 |
+| 24/09/2026 | Manuel Cucca | Fase indicata in tutti i requisiti (4 per i Must, 1 per gli Should); posizione di ID-09 e ID-10 espressa come codici dei requisiti | DEC-09 |
+| 24/09/2026 | Manuel Cucca | Due deduzioni da confermare aggiunte alle domande aperte del modulo note (EN-02, RF-02) | DEC-09 |

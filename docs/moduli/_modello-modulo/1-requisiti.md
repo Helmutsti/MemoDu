@@ -3,7 +3,7 @@
 <!-- Fase 1 della guida, con i criteri di accettazione della Fase 8. Copia il blocco per ogni requisito. -->
 
 ## RF-00 – [Titolo]
-**Priorità:** Must | Should | Could | Won't · **Origine:** ID-00, DEC-00 · **Stato:** In progettazione | Pronto | Implementato
+**Priorità:** Must | Should | Could | Won't · **Origine:** ID-00, DEC-00 · **Fase:** 1…9 · **Stato:** In progettazione | Pronto | Implementato
 
 Come *[ruolo]* voglio *[azione]* per *[beneficio]*.
 

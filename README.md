@@ -24,6 +24,7 @@ La documentazione del progetto si trova in [`docs/`](docs/) e segue il metodo de
 - **Design system:** [`docs/design-system/`](docs/design-system/)
 - **Architettura e ambienti:** [`docs/architettura/`](docs/architettura/)
 - **Idee, decisioni e storico:** [`docs/registri/`](docs/registri/)
+- **A che punto siamo:** [`docs/avanzamento.md`](docs/avanzamento.md)
 
 ## Contribuire
 Leggi [`CONTRIBUTING.md`](CONTRIBUTING.md). Se usi un agente IA, le sue istruzioni sono in [`AGENTS.md`](AGENTS.md).

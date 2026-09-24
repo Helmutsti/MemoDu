@@ -22,3 +22,5 @@
 | RF-03 | Il testo alternativo delle immagini non è stato scelto, ma WCAG 2.1 AA (RNF-04) lo richiede: va aggiunto? | Manuel Cucca | Sì: di default il nome del file, modificabile nelle impostazioni dell'immagine | |
 | RF-03 | Dimensione, allineamento e ritaglio non sono previsti dal markdown standard: come si salvano senza rompere l'esportazione (RF-13)? Da decidere in Fase 7 | | | |
 | RF-03 | Il ritaglio e la rotazione modificano l'immagine originale o si possono annullare in seguito? (Principio: nessun dato perso, DEC-06) | Manuel Cucca | No: sono reversibili, l'originale resta intatto | |
+| EN-02 | Eliminando una nota, le sue immagini la seguono nel cestino e tornano con lei se viene ripristinata? (Deduzione da confermare) | | | |
+| RF-02 | Il comando Annulla (Ctrl+Z / Cmd+Z) vale per tutte le modifiche della nota aperta, non solo per le immagini tolte (RB-46)? (Deduzione da confermare) | | | |
