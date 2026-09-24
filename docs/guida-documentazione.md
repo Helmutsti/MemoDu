@@ -68,7 +68,7 @@ Ogni elemento riceve un codice univoco, da riportare ovunque venga richiamato. I
     │   │   ├── 2-flussi.md            ← Fase 2
     │   │   ├── 3-entita.md            ← Fase 3
     │   │   ├── 4-schermate.md         ← Fasi 4 e 6 (link a wireframe e mockup)
-    │   │   └── 5-test.md              ← Fase 8 (piano di test, domande aperte)
+    │   │   └── 8-test.md              ← Fase 8 (piano di test, domande aperte)
     │   └── nome-modulo/
     ├── design-system/                 ← Fase 5
     │   ├── moodboard.md
@@ -88,6 +88,21 @@ Ogni elemento riceve un codice univoco, da riportare ovunque venga richiamato. I
             ├── _modello.md
             └── DEC-01-titolo.md
 ```
+
+Nei moduli il numero del file indica la fase in cui il file nasce. I numeri mancanti (5, 6, 7) sono le fasi che valgono per tutto il progetto e quindi vivono fuori dai moduli.
+
+| Fase | Dove scrive |
+|---|---|
+| 1 – Requisiti | `generale/` (visione, destinatari, requisiti non funzionali, glossario) e `moduli/*/1-requisiti.md` |
+| 2 – Flussi logici | `moduli/*/2-flussi.md` e `generale/catalogo-sfighe.md` |
+| 3 – Entità | `moduli/*/3-entita.md` |
+| 4 – Wireframe | `moduli/*/4-schermate.md` |
+| 5 – Design System | `design-system/` |
+| 6 – Mockup | link in `moduli/*/4-schermate.md` |
+| 7 – Architettura | `architettura/` |
+| 8 – Handoff | criteri di accettazione in `moduli/*/1-requisiti.md`, `moduli/*/8-test.md`, `generale/definition-of-ready-done.md` |
+| 9 – Rilascio | `rilascio/` e `CHANGELOG.md` |
+| Parte B – Registri | `registri/` |
 
 ## Cosa non va in questa documentazione
 La documentazione dice *cosa* costruire e *perché*. Chi fa cosa ed entro quando (task, scadenze, avanzamento dello sviluppo) vive nello strumento di gestione del progetto, collegato ai codici `RF-` e `FL-`. Duplicare quelle informazioni qui porta a contraddizioni.

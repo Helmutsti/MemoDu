@@ -41,3 +41,4 @@
 | 24/09/2026 | Manuel Cucca | Destinatari: persona della prima fase | Risposta alla domanda sulle personas |
 | 24/09/2026 | Manuel Cucca | RF-07: confermato Should, nella prima fase si separano gli ambiti con le cartelle | Revisione dopo la persona |
 | 24/09/2026 | Manuel Cucca | RNF-03, RNF-05, RNF-07 compilati | Risposta alla domanda sugli ultimi requisiti non funzionali |
+| 24/09/2026 | Manuel Cucca | Rinominato `5-test.md` in `8-test.md` in tutti i moduli; aggiunta nella guida la tabella "Fase → dove scrive" | Il numero del file ora coincide con la fase che lo genera |
