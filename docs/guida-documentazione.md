@@ -320,6 +320,8 @@ Organizzati su tre livelli:
 2. **Semantici:** il significato (`color-primary`, `color-danger`, `space-section`). I componenti usano questi.
 3. **Di componente** (opzionali): `button-padding`, `card-radius`.
 
+Il livello semantico vale per ogni categoria: colori, spazi, raggi, misure, ombre, durate. Un primitivo usato direttamente da un componente è una domanda aperta: o trova il suo semantico o diventa una regola visiva che lo giustifica. Gli spazi semantici nascono da un inventario dei ruoli (dentro un gruppo, tra blocchi, tra gruppi, bordo dei contenitori), non dai numeri.
+
 Categorie tipiche: colore, tipografia (scala di dimensioni, pesi, interlinea), spaziatura, raggi, ombre ed elevazione (legate ai livelli z-index della Fase 4), bordi, durate delle animazioni, breakpoint.
 
 Per ogni coppia colore/sfondo si verifica il contrasto: almeno **WCAG AA**, cioè 4.5:1 per il testo normale.
@@ -337,7 +339,7 @@ Per ogni componente la documentazione include:
 - esempi d'uso corretti e scorretti.
 
 **Output:** libreria di token e componenti documentata.
-**Completata quando:** tutte le schermate della Fase 4 si possono costruire usando solo componenti del sistema.
+**Completata quando:** tutte le schermate della Fase 4 si possono costruire usando solo componenti del sistema, e nessun componente usa un primitivo o un valore senza token.
 
 ---
 

@@ -48,3 +48,4 @@ Regole decise da Manuel Cucca dopo la scelta della direzione. Diventano token (r
 | 9 | **Modo scuro:** stessi grigi neutri e stessi ruoli, segue l'impostazione del sistema | Tutta l'interfaccia |
 | 10 | **Animazioni brevi:** dissolvenza di circa 120 ms con uno spostamento di 4 px; nessun movimento se il sistema chiede di ridurlo | Pillola, menu, pannelli, avvisi |
 | 11 | **Controlli distinguibili da ogni superficie:** un fondo di controllo non è mai uguale a una superficie su cui può comparire (nota, colonna, flottante), in chiaro e in scuro | Campi, ricerca, tag, pulsanti, hover, righe selezionate (tabella in `tokens.md`) |
+| 12 | **Spazi con un ruolo:** ogni spazio ha un ruolo e il ruolo ha un solo valore; i componenti usano il ruolo, mai il numero. Più il legame è stretto, meno spazio: 4 dentro un gruppo, 16 tra blocchi, 24 tra gruppi (DEC-21) | Tutti i componenti e le schermate (tabella in `tokens.md`) |

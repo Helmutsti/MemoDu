@@ -78,14 +78,33 @@ Il colore compare solo quando comunica uno stato. `<stato>` è `errore` (rosso),
 
 Il modo segue l'impostazione del sistema (regola 9).
 
+## Spazi (regola 12)
+I primitivi `spazio-4` … `spazio-48` (4, 8, 12, 16, 24, 32, 48) non si usano direttamente: sono nascosti nella libreria e i componenti usano solo i ruoli qui sotto (DEC-21). Più il legame è stretto, meno spazio c'è.
+
+| Token | Valore | Ruolo |
+|---|---|---|
+| `spazio-elemento` | 4 | Tra elementi dello stesso gruppo: voci di un elenco e della checklist, righe di un risultato, tag vicini, margine della pillola degli strumenti |
+| `spazio-icona-piccola` | 4 | Tra icona e testo nei controlli alti 24 (tag, filtri, campo nome nell'albero) |
+| `spazio-icona` | 8 | Tra icona e testo, e tra elementi affiancati o impilati che si leggono insieme (titolo e testo, filtri, pulsanti di una finestra, tag e data) |
+| `spazio-controllo-piccolo` | 8 | Margine interno dei controlli alti 24; margine verticale delle righe su più linee; lato di una riga che finisce con un controllo |
+| `spazio-controllo` | 12 | Margine interno di campi, righe della colonna e voci di menu |
+| `spazio-pulsante` | 16 | Margine interno orizzontale del pulsante |
+| `spazio-blocco` | 16 | Tra blocchi: paragrafi della nota, titolo e metadati, campi di un modulo, gruppi di un pannello, testo e controllo di una riga di impostazione |
+| `spazio-gruppo` | 24 | Tra sezioni e gruppi: sezioni della colonna, intestazione e testo della nota, margine dello stato vuoto |
+| `spazio-flottante` | 8 | Bordo di menu e pannelli a comparsa |
+| `spazio-contenitore` | 16 | Bordo della colonna e degli avvisi |
+| `spazio-finestra` | 24 | Bordo delle finestre di conferma |
+
+**Di componente:** `interruttore-margine-spento` (4) e `interruttore-margine-acceso` (2, con il primitivo `spazio-2`): centrano il pallino da 8 o 12 nel binario alto 16. Sono geometria del componente, non spazi tra elementi.
+
 ## Semantici · dimensioni e movimento
 | Token | Valore | Uso |
 |---|---|---|
-| `spazio-4` … `spazio-48` | 4, 8, 12, 16, 24, 32, 48 | Margini e distanze |
 | `raggio-pillola` | 999 | Controlli alti una riga (regola 1) |
 | `raggio-contenitore` | 20 | Menu, pannelli, finestre, immagini (regola 2) |
 | `raggio-interno` | 12 | Evidenziazione dei blocchi su più righe dentro un contenitore: concentrico (20 − 8 di margine) |
 | `misura-riga` | 32 | Righe della colonna e dei menu (regola 6) |
+| `misura-colonna` | 288 | Colonna sinistra al breakpoint largo: 16 px di margine ai lati e righe da 256 |
 | `misura-controllo-piccolo` | 24 | Controlli che stanno dentro una riga, come i tag |
 | `misura-icona` | 16 | Icone (regola 8) |
 | `tratto-icona` | 1,5 | Spessore delle icone di linea |
@@ -115,7 +134,8 @@ Un solo carattere: **Inter**.
 | `nota-corpo` | 15 | Regular | 1,6 | Testo della nota |
 | `interfaccia-normale` | 13 | Regular | 1,4 | Righe, voci di menu, campi |
 | `interfaccia-media` | 13 | Medium | 1,4 | Riga selezionata, pulsanti |
-| `interfaccia-etichetta` | 11 | Medium | 1,3 | Titoli di sezione della colonna |
+| `interfaccia-etichetta` | 11 | Medium | 1,3 | Etichette dei campi, giorni della settimana, titoli di gruppo delle impostazioni |
+| `interfaccia-titolo-sezione` | 11 | Semi Bold, maiuscolo, spaziatura 6% | 1,3 | Titoli di sezione della colonna (Non organizzate, Cartelle) |
 | `interfaccia-piccola` | 11 | Regular | 1,3 | Date, dettagli |
 
 ## Ombre ed elevazione
