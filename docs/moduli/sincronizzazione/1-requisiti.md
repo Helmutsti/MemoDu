@@ -3,7 +3,7 @@
 <!-- Fase 1 della guida, con i criteri di accettazione della Fase 8. Copia il blocco per ogni requisito. -->
 
 ## RF-10 – Sincronizzazione cloud cifrata end-to-end
-**Priorità:** Must · **Origine:** DEC-01, DEC-02, DEC-06, DEC-13 · **Fase:** 5 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** DEC-01, DEC-02, DEC-06, DEC-13 · **Fase:** 6 · **Stato:** In progettazione
 
 Come *utente* voglio che tutte le mie note siano sincronizzate nel cloud con cifratura end-to-end per avere l'intera struttura a disposizione su ogni dispositivo, senza che altri possano leggerla.
 
@@ -24,7 +24,7 @@ Lavoro su due dispositivi e ognuno accumula modifiche e nuove note. Se entrambi 
 ---
 
 ## RF-14 – Collegamento all'installazione
-**Priorità:** Must · **Origine:** DEC-05, DEC-13 · **Fase:** 5 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** DEC-05, DEC-13 · **Fase:** 6 · **Stato:** In progettazione
 
 Come *utente* voglio che Memodu si colleghi da solo alla mia installazione per sincronizzare le note senza dover mai accedere.
 

@@ -166,3 +166,4 @@
 | 25/09/2026 | Manuel Cucca | Frammento Must: mockup della Fase 6 in pausa (rinvio), avviata la Fase 7 in parallelo, come la guida permette | Scelta di Manuel Cucca: ragionare sulle tecnologie |
 | 25/09/2026 | Manuel Cucca | Architettura: app desktop Tauri 2, server Node con TypeScript, archivio del server su file system. Rinviati alla Fase 7: framework dell'interfaccia, database locale, cifratura, API e sincronizzazione, organizzazione dei file, hosting | DEC-23, DEC-24, DEC-25 |
 | 25/09/2026 | Manuel Cucca | Ambienti: per ora il server gira sulla macchina di sviluppo con l'archivio su file (ambiente Locale); hosting definitivo rinviato alla Fase 8 | Scelta di Manuel Cucca, DEC-25 |
+| 25/09/2026 | Manuel Cucca | Nuovo frammento Must A · Scrivere in locale (RF-01, RF-02), staccato dal Must per arrivare prima alla Definition of Ready e iniziare il codice; gli altri requisiti Must restano nel frammento Must. Requisiti Must in Fase 6 | Scelta di Manuel Cucca |

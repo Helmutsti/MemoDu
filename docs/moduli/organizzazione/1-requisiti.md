@@ -5,7 +5,7 @@
 L'organizzazione è un effetto secondario della scrittura: l'utente ha piena libertà su come organizzare le proprie note.
 
 ## RF-05 – Struttura di cartelle
-**Priorità:** Must · **Origine:** ID-15 · **Fase:** 5 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** ID-15 · **Fase:** 6 · **Stato:** In progettazione
 
 Come *utente* voglio organizzare le note in un albero di cartelle per dare loro una collocazione fisica.
 
@@ -24,7 +24,7 @@ Condiviso con RF-04 e RF-06: Scrivo la nota. Le note non ancora organizzate comp
 ---
 
 ## RF-06 – Tag
-**Priorità:** Must · **Origine:** — · **Fase:** 5 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 6 · **Stato:** In progettazione
 
 Come *utente* voglio assegnare tag alle note per raggrupparle in modo trasversale alle cartelle.
 
@@ -45,7 +45,7 @@ Condiviso con RF-04 e RF-05: vedi lo scenario di RF-05.
 ---
 
 ## RF-15 – Cestino
-**Priorità:** Must · **Origine:** — · **Fase:** 5 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 6 · **Stato:** In progettazione
 
 Come *utente* voglio che le note e le cartelle eliminate finiscano in un cestino per poterle recuperare se ho sbagliato.
 
@@ -82,7 +82,7 @@ Nella prima fase la separazione tra ambiti si ottiene con le cartelle principali
 ---
 
 ## RF-08 – Ricerca e filtro
-**Priorità:** Must · **Origine:** — · **Fase:** 5 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 6 · **Stato:** In progettazione
 
 Come *utente* voglio cercare e filtrare le note per trovare subito quella che mi serve.
 
