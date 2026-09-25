@@ -249,3 +249,5 @@ La posizione di una nota (radice, cartella, cestino) è descritta nel diagramma 
 | RB-22 | Nei tag maiuscole e minuscole non contano (`Lavoro` e `lavoro` sono lo stesso tag, mostrato come è stato scritto la prima volta). Spazi, accenti ed emoji sono ammessi. I `/` all'inizio, alla fine o doppi si correggono in automatico | FL-04 |
 | RB-46 | Un'immagine tolta dal testo si recupera con Annulla (Ctrl+Z / Cmd+Z) finché la nota è aperta; chiusa la nota, l'immagine è cancellata definitivamente | FL-03 |
 | RB-47 | Copiando un'immagine da una nota a un'altra nasce un'immagine indipendente, con le sue impostazioni: un'immagine appartiene sempre a una sola nota | FL-03 |
+| RB-58 | Le immagini seguono la loro nota: eliminandola vanno nel cestino con lei, ripristinandola tornano, eliminandola definitivamente si cancellano | FL-03, FL-05 |
+| RB-59 | Annulla (Ctrl+Z / Cmd+Z) vale per tutte le modifiche della nota aperta: testo, formattazione, immagini e caselle. Non annulla le azioni fuori dalla nota (spostamenti, eliminazioni: per quelle c'è il cestino) | FL-02, FL-03 |

@@ -2,12 +2,12 @@
 
 <!-- Fasi 4 e 6 della guida. Wireframe e mockup restano nello strumento di design: qui si mettono i link. -->
 
-L'impostazione generale è in `moduli/interfaccia/4-schermate.md`. La sincronizzazione non ha schermate proprie: è invisibile finché va tutto bene (RB-40).
+L'impostazione generale è in `moduli/interfaccia/4-schermate.md`. La sincronizzazione è invisibile finché va tutto bene (RB-40). Ha una sola schermata propria, SC-07, quando le credenziali mancano o vengono rifiutate.
 
 ## Avvisi di sincronizzazione (FL-07)
 **Flussi:** FL-07 · **Componenti:** avviso
 
-- **Wireframe:** [i tre avvisi](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-130) · [nota in conflitto](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=32-147)
+- **Wireframe:** [i due avvisi](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-130) · [nota in conflitto](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=32-147)
 - **Esportazioni:** `immagini/SC-01-avvisi.png`
 
 In cima all'area della nota di SC-01, livello 50, uno alla volta:
@@ -15,11 +15,29 @@ In cima all'area della nota di SC-01, livello 50, uno alla volta:
 | Avviso | Quando | Azione |
 |---|---|---|
 | Server irraggiungibile | Oltre la soglia (indicativa 24 ore, RB-40) | Ho capito |
-| Credenziali rifiutate | Subito (SF-25) | Ho capito; la configurazione si corregge fuori dall'app (FL-08) |
 | Errore di sincronizzazione | Subito (SF-32) | Ho capito |
 | Nota in conflitto | Subito (RB-39) | Apri l'altra |
 
-Visto su un dispositivo, l'avviso sparisce su tutti (RB-53).
+Visto su un dispositivo, l'avviso sparisce su tutti (RB-53). Le credenziali rifiutate non sono un avviso: bloccano la finestra (SC-07).
+
+---
+
+## SC-07 – Collegamento bloccato
+**Flussi:** FL-08 · **Componenti:** stato vuoto (variante Blocco), pulsante
+
+- **Wireframe:** [collegamento bloccato](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=51-169)
+- **Esportazioni:** `immagini/SC-07.png`
+- **Mockup:** [Fase 6]
+
+Al posto della finestra principale e della nota rapida quando le credenziali mancano nel file di configurazione o il server le rifiuta (RB-57, DEC-20). Finestra vuota con, al centro, icona di errore, «Memodu non riesce a collegarsi», una riga che spiega cosa correggere e il pulsante Riprova. Senza rete non compare (DEC-02).
+
+### Stati della schermata
+| Stato | Descrizione | Testo mostrato |
+|---|---|---|
+| Vuoto | Non previsto | — |
+| Caricamento | Dopo Riprova, il pulsante in caricamento | — |
+| Errore | È la schermata stessa; se Riprova fallisce resta com'è | Testo definitivo in Fase 6 |
+| Successo | Credenziali accettate: si apre SC-01 | — |
 
 ---
 

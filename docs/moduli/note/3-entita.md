@@ -81,6 +81,6 @@ erDiagram
 
 - **Chi la crea:** l'utente (FL-03).
 - **Chi la modifica:** l'utente, dalle impostazioni dell'immagine.
-- **Cancellazione:** togliendola dal testo si recupera con Annulla finché la nota è aperta, poi è definitiva (RB-46). Eliminando la nota, le sue immagini la seguono nel cestino.
+- **Cancellazione:** togliendola dal testo si recupera con Annulla finché la nota è aperta, poi è definitiva (RB-46). Eliminando la nota, le sue immagini la seguono nel cestino e tornano con lei (RB-58).
 - **Copia:** copiata in un'altra nota diventa un'immagine indipendente (RB-47).
 - **Dati sensibili:** tutti gli attributi, file compreso, sono cifrati end-to-end (DEC-08).

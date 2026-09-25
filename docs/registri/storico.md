@@ -150,3 +150,6 @@
 | 25/09/2026 | Manuel Cucca | DEC-17: wireframe di SC-04 aggiornati con Elimina definitivamente; il pacchetto ha raggiunto la Fase 5 | Ciclo di vita dei pacchetti (DEC-18) |
 | 25/09/2026 | Manuel Cucca | Icone: restano in più tracciati; dopo uno scambio si ricolorano tutti i tracciati (chiusa la questione del colore) | Scelta di Manuel Cucca |
 | 25/09/2026 | Manuel Cucca | Design system: numero di note nelle righe di cartella e in Non organizzate (CMP-06, CMP-14, ID-15); variante Password di CMP-03 e nuovo CMP-22 Modulo di accesso (DEC-19); icona mostra (eye) | Fase 5 |
+| 25/09/2026 | Manuel Cucca | Deduzioni confermate: le immagini seguono la loro nota nel cestino, nel ripristino e nell'eliminazione definitiva (RB-58, EN-02); Annulla vale per tutte le modifiche della nota aperta (RB-59) | Risposta di Manuel Cucca |
+| 25/09/2026 | Manuel Cucca | DEC-20: con credenziali mancanti o rifiutate la finestra non si apre e compare la schermata di blocco SC-07 con Riprova; senza rete non si blocca. Nuova RB-57, FL-08 e RF-14 aggiornati, RB-40 ed EN-08 senza l'avviso di credenziali rifiutate; wireframe SC-07 e variante Blocco di CMP-19 | Deduzione di FL-08 non confermata da Manuel Cucca |
+| 25/09/2026 | Manuel Cucca | Design system: variante Azione di CMP-18 per la sezione Account di SC-06 (DEC-19); wireframe di SC-05 e SC-06 segnati come non attivi | DEC-19 |

@@ -70,7 +70,6 @@ Sono al centro della finestra, con un velo sul resto. L'azione principale sta a 
 | Sfiga | Testo definitivo |
 |---|---|
 | SF-30 Server irraggiungibile oltre la soglia | Fase 6 (RB-40) |
-| SF-25 Credenziali rifiutate | Fase 6 (RB-40) |
 | SF-32 Errore di sincronizzazione | Fase 6 (RB-40) |
 
 ---
@@ -96,7 +95,7 @@ Si apre dalla voce Impostazioni del menu `···`, al posto della nota, come il 
 |---|---|---|
 | Vuoto | Non previsto: ogni impostazione ha un valore di default | — |
 | Caricamento | Non previsto: le impostazioni sono sulla copia di lavoro | — |
-| Errore | Non previsto: senza account non ci sono credenziali da verificare (DEC-13) | — |
+| Errore | Non previsto nella prima versione: senza account non ci sono credenziali da verificare (DEC-13). Credenziali mancanti o rifiutate bloccano la finestra (SC-07) | — |
 | Successo | Nessun messaggio: il valore cambiato resta visibile | — |
 
 ---

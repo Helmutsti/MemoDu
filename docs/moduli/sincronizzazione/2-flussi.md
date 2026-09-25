@@ -44,7 +44,7 @@ flowchart TD
 | SF-08 Connessione che cade a metà | La sincronizzazione non si completa | Nessun messaggio, se dura poco | Riprova alla sincronizzazione successiva (DEC-02) |
 | SF-20 Riferimenti spariti | Nota creata o spostata in una cartella eliminata altrove | Nessun messaggio | La cartella torna dal cestino (RB-30) |
 | SF-22 Modifica simultanea | Lo stesso elemento cambiato su due dispositivi | Avviso solo per le note in conflitto (RB-39) | DEC-06, RB-36, RB-37, RB-38 |
-| SF-25 Accesso revocato | Il server rifiuta le credenziali | Avviso (RB-40) | Si controlla la configurazione dell'app (FL-08) |
+| SF-25 Accesso revocato | Il server rifiuta le credenziali | Schermata di blocco (RB-57) | Si corregge la configurazione dell'app (FL-08) |
 | SF-30 Servizio esterno fuori uso | Server irraggiungibile oltre la soglia | Avviso (RB-40) | Le modifiche restano sulla copia di lavoro finché il server non torna |
 | SF-31 Notifiche perse | Un conflitto avviene mentre l'utente non guarda | L'avviso resta finché non viene visto | La nota in conflitto resta nella cartella, riconoscibile dal titolo (DEC-06) |
 | SF-32 Errore a metà operazione | Errore durante l'invio o la ricezione | Avviso (RB-40) | Riprova alla sincronizzazione successiva; la copia di lavoro resta intatta |
@@ -66,15 +66,21 @@ flowchart TD
     A[Installo il server: si generano le credenziali dell'installazione - DEC-13] --> B[Installo l'app con le credenziali nel file di configurazione - RB-54]
     B --> C[Apro Memodu]
     C --> D[Le note sono subito disponibili sulla copia di lavoro - RNF-01]
+    C --> M{Le credenziali ci sono nel file?}
+    M -- No --> G
+    M -- Sì --> D
     D --> E{Il server accetta le credenziali?}
     E -- Sì --> F[La sincronizzazione parte in background - FL-07]
-    E -- No --> G[Avviso: credenziali rifiutate - RB-40]
-    G --> H[Si continua a scrivere sulla copia di lavoro; si corregge la configurazione fuori dall'app]
-    H --> C
+    E -- Server irraggiungibile --> R[Si continua sulla copia di lavoro - DEC-02]
+    E -- No --> G[Schermata di blocco al posto della finestra - RB-57, SC-07]
+    G --> H[Si corregge la configurazione fuori dall'app]
+    H --> I[Riprova]
+    I --> M
 ```
 
 ### Percorsi alternativi
-- **Credenziali mancanti o rifiutate:** nessuna schermata di accesso. Compare l'avviso "credenziali rifiutate" e si continua a scrivere sulla copia di lavoro (DEC-02); la configurazione si corregge fuori dall'app.
+- **Credenziali mancanti o rifiutate:** la finestra non si apre; al suo posto c'è la schermata di blocco con Riprova (RB-57, DEC-20). Se il rifiuto arriva con l'app aperta, anche la nota rapida passa alla schermata di blocco: quello che era scritto resta sulla copia di lavoro. La configurazione si corregge fuori dall'app.
+- **Server irraggiungibile:** non blocca; si lavora sulla copia di lavoro (DEC-02, RB-40).
 - **Credenziali perse:** il recupero è rimandato (domanda aperta su RF-10).
 - **Cambio delle credenziali:** come si fa si decide in Fase 7.
 
@@ -82,7 +88,7 @@ flowchart TD
 | Sfiga | Rilevamento | Comunicazione | Via d'uscita |
 |---|---|---|---|
 | SF-07 Dimenticanze | Credenziali perse | Da definire | Rimandato: blocca la Definition of Ready di RF-14 |
-| SF-25 Accesso revocato | Il server rifiuta le credenziali | Avviso (RB-40) | Si corregge la configurazione dell'app |
+| SF-25 Accesso revocato | Credenziali mancanti o rifiutate dal server | Schermata di blocco (SC-07, RB-57) | Si corregge la configurazione dell'app e si preme Riprova |
 
 ### Sfighe considerate e scartate
 - SF-01 Doppio invio: collegarsi due volte non crea nulla di diverso.
@@ -102,7 +108,7 @@ flowchart TD
 | RB-37 | Se una nota è stata spostata in cartelle diverse su due dispositivi, resta nella posizione più recente | FL-07 |
 | RB-38 | Se una cartella è stata rinominata in modo diverso su due dispositivi, prende il nome più recente; accanto nasce una cartella vuota con l'altro nome, come segnale del conflitto | FL-07 |
 | RB-39 | Quando nasce una nota in conflitto (DEC-06) compare un avviso con il collegamento alla nota. La nota in conflitto ha lo stesso titolo seguito da "(copia in conflitto)" | FL-07 |
-| RB-40 | La sincronizzazione è invisibile finché va tutto bene. Compare un avviso solo per: errore di sincronizzazione (subito), credenziali rifiutate (subito), server irraggiungibile oltre una soglia (valore indicativo 24 ore, da fissare in Fase 7) | FL-07 |
+| RB-40 | La sincronizzazione è invisibile finché va tutto bene. Compare un avviso solo per: errore di sincronizzazione (subito), server irraggiungibile oltre una soglia (valore indicativo 24 ore, da fissare in Fase 7) | FL-07 |
 | RB-41 | ~~Uscendo (logout), le modifiche in attesa vengono sincronizzate e poi la copia di lavoro su quel dispositivo viene cancellata~~ Superata da DEC-13 | — |
 | RB-42 | ~~Non c'è limite ai tentativi di accesso con password sbagliata (rischio accettato, DEC-07)~~ Superata da DEC-13 | — |
 | RB-43 | ~~La password non ha requisiti di lunghezza o complessità (rischio accettato, DEC-07)~~ Superata da DEC-13 | — |
@@ -111,3 +117,4 @@ flowchart TD
 | RB-51 | Il nome di un dispositivo viene preso dal sistema (es. nome del PC) e si può cambiare dalle impostazioni | FL-07, FL-08 |
 | RB-53 | Gli avvisi si sincronizzano: compaiono su tutti i dispositivi e, visti su uno, non si mostrano più su nessuno | FL-07 |
 | RB-54 | Un dispositivo si collega all'installazione con le credenziali scritte nel file di configurazione dell'app all'installazione: non ci sono login, email, password né uscita (DEC-13) | FL-08 |
+| RB-57 | Con credenziali mancanti nel file di configurazione, o rifiutate dal server, la finestra principale e la nota rapida non si aprono: al loro posto c'è la schermata di blocco con Riprova, che rilegge la configurazione. Il server irraggiungibile non blocca (DEC-02). Quello che era scritto resta sulla copia di lavoro (DEC-20) | FL-08 |

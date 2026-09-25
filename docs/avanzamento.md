@@ -11,7 +11,7 @@ Perimetro: solo cloud, un solo utente, installazione personale con credenziali p
 
 | Frammento | Requisiti | Fasi complete | Prossima fase | Note |
 |---|---|---|---|---|
-| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4 | 5 – Design system | Fase 4 completata (SC-01 … SC-06, wireflow cliccabile, test rapido fatto). Fase 5 quasi completa: moodboard e direzione C (DEC-12), regole visive 1–11, token in chiaro e scuro con contrasti verificati (DEC-14, DEC-16), icone Lucide (DEC-15), tutti i componenti CMP-01 … CMP-21 disegnati e documentati. Componenti approvati da Manuel Cucca (le deduzioni sui componenti valgono come regole). Per chiuderla: due decisioni aperte (allineamento nel tag, icona su Elimina). Nel frattempo sono arrivati in Fase 5: ID-15 (numero di note), DEC-17 (elimina definitivamente), DEC-19 (accesso progettato: CMP-22 e variante Password) |
+| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4 | 5 – Design system | Fase 4 completata (SC-01 … SC-06, wireflow cliccabile, test rapido fatto). Fase 5 quasi completa: moodboard e direzione C (DEC-12), regole visive 1–11, token in chiaro e scuro con contrasti verificati (DEC-14, DEC-16), icone Lucide (DEC-15), tutti i componenti CMP-01 … CMP-21 disegnati e documentati. Componenti approvati da Manuel Cucca (le deduzioni sui componenti valgono come regole). Per chiuderla: due decisioni aperte (allineamento nel tag, icona su Elimina). Nel frattempo sono arrivati in Fase 5: ID-15 (numero di note), DEC-17 (elimina definitivamente), DEC-19 (accesso progettato: CMP-22, variante Password, riga Account di CMP-18), DEC-20 (schermata di blocco SC-07, variante Blocco di CMP-19) |
 | Should | RF-07, RF-09, RF-12, RF-13, RF-16 | — | 1 – Requisiti | Mancano gli scenari d'uso |
 
 ### Idee parcheggiate
@@ -46,11 +46,7 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 ## Deduzioni da confermare
 Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui non valgono come regole.
 
-| Deduzione | Riguarda | Dove è annotata |
-|---|---|---|
-| Eliminando una nota, le sue immagini la seguono nel cestino | EN-02 | `moduli/note/8-test.md` |
-| Il comando Annulla vale per tutte le modifiche della nota aperta | RF-02 | `moduli/note/8-test.md` |
-| Con credenziali mancanti o rifiutate l'app funziona lo stesso sulla copia di lavoro, e mostra solo l'avviso | FL-08, DEC-13 | `moduli/sincronizzazione/2-flussi.md` |
+Nessuna: le ultime tre sono state confermate (RB-58, RB-59) o superate da DEC-20.
 
 ## Rischi accettati
 | Rischio | Decisione | Da rivedere |

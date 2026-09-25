@@ -31,9 +31,10 @@ Come *utente* voglio che Memodu si colleghi da solo alla mia installazione per s
 - L'installazione è personale: un solo utente e nessuna registrazione pubblica (DEC-05, DEC-13).
 - Installando il server si generano le credenziali dell'installazione; si scrivono nel file di configurazione dell'app quando la si installa (RB-54).
 - Non esistono schermate di accesso, email, password né comandi di uscita. L'avvio resta istantaneo (RNF-01).
+- Con credenziali mancanti o rifiutate Memodu non si apre: compare una schermata di blocco con Riprova. Senza rete invece si lavora come sempre (RB-57, DEC-20).
 - Il recupero delle credenziali perse è rimandato (vedi domande aperte su RF-10).
 
-**Collegamenti:** FL-08 · EN-05 · EN-06 · SC-00 · RF-10 · RNF-02
+**Collegamenti:** FL-08 · EN-05 · EN-06 · SC-07 · RF-10 · RNF-02
 
 ### Scenario d'uso
 Installo Memodu sul mio server e ottengo le credenziali dell'installazione. Installo l'app sul PC Windows con quelle credenziali: la apro e le mie note si sincronizzano, senza accedere. Faccio lo stesso sul Mac.

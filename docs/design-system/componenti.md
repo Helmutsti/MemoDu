@@ -658,15 +658,16 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 ---
 
 ## CMP-18 – Riga di impostazione
-**Tipo:** composto (usa CMP-03 e CMP-04) · **Usato in:** SC-06 · **Figma:** pagina Componenti composti, [Riga di impostazione](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=74-2255)
+**Tipo:** composto (usa CMP-01, CMP-03 e CMP-04) · **Usato in:** SC-06 · **Figma:** pagina Componenti composti, [Riga di impostazione](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=74-2255)
 
 **Scopo:** una preferenza, con il suo controllo.
-**Quando usarlo:** in SC-06, una riga per impostazione, raggruppate sotto un titolo (Generale, Ricerca, Dispositivo).
+**Quando usarlo:** in SC-06, una riga per impostazione, raggruppate sotto un titolo (Generale, Ricerca, Dispositivo, Account).
 **Quando non usarlo:** per azioni (pulsante) o per informazioni non modificabili.
 
 ### Varianti e dimensioni
 - **Interruttore:** etichetta (Interfaccia/Normale) e descrizione (Interfaccia/Piccola, `testo-tenue`) a sinistra, interruttore (CMP-04) a destra; tutta la riga si clicca.
 - **Campo:** come sopra, con un campo (CMP-03, largo 200) a destra, es. la scorciatoia della nota rapida o il nome del dispositivo.
+- **Azione:** etichetta e valore (in `testo-tenue`) a sinistra, pulsante secondario (CMP-01) a destra, es. Email con Cambia o Esci. Serve alla sezione Account, progettata ma non attiva (DEC-19). Si attiva solo il pulsante, come il campo.
 - **Titolo di gruppo:** Interfaccia/Etichetta in `testo-tenue`, alto 32.
 - Largo 560, margini 12, 16 tra testo e controllo, su `sfondo-nota`.
 
@@ -692,16 +693,17 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 ---
 
 ## CMP-19 – Stato vuoto
-**Tipo:** composto (usa CMP-01 e CMP-02) · **Usato in:** SC-01, SC-03, SC-04 · **Figma:** pagina Componenti composti, [Stato vuoto](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=75-2292)
+**Tipo:** composto (usa CMP-01 e CMP-02) · **Usato in:** SC-01, SC-03, SC-04, SC-07 · **Figma:** pagina Componenti composti, [Stato vuoto](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=75-2292)
 
 **Scopo:** spiegare perché non c'è niente e cosa fare, al posto di un'area vuota (SF-16).
 **Quando usarlo:** nessuna nota aperta, cestino vuoto, nessuna cartella.
-**Quando non usarlo:** per la ricerca senza risultati (è nella card, CMP-13) o per gli errori (avviso, CMP-15).
+**Quando non usarlo:** per la ricerca senza risultati (è nella card, CMP-13) o per gli errori che non bloccano (avviso, CMP-15).
 
 ### Varianti e dimensioni
 - **Nota:** icona `file-text` 24, «Nessuna nota aperta», spiegazione e il pulsante primario «Nuova nota».
 - **Cestino:** icona elimina 24, «Il cestino è vuoto», spiegazione, senza azioni (niente Svuota cestino).
 - **Colonna:** una riga Interfaccia/Piccola in `testo-tenue`, «Nessuna cartella. Creane una con +».
+- **Blocco:** al posto della finestra quando le credenziali mancano o vengono rifiutate (SC-07, DEC-20). Icona errore 24 in `icona-errore`, «Memodu non riesce a collegarsi», cosa correggere e il pulsante primario «Riprova».
 - Icona in `icona-tenue`, titolo Interfaccia/Media, testo Interfaccia/Normale in `testo-tenue`, centrati, largo 320, 8 px di distanza.
 - I testi sono esempi nel tono di voce; quelli definitivi si scrivono in Fase 6.
 

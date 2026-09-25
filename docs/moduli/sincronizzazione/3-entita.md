@@ -41,7 +41,7 @@ Il diagramma di tutto il sistema è in `moduli/note/3-entita.md`.
 | Attributo | Tipo | Obbligatorio | Vincoli | Note |
 |---|---|---|---|---|
 | Identificativo | Codice | Sì | Unico e stabile | Tecnico, non visibile |
-| Tipo | nota in conflitto \| errore di sincronizzazione \| credenziali rifiutate \| server irraggiungibile | Sì | | RB-39, RB-40 |
+| Tipo | nota in conflitto \| errore di sincronizzazione \| server irraggiungibile | Sì | | RB-39, RB-40. Le credenziali rifiutate non sono un avviso: bloccano la finestra (RB-57) |
 | Nota collegata | EN-01 | No | Solo per il tipo "nota in conflitto" | Il collegamento dell'avviso (RB-39) |
 | Dispositivo | EN-06 | Sì | | Il dispositivo su cui è nato il problema |
 | Data | Data e ora | Sì | | |
