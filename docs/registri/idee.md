@@ -20,3 +20,7 @@
 | ID-12 | Servizio gestito aperto al pubblico, per utenti senza competenze tecniche | Manuel Cucca | 24/09/2026 | Parcheggiata | — | La prima fase è un'installazione personale (DEC-05). È l'obiettivo finale descritto nei destinatari: da rivalutare a fine prima fase, insieme a ID-05 |
 | ID-13 | Preferenza nelle impostazioni per scegliere come incollare il testo formattato (testo semplice o conversione in markdown) | Manuel Cucca | 24/09/2026 | Parcheggiata | — | Nella prima fase si incolla sempre come testo semplice (RB-07). Da riprendere dopo la prima fase |
 | ID-14 | Allegare file diversi dalle immagini (PDF, documenti...) | Manuel Cucca | 24/09/2026 | Parcheggiata | — | Nella prima fase solo immagini (RB-11). Da rivalutare dopo la prima fase |
+| ID-15 | Numero di note accanto a ogni cartella e alle Non organizzate, nella colonna | Manuel Cucca (moodboard, DEC-11) | 25/09/2026 | Proposta | — | — |
+| ID-16 | Colore o icona scelti dall'utente per ogni cartella | Manuel Cucca (moodboard, DEC-11) | 25/09/2026 | Proposta | — | — |
+| ID-17 | Sezione Tag nella colonna, per filtrare le note con un clic | Manuel Cucca (moodboard, DEC-11) | 25/09/2026 | Proposta | — | — |
+| ID-18 | Cestino sempre visibile in fondo alla colonna (oggi compare solo durante il trascinamento e si apre dal menu ···) | Manuel Cucca (moodboard, DEC-11) | 25/09/2026 | Proposta | — | — |

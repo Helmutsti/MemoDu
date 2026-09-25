@@ -11,11 +11,11 @@ Perimetro: solo cloud, un solo utente, installazione personale (DEC-01, DEC-05);
 
 | Frammento | Requisiti | Fasi complete | Prossima fase | Note |
 |---|---|---|---|---|
-| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4 | 5 – Design system | Fase 4 completata: SC-01 … SC-06 con i loro stati e wireflow cliccabile per FL-01 … FL-09 (prototipo Figma). Test rapido non fatto. La Fase 5 parte dal moodboard |
+| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4 | 5 – Design system | Fase 4 completata: SC-01 … SC-06 con i loro stati e wireflow cliccabile per FL-01 … FL-09 (prototipo Figma). Test rapido non fatto. Fase 5 in corso: moodboard fatto, direzione C · Essenziale originale con grigi neutri (DEC-12), regole visive e token fatti (chiaro e scuro, contrasti verificati); prossimi i componenti |
 | Should | RF-07, RF-09, RF-12, RF-13, RF-16 | — | 1 – Requisiti | Mancano gli scenari d'uso |
 
 ### Idee parcheggiate
-Da rivalutare a fine prima fase: ID-01, ID-03, ID-04, ID-05, ID-06, ID-11, ID-12, ID-13, ID-14. Dettagli in `registri/idee.md`.
+Da rivalutare a fine prima fase: ID-01, ID-03, ID-04, ID-05, ID-06, ID-11, ID-12, ID-13, ID-14. In stato Proposta, da valutare a fine prima fase: ID-15, ID-16, ID-17, ID-18 (dal moodboard, DEC-11). Dettagli in `registri/idee.md`.
 
 ## Rinvii
 Tutto ciò che è stato rimandato, con la fase in cui va risolto.
@@ -50,4 +50,4 @@ Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui
 | Una volta usciti dal browser senza rete, le modifiche si sincronizzano solo riaprendo Memodu in quel browser | RB-44 | Con RF-16 |
 
 ## Strumenti
-- **Disegni (Fasi 4–6):** Figma (DEC-10), secondo la sezione "Disegni" della guida. Account `manuc.1297@gmail.com`, piano **Il mio team solitario** (posto Full, l'unico con permessi di scrittura). File di lavoro: [Memodu – Wireframe (Fase 4)](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK). Componenti da wireframe (solo struttura, niente token): [Memodu – Wireframe UI (libreria)](https://www.figma.com/design/TzpeVsSZCJDBOyb8TkaJ69).
+- **Disegni (Fasi 4–6):** Figma (DEC-10), secondo la sezione "Disegni" della guida. Account `manuc.1297@gmail.com`, piano **Il mio team solitario** (posto Full, l'unico con permessi di scrittura). File di lavoro: [Memodu – Wireframe (Fase 4)](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK). Componenti da wireframe (solo struttura, niente token): [Memodu – Wireframe UI (libreria)](https://www.figma.com/design/TzpeVsSZCJDBOyb8TkaJ69). Fase 5 (moodboard, direzioni, poi token e componenti): [Memodu – Design system](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE).
