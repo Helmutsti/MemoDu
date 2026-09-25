@@ -33,6 +33,18 @@ Un cambiamento attraversa le fasi come un **pacchetto**: nasce nei registri (un'
 - Il **frammento** è l'unità a cui si applicano i criteri di completamento: una fase si dice completa *per quel frammento*.
 - Lo stato di ogni pacchetto e frammento si riassume in `docs/avanzamento.md` (vedi sotto).
 
+### Ciclo di vita di un pacchetto
+Ogni pacchetto segue lo stesso giro, e può fermarsi a ogni passo:
+
+1. **Nasce nel registro idee**, da cui tutto parte.
+2. **Viene valutato:** diventa una decisione o dei requisiti, oppure si ferma (parcheggiato o rifiutato). La valutazione può essere leggera: se serve un tasto, si aggiunge.
+3. **Attraversa le fasi.** Lungo il percorso può dividersi:
+   - se un pezzo cambia *cosa* si vuole, torna nel registro idee come idea nuova, indicando il pacchetto da cui viene;
+   - se cambia solo *quando* si fa, resta dov'è come rinvio in `docs/avanzamento.md`, con la fase entro cui riprenderlo.
+4. **Un rinvio, quando il progetto raggiunge la sua fase, torna in valutazione:** si risolve, si rinvia di nuovo o diventa un'idea.
+
+Una decisione presa non si modifica: se ci si ripensa, se ne scrive una nuova che la supera. Ogni pacchetto che si ferma, a qualsiasi passo, resta scritto con il suo motivo, così nessun pezzo si perde.
+
 ## Come capire se una fase è completa
 Ogni fase termina con un **criterio di completamento**. Finché il criterio non è soddisfatto, passare alla fase successiva significa costruire su basi incerte. Se si decide di procedere comunque, va annotato cosa resta in sospeso, in `docs/avanzamento.md`.
 
