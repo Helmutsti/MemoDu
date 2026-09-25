@@ -136,6 +136,7 @@ stateDiagram-v2
 | RB-31 | Se creando, rinominando o spostando una cartella il nome esiste già nella destinazione, compare un avviso con tre scelte: aggiungere un numero (es. "Idee (2)"), unire le due cartelle o annullare. Unendo due cartelle, per ogni sottocartella con lo stesso nome ricompare lo stesso avviso | FL-05 |
 | RB-32 | Svuotare il cestino chiede una conferma prima dell'eliminazione definitiva | FL-05 |
 | RB-55 | Nel cestino un singolo elemento si può eliminare per sempre con "Elimina definitivamente"; prima si chiede conferma, indicando il nome e, per una cartella, quante note contiene (DEC-17) | FL-05 |
+| RB-56 | Accanto a ogni cartella e alla sezione Non organizzate si mostra il numero di note che contiene, sottocartelle comprese; le note nel cestino non contano. Il numero si aggiorna subito (ID-15) | FL-05 |
 | RB-33 | La ricerca parte mentre si scrive, dopo una brevissima pausa, senza premere Invio | FL-06 |
 | RB-34 | I risultati si ordinano per pertinenza: prima le note con la parola nel titolo o nei tag, poi quelle con la parola solo nel testo. La card a discesa li mostra tutti e si scorre | FL-06 |
 | RB-35 | Senza risultati la card resta aperta con il messaggio "Nessuna nota trovata" | FL-06 |

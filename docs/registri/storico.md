@@ -143,3 +143,10 @@
 | 25/09/2026 | Manuel Cucca | Requisiti Must: fase aggiornata da 4 a 5 (la Fase 4 è completa) | Coerenza con avanzamento.md |
 | 25/09/2026 | Manuel Cucca | DEC-18: ciclo di vita dei pacchetti (registro idee, valutazione, viaggio lungo le fasi; i pezzi staccati tornano idee o restano rinvii; un rinvio raggiunto torna in valutazione). Nuovo paragrafo nella guida | Proposta di Manuel Cucca guardando la mappa dei pacchetti |
 | 25/09/2026 | Manuel Cucca | Guida allineata alla pratica: stati delle idee (Proposta, Accettata, Parcheggiata, Rifiutata; dopo l'accettazione il percorso lo segue il requisito), idee staccate da un pacchetto con il codice d'origine, storico che registra anche design system e metodo e si scrive per essere letto, deduzioni da confermare e rischi accettati descritti nello stato della documentazione | DEC-18 |
+| 25/09/2026 | Manuel Cucca | Eliminata la libreria Figma "Memodu – Wireframe UI" | Scelta di Manuel Cucca: la libreria del progetto è il file Design system |
+| 25/09/2026 | Manuel Cucca | ID-15 accettata: numero di note accanto a ogni cartella e a Non organizzate, sottocartelle comprese (RF-05, nuova RB-56, SC-01; wireframe aggiornati) | Scelta di Manuel Cucca |
+| 25/09/2026 | Manuel Cucca | ID-17 rifiutata: il filtro per tag della ricerca fa già la stessa cosa | Scelta di Manuel Cucca |
+| 25/09/2026 | Manuel Cucca | DEC-19: l'accesso resta progettato fino al design ma non attivo nella prima versione; tornano SC-05 e la sezione Account di SC-06 | Precisazione di Manuel Cucca su DEC-13 |
+| 25/09/2026 | Manuel Cucca | DEC-17: wireframe di SC-04 aggiornati con Elimina definitivamente; il pacchetto ha raggiunto la Fase 5 | Ciclo di vita dei pacchetti (DEC-18) |
+| 25/09/2026 | Manuel Cucca | Icone: restano in più tracciati; dopo uno scambio si ricolorano tutti i tracciati (chiusa la questione del colore) | Scelta di Manuel Cucca |
+| 25/09/2026 | Manuel Cucca | Design system: numero di note nelle righe di cartella e in Non organizzate (CMP-06, CMP-14, ID-15); variante Password di CMP-03 e nuovo CMP-22 Modulo di accesso (DEC-19); icona mostra (eye) | Fase 5 |

@@ -5,12 +5,13 @@
 L'organizzazione è un effetto secondario della scrittura: l'utente ha piena libertà su come organizzare le proprie note.
 
 ## RF-05 – Struttura di cartelle
-**Priorità:** Must · **Origine:** — · **Fase:** 5 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** ID-15 · **Fase:** 5 · **Stato:** In progettazione
 
 Come *utente* voglio organizzare le note in un albero di cartelle per dare loro una collocazione fisica.
 
 - Ogni nota sta in una sola cartella; per appartenere a più gruppi si usano i tag (RF-06).
 - Una nota può anche stare fuori da qualsiasi cartella, nella radice. Le note nella radice sono le "note non organizzate": compaiono nella barra laterale e ne escono appena vengono spostate in una cartella, anche se non hanno tag.
+- Accanto a ogni cartella e alla sezione Non organizzate si vede quante note contiene (RB-56, ID-15).
 
 **Collegamenti:** FL-05 · FL-09 · EN-01 · EN-03 · SC-00
 

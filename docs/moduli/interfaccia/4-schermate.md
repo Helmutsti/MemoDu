@@ -31,7 +31,7 @@ Nessuna barra superiore: la colonna sinistra e l'area della nota occupano tutta 
 
 La colonna sinistra ha due sezioni impilate senza separatore: le cartelle iniziano subito sotto l'ultima nota non organizzata e la colonna scorre tutta insieme.
 
-**Le due sezioni si chiudono** con un clic sul titolo (▾ aperta, ▸ chiusa), così molte non organizzate non spingono le cartelle in fondo. Chiusa, la sezione Non organizzate mostra quante note contiene.
+**Le due sezioni si chiudono** con un clic sul titolo (▾ aperta, ▸ chiusa), così molte non organizzate non spingono le cartelle in fondo. Accanto a ogni cartella e a Non organizzate c'è il numero di note che contengono, sottocartelle comprese (RB-56, ID-15): in grigio piccolo, allineato a destra, a sinistra del +.
 
 Le **non organizzate stanno sopra le cartelle**: sono la posta in arrivo della scrittura veloce (RB-01), quindi la lista che si guarda più spesso, e il trascinamento verso l'albero va dall'alto verso il basso.
 
@@ -76,19 +76,20 @@ Sono al centro della finestra, con un velo sul resto. L'azione principale sta a 
 ---
 
 ## SC-06 – Impostazioni
-**Entità:** EN-07 · **Componenti:** riga di impostazione, campo di testo
+**Entità:** EN-07 · **Componenti:** riga di impostazione, campo di testo, pulsante
 
 - **Wireframe:** [impostazioni](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-227)
 - **Esportazioni:** `immagini/SC-06.png`
 - **Mockup:** [Fase 6]
 
-Si apre dalla voce Impostazioni del menu `···`, al posto della nota, come il cestino. Una sola schermata con tre sezioni:
+Si apre dalla voce Impostazioni del menu `···`, al posto della nota, come il cestino. Una sola schermata con quattro sezioni:
 
 | Sezione | Contenuto |
 |---|---|
 | Generale | Scorciatoia della nota rapida (separata per Windows e macOS, RB-52), avvio all'accensione (solo desktop) |
 | Ricerca | Note del cestino nei risultati (RB-29) |
 | Dispositivo | Nome di questo dispositivo (RB-51) |
+| Account | Email e password con Cambia; Esci. **Progettata ma non attiva** nella prima versione: oggi il dispositivo si collega con le credenziali preimpostate (DEC-13, DEC-19) |
 
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |

@@ -7,7 +7,7 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | Codice | Componente | Tipo | Stato |
 |---|---|---|---|
 | CMP-01 | Pulsante | base | Disegnato |
-| CMP-02 | Icona | base | 29 icone, 4 dimensioni |
+| CMP-02 | Icona | base | 30 icone, 4 dimensioni |
 | CMP-03 | Campo di testo | base | Disegnato |
 | CMP-04 | Interruttore | base | Disegnato |
 | CMP-05 | Tag | base | Disegnato |
@@ -27,6 +27,7 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-19 | Stato vuoto | composto | Disegnato |
 | CMP-20 | Testo della nota (campo titolo e stili dell'editor) | composto | Disegnato |
 | CMP-21 | Immagine nel testo e area di trascinamento | composto | Disegnato |
+| CMP-22 | Modulo di accesso (progettato, non attivo: DEC-19) | composto | Disegnato |
 
 L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'icona di sistema e non è un componente.
 
@@ -46,7 +47,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 | CMP-03 Campo di testo | ✓ (tag, impostazioni) | ✓ (ricerca) | ✓ (pannelli, menu) | campo |
 | CMP-04 Interruttore | ✓ (impostazioni) | | | hover, pieno |
 | CMP-05 Tag | ✓ (riga dei tag) | | ✓ (filtri della ricerca) | campo, hover, pieno |
-| CMP-06 Riga della colonna | | ✓ | | hover, pieno |
+| CMP-06 Riga della colonna | | ✓ | | hover, pieno; numero di note in testo tenue (RB-56) |
 | CMP-07 Voce di menu | | | ✓ | hover, errore |
 | CMP-08 Suggerimento | ✓ | ✓ | ✓ | pieno (flottante lui stesso) |
 | CMP-14 Albero delle cartelle | | ✓ | | hover, pieno, campo, errore (cestino di trascinamento) |
@@ -109,7 +110,8 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 - Libreria **Lucide** (DEC-15), icone di linea, colore `icona-tenue` o `icona-su-pieno`.
 - Variante **Dimensione**: 12, 16 (default, `misura-icona`), 20 e 24 px. Il tratto resta 1,5 (`tratto-icona`) a tutte le dimensioni, così le icone piccole non diventano sottili e le grandi non diventano pesanti.
 - Ogni icona è un set di componenti `Icona/<nome>` con la fonte Lucide nella descrizione. Nei componenti si scambia con la proprietà Icona e si sceglie la dimensione con la variante, senza ridimensionare l'istanza.
-- Primo nucleo: **più** (`plus`), **altro** (`ellipsis`), **caricamento** (`loader-circle`), **cerca** (`search`), **calendario** (`calendar`), **chiudi** (`x`), **errore** (`circle-alert`), **freccia destra** (`chevron-right`), **freccia giù** (`chevron-down`), **titolo** (`heading-1`), **sottotitolo** (`heading-2`), **elenco puntato** (`list`), **elenco numerato** (`list-ordered`), **checklist** (`list-checks`), **immagine** (`image`), **elimina** (`trash-2`), **tag** (`tag`), **sposta** (`folder-input`), **impostazioni** (`settings`), **grassetto** (`bold`), **corsivo** (`italic`), **sottolineato** (`underline`), **barrato** (`strikethrough`), **spunta** (`check`), **freccia sinistra** (`chevron-left`), **cartella** (`folder`), **nota** (`file-text`), **avviso** (`triangle-alert`), **informazione** (`info`). Le altre si aggiungono quando servono ai componenti.
+- Le icone restano fatte di più tracciati, come in Lucide. Se in un'istanza si cambia icona dopo averla colorata, il colore non passa alla nuova: si ricolorano tutti i tracciati insieme (in Figma, dal pannello "Colori della selezione").
+- Primo nucleo: **più** (`plus`), **altro** (`ellipsis`), **caricamento** (`loader-circle`), **cerca** (`search`), **calendario** (`calendar`), **chiudi** (`x`), **errore** (`circle-alert`), **freccia destra** (`chevron-right`), **freccia giù** (`chevron-down`), **titolo** (`heading-1`), **sottotitolo** (`heading-2`), **elenco puntato** (`list`), **elenco numerato** (`list-ordered`), **checklist** (`list-checks`), **immagine** (`image`), **elimina** (`trash-2`), **tag** (`tag`), **sposta** (`folder-input`), **impostazioni** (`settings`), **grassetto** (`bold`), **corsivo** (`italic`), **sottolineato** (`underline`), **barrato** (`strikethrough`), **spunta** (`check`), **freccia sinistra** (`chevron-left`), **cartella** (`folder`), **nota** (`file-text`), **avviso** (`triangle-alert`), **informazione** (`info`), **mostra** (`eye`). Le altre si aggiungono quando servono ai componenti.
 
 ### Stati
 | Stato | Descrizione |
@@ -138,6 +140,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 ### Varianti e dimensioni
 - **Normale:** solo il testo.
 - **Ricerca:** icona cerca a sinistra; quando è compilata compare ✕ per cancellare.
+- **Password:** il valore si vede come pallini; l'icona a occhio a destra lo mostra e lo nasconde. Serve al modulo di accesso (CMP-22), progettato ma non attivo (DEC-19).
 - **Con icona:** icona a destra (di default il calendario), che apre la scelta alternativa. Proprietà **Icona** per cambiarla.
 - **Campo della scorciatoia** (SC-06, RB-52): è un campo normale con testi suoi ("Nessuna scorciatoia", al focus "Premi i tasti…"). Non scrive testo ma registra la prima combinazione premuta, che diventa il valore (es. "Ctrl + Alt + N"). Non è una variante: l'aspetto è lo stesso, cambia solo il comportamento.
 - Una sola dimensione: alto 32 (`misura-riga`), pillola, sfondo `sfondo-campo`, margini 12, distanza 8 tra icone e testo, testo Interfaccia/Normale. La larghezza la decide chi lo usa (240 negli esempi).
@@ -243,8 +246,8 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 
 ### Varianti e dimensioni
 - **Nota:** solo il titolo, in `testo-primario`, margine 12. Una nota senza titolo mostra "Nota vuota" in `testo-tenue` (RB-15).
-- **Cartella chiusa / aperta:** freccia ▸ o ▾ (16 px) e nome, margine 8. Niente icona di cartella: la direzione C tiene la colonna pulita (DEC-12).
-- **Sezione aperta / chiusa:** freccia di 12 px, etichetta Interfaccia/Etichetta in `testo-tenue`, il + per creare (nuova nota o nuova cartella) e, da chiusa, il numero di elementi.
+- **Cartella chiusa / aperta:** freccia ▸ o ▾ (16 px), nome e, a destra, il numero di note che contiene, sottocartelle comprese (Interfaccia/Piccola in `testo-tenue`; primario in hover, su pieno se selezionata; RB-56, ID-15). Margine 8. Niente icona di cartella: la direzione C tiene la colonna pulita (DEC-12).
+- **Sezione aperta / chiusa:** freccia di 12 px, etichetta Interfaccia/Etichetta in `testo-tenue`, il numero di note e il + per creare (nuova nota o nuova cartella). Il numero si mostra per Non organizzate; nel titolo Cartelle si nasconde.
 - Alta 32 (`misura-riga`), pillola, distanza 4 tra freccia e testo. Il testo troppo lungo finisce con i puntini.
 - **Rientro:** per le sottocartelle si mostra il livello "rientro" e lo si allarga di 16 px per ogni livello.
 
@@ -538,7 +541,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 **Quando non usarlo:** per scegliere una cartella in un pannello (Sposta in, CMP-11, che usa le voci di menu).
 
 ### Varianti e dimensioni
-- Righe CMP-06 su `sfondo-colonna`, larghe 240; 8 px tra le sezioni. Sezione **Non organizzate** con le note (la nota aperta è selezionata), sezione **Cartelle** con l'albero; 16 px di rientro per livello.
+- Righe CMP-06 su `sfondo-colonna`, larghe 240; 8 px tra le sezioni. Sezione **Non organizzate** con le note e il loro numero (la nota aperta è selezionata), sezione **Cartelle** con l'albero e il numero di note accanto a ogni cartella (RB-56); 16 px di rientro per livello.
 - **Nuova cartella:** il campo nome compare sul posto, su `sfondo-campo` con l'anello di focus e il nome "Nuova cartella" già selezionato (RB-48). Invio conferma, Esc annulla.
 - **Trascinamento:** la cartella che riceverebbe è evidenziata (CMP-06, trascinamento sopra) e in fondo alla colonna compare il **cestino di trascinamento** (`sfondo-campo`, icona elimina, "Trascina qui per eliminare").
 - **Trascinamento sul cestino:** il cestino diventa `sfondo-errore` con testo e icona in `testo-errore` e `icona-errore` ("Rilascia per spostare nel cestino").
@@ -784,3 +787,39 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 ### Esempi
 - ✅ Corretto: «Si possono inserire solo immagini, fino a 25 MB.» accanto al punto in cui si è rilasciato il file.
 - ❌ Scorretto: una finestra che blocca per dire che il file non è un'immagine.
+
+---
+
+## CMP-22 – Modulo di accesso
+**Tipo:** composto (usa CMP-01 e CMP-03) · **Usato in:** SC-05 (progettata, non attiva) · **Figma:** pagina Componenti composti, [Modulo di accesso](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=86-2910)
+
+**Scopo:** entrare in Memodu con email e password, o creare l'account al primo avvio.
+**Quando usarlo:** quando l'accesso verrà attivato (per esempio con il web, ID-19). Nella prima versione non compare: i dispositivi si collegano con le credenziali preimpostate (DEC-13, DEC-19).
+**Quando non usarlo:** per cambiare email o password (sezione Account di SC-06, con righe di impostazione).
+
+### Varianti e dimensioni
+- **Accesso:** nome Memodu (Nota/Sottotitolo), sottotitolo in `testo-tenue`, campi Email (CMP-03 normale) e Password (CMP-03 password) con etichette Interfaccia/Etichetta, pulsante primario «Accedi» a tutta larghezza.
+- **Primo avvio:** stesso modulo, sottotitolo «Crea l'account di questa installazione.» e pulsante «Crea l'account».
+- **Errore:** messaggio in linea sopra il pulsante, icona errore e testo `testo-errore` («Email o password non corrette.»).
+- Largo 320, 16 px tra i blocchi, al centro di una finestra vuota su `sfondo-nota`.
+- I testi sono esempi; le regole dell'accesso (tentativi, requisiti e recupero della password) si decidono quando lo si attiva.
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Default | Accesso o primo avvio |
+| Hover · Focus | Li gestiscono campi e pulsante |
+| Attivo | Accedi: SC-01 in caricamento mentre arriva la copia di lavoro |
+| Errore | Credenziali errate: messaggio in linea sopra il pulsante |
+| Disabilitato | Non previsto |
+| Caricamento | Il pulsante in caricamento (CMP-01) |
+
+### Accessibilità
+- **Tastiera:** focus sul campo Email all'apertura; Invio da qualsiasi campo invia il modulo.
+- **Lettori di schermo:** il messaggio di errore è collegato ai campi e si annuncia quando compare; il pulsante con l'occhio ha il nome "Mostra la password".
+- **Contrasti:** come CMP-01 e CMP-03.
+
+### Esempi
+- ✅ Corretto: un solo messaggio per email o password sbagliate, senza dire quale delle due.
+- ❌ Scorretto: svuotare il campo Email dopo un errore.
+

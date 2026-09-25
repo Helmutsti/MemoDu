@@ -24,4 +24,20 @@ Visto su un dispositivo, l'avviso sparisce su tutti (RB-53).
 ---
 
 ## SC-05 – Accesso
-Eliminata da DEC-13: le credenziali sono preimpostate e non esiste login. I wireframe restano nel file Figma e le esportazioni nella storia di git, come riferimento se il web (ID-19) richiederà un accesso.
+**Flussi:** — (progettata, non attiva) · **Componenti:** modulo di accesso (CMP-22), campo di testo con password (CMP-03), pulsante, messaggio in linea
+
+- **Wireframe:** [accesso](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-181) · [credenziali errate](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-196) · [primo avvio](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-211)
+- **Esportazioni:** `immagini/SC-05.png`, `immagini/SC-05-errore.png`, `immagini/SC-05-primo-avvio.png`
+- **Mockup:** [Fase 6]
+
+**Progettata ma non attiva nella prima versione (DEC-19).** Oggi il dispositivo si collega con le credenziali preimpostate (DEC-13); l'accesso si porta avanti fino al design per averlo pronto quando servirà (per esempio con il web, ID-19). Le regole dell'accesso (tentativi, requisiti e recupero della password) si decidono quando lo si attiva.
+
+Finestra vuota con il modulo al centro: nome Memodu, email, password, Accedi. Al primo avvio lo stesso modulo crea l'account.
+
+### Stati della schermata
+| Stato | Descrizione | Testo mostrato |
+|---|---|---|
+| Vuoto | Primo avvio: Crea l'account | Testo definitivo in Fase 6 |
+| Caricamento | Dopo Accedi, mentre arriva la copia di lavoro: SC-01 in caricamento | — |
+| Errore | Credenziali errate: messaggio in linea sopra il pulsante | Testo definitivo in Fase 6 |
+| Successo | Si entra in SC-01 e si resta collegati | — |
