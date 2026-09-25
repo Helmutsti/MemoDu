@@ -11,7 +11,7 @@ Perimetro: solo cloud, un solo utente, installazione personale con credenziali p
 
 | Frammento | Requisiti | Fasi complete | Prossima fase | Note |
 |---|---|---|---|---|
-| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4 | 5 – Design system | Fase 4 completata: SC-01 … SC-06 con i loro stati e wireflow cliccabile per FL-01 … FL-09 (prototipo Figma). Test rapido dei wireframe fatto. Fase 5 in corso: moodboard fatto, direzione C · Essenziale originale con grigi neutri (DEC-12), regole visive e token fatti (chiaro e scuro, contrasti verificati), con scale complete e colori degli stati (DEC-14). Componenti: componenti base CMP-01 … CMP-08, CMP-09 Menu, CMP-10 Pillola degli strumenti e CMP-11 Pannello a comparsa disegnati, icone Lucide (DEC-15) in 4 dimensioni; prossimi i composti CMP-12 … CMP-21 |
+| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4 | 5 – Design system | Fase 4 completata: SC-01 … SC-06 con i loro stati e wireflow cliccabile per FL-01 … FL-09 (prototipo Figma). Test rapido dei wireframe fatto. Fase 5 in corso: moodboard fatto, direzione C · Essenziale originale con grigi neutri (DEC-12), regole visive e token fatti (chiaro e scuro, contrasti verificati), con scale complete e colori degli stati (DEC-14). Componenti: componenti base CMP-01 … CMP-08, CMP-09 Menu, CMP-10 Pillola degli strumenti e tutti i componenti CMP-01 … CMP-21 disegnati (da rivedere con Manuel Cucca), icone Lucide (DEC-15) in 4 dimensioni; poi le decisioni aperte e la chiusura della Fase 5 |
 | Should | RF-07, RF-09, RF-12, RF-13, RF-16 | — | 1 – Requisiti | Mancano gli scenari d'uso |
 
 ### Idee parcheggiate
@@ -31,6 +31,7 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 | Fondo dei campi sotto 3:1 contro la superficie (WCAG 1.4.11): verificare nel test di accessibilità che il campo si riconosca da etichetta, segnaposto, icona e anello di focus | CMP-03, token | Fase 8 | `design-system/tokens.md` |
 | Breakpoint e disegni per il mobile | Token, ID-11 | Quando si riprende il mobile | `design-system/tokens.md` |
 | Libreria "Memodu – Wireframe UI": eliminarla o archiviarla ora che la libreria è il file Design system; i wireframe ne usano le istanze | DEC-10 | Fine della Fase 5 | `design-system/componenti.md` |
+| Pannello delle impostazioni dell'immagine (dimensione, allineamento, ritaglio, rotazione, testo alternativo) | CMP-21, RB-14 | Fase 6, con i mockup | `design-system/componenti.md` |
 | Testi definitivi di messaggi e avvisi | Tutti i flussi, EN-08 | Fase 6 | Flussi, colonna "Comunicazione" |
 | Come si salva il sottolineato nel markdown | RF-02 | Fase 7 | `moduli/note/8-test.md` |
 | Come si salvano dimensione, allineamento, ritaglio e rotazione delle immagini senza rompere l'esportazione | RF-03, RF-13 | Fase 7 | `moduli/note/8-test.md` |
@@ -58,6 +59,14 @@ Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui
 | Nei menu: frecce su e giù tra le voci, Invio attiva, Esc chiude, freccia destra e sinistra aprono e chiudono il sottomenu. Il suggerimento compare anche al focus da tastiera e si nasconde con Esc | CMP-07, CMP-08 | `design-system/componenti.md` |
 | Scorciatoie di sottolineato (Ctrl + U) e barrato (Ctrl + Maiusc + X); nel menu di inserimento si scrive dopo / per filtrare le voci | CMP-09, RF-02 | `design-system/componenti.md` |
 | La pillola degli strumenti si raggiunge da tastiera con una scorciatoia e si percorre con le frecce; Esc torna al testo | CMP-10 | `design-system/componenti.md` |
+| Nel calendario: frecce tra i giorni, Pagina su e giù per cambiare mese, Invio sceglie, Esc chiude; la settimana parte dal lunedì | CMP-12 | `design-system/componenti.md` |
+| Dalla ricerca, freccia giù entra nei risultati; Invio apre, Esc chiude la card. I filtri per data si scelgono da un menu | CMP-13 | `design-system/componenti.md` |
+| Hover dei blocchi su più righe (risultati, cestino, impostazioni) a rettangolo con raggio-interno 12 invece della pillola | CMP-13, CMP-17, CMP-18 | `design-system/componenti.md` |
+| Casella della checklist tonda; la voce spuntata va in testo tenue barrato; Ctrl + Invio spunta la voce | CMP-20 | `design-system/componenti.md` |
+| Nella finestra con tre scelte (RB-31) l'azione principale è "Aggiungi un numero", la scelta che non tocca niente | CMP-16 | `design-system/componenti.md` |
+| F2 rinomina la cartella in focus; lo spostamento da tastiera passa da Sposta in | CMP-14 | `design-system/componenti.md` |
+| Larghezze: card dei risultati 480, avviso 480, finestra di conferma 400, testo della nota 640, elemento del cestino e riga di impostazione 560 | CMP-13 … CMP-21 | `design-system/componenti.md` |
+| Selezione dell'immagine con contorno sfondo-pieno; impostazioni dell'immagine dal tasto destro | CMP-21 | `design-system/componenti.md` |
 | La finestra desktop non si stringe sotto 1024 px, perché il breakpoint stretto serviva solo al web | Token, breakpoint | `design-system/tokens.md` |
 
 ## Rischi accettati

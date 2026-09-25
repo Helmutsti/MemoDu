@@ -84,6 +84,7 @@ Il modo segue l'impostazione del sistema (regola 9).
 | `spazio-4` … `spazio-48` | 4, 8, 12, 16, 24, 32, 48 | Margini e distanze |
 | `raggio-pillola` | 999 | Controlli alti una riga (regola 1) |
 | `raggio-contenitore` | 20 | Menu, pannelli, finestre, immagini (regola 2) |
+| `raggio-interno` | 12 | Evidenziazione dei blocchi su più righe dentro un contenitore: concentrico (20 − 8 di margine) |
 | `misura-riga` | 32 | Righe della colonna e dei menu (regola 6) |
 | `misura-controllo-piccolo` | 24 | Controlli che stanno dentro una riga, come i tag |
 | `misura-icona` | 16 | Icone (regola 8) |
