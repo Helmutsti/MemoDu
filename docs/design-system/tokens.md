@@ -82,6 +82,7 @@ Il modo segue l'impostazione del sistema (regola 9).
 | `raggio-pillola` | 999 | Controlli alti una riga (regola 1) |
 | `raggio-contenitore` | 20 | Menu, pannelli, finestre, immagini (regola 2) |
 | `misura-riga` | 32 | Righe della colonna e dei menu (regola 6) |
+| `misura-controllo-piccolo` | 24 | Controlli che stanno dentro una riga, come i tag |
 | `misura-icona` | 16 | Icone (regola 8) |
 | `tratto-icona` | 1,5 | Spessore delle icone di linea |
 | `focus-spessore` | 2 | Spessore dell'anello di focus |

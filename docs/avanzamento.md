@@ -11,7 +11,7 @@ Perimetro: solo cloud, un solo utente, installazione personale con credenziali p
 
 | Frammento | Requisiti | Fasi complete | Prossima fase | Note |
 |---|---|---|---|---|
-| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4 | 5 – Design system | Fase 4 completata: SC-01 … SC-06 con i loro stati e wireflow cliccabile per FL-01 … FL-09 (prototipo Figma). Test rapido dei wireframe fatto. Fase 5 in corso: moodboard fatto, direzione C · Essenziale originale con grigi neutri (DEC-12), regole visive e token fatti (chiaro e scuro, contrasti verificati), con scale complete e colori degli stati (DEC-14). Componenti: CMP-01 Pulsante e CMP-03 Campo di testo disegnati, icone Lucide (DEC-15) con un primo nucleo; prossimi CMP-04 … CMP-08 |
+| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4 | 5 – Design system | Fase 4 completata: SC-01 … SC-06 con i loro stati e wireflow cliccabile per FL-01 … FL-09 (prototipo Figma). Test rapido dei wireframe fatto. Fase 5 in corso: moodboard fatto, direzione C · Essenziale originale con grigi neutri (DEC-12), regole visive e token fatti (chiaro e scuro, contrasti verificati), con scale complete e colori degli stati (DEC-14). Componenti: CMP-01 Pulsante, CMP-03 Campo di testo, CMP-04 Interruttore, CMP-05 Tag e CMP-06 Riga della colonna disegnati, icone Lucide (DEC-15) in 4 dimensioni; prossimi CMP-07 e CMP-08 |
 | Should | RF-07, RF-09, RF-12, RF-13, RF-16 | — | 1 – Requisiti | Mancano gli scenari d'uso |
 
 ### Idee parcheggiate
@@ -25,6 +25,7 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 | Recupero delle credenziali dell'installazione perse (contengono la chiave di cifratura) | RF-10, RF-14 | Prima della Definition of Ready (Fase 8) | `moduli/sincronizzazione/8-test.md` |
 | Elenco dei dispositivi e uscita a distanza da ripensare: con credenziali uguali per tutti non si fa uscire un solo dispositivo | RF-16 | Fase 1 di RF-16 (Should) | `moduli/sincronizzazione/1-requisiti.md` |
 | Wireframe da allineare a DEC-13: togliere SC-05, la sezione Account di SC-06 e il punto di partenza FL-08 del prototipo | SC-05, SC-06 | Fase 6, prima dei mockup | File Figma dei wireframe |
+| **Aperta:** allineamento di icona e testo nel tag (la ✕ sembra più alta del testo). Alternative nel confronto della pagina Prove del file Design system: C (rifinitura del testo + icona abbassata di 1 px) o D (✕ a 16 px); valutare anche per pulsante e ricerca | CMP-05, CMP-01, CMP-03 | Fase 5, prima di chiuderla | Figma, pagina Prove |
 | Breakpoint e disegni per il mobile | Token, ID-11 | Quando si riprende il mobile | `design-system/tokens.md` |
 | Libreria "Memodu – Wireframe UI": eliminarla o archiviarla ora che la libreria è il file Design system; i wireframe ne usano le istanze | DEC-10 | Fine della Fase 5 | `design-system/componenti.md` |
 | Testi definitivi di messaggi e avvisi | Tutti i flussi, EN-08 | Fase 6 | Flussi, colonna "Comunicazione" |
@@ -48,6 +49,8 @@ Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui
 | Con credenziali mancanti o rifiutate l'app funziona lo stesso sulla copia di lavoro, e mostra solo l'avviso | FL-08, DEC-13 | `moduli/sincronizzazione/2-flussi.md` |
 | Nelle finestre di conferma il focus da tastiera parte da Annulla, per non confermare per errore | CMP-01 | `design-system/componenti.md` |
 | Nel campo di testo Esc cancella la ricerca; nel campo scorciatoia Esc annulla la registrazione e Backspace toglie la combinazione | CMP-03 | `design-system/componenti.md` |
+| Canc o Backspace toglie il tag in focus; nei filtri della ricerca Spazio seleziona o deseleziona il tag | CMP-05 | `design-system/componenti.md` |
+| Nella colonna le frecce su e giù passano da una riga all'altra, destra e sinistra aprono e chiudono le cartelle, Invio apre la nota | CMP-06 | `design-system/componenti.md` |
 | La finestra desktop non si stringe sotto 1024 px, perché il breakpoint stretto serviva solo al web | Token, breakpoint | `design-system/tokens.md` |
 
 ## Rischi accettati
