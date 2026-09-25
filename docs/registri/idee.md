@@ -25,3 +25,4 @@
 | ID-17 | Sezione Tag nella colonna, per filtrare le note con un clic | Manuel Cucca (moodboard, DEC-11) | 25/09/2026 | Rifiutata | — | Coperta dal filtro per tag della ricerca (CMP-13): una sezione in più appesantirebbe la colonna |
 | ID-18 | Cestino sempre visibile in fondo alla colonna (oggi compare solo durante il trascinamento e si apre dal menu ···) | Manuel Cucca (moodboard, DEC-11) | 25/09/2026 | Proposta | — | — |
 | ID-19 | Versione web nel browser | Manuel Cucca | 25/09/2026 | Parcheggiata | — | Rinviata da DEC-13: senza login un browser non ha dove leggere le credenziali. Da riprendere decidendo come si accede dal web |
+| ID-20 | Allineamento ottico di icona e testo nel tag (la ✕ sembra più alta del testo); da valutare anche per pulsante con icona e campo di ricerca | Manuel Cucca, da Fase 5 | 25/09/2026 | Parcheggiata | — | Per ora resta com'è (alternativa A). Le alternative B–E restano nel confronto della pagina Prove del file Design system |
