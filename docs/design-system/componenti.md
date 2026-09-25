@@ -74,7 +74,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 - **Secondario:** sfondo `sfondo-campo`, testo `testo-primario`. Azioni di supporto accanto al primario (Annulla).
 - **Tenue:** senza sfondo, testo `testo-tenue`. Azioni minori in liste e pannelli (Ripristina nel cestino).
 - **Solo icona:** 32 × 32, icona `icona-tenue`. Azioni ripetute con un'icona chiara (+ delle non organizzate, ···).
-- Una sola dimensione: alto 32 (`misura-riga`), pillola (`raggio-pillola`), margini laterali 16 (8 per il solo icona), distanza tra icona e testo 8, testo Interfaccia/Media.
+- Una sola dimensione: alto 32 (`misura-riga`), pillola (`raggio-pillola`), margini laterali 16 (8 per il solo icona), distanza tra icona e testo 8, testo Interfaccia/Controllo attivo.
 - Proprietà: **Etichetta** (testo), **Mostra icona** (icona a sinistra del testo, spenta di default), **Icona** (una qualsiasi icona di CMP-02).
 
 ### Stati
@@ -143,7 +143,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 - **Password:** il valore si vede come pallini; l'icona a occhio a destra lo mostra e lo nasconde. Serve al modulo di accesso (CMP-22), progettato ma non attivo (DEC-19).
 - **Con icona:** icona a destra (di default il calendario), che apre la scelta alternativa. Proprietà **Icona** per cambiarla.
 - **Campo della scorciatoia** (SC-06, RB-52): è un campo normale con testi suoi ("Nessuna scorciatoia", al focus "Premi i tasti…"). Non scrive testo ma registra la prima combinazione premuta, che diventa il valore (es. "Ctrl + Alt + N"). Non è una variante: l'aspetto è lo stesso, cambia solo il comportamento.
-- Una sola dimensione: alto 32 (`misura-riga`), pillola, sfondo `sfondo-campo`, margini 12, distanza 8 tra icone e testo, testo Interfaccia/Normale. La larghezza la decide chi lo usa (240 negli esempi).
+- Una sola dimensione: alto 32 (`misura-riga`), pillola, sfondo `sfondo-campo`, margini 12, distanza 8 tra icone e testo, testo Interfaccia/Controllo. La larghezza la decide chi lo usa (240 negli esempi).
 - Segnaposto in `testo-tenue`, valore in `testo-primario`. Il testo troppo lungo finisce con i puntini.
 
 ### Stati
@@ -154,7 +154,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 | Focus | Anello `focus-anello` di 2 px staccato 2 px e cursore lampeggiante dopo il testo. Si vede anche con il mouse, perché si sta scrivendo lì |
 | Compilato | Il valore in `testo-primario` |
 | Disabilitato | Tutto il campo a opacità 40% |
-| Errore | Anello in `icona-errore` e, sotto il campo, icona errore con il messaggio in `testo-errore` (Interfaccia/Piccola), 8 px sotto l'anello e allineato al testo del campo (12 px dal bordo); un messaggio lungo va a capo. La ricerca non ha errore |
+| Errore | Anello in `icona-errore` e, sotto il campo, icona errore con il messaggio in `testo-errore` (Interfaccia/Dettaglio), 8 px sotto l'anello e allineato al testo del campo (12 px dal bordo); un messaggio lungo va a capo. La ricerca non ha errore |
 | Caricamento | Non previsto: la ricerca è sul dispositivo (DEC-08) e risponde mentre si scrive |
 
 ### Accessibilità
@@ -211,7 +211,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 **Quando non usarlo:** per la cartella di una nota (è un testo nel risultato) o per etichette di stato (si usa l'avviso, CMP-15).
 
 ### Varianti e dimensioni
-- Pillola alta 24 (`misura-controllo-piccolo`), margini 8, testo Interfaccia/Normale in `testo-primario` su `sfondo-campo`.
+- Pillola alta 24 (`misura-controllo-piccolo`), margini 8, testo Interfaccia/Controllo in `testo-primario` su `sfondo-campo`.
 - Proprietà **Nome** (il testo del tag) e **Rimovibile** (mostra la ✕ di 12 px per togliere il tag dalla nota). Nei filtri della ricerca la ✕ non c'è.
 - Il tag si mostra come scritto dall'utente, senza "#" davanti.
 
@@ -246,7 +246,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 
 ### Varianti e dimensioni
 - **Nota:** solo il titolo, in `testo-primario`, margine 12. Una nota senza titolo mostra "Nota vuota" in `testo-tenue` (RB-15).
-- **Cartella chiusa / aperta:** freccia ▸ o ▾ (16 px), nome e, a destra, il numero di note che contiene, sottocartelle comprese (Interfaccia/Piccola in `testo-tenue`; primario in hover, su pieno se selezionata; RB-56, ID-15). Margine 8. Niente icona di cartella: la direzione C tiene la colonna pulita (DEC-12).
+- **Cartella chiusa / aperta:** freccia ▸ o ▾ (16 px), nome e, a destra, il numero di note che contiene, sottocartelle comprese (Interfaccia/Dettaglio in `testo-tenue`; primario in hover, su pieno se selezionata; RB-56, ID-15). Margine 8. Niente icona di cartella: la direzione C tiene la colonna pulita (DEC-12).
 - **Sezione aperta / chiusa:** freccia di 12 px, titolo in Interfaccia/Titolo di sezione (maiuscolo Semi Bold, spaziatura 6%) in `testo-tenue`, il numero di note e il + per creare (nuova nota o nuova cartella). Il numero si mostra per Non organizzate; nel titolo Cartelle si nasconde.
 - Alta 32 (`misura-riga`), pillola, distanza 4 tra freccia e testo. Il testo troppo lungo finisce con i puntini.
 - **Rientro:** per le sottocartelle si mostra il livello "rientro" e lo si allarga di 16 px per ogni livello.
@@ -257,7 +257,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 | Default | Senza sfondo, sulla colonna |
 | Hover | `sfondo-hover`; tutto il testo passa a `testo-primario`, anche l'etichetta della sezione e il numero (regola 7) |
 | Focus | Anello `focus-anello` di 2 px staccato 2 px |
-| Attivo | Selezionata: la nota aperta nella colonna, o la cartella attuale (in Sposta in, CMP-11); `sfondo-pieno` con testo Interfaccia/Media in `testo-su-pieno` |
+| Attivo | Selezionata: la nota aperta nella colonna, o la cartella attuale (in Sposta in, CMP-11); `sfondo-pieno` con testo Interfaccia/Controllo attivo in `testo-su-pieno` |
 | Trascinamento sopra | Solo cartella: mentre si trascina una nota o una cartella, quella che la riceverebbe ha `sfondo-hover` e un contorno di 1,5 in `icona-tenue` |
 | Disabilitato | Non previsto |
 | Errore | Non previsto: gli errori di spostamento si mostrano con un avviso (CMP-15) |
@@ -282,12 +282,12 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 **Quando non usarlo:** fuori da un menu: nella colonna si usa la riga della colonna (CMP-06), in una schermata un pulsante (CMP-01).
 
 ### Varianti e dimensioni
-- **Normale:** etichetta Interfaccia/Normale in `testo-primario`, su `sfondo-flottante`.
+- **Normale:** etichetta Interfaccia/Controllo in `testo-primario`, su `sfondo-flottante`.
 - **Distruttiva:** per le azioni che eliminano (Elimina, Svuota cestino), in `testo-errore` e `icona-errore`. È l'unico uso del colore di uno stato per un'azione: avvisa che non si torna indietro (DEC-14). L'azione chiede comunque conferma (CMP-16).
 - **Separatore:** linea di 1 px in `bordo-divisore-tenue`, alta 9 in tutto, tra gruppi di voci, da lato a lato del menu (regola 4: le linee solo dove servono).
 - La voce è larga quanto il menu (236 negli esempi) con 8 px di margine trasparente ai lati; dentro c'è la pillola alta 32 (`misura-riga`) con il testo a 12 px dal bordo, come le note nella colonna. Distanza 8 tra icona, testo e scorciatoia.
 - **Icona:** nei menu di azioni tutte le voci la mostrano, Elimina compresa (in `icona-errore`); nelle liste di valori nessuna (vedi CMP-09).
-- Proprietà: **Etichetta**, **Mostra icona** + **Icona** (Lucide 16), **Mostra scorciatoia** + **Scorciatoia** (Interfaccia/Piccola in `testo-tenue`, es. "Ctrl + B"), **Sottomenu** (freccia a destra).
+- Proprietà: **Etichetta**, **Mostra icona** + **Icona** (Lucide 16), **Mostra scorciatoia** + **Scorciatoia** (Interfaccia/Dettaglio in `testo-tenue`, es. "Ctrl + B"), **Sottomenu** (freccia a destra).
 
 ### Stati
 | Stato | Descrizione |
@@ -319,7 +319,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 **Quando non usarlo:** per spiegazioni lunghe o informazioni necessarie (vanno nel testo della schermata) e sui controlli che hanno già un'etichetta.
 
 ### Varianti e dimensioni
-- Una sola: pillola alta 24 (`misura-controllo-piccolo`), margini 8, testo Interfaccia/Piccola in `testo-su-pieno` su `sfondo-pieno`, `ombra-flottante`, livello 20 (`z-comparsa`).
+- Una sola: pillola alta 24 (`misura-controllo-piccolo`), margini 8, testo Interfaccia/Dettaglio in `testo-su-pieno` su `sfondo-pieno`, `ombra-flottante`, livello 20 (`z-comparsa`).
 - Compare 8 px sopra il controllo, centrata; se non c'è spazio sopra, sotto.
 - Proprietà: **Testo**.
 
@@ -433,7 +433,7 @@ Compare con `movimento-durata-breve` (120 ms) e `movimento-spostamento` (4 px). 
 
 ### Varianti e dimensioni
 - **Stesso aspetto del menu** (CMP-09), pur restando un componente separato: `sfondo-flottante`, `raggio-contenitore` (20), `ombra-flottante`, livello 20, largo 236, margini 8 sopra e sotto e 0 ai lati, contenuti rientrati di 8 dai lati. Si apre sotto il `···`, allineato a destra.
-- **Date** (FL-04): "Data di creazione" e "Fine validità" con etichetta Interfaccia/Etichetta in `testo-tenue` e campo con il calendario (CMP-03, con icona). Etichette e note partono a 12 px, allineate al testo dei campi, come il testo delle voci di menu. Sotto la data di creazione, in Interfaccia/Piccola, quella di sistema, che non cambia (RB-21). Nessun avviso sulle combinazioni di date (RB-20).
+- **Date** (FL-04): "Data di creazione" e "Fine validità" con etichetta Interfaccia/Etichetta in `testo-tenue` e campo con il calendario (CMP-03, con icona). Etichette e note partono a 12 px, allineate al testo dei campi, come il testo delle voci di menu. Sotto la data di creazione, in Interfaccia/Dettaglio, quella di sistema, che non cambia (RB-21). Nessun avviso sulle combinazioni di date (RB-20).
 - **Sposta in**: campo di ricerca ("Cerca una cartella"), divisore da lato a lato, poi le cartelle come **voci di menu** (CMP-07): la freccia ▸/▾ al posto dell'icona e 16 px di rientro per livello. "Non organizzate" (la radice) lascia vuoto lo spazio della freccia, così i nomi restano allineati. La **cartella attuale** ha la spunta a destra (`check`), non la pillola scura: nel menu la pillola indica l'hover. Eccezione nota ai token: il rientro delle sottocartelle si ottiene allargando il margine della voce (12 + 16 = 28 px per il primo livello), un valore senza token proprio.
 
 ### Stati
@@ -467,7 +467,7 @@ Si chiude con Esc, con un clic fuori o (Sposta in) scegliendo una cartella. Comp
 
 ### Varianti e dimensioni
 - Stesso guscio di menu e pannello: `sfondo-flottante`, `raggio-contenitore` (20), `ombra-flottante`, livello 20, margini 8 sopra e sotto, contenuti rientrati di 8. Largo **240** invece di 236: 7 giorni da 32 px richiedono 224 px di contenuto.
-- **Intestazione:** mese e anno (Interfaccia/Media) e due pulsanti solo icona ‹ › (CMP-01) per il mese precedente e successivo.
+- **Intestazione:** mese e anno (Interfaccia/Titolo) e due pulsanti solo icona ‹ › (CMP-01) per il mese precedente e successivo.
 - **Giorni della settimana:** L M M G V S D, dal lunedì, in Interfaccia/Etichetta `testo-tenue`.
 - **Giorni:** sempre 6 righe, così l'altezza non cambia da un mese all'altro. Ogni giorno è un cerchio di 32 × 32 (parte interna "Giorno del calendario").
 - **Piede:** separatore da lato a lato, poi i pulsanti tenui "Oggi" e "Nessuna data" (svuota il campo, utile per la fine validità).
@@ -476,9 +476,9 @@ Si chiude con Esc, con un clic fuori o (Sposta in) scegliendo una cartella. Comp
 ### Stati (del giorno)
 | Stato | Descrizione |
 |---|---|
-| Default | Numero Interfaccia/Normale in `testo-primario` |
+| Default | Numero Interfaccia/Controllo in `testo-primario` |
 | Altro mese | Giorni del mese prima e dopo in `testo-tenue`; si possono scegliere |
-| Oggi | Numero Interfaccia/Media e un puntino di 4 px sotto: non si confonde con focus e selezione |
+| Oggi | Numero Interfaccia/Controllo attivo e un puntino di 4 px sotto: non si confonde con focus e selezione |
 | Hover | `sfondo-hover` |
 | Focus | Anello interno di 2 px in `focus-anello` |
 | Attivo | Selezionato: `sfondo-pieno` con numero in `testo-su-pieno` (se è anche oggi, il puntino diventa chiaro) |
@@ -508,7 +508,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 ### Varianti e dimensioni
 - Stesso guscio del menu: `sfondo-flottante`, raggio 20, ombra, livello 20, margini 8 sopra e sotto, contenuti rientrati di 8. Larga **480**, più della colonna: copre la nota senza velo, perché non blocca niente.
 - **Filtri** in cima: Tag, Creazione, Modifica, Fine validità (FL-06). Ognuno è una pillola alta 24 come il tag, con una freccia giù, 8 px tra l'una e l'altra, 12 px sopra e sotto la fila. Apre un menu (CMP-09, filtro tag o filtro data) 8 px sotto la pillola. Attivo: pieno scuro con il valore ("Tag: lavoro"; con più tag, "Tag: 2").
-- Divisore da lato a lato, poi i **risultati** per pertinenza (RB-34), tutti, scorrendo la card: titolo (Interfaccia/Media), la frase in cui compare la parola con la parola in `testo-primario` Medium, cartella e data (Interfaccia/Piccola).
+- Divisore da lato a lato, poi i **risultati** per pertinenza (RB-34), tutti, scorrendo la card: titolo (Interfaccia/Titolo), la frase in cui compare la parola con la parola in `testo-primario` Medium, cartella e data (Interfaccia/Dettaglio).
 - **Nel cestino:** titolo e frase attenuati, etichetta "nel cestino" (RB-29); non compaiono se la preferenza li esclude.
 - **Nessun risultato:** filtri, divisore, "Nessuna nota trovata" e un suggerimento; la card resta aperta (RB-35).
 - **Hover dei blocchi su più righe:** rettangolo con raggio 12, concentrico al contenitore (20 − 8). Una pillola alta tre righe diventerebbe un ovale pesante; la pillola resta per tutto ciò che è alto una riga.
@@ -574,7 +574,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 **Quando non usarlo:** per chiedere conferma (CMP-16) o per confermare un'azione riuscita: il successo di solito non si mostra (RB-40).
 
 ### Varianti e dimensioni
-- **Errore**, **Avviso**, **Informazione**, **Successo** (DEC-14): fondo `sfondo-<stato>`, icona Lucide 16 in `icona-<stato>` (`circle-alert`, `triangle-alert`, `info`, `check`), testo Interfaccia/Normale in `testo-primario`, azione a pulsante tenue ("Ho capito", "Apri l'altra").
+- **Errore**, **Avviso**, **Informazione**, **Successo** (DEC-14): fondo `sfondo-<stato>`, icona Lucide 16 in `icona-<stato>` (`circle-alert`, `triangle-alert`, `info`, `check`), testo Interfaccia/Messaggio in `testo-primario`, azione a pulsante tenue ("Ho capito", "Apri l'altra").
 - Largo 480, raggio 20, margini 16 a sinistra e 8 a destra, 8 sopra e sotto, `ombra-flottante`, livello 50, uno alla volta, in cima all'area della nota. Il testo va a capo.
 - I testi sono esempi nel tono di voce; quelli definitivi si scrivono in Fase 6.
 
@@ -607,7 +607,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 ### Varianti e dimensioni
 - **Conferma:** titolo, testo, Annulla (secondario) e l'azione (primario), es. «Svuotare il cestino?» · «3 elementi verranno eliminati per sempre.» · Annulla · Svuota.
 - **Tre scelte:** Annulla, Unisci (secondario) e Aggiungi un numero (primario, la scelta che non tocca niente), per RB-31.
-- Guscio dei flottanti: `sfondo-flottante`, raggio 20, `ombra-flottante`, largo 400, margini 24. Titolo Interfaccia/Media in `testo-primario`, testo Interfaccia/Normale in `testo-tenue`. Pulsanti a destra, 8 px tra loro.
+- Guscio dei flottanti: `sfondo-flottante`, raggio 20, `ombra-flottante`, largo 400, margini 24. Titolo Interfaccia/Titolo in `testo-primario`, testo Interfaccia/Messaggio in `testo-tenue`. Pulsanti a destra, 8 px tra loro.
 - Al centro della finestra, livello 40, con il `velo` sul resto; un avviso (livello 50) resta visibile sopra.
 
 ### Stati
@@ -636,7 +636,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 **Quando non usarlo:** per le note nei risultati della ricerca, anche se sono nel cestino (CMP-13).
 
 ### Varianti e dimensioni
-- **Nota** e **Cartella**: icona Lucide 16 (`file-text` o `folder`) in `icona-tenue`, nome Interfaccia/Media, sotto tipo, provenienza e data di eliminazione (Interfaccia/Piccola, `testo-tenue`; per le cartelle anche il numero di note). A destra Ripristina (pulsante tenue) ed **Elimina definitivamente** (pulsante solo icona con il cestino e il suggerimento "Elimina definitivamente", DEC-17): chiede conferma (CMP-16, RB-55).
+- **Nota** e **Cartella**: icona Lucide 16 (`file-text` o `folder`) in `icona-tenue`, nome Interfaccia/Titolo, sotto tipo, provenienza e data di eliminazione (Interfaccia/Dettaglio, `testo-tenue`; per le cartelle anche il numero di note). A destra Ripristina (pulsante tenue) ed **Elimina definitivamente** (pulsante solo icona con il cestino e il suggerimento "Elimina definitivamente", DEC-17): chiede conferma (CMP-16, RB-55).
 - Largo 560, margini 12 a sinistra, 8 a destra, 8 sopra e sotto, su `sfondo-nota`. Blocco su due righe: hover con `raggio-interno`.
 
 ### Stati
@@ -667,10 +667,10 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 **Quando non usarlo:** per azioni (pulsante) o per informazioni non modificabili.
 
 ### Varianti e dimensioni
-- **Interruttore:** etichetta (Interfaccia/Normale) e descrizione (Interfaccia/Piccola, `testo-tenue`) a sinistra, interruttore (CMP-04) a destra; tutta la riga si clicca.
+- **Interruttore:** etichetta (Interfaccia/Controllo) e descrizione (Interfaccia/Dettaglio, `testo-tenue`) a sinistra, interruttore (CMP-04) a destra; tutta la riga si clicca.
 - **Campo:** come sopra, con un campo (CMP-03, largo 200) a destra, es. la scorciatoia della nota rapida o il nome del dispositivo.
 - **Azione:** etichetta e valore (in `testo-tenue`) a sinistra, pulsante secondario (CMP-01) a destra, es. Email con Cambia o Esci. Serve alla sezione Account, progettata ma non attiva (DEC-19). Si attiva solo il pulsante, come il campo.
-- **Titolo di gruppo:** Interfaccia/Etichetta in `testo-tenue`, alto 32.
+- **Titolo di gruppo:** Interfaccia/Titolo di gruppo in `testo-tenue`, alto 32.
 - Largo 560, margini 12, 16 tra testo e controllo, su `sfondo-nota`.
 
 ### Stati
@@ -704,9 +704,9 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 ### Varianti e dimensioni
 - **Nota:** icona `file-text` 24, «Nessuna nota aperta», spiegazione e il pulsante primario «Nuova nota».
 - **Cestino:** icona elimina 24, «Il cestino è vuoto», spiegazione, senza azioni (niente Svuota cestino).
-- **Colonna:** una riga Interfaccia/Piccola in `testo-tenue`, «Nessuna cartella. Creane una con +».
+- **Colonna:** una riga Interfaccia/Dettaglio in `testo-tenue`, «Nessuna cartella. Creane una con +».
 - **Blocco:** al posto della finestra quando le credenziali mancano o vengono rifiutate (SC-07, DEC-20). Icona errore 24 in `icona-errore`, «Memodu non riesce a collegarsi», cosa correggere e il pulsante primario «Riprova».
-- Icona in `icona-tenue`, titolo Interfaccia/Media, testo Interfaccia/Normale in `testo-tenue`, centrati, largo 320, 8 px di distanza.
+- Icona in `icona-tenue`, titolo Interfaccia/Titolo, testo Interfaccia/Messaggio in `testo-tenue`, centrati, largo 320, 8 px di distanza.
 - I testi sono esempi nel tono di voce; quelli definitivi si scrivono in Fase 6.
 
 ### Stati
@@ -731,7 +731,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 **Quando non usarlo:** per il testo dell'interfaccia (stili Interfaccia/…).
 
 ### Varianti e dimensioni
-- **Riga dei metadati** (parte interna), sotto il titolo: i tag (CMP-05, senza ✕ finché non si modificano, `spazio-elemento` tra l'uno e l'altro) e poi la data di modifica in Interfaccia/Piccola e `testo-tenue`. Sta `spazio-blocco` (16) sotto il titolo e `spazio-gruppo` (24) sopra il testo; tra i tag e la data `spazio-icona` (8). Proprietà **Data** e **Mostra tag**; nella nota nuova niente tag e "Creata ora". Il componente ha la proprietà **Mostra metadati** per nasconderla dove non c'è il titolo (nota rapida, SC-02).
+- **Riga dei metadati** (parte interna), sotto il titolo: i tag (CMP-05, senza ✕ finché non si modificano, `spazio-elemento` tra l'uno e l'altro) e poi la data di modifica in Interfaccia/Dettaglio e `testo-tenue`. Sta `spazio-blocco` (16) sotto il titolo e `spazio-gruppo` (24) sopra il testo; tra i tag e la data `spazio-icona` (8). Proprietà **Data** e **Mostra tag**; nella nota nuova niente tag e "Creata ora". Il componente ha la proprietà **Mostra metadati** per nasconderla dove non c'è il titolo (nota rapida, SC-02).
 - **Con testo:** titolo (Nota/Titolo), riga dei metadati, corpo (Nota/Corpo), sottotitolo (Nota/Sottotitolo), checklist, elenco puntato, elenco numerato; `spazio-blocco` (16) tra i blocchi, `spazio-elemento` (4) tra le voci, `spazio-gruppo` (24) tra intestazione e testo. Larghezza di lettura 640 (la misura massima definitiva si fissa in Fase 7).
 - **Simboli markdown:** in `testo-tenue`, solo sulla riga del cursore (es. `##` davanti al sottotitolo).
 - **Elenchi:** segni (•, 1.) in `testo-tenue`, in una colonna di 16 px.
@@ -769,9 +769,9 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 ### Varianti e dimensioni
 - **Normale:** blocco con `raggio-contenitore` (20); qui un segnaposto su `sfondo-campo` con l'icona immagine 24 in `icona-tenue`.
 - **Selezionata:** contorno 2 px in `sfondo-pieno`, staccato 2 px. Dal tasto destro si aprono le impostazioni (dimensione, allineamento, ritaglio, rotazione, testo alternativo, RB-14); il pannello si disegna con i mockup.
-- **In arrivo:** segnaposto con l'icona di caricamento e «Immagine in arrivo» (Interfaccia/Piccola, `testo-tenue`), mentre l'immagine si sincronizza.
+- **In arrivo:** segnaposto con l'icona di caricamento e «Immagine in arrivo» (Interfaccia/Dettaglio, `testo-tenue`), mentre l'immagine si sincronizza.
 - **Rifiutata:** messaggio in linea accanto al punto di inserimento, icona errore e testo in `testo-errore` (RB-11, RB-12), non bloccante.
-- **Area di trascinamento:** mentre si trascina un file, tutta l'area della nota si copre di un bordo tratteggiato (`icona-tenue`, `tratto-icona`, raggio 20) con icona, «Rilascia qui l'immagine» (Interfaccia/Media) e «Solo immagini, fino a 25 MB» (Interfaccia/Piccola); livello 30.
+- **Area di trascinamento:** mentre si trascina un file, tutta l'area della nota si copre di un bordo tratteggiato (`icona-tenue`, `tratto-icona`, raggio 20) con icona, «Rilascia qui l'immagine» (Interfaccia/Titolo) e «Solo immagini, fino a 25 MB» (Interfaccia/Dettaglio); livello 30.
 
 ### Stati
 | Stato | Descrizione |
@@ -803,7 +803,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 **Quando non usarlo:** per cambiare email o password (sezione Account di SC-06, con righe di impostazione).
 
 ### Varianti e dimensioni
-- **Accesso:** nome Memodu (Nota/Sottotitolo), sottotitolo in `testo-tenue`, campi Email (CMP-03 normale) e Password (CMP-03 password) con etichette Interfaccia/Etichetta, pulsante primario «Accedi» a tutta larghezza.
+- **Accesso:** nome Memodu (Interfaccia/Titolo di schermata), sottotitolo in `testo-tenue`, campi Email (CMP-03 normale) e Password (CMP-03 password) con etichette Interfaccia/Etichetta, pulsante primario «Accedi» a tutta larghezza.
 - **Primo avvio:** stesso modulo, sottotitolo «Crea l'account di questa installazione.» e pulsante «Crea l'account».
 - **Errore:** messaggio in linea sopra il pulsante, icona errore e testo `testo-errore` («Email o password non corrette.»).
 - Largo 320, 16 px tra i blocchi, al centro di una finestra vuota su `sfondo-nota`.

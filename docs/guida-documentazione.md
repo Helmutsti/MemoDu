@@ -143,6 +143,7 @@ Wireframe, componenti visivi, mockup e prototipi (Fasi 4, 5 e 6) si disegnano in
 - A ogni revisione, un'esportazione in immagine di ogni schermata si salva in `moduli/*/immagini/` con il nome del codice (`SC-01.png`). Così il repository resta leggibile senza lo strumento e ogni versione resta nello storico di git.
 - I token del design system (Fase 5) vivono in `design-system/tokens.md` e vengono allineati alle variabili dello strumento.
 - Una scelta presa guardando i disegni diventa una regola, una decisione o una domanda aperta, come ogni altra.
+- Prima di chiudere una fase di disegno (4, 5, 6) si controlla in modo automatico che componenti e schermate usino solo token e stili di ruolo (nel progetto, il comando `/verifica-design`).
 
 ## Cosa non va in questa documentazione
 La documentazione dice *cosa* costruire e *perché*. Chi fa cosa ed entro quando (task, scadenze, avanzamento dello sviluppo) vive nello strumento di gestione del progetto, collegato ai codici `RF-` e `FL-`. Duplicare quelle informazioni qui porta a contraddizioni. Lo stato della *documentazione* (quali fasi sono complete per quali requisiti) è un'altra cosa e vive in `docs/avanzamento.md`.
@@ -339,7 +340,7 @@ Per ogni componente la documentazione include:
 - esempi d'uso corretti e scorretti.
 
 **Output:** libreria di token e componenti documentata.
-**Completata quando:** tutte le schermate della Fase 4 si possono costruire usando solo componenti del sistema, e nessun componente usa un primitivo o un valore senza token.
+**Completata quando:** tutte le schermate della Fase 4 si possono costruire usando solo componenti del sistema, nessun componente usa un primitivo o un valore senza token, e ogni testo usa uno stile di ruolo.
 
 ---
 

@@ -27,3 +27,4 @@
 | ID-19 | Versione web nel browser | Manuel Cucca | 25/09/2026 | Parcheggiata | — | Rinviata da DEC-13: senza login un browser non ha dove leggere le credenziali. Da riprendere decidendo come si accede dal web |
 | ID-20 | Allineamento ottico di icona e testo nel tag (la ✕ sembra più alta del testo); da valutare anche per pulsante con icona e campo di ricerca | Manuel Cucca, da Fase 5 | 25/09/2026 | Parcheggiata | — | Per ora resta com'è (alternativa A). Le alternative B–E restano nel confronto della pagina Prove del file Design system |
 | ID-21 | Personalizzazione nelle impostazioni: colore primario e secondario delle note | Manuel Cucca, da Fase 6 | 25/09/2026 | Proposta | — | — |
+| ID-22 | Numero di note accanto al nome nella riga della colonna, «Titolo (n)», invece che allineato a destra | Manuel Cucca, da Fase 6 | 25/09/2026 | Proposta | — | — |

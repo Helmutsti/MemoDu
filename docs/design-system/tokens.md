@@ -127,16 +127,22 @@ Il breakpoint stretto (sotto 1024 px, con la colonna come drawer) serviva solo a
 ## Tipografia
 Un solo carattere: **Inter**.
 
-| Stile | Dimensione | Peso | Interlinea | Uso |
+| Stile | Dimensione | Peso | Interlinea | Quando si usa |
 |---|---|---|---|---|
 | `nota-titolo` | 30 | Bold | 1,25 (spaziatura −1%) | Titolo della nota |
 | `nota-sottotitolo` | 19 | Semi Bold | 1,35 | Titoli dentro la nota |
 | `nota-corpo` | 15 | Regular | 1,6 | Testo della nota |
-| `interfaccia-normale` | 13 | Regular | 1,4 | Righe, voci di menu, campi |
-| `interfaccia-media` | 13 | Medium | 1,4 | Riga selezionata, pulsanti |
-| `interfaccia-etichetta` | 11 | Medium | 1,3 | Etichette dei campi, giorni della settimana, titoli di gruppo delle impostazioni |
+| `interfaccia-titolo-schermata` | 19 | Semi Bold | 1,35 | Titolo di una schermata senza nota (Memodu nel modulo di accesso) |
+| `interfaccia-controllo` | 13 | Regular | 1,4 | Testo di campi, righe, voci di menu, tag, filtri, giorni del calendario |
+| `interfaccia-controllo-attivo` | 13 | Medium | 1,4 | Riga selezionata, etichetta dei pulsanti, giorno di oggi |
+| `interfaccia-messaggio` | 13 | Regular | 1,4 | Testo di avvisi, finestre di conferma, stati vuoti, aree di trascinamento |
+| `interfaccia-titolo` | 13 | Medium | 1,4 | Titoli di finestre, stati vuoti, risultati, elementi del cestino, mese del calendario |
+| `interfaccia-etichetta` | 11 | Medium | 1,3 | Etichette dei campi, giorni della settimana |
+| `interfaccia-titolo-gruppo` | 11 | Medium | 1,3 | Titoli di gruppo delle impostazioni |
 | `interfaccia-titolo-sezione` | 11 | Semi Bold, maiuscolo, spaziatura 6% | 1,3 | Titoli di sezione della colonna (Non organizzate, Cartelle) |
-| `interfaccia-piccola` | 11 | Regular | 1,3 | Date, dettagli |
+| `interfaccia-dettaglio` | 11 | Regular | 1,3 | Date, cartella, conteggi, scorciatoie, descrizioni, suggerimento, messaggio d'errore di un campo |
+
+Gli stili sono il livello semantico: si sceglie lo stile dal ruolo del testo, mai dalla taglia, e un testo senza stile non è ammesso (DEC-22). Sotto gli stili ci sono i primitivi nascosti `tipo-famiglia` (Inter), `tipo-dimensione-11` … `-30` e `tipo-peso-regular` … `-bold`, collegati a famiglia, dimensione e peso di ogni stile; interlinea e spaziatura restano nello stile, perché sono in percentuale. Ruoli diversi con gli stessi valori (controllo e messaggio, controllo attivo e titolo) restano stili separati: se un ruolo cambia, non trascina l'altro.
 
 ## Ombre ed elevazione
 Un'ombra sola, solo su ciò che fluttua (regola 5): `ombra-flottante` = 0 8 24, colore `ombra-flottante`. La usano i livelli 20–50 della scala z-index; i livelli 0 e 10 sono piatti.

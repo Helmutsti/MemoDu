@@ -15,7 +15,7 @@ Perimetro: solo cloud, un solo utente, installazione personale con credenziali p
 | Should | RF-07, RF-09, RF-12, RF-13, RF-16 | — | 1 – Requisiti | Mancano gli scenari d'uso |
 
 ### Idee parcheggiate
-Da rivalutare a fine prima fase: ID-01, ID-03, ID-04, ID-05, ID-06, ID-11, ID-12, ID-13, ID-14, ID-20. In stato Proposta: ID-16, ID-18 (dal moodboard, DEC-11), ID-21. ID-15 accettata in RF-05, ID-17 rifiutata. Dettagli in `registri/idee.md`.
+Da rivalutare a fine prima fase: ID-01, ID-03, ID-04, ID-05, ID-06, ID-11, ID-12, ID-13, ID-14, ID-20. In stato Proposta: ID-16, ID-18 (dal moodboard, DEC-11), ID-21, ID-22. ID-15 accettata in RF-05, ID-17 rifiutata. Dettagli in `registri/idee.md`.
 
 ## Rinvii
 Tutto ciò che è stato rimandato, con la fase in cui va risolto.
