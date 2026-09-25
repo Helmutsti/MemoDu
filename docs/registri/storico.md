@@ -138,3 +138,5 @@
 | 25/09/2026 | Manuel Cucca | DEC-16: in scuro sfondo-<stato> passa dal gradino 950 all'800 (gli avvisi si confondevano con il fondo) | Scelta di Manuel Cucca tra quattro alternative |
 | 25/09/2026 | Manuel Cucca | DEC-17: "Elimina definitivamente" su ogni elemento del cestino, con conferma. Nuova RB-55, RB-27 aggiornata, FL-05 e SC-04 aggiornati, CMP-17 con il pulsante con il cestino | Richiesta di Manuel Cucca rivedendo CMP-17 |
 | 25/09/2026 | Manuel Cucca | RF-15: allineato a RB-55 il punto sulla permanenza nel cestino | Coerenza con DEC-17 |
+| 25/09/2026 | Manuel Cucca | Componenti CMP-01 … CMP-21 approvati così come sono: le 18 deduzioni sui componenti (tastiera, forme, larghezze, casella tonda, finestra minima 1024 px) diventano regole, già scritte in componenti.md e tokens.md | Revisione di Manuel Cucca |
+| 25/09/2026 | Manuel Cucca | Libreria "Memodu – Wireframe UI": si elimina, la libreria del progetto è il file Design system. Pagina Prove lasciata in sospeso | Scelta di Manuel Cucca |

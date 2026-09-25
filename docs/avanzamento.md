@@ -11,7 +11,7 @@ Perimetro: solo cloud, un solo utente, installazione personale con credenziali p
 
 | Frammento | Requisiti | Fasi complete | Prossima fase | Note |
 |---|---|---|---|---|
-| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4 | 5 – Design system | Fase 4 completata (SC-01 … SC-06, wireflow cliccabile, test rapido fatto). Fase 5 quasi completa: moodboard e direzione C (DEC-12), regole visive 1–11, token in chiaro e scuro con contrasti verificati (DEC-14, DEC-16), icone Lucide (DEC-15), tutti i componenti CMP-01 … CMP-21 disegnati e documentati. Per chiuderla: tre decisioni aperte, conferma delle deduzioni sui componenti, destino della libreria Wireframe UI |
+| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4 | 5 – Design system | Fase 4 completata (SC-01 … SC-06, wireflow cliccabile, test rapido fatto). Fase 5 quasi completa: moodboard e direzione C (DEC-12), regole visive 1–11, token in chiaro e scuro con contrasti verificati (DEC-14, DEC-16), icone Lucide (DEC-15), tutti i componenti CMP-01 … CMP-21 disegnati e documentati. Componenti approvati da Manuel Cucca (le deduzioni sui componenti valgono come regole). Per chiuderla: le decisioni aperte ed eliminare a mano la libreria Wireframe UI |
 | Should | RF-07, RF-09, RF-12, RF-13, RF-16 | — | 1 – Requisiti | Mancano gli scenari d'uso |
 
 ### Idee parcheggiate
@@ -31,7 +31,7 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 | Fondo dei campi sotto 3:1 contro la superficie (WCAG 1.4.11): verificare nel test di accessibilità che il campo si riconosca da etichetta, segnaposto, icona e anello di focus | CMP-03, token | Fase 8 | `design-system/tokens.md` |
 | Eliminazione definitiva di un elemento su un dispositivo mentre un altro lo modifica: verificare che valga come per lo svuotamento del cestino | RB-55, FL-07 | Fase 7 | `registri/decisioni/DEC-17-eliminazione-definitiva-di-un-elemento.md` |
 | Breakpoint e disegni per il mobile | Token, ID-11 | Quando si riprende il mobile | `design-system/tokens.md` |
-| Libreria "Memodu – Wireframe UI": eliminarla o archiviarla ora che la libreria è il file Design system; i wireframe ne usano le istanze | DEC-10 | Fine della Fase 5 | `design-system/componenti.md` |
+| Libreria "Memodu – Wireframe UI": decisa l'eliminazione (non serve più; le istanze nei wireframe restano visibili). Da fare a mano in Figma: annullare la pubblicazione ed eliminare il file | DEC-10 | Fine della Fase 5 | File Figma |
 | Pannello delle impostazioni dell'immagine (dimensione, allineamento, ritaglio, rotazione, testo alternativo) | CMP-21, RB-14 | Fase 6, con i mockup | `design-system/componenti.md` |
 | Testi definitivi di messaggi e avvisi | Tutti i flussi, EN-08 | Fase 6 | Flussi, colonna "Comunicazione" |
 | Come si salva il sottolineato nel markdown | RF-02 | Fase 7 | `moduli/note/8-test.md` |
@@ -53,24 +53,6 @@ Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui
 | Eliminando una nota, le sue immagini la seguono nel cestino | EN-02 | `moduli/note/8-test.md` |
 | Il comando Annulla vale per tutte le modifiche della nota aperta | RF-02 | `moduli/note/8-test.md` |
 | Con credenziali mancanti o rifiutate l'app funziona lo stesso sulla copia di lavoro, e mostra solo l'avviso | FL-08, DEC-13 | `moduli/sincronizzazione/2-flussi.md` |
-| Nelle finestre di conferma il focus da tastiera parte da Annulla, per non confermare per errore | CMP-01 | `design-system/componenti.md` |
-| Nel campo di testo Esc cancella la ricerca; nel campo scorciatoia Esc annulla la registrazione e Backspace toglie la combinazione | CMP-03 | `design-system/componenti.md` |
-| Canc o Backspace toglie il tag in focus; nei filtri della ricerca Spazio seleziona o deseleziona il tag | CMP-05 | `design-system/componenti.md` |
-| Nella colonna le frecce su e giù passano da una riga all'altra, destra e sinistra aprono e chiudono le cartelle, Invio apre la nota | CMP-06 | `design-system/componenti.md` |
-| Nei menu: frecce su e giù tra le voci, Invio attiva, Esc chiude, freccia destra e sinistra aprono e chiudono il sottomenu. Il suggerimento compare anche al focus da tastiera e si nasconde con Esc | CMP-07, CMP-08 | `design-system/componenti.md` |
-| Scorciatoie di sottolineato (Ctrl + U) e barrato (Ctrl + Maiusc + X); nel menu di inserimento si scrive dopo / per filtrare le voci | CMP-09, RF-02 | `design-system/componenti.md` |
-| La pillola degli strumenti si raggiunge da tastiera con una scorciatoia e si percorre con le frecce; Esc torna al testo | CMP-10 | `design-system/componenti.md` |
-| Nel calendario: frecce tra i giorni, Pagina su e giù per cambiare mese, Invio sceglie, Esc chiude; la settimana parte dal lunedì | CMP-12 | `design-system/componenti.md` |
-| Dalla ricerca, freccia giù entra nei risultati; Invio apre, Esc chiude la card. I filtri per data si scelgono da un menu | CMP-13 | `design-system/componenti.md` |
-| Hover dei blocchi su più righe (risultati, cestino, impostazioni) a rettangolo con raggio-interno 12 invece della pillola | CMP-13, CMP-17, CMP-18 | `design-system/componenti.md` |
-| Casella della checklist tonda; la voce spuntata va in testo tenue barrato; Ctrl + Invio spunta la voce | CMP-20 | `design-system/componenti.md` |
-| Nella finestra con tre scelte (RB-31) l'azione principale è "Aggiungi un numero", la scelta che non tocca niente | CMP-16 | `design-system/componenti.md` |
-| F2 rinomina la cartella in focus; lo spostamento da tastiera passa da Sposta in | CMP-14 | `design-system/componenti.md` |
-| Larghezze: card dei risultati 480, avviso 480, finestra di conferma 400, testo della nota 640, elemento del cestino e riga di impostazione 560 | CMP-13 … CMP-21 | `design-system/componenti.md` |
-| Selezione dell'immagine con contorno sfondo-pieno; impostazioni dell'immagine dal tasto destro | CMP-21 | `design-system/componenti.md` |
-| Nel filtro per tag si possono scegliere più tag (la pillola mostra "Tag: 2"); le scelte rapide per data sono Oggi, Ultimi 7 giorni, Ultimi 30 giorni, Quest'anno | CMP-09, CMP-13 | `design-system/componenti.md` |
-| Maiusc + Canc elimina definitivamente l'elemento del cestino in focus, sempre con conferma | CMP-17, RB-55 | `design-system/componenti.md` |
-| La finestra desktop non si stringe sotto 1024 px, perché il breakpoint stretto serviva solo al web | Token, breakpoint | `design-system/tokens.md` |
 
 ## Rischi accettati
 | Rischio | Decisione | Da rivedere |
