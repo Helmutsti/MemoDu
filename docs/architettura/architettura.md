@@ -10,7 +10,7 @@
 | Editor della nota | CodeMirror 6 con anteprima dal vivo | DEC-27 |
 | Server (API) | Node con TypeScript. Framework da scegliere | DEC-24 |
 | Archivio del server | File system: documenti e immagini cifrati come file | DEC-25 |
-| Dati sul dispositivo | File markdown in una cartella: intestazione YAML, titolo come prima riga, date in UTC o solo giorno | DEC-28 |
+| Note | Per ora le gestisce l'API: file markdown in `Documenti\Memodu` sulla macchina di sviluppo (intestazione YAML, titolo come prima riga, date in UTC o solo giorno). Provvisorio: poi database e copia di lavoro sul dispositivo | DEC-28, DEC-29, DEC-30 |
 | Hosting | Per ora la macchina di sviluppo (ambiente Locale). L'hosting definitivo è rinviato; deve avere un disco persistente (DEC-25) | — |
 
 ## Schema generale
