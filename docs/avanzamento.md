@@ -11,7 +11,7 @@ Perimetro: solo cloud, un solo utente, installazione personale con credenziali p
 
 | Frammento | Requisiti | Fasi complete | Prossima fase | Note |
 |---|---|---|---|---|
-| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4 | 5 – Design system | Fase 4 completata: SC-01 … SC-06 con i loro stati e wireflow cliccabile per FL-01 … FL-09 (prototipo Figma). Test rapido dei wireframe fatto. Fase 5 in corso: moodboard fatto, direzione C · Essenziale originale con grigi neutri (DEC-12), regole visive e token fatti (chiaro e scuro, contrasti verificati), con scale complete e colori degli stati (DEC-14). Componenti: CMP-01 Pulsante, CMP-03 Campo di testo, CMP-04 Interruttore, CMP-05 Tag e CMP-06 Riga della colonna disegnati, icone Lucide (DEC-15) in 4 dimensioni; prossimi CMP-07 e CMP-08 |
+| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4 | 5 – Design system | Fase 4 completata: SC-01 … SC-06 con i loro stati e wireflow cliccabile per FL-01 … FL-09 (prototipo Figma). Test rapido dei wireframe fatto. Fase 5 in corso: moodboard fatto, direzione C · Essenziale originale con grigi neutri (DEC-12), regole visive e token fatti (chiaro e scuro, contrasti verificati), con scale complete e colori degli stati (DEC-14). Componenti: componenti base CMP-01 … CMP-08 disegnati, icone Lucide (DEC-15) in 4 dimensioni; prossimi i componenti composti CMP-09 … CMP-21 |
 | Should | RF-07, RF-09, RF-12, RF-13, RF-16 | — | 1 – Requisiti | Mancano gli scenari d'uso |
 
 ### Idee parcheggiate
@@ -32,6 +32,7 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 | Come si salva il sottolineato nel markdown | RF-02 | Fase 7 | `moduli/note/8-test.md` |
 | Come si salvano dimensione, allineamento, ritaglio e rotazione delle immagini senza rompere l'esportazione | RF-03, RF-13 | Fase 7 | `moduli/note/8-test.md` |
 | Durata della pausa di scrittura prima del salvataggio (indicativa 1 s) | RB-06 | Fase 7 | `moduli/note/2-flussi.md` |
+| Ritardo prima della comparsa del suggerimento | CMP-08 | Fase 7 | `design-system/componenti.md` |
 | Frequenza della sincronizzazione | RF-10 | Fase 7 | `moduli/sincronizzazione/1-requisiti.md` |
 | Soglia dell'avviso "server irraggiungibile" (indicativa 24 ore) | RB-40 | Fase 7 | `moduli/sincronizzazione/2-flussi.md` |
 | Memorizzazione di date e fusi orari; confronto "più recente" tra dispositivi | FL-04, FL-07 (SF-14) | Fase 7 | `moduli/note/2-flussi.md`, `moduli/sincronizzazione/2-flussi.md` |
@@ -51,6 +52,7 @@ Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui
 | Nel campo di testo Esc cancella la ricerca; nel campo scorciatoia Esc annulla la registrazione e Backspace toglie la combinazione | CMP-03 | `design-system/componenti.md` |
 | Canc o Backspace toglie il tag in focus; nei filtri della ricerca Spazio seleziona o deseleziona il tag | CMP-05 | `design-system/componenti.md` |
 | Nella colonna le frecce su e giù passano da una riga all'altra, destra e sinistra aprono e chiudono le cartelle, Invio apre la nota | CMP-06 | `design-system/componenti.md` |
+| Nei menu: frecce su e giù tra le voci, Invio attiva, Esc chiude, freccia destra e sinistra aprono e chiudono il sottomenu. Il suggerimento compare anche al focus da tastiera e si nasconde con Esc | CMP-07, CMP-08 | `design-system/componenti.md` |
 | La finestra desktop non si stringe sotto 1024 px, perché il breakpoint stretto serviva solo al web | Token, breakpoint | `design-system/tokens.md` |
 
 ## Rischi accettati

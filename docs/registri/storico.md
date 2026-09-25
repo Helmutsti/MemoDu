@@ -121,3 +121,4 @@
 | 25/09/2026 | Manuel Cucca | CMP-05 Tag: pillola alta 24 (nuovo token misura-controllo-piccolo) con ✕ facoltativa; selezionato come filtro attivo della ricerca | Fase 5 |
 | 25/09/2026 | Manuel Cucca | CMP-02: variante Dimensione 12, 16, 20, 24 px con tratto costante 1,5. Pagina Componenti base riordinata in sezioni; pagina Prove con il confronto sull'allineamento di icona e testo | Richiesta di Manuel Cucca |
 | 25/09/2026 | Manuel Cucca | CMP-06 Riga della colonna: nota, cartella chiusa e aperta, sezione aperta e chiusa; stati default, hover, focus, selezionata, trascinamento sopra; rientro 16 px per livello. CMP-02: frecce destra e giù. Aperta la scelta sull'allineamento di icona e testo nel tag | Fase 5 |
+| 25/09/2026 | Manuel Cucca | CMP-07 Voce di menu (normale, distruttiva in rosso, separatore; evidenziata vale per mouse e tastiera) e CMP-08 Suggerimento (pillola scura sopra i pulsanti solo icona). Componenti base completati | Fase 5 |

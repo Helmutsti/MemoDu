@@ -12,8 +12,8 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-04 | Interruttore | base | Disegnato |
 | CMP-05 | Tag | base | Disegnato |
 | CMP-06 | Riga della colonna | base | Disegnato |
-| CMP-07 | Voce di menu | base | Da disegnare |
-| CMP-08 | Suggerimento | base | Da disegnare |
+| CMP-07 | Voce di menu | base | Disegnato |
+| CMP-08 | Suggerimento | base | Disegnato |
 | CMP-09 | Menu (`···`, tasto destro, inserimento con `/`, suggerimenti dei tag) | composto | Da disegnare |
 | CMP-10 | Pillola degli strumenti | composto | Da disegnare |
 | CMP-11 | Pannello a comparsa | composto | Da disegnare |
@@ -239,4 +239,72 @@ L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'ico
 ### Esempi
 - ✅ Corretto: "Lavoro" con la freccia ▾ e, sotto, "Clienti" con 16 px di rientro.
 - ❌ Scorretto: usare il grigio tenue per il titolo di una nota in hover.
+
+---
+
+## CMP-07 – Voce di menu
+**Tipo:** base · **Usato in:** menu `···`, menu del tasto destro, menu di inserimento con `/`, suggerimenti dei tag (tutti in CMP-09) · **Figma:** [Voce di menu](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=39-502)
+
+**Scopo:** una scelta dentro un menu.
+**Quando usarlo:** solo dentro un menu (CMP-09).
+**Quando non usarlo:** fuori da un menu: nella colonna si usa la riga della colonna (CMP-06), in una schermata un pulsante (CMP-01).
+
+### Varianti e dimensioni
+- **Normale:** etichetta Interfaccia/Normale in `testo-primario`, su `sfondo-flottante`.
+- **Distruttiva:** per le azioni che eliminano (Elimina, Svuota cestino), in `testo-errore` e `icona-errore`. È l'unico uso del colore di uno stato per un'azione: avvisa che non si torna indietro (DEC-14). L'azione chiede comunque conferma (CMP-16).
+- **Separatore:** linea di 1 px in `bordo-divisore`, alta 9 in tutto, tra gruppi di voci (regola 4: le linee solo dove servono).
+- Alta 32 (`misura-riga`), larga 220 negli esempi, pillola, margini 8, distanza 8.
+- Proprietà: **Etichetta**, **Mostra icona** + **Icona** (Lucide 16), **Mostra scorciatoia** + **Scorciatoia** (Interfaccia/Piccola in `testo-tenue`, es. "Ctrl + B"), **Sottomenu** (freccia a destra).
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Default | Come nelle varianti |
+| Hover | Evidenziata: `sfondo-hover` e tutto il testo, scorciatoia compresa, in `testo-primario` (regola 7). La distruttiva si evidenzia su `sfondo-errore` |
+| Focus | Uguale a Evidenziata: nei menu il focus da tastiera si mostra così, non con l'anello |
+| Attivo | Al clic il menu si chiude e l'azione parte |
+| Disabilitato | Opacità 40%; si salta con le frecce |
+| Errore | Non previsto |
+| Caricamento | Non previsto |
+
+### Accessibilità
+- **Tastiera:** frecce su e giù tra le voci (i separatori si saltano), Invio attiva, Esc chiude il menu, freccia destra apre il sottomenu e freccia sinistra lo chiude.
+- **Lettori di schermo:** ruolo "voce di menu"; la scorciatoia si annuncia come tasti di scelta rapida; il sottomenu come "ha un sottomenu".
+- **Contrasti:** testo su `sfondo-flottante` ≥ 12,87:1; scorciatoia in `testo-tenue` 5,49:1 in chiaro e 5,61:1 in scuro; distruttiva 6,06:1 (chiaro) e 5,19:1 (scuro), evidenziata su `sfondo-errore` 5,48:1 e 6,86:1.
+
+### Esempi
+- ✅ Corretto: nel menu della nota, un separatore e poi "Elimina" in rosso come ultima voce.
+- ❌ Scorretto: mettere in rosso un'azione che si annulla (Sposta in) o usare l'icona "+" come decorazione su ogni voce.
+
+---
+
+## CMP-08 – Suggerimento
+**Tipo:** base · **Usato in:** tutte le schermate, sui pulsanti solo icona e sulle icone senza etichetta · **Figma:** [Suggerimento](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=40-542)
+
+**Scopo:** dire cosa fa un controllo che mostra solo un'icona.
+**Quando usarlo:** sempre sui pulsanti solo icona (+, ···, ✕), con lo stesso testo del nome accessibile; se l'azione ha una scorciatoia, la si aggiunge al testo ("Nuova nota · Ctrl + Alt + N").
+**Quando non usarlo:** per spiegazioni lunghe o informazioni necessarie (vanno nel testo della schermata) e sui controlli che hanno già un'etichetta.
+
+### Varianti e dimensioni
+- Una sola: pillola alta 24 (`misura-controllo-piccolo`), margini 8, testo Interfaccia/Piccola in `testo-su-pieno` su `sfondo-pieno`, `ombra-flottante`, livello 20 (`z-comparsa`).
+- Compare 8 px sopra il controllo, centrata; se non c'è spazio sopra, sotto.
+- Proprietà: **Testo**.
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Default | Visibile |
+| Hover · Focus | Compare quando il mouse si ferma sul controllo o quando il controllo riceve il focus da tastiera; sparisce quando lo si lascia o con Esc |
+| Attivo · Disabilitato · Errore · Caricamento | Non previsti: il suggerimento non si clicca |
+
+Compare e sparisce con `movimento-durata-breve` (120 ms). Il ritardo prima della comparsa si fissa in Fase 7.
+
+### Accessibilità
+- **Tastiera:** non riceve il focus; Esc lo nasconde senza spostare il focus.
+- **Lettori di schermo:** il testo è anche la descrizione del controllo, quindi si legge una volta sola.
+- **Contrasti:** 16,48:1 in chiaro e 16,75:1 in scuro.
+
+### Esempi
+- ✅ Corretto: "Nuova nota" sopra il + delle non organizzate.
+- ❌ Scorretto: un suggerimento su un pulsante che dice già "Nuova nota".
 
