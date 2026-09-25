@@ -11,7 +11,7 @@ Perimetro: solo cloud, un solo utente, installazione personale con credenziali p
 
 | Frammento | Requisiti | Fasi complete | Prossima fase | Note |
 |---|---|---|---|---|
-| Must A · Scrivere in locale | RF-01, RF-02 | 1, 2, 3, 4, 5 | 6 – Mockup e prototipo (solo SC-02 e SC-03) | Primo frammento da portare alla Definition of Ready per iniziare il codice. Solo sul dispositivo: niente sincronizzazione, cifratura né server. Servono: mockup e testi definitivi di SC-02 e SC-03 (Fase 6); framework dell'interfaccia, editor markdown, database locale, salvataggio del sottolineato, pausa prima del salvataggio (RB-06), date e fusi orari (Fase 7); criteri di accettazione, piano di test, controllo della Definition of Ready e task (Fase 8) |
+| Must A · Scrivere in locale | RF-01, RF-02 | 1, 2, 3, 4, 5 | 6 – Mockup e prototipo (solo SC-02 e SC-03) | Primo frammento da portare alla Definition of Ready per iniziare il codice. Solo sul dispositivo: niente sincronizzazione, cifratura né server. Fase 7 in parte fatta: React (DEC-26), CodeMirror 6 (DEC-27), note come file markdown con formato e date (DEC-28), salvataggio dopo 2 s (RB-06). Servono: nomi dei file e cartella, cestino, modifiche fatte da fuori, parte Rust e interfaccia (Fase 7); mockup e testi definitivi di SC-02 e SC-03 (Fase 6); criteri di accettazione, piano di test, controllo della Definition of Ready e task (Fase 8) |
 | Must | RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4, 5 | 6 – Mockup e prototipo (in pausa) · 7 – Architettura tecnica avviata in parallelo: scelti app (DEC-23), server (DEC-24) e archivio (DEC-25), il resto rinviato | Fase 5 completata il 25/09/2026, riaperta e richiusa lo stesso giorno per DEC-21 (spazi semantici, regola 12): moodboard e direzione C (DEC-12), regole visive 1–11, token in chiaro e scuro con contrasti verificati (DEC-14, DEC-16), icone Lucide (DEC-15), componenti CMP-01 … CMP-22 disegnati, documentati e approvati da Manuel Cucca, libreria pubblicata. Il criterio "ogni schermata si costruisce con i soli componenti" si verifica schermata per schermata nei mockup: un componente mancante riapre la Fase 5 (guida, Fase 6) |
 | Should | RF-07, RF-09, RF-12, RF-13, RF-16 | — | 1 – Requisiti | Mancano gli scenari d'uso |
 
@@ -23,8 +23,9 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 
 | Cosa | Riguarda | Da risolvere in | Dove è annotato |
 |---|---|---|---|
-| Framework dell'interfaccia (React, Svelte, Vue…) ed editor markdown; cosa sta nella parte Rust e cosa nell'interfaccia | DEC-23, RF-02 | Fase 7 | `registri/decisioni/DEC-23-app-desktop-con-tauri.md` |
-| Database sul dispositivo e ricerca a testo pieno; cifratura a riposo della copia locale | DEC-23, RF-06, RNF-02 | Fase 7 | `architettura/architettura.md` |
+| Cosa sta nella parte Rust e cosa nell'interfaccia | DEC-23 | Fase 7 | `registri/decisioni/DEC-23-app-desktop-con-tauri.md` |
+| Nomi dei file delle note e posizione della cartella; cestino come cartella; controllo delle modifiche fatte da altri programmi | DEC-28, RF-01, RF-02 | Fase 7, frammento Must A | `registri/decisioni/DEC-28-note-come-file-markdown.md` |
+| Ricerca a testo pieno sui file delle note; cifratura a riposo della copia locale | DEC-28, RF-08, RNF-02 | Fase 7 | `architettura/architettura.md` |
 | Cifratura: libreria e algoritmo, chiavi per scopo, allegati a pezzi, portachiavi del sistema | DEC-08, RNF-02 | Fase 7 | `architettura/architettura.md` |
 | Framework HTTP del server, forma delle API e protocollo di sincronizzazione | DEC-24, FL-07 | Fase 7 | `registri/decisioni/DEC-24-server-con-api-in-node.md` |
 | Organizzazione dei file sul server, elenco delle modifiche, backup | DEC-25 | Fase 7 | `registri/decisioni/DEC-25-archivio-del-server-su-file-system.md` |
@@ -38,13 +39,11 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 | Breakpoint e disegni per il mobile | Token, ID-11 | Quando si riprende il mobile | `design-system/tokens.md` |
 | Pannello delle impostazioni dell'immagine (dimensione, allineamento, ritaglio, rotazione, testo alternativo) | CMP-21, RB-14 | Fase 6, con i mockup | `design-system/componenti.md` |
 | Testi definitivi di messaggi e avvisi | Tutti i flussi, EN-08 | Fase 6 | Flussi, colonna "Comunicazione" |
-| Come si salva il sottolineato nel markdown | RF-02 | Fase 7 | `moduli/note/8-test.md` |
 | Come si salvano dimensione, allineamento, ritaglio e rotazione delle immagini senza rompere l'esportazione | RF-03, RF-13 | Fase 7 | `moduli/note/8-test.md` |
-| Durata della pausa di scrittura prima del salvataggio (indicativa 1 s) | RB-06 | Fase 7 | `moduli/note/2-flussi.md` |
 | Ritardo prima della comparsa del suggerimento | CMP-08 | Fase 7 | `design-system/componenti.md` |
 | Frequenza della sincronizzazione | RF-10 | Fase 7 | `moduli/sincronizzazione/1-requisiti.md` |
 | Soglia dell'avviso "server irraggiungibile" (indicativa 24 ore) | RB-40 | Fase 7 | `moduli/sincronizzazione/2-flussi.md` |
-| Memorizzazione di date e fusi orari; confronto "più recente" tra dispositivi | FL-04, FL-07 (SF-14) | Fase 7 | `moduli/note/2-flussi.md`, `moduli/sincronizzazione/2-flussi.md` |
+| Confronto "più recente" tra dispositivi (il formato delle date è fissato in DEC-28) | FL-04, FL-07 (SF-14) | Fase 7 | `moduli/note/2-flussi.md`, `moduli/sincronizzazione/2-flussi.md` |
 | Versioni diverse di app e server | FL-07 (SF-33) | Fase 7 | `moduli/sincronizzazione/2-flussi.md` |
 | Come si generano, si conservano sul dispositivo e si cambiano le credenziali dell'installazione | EN-05, RB-54 | Fase 7 | `moduli/sincronizzazione/3-entita.md` |
 | Quando eliminare davvero gli avvisi visti | EN-08 | Fase 7 | `moduli/sincronizzazione/3-entita.md` |

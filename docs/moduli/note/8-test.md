@@ -12,7 +12,7 @@
 |---|---|---|---|---|
 | RF-01 | La scorciatoia è globale di sistema (funziona anche con l'app chiusa o in background)? Esiste un equivalente su mobile? | Manuel Cucca | Desktop: scorciatoia globale con Memodu in background. Web: nessuna nota rapida. Mobile rinviato | DEC-04 |
 | RF-02 | "Lined" nel testo originale significa barrato, oppure altro (linea orizzontale, evidenziato)? | Manuel Cucca | Barrato. Aggiunti anche titoli ed elenchi; i link esterni non servono nella prima fase | |
-| RF-02 | Il sottolineato non fa parte del markdown standard: come viene salvato nel file? | | | |
+| RF-02 | Il sottolineato non fa parte del markdown standard: come viene salvato nel file? | Manuel Cucca | Come tag HTML `<u>testo</u>` | DEC-28 |
 | RF-02 | Serve anche la nota in testo semplice (ID-01)? | Manuel Cucca | Non ora: ID-01 parcheggiata | |
 | RF-04 | Gli hashtag dei metadati sono gli stessi tag di RF-06? | Manuel Cucca | Sì. Si chiamano solo "tag", mai "hashtag". RF-06 torna Must | |
 | RF-04 | Cosa succede a una nota quando supera la data di fine validità? | Manuel Cucca | Nessun effetto | |

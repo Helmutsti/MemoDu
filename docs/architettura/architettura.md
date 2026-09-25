@@ -6,9 +6,11 @@
 | Ambito | Scelta | Decisione |
 |---|---|---|
 | App desktop (Windows, macOS) | Tauri 2: interfaccia web in TypeScript, parte nativa in Rust. Framework dell'interfaccia da scegliere | DEC-23 |
+| Interfaccia | React con TypeScript | DEC-26 |
+| Editor della nota | CodeMirror 6 con anteprima dal vivo | DEC-27 |
 | Server (API) | Node con TypeScript. Framework da scegliere | DEC-24 |
 | Archivio del server | File system: documenti e immagini cifrati come file | DEC-25 |
-| Database sul dispositivo | Da scegliere (rinvio) | — |
+| Dati sul dispositivo | File markdown in una cartella: intestazione YAML, titolo come prima riga, date in UTC o solo giorno | DEC-28 |
 | Hosting | Per ora la macchina di sviluppo (ambiente Locale). L'hosting definitivo è rinviato; deve avere un disco persistente (DEC-25) | — |
 
 ## Schema generale

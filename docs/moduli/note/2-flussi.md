@@ -230,7 +230,7 @@ La posizione di una nota (radice, cartella, cestino) è descritta nel diagramma 
 | RB-03 | Una nota rapida chiusa senza testo non crea nessuna nota | FL-01 |
 | RB-04 | Premere la scorciatoia con una nota rapida già aperta salva quella aperta, che resta aperta, e ne apre una nuova in un'altra finestra | FL-01 |
 | RB-05 | Aprendo la nota rapida nel programma completo, la nota aperta nel programma viene salvata e chiusa, e al suo posto compare la nota rapida | FL-01 |
-| RB-06 | Ogni modifica a una nota si salva da sola sulla copia di lavoro dopo una breve pausa di scrittura (valore indicativo 1 s, da fissare in Fase 7). Non esiste un pulsante Salva | FL-01, FL-02 |
+| RB-06 | Ogni modifica a una nota si salva da sola sulla copia di lavoro dopo 2 s di pausa di scrittura, e subito quando si chiude la finestra, si cambia nota o la finestra perde il focus. Il file si scrive in modo sicuro (prima un file temporaneo, poi lo si mette al posto dell'originale), così una chiusura a metà non lo rompe. Non esiste un pulsante Salva | FL-01, FL-02 |
 | RB-07 | Il testo incollato da fuori (Word, web, email) si incolla sempre come testo semplice | FL-02 |
 | RB-08 | Il contenuto delle note non esegue mai codice: script e HTML attivo si mostrano come testo o vengono rimossi, su desktop e web | FL-02 |
 | RB-09 | Una nuova nota creata nel programma completo nasce nella cartella selezionata; se nessuna cartella è selezionata, nasce nella radice | FL-09 |
