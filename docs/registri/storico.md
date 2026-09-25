@@ -164,3 +164,4 @@
 | 25/09/2026 | Manuel Cucca | Mockup di SC-01 allineato alla libreria: colonna sui token, titoli di sezione nuovi, intestazione della nota dal componente | Fase 6 |
 | 25/09/2026 | Manuel Cucca | Guida: un requisito può cambiare frammento lungo il percorso mantenendo le fasi già fatte (ciclo di vita di un pacchetto) | Richiesta di Manuel Cucca: fermare delle parti per andare avanti senza rimettere in discussione le fasi |
 | 25/09/2026 | Manuel Cucca | Frammento Must: mockup della Fase 6 in pausa (rinvio), avviata la Fase 7 in parallelo, come la guida permette | Scelta di Manuel Cucca: ragionare sulle tecnologie |
+| 25/09/2026 | Manuel Cucca | Architettura: app desktop Tauri 2, server Node con TypeScript, archivio del server su file system. Rinviati alla Fase 7: framework dell'interfaccia, database locale, cifratura, API e sincronizzazione, organizzazione dei file, hosting | DEC-23, DEC-24, DEC-25 |

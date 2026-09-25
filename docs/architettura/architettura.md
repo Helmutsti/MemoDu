@@ -5,10 +5,11 @@
 ## Scelte tecnologiche
 | Ambito | Scelta | Decisione |
 |---|---|---|
-| Frontend | | DEC-00 |
-| Backend | | DEC-00 |
-| Database | | DEC-00 |
-| Hosting | | DEC-00 |
+| App desktop (Windows, macOS) | Tauri 2: interfaccia web in TypeScript, parte nativa in Rust. Framework dell'interfaccia da scegliere | DEC-23 |
+| Server (API) | Node con TypeScript. Framework da scegliere | DEC-24 |
+| Archivio del server | File system: documenti e immagini cifrati come file | DEC-25 |
+| Database sul dispositivo | Da scegliere (rinvio) | — |
+| Hosting | Da scegliere (rinvio); deve avere un disco persistente (DEC-25) | — |
 
 ## Schema generale
 ```mermaid
