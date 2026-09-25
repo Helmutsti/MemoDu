@@ -5,7 +5,7 @@
 ## Elenco
 | Ambiente | A cosa serve | Chi ha accesso | Codice | Dati | Servizi esterni |
 |---|---|---|---|---|---|
-| Locale | Il singolo sviluppatore lavora | | Il suo ramo in corso | Minimi, generati | Simulati |
+| Locale | Il singolo sviluppatore lavora. Nella prima fase è l'unico ambiente: app e server girano sulla macchina di sviluppo, l'archivio del server è una cartella su quel disco (DEC-25) | Manuel Cucca | Il suo ramo in corso | Minimi, generati | Nessuno |
 | Integrazione | Verificare che i pezzi funzionino insieme | | Ultima versione di ogni componente | Di prova, ricreabili | Sandbox |
 | Collaudo | Verificare prima del rilascio | | Versione candidata | Realistici, anonimizzati | Sandbox |
 | Produzione | Gli utenti veri | | Versione rilasciata | Reali | Reali |

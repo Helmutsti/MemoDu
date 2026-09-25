@@ -27,7 +27,7 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 | Cifratura: libreria e algoritmo, chiavi per scopo, allegati a pezzi, portachiavi del sistema | DEC-08, RNF-02 | Fase 7 | `architettura/architettura.md` |
 | Framework HTTP del server, forma delle API e protocollo di sincronizzazione | DEC-24, FL-07 | Fase 7 | `registri/decisioni/DEC-24-server-con-api-in-node.md` |
 | Organizzazione dei file sul server, elenco delle modifiche, backup | DEC-25 | Fase 7 | `registri/decisioni/DEC-25-archivio-del-server-su-file-system.md` |
-| Hosting del server personale (con disco persistente) e come si installa | DEC-25, DEC-13 | Fase 7 | `architettura/architettura.md` |
+| Hosting definitivo del server personale (con disco persistente) e come si installa. Per ora il server gira sulla macchina di sviluppo | DEC-25, DEC-13 | Fase 8, prima del rilascio | `architettura/architettura.md` |
 | **In pausa:** mockup della Fase 6. Fatto SC-01 stato normale (in revisione); da fare gli altri stati di SC-01 e SC-02 … SC-07, contenuti definitivi, micro-interazioni, prototipo e test di usabilità. Da valutare con il mockup: ID-22 (numero di note accanto al nome) e stile dei titoli di gruppo delle impostazioni | Fase 6, frammento Must | Fase 6, prima della Fase 8 | Figma, file Mockup; `moduli/interfaccia/4-schermate.md` |
 | Recupero delle credenziali dell'installazione perse (contengono la chiave di cifratura) | RF-10, RF-14 | Prima della Definition of Ready (Fase 8) | `moduli/sincronizzazione/8-test.md` |
 | Elenco dei dispositivi e uscita a distanza da ripensare: con credenziali uguali per tutti non si fa uscire un solo dispositivo | RF-16 | Fase 1 di RF-16 (Should) | `moduli/sincronizzazione/1-requisiti.md` |

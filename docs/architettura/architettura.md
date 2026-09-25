@@ -9,7 +9,7 @@
 | Server (API) | Node con TypeScript. Framework da scegliere | DEC-24 |
 | Archivio del server | File system: documenti e immagini cifrati come file | DEC-25 |
 | Database sul dispositivo | Da scegliere (rinvio) | — |
-| Hosting | Da scegliere (rinvio); deve avere un disco persistente (DEC-25) | — |
+| Hosting | Per ora la macchina di sviluppo (ambiente Locale). L'hosting definitivo è rinviato; deve avere un disco persistente (DEC-25) | — |
 
 ## Schema generale
 ```mermaid
