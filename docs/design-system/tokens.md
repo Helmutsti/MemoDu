@@ -72,7 +72,7 @@ Il colore compare solo quando comunica uno stato. `<stato>` è `errore` (rosso),
 
 | Token | Chiaro | Scuro | Uso |
 |---|---|---|---|
-| `sfondo-<stato>` | `<scala>-50` | `<scala>-950` | Sfondo di avvisi e messaggi dello stato |
+| `sfondo-<stato>` | `<scala>-50` | `<scala>-800` | Sfondo di avvisi e messaggi dello stato (in scuro 800 e non 950, che si confondeva con il fondo: DEC-16) |
 | `testo-<stato>` | `<scala>-500` | `<scala>-400` | Testo dello stato |
 | `icona-<stato>` | `<scala>-500` | `<scala>-400` | Icona dello stato |
 
@@ -146,6 +146,8 @@ La regola è nata da un errore: in scuro `sfondo-campo` e `sfondo-flottante` era
 | `sfondo-premuto` (#525252) | Scuro | 2,36 | 2,11 | 1,81 |
 | `sfondo-pieno` (#1F1F1F) | Chiaro | 16,48 | 14,99 | 16,48 |
 | `sfondo-pieno` (#F4F4F4) | Scuro | 16,75 | 14,99 | 12,87 |
+| `sfondo-<stato>` (gradino 50) | Chiaro | 1,09–1,11 | — | 1,09–1,11 |
+| `sfondo-<stato>` (gradino 800) | Scuro | 1,24–1,33 | — | — |
 
 Soglia della regola: ogni cella sopra 1,05 (il valore più basso, 1,08, è il campo sulla colonna in chiaro). Nuovi fondi o nuove superfici si aggiungono a questa tabella prima di usarli.
 
@@ -196,7 +198,7 @@ Soglie WCAG AA: 4,5:1 per il testo normale, 3:1 per icone e testo grande. Il tes
 | Testo dello stato | Sfondo | Modo | Errore | Avviso | Successo | Informazione | WCAG AA |
 |---|---|---|---|---|---|---|---|
 | `testo/<stato>` | `sfondo/<stato>` | Chiaro | 5.48:1 | 5.10:1 | 4.72:1 | 5.05:1 | ✅ |
-| `testo/<stato>` | `sfondo/<stato>` | Scuro | 6.86:1 | 7.08:1 | 7.69:1 | 7.31:1 | ✅ |
+| `testo/<stato>` | `sfondo/<stato>` | Scuro | 5.44:1 | 5.47:1 | 5.82:1 | 5.63:1 | ✅ |
 | `testo/<stato>` | `sfondo/nota` | Chiaro | 6.06:1 | 5.62:1 | 5.12:1 | 5.54:1 | ✅ |
 | `testo/<stato>` | `sfondo/nota` | Scuro | 6.75:1 | 7.05:1 | 7.76:1 | 7.28:1 | ✅ |
 

@@ -299,7 +299,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 ### Accessibilità
 - **Tastiera:** frecce su e giù tra le voci (i separatori si saltano), Invio attiva, Esc chiude il menu, freccia destra apre il sottomenu e freccia sinistra lo chiude.
 - **Lettori di schermo:** ruolo "voce di menu"; la scorciatoia si annuncia come tasti di scelta rapida; il sottomenu come "ha un sottomenu".
-- **Contrasti:** testo su `sfondo-flottante` ≥ 12,87:1; scorciatoia in `testo-tenue` 5,49:1 in chiaro e 5,61:1 in scuro; distruttiva 6,06:1 (chiaro) e 5,19:1 (scuro), evidenziata su `sfondo-errore` 5,48:1 e 6,86:1.
+- **Contrasti:** testo su `sfondo-flottante` ≥ 12,87:1; scorciatoia in `testo-tenue` 5,49:1 in chiaro e 5,61:1 in scuro; distruttiva 6,06:1 (chiaro) e 5,19:1 (scuro), evidenziata su `sfondo-errore` 5,48:1 e 5,44:1.
 
 ### Esempi
 - ✅ Corretto: nel menu della nota, un separatore e poi "Elimina" in rosso come ultima voce.
@@ -354,6 +354,8 @@ Compare e sparisce con `movimento-durata-breve` (120 ms). Il ritardo prima della
 - **Testo** (tasto destro): Taglia, Copia, Incolla · Grassetto, Corsivo, Sottolineato, Barrato, con le scorciatoie · Titolo ›, Elenco ›.
 - **Inserimento** (`/` su una riga vuota): Titolo, Sottotitolo, Elenco puntato, Elenco numerato, Checklist · Immagine. È l'unico menu con icone: aiutano a riconoscere cosa si inserisce.
 - **Tag** (sotto il campo dei tag): i tag che corrispondono a ciò che si scrive, · Crea il tag "…". Il tasto destro su un suggerimento apre "Elimina tag…" (RB-19).
+- **Filtro tag** (dalla pillola Tag della ricerca, CMP-13): campo "Cerca un tag", divisore, i tag con la spunta su quelli scelti (si possono sceglierne più d'uno), divisore, "Togli il filtro".
+- **Filtro data** (dalle pillole Creazione, Modifica, Fine validità): Qualsiasi data, Oggi, Ultimi 7 giorni, Ultimi 30 giorni, Quest'anno, con la spunta sulla scelta attiva · Scegli le date… (apre il calendario, CMP-12).
 - I puntini "…" indicano che la voce apre un pannello o una conferma; la freccia › un sottomenu.
 - Le scorciatoie sono quelle di Windows; su macOS Ctrl diventa ⌘ e Maiusc ⇧.
 
@@ -500,7 +502,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 
 ### Varianti e dimensioni
 - Stesso guscio del menu: `sfondo-flottante`, raggio 20, ombra, livello 20, margini 8 sopra e sotto, contenuti rientrati di 8. Larga **480**, più della colonna: copre la nota senza velo, perché non blocca niente.
-- **Filtri** in cima: Tag, Creazione, Modifica, Fine validità (FL-06). Ognuno è una pillola alta 24 come il tag, con una freccia giù, che apre un menu (CMP-09) con le opzioni. Attivo: pieno scuro con il valore ("Tag: lavoro").
+- **Filtri** in cima: Tag, Creazione, Modifica, Fine validità (FL-06). Ognuno è una pillola alta 24 come il tag, con una freccia giù, 8 px tra l'una e l'altra, 12 px sopra e sotto la fila. Apre un menu (CMP-09, filtro tag o filtro data) 8 px sotto la pillola. Attivo: pieno scuro con il valore ("Tag: lavoro"; con più tag, "Tag: 2").
 - Divisore da lato a lato, poi i **risultati** per pertinenza (RB-34), tutti, scorrendo la card: titolo (Interfaccia/Media), la frase in cui compare la parola con la parola in `testo-primario` Medium, cartella e data (Interfaccia/Piccola).
 - **Nel cestino:** titolo e frase attenuati, etichetta "nel cestino" (RB-29); non compaiono se la preferenza li esclude.
 - **Nessun risultato:** filtri, divisore, "Nessuna nota trovata" e un suggerimento; la card resta aperta (RB-35).
@@ -551,7 +553,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 ### Accessibilità
 - **Tastiera:** come CMP-06; F2 rinomina la cartella in focus con il campo nome; lo spostamento da tastiera passa da Sposta in (CMP-11), non dal trascinamento.
 - **Lettori di schermo:** albero con i livelli; il cestino di trascinamento si annuncia quando compare.
-- **Contrasti:** come CMP-06; cestino di trascinamento in `testo-tenue` su `sfondo-campo` 4,61:1 e 4,65:1; sopra, `testo-errore` su `sfondo-errore` 5,48:1 e 6,86:1.
+- **Contrasti:** come CMP-06; cestino di trascinamento in `testo-tenue` su `sfondo-campo` 4,61:1 e 4,65:1; sopra, `testo-errore` su `sfondo-errore` 5,48:1 e 5,44:1.
 
 ### Esempi
 - ✅ Corretto: trascinare una nota su "Clienti" e vedere la cartella evidenziata prima di rilasciare.
@@ -582,7 +584,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 ### Accessibilità
 - **Tastiera:** non ruba il focus; si raggiunge con Tab.
 - **Lettori di schermo:** annunciato senza interrompere, con il tipo ("Errore", "Avviso"…).
-- **Contrasti:** testo primario su `sfondo-<stato>` ≥ 15:1 in chiaro e in scuro; icone ≥ 4,72:1; pulsante tenue ≥ 4,5:1.
+- **Contrasti:** testo primario su `sfondo-<stato>` ≥ 15:1 in chiaro e ≥ 12,6:1 in scuro; icone ≥ 4,72:1 in chiaro e ≥ 5,44:1 in scuro; pulsante tenue ≥ 4,5:1. In scuro il fondo è il gradino 800 (DEC-16).
 
 ### Esempi
 - ✅ Corretto: «Non riesco a sincronizzare da 24 ore. Le modifiche restano qui.»
@@ -594,7 +596,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 **Tipo:** composto (usa CMP-01) · **Usato in:** SC-01, SC-03, SC-04 · **Figma:** pagina Componenti composti, [Finestra di conferma](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=71-2091)
 
 **Scopo:** fermare l'utente prima di un'azione che non si annulla o che ha più esiti.
-**Quando usarlo:** svuotare il cestino (RB-32), eliminare un tag (RB-19), nome di cartella già presente (RB-31).
+**Quando usarlo:** svuotare il cestino (RB-32), eliminare per sempre un elemento del cestino (RB-55: «Eliminare «Riunione di lunedì» per sempre?» · Annulla · Elimina), eliminare un tag (RB-19), nome di cartella già presente (RB-31).
 **Quando non usarlo:** per azioni che si annullano (spostare, eliminare una nota: va nel cestino) o per informare (avviso, CMP-15).
 
 ### Varianti e dimensioni
@@ -629,7 +631,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 **Quando non usarlo:** per le note nei risultati della ricerca, anche se sono nel cestino (CMP-13).
 
 ### Varianti e dimensioni
-- **Nota** e **Cartella**: icona Lucide 16 (`file-text` o `folder`) in `icona-tenue`, nome Interfaccia/Media, sotto tipo, provenienza e data di eliminazione (Interfaccia/Piccola, `testo-tenue`; per le cartelle anche il numero di note), Ripristina a destra (pulsante tenue).
+- **Nota** e **Cartella**: icona Lucide 16 (`file-text` o `folder`) in `icona-tenue`, nome Interfaccia/Media, sotto tipo, provenienza e data di eliminazione (Interfaccia/Piccola, `testo-tenue`; per le cartelle anche il numero di note). A destra Ripristina (pulsante tenue) ed **Elimina definitivamente** (pulsante solo icona con il cestino e il suggerimento "Elimina definitivamente", DEC-17): chiede conferma (CMP-16, RB-55).
 - Largo 560, margini 12 a sinistra, 8 a destra, 8 sopra e sotto, su `sfondo-nota`. Blocco su due righe: hover con `raggio-interno`.
 
 ### Stati
@@ -638,11 +640,11 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 | Default | Come sopra |
 | Hover | `sfondo-hover`; tutto il testo, dettagli e Ripristina compresi, in `testo-primario` (regola 7) |
 | Focus | Anello interno 2 px |
-| Attivo | Ripristina: l'elemento sparisce dall'elenco e torna nella radice (RB-28), senza messaggio |
+| Attivo | Ripristina: l'elemento sparisce dall'elenco e torna nella radice (RB-28), senza messaggio. Elimina definitivamente: conferma, poi l'elemento sparisce (RB-55) |
 | Disabilitato · Errore · Caricamento | Non previsti |
 
 ### Accessibilità
-- **Tastiera:** frecce tra gli elementi; Tab raggiunge Ripristina.
+- **Tastiera:** frecce tra gli elementi; Tab raggiunge Ripristina ed Elimina definitivamente; Maiusc + Canc elimina definitivamente l'elemento in focus (sempre con conferma).
 - **Lettori di schermo:** nome, tipo, provenienza e data; Ripristina porta il nome dell'elemento ("Ripristina Riunione di lunedì").
 - **Contrasti:** nome ≥ 12,49:1; dettagli 5,49:1 e 7,30:1; in hover tutto ≥ 9,88:1.
 

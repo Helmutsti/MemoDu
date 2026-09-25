@@ -49,7 +49,7 @@ Condiviso con RF-04 e RF-05: vedi lo scenario di RF-05.
 Come *utente* voglio che le note e le cartelle eliminate finiscano in un cestino per poterle recuperare se ho sbagliato.
 
 - Nel cestino finiscono sia le note sia le cartelle, con tutto il loro contenuto (RB-25, RB-26).
-- Gli elementi restano nel cestino finché l'utente non lo svuota: Memodu non cancella mai dati da solo (RB-27).
+- Gli elementi restano nel cestino finché l'utente non lo svuota o non li elimina uno per uno, sempre dopo una conferma: Memodu non cancella mai dati da solo (RB-27, RB-55, DEC-17).
 - Un elemento ripristinato torna sempre nella radice: una nota diventa non organizzata, una cartella torna al primo livello dell'albero (RB-28).
 - Le note nel cestino compaiono nella ricerca, segnalate come "nel cestino"; una preferenza nelle impostazioni permette di escluderle (RB-29).
 

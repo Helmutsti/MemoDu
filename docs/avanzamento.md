@@ -29,6 +29,7 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 | **Aperta:** icona su "Elimina" nei menu. Alternative nella pagina Prove: nessuna icona (oggi), icone su tutte le voci, solo Elimina a sinistra, a destra, o con spazio riservato | CMP-07, CMP-09 | Fase 5, prima di chiuderla | Figma, pagina Prove |
 | Colore delle icone quando si cambia icona con la proprietà Icona: il colore impostato nell'istanza si perde e la nuova icona torna `icona-tenue`. Proposta: unire le forme di ogni icona in un solo tracciato, così il colore resta. Intanto va ricolorata a mano dopo ogni scambio | CMP-02 | Fase 5, prima di chiuderla | `design-system/componenti.md` |
 | Fondo dei campi sotto 3:1 contro la superficie (WCAG 1.4.11): verificare nel test di accessibilità che il campo si riconosca da etichetta, segnaposto, icona e anello di focus | CMP-03, token | Fase 8 | `design-system/tokens.md` |
+| Eliminazione definitiva di un elemento su un dispositivo mentre un altro lo modifica: verificare che valga come per lo svuotamento del cestino | RB-55, FL-07 | Fase 7 | `registri/decisioni/DEC-17-eliminazione-definitiva-di-un-elemento.md` |
 | Breakpoint e disegni per il mobile | Token, ID-11 | Quando si riprende il mobile | `design-system/tokens.md` |
 | Libreria "Memodu – Wireframe UI": eliminarla o archiviarla ora che la libreria è il file Design system; i wireframe ne usano le istanze | DEC-10 | Fine della Fase 5 | `design-system/componenti.md` |
 | Pannello delle impostazioni dell'immagine (dimensione, allineamento, ritaglio, rotazione, testo alternativo) | CMP-21, RB-14 | Fase 6, con i mockup | `design-system/componenti.md` |
@@ -67,6 +68,8 @@ Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui
 | F2 rinomina la cartella in focus; lo spostamento da tastiera passa da Sposta in | CMP-14 | `design-system/componenti.md` |
 | Larghezze: card dei risultati 480, avviso 480, finestra di conferma 400, testo della nota 640, elemento del cestino e riga di impostazione 560 | CMP-13 … CMP-21 | `design-system/componenti.md` |
 | Selezione dell'immagine con contorno sfondo-pieno; impostazioni dell'immagine dal tasto destro | CMP-21 | `design-system/componenti.md` |
+| Nel filtro per tag si possono scegliere più tag (la pillola mostra "Tag: 2"); le scelte rapide per data sono Oggi, Ultimi 7 giorni, Ultimi 30 giorni, Quest'anno | CMP-09, CMP-13 | `design-system/componenti.md` |
+| Maiusc + Canc elimina definitivamente l'elemento del cestino in focus, sempre con conferma | CMP-17, RB-55 | `design-system/componenti.md` |
 | La finestra desktop non si stringe sotto 1024 px, perché il breakpoint stretto serviva solo al web | Token, breakpoint | `design-system/tokens.md` |
 
 ## Rischi accettati

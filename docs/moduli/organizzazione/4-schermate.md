@@ -28,7 +28,7 @@ L'impostazione generale (breakpoint, scala z-index, inventario dei componenti) �
 - **Esportazioni:** `immagini/SC-04.png`, `immagini/SC-04-vuoto.png`, `immagini/SC-04-svuota.png`
 - **Mockup:** [Fase 6]
 
-Si apre dalla voce Cestino del menu `···`, al posto della nota; la colonna resta. Ogni elemento mostra tipo (nota o cartella con il numero di note), da dove veniva e quando è stato eliminato, con Ripristina. In cima, Svuota cestino.
+Si apre dalla voce Cestino del menu `···`, al posto della nota; la colonna resta. Ogni elemento mostra tipo (nota o cartella con il numero di note), da dove veniva e quando è stato eliminato, con Ripristina ed Elimina definitivamente (icona del cestino, con conferma: RB-55, DEC-17). In cima, Svuota cestino.
 
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |
@@ -36,7 +36,7 @@ Si apre dalla voce Cestino del menu `···`, al posto della nota; la colonna re
 | Vuoto | Nessun elemento: solo il messaggio, senza Svuota cestino | Testo definitivo in Fase 6 |
 | Caricamento | Non previsto: il cestino è sulla copia di lavoro | — |
 | Errore | Non previsto | — |
-| Successo | Ripristina: l'elemento sparisce dall'elenco e torna nella radice (RB-28), senza messaggio. Svuota: dopo la conferma il cestino è vuoto (RB-32) | — |
+| Successo | Ripristina: l'elemento sparisce dall'elenco e torna nella radice (RB-28), senza messaggio. Elimina definitivamente: dopo la conferma l'elemento sparisce (RB-55). Svuota: dopo la conferma il cestino è vuoto (RB-32) | — |
 | Contenuto lungo | L'elenco scorre; resta tutto finché non si svuota (RB-27, SF-17) | — |
 
 ### Messaggi di errore
