@@ -1,6 +1,6 @@
 # DEC-05 – Installazione personale e accesso
 
-**Data:** 2026-09-24 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-24 · **Stato:** Superata da DEC-13 · **Idea di origine:** —
 
 ## Contesto
 DEC-01 stabilisce che il database non prevede più utenti, ma non dice se il servizio è aperto al pubblico. La sincronizzazione cloud (RF-10) e la versione web (DEC-04) richiedono comunque che il server riconosca l'utente.

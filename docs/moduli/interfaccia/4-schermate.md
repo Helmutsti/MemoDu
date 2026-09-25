@@ -2,13 +2,13 @@
 
 <!-- Fasi 4 e 6 della guida. Wireframe e mockup restano nello strumento di design: qui si mettono i link. -->
 
-Impostazione generale della Fase 4: **desktop-first**. Il pubblico della prima fase usa Windows, macOS e web su schermo grande (DEC-04) e la nota rapida esiste solo su desktop (RF-01): la versione stretta si ricava da quella larga, non il contrario.
+Impostazione generale della Fase 4: **desktop-first**. Il pubblico della prima fase usa Windows e macOS su schermo grande (DEC-13) e la nota rapida esiste solo su desktop (RF-01): la versione stretta si ricava da quella larga, non il contrario.
 
 | Breakpoint | Larghezza | Cosa cambia |
 |---|---|---|
 | Largo | ≥ 1280 px | Tre zone affiancate: colonna sinistra, nota aperta, spazio di respiro ai lati del testo |
 | Medio | 1024–1279 px | Colonna sinistra più stretta; il testo della nota occupa tutta la larghezza restante |
-| Stretto | < 1024 px (solo web) | La colonna sinistra si chiude; il pulsante ☰ in alto a sinistra la riapre come drawer sopra il contenuto, con velo (livello 30). Clic sul velo o Esc per chiuderla. [Colonna chiusa](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=32-252) · [drawer aperto](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=32-274), `immagini/SC-01-stretto.png`, `immagini/SC-01-stretto-drawer.png` |
+| Stretto | < 1024 px (solo web, rinviato con ID-19) | La colonna sinistra si chiude; il pulsante ☰ in alto a sinistra la riapre come drawer sopra il contenuto, con velo (livello 30). Clic sul velo o Esc per chiuderla. [Colonna chiusa](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=32-252) · [drawer aperto](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=32-274), `immagini/SC-01-stretto.png`, `immagini/SC-01-stretto-drawer.png` |
 
 ## SC-01 – Finestra principale
 **Flussi:** FL-01 · FL-02 · FL-05 · FL-06 · FL-09 · **Componenti:** vedi "Inventario dei componenti concettuali"
@@ -76,27 +76,26 @@ Sono al centro della finestra, con un velo sul resto. L'azione principale sta a 
 ---
 
 ## SC-06 – Impostazioni
-**Flussi:** FL-08 (cambio email e password, uscita) · **Entità:** EN-07 · **Componenti:** riga di impostazione, campo di testo, pulsante
+**Entità:** EN-07 · **Componenti:** riga di impostazione, campo di testo
 
 - **Wireframe:** [impostazioni](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-227)
 - **Esportazioni:** `immagini/SC-06.png`
 - **Mockup:** [Fase 6]
 
-Si apre dalla voce Impostazioni del menu `···`, al posto della nota, come il cestino. Una sola schermata con quattro sezioni:
+Si apre dalla voce Impostazioni del menu `···`, al posto della nota, come il cestino. Una sola schermata con tre sezioni:
 
 | Sezione | Contenuto |
 |---|---|
 | Generale | Scorciatoia della nota rapida (separata per Windows e macOS, RB-52), avvio all'accensione (solo desktop) |
 | Ricerca | Note del cestino nei risultati (RB-29) |
 | Dispositivo | Nome di questo dispositivo (RB-51) |
-| Account | Email e password con Cambia, che chiede la password attuale (RB-50); Esci (RB-41, RB-44) |
 
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |
 |---|---|---|
 | Vuoto | Non previsto: ogni impostazione ha un valore di default | — |
 | Caricamento | Non previsto: le impostazioni sono sulla copia di lavoro | — |
-| Errore | Password attuale sbagliata cambiando email o password: messaggio in linea | Testo definitivo in Fase 6 |
+| Errore | Non previsto: senza account non ci sono credenziali da verificare (DEC-13) | — |
 | Successo | Nessun messaggio: il valore cambiato resta visibile | — |
 
 ---
@@ -139,7 +138,7 @@ Elementi che si ripetono, notati disegnando i wireframe. Sono l'ingresso della F
 | Campo di testo | Una riga di testo, con icona facoltativa a destra (es. calendario) | SC-03 |
 | Pannello a comparsa | Contenitore di livello 20 sotto il `···`: date, sposta in | SC-03 |
 | Date picker | Calendario per scegliere una data; si disegna in Fase 5 | SC-03 |
-| Menu `···` | Sopra le azioni sulla nota aperta, sotto quelle del programma (cestino, impostazioni, account) | SC-01, SC-03 |
+| Menu `···` | Sopra le azioni sulla nota aperta, sotto quelle del programma (cestino, impostazioni) | SC-01, SC-03 |
 | Campo titolo | Titolo della nota, può restare vuoto (RB-15) | SC-03 |
 | Immagine inline | Immagine nel testo, selezionabile, con il suo pannello impostazioni | SC-03 |
 | Avviso | Comunicazione non bloccante che resta finché non è vista (RB-40) | Tutte |
@@ -147,7 +146,6 @@ Elementi che si ripetono, notati disegnando i wireframe. Sono l'ingresso della F
 | Campo nome nell'albero | Crea o rinomina una cartella sul posto, con il nome selezionato (RB-48) | SC-01 |
 | Cestino durante il trascinamento | Zona di rilascio in fondo alla colonna, solo mentre si trascina | SC-01 |
 | Elemento del cestino | Icona, nome, provenienza e data, Ripristina | SC-04 |
-| Modulo di accesso | Email, password e un pulsante, al centro della finestra | SC-05 |
 | Riga di impostazione | Etichetta a sinistra, controllo a destra | SC-06 |
 | Stato vuoto | Spiegazione più azione, al posto di una lista vuota | SC-01, SC-03 |
 | Icona in background | Area di notifica (Windows) o barra dei menu (macOS): apre la nota rapida e il programma | Fuori dalle schermate |
@@ -155,7 +153,7 @@ Elementi che si ripetono, notati disegnando i wireframe. Sono l'ingresso della F
 ---
 
 ## Wireflow – prima fase (FL-01 … FL-09)
-Ogni freccia è un'azione dell'utente o un evento del sistema. Lo stesso percorso è cliccabile nel prototipo Figma (modalità Presentazione), con sei punti di partenza: **FL-01 Nota rapida**, **FL-02 · FL-04 · FL-06 · FL-09 Programma** (dalla finestra principale), **FL-03 Immagine** (dal clic sul vuoto), **FL-05 Cartelle e cestino**, **FL-07 Avvisi di sincronizzazione**, **FL-08 Accesso (primo avvio)**.
+Ogni freccia è un'azione dell'utente o un evento del sistema. Lo stesso percorso è cliccabile nel prototipo Figma (modalità Presentazione), con sei punti di partenza: **FL-01 Nota rapida**, **FL-02 · FL-04 · FL-06 · FL-09 Programma** (dalla finestra principale), **FL-03 Immagine** (dal clic sul vuoto), **FL-05 Cartelle e cestino**, **FL-07 Avvisi di sincronizzazione**. Il punto di partenza FL-08 Accesso del prototipo è superato da DEC-13.
 
 ```mermaid
 flowchart LR
@@ -189,12 +187,9 @@ flowchart LR
     SC01 -- trascino una cartella dentro sé stessa --> No[Nessun effetto - RB-24]
     Menu -- Cestino --> SC04[SC-04 Cestino] -- Svuota cestino --> Conf2[Conferma] --> SC04v[Cestino vuoto]
     SC04 -- Ripristina --> SC01
-    Menu -- Impostazioni --> SC06[SC-06 Impostazioni] -- Esci --> SC05
+    Menu -- Impostazioni --> SC06[SC-06 Impostazioni]
 
-    Avv[Avviso di sincronizzazione] -- Accedi --> SC05[SC-05 Accesso]
-    Primo[SC-05 Primo avvio: crea l'account] --> SC01
-    SC05 -- credenziali errate --> SC05e[Messaggio in linea] --> SC05
-    SC05 -- Accedi --> SC01
+    Avv[Avviso di sincronizzazione] -- Ho capito --> SC01
 ```
 
 `SC-03` non è una finestra a sé: vive dentro l'area della nota di `SC-01`. È una schermata separata perché ha stati propri, e perché la nota rapida ci arriva da fuori (RB-05).

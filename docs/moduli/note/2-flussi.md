@@ -3,7 +3,7 @@
 <!-- Fase 2 della guida. I diagrammi si scrivono in Mermaid. -->
 
 ## FL-01 – Nota rapida
-**Requisito:** RF-01 · **Attori:** Utente (solo app desktop, DEC-04) · **Interazioni rapide:** scorciatoia globale (RF-11)
+**Requisito:** RF-01 · **Attori:** Utente (solo app desktop, DEC-13) · **Interazioni rapide:** scorciatoia globale (RF-11)
 
 ```mermaid
 flowchart TD
@@ -41,8 +41,8 @@ flowchart TD
 - SF-05 Cambio idea: dopo il salvataggio la nota si modifica come tutte le altre (FL-02).
 - SF-06 Input strani ma legittimi, SF-17 Troppo, SF-36 Input malevolo: riguardano l'editor, gestiti in FL-02.
 - SF-10 App in background o schermo bloccato, SF-32 Errore a metà operazione: dipendono dal salvataggio durante la scrittura, gestito in FL-02.
-- SF-11 Dispositivo limitato: la nota rapida esiste solo su desktop (DEC-04).
-- SF-12 Sessione scaduta: si resta collegati finché non si esce (RF-14).
+- SF-11 Dispositivo limitato: la prima fase è solo desktop (DEC-13).
+- SF-12 Sessione scaduta: non c'è sessione, il dispositivo usa le credenziali preimpostate (RF-14, DEC-13).
 - SF-13, SF-14, SF-15 (tempo): nessuna scadenza o data coinvolta.
 - SF-18 … SF-31, SF-33 … SF-35: nessun valore limite, dato condiviso, permesso, sistema esterno o accesso remoto coinvolto.
 
@@ -119,7 +119,7 @@ flowchart TD
 - SF-01 Doppio invio, SF-03 Tasto indietro e refresh: non esiste un'azione di invio, il salvataggio è continuo (RB-06).
 - SF-04 Più schede aperte: il programma mostra una nota alla volta (RF-01). La stessa nota aperta su due dispositivi è un conflitto, gestito in FL-07.
 - SF-05 Cambio idea: la nota resta sempre modificabile.
-- SF-12 Sessione scaduta: si resta collegati finché non si esce (RF-14).
+- SF-12 Sessione scaduta: non c'è sessione, il dispositivo usa le credenziali preimpostate (RF-14, DEC-13).
 - SF-16 Vuoto: la nuova nota vuota resta (RB-10), vedi FL-09.
 - SF-17 Troppo: nessun limite di lunghezza documentato; nessuna soglia sulla digitazione (RNF-01).
 - SF-22 Modifica simultanea: gestita in FL-07.

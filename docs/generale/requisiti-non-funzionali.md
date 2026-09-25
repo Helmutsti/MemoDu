@@ -9,6 +9,6 @@
 | RNF-03 | Privacy/GDPR | Non si applica nella prima fase: i dati sono solo del proprietario, su un server suo e cifrati end-to-end (DEC-05). Diventa obbligatoria con il servizio aperto al pubblico (ID-12) | |
 | RNF-04 | Accessibilità | Conformità WCAG 2.1 AA. Le immagini nelle note hanno un testo alternativo, di default il nome del file (RF-03) | |
 | RNF-05 | Lingue | Interfaccia in italiano, con i testi separati dal codice per poter aggiungere altre lingue in futuro | Nessun testo dell'interfaccia scritto direttamente nel codice |
-| RNF-06 | Dispositivi e browser | Prima fase: app desktop per Windows e macOS, e versione web nel browser (DEC-04). Mobile parcheggiato (ID-11) | |
-| RNF-07 | Disponibilità | Nessuna soglia nella prima fase: se il server non è raggiungibile si scrive sulla copia di lavoro e si sincronizza dopo (DEC-02). La versione web invece richiede il server raggiungibile | |
+| RNF-06 | Dispositivi e browser | Prima fase: app desktop per Windows e macOS (DEC-13). Web rinviato (ID-19), mobile parcheggiato (ID-11) | |
+| RNF-07 | Disponibilità | Nessuna soglia nella prima fase: se il server non è raggiungibile si scrive sulla copia di lavoro e si sincronizza dopo (DEC-02) | |
 | RNF-08 | Usabilità | Interfaccia semplice e intuitiva, adatta a utenti di ogni fascia d'età | |

@@ -1,6 +1,6 @@
 # DEC-04 – Piattaforme della prima fase
 
-**Data:** 2026-09-24 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-24 · **Stato:** Superata da DEC-13 · **Idea di origine:** —
 
 ## Contesto
 La visione chiede un'app cross-platform (RNF-06), ma senza indicare quali piattaforme. Ogni piattaforma in più moltiplica schermate, test e casi limite, e condiziona le scelte tecnologiche della Fase 7.

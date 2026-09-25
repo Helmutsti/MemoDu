@@ -24,3 +24,4 @@
 | ID-16 | Colore o icona scelti dall'utente per ogni cartella | Manuel Cucca (moodboard, DEC-11) | 25/09/2026 | Proposta | — | — |
 | ID-17 | Sezione Tag nella colonna, per filtrare le note con un clic | Manuel Cucca (moodboard, DEC-11) | 25/09/2026 | Proposta | — | — |
 | ID-18 | Cestino sempre visibile in fondo alla colonna (oggi compare solo durante il trascinamento e si apre dal menu ···) | Manuel Cucca (moodboard, DEC-11) | 25/09/2026 | Proposta | — | — |
+| ID-19 | Versione web nel browser | Manuel Cucca | 25/09/2026 | Parcheggiata | — | Rinviata da DEC-13: senza login un browser non ha dove leggere le credenziali. Da riprendere decidendo come si accede dal web |

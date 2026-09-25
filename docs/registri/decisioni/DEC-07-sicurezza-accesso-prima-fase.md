@@ -1,6 +1,6 @@
 # DEC-07 – Sicurezza dell'accesso nella prima fase
 
-**Data:** 2026-09-24 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-24 · **Stato:** Superata da DEC-13 · **Idea di origine:** —
 
 ## Contesto
 L'installazione è personale ma raggiungibile da Internet, per permettere la versione web (DEC-04, DEC-05). Si resta collegati finché non si esce (RF-14). La password protegge sia l'accesso sia la cifratura end-to-end delle note (RNF-02).

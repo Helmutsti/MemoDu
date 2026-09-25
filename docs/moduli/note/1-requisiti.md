@@ -17,7 +17,7 @@ Il programma completo mostra una nota alla volta: se la nota rapida viene aperta
 
 Piattaforme:
 - **Desktop (Windows, macOS):** la scorciatoia è globale, funziona da qualsiasi programma e l'utente può cambiarla (RF-11). Memodu resta attivo in background, con un'icona nell'area di notifica (Windows) o nella barra dei menu (macOS); l'avvio automatico all'accensione è opzionale.
-- **Web:** la nota rapida non esiste; si usa la normale creazione di una nota.
+- **Web:** rinviato (ID-19). Quando arriverà, la nota rapida non esisterà e si userà la normale creazione di una nota.
 
 **Collegamenti:** FL-01 · EN-01 · EN-07 · SC-00 · RNF-01
 

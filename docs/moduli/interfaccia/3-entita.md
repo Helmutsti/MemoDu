@@ -16,7 +16,7 @@ Il diagramma di tutto il sistema è in `moduli/note/3-entita.md`.
 | Avvio automatico all'accensione | Sì \| No | Sì | Solo app desktop | Opzionale (RF-01) |
 | Note del cestino nella ricerca | Sì \| No | Sì | | Di default Sì (RB-29) |
 
-Il nome del dispositivo non è qui: appartiene al dispositivo (EN-06, RB-51). Email e password appartengono all'account (EN-05, RB-50).
+Il nome del dispositivo non è qui: appartiene al dispositivo (EN-06, RB-51). Le credenziali appartengono all'installazione (EN-05, RB-54).
 
 - **Chi le crea:** il sistema, con i valori di default, alla creazione dell'account.
 - **Chi le modifica:** l'utente, dalle impostazioni.

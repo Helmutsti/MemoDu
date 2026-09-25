@@ -28,7 +28,7 @@ Temi ricorrenti nei riferimenti: fondi color carta invece del bianco puro; barra
 
 **Direzione scelta:** C · Essenziale originale, con grigi neutri assoluti – vedi DEC-12 (supera DEC-11, che sceglieva la C rivista con i riferimenti 04, 08, 17, 20, 23). Tavola: [C · Essenziale](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE/Memodu-%E2%80%93-Design-system?node-id=2-141).
 
-Colori di partenza per i token: fondo #FFFFFF, colonna #F4F4F4, testo #1F1F1F, testo tenue #7B7B7B, accento e pieno (pillola, riga attiva) #1F1F1F, bordo e selezione #E0E0E0. Carattere unico: Inter.
+Colori di partenza per i token: fondo #FFFFFF, colonna #F4F4F4, testo #1F1F1F, testo tenue #7B7B7B, accento e pieno (pillola, riga attiva) #1F1F1F, bordo e selezione #E0E0E0. Carattere unico: Inter. Per gli stati (errore, avviso, successo, informazione) si aggiungono quattro scale di colore, usate solo per comunicare uno stato (DEC-14).
 
 Le funzioni nuove viste nei riferimenti (numeri accanto alle cartelle, colori per cartella, tag nella colonna, cestino fisso) restano nel registro idee: ID-15 … ID-18.
 
@@ -43,7 +43,7 @@ Regole decise da Manuel Cucca dopo la scelta della direzione. Diventano token (r
 | 4 | **Niente linee di separazione:** le zone si distinguono per il fondo (colonna grigia, nota bianca). Linee sottili solo dove servono davvero | Divisori nei menu, elenco del cestino |
 | 5 | **Ombre solo su ciò che fluttua:** un'ombra sola, morbida; tutto il resto è piatto | Pillola degli strumenti, menu, pannelli, avvisi, finestre di conferma, nota rapida (livelli 20–50) |
 | 6 | **Densità compatta:** righe da 32 px nella colonna e nelle liste | Colonna, menu, elenchi |
-| 7 | **Passaggio del mouse:** pillola grigio chiaro dietro la riga o il pulsante; la selezione è la pillola scura, stessa forma | Righe, voci di menu, pulsanti |
+| 7 | **Passaggio del mouse:** pillola grigio chiaro dietro la riga o il pulsante e tutto il testo della riga in testo primario; la selezione è la pillola scura, stessa forma | Righe, voci di menu, pulsanti |
 | 8 | **Icone di linea:** 16 px, tratto 1,5 px con estremità arrotondate, grigio tenue; chiare sulla riga selezionata | Colonna, menu, pulsanti |
 | 9 | **Modo scuro:** stessi grigi neutri e stessi ruoli, segue l'impostazione del sistema | Tutta l'interfaccia |
 | 10 | **Animazioni brevi:** dissolvenza di circa 120 ms con uno spostamento di 4 px; nessun movimento se il sistema chiede di ridurlo | Pillola, menu, pannelli, avvisi |

@@ -5,7 +5,7 @@
 Direzione: C · Essenziale con grigi neutri (DEC-12) e regole visive di `moodboard.md`. I token vivono come variabili nel file Figma [Memodu – Design system](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE) (collezioni **Primitivi**, **Colore** con modi Chiaro e Scuro, **Dimensioni**; pagina **Token**). Nel codice il nome diventa una variabile CSS: `colore/sfondo/nota` → `var(--sfondo-nota)`.
 
 ## Primitivi
-Grigi neutri assoluti (rosso, verde e blu uguali). Non si usano direttamente nei componenti.
+Grigi neutri assoluti (rosso, verde e blu uguali) e quattro scale semantiche per gli stati (DEC-14). Non si usano direttamente nei componenti. Le scale complete sono nel riquadro "Scale complete" della pagina Token.
 
 | Token | Valore |
 |---|---|
@@ -13,13 +13,33 @@ Grigi neutri assoluti (rosso, verde e blu uguali). Non si usano direttamente nei
 | `grigio-50` | #F4F4F4 |
 | `grigio-100` | #EBEBEB |
 | `grigio-200` | #E0E0E0 |
+| `grigio-300` | #C1C1C1 |
 | `grigio-400` | #A3A3A3 |
 | `grigio-500` | #696969 |
+| `grigio-600` | #525252 |
 | `grigio-700` | #3D3D3D |
 | `grigio-800` | #2B2B2B |
 | `grigio-900` | #1F1F1F |
 | `grigio-950` | #141414 |
 | `nero-12` · `nero-30` · `nero-40` · `nero-50` | #000000 al 12%, 30%, 40%, 50% |
+
+I gradini 300 e 600 del grigio completano la scala; oggi nessun token semantico li usa.
+
+Scale semantiche: a parità di gradino hanno la stessa luminosità dei grigi.
+
+| Gradino | `rosso` | `ambra` | `verde` | `blu` |
+|---|---|---|---|---|
+| 50 | #FFF0EF | #FEF2E5 | #E3FCE7 | #EEF5FE |
+| 100 | #FFE4E1 | #FFE7CC | #D0F7D6 | #DFEDFE |
+| 200 | #FFD5D0 | #FFD9AE | #B6F2C1 | #CDE2FE |
+| 300 | #FFA69F | #F6B25E | #86D798 | #97C4FF |
+| 400 | #FE6F69 | #DE8F0F | #58BC72 | #5EA5FF |
+| 500 | #BE232A | #915C02 | #047F39 | #1468C2 |
+| 600 | #9E0117 | #734803 | #03642C | #01519F |
+| 700 | #77010F | #573400 | #004B1E | #013C79 |
+| 800 | #570108 | #3E2501 | #013514 | #012A58 |
+| 900 | #420105 | #2E1A00 | #00270D | #001E43 |
+| 950 | #2F0002 | #201000 | #001A07 | #001330 |
 
 ## Semantici · colore
 | Token | Chiaro | Scuro | Uso |
@@ -39,6 +59,15 @@ Grigi neutri assoluti (rosso, verde e blu uguali). Non si usano direttamente nei
 | `evidenziazione-selezione` | `grigio-200` | `grigio-700` | Evidenziazione del testo selezionato |
 | `velo` | `nero-30` | `nero-50` | Velo sotto le finestre di conferma (livello 40) |
 | `ombra-flottante` | `nero-12` | `nero-40` | Colore dell'ombra degli elementi flottanti |
+
+### Stati (DEC-14)
+Il colore compare solo quando comunica uno stato. `<stato>` è `errore` (rosso), `avviso` (ambra), `successo` (verde) o `informazione` (blu).
+
+| Token | Chiaro | Scuro | Uso |
+|---|---|---|---|
+| `sfondo-<stato>` | `<scala>-50` | `<scala>-950` | Sfondo di avvisi e messaggi dello stato |
+| `testo-<stato>` | `<scala>-500` | `<scala>-400` | Testo dello stato |
+| `icona-<stato>` | `<scala>-500` | `<scala>-400` | Icona dello stato |
 
 Il modo segue l'impostazione del sistema (regola 9).
 
@@ -76,7 +105,7 @@ Un'ombra sola, solo su ciò che fluttua (regola 5): `ombra-flottante` = 0 8 24, 
 | `z-base` | 0 | Contenuto base: colonna, area della nota |
 | `z-fisso` | 10 | Ricerca in cima alla colonna |
 | `z-comparsa` | 20 | Pillola degli strumenti, menu, pannelli, suggerimenti, card dei risultati |
-| `z-overlay` | 30 | Drawer sul web stretto, area di trascinamento |
+| `z-overlay` | 30 | Area di trascinamento; drawer sul web stretto (rinviato, ID-19) |
 | `z-conferma` | 40 | Finestre di conferma, con velo |
 | `z-avviso` | 50 | Avvisi |
 
@@ -114,4 +143,13 @@ Soglie WCAG AA: 4,5:1 per il testo normale, 3:1 per icone e testo grande. Il tes
 | `icona/su-pieno` | `sfondo/pieno` | Chiaro | #FFFFFF su #1F1F1F | 16.48:1 | ✅ |
 | `icona/su-pieno` | `sfondo/pieno` | Scuro | #141414 su #F4F4F4 | 16.75:1 | ✅ |
 
-Il testo tenue sulla pillola di passaggio del mouse (`sfondo-hover`) non raggiunge 4,5:1: sulle righe in hover il testo resta `testo-primario` (**da confermare**, vedi i rinvii in `avanzamento.md`). Il testo tenue si usa solo su nota, colonna, campi e superfici flottanti.
+| Testo dello stato | Sfondo | Modo | Errore | Avviso | Successo | Informazione | WCAG AA |
+|---|---|---|---|---|---|---|---|
+| `testo/<stato>` | `sfondo/<stato>` | Chiaro | 5.48:1 | 5.10:1 | 4.72:1 | 5.05:1 | ✅ |
+| `testo/<stato>` | `sfondo/<stato>` | Scuro | 6.86:1 | 7.08:1 | 7.69:1 | 7.31:1 | ✅ |
+| `testo/<stato>` | `sfondo/nota` | Chiaro | 6.06:1 | 5.62:1 | 5.12:1 | 5.54:1 | ✅ |
+| `testo/<stato>` | `sfondo/nota` | Scuro | 6.75:1 | 7.05:1 | 7.76:1 | 7.28:1 | ✅ |
+
+Tutti i token di testo e icone neutri puntano alla scala dei grigi; quelli degli stati alle scale semantiche. Nessun token ha un valore scritto direttamente.
+
+Il testo tenue sulla pillola di passaggio del mouse (`sfondo-hover`) non raggiunge 4,5:1: sulle righe in hover tutto il testo, compreso quello secondario (date, numeri), passa a `testo-primario` (12,49:1 chiaro, 9,88:1 scuro). Scelta tra quattro alternative confrontate nel riquadro "Hover · alternative di contrasto" della pagina Token; scartate: testo tenue scurito (#636363 / #A7A7A7) e grigio hover più tenue (#E9E9E9 / #3A3A3A), corrette ma senza differenza visibile. Il testo tenue si usa solo su nota, colonna, campi e superfici flottanti.

@@ -37,15 +37,14 @@ Obiettivi della prima fase, riferiti all'uso da parte del proprietario dell'inst
 Budget, tempi, tecnologie imposte, integrazioni obbligatorie.
 
 - Prima fase: solo modalità cloud, con un solo utente, limitata a scrittura e archiviazione (DEC-01).
-- Prima fase: Windows, macOS e web (DEC-04).
-- Prima fase: installazione personale con un solo account, senza registrazione pubblica (DEC-05).
+- Prima fase: Windows e macOS (DEC-13). Il web è rinviato (ID-19).
+- Prima fase: installazione personale con un solo utente, senza registrazione pubblica né login: le credenziali sono preimpostate nell'app (DEC-13).
 
 ## Assunzioni
 Ciò che si dà per vero senza averlo verificato. Ogni assunzione è un rischio.
 
-- L'obiettivo "solo Memodu per 30 giorni" si raggiunge anche senza app mobile (ID-11): le note si prendono da desktop o dal web.
+- L'obiettivo "solo Memodu per 30 giorni" si raggiunge anche senza app mobile (ID-11): le note si prendono da desktop.
 - Il proprietario sa installare, aggiornare e fare il backup del server dell'installazione personale (DEC-05).
-- Nel browser si possono decifrare e cercare tutte le note (RF-08, RF-10) con prestazioni accettabili.
 - Sottolineato e impostazioni delle immagini si possono salvare in un markdown che altri programmi leggono ancora in modo accettabile (RF-02, RF-03, RF-13).
 
 ## Fuori dal progetto
