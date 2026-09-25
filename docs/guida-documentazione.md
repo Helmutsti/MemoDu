@@ -43,6 +43,8 @@ Ogni pacchetto segue lo stesso giro, e può fermarsi a ogni passo:
    - se cambia solo *quando* si fa, resta dov'è come rinvio in `docs/avanzamento.md`, con la fase entro cui riprenderlo.
 4. **Un rinvio, quando il progetto raggiunge la sua fase, torna in valutazione:** si risolve, si rinvia di nuovo o diventa un'idea.
 
+Un requisito può anche cambiare frammento lungo il percorso (per esempio da Must a Should, perché una fase ha mostrato che non serve subito). Si cambia la priorità nella sua riga, si registra nello storico con il motivo, e il requisito passa al frammento nuovo mantenendo le fasi già fatte: riparte da dove era arrivato quando quel frammento lo raggiunge. Non è un ripensamento del *cosa*, quindi non torna nel registro idee.
+
 Una decisione presa non si modifica: se ci si ripensa, se ne scrive una nuova che la supera. Ogni pacchetto che si ferma, a qualsiasi passo, resta scritto con il suo motivo, così nessun pezzo si perde.
 
 ## Come capire se una fase è completa

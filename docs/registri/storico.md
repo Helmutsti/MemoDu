@@ -162,3 +162,5 @@
 | 25/09/2026 | Manuel Cucca | Fase 5 riaperta e richiusa per il frammento Must: nessun componente usa primitivi o valori senza token | DEC-21 |
 | 25/09/2026 | Manuel Cucca | Stili di testo per ruolo (Controllo, Controllo attivo, Messaggio, Titolo, Dettaglio, Titolo di gruppo, Titolo di schermata) collegati a primitivi tipografici; stili vecchi eliminati. Guida: ogni testo usa uno stile di ruolo e i disegni si verificano prima di chiudere una fase; comando /verifica-design | DEC-22 |
 | 25/09/2026 | Manuel Cucca | Mockup di SC-01 allineato alla libreria: colonna sui token, titoli di sezione nuovi, intestazione della nota dal componente | Fase 6 |
+| 25/09/2026 | Manuel Cucca | Guida: un requisito può cambiare frammento lungo il percorso mantenendo le fasi già fatte (ciclo di vita di un pacchetto) | Richiesta di Manuel Cucca: fermare delle parti per andare avanti senza rimettere in discussione le fasi |
+| 25/09/2026 | Manuel Cucca | Frammento Must: mockup della Fase 6 in pausa (rinvio), avviata la Fase 7 in parallelo, come la guida permette | Scelta di Manuel Cucca: ragionare sulle tecnologie |
