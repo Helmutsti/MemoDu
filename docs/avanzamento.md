@@ -11,7 +11,7 @@ Perimetro: solo cloud, un solo utente, installazione personale con credenziali p
 
 | Frammento | Requisiti | Fasi complete | Prossima fase | Note |
 |---|---|---|---|---|
-| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4 | 5 – Design system | Fase 4 completata: SC-01 … SC-06 con i loro stati e wireflow cliccabile per FL-01 … FL-09 (prototipo Figma). Test rapido dei wireframe fatto. Fase 5 in corso: moodboard fatto, direzione C · Essenziale originale con grigi neutri (DEC-12), regole visive e token fatti (chiaro e scuro, contrasti verificati), con scale complete e colori degli stati (DEC-14). Componenti: CMP-01 Pulsante disegnato, icone Lucide (DEC-15) con un primo nucleo; prossimi CMP-03 … CMP-08 |
+| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4 | 5 – Design system | Fase 4 completata: SC-01 … SC-06 con i loro stati e wireflow cliccabile per FL-01 … FL-09 (prototipo Figma). Test rapido dei wireframe fatto. Fase 5 in corso: moodboard fatto, direzione C · Essenziale originale con grigi neutri (DEC-12), regole visive e token fatti (chiaro e scuro, contrasti verificati), con scale complete e colori degli stati (DEC-14). Componenti: CMP-01 Pulsante e CMP-03 Campo di testo disegnati, icone Lucide (DEC-15) con un primo nucleo; prossimi CMP-04 … CMP-08 |
 | Should | RF-07, RF-09, RF-12, RF-13, RF-16 | — | 1 – Requisiti | Mancano gli scenari d'uso |
 
 ### Idee parcheggiate
@@ -47,6 +47,7 @@ Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui
 | Il comando Annulla vale per tutte le modifiche della nota aperta | RF-02 | `moduli/note/8-test.md` |
 | Con credenziali mancanti o rifiutate l'app funziona lo stesso sulla copia di lavoro, e mostra solo l'avviso | FL-08, DEC-13 | `moduli/sincronizzazione/2-flussi.md` |
 | Nelle finestre di conferma il focus da tastiera parte da Annulla, per non confermare per errore | CMP-01 | `design-system/componenti.md` |
+| Nel campo di testo Esc cancella la ricerca; nel campo scorciatoia Esc annulla la registrazione e Backspace toglie la combinazione | CMP-03 | `design-system/componenti.md` |
 | La finestra desktop non si stringe sotto 1024 px, perché il breakpoint stretto serviva solo al web | Token, breakpoint | `design-system/tokens.md` |
 
 ## Rischi accettati
