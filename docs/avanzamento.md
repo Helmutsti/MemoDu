@@ -23,6 +23,9 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 | Cosa | Riguarda | Da risolvere in | Dove è annotato |
 |---|---|---|---|
 | Recupero della password e della chiave di cifratura | RF-10, RF-14 | Prima della Definition of Ready (Fase 8) | `moduli/sincronizzazione/8-test.md` |
+| Da confermare: sulle righe in hover il testo resta `testo-primario` (il tenue sul grigio hover non raggiunge 4,5:1), oppure si scurisce ancora il testo tenue | Token, regola 7 | Fase 5, prima dei componenti | `design-system/tokens.md` |
+| Campo "Ripeti la password" al primo avvio: la password protegge la cifratura e il recupero è rinviato, un errore di battitura può far perdere l'accesso | RF-14, RB-43, SC-05 | Fase 5, con i componenti | `moduli/sincronizzazione/4-schermate.md` |
+| Test rapido dei wireframe con 3–5 persone (consigliato dalla guida, non fatto) | Fase 4 | Prima della Fase 6 | `moduli/interfaccia/4-schermate.md` (wireflow) |
 | Testi definitivi di messaggi e avvisi | Tutti i flussi, EN-08 | Fase 6 | Flussi, colonna "Comunicazione" |
 | Come si salva il sottolineato nel markdown | RF-02 | Fase 7 | `moduli/note/8-test.md` |
 | Come si salvano dimensione, allineamento, ritaglio e rotazione delle immagini senza rompere l'esportazione | RF-03, RF-13 | Fase 7 | `moduli/note/8-test.md` |

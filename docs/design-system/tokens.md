@@ -114,4 +114,4 @@ Soglie WCAG AA: 4,5:1 per il testo normale, 3:1 per icone e testo grande. Il tes
 | `icona/su-pieno` | `sfondo/pieno` | Chiaro | #FFFFFF su #1F1F1F | 16.48:1 | ✅ |
 | `icona/su-pieno` | `sfondo/pieno` | Scuro | #141414 su #F4F4F4 | 16.75:1 | ✅ |
 
-Il testo tenue sulla pillola di passaggio del mouse (`sfondo-hover`) non raggiunge 4,5:1: sulle righe in hover il testo resta `testo-primario`. Il testo tenue si usa solo su nota, colonna, campi e superfici flottanti.
+Il testo tenue sulla pillola di passaggio del mouse (`sfondo-hover`) non raggiunge 4,5:1: sulle righe in hover il testo resta `testo-primario` (**da confermare**, vedi i rinvii in `avanzamento.md`). Il testo tenue si usa solo su nota, colonna, campi e superfici flottanti.
