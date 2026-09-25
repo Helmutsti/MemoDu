@@ -312,6 +312,9 @@ Ogni sfiga ha un codice `SF-`, da riportare nei diagrammi dove viene gestita. In
 ## Fase 5 – Design System
 **Scopo:** dare un'identità visiva coerente e costruire i mattoni riutilizzabili.
 
+### Prima di disegnare i componenti
+Si decide come verrà costruita l'interfaccia: componenti da zero o da una libreria (quale), sistema di stile, web o nativo. È una `DEC-` della Fase 7 presa in anticipo, perché cambia cosa si può disegnare. Se si usa una libreria, il design system parte dal suo catalogo e ne diventa il tema. Anche i componenti "motore" (editor, calendario, tabelle) si scelgono qui, perché il loro comportamento entra nel disegno; quando il comportamento richiesto è insolito, una prova tecnica veloce verifica che la libreria lo sappia fare prima di rifinirlo.
+
 ### Moodboard
 - Riferimenti visivi, tono di voce e parole chiave del brand (es. "affidabile, calmo, essenziale").
 - Si preparano 2–3 direzioni alternative e se ne sceglie una esplicitamente, con motivazione.
@@ -371,7 +374,7 @@ Per ogni componente la documentazione include:
 - **Integrazioni:** per ogni sistema esterno, cosa si scambia, cosa succede quando non risponde, come si gestiscono i duplicati.
 - **Ambienti:** vedi sotto.
 
-Questa fase non deve per forza aspettare la fine della 6: spesso conviene avviarla in parallelo con la Fase 5, perché alcuni vincoli tecnici possono influenzare il design.
+Questa fase non deve per forza aspettare la fine della 6: le scelte che cambiano cosa si può disegnare (costruzione dell'interfaccia e componenti "motore") si prendono già all'inizio della Fase 5 (vedi "Prima di disegnare i componenti"); il resto può procedere in parallelo con le Fasi 5 e 6.
 
 ### Ambienti
 Un ambiente è la combinazione di cinque strati: codice (la versione di ogni componente), configurazione, dati, infrastruttura e servizi esterni. Due ambienti possono condividere lo stesso codice e differire solo nei dati, oppure il contrario.
