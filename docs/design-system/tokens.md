@@ -49,6 +49,9 @@ Scale semantiche: a parità di gradino hanno la stessa luminosità dei grigi.
 | `sfondo-campo` | `grigio-100` | `grigio-800` | Campo di ricerca e campi |
 | `sfondo-hover` | `grigio-200` | `grigio-700` | Passaggio del mouse (pillola chiara) |
 | `sfondo-pieno` | `grigio-900` | `grigio-50` | Riga selezionata, pillola degli strumenti, pulsante primario |
+| `sfondo-pieno-hover` | `grigio-700` | `grigio-200` | Pulsante primario al passaggio del mouse |
+| `sfondo-pieno-premuto` | `grigio-800` | `grigio-100` | Pulsante primario premuto |
+| `sfondo-premuto` | `grigio-300` | `grigio-600` | Pulsanti secondario, tenue e solo icona premuti |
 | `sfondo-flottante` | `grigio-0` | `grigio-800` | Menu, pannelli, avvisi chiari, nota rapida |
 | `testo-primario` | `grigio-900` | `grigio-50` | Testo principale |
 | `testo-tenue` | `grigio-500` | `grigio-400` | Testo secondario, etichette, segnaposto |
@@ -59,6 +62,7 @@ Scale semantiche: a parità di gradino hanno la stessa luminosità dei grigi.
 | `evidenziazione-selezione` | `grigio-200` | `grigio-700` | Evidenziazione del testo selezionato |
 | `velo` | `nero-30` | `nero-50` | Velo sotto le finestre di conferma (livello 40) |
 | `ombra-flottante` | `nero-12` | `nero-40` | Colore dell'ombra degli elementi flottanti |
+| `focus-anello` | `grigio-900` | `grigio-50` | Anello di focus: mostra dove si trova chi usa la tastiera |
 
 ### Stati (DEC-14)
 Il colore compare solo quando comunica uno stato. `<stato>` è `errore` (rosso), `avviso` (ambra), `successo` (verde) o `informazione` (blu).
@@ -80,8 +84,21 @@ Il modo segue l'impostazione del sistema (regola 9).
 | `misura-riga` | 32 | Righe della colonna e dei menu (regola 6) |
 | `misura-icona` | 16 | Icone (regola 8) |
 | `tratto-icona` | 1,5 | Spessore delle icone di linea |
+| `focus-spessore` | 2 | Spessore dell'anello di focus |
+| `focus-distanza` | 2 | Spazio tra il controllo e l'anello di focus |
+| `opacita-disabilitato` | 40% | Opacità di un controllo disabilitato |
 | `movimento-durata-breve` | 120 ms | Comparsa di pillola, menu, pannelli, avvisi (regola 10) |
 | `movimento-spostamento` | 4 px | Spostamento durante la comparsa |
+
+## Breakpoint
+Desktop-first (vedi `moduli/interfaccia/4-schermate.md`). Solo Windows e macOS (DEC-13).
+
+| Token | Valore | Uso |
+|---|---|---|
+| `breakpoint-largo` | 1280 | Da 1280 px: colonna sinistra, nota aperta e spazio di respiro ai lati del testo |
+| `breakpoint-medio` | 1024 | Da 1024 a 1279 px: colonna più stretta, il testo occupa tutta la larghezza restante. È anche la larghezza minima della finestra desktop |
+
+Il breakpoint stretto (sotto 1024 px, con la colonna come drawer) serviva solo al web ed è rinviato con ID-19.
 
 ## Tipografia
 Un solo carattere: **Inter**.
@@ -136,6 +153,14 @@ Soglie WCAG AA: 4,5:1 per il testo normale, 3:1 per icone e testo grande. Il tes
 | `testo/tenue` | `sfondo/flottante` | Scuro | #A3A3A3 su #2B2B2B | 5.61:1 | ✅ |
 | `testo/tenue` | `sfondo/hover` | Chiaro | #696969 su #E0E0E0 | 4.16:1 | ⚠️ solo testo grande (≥3:1) |
 | `testo/tenue` | `sfondo/hover` | Scuro | #A3A3A3 su #3D3D3D | 4.31:1 | ⚠️ solo testo grande (≥3:1) |
+| `testo/primario` | `sfondo/premuto` | Chiaro | #1F1F1F su #C1C1C1 | 9.16:1 | ✅ |
+| `testo/primario` | `sfondo/premuto` | Scuro | #F4F4F4 su #525252 | 7.10:1 | ✅ |
+| `testo/su-pieno` | `sfondo/pieno-hover` | Chiaro | #FFFFFF su #3D3D3D | 10.86:1 | ✅ |
+| `testo/su-pieno` | `sfondo/pieno-hover` | Scuro | #141414 su #E0E0E0 | 13.96:1 | ✅ |
+| `testo/su-pieno` | `sfondo/pieno-premuto` | Chiaro | #FFFFFF su #2B2B2B | 14.16:1 | ✅ |
+| `testo/su-pieno` | `sfondo/pieno-premuto` | Scuro | #141414 su #EBEBEB | 15.45:1 | ✅ |
+| `icona/tenue` | `sfondo/premuto` | Chiaro | #696969 su #C1C1C1 | 3.05:1 | ✅ (icone ≥ 3:1) |
+| `icona/tenue` | `sfondo/premuto` | Scuro | #A3A3A3 su #525252 | 3.10:1 | ✅ (icone ≥ 3:1) |
 | `testo/su-pieno` | `sfondo/pieno` | Chiaro | #FFFFFF su #1F1F1F | 16.48:1 | ✅ |
 | `testo/su-pieno` | `sfondo/pieno` | Scuro | #141414 su #F4F4F4 | 16.75:1 | ✅ |
 | `icona/tenue` | `sfondo/colonna` | Chiaro | #696969 su #F4F4F4 | 4.99:1 | ✅ |
