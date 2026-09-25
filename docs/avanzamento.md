@@ -11,7 +11,7 @@ Perimetro: solo cloud, un solo utente, installazione personale con credenziali p
 
 | Frammento | Requisiti | Fasi complete | Prossima fase | Note |
 |---|---|---|---|---|
-| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4 | 5 – Design system | Fase 4 completata: SC-01 … SC-06 con i loro stati e wireflow cliccabile per FL-01 … FL-09 (prototipo Figma). Test rapido dei wireframe fatto. Fase 5 in corso: moodboard fatto, direzione C · Essenziale originale con grigi neutri (DEC-12), regole visive e token fatti (chiaro e scuro, contrasti verificati), con scale complete e colori degli stati (DEC-14). Componenti: componenti base CMP-01 … CMP-08, CMP-09 Menu, CMP-10 Pillola degli strumenti e tutti i componenti CMP-01 … CMP-21 disegnati (da rivedere con Manuel Cucca), icone Lucide (DEC-15) in 4 dimensioni; poi le decisioni aperte e la chiusura della Fase 5 |
+| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4 | 5 – Design system | Fase 4 completata (SC-01 … SC-06, wireflow cliccabile, test rapido fatto). Fase 5 quasi completa: moodboard e direzione C (DEC-12), regole visive 1–11, token in chiaro e scuro con contrasti verificati (DEC-14, DEC-16), icone Lucide (DEC-15), tutti i componenti CMP-01 … CMP-21 disegnati e documentati. Per chiuderla: tre decisioni aperte, conferma delle deduzioni sui componenti, destino della libreria Wireframe UI |
 | Should | RF-07, RF-09, RF-12, RF-13, RF-16 | — | 1 – Requisiti | Mancano gli scenari d'uso |
 
 ### Idee parcheggiate
