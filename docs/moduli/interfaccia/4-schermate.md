@@ -43,7 +43,7 @@ L'unico menu della finestra. È diviso in due parti:
 | Parte | Voci |
 |---|---|
 | Sopra: **questa nota** | Tag, Date, Sposta in, Elimina (FL-04, RB-25) |
-| Sotto: **Memodu** | Cestino (SC-04), Impostazioni con l'account (SC-06) |
+| Sotto: **Memodu** | Cestino (SC-04), Impostazioni (SC-06) |
 
 Senza una nota aperta (stato vuoto) il menu mostra solo la parte sotto.
 
@@ -70,7 +70,7 @@ Sono al centro della finestra, con un velo sul resto. L'azione principale sta a 
 | Sfiga | Testo definitivo |
 |---|---|
 | SF-30 Server irraggiungibile oltre la soglia | Fase 6 (RB-40) |
-| SF-25 Accesso scaduto o revocato | Fase 6 (RB-40) |
+| SF-25 Credenziali rifiutate | Fase 6 (RB-40) |
 | SF-32 Errore di sincronizzazione | Fase 6 (RB-40) |
 
 ---
@@ -110,7 +110,7 @@ Vale per tutto il progetto. Non si usano numeri fuori da questa scala.
 | 0 | Contenuto base: colonna sinistra, area della nota |
 | 10 | Elementi fissi: ricerca in cima alla colonna sinistra |
 | 20 | Menu a discesa, menu del tasto destro, suggerimenti dei tag, card dei risultati di ricerca, pannello impostazioni dell'immagine, pillola degli strumenti, menu di inserimento |
-| 30 | Overlay e drawer: colonna sinistra come drawer sul web stretto, area di trascinamento di un'immagine |
+| 30 | Overlay e drawer: area di trascinamento; colonna sinistra come drawer sul web stretto (rinviato, ID-19) di un'immagine |
 | 40 | Finestre di conferma (svuota cestino, elimina tag) |
 | 50 | Avvisi (RB-40) |
 
