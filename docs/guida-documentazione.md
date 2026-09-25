@@ -129,7 +129,7 @@ Nei moduli il numero del file indica la fase in cui il file nasce. I numeri manc
 | Stato della documentazione | `avanzamento.md` |
 
 ## Lo stato della documentazione
-`docs/avanzamento.md` dice a che punto è la documentazione: per ogni pacchetto e frammento, quali fasi sono complete e quale viene dopo; e l'elenco unico di ciò che è stato **rinviato**, con la fase in cui va risolto e il documento in cui è annotato.
+`docs/avanzamento.md` dice a che punto è la documentazione: per ogni pacchetto e frammento, quali fasi sono complete e quale viene dopo; l'elenco unico di ciò che è stato **rinviato**, con la fase in cui va risolto e il documento in cui è annotato; le **deduzioni da confermare**, cioè comportamenti ricavati ma non ancora decisi, che finché restano lì non valgono come regole; e i **rischi accettati**, con la decisione che li ha accettati e quando rivederli.
 
 - Non fa parte della fotografia né dei registri: descrive la documentazione, non il sistema. Si sovrascrive e le sue modifiche non si registrano nello storico.
 - Si aggiorna alla chiusura di ogni fase per un frammento, e ogni volta che qualcosa viene rinviato o risolto.
@@ -490,10 +490,11 @@ Raccoglie tutte le proposte, prima che diventino requisiti.
 
 **Ogni idea riporta:** codice, descrizione breve, chi l'ha proposta, data, stato, posizione nella guida, esito.
 
-**Stati:** Proposta → In valutazione → Accettata → In progettazione → Pronta → Implementata. Oppure: Parcheggiata o Rifiutata.
+**Stati:** Proposta → Accettata, oppure Parcheggiata o Rifiutata. Da quando è accettata, il percorso lo segue il requisito in cui è diventata (fase e stato nella sua riga), e l'idea non cambia più stato.
 
 **Regole**
 - Chiunque può proporre un'idea.
+- Un'idea che nasce staccandosi da un pacchetto (vedi "Ciclo di vita di un pacchetto") riporta nella colonna "Proposta da" anche il codice da cui viene (es. "Manuel Cucca, da DEC-13").
 - Il registro si rivede periodicamente, con una cadenza decisa dal team.
 - Un'idea accettata diventa uno o più `RF-`, e la colonna "posizione" ne elenca i codici. La fase in cui si trova ciascuno è indicata nel requisito stesso.
 - Un'idea parcheggiata o rifiutata ha sempre un motivo. Per quelle parcheggiate si indica quando rivalutarle.
@@ -508,7 +509,7 @@ Un file per ogni decisione importante.
 **Regola:** una decisione non si modifica mai. Se cambia, se ne scrive una nuova e la vecchia viene segnata come superata.
 
 ## B.3 – Storico
-Una riga per ogni modifica alla fotografia.
+Una riga per ogni modifica alla fotografia, al design system e al metodo (questa guida). Si scrive per essere letto: chi lo apre deve capire cosa è cambiato e perché senza aprire altri file.
 
 **Ogni riga riporta:** data, autore, cosa è cambiato, perché (codice `ID-` o `DEC-`).
 
