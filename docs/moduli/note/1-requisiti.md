@@ -5,7 +5,7 @@
 La scrittura viene prima di tutto: aprire l'app e iniziare a scrivere deve essere immediato (`RNF-01`).
 
 ## RF-01 – Nota rapida da scorciatoia
-**Priorità:** Must · **Origine:** — · **Fase:** 4 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 5 · **Stato:** In progettazione
 
 Come *utente desktop* voglio aprire con una scorciatoia da tastiera una finestra di nota rapida per annotare un'idea senza interrompere quello che sto facendo.
 
@@ -30,7 +30,7 @@ Premo la scorciatoia e compare la finestra della nota rapida. A quel punto posso
 ---
 
 ## RF-02 – Scrittura in markdown con formattazione minima
-**Priorità:** Must · **Origine:** — · **Fase:** 4 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 5 · **Stato:** In progettazione
 
 Come *utente* voglio scrivere note in markdown con una formattazione minima per prendere appunti strutturati e produrre documenti formattati.
 
@@ -57,7 +57,7 @@ Scrivo la nota e inserisco un'immagine trascinandola nel testo, oppure premendo 
 ---
 
 ## RF-03 – Immagini nelle note
-**Priorità:** Must · **Origine:** — · **Fase:** 4 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 5 · **Stato:** In progettazione
 
 Come *utente* voglio inserire immagini nelle note per tenere insieme testo e materiali collegati.
 
@@ -81,7 +81,7 @@ Condiviso con RF-02: vedi lo scenario di RF-02.
 ---
 
 ## RF-04 – Metadati della nota
-**Priorità:** Must · **Origine:** — · **Fase:** 4 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 5 · **Stato:** In progettazione
 
 Come *utente* voglio associare dei metadati a ogni nota per descriverla con titolo, date e tag.
 

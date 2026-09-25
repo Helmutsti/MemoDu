@@ -5,7 +5,7 @@
 L'interfaccia deve essere semplice e intuitiva (`RNF-08`) e favorire velocità e produttività.
 
 ## RF-11 – Interazioni rapide
-**Priorità:** Must · **Origine:** — · **Fase:** 4 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 5 · **Stato:** In progettazione
 
 Come *utente* voglio usare trascinamento, menu del tasto destro e scorciatoie da tastiera per lavorare sulle note senza passare da menu e finestre di dialogo.
 

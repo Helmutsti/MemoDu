@@ -140,3 +140,4 @@
 | 25/09/2026 | Manuel Cucca | RF-15: allineato a RB-55 il punto sulla permanenza nel cestino | Coerenza con DEC-17 |
 | 25/09/2026 | Manuel Cucca | Componenti CMP-01 … CMP-21 approvati così come sono: le 18 deduzioni sui componenti (tastiera, forme, larghezze, casella tonda, finestra minima 1024 px) diventano regole, già scritte in componenti.md e tokens.md | Revisione di Manuel Cucca |
 | 25/09/2026 | Manuel Cucca | Libreria "Memodu – Wireframe UI": si elimina, la libreria del progetto è il file Design system. Pagina Prove lasciata in sospeso | Scelta di Manuel Cucca |
+| 25/09/2026 | Manuel Cucca | Requisiti Must: fase aggiornata da 4 a 5 (la Fase 4 è completa) | Coerenza con avanzamento.md |
