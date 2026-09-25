@@ -7,16 +7,16 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | Codice | Componente | Tipo | Stato |
 |---|---|---|---|
 | CMP-01 | Pulsante | base | Disegnato |
-| CMP-02 | Icona | base | Primo nucleo (9 icone, 4 dimensioni) |
+| CMP-02 | Icona | base | 24 icone, 4 dimensioni |
 | CMP-03 | Campo di testo | base | Disegnato |
 | CMP-04 | Interruttore | base | Disegnato |
 | CMP-05 | Tag | base | Disegnato |
 | CMP-06 | Riga della colonna | base | Disegnato |
 | CMP-07 | Voce di menu | base | Disegnato |
 | CMP-08 | Suggerimento | base | Disegnato |
-| CMP-09 | Menu (`···`, tasto destro, inserimento con `/`, suggerimenti dei tag) | composto | Da disegnare |
-| CMP-10 | Pillola degli strumenti | composto | Da disegnare |
-| CMP-11 | Pannello a comparsa | composto | Da disegnare |
+| CMP-09 | Menu (`···`, tasto destro, inserimento con `/`, suggerimenti dei tag) | composto | Disegnato |
+| CMP-10 | Pillola degli strumenti | composto | Disegnato |
+| CMP-11 | Pannello a comparsa | composto | Disegnato |
 | CMP-12 | Date picker | composto | Da disegnare |
 | CMP-13 | Ricerca con card dei risultati e filtri | composto | Da disegnare |
 | CMP-14 | Albero delle cartelle | composto | Da disegnare |
@@ -29,6 +29,23 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-21 | Immagine nel testo e area di trascinamento | composto | Da disegnare |
 
 L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'icona di sistema e non è un componente.
+
+### Superfici su cui compare ogni componente
+Ogni componente si verifica su tutte le superfici in cui può comparire, in chiaro e in scuro (regola visiva 11, tabella "Fondi dei controlli sulle superfici" in `tokens.md`). I componenti flottanti hanno la propria superficie, `sfondo-flottante`, e si staccano dal resto con l'ombra.
+
+| Componente | Nota | Colonna | Flottante | Fondi propri |
+|---|---|---|---|---|
+| CMP-01 Pulsante | ✓ (cestino, impostazioni, stati vuoti) | ✓ (+) | ✓ (finestre di conferma, pannelli) | campo, hover, premuto, pieno |
+| CMP-02 Icona | ✓ | ✓ | ✓ | — |
+| CMP-03 Campo di testo | ✓ (tag, impostazioni) | ✓ (ricerca) | ✓ (pannelli, menu) | campo |
+| CMP-04 Interruttore | ✓ (impostazioni) | | | hover, pieno |
+| CMP-05 Tag | ✓ (riga dei tag) | | ✓ (filtri della ricerca) | campo, hover, pieno |
+| CMP-06 Riga della colonna | | ✓ | | hover, pieno |
+| CMP-07 Voce di menu | | | ✓ | hover, errore |
+| CMP-08 Suggerimento | ✓ | ✓ | ✓ | pieno (flottante lui stesso) |
+| CMP-09 Menu · CMP-10 Pillola · CMP-11 Pannello | sopra la nota | sopra la colonna | sono la superficie | flottante, con ombra |
+
+**Verifica per ogni componente nuovo:** prima di segnarlo come Disegnato, (1) elencare le superfici su cui compare in questa tabella; (2) controllare nella tabella dei token che ogni suo fondo sia sopra la soglia su quelle superfici, in entrambi i modi; (3) controllarlo a occhio nell'anteprima scura, meglio se dentro un menu o un pannello, dove i grigi sono più vicini.
 
 ---
 
@@ -80,7 +97,7 @@ L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'ico
 - Libreria **Lucide** (DEC-15), icone di linea, colore `icona-tenue` o `icona-su-pieno`.
 - Variante **Dimensione**: 12, 16 (default, `misura-icona`), 20 e 24 px. Il tratto resta 1,5 (`tratto-icona`) a tutte le dimensioni, così le icone piccole non diventano sottili e le grandi non diventano pesanti.
 - Ogni icona è un set di componenti `Icona/<nome>` con la fonte Lucide nella descrizione. Nei componenti si scambia con la proprietà Icona e si sceglie la dimensione con la variante, senza ridimensionare l'istanza.
-- Primo nucleo: **più** (`plus`), **altro** (`ellipsis`), **caricamento** (`loader-circle`), **cerca** (`search`), **calendario** (`calendar`), **chiudi** (`x`), **errore** (`circle-alert`), **freccia destra** (`chevron-right`), **freccia giù** (`chevron-down`). Le altre si aggiungono quando servono ai componenti.
+- Primo nucleo: **più** (`plus`), **altro** (`ellipsis`), **caricamento** (`loader-circle`), **cerca** (`search`), **calendario** (`calendar`), **chiudi** (`x`), **errore** (`circle-alert`), **freccia destra** (`chevron-right`), **freccia giù** (`chevron-down`), **titolo** (`heading-1`), **sottotitolo** (`heading-2`), **elenco puntato** (`list`), **elenco numerato** (`list-ordered`), **checklist** (`list-checks`), **immagine** (`image`), **elimina** (`trash-2`), **tag** (`tag`), **sposta** (`folder-input`), **impostazioni** (`settings`), **grassetto** (`bold`), **corsivo** (`italic`), **sottolineato** (`underline`), **barrato** (`strikethrough`), **spunta** (`check`). Le altre si aggiungono quando servono ai componenti.
 
 ### Stati
 | Stato | Descrizione |
@@ -128,7 +145,7 @@ L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'ico
 ### Accessibilità
 - **Tastiera:** si raggiunge con Tab. Esc cancella la ricerca; nel campo della scorciatoia Esc annulla la registrazione e Backspace toglie la combinazione.
 - **Lettori di schermo:** ogni campo ha un'etichetta accessibile anche quando si vede solo il segnaposto (es. "Cerca nelle note"). Il messaggio di errore è collegato al campo e si annuncia quando compare. L'icona a destra è un pulsante con il suo nome (es. "Scegli dal calendario").
-- **Contrasti:** segnaposto `testo-tenue` su `sfondo-campo` 4,61:1 in chiaro e 5,61:1 in scuro; messaggio di errore su `sfondo-nota` ≥ 6:1.
+- **Contrasti:** segnaposto `testo-tenue` su `sfondo-campo` 4,61:1 in chiaro e 4,65:1 in scuro; messaggio di errore su `sfondo-nota` ≥ 6:1.
 
 ### Esempi
 - ✅ Corretto: "Data non valida" sotto il campo, con il campo che resta modificabile.
@@ -197,7 +214,7 @@ L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'ico
 ### Accessibilità
 - **Tastiera:** i tag si raggiungono con Tab; Canc o Backspace toglie il tag in focus (se rimovibile); nei filtri Spazio lo seleziona o lo deseleziona.
 - **Lettori di schermo:** la ✕ è un pulsante con nome "Togli il tag lavoro"; un filtro è un pulsante con stato premuto o non premuto.
-- **Contrasti:** testo su `sfondo-campo` 13,83:1 in chiaro e 12,87:1 in scuro, su `sfondo-hover` ≥ 9,88:1; la ✕ in `icona-tenue` ≥ 4,16:1.
+- **Contrasti:** testo su `sfondo-campo` 13,83:1 in chiaro e 10,66:1 in scuro, su `sfondo-hover` ≥ 9,88:1; la ✕ in `icona-tenue` ≥ 4,16:1.
 
 ### Esempi
 - ✅ Corretto: nella riga dei tag, "lavoro ✕" e "clienti ✕" affiancati con 4 px di distanza.
@@ -225,7 +242,7 @@ L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'ico
 | Default | Senza sfondo, sulla colonna |
 | Hover | `sfondo-hover`; tutto il testo passa a `testo-primario`, anche l'etichetta della sezione e il numero (regola 7) |
 | Focus | Anello `focus-anello` di 2 px staccato 2 px |
-| Attivo | Selezionata (solo nota): la nota aperta, `sfondo-pieno` con testo Interfaccia/Media in `testo-su-pieno` |
+| Attivo | Selezionata: la nota aperta nella colonna, o la cartella attuale (in Sposta in, CMP-11); `sfondo-pieno` con testo Interfaccia/Media in `testo-su-pieno` |
 | Trascinamento sopra | Solo cartella: mentre si trascina una nota o una cartella, quella che la riceverebbe ha `sfondo-hover` e un contorno di 1,5 in `icona-tenue` |
 | Disabilitato | Non previsto |
 | Errore | Non previsto: gli errori di spostamento si mostrano con un avviso (CMP-15) |
@@ -252,8 +269,8 @@ L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'ico
 ### Varianti e dimensioni
 - **Normale:** etichetta Interfaccia/Normale in `testo-primario`, su `sfondo-flottante`.
 - **Distruttiva:** per le azioni che eliminano (Elimina, Svuota cestino), in `testo-errore` e `icona-errore`. È l'unico uso del colore di uno stato per un'azione: avvisa che non si torna indietro (DEC-14). L'azione chiede comunque conferma (CMP-16).
-- **Separatore:** linea di 1 px in `bordo-divisore`, alta 9 in tutto, tra gruppi di voci (regola 4: le linee solo dove servono).
-- Alta 32 (`misura-riga`), larga 220 negli esempi, pillola, margini 8, distanza 8.
+- **Separatore:** linea di 1 px in `bordo-divisore-tenue`, alta 9 in tutto, tra gruppi di voci, da lato a lato del menu (regola 4: le linee solo dove servono).
+- La voce è larga quanto il menu (236 negli esempi) con 8 px di margine trasparente ai lati; dentro c'è la pillola alta 32 (`misura-riga`) con il testo a 12 px dal bordo, come le note nella colonna. Distanza 8 tra icona, testo e scorciatoia.
 - Proprietà: **Etichetta**, **Mostra icona** + **Icona** (Lucide 16), **Mostra scorciatoia** + **Scorciatoia** (Interfaccia/Piccola in `testo-tenue`, es. "Ctrl + B"), **Sottomenu** (freccia a destra).
 
 ### Stati
@@ -307,4 +324,116 @@ Compare e sparisce con `movimento-durata-breve` (120 ms). Il ritardo prima della
 ### Esempi
 - ✅ Corretto: "Nuova nota" sopra il + delle non organizzate.
 - ❌ Scorretto: un suggerimento su un pulsante che dice già "Nuova nota".
+
+---
+
+## CMP-09 – Menu
+**Tipo:** composto (usa CMP-07) · **Usato in:** SC-01 (menu `···`, tasto destro su una cartella), SC-03 (tasto destro sul testo, inserimento con `/`, suggerimenti dei tag) · **Figma:** pagina Componenti composti, [Menu](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=42-982)
+
+**Scopo:** offrire le azioni possibili in quel punto, senza spostarsi (RF-11).
+**Quando usarlo:** per più di due azioni legate a un oggetto (la nota, una cartella, il testo selezionato) o per scegliere cosa inserire.
+**Quando non usarlo:** per una sola azione (pulsante, CMP-01) o per scegliere una data o una cartella (pannello a comparsa, CMP-11).
+
+### Varianti e dimensioni
+- Contenitore `sfondo-flottante`, `raggio-contenitore` (20), margini 8 sopra e sotto e 0 ai lati, `ombra-flottante`, livello 20 (`z-comparsa`). Largo 236 negli esempi; si allarga fino alla voce più lunga.
+- La pillola dell'evidenziazione sta a 8 px dai lati (margine della voce); i divisori vanno da lato a lato e sono leggeri (`bordo-divisore-tenue`). Scelta tra sei alternative (divisori rientrati o da lato a lato, pieni o leggeri; margine 8 o 12; pillola, rettangolo con raggio 12 o fascia a tutta larghezza): la pillola resta per coerenza con colonna, pulsanti e tag.
+- **Nota** (`···`): Tag…, Date…, Sposta in… · Elimina · Cestino, Impostazioni. Senza una nota aperta resta solo l'ultimo gruppo.
+- **Cartella** (tasto destro): Nuova nota qui, Nuova sottocartella, Rinomina · Elimina.
+- **Testo** (tasto destro): Taglia, Copia, Incolla · Grassetto, Corsivo, Sottolineato, Barrato, con le scorciatoie · Titolo ›, Elenco ›.
+- **Inserimento** (`/` su una riga vuota): Titolo, Sottotitolo, Elenco puntato, Elenco numerato, Checklist · Immagine. È l'unico menu con icone: aiutano a riconoscere cosa si inserisce.
+- **Tag** (sotto il campo dei tag): i tag che corrispondono a ciò che si scrive, · Crea il tag "…". Il tasto destro su un suggerimento apre "Elimina tag…" (RB-19).
+- I puntini "…" indicano che la voce apre un pannello o una conferma; la freccia › un sottomenu.
+- Le scorciatoie sono quelle di Windows; su macOS Ctrl diventa ⌘ e Maiusc ⇧.
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Default | Aperto, nessuna voce evidenziata; con la tastiera la prima voce è evidenziata |
+| Hover · Focus · Attivo · Disabilitato | Li gestiscono le voci (CMP-07) |
+| Errore | Non previsto |
+| Caricamento | Non previsto: le voci non dipendono dalla rete |
+
+Compare con `movimento-durata-breve` (120 ms) e `movimento-spostamento` (4 px). Si chiude con Esc, con un clic fuori o scegliendo una voce. Se non c'è spazio sotto si apre sopra.
+
+### Accessibilità
+- **Tastiera:** come in CMP-07. Nel menu di inserimento si continua a scrivere per filtrare le voci (es. "/tit"); nei suggerimenti dei tag le frecce scelgono e Invio conferma.
+- **Lettori di schermo:** ruolo "menu" con il nome di ciò che lo ha aperto (es. "Menu della nota"); alla chiusura il focus torna dove era.
+- **Contrasti:** vedi CMP-07.
+
+### Esempi
+- ✅ Corretto: il tasto destro sul testo con le scorciatoie accanto, per impararle usandole.
+- ❌ Scorretto: un menu con una sola voce, o voci che cambiano posto a seconda della nota.
+
+---
+
+## CMP-10 – Pillola degli strumenti
+**Tipo:** composto (con le parti interne "Strumento della pillola" e "Divisore della pillola") · **Usato in:** SC-03 (sopra la selezione o il punto del clic sul vuoto) · **Figma:** pagina Componenti composti, [Pillola degli strumenti](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=52-504)
+
+**Scopo:** formattare il testo selezionato o inserire un elemento senza una barra fissa sopra la nota.
+**Quando usarlo:** con testo selezionato (formattazione) o con un clic sul vuoto (inserimento). Una sola pillola alla volta.
+**Quando non usarlo:** come barra permanente, o per azioni sulla nota intera (sono nel menu `···`, CMP-09).
+
+### Varianti e dimensioni
+- **Formattazione:** grassetto, corsivo, sottolineato, barrato · titolo, sottotitolo.
+- **Inserimento:** titolo, sottotitolo · elenco puntato, elenco numerato, checklist · immagine.
+- Pillola su `sfondo-flottante` (bianca in chiaro, scura in scuro), `ombra-flottante`, margini 4, alta 40, livello 20.
+- 4 px (`spazio-4`) tra uno strumento e l'altro: passando con il mouse, il cerchio dell'hover non tocca mai quello dello strumento attivo.
+- Tra i gruppi, il **divisore della pillola**: linea di 1 px in `bordo-divisore-tenue` a tutta altezza (da bordo a bordo della pillola), con 4 px ai lati. È lo stesso segno leggero dei divisori dei menu. Scelta tra solo spazio, linea corta leggera, linea corta visibile, linea a tutta altezza e puntino.
+- **Strumento della pillola:** pulsante tondo 32 × 32 con icona Lucide 16 in `icona-tenue`; proprietà **Icona**.
+- Compare 8 px sopra la selezione o il punto del clic, centrata; se non c'è spazio sopra, sotto. Sparisce quando si riprende a scrivere, con Esc o con un clic altrove.
+- Inizialmente la pillola era scura (`sfondo-pieno`); è stata invertita perché in mezzo al testo era troppo pesante. Ora parla come menu e colonna: l'unica cosa scura è ciò che è attivo.
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Default | Strumento senza sfondo, icona `icona-tenue` |
+| Hover | `sfondo-hover` |
+| Focus | Anello interno di 2 px in `focus-anello` |
+| Attivo | Formato già applicato alla selezione (es. il testo è in grassetto): cerchio `sfondo-pieno` con icona `icona-su-pieno`, come la riga selezionata |
+| Disabilitato | Opacità 40% (es. titoli dentro una checklist, se non ammessi) |
+| Errore | Non previsto |
+| Caricamento | Non previsto |
+
+### Accessibilità
+- **Tastiera:** la pillola non ruba il focus mentre si scrive; si raggiunge con una scorciatoia (da fissare in Fase 7) e poi con le frecce sinistra e destra tra gli strumenti; Esc torna al testo. Le scorciatoie di formattazione restano sempre valide (CMP-09).
+- **Lettori di schermo:** barra degli strumenti con nome ("Formattazione" o "Inserimento"); ogni strumento è un pulsante con nome e, per la formattazione, stato premuto o non premuto; ogni strumento ha il suggerimento (CMP-08).
+- **Contrasti:** icone `icona-tenue` su `sfondo-flottante` 5,49:1 in chiaro e 5,61:1 in scuro, su `sfondo-hover` ≥ 4,16:1; attivo 16,48:1.
+
+### Esempi
+- ✅ Corretto: selezionare "spostare" e vedere la pillola sopra la parola con il grassetto già attivo.
+- ❌ Scorretto: lasciare la pillola visibile mentre si continua a scrivere.
+
+---
+
+## CMP-11 – Pannello a comparsa
+**Tipo:** composto (usa CMP-03 e CMP-07) · **Usato in:** SC-03 (voci Date… e Sposta in… del menu `···`) · **Figma:** pagina Componenti composti, [Pannello a comparsa](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=60-1780)
+
+**Scopo:** modificare un'informazione della nota che ha bisogno di più di una voce di menu: una data, una cartella.
+**Quando usarlo:** quando la scelta richiede un campo, una ricerca o un albero, aperto dalla voce con "…" del menu.
+**Quando non usarlo:** per una scelta tra poche azioni (menu, CMP-09) o per chiedere conferma (finestra di conferma, CMP-16).
+
+### Varianti e dimensioni
+- **Stesso aspetto del menu** (CMP-09), pur restando un componente separato: `sfondo-flottante`, `raggio-contenitore` (20), `ombra-flottante`, livello 20, largo 236, margini 8 sopra e sotto e 0 ai lati, contenuti rientrati di 8 dai lati. Si apre sotto il `···`, allineato a destra.
+- **Date** (FL-04): "Data di creazione" e "Fine validità" con etichetta Interfaccia/Etichetta in `testo-tenue` e campo con il calendario (CMP-03, con icona). Etichette e note partono a 12 px, allineate al testo dei campi, come il testo delle voci di menu. Sotto la data di creazione, in Interfaccia/Piccola, quella di sistema, che non cambia (RB-21). Nessun avviso sulle combinazioni di date (RB-20).
+- **Sposta in**: campo di ricerca ("Cerca una cartella"), divisore da lato a lato, poi le cartelle come **voci di menu** (CMP-07): la freccia ▸/▾ al posto dell'icona e 16 px di rientro per livello. "Non organizzate" (la radice) lascia vuoto lo spazio della freccia, così i nomi restano allineati. La **cartella attuale** ha la spunta a destra (`check`), non la pillola scura: nel menu la pillola indica l'hover.
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Default | Aperto, con i valori attuali |
+| Hover · Focus · Errore | Li gestiscono i campi (CMP-03) e le righe (CMP-06) |
+| Attivo | Date: la modifica si salva subito (RB-06). Sposta in: il clic su una cartella sposta la nota e chiude il pannello |
+| Disabilitato | Non previsto |
+| Caricamento | Non previsto: tutto è sulla copia di lavoro |
+
+Si chiude con Esc, con un clic fuori o (Sposta in) scegliendo una cartella. Compare con `movimento-durata-breve` e `movimento-spostamento`.
+
+### Accessibilità
+- **Tastiera:** all'apertura il focus va sul primo campo (Date) o sulla ricerca (Sposta in); Tab tra i campi; in Sposta in, scrivendo si filtra l'albero, le frecce scelgono la cartella e Invio sposta. Esc chiude e riporta il focus sul `···`.
+- **Lettori di schermo:** finestra non modale con titolo ("Date", "Sposta in"); la cartella attuale è annunciata come "attuale".
+- **Contrasti:** etichette in `testo-tenue` su `sfondo-flottante` 5,49:1 in chiaro e 5,61:1 in scuro; campi e voci come in CMP-03 e CMP-07.
+
+### Esempi
+- ✅ Corretto: aprire Sposta in e trovare subito la cartella attuale selezionata, già visibile.
+- ❌ Scorretto: chiedere conferma per spostare una nota: lo spostamento si annulla spostandola di nuovo.
 

@@ -18,10 +18,12 @@ Grigi neutri assoluti (rosso, verde e blu uguali) e quattro scale semantiche per
 | `grigio-500` | #696969 |
 | `grigio-600` | #525252 |
 | `grigio-700` | #3D3D3D |
+| `grigio-750` | #383838 · solo per `sfondo-campo` in scuro, tra `grigio-800` (flottante) e `grigio-700` (hover) |
 | `grigio-800` | #2B2B2B |
 | `grigio-900` | #1F1F1F |
 | `grigio-950` | #141414 |
-| `nero-12` · `nero-30` · `nero-40` · `nero-50` | #000000 al 12%, 30%, 40%, 50% |
+| `nero-6` · `nero-12` · `nero-30` · `nero-40` · `nero-50` | #000000 al 6%, 12%, 30%, 40%, 50% |
+| `bianco-5` | #FFFFFF al 5% |
 
 I gradini 300 e 600 del grigio completano la scala; oggi nessun token semantico li usa.
 
@@ -46,19 +48,20 @@ Scale semantiche: a parità di gradino hanno la stessa luminosità dei grigi.
 |---|---|---|---|
 | `sfondo-nota` | `grigio-0` | `grigio-950` | Area della nota |
 | `sfondo-colonna` | `grigio-50` | `grigio-900` | Colonna sinistra |
-| `sfondo-campo` | `grigio-100` | `grigio-800` | Campo di ricerca e campi |
+| `sfondo-campo` | `grigio-100` | `grigio-750` | Campi, ricerca, tag, pulsante secondario. Deve staccarsi da nota, colonna e flottante (vedi "Fondi dei controlli sulle superfici") |
 | `sfondo-hover` | `grigio-200` | `grigio-700` | Passaggio del mouse (pillola chiara) |
-| `sfondo-pieno` | `grigio-900` | `grigio-50` | Riga selezionata, pillola degli strumenti, pulsante primario |
+| `sfondo-pieno` | `grigio-900` | `grigio-50` | Riga selezionata, strumento attivo della pillola, suggerimento, pulsante primario |
 | `sfondo-pieno-hover` | `grigio-700` | `grigio-200` | Pulsante primario al passaggio del mouse |
 | `sfondo-pieno-premuto` | `grigio-800` | `grigio-100` | Pulsante primario premuto |
 | `sfondo-premuto` | `grigio-300` | `grigio-600` | Pulsanti secondario, tenue e solo icona premuti |
-| `sfondo-flottante` | `grigio-0` | `grigio-800` | Menu, pannelli, avvisi chiari, nota rapida |
+| `sfondo-flottante` | `grigio-0` | `grigio-800` | Menu, pillola degli strumenti, pannelli, avvisi chiari, nota rapida |
 | `testo-primario` | `grigio-900` | `grigio-50` | Testo principale |
 | `testo-tenue` | `grigio-500` | `grigio-400` | Testo secondario, etichette, segnaposto |
 | `testo-su-pieno` | `grigio-0` | `grigio-950` | Testo su sfondo pieno |
 | `icona-tenue` | `grigio-500` | `grigio-400` | Icone di linea |
 | `icona-su-pieno` | `grigio-0` | `grigio-950` | Icone su sfondo pieno |
-| `bordo-divisore` | `grigio-200` | `grigio-700` | Divisori dove servono (menu, cestino) |
+| `bordo-divisore` | `grigio-200` | `grigio-700` | Divisori dove servono (cestino) |
+| `bordo-divisore-tenue` | `nero-6` | `bianco-5` | Divisori dei menu, da lato a lato. Trasparente: su `sfondo-flottante` dà circa #F0 in chiaro e #36 in scuro. Decorativo, senza soglia di contrasto |
 | `evidenziazione-selezione` | `grigio-200` | `grigio-700` | Evidenziazione del testo selezionato |
 | `velo` | `nero-30` | `nero-50` | Velo sotto le finestre di conferma (livello 40) |
 | `ombra-flottante` | `nero-12` | `nero-40` | Colore dell'ombra degli elementi flottanti |
@@ -127,6 +130,26 @@ Un'ombra sola, solo su ciò che fluttua (regola 5): `ombra-flottante` = 0 8 24, 
 | `z-conferma` | 40 | Finestre di conferma, con velo |
 | `z-avviso` | 50 | Avvisi |
 
+## Fondi dei controlli sulle superfici
+Regola visiva 11: un controllo con un fondo proprio (campo, hover, premuto, pieno) deve distinguersi da **ogni superficie** su cui può comparire, in chiaro e in scuro. Le superfici sono tre: `sfondo-nota`, `sfondo-colonna` e `sfondo-flottante` (menu, pannelli, pillola, finestre). Due fondi uguali (rapporto 1,00) non sono mai ammessi.
+
+La regola è nata da un errore: in scuro `sfondo-campo` e `sfondo-flottante` erano entrambi `grigio-800`, e i campi nei pannelli (CMP-11) sparivano. Da qui il nuovo `grigio-750`.
+
+| Fondo del controllo | Modo | Su nota | Su colonna | Su flottante |
+|---|---|---|---|---|
+| `sfondo-campo` (#EBEBEB) | Chiaro | 1,19 | 1,08 | 1,19 |
+| `sfondo-campo` (#383838) | Scuro | 1,57 | 1,41 | 1,21 |
+| `sfondo-hover` (#E0E0E0) | Chiaro | 1,32 | 1,20 | 1,32 |
+| `sfondo-hover` (#3D3D3D) | Scuro | 1,70 | 1,52 | 1,30 |
+| `sfondo-premuto` (#C1C1C1) | Chiaro | 1,80 | 1,64 | 1,80 |
+| `sfondo-premuto` (#525252) | Scuro | 2,36 | 2,11 | 1,81 |
+| `sfondo-pieno` (#1F1F1F) | Chiaro | 16,48 | 14,99 | 16,48 |
+| `sfondo-pieno` (#F4F4F4) | Scuro | 16,75 | 14,99 | 12,87 |
+
+Soglia della regola: ogni cella sopra 1,05 (il valore più basso, 1,08, è il campo sulla colonna in chiaro). Nuovi fondi o nuove superfici si aggiungono a questa tabella prima di usarli.
+
+**Limite noto (WCAG 1.4.11):** il fondo dei campi non raggiunge 3:1 contro la superficie. Il campo si riconosce comunque da etichetta, segnaposto, icona e dall'anello di focus (che invece supera 3:1); va verificato nel test di accessibilità (Fase 8).
+
 ## Verifica contrasti
 Soglie WCAG AA: 4,5:1 per il testo normale, 3:1 per icone e testo grande. Il testo tenue è passato da #7B7B7B (moodboard) a #696969 perché il primo non raggiungeva 4,5:1.
 
@@ -137,7 +160,7 @@ Soglie WCAG AA: 4,5:1 per il testo normale, 3:1 per icone e testo grande. Il tes
 | `testo/primario` | `sfondo/colonna` | Chiaro | #1F1F1F su #F4F4F4 | 14.99:1 | ✅ |
 | `testo/primario` | `sfondo/colonna` | Scuro | #F4F4F4 su #1F1F1F | 14.99:1 | ✅ |
 | `testo/primario` | `sfondo/campo` | Chiaro | #1F1F1F su #EBEBEB | 13.83:1 | ✅ |
-| `testo/primario` | `sfondo/campo` | Scuro | #F4F4F4 su #2B2B2B | 12.87:1 | ✅ |
+| `testo/primario` | `sfondo/campo` | Scuro | #F4F4F4 su #383838 | 10.66:1 | ✅ |
 | `testo/primario` | `sfondo/hover` | Chiaro | #1F1F1F su #E0E0E0 | 12.49:1 | ✅ |
 | `testo/primario` | `sfondo/hover` | Scuro | #F4F4F4 su #3D3D3D | 9.88:1 | ✅ |
 | `testo/primario` | `sfondo/flottante` | Chiaro | #1F1F1F su #FFFFFF | 16.48:1 | ✅ |
@@ -149,7 +172,7 @@ Soglie WCAG AA: 4,5:1 per il testo normale, 3:1 per icone e testo grande. Il tes
 | `testo/tenue` | `sfondo/colonna` | Chiaro | #696969 su #F4F4F4 | 4.99:1 | ✅ |
 | `testo/tenue` | `sfondo/colonna` | Scuro | #A3A3A3 su #1F1F1F | 6.53:1 | ✅ |
 | `testo/tenue` | `sfondo/campo` | Chiaro | #696969 su #EBEBEB | 4.61:1 | ✅ |
-| `testo/tenue` | `sfondo/campo` | Scuro | #A3A3A3 su #2B2B2B | 5.61:1 | ✅ |
+| `testo/tenue` | `sfondo/campo` | Scuro | #A3A3A3 su #383838 | 4.65:1 | ✅ |
 | `testo/tenue` | `sfondo/flottante` | Chiaro | #696969 su #FFFFFF | 5.49:1 | ✅ |
 | `testo/tenue` | `sfondo/flottante` | Scuro | #A3A3A3 su #2B2B2B | 5.61:1 | ✅ |
 | `testo/tenue` | `sfondo/hover` | Chiaro | #696969 su #E0E0E0 | 4.16:1 | ⚠️ solo testo grande (≥3:1) |

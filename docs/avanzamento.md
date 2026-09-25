@@ -11,7 +11,7 @@ Perimetro: solo cloud, un solo utente, installazione personale con credenziali p
 
 | Frammento | Requisiti | Fasi complete | Prossima fase | Note |
 |---|---|---|---|---|
-| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4 | 5 – Design system | Fase 4 completata: SC-01 … SC-06 con i loro stati e wireflow cliccabile per FL-01 … FL-09 (prototipo Figma). Test rapido dei wireframe fatto. Fase 5 in corso: moodboard fatto, direzione C · Essenziale originale con grigi neutri (DEC-12), regole visive e token fatti (chiaro e scuro, contrasti verificati), con scale complete e colori degli stati (DEC-14). Componenti: componenti base CMP-01 … CMP-08 disegnati, icone Lucide (DEC-15) in 4 dimensioni; prossimi i componenti composti CMP-09 … CMP-21 |
+| Must | RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4 | 5 – Design system | Fase 4 completata: SC-01 … SC-06 con i loro stati e wireflow cliccabile per FL-01 … FL-09 (prototipo Figma). Test rapido dei wireframe fatto. Fase 5 in corso: moodboard fatto, direzione C · Essenziale originale con grigi neutri (DEC-12), regole visive e token fatti (chiaro e scuro, contrasti verificati), con scale complete e colori degli stati (DEC-14). Componenti: componenti base CMP-01 … CMP-08, CMP-09 Menu, CMP-10 Pillola degli strumenti e CMP-11 Pannello a comparsa disegnati, icone Lucide (DEC-15) in 4 dimensioni; prossimi i composti CMP-12 … CMP-21 |
 | Should | RF-07, RF-09, RF-12, RF-13, RF-16 | — | 1 – Requisiti | Mancano gli scenari d'uso |
 
 ### Idee parcheggiate
@@ -26,6 +26,9 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 | Elenco dei dispositivi e uscita a distanza da ripensare: con credenziali uguali per tutti non si fa uscire un solo dispositivo | RF-16 | Fase 1 di RF-16 (Should) | `moduli/sincronizzazione/1-requisiti.md` |
 | Wireframe da allineare a DEC-13: togliere SC-05, la sezione Account di SC-06 e il punto di partenza FL-08 del prototipo | SC-05, SC-06 | Fase 6, prima dei mockup | File Figma dei wireframe |
 | **Aperta:** allineamento di icona e testo nel tag (la ✕ sembra più alta del testo). Alternative nel confronto della pagina Prove del file Design system: C (rifinitura del testo + icona abbassata di 1 px) o D (✕ a 16 px); valutare anche per pulsante e ricerca | CMP-05, CMP-01, CMP-03 | Fase 5, prima di chiuderla | Figma, pagina Prove |
+| **Aperta:** icona su "Elimina" nei menu. Alternative nella pagina Prove: nessuna icona (oggi), icone su tutte le voci, solo Elimina a sinistra, a destra, o con spazio riservato | CMP-07, CMP-09 | Fase 5, prima di chiuderla | Figma, pagina Prove |
+| Colore delle icone quando si cambia icona con la proprietà Icona: il colore impostato nell'istanza si perde e la nuova icona torna `icona-tenue`. Proposta: unire le forme di ogni icona in un solo tracciato, così il colore resta. Intanto va ricolorata a mano dopo ogni scambio | CMP-02 | Fase 5, prima di chiuderla | `design-system/componenti.md` |
+| Fondo dei campi sotto 3:1 contro la superficie (WCAG 1.4.11): verificare nel test di accessibilità che il campo si riconosca da etichetta, segnaposto, icona e anello di focus | CMP-03, token | Fase 8 | `design-system/tokens.md` |
 | Breakpoint e disegni per il mobile | Token, ID-11 | Quando si riprende il mobile | `design-system/tokens.md` |
 | Libreria "Memodu – Wireframe UI": eliminarla o archiviarla ora che la libreria è il file Design system; i wireframe ne usano le istanze | DEC-10 | Fine della Fase 5 | `design-system/componenti.md` |
 | Testi definitivi di messaggi e avvisi | Tutti i flussi, EN-08 | Fase 6 | Flussi, colonna "Comunicazione" |
@@ -53,6 +56,8 @@ Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui
 | Canc o Backspace toglie il tag in focus; nei filtri della ricerca Spazio seleziona o deseleziona il tag | CMP-05 | `design-system/componenti.md` |
 | Nella colonna le frecce su e giù passano da una riga all'altra, destra e sinistra aprono e chiudono le cartelle, Invio apre la nota | CMP-06 | `design-system/componenti.md` |
 | Nei menu: frecce su e giù tra le voci, Invio attiva, Esc chiude, freccia destra e sinistra aprono e chiudono il sottomenu. Il suggerimento compare anche al focus da tastiera e si nasconde con Esc | CMP-07, CMP-08 | `design-system/componenti.md` |
+| Scorciatoie di sottolineato (Ctrl + U) e barrato (Ctrl + Maiusc + X); nel menu di inserimento si scrive dopo / per filtrare le voci | CMP-09, RF-02 | `design-system/componenti.md` |
+| La pillola degli strumenti si raggiunge da tastiera con una scorciatoia e si percorre con le frecce; Esc torna al testo | CMP-10 | `design-system/componenti.md` |
 | La finestra desktop non si stringe sotto 1024 px, perché il breakpoint stretto serviva solo al web | Token, breakpoint | `design-system/tokens.md` |
 
 ## Rischi accettati

@@ -47,3 +47,4 @@ Regole decise da Manuel Cucca dopo la scelta della direzione. Diventano token (r
 | 8 | **Icone di linea:** 16 px, tratto 1,5 px con estremità arrotondate, grigio tenue; chiare sulla riga selezionata | Colonna, menu, pulsanti |
 | 9 | **Modo scuro:** stessi grigi neutri e stessi ruoli, segue l'impostazione del sistema | Tutta l'interfaccia |
 | 10 | **Animazioni brevi:** dissolvenza di circa 120 ms con uno spostamento di 4 px; nessun movimento se il sistema chiede di ridurlo | Pillola, menu, pannelli, avvisi |
+| 11 | **Controlli distinguibili da ogni superficie:** un fondo di controllo non è mai uguale a una superficie su cui può comparire (nota, colonna, flottante), in chiaro e in scuro | Campi, ricerca, tag, pulsanti, hover, righe selezionate (tabella in `tokens.md`) |
