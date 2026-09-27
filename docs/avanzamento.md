@@ -49,10 +49,7 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 ## Deduzioni da confermare
 Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui non valgono come regole.
 
-| Deduzione | Riguarda | Dove |
-|---|---|---|
-| All'avvio, se ci sono note, si apre la modificata più di recente | SC-01, SC-03 | `app/src/schermate/FinestraPrincipale.tsx` |
-| Larghezza di lettura del testo 640 px (CMP-20 rinviava la misura definitiva alla Fase 7) | CMP-20, SC-03 | `app/src/stili/token.css` |
+Nessuna: le deduzioni dell'attività 4 sono state confermate il 28/09/2026.
 
 ## Rischi accettati
 | Rischio | Decisione | Da rivedere |

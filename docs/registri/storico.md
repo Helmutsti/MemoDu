@@ -203,3 +203,4 @@
 | 28/09/2026 | Manuel Cucca | Confermati i dettagli dei nomi dei file e dell'anteprima | Scelta di Manuel Cucca (deduzione confermata) |
 | 28/09/2026 | Manuel Cucca | API delle note implementata (attività 3): origini ammesse solo dall'app, nessuna conversione silenziosa dei dati, corpo di POST sempre un oggetto JSON | DEC-32 |
 | 28/09/2026 | Manuel Cucca | Attività 4: finestra principale ridotta nel codice; token e stili di testo come CSS, icone Lucide e Inter incorporato; due deduzioni da confermare (nota aperta all'avvio, larghezza di lettura) | DEC-15, DEC-21, DEC-22 |
+| 28/09/2026 | Manuel Cucca | SC-01: all'avvio si apre la nota modificata più di recente; CMP-20: larghezza di lettura 640 confermata | Scelta di Manuel Cucca (deduzioni confermate) |

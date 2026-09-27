@@ -732,7 +732,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 
 ### Varianti e dimensioni
 - **Riga dei metadati** (parte interna), sotto il titolo: i tag (CMP-05, senza ✕ finché non si modificano, `spazio-elemento` tra l'uno e l'altro) e poi la data di modifica in Interfaccia/Dettaglio e `testo-tenue`. Sta `spazio-blocco` (16) sotto il titolo e `spazio-gruppo` (24) sopra il testo; tra i tag e la data `spazio-icona` (8). Proprietà **Data** e **Mostra tag**; nella nota nuova niente tag e "Creata ora". Il componente ha la proprietà **Mostra metadati** per nasconderla dove non c'è il titolo (nota rapida, SC-02).
-- **Con testo:** titolo (Nota/Titolo), riga dei metadati, corpo (Nota/Corpo), sottotitolo (Nota/Sottotitolo), checklist, elenco puntato, elenco numerato; `spazio-blocco` (16) tra i blocchi, `spazio-elemento` (4) tra le voci, `spazio-gruppo` (24) tra intestazione e testo. Larghezza di lettura 640 (la misura massima definitiva si fissa in Fase 7).
+- **Con testo:** titolo (Nota/Titolo), riga dei metadati, corpo (Nota/Corpo), sottotitolo (Nota/Sottotitolo), checklist, elenco puntato, elenco numerato; `spazio-blocco` (16) tra i blocchi, `spazio-elemento` (4) tra le voci, `spazio-gruppo` (24) tra intestazione e testo. Larghezza di lettura 640, confermata come misura massima il 28/09/2026.
 - **Simboli markdown:** in `testo-tenue`, solo sulla riga del cursore (es. `##` davanti al sottotitolo).
 - **Elenchi:** segni (•, 1.) in `testo-tenue`, in una colonna di 16 px.
 - **Checklist:** casella tonda di 16, coerente con le pillole: vuota con contorno `icona-tenue` 1,5; spuntata `sfondo-pieno` con spunta `icona-su-pieno`; la voce spuntata va in `testo-tenue` barrato.

@@ -19,7 +19,7 @@ Impostazione generale della Fase 4: **desktop-first**. Il pubblico della prima f
 - **Mockup della versione ridotta (frammento Must A, approvati da Manuel Cucca il 27/09/2026):** [con note](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=17-214) · [vuota, primo utilizzo](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=17-425); esportazioni `immagini/SC-01-ridotta-mockup.png`, `immagini/SC-01-ridotta-vuota-mockup.png`. Nella nota aperta niente menu `···` e niente riga dei metadati (tag e data di modifica): torna con RF-04
 - **Versione ridotta per il frammento Must A:** la colonna sinistra ha solo la sezione Non organizzate con il suo + (FL-09); niente ricerca e niente sezione Cartelle. Le cartelle si aggiungeranno sotto con il frammento Must. Finché non ci sono le cartelle la sezione si intitola "Note" (diventerà "Non organizzate"); il + ha il suggerimento "Nuova nota"; con l'elenco vuoto compare "Le note che scrivi compaiono qui."
 
-La finestra è sempre la stessa: cambia solo cosa c'è dentro l'area della nota. Il programma mostra una nota alla volta (RF-01), quindi non esistono schede né più note affiancate (RF-12 è *Should*, fuori dalla prima fase).
+La finestra è sempre la stessa: cambia solo cosa c'è dentro l'area della nota. All'avvio, se ci sono note, si apre la modificata più di recente. Il programma mostra una nota alla volta (RF-01), quindi non esistono schede né più note affiancate (RF-12 è *Should*, fuori dalla prima fase).
 
 ### Zone e gerarchia
 | Ordine di lettura | Zona | Contenuto |
