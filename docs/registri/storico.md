@@ -191,3 +191,9 @@
 | 28/09/2026 | Manuel Cucca | EN-01: il contenuto di una nota arriva fino a 10 MB (prima: nessun limite), limite dell'API; SF-17 in FL-02 aggiornata | Scelta di Manuel Cucca |
 | 28/09/2026 | Manuel Cucca | RB-61 estesa agli errori di salvataggio dell'API (404, 413, 500): stessa SC-07, nessun testo dedicato | Scelta di Manuel Cucca (deduzione confermata) |
 | 28/09/2026 | Manuel Cucca | Fase 7 di Must A chiusa: ogni flusso ha i suoi endpoint e ogni sfiga una risposta tecnica; RF-01 e RF-02 passano alla Fase 8 | DEC-32 |
+| 28/09/2026 | Manuel Cucca | RF-01: criteri di accettazione CA-01.1 … CA-01.8; nel frammento Must A la scorciatoia è fissa, la modifica arriva con SC-06 | Scelta di Manuel Cucca (criteri ricavati dall'agente dai flussi) |
+| 28/09/2026 | Manuel Cucca | RF-02: criteri di accettazione CA-02.1 … CA-02.13; CMP-10: la pillola si raggiunge da tastiera con Alt + F10 (Option + F10) | Scelta di Manuel Cucca (criteri ricavati dall'agente dai flussi) |
+| 28/09/2026 | Manuel Cucca | Piano di test di Must A: TC-01 … TC-32, un caso per criterio e per coppia flusso-sfiga, ambiente Locale | Ricavato dall'agente dai criteri CA-01, CA-02 |
+| 28/09/2026 | Manuel Cucca | CMP-08: il suggerimento compare dopo 500 ms di sosta (rinvio risolto) | Scelta di Manuel Cucca |
+| 28/09/2026 | Manuel Cucca | Definition of Done: senza colleghi, la revisione del codice la fa l'agente e Manuel Cucca ne vede il risultato | Scelta di Manuel Cucca |
+| 28/09/2026 | Manuel Cucca | Fase 8 di Must A chiusa: RF-01 e RF-02 soddisfano la Definition of Ready e passano a Pronto; nessuno strumento di gestione dei task per ora | Scelta di Manuel Cucca |

@@ -330,7 +330,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 | Hover · Focus | Compare quando il mouse si ferma sul controllo o quando il controllo riceve il focus da tastiera; sparisce quando lo si lascia o con Esc |
 | Attivo · Disabilitato · Errore · Caricamento | Non previsti: il suggerimento non si clicca |
 
-Compare e sparisce con `movimento-durata-breve` (120 ms). Il ritardo prima della comparsa si fissa in Fase 7.
+Compare e sparisce con `movimento-durata-breve` (120 ms). Compare dopo 500 ms di sosta sul controllo (al focus da tastiera subito).
 
 ### Accessibilità
 - **Tastiera:** non riceve il focus; Esc lo nasconde senza spostare il focus.
@@ -414,7 +414,7 @@ Compare con `movimento-durata-breve` (120 ms) e `movimento-spostamento` (4 px). 
 | Caricamento | Non previsto |
 
 ### Accessibilità
-- **Tastiera:** la pillola non ruba il focus mentre si scrive; si raggiunge con una scorciatoia (da fissare in Fase 7) e poi con le frecce sinistra e destra tra gli strumenti; Esc torna al testo. Le scorciatoie di formattazione restano sempre valide (CMP-09).
+- **Tastiera:** la pillola non ruba il focus mentre si scrive; si raggiunge con Alt + F10 (Option + F10 su macOS), lo standard degli editor per la barra degli strumenti e poi con le frecce sinistra e destra tra gli strumenti; Esc torna al testo. Le scorciatoie di formattazione restano sempre valide (CMP-09).
 - **Lettori di schermo:** barra degli strumenti con nome ("Formattazione" o "Inserimento"); ogni strumento è un pulsante con nome e, per la formattazione, stato premuto o non premuto; ogni strumento ha il suggerimento (CMP-08).
 - **Contrasti:** icone `icona-tenue` su `sfondo-flottante` 5,49:1 in chiaro e 5,61:1 in scuro, su `sfondo-hover` ≥ 4,16:1; attivo 16,48:1.
 

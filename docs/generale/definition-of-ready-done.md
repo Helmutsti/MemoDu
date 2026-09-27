@@ -15,7 +15,7 @@ Un requisito è pronto per essere sviluppato quando:
 Un requisito è finito quando:
 
 - [ ] tutti i criteri di accettazione sono superati;
-- [ ] il codice è stato rivisto da un collega;
+- [ ] il codice è stato rivisto da un collega; finché Manuel Cucca lavora da solo, dall'agente con una revisione del codice di cui Manuel Cucca vede il risultato;
 - [ ] i test sono scritti e passano;
 - [ ] l'accessibilità è verificata;
 - [ ] la documentazione è aggiornata e lo storico registrato;

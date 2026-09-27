@@ -5,7 +5,7 @@
 La scrittura viene prima di tutto: aprire l'app e iniziare a scrivere deve essere immediato (`RNF-01`).
 
 ## RF-01 – Nota rapida da scorciatoia
-**Priorità:** Must · **Origine:** — · **Fase:** 8 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 9 · **Stato:** Pronto
 
 Come *utente desktop* voglio aprire con una scorciatoia da tastiera una finestra di nota rapida per annotare un'idea senza interrompere quello che sto facendo.
 
@@ -25,12 +25,21 @@ Piattaforme:
 Premo la scorciatoia e compare la finestra della nota rapida. A quel punto posso decidere di aprire il programma completo senza perdere la nota, oppure salvare e chiudere la finestra. Se nel programma è già aperta un'altra nota, viene semplicemente salvata e messa da parte.
 
 ### Criteri di accettazione
-- [Da compilare]
+Frammento Must A: la scorciatoia è fissa (Ctrl + Alt + N su Windows, Control + Option + N su macOS); cambiarla dalle impostazioni (RF-11, SC-06) arriva con il frammento Must.
+
+- **CA-01.1** *Dato* Memodu in background, *quando* premo la scorciatoia da un altro programma, *allora* entro 0,2 s compare SC-02 con il cursore nell'area di scrittura (RNF-01).
+- **CA-01.2** *Dato* una nota rapida con del testo, *quando* la chiudo con Esc, con ✕ o con un clic fuori, *allora* la finestra si chiude e la nota compare in cima all'elenco del programma, nella radice (RB-01, RB-02, RB-60).
+- **CA-01.3** *Dato* una nota rapida vuota, *quando* la chiudo, *allora* non nasce nessuna nota (RB-03, SF-16).
+- **CA-01.4** *Dato* una nota rapida aperta, *quando* premo di nuovo la scorciatoia, *allora* la prima viene salvata e resta aperta, e ne compare un'altra spostata di 32 px a destra e in basso (RB-04, SF-01, SF-04).
+- **CA-01.5** *Dato* una nota rapida con del testo e un'altra nota aperta nel programma, *quando* premo Apri nel programma, *allora* la nota del programma viene salvata e chiusa e al suo posto si apre la nota rapida (RB-05).
+- **CA-01.6** *Dato* Memodu in background, *quando* uso l'icona nell'area di notifica (Windows) o nella barra dei menu (macOS), *allora* posso aprire la nota rapida o il programma.
+- **CA-01.7** *Dato* il server spento, *quando* la nota rapida prova a salvare, *allora* compare SC-07 con «Il server delle note non risponde. Avvialo e premi Riprova.»; avviato il server, Riprova salva la nota con tutto il testo (RB-61, SF-30).
+- **CA-01.8** *Dato* del testo non salvato perché il server non risponde, *quando* chiudo la finestra, *allora* compare la conferma «La nota non è salvata»; Annulla lascia la finestra aperta con il testo, Chiudi comunque la chiude (RB-62).
 
 ---
 
 ## RF-02 – Scrittura in markdown con formattazione minima
-**Priorità:** Must · **Origine:** — · **Fase:** 8 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 9 · **Stato:** Pronto
 
 Come *utente* voglio scrivere note in markdown con una formattazione minima per prendere appunti strutturati e produrre documenti formattati.
 
@@ -52,7 +61,21 @@ Ogni modifica si salva da sola, senza pulsante Salva (RB-06). Il testo incollato
 Scrivo la nota e inserisco un'immagine trascinandola nel testo, oppure premendo il pulsante degli allegati. Sull'immagine inserita posso poi aprire delle impostazioni, in stile Word.
 
 ### Criteri di accettazione
-- [Da compilare]
+Frammento Must A: senza immagini (RF-03), senza menu `···` e senza riga dei metadati (RF-04).
+
+- **CA-02.1** *Dato* il programma aperto, *quando* premo il + della sezione Note o Nuova nota, *allora* nasce una nota vuota in cima all'elenco, aperta con il cursore nel corpo; lasciata vuota, resta (FL-09, RB-10, RB-60).
+- **CA-02.2** *Dato* una nota aperta, *quando* scrivo la sintassi markdown (`#`, `##`, `**`, `*`, `~~`, `-`, `1.`, `- [ ]`), *allora* il testo si formatta subito e i simboli si vedono solo sulla riga del cursore (RF-02).
+- **CA-02.3** *Dato* del testo selezionato, *quando* premo Ctrl + B, I, U o Ctrl + Maiusc + X (⌘ su macOS), *allora* diventa grassetto, corsivo, sottolineato o barrato; il sottolineato si salva come `<u>…</u>` (DEC-28).
+- **CA-02.4** *Dato* del testo selezionato, *allora* 8 px sopra compare la pillola di formattazione; *dato* un clic sul vuoto, compare quella di inserimento; *dato* `/` su una riga vuota, si apre il menu di inserimento. In nessuno c'è la voce Immagine; la pillola sparisce riprendendo a scrivere, con Esc o con un clic altrove (CMP-10, CMP-09).
+- **CA-02.5** *Dato* il cursore nel testo, *quando* premo Alt + F10 (Option + F10), *allora* il focus va sulla pillola; le frecce passano da uno strumento all'altro ed Esc torna al testo (CMP-10, RNF-04).
+- **CA-02.6** *Dato* del testo, *quando* uso il tasto destro, *allora* compare il menu con Taglia, Copia, Incolla, la formattazione con le scorciatoie, Titolo › ed Elenco › (RF-11).
+- **CA-02.7** *Dato* una modifica, *quando* passano 2 s senza scrivere, o cambio nota, o chiudo, o la finestra perde il focus, *allora* la nota si salva senza messaggi e sale in cima all'elenco (RB-06, RB-60).
+- **CA-02.8** *Dato* testo copiato da Word, dal web o da un'email, *quando* lo incollo, *allora* entra come testo semplice (RB-07, SF-06).
+- **CA-02.9** *Dato* uno script o dell'HTML attivo nel testo, *quando* la nota si mostra, *allora* il codice non viene eseguito: si vede come testo o viene rimosso (RB-08, SF-36).
+- **CA-02.10** *Dato* una nota senza titolo, *allora* nell'elenco compaiono le prime parole del testo; senza titolo né testo compare «Nota vuota» in grigio chiaro (RB-15).
+- **CA-02.11** *Dato* una nota aperta, *quando* premo Ctrl + Z (⌘ + Z), *allora* si annulla l'ultima modifica, qualunque sia (RB-59).
+- **CA-02.12** *Dato* un'interruzione improvvisa (crash o spegnimento), *quando* riapro la nota, *allora* trovo l'ultimo salvataggio e il file non è rovinato (RB-06, SF-10, SF-32).
+- **CA-02.13** *Dato* il server spento o un errore di salvataggio, *allora* valgono SC-07, il testo in memoria e la conferma alla chiusura, come in CA-01.7 e CA-01.8 (RB-61, RB-62).
 
 ---
 
