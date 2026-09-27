@@ -24,6 +24,26 @@ Un solo repository con workspace npm (DEC-33):
 
 Prove con Vitest, controllo del codice con ESLint e Prettier.
 
+## File delle note (frammento Must A)
+Li scrive solo l'API (`server/src/archivio.ts`), secondo DEC-28 e DEC-29:
+
+```
+---
+id: 3f6c1b2e-9a4d-4c8e-8f1a-2b7d5e6a9c10
+creata: 2026-09-28T08:00:00.000Z
+modificata: 2026-09-28T08:40:12.000Z
+---
+# Titolo
+
+Contenuto in markdown
+```
+
+- La riga `# Titolo` c'è sempre, anche vuota (`# `), così un contenuto che inizia con un titolo non si confonde con il titolo della nota.
+- Nome del file: il titolo con i caratteri vietati (`< > : " / \ | ? *` e i caratteri di controllo) sostituiti da `-`, senza punti e spazi finali, al massimo 100 caratteri; i nomi riservati di Windows (`CON`, `PRN`, `AUX`, `NUL`, `COM1`…, `LPT1`…) ricevono un `-` in fondo. Titolo vuoto: "Senza titolo". Nome già usato, senza distinguere maiuscole e minuscole: "Titolo 2", "Titolo 3"… *Dettagli dell'agente, da confermare.*
+- Anteprima nell'elenco (RB-15): le prime parole del contenuto senza simboli markdown, al massimo 80 caratteri. *Dettaglio dell'agente, da confermare.*
+- I file `.md` senza questa intestazione non sono note di Memodu e si ignorano.
+- La cartella è `Documenti/Memodu`; la variabile d'ambiente `MEMODU_CARTELLA` la sostituisce (prove e sviluppo).
+
 ## Schema generale
 ```mermaid
 flowchart LR

@@ -49,7 +49,9 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 ## Deduzioni da confermare
 Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui non valgono come regole.
 
-Nessuna: le deduzioni sugli endpoint delle note sono state confermate il 28/09/2026.
+| Deduzione | Riguarda | Dove |
+|---|---|---|
+| Dettagli dei nomi dei file (carattere `-` al posto dei vietati, 100 caratteri, nomi riservati, numerazione senza distinguere maiuscole) e anteprima di 80 caratteri | DEC-29, RB-15 | `architettura/architettura.md` |
 
 ## Rischi accettati
 | Rischio | Decisione | Da rivedere |

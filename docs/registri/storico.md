@@ -199,3 +199,4 @@
 | 28/09/2026 | Manuel Cucca | Fase 8 di Must A chiusa: RF-01 e RF-02 soddisfano la Definition of Ready e passano a Pronto; nessuno strumento di gestione dei task per ora | Scelta di Manuel Cucca |
 | 28/09/2026 | Manuel Cucca | Struttura del codice: workspace npm con app, server e condiviso; Vitest, ESLint, Prettier | DEC-33 |
 | 28/09/2026 | Manuel Cucca | Comandi del progetto in AGENTS.md; struttura del repository in architettura; API su 127.0.0.1:4317 nell'ambiente Locale | DEC-33 |
+| 28/09/2026 | Manuel Cucca | Formato dei file delle note e regole dei nomi documentati in architettura (attività 2); una deduzione da confermare sui dettagli | DEC-28, DEC-29 |
