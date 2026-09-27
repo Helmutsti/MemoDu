@@ -197,3 +197,5 @@
 | 28/09/2026 | Manuel Cucca | CMP-08: il suggerimento compare dopo 500 ms di sosta (rinvio risolto) | Scelta di Manuel Cucca |
 | 28/09/2026 | Manuel Cucca | Definition of Done: senza colleghi, la revisione del codice la fa l'agente e Manuel Cucca ne vede il risultato | Scelta di Manuel Cucca |
 | 28/09/2026 | Manuel Cucca | Fase 8 di Must A chiusa: RF-01 e RF-02 soddisfano la Definition of Ready e passano a Pronto; nessuno strumento di gestione dei task per ora | Scelta di Manuel Cucca |
+| 28/09/2026 | Manuel Cucca | Struttura del codice: workspace npm con app, server e condiviso; Vitest, ESLint, Prettier | DEC-33 |
+| 28/09/2026 | Manuel Cucca | Comandi del progetto in AGENTS.md; struttura del repository in architettura; API su 127.0.0.1:4317 nell'ambiente Locale | DEC-33 |

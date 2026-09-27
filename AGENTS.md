@@ -6,11 +6,11 @@ Istruzioni per gli agenti IA che lavorano su questo repository.
 Memodu è un'applicazione di note cross-platform che mette la scrittura al primo posto: note in markdown, organizzate in cartelle, tag e workspace, sincronizzate nel cloud con cifratura end-to-end. Si rivolge a chiunque debba prendere appunti o produrre documenti formattati. La prima fase è solo cloud e mono-utente (DEC-01).
 
 ## Comandi
-<!-- Da compilare con i comandi reali del progetto. -->
-- Installazione: `[comando]`
-- Avvio in locale: `[comando]`
-- Test: `[comando]`
-- Lint e formattazione: `[comando]`
+Dalla cartella principale (workspace npm con `app`, `server`, `condiviso`, DEC-33):
+- Installazione: `npm install`
+- Avvio in locale: `npm run server` (API su `127.0.0.1:4317`), poi in un altro terminale `npm run app`
+- Test: `npm test`
+- Lint e formattazione: `npm run lint` (controllo), `npm run format` (correzione); tipi: `npm run typecheck`
 
 ## Documentazione: leggila prima di scrivere codice
 Il progetto segue il metodo descritto in `docs/guida-documentazione.md`. Non modificare quel file se non ti viene chiesto esplicitamente.

@@ -1,0 +1,4 @@
+docs
+app/src-tauri
+*.md
+package-lock.json
