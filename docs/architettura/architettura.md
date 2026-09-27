@@ -8,6 +8,8 @@
 | App desktop (Windows, macOS) | Tauri 2: interfaccia web in TypeScript, parte nativa in Rust. Framework dell'interfaccia da scegliere | DEC-23 |
 | Interfaccia | React con TypeScript | DEC-26 |
 | Editor della nota | CodeMirror 6 con anteprima dal vivo | DEC-27 |
+| Icone e carattere | `lucide-react` per le icone Lucide; Inter incorporato nell'app con `@fontsource-variable/inter`, così non dipende dai caratteri installati | DEC-15, tokens.md |
+| Token nel codice | Variabili CSS in `app/src/stili/token.css`, stili di testo come classi in `app/src/stili/base.css`; il modo chiaro o scuro segue il sistema | DEC-21, DEC-22 |
 | Server (API) | Node con TypeScript e Fastify | DEC-24, DEC-32 |
 | Archivio del server | File system: documenti e immagini cifrati come file | DEC-25 |
 | Note | Per ora le gestisce l'API: file markdown in `Documenti\Memodu` sulla macchina di sviluppo (intestazione YAML, titolo come prima riga, date in UTC o solo giorno). Provvisorio: poi database e copia di lavoro sul dispositivo | DEC-28, DEC-29, DEC-30 |

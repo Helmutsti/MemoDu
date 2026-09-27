@@ -1,14 +1,9 @@
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
+// Nucleo Rust di Memodu. Nel frammento Must A fa solo area di notifica, scorciatoia globale
+// e finestre (DEC-30): le note passano dall'API. Scorciatoia e nota rapida: attività 9.
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
-        .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet])
         .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .expect("Memodu non è riuscito ad avviarsi");
 }

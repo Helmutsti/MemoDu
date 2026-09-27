@@ -1,0 +1,35 @@
+.stato-vuoto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 320px;
+  padding: var(--spazio-gruppo);
+  text-align: center;
+}
+.stato-vuoto p {
+  margin: 0;
+}
+.stato-vuoto-icona {
+  display: inline-flex;
+  margin-bottom: var(--spazio-icona);
+  color: var(--icona-tenue);
+}
+.stato-vuoto-titolo {
+  color: var(--testo-primario);
+}
+.stato-vuoto-testo {
+  margin-top: var(--spazio-icona) !important;
+  color: var(--testo-tenue);
+}
+.stato-vuoto-azione {
+  margin-top: var(--spazio-blocco);
+}
+
+.stato-vuoto-colonna {
+  display: flex;
+  align-items: center;
+  height: var(--misura-riga);
+  margin: 0;
+  padding: 0 var(--spazio-controllo);
+  color: var(--testo-tenue);
+}

@@ -1,0 +1,38 @@
+.suggerimento-ancora {
+  display: inline-flex;
+}
+
+/* left e top arrivano dal componente: centro orizzontale e bordo del controllo. */
+.suggerimento {
+  position: fixed;
+  z-index: var(--z-comparsa);
+  display: flex;
+  align-items: center;
+  height: var(--misura-controllo-piccolo);
+  padding: 0 var(--spazio-controllo-piccolo);
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-pieno);
+  color: var(--testo-su-pieno);
+  box-shadow: var(--ombra);
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+  animation: suggerimento-sopra var(--movimento-durata-breve) ease-out;
+}
+.suggerimento-sotto {
+  transform: translate(-50%, 0);
+  animation-name: suggerimento-sotto;
+}
+
+@keyframes suggerimento-sopra {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-100% + var(--movimento-spostamento)));
+  }
+}
+@keyframes suggerimento-sotto {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(0px - var(--movimento-spostamento)));
+  }
+}

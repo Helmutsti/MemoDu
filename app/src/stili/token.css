@@ -1,0 +1,119 @@
+/* Token semantici del design system (docs/design-system/tokens.md, DEC-21, DEC-22).
+   I componenti usano solo queste variabili; i primitivi non escono da questo file. */
+
+:root {
+  /* Primitivi: solo per definire i semantici qui sotto. */
+  --grigio-0: #ffffff;
+  --grigio-50: #f4f4f4;
+  --grigio-100: #ebebeb;
+  --grigio-200: #e0e0e0;
+  --grigio-300: #c1c1c1;
+  --grigio-400: #a3a3a3;
+  --grigio-500: #696969;
+  --grigio-600: #525252;
+  --grigio-700: #3d3d3d;
+  --grigio-750: #383838;
+  --grigio-800: #2b2b2b;
+  --grigio-900: #1f1f1f;
+  --grigio-950: #141414;
+  --rosso-50: #fff0ef;
+  --rosso-400: #fe6f69;
+  --rosso-500: #be232a;
+  --rosso-800: #570108;
+
+  /* Colore · chiaro */
+  --sfondo-nota: var(--grigio-0);
+  --sfondo-colonna: var(--grigio-50);
+  --sfondo-campo: var(--grigio-100);
+  --sfondo-hover: var(--grigio-200);
+  --sfondo-pieno: var(--grigio-900);
+  --sfondo-pieno-hover: var(--grigio-700);
+  --sfondo-pieno-premuto: var(--grigio-800);
+  --sfondo-premuto: var(--grigio-300);
+  --sfondo-flottante: var(--grigio-0);
+  --testo-primario: var(--grigio-900);
+  --testo-tenue: var(--grigio-500);
+  --testo-su-pieno: var(--grigio-0);
+  --icona-tenue: var(--grigio-500);
+  --icona-su-pieno: var(--grigio-0);
+  --bordo-divisore: var(--grigio-200);
+  --bordo-divisore-tenue: rgb(0 0 0 / 6%);
+  --evidenziazione-selezione: var(--grigio-200);
+  --velo: rgb(0 0 0 / 30%);
+  --ombra-flottante: rgb(0 0 0 / 12%);
+  --focus-anello: var(--grigio-900);
+  --sfondo-errore: var(--rosso-50);
+  --testo-errore: var(--rosso-500);
+  --icona-errore: var(--rosso-500);
+
+  /* Spazi (regola 12) */
+  --spazio-elemento: 4px;
+  --spazio-icona-piccola: 4px;
+  --spazio-icona: 8px;
+  --spazio-controllo-piccolo: 8px;
+  --spazio-controllo: 12px;
+  --spazio-pulsante: 16px;
+  --spazio-blocco: 16px;
+  --spazio-gruppo: 24px;
+  --spazio-flottante: 8px;
+  --spazio-contenitore: 16px;
+  --spazio-finestra: 24px;
+
+  /* Dimensioni e movimento */
+  --raggio-pillola: 999px;
+  --raggio-contenitore: 20px;
+  --raggio-interno: 12px;
+  --misura-riga: 32px;
+  --misura-colonna: 288px;
+  --misura-controllo-piccolo: 24px;
+  --misura-icona: 16px;
+  --tratto-icona: 1.5;
+  --focus-spessore: 2px;
+  --focus-distanza: 2px;
+  --opacita-disabilitato: 0.4;
+  --movimento-durata-breve: 120ms;
+  --movimento-spostamento: 4px;
+  --misura-lettura: 640px;
+
+  /* Ombra (regola 5) */
+  --ombra: 0 8px 24px var(--ombra-flottante);
+
+  /* Scala z-index */
+  --z-base: 0;
+  --z-fisso: 10;
+  --z-comparsa: 20;
+  --z-overlay: 30;
+  --z-conferma: 40;
+  --z-avviso: 50;
+
+  color-scheme: light dark;
+}
+
+/* Colore · scuro: il modo segue il sistema (regola 9). */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --sfondo-nota: var(--grigio-950);
+    --sfondo-colonna: var(--grigio-900);
+    --sfondo-campo: var(--grigio-750);
+    --sfondo-hover: var(--grigio-700);
+    --sfondo-pieno: var(--grigio-50);
+    --sfondo-pieno-hover: var(--grigio-200);
+    --sfondo-pieno-premuto: var(--grigio-100);
+    --sfondo-premuto: var(--grigio-600);
+    --sfondo-flottante: var(--grigio-800);
+    --testo-primario: var(--grigio-50);
+    --testo-tenue: var(--grigio-400);
+    --testo-su-pieno: var(--grigio-950);
+    --icona-tenue: var(--grigio-400);
+    --icona-su-pieno: var(--grigio-950);
+    --bordo-divisore: var(--grigio-700);
+    --bordo-divisore-tenue: rgb(255 255 255 / 5%);
+    --evidenziazione-selezione: var(--grigio-700);
+    --velo: rgb(0 0 0 / 50%);
+    --ombra-flottante: rgb(0 0 0 / 40%);
+    --focus-anello: var(--grigio-50);
+    --sfondo-errore: var(--rosso-800);
+    --testo-errore: var(--rosso-400);
+    --icona-errore: var(--rosso-400);
+  }
+}

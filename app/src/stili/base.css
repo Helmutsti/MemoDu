@@ -1,0 +1,88 @@
+/* Base e stili di testo (tokens.md, "Tipografia"): ogni testo usa una di queste classi. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: "Inter Variable", "Inter", system-ui, sans-serif;
+  background: var(--sfondo-nota);
+  color: var(--testo-primario);
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: var(--focus-spessore) solid var(--focus-anello);
+  outline-offset: var(--focus-distanza);
+}
+
+.nota-titolo {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.nota-sottotitolo {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.nota-corpo {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+.interfaccia-titolo-schermata {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.interfaccia-controllo,
+.interfaccia-messaggio {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+.interfaccia-controllo-attivo,
+.interfaccia-titolo {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.interfaccia-etichetta,
+.interfaccia-titolo-gruppo {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.interfaccia-titolo-sezione {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.interfaccia-dettaglio {
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.3;
+}

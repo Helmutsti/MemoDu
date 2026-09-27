@@ -1,0 +1,73 @@
+.riga {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: var(--misura-riga);
+  border: none;
+  border-radius: var(--raggio-pillola);
+  background: none;
+  color: var(--testo-primario);
+  text-align: left;
+  cursor: default;
+}
+
+.riga-nome {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.riga-nota {
+  padding: 0 var(--spazio-controllo);
+}
+.riga-nota:hover {
+  background: var(--sfondo-hover);
+}
+.riga-vuota {
+  color: var(--testo-tenue);
+}
+.riga-vuota:hover {
+  color: var(--testo-primario);
+}
+.riga-selezionata,
+.riga-selezionata:hover {
+  background: var(--sfondo-pieno);
+  color: var(--testo-su-pieno);
+}
+
+/* Titolo di sezione: freccia 12, titolo e numero in testo tenue, + a destra. */
+.riga-sezione {
+  gap: var(--spazio-elemento);
+  padding: 0 var(--spazio-controllo-piccolo);
+  color: var(--testo-tenue);
+}
+.riga-sezione:hover {
+  background: var(--sfondo-hover);
+  color: var(--testo-primario);
+}
+.riga-sezione-titolo {
+  display: flex;
+  text-align: left;
+  flex: 1;
+  align-items: center;
+  gap: var(--spazio-elemento);
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: default;
+}
+.riga-conteggio {
+  padding-right: var(--spazio-elemento);
+}
+.riga-aggiungi {
+  display: inline-flex;
+  padding: 0;
+  border: none;
+  border-radius: var(--raggio-pillola);
+  background: none;
+  cursor: default;
+}
