@@ -29,7 +29,7 @@ Visto su un dispositivo, l'avviso sparisce su tutti (RB-53). Le credenziali rifi
 - **Esportazioni:** `immagini/SC-07.png`
 - **Mockup:** [Fase 6]
 
-Al posto della finestra principale e della nota rapida quando le credenziali mancano nel file di configurazione o il server le rifiuta (RB-57, DEC-20). Finestra vuota con, al centro, icona di errore, «Memodu non riesce a collegarsi», una riga che spiega cosa correggere e il pulsante Riprova. Senza rete non compare (DEC-02).
+Al posto della finestra principale e della nota rapida quando le credenziali mancano nel file di configurazione o il server le rifiuta (RB-57, DEC-20). Finestra vuota con, al centro, icona di errore, «Memodu non riesce a collegarsi», una riga che spiega cosa correggere e il pulsante Riprova. Senza rete non compare (DEC-02). Nel frammento Must A compare anche quando l'API delle note non risponde (RB-61), con la spiegazione «Il server delle note non risponde. Avvialo e premi Riprova.»
 
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |

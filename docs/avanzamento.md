@@ -2,7 +2,7 @@
 
 <!-- Stato della documentazione (vedi "Lo stato della documentazione" nella guida). Si sovrascrive; le modifiche non vanno nello storico. Chi riprende il lavoro parte da qui. -->
 
-**Ultimo aggiornamento:** 25/09/2026
+**Ultimo aggiornamento:** 28/09/2026
 
 ## Pacchetti e frammenti
 
@@ -11,7 +11,7 @@ Perimetro: solo cloud, un solo utente, installazione personale con credenziali p
 
 | Frammento | Requisiti | Fasi complete | Prossima fase | Note |
 |---|---|---|---|---|
-| Must A · Scrivere | RF-01, RF-02 | 1, 2, 3, 4, 5 | 6 – Mockup e prototipo (solo SC-02 e SC-03) | Primo frammento da portare alla Definition of Ready per iniziare il codice. Niente sincronizzazione né cifratura; le note passano dall'API Node sulla macchina di sviluppo (DEC-30). Fase 7 in parte fatta: React (DEC-26), CodeMirror 6 (DEC-27), note come file markdown con formato e date (DEC-28), salvataggio dopo 2 s (RB-06). cartella, nomi dei file e modifiche esterne ignorate (DEC-29, file provvisori). Note tramite l'API, nucleo Rust solo per area di notifica, scorciatoia e finestre (DEC-30). Serve ancora: framework HTTP ed endpoint delle note (Fase 7); mockup e testi definitivi di SC-02 e SC-03 (Fase 6); criteri di accettazione, piano di test, controllo della Definition of Ready e task (Fase 8) |
+| Must A · Scrivere | RF-01, RF-02 | 1, 2, 3, 4, 5, 6, 7 | 8 – Handoff: criteri di accettazione, piano di test, Definition of Ready, task | Primo frammento da portare alla Definition of Ready per iniziare il codice. Niente sincronizzazione né cifratura; le note passano dall'API Node sulla macchina di sviluppo (DEC-30). Fase 6 chiusa il 27/09/2026 senza prototipo né test di usabilità (DEC-31): mockup approvati di SC-02, SC-03 (solo le parti di RF-01 e RF-02: scrittura, titolo, formattazione, inserimento senza Immagine, tasto destro, stati vuoti; niente menu `···` né riga dei metadati) e SC-01 ridotta (sola sezione "Note" con il +, ordine per ultima modifica, RB-60); testi degli stati vuoti rivedibili. Fase 7 in parte fatta: React (DEC-26), CodeMirror 6 (DEC-27), note come file markdown (DEC-28), salvataggio dopo 2 s (RB-06), file provvisori (DEC-29), note tramite l'API e nucleo Rust solo per area di notifica, scorciatoia e finestre (DEC-30). Fase 7 chiusa il 28/09/2026: Fastify (DEC-32), endpoint delle note in `architettura/api.md` (solo 127.0.0.1, senza credenziali, UUID, fino a 10 MB), API spenta o in errore gestita con SC-07 e conferma alla chiusura (RB-61, RB-62); criteri di accettazione, piano di test, controllo della Definition of Ready e task (Fase 8). In Figma da sistemare: fondo della nota aperta non legato a `sfondo-nota` nella pagina SC-01 (frame 5:718 e 17:214) e aggiornamento della libreria nel file Mockup (Interfaccia/Dettaglio compare col vecchio nome Interfaccia/Piccola) |
 | Must | RF-03, RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15 | 1, 2, 3, 4, 5 | 6 – Mockup e prototipo (in pausa) · 7 – Architettura tecnica avviata in parallelo: scelti app (DEC-23), server (DEC-24) e archivio (DEC-25), il resto rinviato | Fase 5 completata il 25/09/2026, riaperta e richiusa lo stesso giorno per DEC-21 (spazi semantici, regola 12): moodboard e direzione C (DEC-12), regole visive 1–11, token in chiaro e scuro con contrasti verificati (DEC-14, DEC-16), icone Lucide (DEC-15), componenti CMP-01 … CMP-22 disegnati, documentati e approvati da Manuel Cucca, libreria pubblicata. Il criterio "ogni schermata si costruisce con i soli componenti" si verifica schermata per schermata nei mockup: un componente mancante riapre la Fase 5 (guida, Fase 6) |
 | Should | RF-07, RF-09, RF-12, RF-13, RF-16 | — | 1 – Requisiti | Mancano gli scenari d'uso |
 
@@ -23,9 +23,9 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 
 | Cosa | Riguarda | Da risolvere in | Dove è annotato |
 |---|---|---|---|
+| Prototipo cliccabile e test di usabilità di SC-01, SC-02, SC-03 (saltati per Must A) | RF-01, RF-02 | Fase 6 del frammento Must, e prima di un rilascio ad altre persone | `registri/decisioni/DEC-31-fase-6-di-must-a-senza-prototipo-e-test.md` |
 | Database definitivo sul dispositivo al posto dei file (DEC-29, provvisoria), e con lui ricerca a testo pieno, cestino e cifratura a riposo della copia locale | DEC-28, DEC-29, RF-08, RF-15, RNF-02 | Fase 7 del frammento Must, prima della sincronizzazione | `registri/decisioni/DEC-29-file-delle-note-soluzione-provvisoria.md` |
 | Cifratura: libreria e algoritmo, chiavi per scopo, allegati a pezzi, portachiavi del sistema | DEC-08, RNF-02 | Fase 7 | `architettura/architettura.md` |
-| Framework HTTP dell'API ed endpoint delle note (aprire, salvare, creare, elencare) con i loro errori | DEC-24, DEC-30, FL-01, FL-02 | Fase 7, frammento Must A | `architettura/api.md` |
 | Protocollo di sincronizzazione e resto delle API | DEC-24, FL-07 | Fase 7 del frammento Must | `registri/decisioni/DEC-24-server-con-api-in-node.md` |
 | Organizzazione dei file sul server, elenco delle modifiche, backup | DEC-25 | Fase 7 | `registri/decisioni/DEC-25-archivio-del-server-su-file-system.md` |
 | Hosting definitivo del server personale (con disco persistente) e come si installa. Per ora il server gira sulla macchina di sviluppo | DEC-25, DEC-13 | Fase 8, prima del rilascio | `architettura/architettura.md` |
@@ -50,7 +50,7 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 ## Deduzioni da confermare
 Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui non valgono come regole.
 
-Nessuna: le ultime tre sono state confermate (RB-58, RB-59) o superate da DEC-20.
+Nessuna: le deduzioni sugli endpoint delle note sono state confermate il 28/09/2026.
 
 ## Rischi accettati
 | Rischio | Decisione | Da rivedere |

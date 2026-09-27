@@ -5,7 +5,7 @@
 La scrittura viene prima di tutto: aprire l'app e iniziare a scrivere deve essere immediato (`RNF-01`).
 
 ## RF-01 – Nota rapida da scorciatoia
-**Priorità:** Must · **Origine:** — · **Fase:** 6 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 8 · **Stato:** In progettazione
 
 Come *utente desktop* voglio aprire con una scorciatoia da tastiera una finestra di nota rapida per annotare un'idea senza interrompere quello che sto facendo.
 
@@ -30,7 +30,7 @@ Premo la scorciatoia e compare la finestra della nota rapida. A quel punto posso
 ---
 
 ## RF-02 – Scrittura in markdown con formattazione minima
-**Priorità:** Must · **Origine:** — · **Fase:** 6 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 8 · **Stato:** In progettazione
 
 Come *utente* voglio scrivere note in markdown con una formattazione minima per prendere appunti strutturati e produrre documenti formattati.
 

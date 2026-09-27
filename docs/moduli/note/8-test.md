@@ -24,3 +24,4 @@
 | RF-03 | Il ritaglio e la rotazione modificano l'immagine originale o si possono annullare in seguito? (Principio: nessun dato perso, DEC-06) | Manuel Cucca | No: sono reversibili, l'originale resta intatto | |
 | EN-02 | Eliminando una nota, le sue immagini la seguono nel cestino e tornano con lei se viene ripristinata? | Manuel Cucca | Sì, anche nell'eliminazione definitiva (RB-58) | |
 | RF-02 | Il comando Annulla (Ctrl+Z / Cmd+Z) vale per tutte le modifiche della nota aperta, non solo per le immagini tolte (RB-46)? | Manuel Cucca | Sì, tutte le modifiche della nota aperta (RB-59) | |
+| SC-02 | La nota rapida si apre a 480 × 320 come nel wireframe, o più grande ("circa un quarto di schermo")? Deduzione dell'agente | Manuel Cucca | 480 × 320, ridimensionabile | |

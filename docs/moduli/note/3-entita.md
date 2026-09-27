@@ -49,7 +49,7 @@ erDiagram
 |---|---|---|---|---|
 | Identificativo | Codice | Sì | Unico e stabile: non cambia se la nota viene rinominata o spostata | Tecnico, non visibile |
 | Titolo | Testo | No | Può ripetersi (RB-16) | Se manca, nelle liste si mostrano le prime parole del testo (RB-15) |
-| Contenuto | Markdown | No | Nessun limite di lunghezza | Può essere vuoto (RB-10) |
+| Contenuto | Markdown | No | Fino a 10 MB (circa 5.000 pagine), limite dell'API | Può essere vuoto (RB-10) |
 | Data di creazione di sistema | Data e ora | Sì | Non modificabile (RB-21) | Sempre visibile nei dettagli |
 | Data di creazione scelta | Data | No | Qualsiasi valore (RB-20) | Se c'è, è la data di creazione mostrata (RF-04) |
 | Data di ultima modifica | Data e ora | Sì | Impostata dal sistema | |

@@ -35,6 +35,7 @@ flowchart TD
 | SF-02 Abbandono a metà | Finestra chiusa senza scegliere | Nessun messaggio | Salvataggio automatico (RB-02) |
 | SF-08 Connessione che cade a metà | Assenza di rete | Nessun messaggio: la nota rapida non dipende dalla rete | Salvataggio sulla copia di lavoro, sincronizzazione più tardi (DEC-02) |
 | SF-16 Vuoto | Nota rapida chiusa senza testo | Nessun messaggio | Non si crea nessuna nota (RB-03) |
+| SF-30 Servizio esterno fuori uso (solo Must A, DEC-30) | L'API delle note non risponde quando si salva, si apre o si crea una nota | SC-07 al posto del contenuto della finestra: «Memodu non riesce a collegarsi», con la spiegazione «Il server delle note non risponde. Avvialo e premi Riprova.» e Riprova | Il server si avvia a mano; il testo non ancora salvato resta in memoria e si salva dopo Riprova (RB-61); chiudendo prima, conferma (RB-62) |
 
 ### Sfighe considerate e scartate
 - SF-03 Tasto indietro e refresh: la nota rapida è una finestra desktop, senza navigazione.
@@ -113,6 +114,7 @@ flowchart TD
 | SF-08 Connessione che cade a metà | Assenza di rete | Nessun messaggio: la scrittura non dipende dalla rete | Salvataggio sulla copia di lavoro, sincronizzazione più tardi (DEC-02) |
 | SF-10 App in background o schermo bloccato | Sospensione del dispositivo durante la scrittura | Nessun messaggio | Si perde al massimo l'ultima pausa di scrittura (RB-06) |
 | SF-32 Errore a metà operazione | Crash del programma durante la scrittura | Alla riapertura la nota mostra l'ultimo salvataggio | Si perde al massimo l'ultima pausa di scrittura (RB-06) |
+| SF-30 Servizio esterno fuori uso (solo Must A, DEC-30) | L'API delle note non risponde quando si salva, si apre o si crea una nota | SC-07 al posto del contenuto della finestra: «Memodu non riesce a collegarsi», con la spiegazione «Il server delle note non risponde. Avvialo e premi Riprova.» e Riprova | Il server si avvia a mano; il testo non ancora salvato resta in memoria e si salva dopo Riprova (RB-61); chiudendo prima, conferma (RB-62) |
 | SF-36 Input malevolo | Script o HTML attivo nel testo, incollato o scritto | Il codice si vede come testo oppure viene rimosso | Il contenuto delle note non esegue mai codice (RB-08) |
 
 ### Sfighe considerate e scartate
@@ -121,7 +123,7 @@ flowchart TD
 - SF-05 Cambio idea: la nota resta sempre modificabile.
 - SF-12 Sessione scaduta: non c'è sessione, il dispositivo usa le credenziali preimpostate (RF-14, DEC-13).
 - SF-16 Vuoto: la nuova nota vuota resta (RB-10), vedi FL-09.
-- SF-17 Troppo: nessun limite di lunghezza documentato; nessuna soglia sulla digitazione (RNF-01).
+- SF-17 Troppo: una nota arriva fino a 10 MB di testo (EN-01); oltre, il salvataggio fallisce e compare SC-07 (RB-61). Nessuna soglia sulla digitazione (RNF-01).
 - SF-22 Modifica simultanea: gestita in FL-07.
 - SF-13 … SF-15, SF-18 … SF-21, SF-23 … SF-31, SF-33 … SF-35: nessuna data, valore limite, file, permesso o sistema esterno coinvolto. I file sono in FL-03.
 
@@ -251,3 +253,5 @@ La posizione di una nota (radice, cartella, cestino) è descritta nel diagramma 
 | RB-47 | Copiando un'immagine da una nota a un'altra nasce un'immagine indipendente, con le sue impostazioni: un'immagine appartiene sempre a una sola nota | FL-03 |
 | RB-58 | Le immagini seguono la loro nota: eliminandola vanno nel cestino con lei, ripristinandola tornano, eliminandola definitivamente si cancellano | FL-03, FL-05 |
 | RB-59 | Annulla (Ctrl+Z / Cmd+Z) vale per tutte le modifiche della nota aperta: testo, formattazione, immagini e caselle. Non annulla le azioni fuori dalla nota (spostamenti, eliminazioni: per quelle c'è il cestino) | FL-02, FL-03 |
+| RB-61 | Solo nel frammento Must A (DEC-30): se l'API delle note non risponde o non riesce a salvare (nota non trovata, contenuto oltre 10 MB, file non scritto), la finestra (programma o nota rapida) mostra SC-07 al posto del contenuto; il testo non ancora salvato resta in memoria e si salva appena Riprova riesce. Memodu non avvia il server da solo: si avvia a mano | FL-01, FL-02, FL-09 |
+| RB-62 | Solo nel frammento Must A: se si chiude una finestra (Esc, ✕, clic altrove o chiusura di Memodu) mentre c'è testo non salvato per RB-61, compare una finestra di conferma (CMP-16): titolo «La nota non è salvata», testo «Chiudendo, il testo va perso.», pulsanti «Annulla» e «Chiudi comunque». Annulla lascia la finestra aperta con il testo | FL-01, FL-02 |

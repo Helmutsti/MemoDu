@@ -9,7 +9,8 @@ L'impostazione generale (desktop-first, breakpoint, scala z-index, inventario de
 
 - **Wireframe:** [finestra singola](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=2-2) · [più finestre a cascata](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=2-14)
 - **Esportazioni:** `immagini/SC-02.png`, `immagini/SC-02-cascata.png`
-- **Mockup:** [Fase 6]
+- **Mockup (frammento Must A, approvati da Manuel Cucca il 27/09/2026):** [vuota](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=20-316) · [con testo](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=20-346) · [più note a cascata](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=20-371)
+- **Esportazioni mockup:** `immagini/SC-02-mockup.png`, `immagini/SC-02-testo-mockup.png`, `immagini/SC-02-cascata-mockup.png`
 
 Finestra di sistema, solo su desktop (RF-01). Niente cromatura dell'applicazione: nessuna colonna, nessun albero, nessuna ricerca. Compare entro 0,2 s (RNF-01), già pronta alla scrittura, con il cursore nel testo.
 
@@ -22,7 +23,7 @@ Finestra di sistema, solo su desktop (RF-01). Niente cromatura dell'applicazione
 
 **Nessuna cornice:** niente barra del titolo, niente divisori, niente bordo. La finestra è una superficie bianca con ombra. Si trascina dalla fascia in alto, che non si vede; ✕ e azioni sono tenui e si scuriscono al passaggio del mouse.
 
-Dimensione iniziale piccola (circa un quarto di schermo), ridimensionabile. Resta in primo piano rispetto agli altri programmi finché non si chiude.
+Dimensione iniziale 480 × 320, ridimensionabile. La finestra non è un componente del design system: è costruita con token (`sfondo-nota`, `raggio-contenitore`, `spazio-finestra`, `ombra-flottante`), un pulsante solo icona con `x` per la chiusura e un pulsante tenue per Apri nel programma. Il ✕ sta nella fascia di trascinamento in alto, sopra il testo. Resta in primo piano rispetto agli altri programmi finché non si chiude.
 
 ### Più note rapide aperte insieme (SF-04) — rinvio risolto
 Ogni finestra è indipendente e si chiude per conto suo (RB-02, RB-04). Le finestre si dispongono **a cascata**: ognuna compare spostata di circa 32 px verso destra e verso il basso rispetto all'ultima aperta, sullo schermo dove si trova il puntatore. Arrivata al bordo dello schermo, la cascata riparte dalla posizione iniziale. Nessun affiancamento automatico e nessun limite al numero di finestre: chi ne apre molte le sposta a mano.
@@ -38,7 +39,7 @@ Stessi tasti fisici sui due sistemi, libere nelle configurazioni di default di e
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |
 |---|---|---|
-| Vuoto | Finestra appena aperta, nessun testo | Invito alla scrittura nell'area vuota; testo definitivo in Fase 6 |
+| Vuoto | Finestra appena aperta, nessun testo | "Scrivi qui…" nell'area vuota; in basso "Esc per chiudere" e "Apri nel programma" |
 | Caricamento | Non previsto: la finestra compare già pronta (RNF-01) | — |
 | Errore | Non previsto: la nota rapida non dipende dalla rete (SF-08) | — |
 | Successo | Non previsto: la chiusura è la conferma. Chiusa vuota, non crea nulla e non lo dice (RB-03) | — |
@@ -56,7 +57,9 @@ Stessi tasti fisici sui due sistemi, libere nelle configurazioni di default di e
 
 - **Wireframe:** [immagine selezionata](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=2-36) · [nota nuova vuota](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=2-66) · [testo selezionato e riga vuota](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=15-96) · [clic sul vuoto](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=15-180)
 - **Esportazioni:** `immagini/SC-03.png`, `immagini/SC-03-vuoto.png`, `immagini/SC-03-selezione.png`, `immagini/SC-03-pillola.png`
-- **Mockup:** [Fase 6]
+- **Mockup (frammento Must A, approvati da Manuel Cucca il 27/09/2026):** [nota nuova vuota](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=18-311) · [simboli markdown sulla riga del cursore](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=18-322) · [testo selezionato con la pillola di formattazione](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=18-333) · [clic sul vuoto con la pillola di inserimento](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=18-344) · [menu `/`](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=18-355) · [tasto destro sul testo](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=18-366)
+- **Esportazioni mockup:** `immagini/SC-03-vuoto-mockup.png`, `immagini/SC-03-markdown-mockup.png`, `immagini/SC-03-selezione-mockup.png`, `immagini/SC-03-pillola-mockup.png`, `immagini/SC-03-inserimento-mockup.png`, `immagini/SC-03-tasto-destro-mockup.png`
+- **Perimetro del frammento Must A:** si disegnano solo le parti di RF-01 e RF-02: scrittura, titolo, simboli markdown, pillola di formattazione e di inserimento (senza la voce Immagine), menu `/`, tasto destro, stati vuoti. Menu `···`, immagini, metadati e nota in conflitto si disegnano con il frammento Must
 
 È l'area della nota dentro `SC-01`. Nessun pulsante Salva: ogni modifica si salva da sola dopo una pausa di scrittura (RB-06), e non c'è nessun indicatore permanente di salvataggio — sarebbe rumore su un'azione che non fallisce sul dispositivo.
 
@@ -108,8 +111,8 @@ Il testo ha una larghezza massima di lettura anche su schermi larghi: oltre una 
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |
 |---|---|---|
-| Vuoto (nessuna nota aperta) | Primo utilizzo o nota appena eliminata: invito a scrivere più pulsante per creare la prima nota | Testo definitivo in Fase 6 |
-| Vuoto (nota nuova) | Nota creata e ancora senza testo: titolo e corpo vuoti con il loro invito. La nota esiste già e resta (RB-10) | Testo definitivo in Fase 6 |
+| Vuoto (nessuna nota aperta) | Primo utilizzo o nota appena eliminata: invito a scrivere più pulsante per creare la prima nota | Titolo "Nessuna nota, per ora." · spiegazione "Inizia a scrivere." · pulsante "Nuova nota" (stato vuoto, CMP-19) |
+| Vuoto (nota nuova) | Nota creata e ancora senza testo: titolo e corpo vuoti con il loro invito. La nota esiste già e resta (RB-10) | Titolo: "Titolo" · corpo: "Scrivi qui, oppure premi / per inserire titoli ed elenchi" |
 | Caricamento | Non previsto: la nota arriva dalla copia di lavoro sul dispositivo | — |
 | Errore | Immagine rifiutata: messaggio accanto al punto di inserimento, non bloccante (RB-11, RB-12) | Testo definitivo in Fase 6 |
 | Successo | Non previsto: il salvataggio è silenzioso (RB-06) | — |

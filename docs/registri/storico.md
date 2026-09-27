@@ -172,3 +172,22 @@
 | 25/09/2026 | Manuel Cucca | Guida, Fase 5: nuovo passo "Prima di disegnare i componenti" (costruzione dell'interfaccia e componenti "motore" decisi prima del design system); la nota sul parallelo nella Fase 7 rimanda lì | Ragionamento di Manuel Cucca: una libreria scelta dopo (es. Kendo) avrebbe reso incompatibili i componenti già disegnati |
 | 25/09/2026 | Manuel Cucca | Note sul dispositivo: cartella Documenti\Memodu, file chiamati come il titolo, modifiche esterne ignorate; il file system è provvisorio e il database definitivo è rinviato | DEC-29 |
 | 25/09/2026 | Manuel Cucca | Must A: le note passano dall'API Node (per ora sulla macchina di sviluppo), il nucleo Rust fa solo area di notifica, scorciatoia e finestre; il frammento si chiama ora "Must A · Scrivere" | DEC-30 |
+| 27/09/2026 | Manuel Cucca | Mockup di SC-03 per Must A limitato a RF-01 e RF-02 (scrittura, titolo, formattazione, inserimento senza immagine, tasto destro, stati vuoti); menu `···`, immagini, metadati e conflitto rinviati al frammento Must | Scelta di Manuel Cucca |
+| 27/09/2026 | Manuel Cucca | Must A comprende una SC-01 ridotta: colonna sinistra con la sola sezione Non organizzate e il + per creare una nota (FL-09), senza ricerca né cartelle | Scelta di Manuel Cucca |
+| 27/09/2026 | Manuel Cucca | Nuova RB-60: nella sezione Non organizzate le note si ordinano per ultima modifica, la più recente in cima | Scelta di Manuel Cucca |
+| 27/09/2026 | Manuel Cucca | Testi definitivi per Must A: stato vuoto di SC-02, stati vuoti di SC-03, sezione "Note" della SC-01 ridotta con suggerimento del + ed elenco vuoto | Scelta di Manuel Cucca (proposta dell'agente, confermata) |
+| 27/09/2026 | Manuel Cucca | Mockup del frammento Must A in Figma (SC-02 vuota, con testo e a cascata; SC-03 in sei stati; SC-01 ridotta con note e vuota), con link ed esportazioni; titolo e spiegazione separati nello stato vuoto; due deduzioni da confermare (metadati nascosti, misura della nota rapida) | Scelta di Manuel Cucca (perimetro e testi); mockup dell'agente |
+| 27/09/2026 | Manuel Cucca | Confermato: nel frammento Must A la nota aperta non mostra la riga dei metadati (tag e data di modifica), che torna con RF-04 | Scelta di Manuel Cucca (deduzione confermata) |
+| 27/09/2026 | Manuel Cucca | SC-02: la nota rapida si apre a 480 × 320 (prima "circa un quarto di schermo"), ridimensionabile | Scelta di Manuel Cucca (deduzione confermata) |
+| 27/09/2026 | Manuel Cucca | Mockup del frammento Must A (SC-02, SC-03, SC-01 ridotta) approvati | Scelta di Manuel Cucca |
+| 27/09/2026 | Manuel Cucca | Fase 6 di Must A chiusa senza prototipo né test di usabilità, rinviati al frammento Must; RF-01 e RF-02 passano alla Fase 7 | DEC-31 |
+| 27/09/2026 | Manuel Cucca | Server dell'API in Fastify | DEC-32 |
+| 27/09/2026 | Manuel Cucca | Nuova RB-61 e sfiga SF-30 in FL-01 e FL-02: nel frammento Must A, se l'API non risponde compare SC-07 con Riprova, il testo resta in memoria, il server si avvia a mano | Scelta di Manuel Cucca |
+| 27/09/2026 | Manuel Cucca | Nuova RB-62: nel frammento Must A, chiudere con testo non salvato chiede conferma («La nota non è salvata» · «Chiudendo, il testo va perso.» · Annulla / Chiudi comunque) | Scelta di Manuel Cucca (testi proposti dall'agente) |
+| 27/09/2026 | Manuel Cucca | Testo di SC-07 quando l'API non risponde (Must A): «Il server delle note non risponde. Avvialo e premi Riprova.» | Scelta di Manuel Cucca (testo proposto dall'agente) |
+| 27/09/2026 | Manuel Cucca | Endpoint delle note per Must A (GET /note, GET /note/:id, POST /note, PUT /note/:id) con errori e sfighe; quattro deduzioni da confermare | DEC-30, DEC-32 (endpoint ricavati dall'agente dai flussi) |
+| 27/09/2026 | Manuel Cucca | API delle note di Must A solo su 127.0.0.1 e senza credenziali; obbligatorie quando l'API esce dalla macchina | Scelta di Manuel Cucca (deduzione confermata) |
+| 28/09/2026 | Manuel Cucca | Identificativo della nota: UUID generato dall'API | Scelta di Manuel Cucca (deduzione confermata) |
+| 28/09/2026 | Manuel Cucca | EN-01: il contenuto di una nota arriva fino a 10 MB (prima: nessun limite), limite dell'API; SF-17 in FL-02 aggiornata | Scelta di Manuel Cucca |
+| 28/09/2026 | Manuel Cucca | RB-61 estesa agli errori di salvataggio dell'API (404, 413, 500): stessa SC-07, nessun testo dedicato | Scelta di Manuel Cucca (deduzione confermata) |
+| 28/09/2026 | Manuel Cucca | Fase 7 di Must A chiusa: ogni flusso ha i suoi endpoint e ogni sfiga una risposta tecnica; RF-01 e RF-02 passano alla Fase 8 | DEC-32 |
