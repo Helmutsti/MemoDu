@@ -200,3 +200,5 @@
 | 28/09/2026 | Manuel Cucca | Struttura del codice: workspace npm con app, server e condiviso; Vitest, ESLint, Prettier | DEC-33 |
 | 28/09/2026 | Manuel Cucca | Comandi del progetto in AGENTS.md; struttura del repository in architettura; API su 127.0.0.1:4317 nell'ambiente Locale | DEC-33 |
 | 28/09/2026 | Manuel Cucca | Formato dei file delle note e regole dei nomi documentati in architettura (attività 2); una deduzione da confermare sui dettagli | DEC-28, DEC-29 |
+| 28/09/2026 | Manuel Cucca | Confermati i dettagli dei nomi dei file e dell'anteprima | Scelta di Manuel Cucca (deduzione confermata) |
+| 28/09/2026 | Manuel Cucca | API delle note implementata (attività 3): origini ammesse solo dall'app, nessuna conversione silenziosa dei dati, corpo di POST sempre un oggetto JSON | DEC-32 |

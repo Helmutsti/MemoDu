@@ -12,6 +12,9 @@ Per Must A le note passano dall'API, che è l'unica a scrivere i file (DEC-30); 
 - **Autorizzazione:** nessuna nel frammento Must A: l'API non è raggiungibile da fuori. Le credenziali preimpostate (DEC-13, RB-57) entrano con la sincronizzazione, e sono obbligatorie appena l'API si sposta fuori dalla macchina. Confermato da Manuel Cucca il 27/09/2026.
 - **Identificativo:** UUID generato dall'API alla creazione, scritto nell'intestazione YAML del file (DEC-29); non cambia se cambia il titolo (EN-01). Confermato da Manuel Cucca il 28/09/2026.
 - **Lunghezza:** corpo della richiesta fino a 10 MB (`bodyLimit` di Fastify; il valore di default è 1 MB), circa 5.000 pagine di testo (EN-01, SF-17). Le immagini hanno il loro limite (RB-12). Scelta di Manuel Cucca, 28/09/2026.
+- **Origini ammesse:** l'API risponde alle chiamate del browser solo dall'interfaccia dell'app (`http://localhost:1420` in sviluppo, `tauri://localhost` e `http://tauri.localhost` nell'app installata); le altre origini non ricevono l'intestazione `Access-Control-Allow-Origin`.
+- **Controllo dei dati:** nessuna conversione silenziosa. Un campo che non è testo o un campo in più danno 400.
+- **Implementazione:** `server/src/app.ts`, prove in `server/src/app.test.ts`.
 - **API che non risponde** (server spento, SF-30): lo gestisce l'app, con SC-07 e il testo tenuto in memoria (RB-61, RB-62).
 
 ### Oggetto Nota
@@ -75,7 +78,7 @@ Crea una nota nella radice (RB-01). La nota rapida si crea solo quando c'è del 
 ```json
 { "titolo": "", "contenuto": "" }
 ```
-Entrambi facoltativi.
+Entrambi facoltativi, ma il corpo è sempre un oggetto JSON, anche vuoto (`{}`).
 
 **Output:** `201` con l'oggetto Nota, `id` e date compresi.
 

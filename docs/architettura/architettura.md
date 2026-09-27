@@ -39,8 +39,8 @@ Contenuto in markdown
 ```
 
 - La riga `# Titolo` c'è sempre, anche vuota (`# `), così un contenuto che inizia con un titolo non si confonde con il titolo della nota.
-- Nome del file: il titolo con i caratteri vietati (`< > : " / \ | ? *` e i caratteri di controllo) sostituiti da `-`, senza punti e spazi finali, al massimo 100 caratteri; i nomi riservati di Windows (`CON`, `PRN`, `AUX`, `NUL`, `COM1`…, `LPT1`…) ricevono un `-` in fondo. Titolo vuoto: "Senza titolo". Nome già usato, senza distinguere maiuscole e minuscole: "Titolo 2", "Titolo 3"… *Dettagli dell'agente, da confermare.*
-- Anteprima nell'elenco (RB-15): le prime parole del contenuto senza simboli markdown, al massimo 80 caratteri. *Dettaglio dell'agente, da confermare.*
+- Nome del file: il titolo con i caratteri vietati (`< > : " / \ | ? *` e i caratteri di controllo) sostituiti da `-`, senza punti e spazi finali, al massimo 100 caratteri; i nomi riservati di Windows (`CON`, `PRN`, `AUX`, `NUL`, `COM1`…, `LPT1`…) ricevono un `-` in fondo. Titolo vuoto: "Senza titolo". Nome già usato, senza distinguere maiuscole e minuscole: "Titolo 2", "Titolo 3"… Confermato da Manuel Cucca il 28/09/2026.
+- Anteprima nell'elenco (RB-15): le prime parole del contenuto senza simboli markdown, al massimo 80 caratteri. Confermato da Manuel Cucca il 28/09/2026.
 - I file `.md` senza questa intestazione non sono note di Memodu e si ignorano.
 - La cartella è `Documenti/Memodu`; la variabile d'ambiente `MEMODU_CARTELLA` la sostituisce (prove e sviluppo).
 
