@@ -240,3 +240,5 @@
 | 28/09/2026 | Manuel Cucca | SC-01, CMP-09: tasto destro su una nota della colonna con Sposta in… ed Elimina | Scelta di Manuel Cucca |
 | 28/09/2026 | Manuel Cucca | RB-10: le note lasciate vuote si cancellano da sole; CA-02.1, TC-09; DELETE /note/:id | DEC-39 |
 | 29/09/2026 | Manuel Cucca | SC-01, SC-04, CMP-06, CMP-09, CMP-14: riga Cestino in fondo alla colonna, «Cestino» tolto dal menu ···; GET /albero con il numero di elementi nel cestino; CA-15.4, TC-46 | DEC-40 |
+| 29/09/2026 | Manuel Cucca | Mockup di SC-01 (Must B) e SC-04 con la riga Cestino, menu ··· senza Cestino, ··· nascosto nel cestino; esportazioni rifatte | DEC-40 |
+| 29/09/2026 | Manuel Cucca | RB-48, FL-05, SC-01, SC-04: confermate le cinque deduzioni del codice di Must B | Scelta di Manuel Cucca (deduzioni confermate) |

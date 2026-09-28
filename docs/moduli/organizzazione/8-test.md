@@ -39,8 +39,8 @@
 | RB-23, RB-63 | «Idee» e «idee» contano come lo stesso nome di cartella, visto che su macOS e Windows il disco non le distingue? Deduzione dell'agente | Manuel Cucca | Sì, stesso nome | DEC-36 |
 | RF-15, SC-04 | Nel cestino gli elementi si ordinano con l'eliminato più di recente in cima? Deduzione dell'agente | Manuel Cucca | Sì | DEC-37 |
 | FL-05 | Se un'operazione su cartelle o cestino fallisce (elemento sparito, disco che non scrive), l'app ricarica l'albero e mostra un avviso (CMP-15), con testi da scrivere in Fase 6? Deduzione dell'agente | Manuel Cucca | Sì | DEC-37 |
-| SC-01 | Il ··· in alto a destra si chiama «Altre azioni»? Deduzione dell'agente | Manuel Cucca | | |
-| CMP-14, RB-48 | Nel campo nome un clic altrove conferma; un nome vuoto annulla? Deduzione dell'agente | Manuel Cucca | | |
-| FL-05 | Una nota trascinata sul titolo «Non organizzate» torna nella radice, una cartella sul titolo «Cartelle» va al primo livello? Deduzione dell'agente | Manuel Cucca | | |
-| SC-04 | Testi per cartella vuota e con una sola nota nella conferma di eliminazione definitiva? Deduzione dell'agente | Manuel Cucca | | |
-| SC-01, RB-67 | Con note ma nessuna aperta, «Nessuna nota aperta» con il testo del componente? Deduzione dell'agente | Manuel Cucca | | |
+| SC-01 | Il ··· in alto a destra si chiama «Altre azioni»? Deduzione dell'agente | Manuel Cucca | Sì | |
+| CMP-14, RB-48 | Nel campo nome un clic altrove conferma; un nome vuoto annulla? Deduzione dell'agente | Manuel Cucca | Sì | |
+| FL-05 | Una nota trascinata sul titolo «Non organizzate» torna nella radice, una cartella sul titolo «Cartelle» va al primo livello? Deduzione dell'agente | Manuel Cucca | Sì | |
+| SC-04 | Testi per cartella vuota e con una sola nota nella conferma di eliminazione definitiva? Deduzione dell'agente | Manuel Cucca | Sì | |
+| SC-01, RB-67 | Con note ma nessuna aperta, «Nessuna nota aperta» con il testo del componente? Deduzione dell'agente | Manuel Cucca | Sì | |

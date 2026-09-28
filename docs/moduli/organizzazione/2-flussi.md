@@ -29,6 +29,7 @@ flowchart TD
 ```
 
 ### Percorsi alternativi
+- **Tornare al primo livello trascinando:** una nota trascinata sul titolo «Non organizzate» torna tra le non organizzate; una cartella trascinata sul titolo «Cartelle» va al primo livello.
 - **Nuova cartella dal tasto destro:** su una cartella crea una sottocartella; sullo spazio vuoto dell'albero crea una cartella al primo livello.
 - **Nuova nota dal tasto destro su una cartella:** vedi FL-09.
 - **Elemento ritrovato con la ricerca mentre è nel cestino:** è segnalato come "nel cestino" (RB-29).
@@ -148,5 +149,5 @@ stateDiagram-v2
 | RB-34 | I risultati si ordinano per pertinenza: prima le note con la parola nel titolo o nei tag, poi quelle con la parola solo nel testo. La card a discesa li mostra tutti e si scorre | FL-06 |
 | RB-35 | Senza risultati la card resta aperta con il messaggio "Nessuna nota trovata" | FL-06 |
 | RB-45 | Mentre la card è aperta i risultati non si aggiornano; cliccando un risultato si apre sempre la versione aggiornata della nota | FL-06 |
-| RB-48 | Una nuova cartella nasce con il nome "Nuova cartella" (con un numero se il nome esiste già, RB-23), già selezionato per essere cambiato. Invio conferma il nome; Esc annulla la creazione e la cartella non nasce. Rinominando una cartella esistente, Esc riporta il nome di prima | FL-05 |
+| RB-48 | Una nuova cartella nasce con il nome "Nuova cartella" (con un numero se il nome esiste già, RB-23), già selezionato per essere cambiato. Invio o un clic altrove confermano il nome; Esc o un nome vuoto annullano la creazione e la cartella non nasce. Rinominando una cartella esistente, Esc riporta il nome di prima | FL-05 |
 | RB-49 | Un tag continua a esistere anche quando nessuna nota lo usa più, e resta tra i suggerimenti finché l'utente non lo elimina (RB-19) | FL-04 |

@@ -42,6 +42,8 @@ Le **non organizzate stanno sopra le cartelle**: sono la posta in arrivo della s
 **Il Cestino è una riga fissa in fondo alla colonna sinistra** (DEC-40, che supera la scelta di tenerlo fuori dalla colonna), con l'icona e il numero di elementi: cliccandola il cestino (SC-04) si apre al posto della nota. Durante il trascinamento la riga lascia il posto al cestino di trascinamento.
 
 ### Menu `···` in alto a destra (livello 20)
+Il pulsante si chiama «Altre azioni» (nome per i lettori di schermo e suggerimento).
+
 L'unico menu della finestra. È diviso in due parti:
 
 | Parte | Voci |
