@@ -249,6 +249,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 - **Cartella chiusa / aperta:** freccia ▸ o ▾ (16 px), nome e, a destra, il numero di note che contiene, sottocartelle comprese (Interfaccia/Dettaglio in `testo-tenue`; primario in hover, su pieno se selezionata; RB-56, ID-15). Margine 8. Niente icona di cartella: la direzione C tiene la colonna pulita (DEC-12).
 - **Sezione aperta / chiusa:** freccia di 12 px, titolo in Interfaccia/Titolo di sezione (maiuscolo Semi Bold, spaziatura 6%) in `testo-tenue`, il numero di note e il + per creare (nuova nota o nuova cartella). Il numero si mostra per Non organizzate; nel titolo Cartelle si nasconde.
 - Alta 32 (`misura-riga`), pillola, distanza 4 tra freccia e testo. Il testo troppo lungo finisce con i puntini.
+- **Tra una riga e l'altra**, e tra il titolo della sezione e la prima riga: `spazio-elemento` (4), così le pillole dell'hover e della selezione non si toccano.
 - **Rientro:** per le sottocartelle si mostra il livello "rientro" e lo si allarga di 16 px per ogni livello.
 
 ### Stati
@@ -543,7 +544,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 **Quando non usarlo:** per scegliere una cartella in un pannello (Sposta in, CMP-11, che usa le voci di menu).
 
 ### Varianti e dimensioni
-- Righe CMP-06 su `sfondo-colonna`, larghe 256, dentro la colonna larga `misura-colonna` (288) con `spazio-contenitore` (16) ai lati e in cima, `spazio-blocco` (16) tra la ricerca e l'albero; `spazio-gruppo` (24) tra le sezioni. Titoli di sezione in maiuscolo grassetto: scelta 6 tra sette alternative (spazio, maiuscolo, grassetto, linea), confronto nella pagina Prove. Sezione **Non organizzate** con le note e il loro numero (la nota aperta è selezionata), sezione **Cartelle** con l'albero e il numero di note accanto a ogni cartella (RB-56); 16 px di rientro per livello.
+- Righe CMP-06 su `sfondo-colonna`, larghe 256, dentro la colonna larga `misura-colonna` (288) con `spazio-contenitore` (16) ai lati e in cima, `spazio-blocco` (16) tra la ricerca e l'albero; `spazio-elemento` (4) tra le righe, `spazio-gruppo` (24) tra le sezioni. Titoli di sezione in maiuscolo grassetto: scelta 6 tra sette alternative (spazio, maiuscolo, grassetto, linea), confronto nella pagina Prove. Sezione **Non organizzate** con le note e il loro numero (la nota aperta è selezionata), sezione **Cartelle** con l'albero e il numero di note accanto a ogni cartella (RB-56); 16 px di rientro per livello.
 - **Nuova cartella:** il campo nome compare sul posto, su `sfondo-campo` con l'anello di focus e il nome "Nuova cartella" già selezionato (RB-48). Invio conferma, Esc annulla.
 - **Trascinamento:** la cartella che riceverebbe è evidenziata (CMP-06, trascinamento sopra) e in fondo alla colonna compare il **cestino di trascinamento** (`sfondo-campo`, icona elimina, "Trascina qui per eliminare").
 - **Trascinamento sul cestino:** il cestino diventa `sfondo-errore` con testo e icona in `testo-errore` e `icona-errore` ("Rilascia per spostare nel cestino").

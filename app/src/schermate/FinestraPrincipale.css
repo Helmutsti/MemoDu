@@ -12,8 +12,12 @@
   background: var(--sfondo-colonna);
 }
 
+/* Tra il titolo della sezione e le righe, e tra una riga e l'altra: le pillole non si toccano. */
 .colonna-elenco {
-  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spazio-elemento);
+  margin: var(--spazio-elemento) 0 0;
   padding: 0;
   list-style: none;
 }

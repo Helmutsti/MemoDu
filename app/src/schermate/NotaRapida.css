@@ -1,23 +1,25 @@
-/* SC-02: superficie senza cornice, divisori o bordi; ✕ e azioni tenui. */
+/* SC-02: superficie senza cornice, divisori o bordi; ✕ e azioni tenui. Come il mockup:
+   fondo della nota, spazio-finestra ai bordi e spazio-blocco tra fascia, testo e azioni. */
 .corpo-rapida {
-  background: var(--sfondo-flottante);
+  background: var(--sfondo-nota);
 }
 
 .nota-rapida {
   display: flex;
   flex-direction: column;
+  gap: var(--spazio-blocco);
   height: 100%;
-  padding: 0 var(--spazio-gruppo) var(--spazio-contenitore);
-  background: var(--sfondo-flottante);
+  padding: 0 var(--spazio-finestra) var(--spazio-finestra);
+  background: var(--sfondo-nota);
 }
 
-/* Fascia in alto: non si vede, serve a trascinare la finestra. */
+/* Fascia in alto: non si vede, serve a trascinare la finestra. Comprende il bordo superiore,
+   così la finestra si prende anche dal margine. */
 .nota-rapida-fascia {
   display: flex;
   flex: none;
   justify-content: flex-end;
-  margin-right: calc(0px - var(--spazio-blocco));
-  padding-top: var(--spazio-controllo-piccolo);
+  padding-top: var(--spazio-finestra);
 }
 
 .nota-rapida-area {
@@ -31,7 +33,6 @@
   flex: none;
   align-items: center;
   justify-content: space-between;
-  padding-top: var(--spazio-controllo-piccolo);
 }
 .nota-rapida-suggerimento {
   color: var(--testo-tenue);
