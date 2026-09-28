@@ -231,3 +231,8 @@
 | 28/09/2026 | Manuel Cucca | SC-01 (versione Must B, 8 stati) e SC-04 (4 stati): mockup e testi definitivi di albero vuoto, nome già esistente, errore, cestino vuoto, conferme e dettagli degli elementi | DEC-36, DEC-37 |
 | 28/09/2026 | Manuel Cucca | Varianti dei testi di SC-01 e SC-04 confermate | Scelta di Manuel Cucca (deduzione confermata) |
 | 28/09/2026 | Manuel Cucca | Must B: Fase 6 chiusa senza prototipo né test di usabilità, Fase 7 chiusa | DEC-38 |
+| 28/09/2026 | Manuel Cucca | RB-48: Esc annulla la creazione della cartella; POST /cartelle riceve il nome confermato | Scelta di Manuel Cucca, DEC-37 |
+| 28/09/2026 | Manuel Cucca | RB-67: eliminata la nota aperta, l'area della nota mostra lo stato vuoto | Scelta di Manuel Cucca |
+| 28/09/2026 | Manuel Cucca | RB-09: il + delle Non organizzate crea sempre nella radice; «Nuova nota qui» nella cartella; POST /note con `cartella` | Scelta di Manuel Cucca |
+| 28/09/2026 | Manuel Cucca | RF-05 e RF-15: criteri di accettazione CA-05.1 … CA-05.12 e CA-15.1 … CA-15.8 per il frammento Must B; piano di test TC-33 … TC-50 | DEC-36 |
+| 28/09/2026 | Manuel Cucca | Must B: criteri di accettazione e piano di test approvati, Fase 8 chiusa | DEC-36 |

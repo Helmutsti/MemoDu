@@ -235,7 +235,7 @@ La posizione di una nota (radice, cartella, cestino) è descritta nel diagramma 
 | RB-06 | Ogni modifica a una nota si salva da sola sulla copia di lavoro dopo 2 s di pausa di scrittura, e subito quando si chiude la finestra, si cambia nota o la finestra perde il focus. Il file si scrive in modo sicuro (prima un file temporaneo, poi lo si mette al posto dell'originale), così una chiusura a metà non lo rompe. Non esiste un pulsante Salva | FL-01, FL-02 |
 | RB-07 | Il testo incollato da fuori (Word, web, email) si incolla sempre come testo semplice | FL-02 |
 | RB-08 | Il contenuto delle note non esegue mai codice: script e HTML attivo si mostrano come testo o vengono rimossi, su desktop e web | FL-02 |
-| RB-09 | Una nuova nota creata nel programma completo nasce nella cartella selezionata; se nessuna cartella è selezionata, nasce nella radice | FL-09 |
+| RB-09 | Una nuova nota creata con il + delle Non organizzate nasce sempre nella radice, tra le non organizzate, qualunque sia la nota aperta. Con «Nuova nota qui» dal tasto destro su una cartella nasce in quella cartella | FL-09 |
 | RB-10 | Una nuova nota creata nel programma completo e lasciata vuota resta; si può eliminare a mano, e finisce nel cestino (RB-26) | FL-09 |
 | RB-11 | Nella prima fase si possono inserire solo immagini leggibili; gli altri file e le immagini corrotte vengono rifiutati con un messaggio | FL-03 |
 | RB-12 | Un'immagine può pesare al massimo 25 MB | FL-03 |

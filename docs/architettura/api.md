@@ -73,20 +73,21 @@ Elenco delle note non organizzate (nella radice), la modificata più di recente 
 ## POST /note
 **Flusso:** FL-01 (prima pausa di scrittura in una nota rapida), FL-09 (+ o Nuova nota) · **Ruoli autorizzati:** —
 
-Crea una nota nella radice (RB-01). La nota rapida si crea solo quando c'è del testo: chiusa vuota non chiama l'API (RB-03). Dal + nasce vuota e resta (RB-10).
+Crea una nota nella radice (RB-01, RB-09), o nella cartella indicata con «Nuova nota qui» (RB-09, frammento Must B). La nota rapida si crea solo quando c'è del testo: chiusa vuota non chiama l'API (RB-03). Dal + nasce vuota e resta (RB-10).
 
 **Input**
 ```json
-{ "titolo": "", "contenuto": "" }
+{ "titolo": "", "contenuto": "", "cartella": "Lavoro" }
 ```
-Entrambi facoltativi, ma il corpo è sempre un oggetto JSON, anche vuoto (`{}`).
+Tutti facoltativi, ma il corpo è sempre un oggetto JSON, anche vuoto (`{}`). Senza `cartella`, o con `""`, la nota nasce nella radice.
 
 **Output:** `201` con l'oggetto Nota, `id` e date compresi.
 
 **Errori**
 | Codice | Significato | Sfiga |
 |---|---|---|
-| 400 | Campi non di tipo testo | SF-06 |
+| 400 | Campi non di tipo testo o percorso non valido | SF-06 |
+| 404 | La `cartella` non esiste | SF-32 |
 | 413 | Contenuto oltre il limite del server | SF-17 |
 | 500 | File non scritto | SF-32 |
 
@@ -175,28 +176,29 @@ Le non organizzate sono ordinate come in `GET /note` (RB-60).
 ---
 
 ## POST /cartelle
-**Flusso:** FL-05 (+ in cima all'albero, tasto destro → Nuova cartella) · **Ruoli autorizzati:** —
+**Flusso:** FL-05 (+ in cima all'albero, tasto destro → Nuova sottocartella) · **Ruoli autorizzati:** —
 
-Crea una cartella «Nuova cartella» (con un numero se c'è già, RB-48) dentro `genitore`. Il nome si cambia subito dopo con `PATCH /cartelle`.
+Crea una cartella dentro `genitore`. L'app la chiama solo quando il nome è confermato con Invio: con Esc la cartella non nasce e l'API non viene chiamata (RB-48). Senza `nome` vale «Nuova cartella»; con un nome già usato segue RB-31 con `seEsiste`, e per il nome proposto «Nuova cartella» aggiunge da sola un numero (RB-48).
 
 **Input**
 ```json
-{ "genitore": "Lavoro" }
+{ "genitore": "Lavoro", "nome": "Clienti", "seEsiste": "chiedi" }
 ```
 
-**Output:** `201` con l'oggetto Cartella (vuota).
+**Output:** `201` con l'oggetto Cartella (vuota); con `"unisci"` come `PATCH /cartelle`.
 
 **Errori**
 | Codice | Significato | Sfiga |
 |---|---|---|
 | 400 | Percorso non valido | SF-06 |
 | 404 | `genitore` non esiste (per esempio tolto da fuori) | SF-32 |
+| 409 | Nome già esistente, con `seEsiste` = `"chiedi"` | SF-19 |
 | 500 | Cartella non creata | SF-32 |
 
 ---
 
 ## PATCH /cartelle
-**Flusso:** FL-05 (Rinomina, e conferma del nome di una cartella nuova) · **Ruoli autorizzati:** —
+**Flusso:** FL-05 (Rinomina dal tasto destro o con F2) · **Ruoli autorizzati:** —
 
 Rinomina la cartella. Il nome passa per RB-63.
 

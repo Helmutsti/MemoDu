@@ -143,9 +143,10 @@ stateDiagram-v2
 | RB-64 | Nell'albero le cartelle di ogni livello si ordinano alfabeticamente, dalla A alla Z, senza distinguere maiuscole e minuscole | FL-05 |
 | RB-65 | Le note di una cartella si vedono nell'albero: aprendo la cartella compaiono prima le sottocartelle (RB-64), poi le note, in ordine alfabetico per titolo, dalla A alla Z, senza distinguere maiuscole e minuscole | FL-05 |
 | RB-66 | Spostare la nota aperta (Sposta in o trascinamento) non la chiude: si continua a scrivere, e nella colonna la cartella di destinazione si apre per mostrare la nota selezionata | FL-05 |
+| RB-67 | Se la nota aperta finisce nel cestino (eliminata dal menu `···`, trascinata sul cestino o dentro una cartella eliminata), l'area della nota mostra lo stato vuoto «Nessuna nota aperta» (CMP-19); nessun'altra nota si apre da sola | FL-05 |
 | RB-33 | La ricerca parte mentre si scrive, dopo una brevissima pausa, senza premere Invio | FL-06 |
 | RB-34 | I risultati si ordinano per pertinenza: prima le note con la parola nel titolo o nei tag, poi quelle con la parola solo nel testo. La card a discesa li mostra tutti e si scorre | FL-06 |
 | RB-35 | Senza risultati la card resta aperta con il messaggio "Nessuna nota trovata" | FL-06 |
 | RB-45 | Mentre la card è aperta i risultati non si aggiornano; cliccando un risultato si apre sempre la versione aggiornata della nota | FL-06 |
-| RB-48 | Una nuova cartella nasce con il nome "Nuova cartella" (con un numero se il nome esiste già, RB-23), già selezionato per essere cambiato | FL-05 |
+| RB-48 | Una nuova cartella nasce con il nome "Nuova cartella" (con un numero se il nome esiste già, RB-23), già selezionato per essere cambiato. Invio conferma il nome; Esc annulla la creazione e la cartella non nasce. Rinominando una cartella esistente, Esc riporta il nome di prima | FL-05 |
 | RB-49 | Un tag continua a esistere anche quando nessuna nota lo usa più, e resta tra i suggerimenti finché l'utente non lo elimina (RB-19) | FL-04 |
