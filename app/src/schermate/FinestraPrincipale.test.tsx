@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Nota, VoceElenco } from "@memodu/condiviso";
@@ -92,5 +92,47 @@ describe("SC-01 ridotta con note", () => {
     );
     await userEvent.click(screen.getByRole("button", { name: /Note/ }));
     expect(screen.queryByRole("list")).not.toBeInTheDocument();
+  });
+});
+
+describe("SC-07 quando l'API non risponde (RB-61, CA-01.7, CA-02.13)", () => {
+  it("all'avvio mostra il blocco e Riprova carica le note", async () => {
+    vi.mocked(api.elenca)
+      .mockRejectedValueOnce(new Error("spento"))
+      .mockResolvedValue([voce("a", "Lista della spesa")]);
+    vi.mocked(api.leggi).mockResolvedValue(nota("a", "Lista della spesa"));
+    render(<FinestraPrincipale />);
+    expect(await screen.findByText("Memodu non riesce a collegarsi")).toBeInTheDocument();
+    expect(
+      screen.getByText("Il server delle note non risponde. Avvialo e premi Riprova."),
+    ).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Riprova" }));
+    expect(await screen.findByDisplayValue("Lista della spesa")).toBeInTheDocument();
+    expect(screen.queryByText("Memodu non riesce a collegarsi")).not.toBeInTheDocument();
+  });
+
+  it("se Riprova non riesce, il blocco resta", async () => {
+    vi.mocked(api.elenca).mockRejectedValue(new Error("spento"));
+    render(<FinestraPrincipale />);
+    await userEvent.click(await screen.findByRole("button", { name: "Riprova" }));
+    expect(await screen.findByText("Memodu non riesce a collegarsi")).toBeInTheDocument();
+  });
+
+  it("un salvataggio fallito blocca la finestra e Riprova salva il testo tenuto in memoria", async () => {
+    vi.mocked(api.elenca).mockResolvedValue([voce("a", "Lista")]);
+    vi.mocked(api.leggi).mockResolvedValue(nota("a", "Lista"));
+    vi.mocked(api.salva)
+      .mockRejectedValueOnce(new Error("spento"))
+      .mockResolvedValue(nota("a", "Lista della spesa"));
+    render(<FinestraPrincipale />);
+    const titolo = await screen.findByDisplayValue("Lista");
+    await userEvent.type(titolo, " della spesa");
+    fireEvent.blur(window);
+    expect(await screen.findByText("Memodu non riesce a collegarsi")).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Riprova" }));
+    await waitFor(() =>
+      expect(api.salva).toHaveBeenLastCalledWith("a", { titolo: "Lista della spesa" }, undefined),
+    );
+    expect(screen.getByDisplayValue("Lista della spesa")).toBeInTheDocument();
   });
 });

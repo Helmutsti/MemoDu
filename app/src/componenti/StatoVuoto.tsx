@@ -10,13 +10,21 @@ interface Proprieta {
   titolo: string;
   testo: string;
   azione?: ReactNode;
+  /** Variante Blocco: icona in icona-errore (SC-07). */
+  errore?: boolean;
 }
 
 /** Variante Nota, Cestino o Blocco: al centro dell'area. */
-export function StatoVuoto({ icona, titolo, testo, azione }: Proprieta): ReactElement {
+export function StatoVuoto({
+  icona,
+  titolo,
+  testo,
+  azione,
+  errore = false,
+}: Proprieta): ReactElement {
   return (
     <div className="stato-vuoto">
-      <span className="stato-vuoto-icona">
+      <span className={`stato-vuoto-icona ${errore ? "stato-vuoto-icona-errore" : ""}`}>
         <Icona di={icona} misura={24} />
       </span>
       <p className="stato-vuoto-titolo interfaccia-titolo">{titolo}</p>

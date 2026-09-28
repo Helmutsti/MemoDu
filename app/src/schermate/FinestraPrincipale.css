@@ -31,3 +31,8 @@
   justify-content: center;
   height: 100%;
 }
+
+/* Sotto SC-07 il contenuto resta in memoria, ma non si vede e non si usa (RB-61). */
+.finestra-nascosta {
+  visibility: hidden;
+}

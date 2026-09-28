@@ -1,0 +1,39 @@
+.velo {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-conferma);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--velo);
+}
+
+.finestra-conferma {
+  width: 400px;
+  padding: var(--spazio-finestra);
+  border-radius: var(--raggio-contenitore);
+  background: var(--sfondo-flottante);
+  box-shadow: var(--ombra);
+  color: var(--testo-primario);
+  animation: conferma-compare var(--movimento-durata-breve) ease-out;
+}
+.finestra-conferma p {
+  margin: 0;
+}
+.finestra-conferma-testo {
+  margin-top: var(--spazio-icona) !important;
+  color: var(--testo-tenue);
+}
+.finestra-conferma-pulsanti {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spazio-icona);
+  margin-top: var(--spazio-gruppo);
+}
+
+@keyframes conferma-compare {
+  from {
+    opacity: 0;
+    transform: translateY(var(--movimento-spostamento));
+  }
+}

@@ -60,3 +60,13 @@
 .pulsante-icona:active {
   background: var(--sfondo-premuto);
 }
+
+.pulsante-caricamento {
+  display: inline-flex;
+  animation: pulsante-gira 1s linear infinite;
+}
+@keyframes pulsante-gira {
+  to {
+    transform: rotate(360deg);
+  }
+}
