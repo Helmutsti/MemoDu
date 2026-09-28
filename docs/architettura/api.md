@@ -24,17 +24,18 @@ Per Must A le note passano dall'API, che è l'unica a scrivere i file (DEC-30); 
   "titolo": "Lista della spesa",
   "contenuto": "- latte\n- pane",
   "creata": "2026-09-27T08:32:00Z",
-  "modificata": "2026-09-27T08:40:12Z"
+  "modificata": "2026-09-27T08:40:12Z",
+  "cartella": "Lavoro/Clienti"
 }
 ```
-`titolo` può essere vuoto (RB-15) e `contenuto` pure (RB-10). Gli istanti sono in UTC, formato ISO 8601 (DEC-28). Nel file il titolo è la prima riga `# Titolo`: l'API la compone e la separa, l'app vede solo i due campi.
+`titolo` può essere vuoto (RB-15) e `contenuto` pure (RB-10). `cartella` (dal frammento Must B, DEC-37) è il percorso della cartella che contiene la nota; `""` per le non organizzate. Si cambia solo con `PUT /note/:id/cartella`. Gli istanti sono in UTC, formato ISO 8601 (DEC-28). Nel file il titolo è la prima riga `# Titolo`: l'API la compone e la separa, l'app vede solo i due campi.
 
 ---
 
 ## GET /note
 **Flusso:** FL-02, FL-09 (elenco della colonna di SC-01 ridotta) · **Ruoli autorizzati:** —
 
-Elenco delle note, la modificata più di recente in cima (RB-60).
+Elenco delle note non organizzate (nella radice), la modificata più di recente in cima (RB-60). Dal frammento Must B le note nelle cartelle arrivano con `GET /albero`.
 
 **Input:** nessuno.
 
@@ -112,3 +113,238 @@ Salva titolo e contenuto e aggiorna `modificata`. Il file si scrive in modo sicu
 | 500 | File non scritto: il file precedente resta intatto (RB-06) | SF-32 |
 
 **Come reagisce l'app agli errori:** per 404, 413 e 500 il testo resta nella finestra e l'app mostra SC-07 come per l'API che non risponde (RB-61). Nessun testo dedicato per questi casi: vale la spiegazione di SC-07 anche se la causa non è il server spento. Scelta di Manuel Cucca, 28/09/2026.
+
+---
+
+## Cartelle e cestino (frammento Must B)
+Cartelle come sottocartelle di Documenti/Memodu e cestino nella cartella nascosta `.cestino` (DEC-36); endpoint e identificativi in DEC-37. Valgono le regole generali delle note (indirizzo, autorizzazione, origini, controllo dei dati).
+
+**Valgono per tutti gli endpoint di cartelle e cestino:**
+- **Percorso di una cartella:** i nomi dal primo livello in giù separati da `/`, per esempio `"Lavoro/Clienti"`; `""` è la radice. Viaggia nel corpo JSON. Un percorso con `..`, con `.cestino` o con una parte vuota dà 400.
+- **Nomi:** l'API applica RB-63 (caratteri vietati sostituiti con `-`, come per i file delle note) e confronta i nomi senza distinguere maiuscole e minuscole (RB-23). Nelle risposte c'è sempre il nome come è stato scritto sul disco.
+- **Nome già esistente** (RB-31, SF-19): `409` con `{ "conflitto": "Idee" }`. L'app mostra l'avviso con tre scelte e ripete la richiesta con `"seEsiste": "numero"` (diventa «Idee (2)») o `"seEsiste": "unisci"`; Annulla non chiama l'API. Senza `seEsiste` vale `"chiedi"`.
+- **Unisci:** le note passano nella cartella di destinazione (un nome di file già usato prende un numero, come in DEC-29); le sottocartelle senza omonimi passano anche loro; quelle con un omonimo restano dove sono e tornano in `daRisolvere`. L'app chiede per ognuna (RB-31) e chiama `POST /cartelle/sposta`. La cartella di partenza sparisce quando resta vuota.
+- **Implementazione:** `server/src/app.ts` e `server/src/archivio.ts`, prove accanto.
+
+### Oggetto Cartella
+```json
+{
+  "nome": "Clienti",
+  "percorso": "Lavoro/Clienti",
+  "conteggio": 5,
+  "cartelle": [],
+  "note": [{ "id": "3f6c1b2e-…", "titolo": "Budget 2026", "anteprima": "…", "modificata": "2026-09-27T08:40:12Z" }]
+}
+```
+`conteggio` sono le note della cartella e delle sottocartelle, senza quelle nel cestino (RB-56). `cartelle` in ordine alfabetico (RB-64), `note` in ordine alfabetico per titolo (RB-65); le note usano la stessa voce di `GET /note`.
+
+### Oggetto Elemento del cestino
+```json
+{
+  "id": "9b1e…",
+  "tipo": "cartella",
+  "nome": "Vecchi progetti",
+  "provenienza": "Lavoro",
+  "eliminato": "2026-09-28T10:02:00Z",
+  "conteggio": 7
+}
+```
+`tipo` è `"nota"` o `"cartella"`; `nome` è il titolo della nota o il nome della cartella; `provenienza` il percorso da cui veniva (`""` la radice); `conteggio` solo per le cartelle. Sul disco è la cartella `.cestino/<id>/` con dentro l'elemento e il file `elemento.json` (DEC-37).
+
+---
+
+## GET /albero
+**Flusso:** FL-05 (colonna di SC-01) · **Ruoli autorizzati:** —
+
+Tutta la colonna in una volta: le non organizzate e l'albero.
+
+**Output**
+```json
+{
+  "nonOrganizzate": { "conteggio": 3, "note": [ … ] },
+  "cartelle": [ { "nome": "Lavoro", "percorso": "Lavoro", "conteggio": 12, "cartelle": [ … ], "note": [ … ] } ]
+}
+```
+Le non organizzate sono ordinate come in `GET /note` (RB-60).
+
+**Errori**
+| Codice | Significato | Sfiga |
+|---|---|---|
+| 500 | Cartella delle note illeggibile | SF-32 |
+
+---
+
+## POST /cartelle
+**Flusso:** FL-05 (+ in cima all'albero, tasto destro → Nuova cartella) · **Ruoli autorizzati:** —
+
+Crea una cartella «Nuova cartella» (con un numero se c'è già, RB-48) dentro `genitore`. Il nome si cambia subito dopo con `PATCH /cartelle`.
+
+**Input**
+```json
+{ "genitore": "Lavoro" }
+```
+
+**Output:** `201` con l'oggetto Cartella (vuota).
+
+**Errori**
+| Codice | Significato | Sfiga |
+|---|---|---|
+| 400 | Percorso non valido | SF-06 |
+| 404 | `genitore` non esiste (per esempio tolto da fuori) | SF-32 |
+| 500 | Cartella non creata | SF-32 |
+
+---
+
+## PATCH /cartelle
+**Flusso:** FL-05 (Rinomina, e conferma del nome di una cartella nuova) · **Ruoli autorizzati:** —
+
+Rinomina la cartella. Il nome passa per RB-63.
+
+**Input**
+```json
+{ "percorso": "Lavoro/Nuova cartella", "nome": "Clienti", "seEsiste": "chiedi" }
+```
+
+**Output:** l'oggetto Cartella con nome e percorso nuovi; con `"unisci"`, `{ "cartella": { … }, "daRisolvere": ["Lavoro/Clienti/Archivio"] }`.
+
+**Errori**
+| Codice | Significato | Sfiga |
+|---|---|---|
+| 400 | Percorso non valido o nome vuoto | SF-06 |
+| 404 | La cartella non esiste | SF-32 |
+| 409 | Nome già esistente, con `seEsiste` = `"chiedi"` | SF-19 |
+| 500 | Cartella non rinominata | SF-32 |
+
+---
+
+## POST /cartelle/sposta
+**Flusso:** FL-05 (trascinamento di una cartella nell'albero; sottocartelle da risolvere dopo Unisci) · **Ruoli autorizzati:** —
+
+Sposta la cartella con tutto il contenuto dentro `destinazione` (`""` per il primo livello).
+
+**Input**
+```json
+{ "percorso": "Personale/Idee", "destinazione": "Lavoro", "seEsiste": "chiedi" }
+```
+
+**Output:** come `PATCH /cartelle`.
+
+**Errori**
+| Codice | Significato | Sfiga |
+|---|---|---|
+| 400 | Percorso non valido | SF-06 |
+| 404 | La cartella o la destinazione non esistono | SF-32 |
+| 409 | Nome già esistente nella destinazione | SF-19 |
+| 422 | Destinazione uguale alla cartella o dentro una sua sottocartella: nessuna modifica (RB-24) | SF-18 |
+| 500 | Cartella non spostata | SF-32 |
+
+---
+
+## PUT /note/:id/cartella
+**Flusso:** FL-05 (trascinamento di una nota, Sposta in del menu `···`) · **Ruoli autorizzati:** —
+
+Sposta la nota nella cartella indicata, o tra le non organizzate con `""`. Il file cambia sottocartella; se il nome del file c'è già, prende un numero (DEC-29). La data di modifica non cambia. La nota aperta resta aperta (RB-66): lo gestisce l'app.
+
+**Input**
+```json
+{ "cartella": "Lavoro/Clienti" }
+```
+
+**Output:** l'oggetto Nota con la nuova `cartella`.
+
+**Errori**
+| Codice | Significato | Sfiga |
+|---|---|---|
+| 400 | `id` non è un UUID o percorso non valido | SF-06, SF-34 |
+| 404 | La nota o la cartella non esistono | SF-32 |
+| 500 | File non spostato: resta dov'era | SF-32 |
+
+---
+
+## POST /cestino
+**Flusso:** FL-05 (Elimina dal menu, trascinamento sul cestino) · **Ruoli autorizzati:** —
+
+Manda nel cestino una nota (RB-26) o una cartella con tutto il contenuto (RB-25).
+
+**Input**
+```json
+{ "tipo": "nota", "id": "3f6c1b2e-…" }
+```
+oppure `{ "tipo": "cartella", "percorso": "Lavoro/Vecchi progetti" }`.
+
+**Output:** `201` con l'oggetto Elemento del cestino.
+
+**Errori**
+| Codice | Significato | Sfiga |
+|---|---|---|
+| 400 | Dati non validi | SF-06, SF-34 |
+| 404 | La nota o la cartella non esistono | SF-32 |
+| 500 | Non spostata nel cestino: resta dov'era | SF-32 |
+
+---
+
+## GET /cestino
+**Flusso:** FL-05 (SC-04) · **Ruoli autorizzati:** —
+
+Gli elementi del cestino, l'eliminato più di recente in cima.
+
+**Output:** un elenco di oggetti Elemento del cestino (vuoto se il cestino è vuoto).
+
+**Errori**
+| Codice | Significato | Sfiga |
+|---|---|---|
+| 500 | Cestino illeggibile | SF-32 |
+
+---
+
+## POST /cestino/:id/ripristina
+**Flusso:** FL-05 (Ripristina in SC-04) · **Ruoli autorizzati:** —
+
+Riporta l'elemento nella radice: la nota tra le non organizzate, la cartella al primo livello (RB-28). Una cartella con un nome già presente al primo livello segue RB-31, con `seEsiste`; una nota con un nome di file già usato prende un numero (DEC-29).
+
+**Input**
+```json
+{ "seEsiste": "chiedi" }
+```
+
+**Output:** l'oggetto Nota o l'oggetto Cartella ripristinati (con `"unisci"`, anche `daRisolvere`).
+
+**Errori**
+| Codice | Significato | Sfiga |
+|---|---|---|
+| 400 | `id` non valido | SF-34 |
+| 404 | Nessun elemento con questo `id` nel cestino | SF-32 |
+| 409 | Cartella con un nome già presente al primo livello | SF-19 |
+| 500 | Non ripristinato: resta nel cestino | SF-32 |
+
+---
+
+## DELETE /cestino/:id
+**Flusso:** FL-05 (Elimina definitivamente, dopo la conferma, RB-55) · **Ruoli autorizzati:** —
+
+Cancella per sempre l'elemento dal disco. La conferma la chiede l'app prima di chiamare l'API.
+
+**Output:** `204`.
+
+**Errori**
+| Codice | Significato | Sfiga |
+|---|---|---|
+| 400 | `id` non valido | SF-34 |
+| 404 | Nessun elemento con questo `id` nel cestino | SF-32 |
+| 500 | Non cancellato del tutto | SF-32 |
+
+---
+
+## DELETE /cestino
+**Flusso:** FL-05 (Svuota cestino, dopo la conferma, RB-32) · **Ruoli autorizzati:** —
+
+Cancella per sempre tutti gli elementi del cestino.
+
+**Output:** `204`, anche se il cestino era già vuoto.
+
+**Errori**
+| Codice | Significato | Sfiga |
+|---|---|---|
+| 500 | Cestino non svuotato del tutto: gli elementi rimasti restano nel cestino | SF-32 |
+
+**Come reagisce l'app agli errori di cartelle e cestino:** per 404 e 500 l'app ricarica l'albero e mostra un avviso (CMP-15); testi definitivi in Fase 6 con i mockup. 409 apre l'avviso con tre scelte (RB-31); 422 non mostra niente, lo spostamento semplicemente non avviene (RB-24).

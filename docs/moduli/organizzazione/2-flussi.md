@@ -40,6 +40,7 @@ flowchart TD
 | SF-05 Cambio idea | Nota o cartella eliminata per errore | Nessun messaggio: l'elemento è nel cestino | Si ripristina dal cestino, nella radice (RB-28) |
 | SF-18 Valori limite | Cartella trascinata dentro sé stessa o una sua sottocartella | Lo spostamento non avviene | Nessuna modifica (RB-24) |
 | SF-19 Duplicati | Nome di cartella già presente nella destinazione | Avviso con le scelte: aggiungi un numero, unisci, annulla | L'utente sceglie (RB-31) |
+| SF-32 Errore del server a metà operazione | Il server risponde che la nota o la cartella non esiste più (tolta da fuori Memodu) o che il disco non ha scritto | Avviso (CMP-15), testo definitivo in Fase 6 | L'app ricarica la colonna: si vede lo stato vero e si riprova (DEC-37) |
 | SF-20 Riferimenti spariti | Nota creata o spostata, su un altro dispositivo, in una cartella finita nel cestino | Nessun messaggio | La cartella torna dal cestino con la nota (RB-30) |
 | SF-17 Troppo | Cestino con moltissimi elementi | Nessun messaggio | Resta finché l'utente non lo svuota (RB-27) |
 

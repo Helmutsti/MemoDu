@@ -20,3 +20,5 @@
 | RF-06 | Quali caratteri sono ammessi nei nomi dei tag (spazi, emoji, `/` all'inizio o alla fine, maiuscole e minuscole distinte)? | Manuel Cucca | Maiuscole e minuscole non contano; spazi, accenti ed emoji ammessi; `/` superflui corretti in automatico (RB-22) | |
 | RF-05 | Unendo due cartelle con lo stesso nome, cosa succede alle sottocartelle che hanno a loro volta lo stesso nome? | Manuel Cucca | Per ogni sottocartella doppia ricompare l'avviso con le tre scelte (RB-31) | |
 | RB-23, RB-63 | «Idee» e «idee» contano come lo stesso nome di cartella, visto che su macOS e Windows il disco non le distingue? Deduzione dell'agente | Manuel Cucca | Sì, stesso nome | DEC-36 |
+| RF-15, SC-04 | Nel cestino gli elementi si ordinano con l'eliminato più di recente in cima? Deduzione dell'agente | Manuel Cucca | Sì | DEC-37 |
+| FL-05 | Se un'operazione su cartelle o cestino fallisce (elemento sparito, disco che non scrive), l'app ricarica l'albero e mostra un avviso (CMP-15), con testi da scrivere in Fase 6? Deduzione dell'agente | Manuel Cucca | Sì | DEC-37 |

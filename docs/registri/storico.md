@@ -223,3 +223,6 @@
 | 28/09/2026 | Manuel Cucca | RB-65: note dentro le cartelle in ordine alfabetico per titolo | Scelta di Manuel Cucca |
 | 28/09/2026 | Manuel Cucca | RB-65, SC-01, CMP-14: le note di una cartella compaiono nell'albero dopo le sottocartelle | Scelta di Manuel Cucca |
 | 28/09/2026 | Manuel Cucca | RB-66: la nota aperta spostata resta aperta e la cartella di destinazione si apre | Scelta di Manuel Cucca |
+| 28/09/2026 | Manuel Cucca | API di albero, cartelle, spostamento delle note e cestino; oggetto Nota con `cartella`; GET /note limitato alle non organizzate; struttura di `.cestino` | DEC-37 |
+| 28/09/2026 | Manuel Cucca | SC-04: elementi del cestino dal più recente | DEC-37 (deduzione confermata) |
+| 28/09/2026 | Manuel Cucca | FL-05: sfiga SF-32 gestita, avviso e colonna ricaricata | DEC-37 (deduzione confermata) |

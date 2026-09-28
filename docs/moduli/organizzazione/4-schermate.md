@@ -28,7 +28,7 @@ L'impostazione generale (breakpoint, scala z-index, inventario dei componenti) �
 - **Esportazioni:** `immagini/SC-04.png`, `immagini/SC-04-vuoto.png`, `immagini/SC-04-svuota.png`
 - **Mockup:** [Fase 6]
 
-Si apre dalla voce Cestino del menu `···`, al posto della nota; la colonna resta. Ogni elemento mostra tipo (nota o cartella con il numero di note), da dove veniva e quando è stato eliminato, con Ripristina ed Elimina definitivamente (icona del cestino, con conferma: RB-55, DEC-17). In cima, Svuota cestino.
+Si apre dalla voce Cestino del menu `···`, al posto della nota; la colonna resta. Gli elementi sono in ordine di eliminazione, il più recente in cima. Ogni elemento mostra tipo (nota o cartella con il numero di note), da dove veniva e quando è stato eliminato, con Ripristina ed Elimina definitivamente (icona del cestino, con conferma: RB-55, DEC-17). In cima, Svuota cestino.
 
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |
