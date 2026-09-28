@@ -1,0 +1,65 @@
+/* SC-04 Cestino: titolo e Svuota cestino in alto, sotto gli elementi (CMP-17), larghi 560,
+   alla stessa altezza del titolo di una nota. */
+.cestino {
+  height: 100%;
+  overflow-y: auto;
+  padding: 80px var(--spazio-gruppo);
+}
+
+.cestino-intestazione,
+.cestino-elenco {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.cestino-intestazione {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spazio-blocco);
+}
+.cestino-intestazione h1 {
+  margin: 0;
+  color: var(--testo-primario);
+}
+
+.cestino-elenco {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spazio-elemento);
+  padding: 0;
+  list-style: none;
+}
+
+/* CMP-17: blocco su due righe, margini 12 a sinistra e 8 a destra, 8 sopra e sotto. */
+.elemento-cestino {
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-icona);
+  padding: var(--spazio-controllo-piccolo) var(--spazio-controllo-piccolo)
+    var(--spazio-controllo-piccolo) var(--spazio-controllo);
+  border-radius: var(--raggio-interno);
+}
+.elemento-cestino:hover {
+  background: var(--sfondo-hover);
+}
+.elemento-cestino-icona {
+  display: inline-flex;
+  color: var(--icona-tenue);
+}
+.elemento-cestino-testi {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+.elemento-cestino-nome {
+  overflow: hidden;
+  color: var(--testo-primario);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.elemento-cestino-dettagli {
+  color: var(--testo-tenue);
+}

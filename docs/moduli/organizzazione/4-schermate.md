@@ -28,7 +28,7 @@ L'impostazione generale (breakpoint, scala z-index, inventario dei componenti) �
 - **Esportazioni:** `immagini/SC-04.png`, `immagini/SC-04-vuoto.png`, `immagini/SC-04-svuota.png`
 - **Mockup (frammento Must B, approvati da Manuel Cucca il 28/09/2026):** [con elementi](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-3727) · [vuoto](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-3935) · [conferma svuotamento](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-4040) · [conferma eliminazione definitiva](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-4238); esportazioni `immagini/SC-04-mockup.png`, `immagini/SC-04-vuoto-mockup.png`, `immagini/SC-04-svuota-mockup.png`, `immagini/SC-04-elimina-mockup.png`. In alto il titolo «Cestino» (Interfaccia/Titolo di schermata) e il pulsante secondario «Svuota cestino»; sotto gli elementi (CMP-17), larghi 560.
 
-Si apre dalla voce Cestino del menu `···`, al posto della nota; la colonna resta. Gli elementi sono in ordine di eliminazione, il più recente in cima. Ogni elemento mostra tipo (nota o cartella con il numero di note), da dove veniva e quando è stato eliminato, con Ripristina ed Elimina definitivamente (icona del cestino, con conferma: RB-55, DEC-17). In cima, Svuota cestino.
+Si apre dalla riga Cestino in fondo alla colonna (DEC-40), al posto della nota; la colonna resta. Gli elementi sono in ordine di eliminazione, il più recente in cima. Ogni elemento mostra tipo (nota o cartella con il numero di note), da dove veniva e quando è stato eliminato, con Ripristina ed Elimina definitivamente (icona del cestino, con conferma: RB-55, DEC-17). In cima, Svuota cestino.
 
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |

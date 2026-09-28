@@ -1,5 +1,6 @@
 // CMP-16 Finestra di conferma: al centro, livello 40, con il velo sul resto. Il focus parte
-// da Annulla e resta dentro la finestra; Esc equivale ad Annulla.
+// da Annulla e resta dentro la finestra; Esc equivale ad Annulla. Variante Tre scelte: una
+// seconda azione secondaria tra Annulla e quella principale (RB-31).
 
 import { useEffect, useRef, type ReactElement } from "react";
 import { createPortal } from "react-dom";
@@ -12,6 +13,8 @@ interface Proprieta {
   azione: string;
   onAnnulla: () => void;
   onConferma: () => void;
+  /** Tre scelte: l'azione secondaria (per esempio «Unisci»). */
+  altra?: { etichetta: string; onClick: () => void };
 }
 
 export function FinestraConferma({
@@ -20,6 +23,7 @@ export function FinestraConferma({
   azione,
   onAnnulla,
   onConferma,
+  altra,
 }: Proprieta): ReactElement {
   const finestra = useRef<HTMLDivElement>(null);
 
@@ -61,6 +65,11 @@ export function FinestraConferma({
           <Pulsante tipo="secondario" onClick={onAnnulla}>
             Annulla
           </Pulsante>
+          {altra && (
+            <Pulsante tipo="secondario" onClick={altra.onClick}>
+              {altra.etichetta}
+            </Pulsante>
+          )}
           <Pulsante onClick={onConferma}>{azione}</Pulsante>
         </div>
       </div>

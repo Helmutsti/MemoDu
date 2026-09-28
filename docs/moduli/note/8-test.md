@@ -13,7 +13,7 @@
 | TC-06 | RF-01 CA-01.6 | Dall'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) aprire la nota rapida e il programma | Locale | — | |
 | TC-07 | RF-01 CA-01.7 | Spegnere il server, scrivere in una nota rapida: compare SC-07; avviare il server e premere Riprova: la nota è salvata con tutto il testo | Locale | Server spento | |
 | TC-08 | RF-01 CA-01.8 | Con SC-07 visibile chiudere la nota rapida: compare la conferma; Annulla lascia il testo, Chiudi comunque chiude | Locale | Server spento | |
-| TC-09 | RF-02 CA-02.1 | Premere + e Nuova nota: nasce una nota vuota in cima con il cursore nel corpo; chiusa vuota resta nell'elenco | Locale | Nessuna nota e poi tre note | |
+| TC-09 | RF-02 CA-02.1 | Premere + e Nuova nota: nasce una nota vuota in cima con il cursore nel corpo; lasciata vuota aprendo un'altra nota sparisce dall'elenco e dal disco; con del testo resta | Locale | Nessuna nota e poi tre note | |
 | TC-10 | RF-02 CA-02.2 | Scrivere ogni sintassi markdown prevista: il testo si formatta, i simboli restano solo sulla riga del cursore | Locale | Nota vuota | |
 | TC-11 | RF-02 CA-02.3 | Applicare le quattro scorciatoie su una parola; controllare nel file che il sottolineato sia `<u>…</u>` | Locale | Nota con testo | |
 | TC-12 | RF-02 CA-02.4 | Selezionare testo, cliccare sul vuoto, scrivere / su riga vuota: compaiono pillole e menu giusti, senza Immagine; spariscono scrivendo, con Esc e con un clic altrove | Locale | Nota con testo | |

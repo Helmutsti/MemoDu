@@ -18,6 +18,8 @@ export type VoceMenu =
       scorciatoia?: string;
       azione?: () => void;
       sottomenu?: VoceMenu[];
+      /** Azione che toglie qualcosa (Elimina): testo e icona di errore (CMP-07). */
+      errore?: boolean;
     }
   | { tipo: "separatore" };
 
@@ -155,7 +157,7 @@ export function Menu({
             key={i}
             role="menuitem"
             aria-haspopup={voce.sottomenu ? "menu" : undefined}
-            className={`voce-menu ${i === attiva ? "voce-menu-evidenziata" : ""}`}
+            className={`voce-menu ${i === attiva ? "voce-menu-evidenziata" : ""} ${voce.errore ? "voce-menu-errore" : ""}`}
             onMouseEnter={() => {
               setAttiva(i);
               if (voce.sottomenu) apriSottomenu(i);

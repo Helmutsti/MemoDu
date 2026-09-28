@@ -63,7 +63,7 @@ Scrivo la nota e inserisco un'immagine trascinandola nel testo, oppure premendo 
 ### Criteri di accettazione
 Frammento Must A: senza immagini (RF-03), senza menu `···` e senza riga dei metadati (RF-04).
 
-- **CA-02.1** *Dato* il programma aperto, *quando* premo il + della sezione Note o Nuova nota, *allora* nasce una nota vuota in cima all'elenco, aperta con il cursore nel corpo; lasciata vuota, resta (FL-09, RB-10, RB-60).
+- **CA-02.1** *Dato* il programma aperto, *quando* premo il + della sezione Note o Nuova nota, *allora* nasce una nota vuota in cima all'elenco, aperta con il cursore nel corpo; se la lascio vuota, sparisce (FL-09, RB-10, RB-60, DEC-39).
 - **CA-02.2** *Dato* una nota aperta, *quando* scrivo la sintassi markdown (`#`, `##`, `**`, `*`, `~~`, `-`, `1.`, `- [ ]`), *allora* il testo si formatta subito e i simboli si vedono solo sulla riga del cursore (RF-02).
 - **CA-02.3** *Dato* del testo selezionato, *quando* premo Ctrl + B, I, U o Ctrl + Maiusc + X (⌘ su macOS), *allora* diventa grassetto, corsivo, sottolineato o barrato; il sottolineato si salva come `<u>…</u>` (DEC-28).
 - **CA-02.4** *Dato* del testo selezionato, *allora* 8 px sopra compare la pillola di formattazione; *dato* un clic sul vuoto, compare quella di inserimento; *dato* `/` su una riga vuota, si apre il menu di inserimento. In nessuno c'è la voce Immagine; la pillola sparisce riprendendo a scrivere, con Esc o con un clic altrove (CMP-10, CMP-09).

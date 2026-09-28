@@ -71,3 +71,71 @@
   background: none;
   cursor: default;
 }
+
+/* Cartella (CMP-06): freccia 16, nome, numero di note in testo tenue (RB-56). Margine 8. */
+.riga-cartella {
+  gap: var(--spazio-elemento);
+  padding: 0 var(--spazio-controllo-piccolo);
+}
+.riga-freccia {
+  display: inline-flex;
+  flex: none;
+  color: var(--icona-tenue);
+}
+.riga-cartella .riga-conteggio {
+  color: var(--testo-tenue);
+}
+.riga-cartella:hover {
+  background: var(--sfondo-hover);
+}
+.riga-cartella:hover .riga-conteggio {
+  color: var(--testo-primario);
+}
+
+/* Trascinamento sopra: la cartella che riceverebbe ha l'hover e un contorno di 1,5 (CMP-06). */
+.riga-sopra,
+.riga-sopra:hover {
+  background: var(--sfondo-hover);
+  box-shadow: inset 0 0 0 1.5px var(--icona-tenue);
+}
+
+/* Campo nome nell'albero (CMP-14): sul posto, su sfondo-campo con l'anello di focus. */
+.riga-campo {
+  gap: var(--spazio-elemento);
+  padding: 0 var(--spazio-controllo-piccolo);
+}
+.riga-campo-nome {
+  flex: 1;
+  min-width: 0;
+  height: var(--misura-controllo-piccolo);
+  padding: 0 var(--spazio-controllo-piccolo);
+  border: none;
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-campo);
+  color: var(--testo-primario);
+  outline: var(--focus-spessore) solid var(--focus-anello);
+  outline-offset: var(--focus-distanza);
+}
+
+/* Cestino di trascinamento (CMP-14): in fondo alla colonna, rosso quando ci si passa sopra. */
+.cestino-trascinamento {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spazio-icona);
+  height: var(--misura-riga);
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-campo);
+  color: var(--testo-tenue);
+}
+.cestino-trascinamento-sopra {
+  background: var(--sfondo-errore);
+  color: var(--testo-errore);
+}
+
+/* Riga Cestino (DEC-40): in fondo alla colonna; durante il trascinamento lascia il posto al
+   cestino di trascinamento. */
+.riga-cestino {
+  flex: none;
+}

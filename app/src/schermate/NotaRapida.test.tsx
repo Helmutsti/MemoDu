@@ -21,7 +21,14 @@ vi.mock("../editor/Editor", () => ({
   ),
 }));
 
-const nota = { id: "r1", titolo: "", contenuto: "idea", creata: "c", modificata: "m" };
+const nota = {
+  id: "r1",
+  titolo: "",
+  contenuto: "idea",
+  creata: "c",
+  modificata: "m",
+  cartella: "",
+};
 
 beforeEach(() => {
   vi.resetAllMocks();

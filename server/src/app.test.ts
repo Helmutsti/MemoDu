@@ -142,3 +142,102 @@ describe("origini ammesse", () => {
     expect(altro.headers["access-control-allow-origin"]).toBeUndefined();
   });
 });
+
+describe("cartelle e cestino (DEC-37)", () => {
+  const chiama = (
+    method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
+    url: string,
+    payload?: object,
+  ) => server.inject({ method, url, payload });
+
+  it("crea, rinomina e sposta cartelle; la nota porta la sua cartella", async () => {
+    expect((await chiama("POST", "/cartelle", { genitore: "", nome: "Lavoro" })).statusCode).toBe(
+      201,
+    );
+    await chiama("POST", "/cartelle", { genitore: "Lavoro", nome: "Clienti" });
+    const nota = (await chiama("POST", "/note", { titolo: "A", cartella: "Lavoro" })).json<Nota>();
+    expect(nota.cartella).toBe("Lavoro");
+    const spostata = await chiama("PUT", `/note/${nota.id}/cartella`, {
+      cartella: "Lavoro/Clienti",
+    });
+    expect(spostata.json()).toMatchObject({ cartella: "Lavoro/Clienti" });
+    const rinominata = await chiama("PATCH", "/cartelle", { percorso: "Lavoro", nome: "Ufficio" });
+    expect(rinominata.json()).toMatchObject({
+      cartella: { percorso: "Ufficio", conteggio: 1 },
+      daRisolvere: [],
+    });
+    const albero = (await chiama("GET", "/albero")).json();
+    expect(albero).toMatchObject({
+      cartelle: [{ nome: "Ufficio", cartelle: [{ nome: "Clienti" }] }],
+    });
+  });
+
+  it("risponde 409 con il nome in conflitto, 422 dentro sé stessa, 404 e 400", async () => {
+    await chiama("POST", "/cartelle", { genitore: "", nome: "Clienti" });
+    await chiama("POST", "/cartelle", { genitore: "Clienti", nome: "Sotto" });
+    const doppia = await chiama("POST", "/cartelle", { genitore: "", nome: "clienti" });
+    expect(doppia.statusCode).toBe(409);
+    expect(doppia.json()).toEqual({ conflitto: "Clienti" });
+    const dentro = await chiama("POST", "/cartelle/sposta", {
+      percorso: "Clienti",
+      destinazione: "Clienti/Sotto",
+    });
+    expect(dentro.statusCode).toBe(422);
+    expect((await chiama("PATCH", "/cartelle", { percorso: "Manca", nome: "X" })).statusCode).toBe(
+      404,
+    );
+    expect(
+      (await chiama("POST", "/cartelle", { genitore: "../fuori", nome: "X" })).statusCode,
+    ).toBe(400);
+    expect((await chiama("POST", "/cartelle", { genitore: "", seEsiste: "boh" })).statusCode).toBe(
+      400,
+    );
+  });
+
+  it("cestina, elenca, ripristina ed elimina", async () => {
+    const nota = await crea({ titolo: "Via" });
+    const elemento = await chiama("POST", "/cestino", { tipo: "nota", id: nota.id });
+    expect(elemento.statusCode).toBe(201);
+    const { id } = elemento.json<{ id: string }>();
+    expect((await chiama("GET", "/cestino")).json()).toMatchObject([
+      { id, tipo: "nota", nome: "Via" },
+    ]);
+    expect((await chiama("POST", `/cestino/${id}/ripristina`, {})).json()).toMatchObject({
+      id: nota.id,
+      cartella: "",
+    });
+    const diNuovo = (await chiama("POST", "/cestino", { tipo: "nota", id: nota.id })).json<{
+      id: string;
+    }>();
+    expect((await chiama("DELETE", `/cestino/${diNuovo.id}`)).statusCode).toBe(204);
+    expect((await chiama("DELETE", `/cestino/${diNuovo.id}`)).statusCode).toBe(404);
+    expect((await chiama("DELETE", "/cestino")).statusCode).toBe(204);
+    expect((await chiama("POST", "/cestino", { tipo: "cartella" })).statusCode).toBe(400);
+  });
+
+  it("permette all'app anche PATCH e DELETE", async () => {
+    const risposta = await server.inject({
+      method: "OPTIONS",
+      url: "/cartelle",
+      headers: { origin: "http://localhost:1420" },
+    });
+    expect(risposta.headers["access-control-allow-methods"]).toContain("PATCH");
+    expect(risposta.headers["access-control-allow-methods"]).toContain("DELETE");
+  });
+});
+
+describe("DELETE /note/:id (DEC-39)", () => {
+  it("cancella una nota vuota con 204 e risponde 409 se non è vuota", async () => {
+    const vuota = await crea({});
+    const piena = await crea({ contenuto: "x" });
+    expect((await server.inject({ method: "DELETE", url: `/note/${vuota.id}` })).statusCode).toBe(
+      204,
+    );
+    expect((await server.inject({ method: "DELETE", url: `/note/${piena.id}` })).statusCode).toBe(
+      409,
+    );
+    expect((await server.inject({ method: "DELETE", url: `/note/${vuota.id}` })).statusCode).toBe(
+      404,
+    );
+  });
+});

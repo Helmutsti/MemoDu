@@ -18,7 +18,7 @@
 | TC-43 | RF-05 CA-05.12 | Senza cartelle: sotto «Cartelle» compare «Nessuna cartella. Creane una con +» | Locale | Solo note non organizzate | |
 | TC-44 | RF-15 CA-15.1, CA-15.2 | Eliminare la nota aperta dal menu `···`, poi una cartella che contiene la nota aperta dal tasto destro: nessuna conferma, stato vuoto nell'area della nota, entrambe nel cestino con il contenuto | Locale | Albero di prova | |
 | TC-45 | RF-15 CA-15.3 | Trascinare una nota e poi una cartella sul cestino in fondo alla colonna: compare, diventa rosso, al rilascio l'elemento è nel cestino | Locale | Albero di prova | |
-| TC-46 | RF-15 CA-15.4 | Eliminare tre elementi in momenti diversi e aprire il cestino: il più recente in cima, testi di tipo, provenienza e data corretti | Locale | Tre elementi eliminati | |
+| TC-46 | RF-15 CA-15.4 | Eliminare tre elementi in momenti diversi: la riga Cestino in fondo alla colonna mostra 3; aprirla: il più recente in cima, testi di tipo, provenienza e data corretti | Locale | Tre elementi eliminati | |
 | TC-47 | RF-15 CA-15.5 | Ripristinare una nota di «Clienti» e una sottocartella: tornano tra le non organizzate e al primo livello; ripristinare una cartella con un nome già al primo livello: compare la finestra | Locale | Cestino con elementi | |
 | TC-48 | RF-15 CA-15.6 | Elimina definitivamente: Annulla lascia l'elemento; confermando sparisce anche da `.cestino` sul disco | Locale | Cestino con elementi | |
 | TC-49 | RF-15 CA-15.7 | Svuota cestino: la conferma indica il numero di elementi; dopo, «Il cestino è vuoto» e niente pulsante Svuota | Locale | Cestino con tre elementi | |
@@ -39,3 +39,8 @@
 | RB-23, RB-63 | «Idee» e «idee» contano come lo stesso nome di cartella, visto che su macOS e Windows il disco non le distingue? Deduzione dell'agente | Manuel Cucca | Sì, stesso nome | DEC-36 |
 | RF-15, SC-04 | Nel cestino gli elementi si ordinano con l'eliminato più di recente in cima? Deduzione dell'agente | Manuel Cucca | Sì | DEC-37 |
 | FL-05 | Se un'operazione su cartelle o cestino fallisce (elemento sparito, disco che non scrive), l'app ricarica l'albero e mostra un avviso (CMP-15), con testi da scrivere in Fase 6? Deduzione dell'agente | Manuel Cucca | Sì | DEC-37 |
+| SC-01 | Il ··· in alto a destra si chiama «Altre azioni»? Deduzione dell'agente | Manuel Cucca | | |
+| CMP-14, RB-48 | Nel campo nome un clic altrove conferma; un nome vuoto annulla? Deduzione dell'agente | Manuel Cucca | | |
+| FL-05 | Una nota trascinata sul titolo «Non organizzate» torna nella radice, una cartella sul titolo «Cartelle» va al primo livello? Deduzione dell'agente | Manuel Cucca | | |
+| SC-04 | Testi per cartella vuota e con una sola nota nella conferma di eliminazione definitiva? Deduzione dell'agente | Manuel Cucca | | |
+| SC-01, RB-67 | Con note ma nessuna aperta, «Nessuna nota aperta» con il testo del componente? Deduzione dell'agente | Manuel Cucca | | |

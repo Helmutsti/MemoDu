@@ -4,12 +4,42 @@
 }
 
 .colonna {
+  display: flex;
   flex: none;
+  flex-direction: column;
   width: var(--misura-colonna);
   padding: var(--spazio-contenitore);
   overflow-y: auto;
   border-right: 1px solid var(--bordo-divisore);
   background: var(--sfondo-colonna);
+}
+
+/* Le due sezioni, una sotto l'altra, con spazio-gruppo tra loro (CMP-14). */
+.colonna-contenuto {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spazio-gruppo);
+}
+
+/* Riga Cestino e cestino di trascinamento restano in fondo alla colonna anche se scorre. */
+.colonna-fondo {
+  position: sticky;
+  bottom: 0;
+  margin-top: var(--spazio-blocco);
+  background: var(--sfondo-colonna);
+}
+
+.area-nota {
+  position: relative;
+}
+
+/* ··· in alto a destra dell'area della nota (SC-01). */
+.area-nota-menu {
+  position: absolute;
+  top: var(--spazio-controllo);
+  right: var(--spazio-controllo);
+  z-index: var(--z-fisso);
 }
 
 /* Tra il titolo della sezione e le righe, e tra una riga e l'altra: le pillole non si toccano. */

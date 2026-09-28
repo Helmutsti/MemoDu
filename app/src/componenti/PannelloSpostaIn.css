@@ -1,0 +1,45 @@
+/* CMP-11 Sposta in: stesso aspetto del menu (CMP-09), contenuti rientrati di 8 dai lati. */
+.pannello-sposta {
+  width: 236px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.pannello-sposta-ricerca {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 0 var(--spazio-flottante) var(--spazio-flottante);
+}
+.pannello-sposta-cerca {
+  position: absolute;
+  left: var(--spazio-controllo);
+  display: inline-flex;
+  color: var(--icona-tenue);
+  pointer-events: none;
+}
+.pannello-sposta-campo {
+  width: 100%;
+  height: var(--misura-riga);
+  padding: 0 var(--spazio-controllo) 0
+    calc(var(--spazio-controllo) + var(--misura-icona) + var(--spazio-icona));
+  border: none;
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-campo);
+  color: var(--testo-primario);
+}
+.pannello-sposta-campo::placeholder {
+  color: var(--testo-tenue);
+}
+
+.pannello-sposta-elenco {
+  margin: var(--spazio-flottante) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* «Non organizzate» lascia vuoto lo spazio della freccia: i nomi restano allineati. */
+.pannello-sposta-vuoto {
+  display: inline-block;
+  width: var(--misura-icona);
+}

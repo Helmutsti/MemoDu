@@ -1,0 +1,29 @@
+/* CMP-15 Avviso: largo 480, raggio 20, margini 16 a sinistra e 8 a destra, 8 sopra e sotto. */
+.avviso {
+  position: absolute;
+  top: var(--spazio-gruppo);
+  left: 50%;
+  z-index: var(--z-avviso);
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-icona);
+  width: 480px;
+  max-width: calc(100% - 2 * var(--spazio-gruppo));
+  padding: var(--spazio-controllo-piccolo) var(--spazio-controllo-piccolo)
+    var(--spazio-controllo-piccolo) var(--spazio-blocco);
+  transform: translateX(-50%);
+  border-radius: var(--raggio-contenitore);
+  box-shadow: var(--ombra);
+  color: var(--testo-primario);
+}
+.avviso-errore {
+  background: var(--sfondo-errore);
+}
+.avviso-errore .avviso-icona {
+  display: inline-flex;
+  color: var(--icona-errore);
+}
+.avviso-testo {
+  flex: 1;
+  margin: 0;
+}

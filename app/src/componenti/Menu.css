@@ -53,3 +53,9 @@
   margin: var(--spazio-elemento) 0;
   background: var(--bordo-divisore-tenue);
 }
+
+/* Voce di errore (Elimina): testo e icona rossi (CMP-07). */
+.voce-menu-errore .voce-menu-riga,
+.voce-menu-errore .voce-menu-icona {
+  color: var(--testo-errore);
+}

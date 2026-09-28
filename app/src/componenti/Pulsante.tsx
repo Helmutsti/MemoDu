@@ -8,6 +8,7 @@ import {
   type ButtonHTMLAttributes,
   type ReactElement,
   type ReactNode,
+  type Ref,
 } from "react";
 import { Icona } from "./Icona";
 import { Menu, type VoceMenu } from "./Menu";
@@ -55,6 +56,7 @@ export function Pulsante({
 interface ProprietaIcona extends ButtonHTMLAttributes<HTMLButtonElement> {
   nome: string;
   icona: ReactNode;
+  ref?: Ref<HTMLButtonElement>;
 }
 
 export function PulsanteIcona({ nome, icona, className, ...resto }: ProprietaIcona): ReactElement {

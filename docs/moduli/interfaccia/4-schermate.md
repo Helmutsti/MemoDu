@@ -39,7 +39,7 @@ La colonna sinistra ha due sezioni impilate senza separatore: le cartelle inizia
 
 Le **non organizzate stanno sopra le cartelle**: sono la posta in arrivo della scrittura veloce (RB-01), quindi la lista che si guarda più spesso, e il trascinamento verso l'albero va dall'alto verso il basso.
 
-**Il Cestino non è nella colonna sinistra** (FL-05, RB-27, RB-28): la colonna resta la sola cosa che serve mentre si scrive. Si raggiunge dal menu `···` in alto a destra (vedi sotto).
+**Il Cestino è una riga fissa in fondo alla colonna sinistra** (DEC-40, che supera la scelta di tenerlo fuori dalla colonna), con l'icona e il numero di elementi: cliccandola il cestino (SC-04) si apre al posto della nota. Durante il trascinamento la riga lascia il posto al cestino di trascinamento.
 
 ### Menu `···` in alto a destra (livello 20)
 L'unico menu della finestra. È diviso in due parti:
@@ -47,9 +47,12 @@ L'unico menu della finestra. È diviso in due parti:
 | Parte | Voci |
 |---|---|
 | Sopra: **questa nota** | Tag, Date, Sposta in, Elimina (FL-04, RB-25) |
-| Sotto: **Memodu** | Cestino (SC-04), Impostazioni (SC-06) |
+| Sotto: **Memodu** | Impostazioni (SC-06). Il Cestino non è più nel menu: si apre dalla riga in fondo alla colonna (DEC-40) |
 
 Senza una nota aperta (stato vuoto) il menu mostra solo la parte sotto.
+
+### Tasto destro su una nota della colonna (livello 20)
+Sposta in… (apre il pannello Sposta in accanto alla nota) · Elimina (nel cestino, RB-26). La nota non si apre; se è quella aperta vale RB-66 o RB-67. Stesse azioni del menu `···`, senza Cestino, che non riguarda la nota. Scelta di Manuel Cucca, 28/09/2026.
 
 ### Tasto destro su una cartella (livello 20)
 Nuova nota qui (la nota nasce in quella cartella, RB-09), Nuova sottocartella, Rinomina, Elimina (nel cestino con il contenuto, RB-25, RB-26).

@@ -12,6 +12,8 @@ export interface Nota {
   creata: string;
   /** Istante dell'ultima modifica, UTC in ISO 8601 (DEC-28). */
   modificata: string;
+  /** Percorso della cartella che la contiene; "" per le non organizzate (DEC-37). */
+  cartella: string;
 }
 
 /** Una riga dell'elenco di GET /note, ordinato per ultima modifica (RB-60). */
@@ -23,8 +25,13 @@ export interface VoceElenco {
   modificata: string;
 }
 
-/** Corpo di POST /note e PUT /note/:id. */
+/** Corpo di PUT /note/:id. */
 export interface DatiNota {
   titolo?: string;
   contenuto?: string;
+}
+
+/** Corpo di POST /note: senza cartella, o con "", la nota nasce nella radice (RB-09). */
+export interface DatiNuovaNota extends DatiNota {
+  cartella?: string;
 }

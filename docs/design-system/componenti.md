@@ -253,6 +253,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 - Alta 32 (`misura-riga`), pillola, distanza 4 tra freccia e testo. Il testo troppo lungo finisce con i puntini.
 - **Tra una riga e l'altra**, e tra il titolo della sezione e la prima riga: `spazio-elemento` (4), così le pillole dell'hover e della selezione non si toccano.
 - **Rientro:** per le sottocartelle si mostra il livello "rientro" e lo si allarga di 16 px per ogni livello.
+- **Cestino** (DEC-40): icona `trash-2` (16) al posto della freccia, «Cestino» e il numero di elementi nel cestino; fissa in fondo alla colonna. Hover e Selezionata come le altre righe (selezionata quando il cestino è aperto).
 
 ### Stati
 | Stato | Descrizione |
@@ -357,7 +358,8 @@ Compare e sparisce con `movimento-durata-breve` (120 ms). Compare dopo 500 ms di
 - Contenitore `sfondo-flottante`, `raggio-contenitore` (20), margini 8 sopra e sotto e 0 ai lati, `ombra-flottante`, livello 20 (`z-comparsa`). Largo 236 negli esempi; si allarga fino alla voce più lunga.
 - La pillola dell'evidenziazione sta a 8 px dai lati (margine della voce); i divisori vanno da lato a lato e sono leggeri (`bordo-divisore-tenue`). Scelta tra sei alternative (divisori rientrati o da lato a lato, pieni o leggeri; margine 8 o 12; pillola, rettangolo con raggio 12 o fascia a tutta larghezza): la pillola resta per coerenza con colonna, pulsanti e tag.
 - **Icone:** tutte le voci dei menu di azioni (nota, cartella, testo, inserimento) hanno la loro icona, così i testi restano allineati ed Elimina si riconosce anche dal cestino, non solo dal rosso. Le liste di valori (suggerimenti dei tag, filtri) restano senza: sono nomi o periodi, non azioni; fa eccezione Crea il tag con il +. Scelta tra cinque alternative (nessuna icona, icone su tutte, solo Elimina a sinistra, a destra o con spazio riservato); il confronto resta nella pagina Prove.
-- **Nota** (`···`): Tag… (tag), Date… (calendario), Sposta in… (sposta) · Elimina (elimina) · Cestino (elimina), Impostazioni (impostazioni). Senza una nota aperta resta solo l'ultimo gruppo.
+- **Nota** (`···`): Tag… (tag), Date… (calendario), Sposta in… (sposta) · Elimina (elimina) · Impostazioni (impostazioni). Senza una nota aperta resta solo l'ultimo gruppo. Il Cestino non è nel menu: si apre dalla riga in fondo alla colonna (DEC-40).
+- **Nota nella colonna** (tasto destro): Sposta in… (sposta) · Elimina (elimina).
 - **Cartella** (tasto destro): Nuova nota qui (nota), Nuova sottocartella (cartella), Rinomina (rinomina) · Elimina (elimina).
 - **Testo** (tasto destro): Taglia, Copia, Incolla · Grassetto, Corsivo, Sottolineato, Barrato, con le scorciatoie · Titolo ›, Elenco › (elenco puntato); ogni voce con l'icona del suo nome.
 - **Inserimento** (`/` su una riga vuota): Titolo, Sottotitolo, Elenco puntato, Elenco numerato, Checklist · Immagine, ognuna con la sua icona.

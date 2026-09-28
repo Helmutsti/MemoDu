@@ -236,3 +236,7 @@
 | 28/09/2026 | Manuel Cucca | RB-09: il + delle Non organizzate crea sempre nella radice; «Nuova nota qui» nella cartella; POST /note con `cartella` | Scelta di Manuel Cucca |
 | 28/09/2026 | Manuel Cucca | RF-05 e RF-15: criteri di accettazione CA-05.1 … CA-05.12 e CA-15.1 … CA-15.8 per il frammento Must B; piano di test TC-33 … TC-50 | DEC-36 |
 | 28/09/2026 | Manuel Cucca | Must B: criteri di accettazione e piano di test approvati, Fase 8 chiusa | DEC-36 |
+| 28/09/2026 | Manuel Cucca | Codice di Must B: API di albero, cartelle e cestino; colonna con l'albero, campo nome, finestra con tre scelte, avviso di errore, menu ··· con Sposta in, tasto destro sulle cartelle, trascinamento e cestino di trascinamento, SC-04; Tauri senza la gestione nativa del trascinamento nella finestra principale. Cinque deduzioni da confermare | DEC-36, DEC-37 |
+| 28/09/2026 | Manuel Cucca | SC-01, CMP-09: tasto destro su una nota della colonna con Sposta in… ed Elimina | Scelta di Manuel Cucca |
+| 28/09/2026 | Manuel Cucca | RB-10: le note lasciate vuote si cancellano da sole; CA-02.1, TC-09; DELETE /note/:id | DEC-39 |
+| 29/09/2026 | Manuel Cucca | SC-01, SC-04, CMP-06, CMP-09, CMP-14: riga Cestino in fondo alla colonna, «Cestino» tolto dal menu ···; GET /albero con il numero di elementi nel cestino; CA-15.4, TC-46 | DEC-40 |

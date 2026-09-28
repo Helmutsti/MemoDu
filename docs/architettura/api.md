@@ -117,6 +117,23 @@ Salva titolo e contenuto e aggiorna `modificata`. Il file si scrive in modo sicu
 
 ---
 
+## DELETE /note/:id
+**Flusso:** FL-09 (nota lasciata vuota, RB-10, DEC-39) · **Ruoli autorizzati:** —
+
+Cancella per sempre la nota, senza cestino, **solo se è vuota**: titolo e contenuto senza caratteri che non siano spazi. L'app la chiama ogni volta che lascia una nota; per una nota con del testo l'API risponde 409 e non tocca niente.
+
+**Output:** `204`.
+
+**Errori**
+| Codice | Significato | Sfiga |
+|---|---|---|
+| 400 | `id` non è un UUID | SF-34 |
+| 404 | Nessuna nota con questo `id` | SF-32 |
+| 409 | La nota non è vuota: resta com'è | — |
+| 500 | File non cancellato | SF-32 |
+
+---
+
 ## Cartelle e cestino (frammento Must B)
 Cartelle come sottocartelle di Documenti/Memodu e cestino nella cartella nascosta `.cestino` (DEC-36); endpoint e identificativi in DEC-37. Valgono le regole generali delle note (indirizzo, autorizzazione, origini, controllo dei dati).
 
@@ -163,10 +180,11 @@ Tutta la colonna in una volta: le non organizzate e l'albero.
 ```json
 {
   "nonOrganizzate": { "conteggio": 3, "note": [ … ] },
-  "cartelle": [ { "nome": "Lavoro", "percorso": "Lavoro", "conteggio": 12, "cartelle": [ … ], "note": [ … ] } ]
+  "cartelle": [ { "nome": "Lavoro", "percorso": "Lavoro", "conteggio": 12, "cartelle": [ … ], "note": [ … ] } ],
+  "cestino": 3
 }
 ```
-Le non organizzate sono ordinate come in `GET /note` (RB-60).
+Le non organizzate sono ordinate come in `GET /note` (RB-60). `cestino` è il numero di elementi nel cestino, mostrato nella riga Cestino in fondo alla colonna (DEC-40).
 
 **Errori**
 | Codice | Significato | Sfiga |
@@ -185,7 +203,7 @@ Crea una cartella dentro `genitore`. L'app la chiama solo quando il nome è conf
 { "genitore": "Lavoro", "nome": "Clienti", "seEsiste": "chiedi" }
 ```
 
-**Output:** `201` con l'oggetto Cartella (vuota); con `"unisci"` come `PATCH /cartelle`.
+**Output:** `201` con `{ "cartella": { … }, "daRisolvere": [] }`, come `PATCH /cartelle`.
 
 **Errori**
 | Codice | Significato | Sfiga |
@@ -207,7 +225,7 @@ Rinomina la cartella. Il nome passa per RB-63.
 { "percorso": "Lavoro/Nuova cartella", "nome": "Clienti", "seEsiste": "chiedi" }
 ```
 
-**Output:** l'oggetto Cartella con nome e percorso nuovi; con `"unisci"`, `{ "cartella": { … }, "daRisolvere": ["Lavoro/Clienti/Archivio"] }`.
+**Output:** `{ "cartella": { … }, "daRisolvere": [] }`, con l'oggetto Cartella con nome e percorso nuovi; con `"unisci"`, `daRisolvere` elenca le sottocartelle rimaste da risolvere, per esempio `["Personale/Idee/Archivio"]`.
 
 **Errori**
 | Codice | Significato | Sfiga |
@@ -226,8 +244,9 @@ Sposta la cartella con tutto il contenuto dentro `destinazione` (`""` per il pri
 
 **Input**
 ```json
-{ "percorso": "Personale/Idee", "destinazione": "Lavoro", "seEsiste": "chiedi" }
+{ "percorso": "Personale/Idee", "destinazione": "Lavoro", "seEsiste": "chiedi", "daUnione": false }
 ```
+`daUnione` è `true` quando l'app risolve una sottocartella di `daRisolvere`: dopo lo spostamento, la cartella che la conteneva viene tolta se è rimasta vuota (era l'origine di un'unione).
 
 **Output:** come `PATCH /cartelle`.
 
@@ -309,7 +328,7 @@ Riporta l'elemento nella radice: la nota tra le non organizzate, la cartella al 
 { "seEsiste": "chiedi" }
 ```
 
-**Output:** l'oggetto Nota o l'oggetto Cartella ripristinati (con `"unisci"`, anche `daRisolvere`).
+**Output:** per una nota l'oggetto Nota; per una cartella `{ "cartella": { … }, "daRisolvere": [ … ] }`, come `PATCH /cartelle`.
 
 **Errori**
 | Codice | Significato | Sfiga |

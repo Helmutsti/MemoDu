@@ -1,13 +1,26 @@
-// Chiamate all'API delle note (docs/architettura/api.md). L'app non salva niente da sé:
-// per il frammento Must A le note passano tutte dall'API (DEC-30).
+// Chiamate all'API di note, cartelle e cestino (docs/architettura/api.md). L'app non salva
+// niente da sé: note, cartelle e cestino passano tutti dall'API (DEC-30, DEC-37).
 
-import { INDIRIZZO_API, type DatiNota, type Nota, type VoceElenco } from "@memodu/condiviso";
+import {
+  INDIRIZZO_API,
+  type Albero,
+  type DatiNota,
+  type DatiNuovaNota,
+  type ElementoCestino,
+  type EsitoCartella,
+  type Nota,
+  type Percorso,
+  type SeEsiste,
+  type VoceElenco,
+} from "@memodu/condiviso";
 
-/** L'API non risponde o risponde con un errore: l'app mostra SC-07 (RB-61). */
+/** L'API non risponde (stato null) o risponde con un errore (RB-61, SF-32). */
 export class ErroreApi extends Error {
   constructor(
     readonly stato: number | null,
     messaggio: string,
+    /** Con 409: il nome già usato nella destinazione (RB-31). */
+    readonly conflitto?: string,
   ) {
     super(messaggio);
   }
@@ -16,7 +29,7 @@ export class ErroreApi extends Error {
 async function chiama<T>(
   metodo: string,
   percorso: string,
-  corpo?: DatiNota,
+  corpo?: object,
   keepalive = false,
 ): Promise<T> {
   let risposta: Response;
@@ -31,14 +44,54 @@ async function chiama<T>(
   } catch {
     throw new ErroreApi(null, "L'API non risponde");
   }
-  if (!risposta.ok) throw new ErroreApi(risposta.status, `L'API ha risposto ${risposta.status}`);
+  if (!risposta.ok) {
+    const dettagli = (await risposta.json().catch(() => ({}))) as { conflitto?: string };
+    throw new ErroreApi(
+      risposta.status,
+      `L'API ha risposto ${risposta.status}`,
+      dettagli.conflitto,
+    );
+  }
+  if (risposta.status === 204) return undefined as T;
   return (await risposta.json()) as T;
 }
 
 export const api = {
   elenca: () => chiama<VoceElenco[]>("GET", "/note"),
   leggi: (id: string) => chiama<Nota>("GET", `/note/${id}`),
-  crea: (dati: DatiNota = {}) => chiama<Nota>("POST", "/note", dati),
+  crea: (dati: DatiNuovaNota = {}) => chiama<Nota>("POST", "/note", dati),
   salva: (id: string, dati: DatiNota, opzioni?: { keepalive?: boolean }) =>
     chiama<Nota>("PUT", `/note/${id}`, dati, opzioni?.keepalive),
+  /** Cancella la nota solo se è vuota (DEC-39); per una nota con del testo l'API risponde 409. */
+  eliminaSeVuota: (id: string, opzioni?: { keepalive?: boolean }) =>
+    chiama<void>("DELETE", `/note/${id}`, undefined, opzioni?.keepalive),
+  spostaNota: (id: string, cartella: Percorso) =>
+    chiama<Nota>("PUT", `/note/${id}/cartella`, { cartella }),
+
+  albero: () => chiama<Albero>("GET", "/albero"),
+  creaCartella: (genitore: Percorso, nome?: string, seEsiste?: SeEsiste) =>
+    chiama<EsitoCartella>("POST", "/cartelle", { genitore, nome, seEsiste }),
+  rinominaCartella: (percorso: Percorso, nome: string, seEsiste?: SeEsiste) =>
+    chiama<EsitoCartella>("PATCH", "/cartelle", { percorso, nome, seEsiste }),
+  spostaCartella: (
+    percorso: Percorso,
+    destinazione: Percorso,
+    seEsiste?: SeEsiste,
+    daUnione?: boolean,
+  ) =>
+    chiama<EsitoCartella>("POST", "/cartelle/sposta", {
+      percorso,
+      destinazione,
+      seEsiste,
+      daUnione,
+    }),
+
+  cestinaNota: (id: string) => chiama<ElementoCestino>("POST", "/cestino", { tipo: "nota", id }),
+  cestinaCartella: (percorso: Percorso) =>
+    chiama<ElementoCestino>("POST", "/cestino", { tipo: "cartella", percorso }),
+  cestino: () => chiama<ElementoCestino[]>("GET", "/cestino"),
+  ripristina: (id: string, seEsiste?: SeEsiste) =>
+    chiama<Nota | EsitoCartella>("POST", `/cestino/${id}/ripristina`, { seEsiste }),
+  eliminaDefinitivamente: (id: string) => chiama<void>("DELETE", `/cestino/${id}`),
+  svuotaCestino: () => chiama<void>("DELETE", "/cestino"),
 };
