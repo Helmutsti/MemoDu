@@ -1,0 +1,66 @@
+/* CMP-10 Pillola degli strumenti. */
+.pillola {
+  position: fixed;
+  z-index: var(--z-comparsa);
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-elemento);
+  height: 40px;
+  padding: var(--spazio-elemento);
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-flottante);
+  box-shadow: var(--ombra);
+  transform: translate(-50%, calc(-100% - var(--spazio-icona)));
+  animation: pillola-sopra var(--movimento-durata-breve) ease-out;
+  user-select: none;
+}
+.pillola-sotto {
+  transform: translate(-50%, var(--spazio-icona));
+  animation-name: pillola-sotto;
+}
+@keyframes pillola-sopra {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-100% - var(--spazio-icona) + var(--movimento-spostamento)));
+  }
+}
+@keyframes pillola-sotto {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(var(--spazio-icona) - var(--movimento-spostamento)));
+  }
+}
+
+/* Strumento: tondo 32, icona 16 tenue. */
+.strumento {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--misura-riga);
+  height: var(--misura-riga);
+  padding: 0;
+  border: none;
+  border-radius: var(--raggio-pillola);
+  background: none;
+  color: var(--icona-tenue);
+  cursor: default;
+}
+.strumento:hover {
+  background: var(--sfondo-hover);
+}
+.strumento-attivo,
+.strumento-attivo:hover {
+  background: var(--sfondo-pieno);
+  color: var(--icona-su-pieno);
+}
+.strumento:focus-visible {
+  outline-offset: calc(0px - var(--focus-spessore));
+}
+
+/* Divisore: 1 px a tutta altezza, da bordo a bordo della pillola. */
+.pillola-divisore {
+  align-self: stretch;
+  width: 1px;
+  margin: calc(0px - var(--spazio-elemento)) 0;
+  background: var(--bordo-divisore-tenue);
+}

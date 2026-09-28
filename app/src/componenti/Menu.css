@@ -1,0 +1,55 @@
+/* CMP-09 Menu e CMP-07 Voce di menu. */
+.menu {
+  position: fixed;
+  z-index: var(--z-comparsa);
+  min-width: 236px;
+  padding: var(--spazio-flottante) 0;
+  border-radius: var(--raggio-contenitore);
+  background: var(--sfondo-flottante);
+  box-shadow: var(--ombra);
+  animation: menu-compare var(--movimento-durata-breve) ease-out;
+  user-select: none;
+}
+
+@keyframes menu-compare {
+  from {
+    opacity: 0;
+    transform: translateY(calc(0px - var(--movimento-spostamento)));
+  }
+}
+
+.voce-menu {
+  padding: 0 var(--spazio-flottante);
+  cursor: default;
+}
+.voce-menu-riga {
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-icona);
+  height: var(--misura-riga);
+  padding: 0 var(--spazio-controllo);
+  border-radius: var(--raggio-pillola);
+  color: var(--testo-primario);
+}
+.voce-menu-evidenziata .voce-menu-riga {
+  background: var(--sfondo-hover);
+}
+.voce-menu-icona {
+  display: inline-flex;
+  color: var(--icona-tenue);
+}
+.voce-menu-etichetta {
+  flex: 1;
+  white-space: nowrap;
+}
+.voce-menu-scorciatoia {
+  color: var(--testo-tenue);
+  white-space: nowrap;
+}
+
+/* Separatore: 1 px, alto 9 in tutto, da lato a lato. */
+.menu-separatore {
+  height: 1px;
+  margin: var(--spazio-elemento) 0;
+  background: var(--bordo-divisore-tenue);
+}

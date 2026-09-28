@@ -205,3 +205,4 @@
 | 28/09/2026 | Manuel Cucca | Attività 4: finestra principale ridotta nel codice; token e stili di testo come CSS, icone Lucide e Inter incorporato; due deduzioni da confermare (nota aperta all'avvio, larghezza di lettura) | DEC-15, DEC-21, DEC-22 |
 | 28/09/2026 | Manuel Cucca | SC-01: all'avvio si apre la nota modificata più di recente; CMP-20: larghezza di lettura 640 confermata | Scelta di Manuel Cucca (deduzioni confermate) |
 | 28/09/2026 | Manuel Cucca | Attività 5: editor CodeMirror con anteprima dal vivo (simboli visibili solo sulla riga in cui si scrive e solo con il focus), scorciatoie di formattazione, casella della checklist cliccabile, Ctrl + Invio per spuntare | DEC-27, RF-02 |
+| 28/09/2026 | Manuel Cucca | Attività 6: pillola di formattazione e di inserimento (senza Immagine), menu con "/", menu del tasto destro con sottomenu, Alt + F10; i menu non prendono il focus e si usano con frecce, Invio ed Esc | RF-02, CMP-09, CMP-10 |
