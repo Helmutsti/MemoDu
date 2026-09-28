@@ -8,6 +8,7 @@ import { api } from "../api";
 import { Pulsante } from "../componenti/Pulsante";
 import { RigaNota, RigaSezione } from "../componenti/RigaColonna";
 import { StatoVuoto, StatoVuotoColonna } from "../componenti/StatoVuoto";
+import { CodaSalvataggio } from "../salvataggio";
 import { NotaAperta } from "./NotaAperta";
 import "./FinestraPrincipale.css";
 
@@ -16,11 +17,37 @@ export function FinestraPrincipale(): ReactElement {
   const [aperta, setAperta] = useState<Nota | null>(null);
   const [sezioneAperta, setSezioneAperta] = useState(true);
   const [nuovaId, setNuovaId] = useState<string | null>(null);
+  // Dopo ogni salvataggio l'elenco si aggiorna: titolo e ordine per ultima modifica (RB-60).
+  const [coda] = useState(
+    () =>
+      new CodaSalvataggio(
+        api.salva,
+        () => void api.elenca().then(setElenco),
+        (errore) => console.error(errore),
+      ),
+  );
 
-  const apri = useCallback(async (id: string) => {
-    setNuovaId(null);
-    setAperta(await api.leggi(id));
-  }, []);
+  // Aprendo un'altra nota, quella corrente si salva prima (RB-06).
+  const apri = useCallback(
+    async (id: string) => {
+      await coda.scarica();
+      setNuovaId(null);
+      setAperta(await api.leggi(id));
+    },
+    [coda],
+  );
+
+  // Si salva subito anche quando la finestra perde il focus o si chiude (RB-06).
+  useEffect(() => {
+    const suPerditaFocus = () => void coda.scarica();
+    const suChiusura = () => void coda.scarica({ keepalive: true });
+    window.addEventListener("blur", suPerditaFocus);
+    window.addEventListener("pagehide", suChiusura);
+    return () => {
+      window.removeEventListener("blur", suPerditaFocus);
+      window.removeEventListener("pagehide", suChiusura);
+    };
+  }, [coda]);
 
   // All'avvio si apre la nota modificata più di recente, se c'è.
   useEffect(() => {
@@ -33,6 +60,7 @@ export function FinestraPrincipale(): ReactElement {
 
   // FL-09: la nota nasce vuota nella radice, in cima all'elenco, e si apre (RB-10, RB-60).
   const nuovaNota = async () => {
+    await coda.scarica();
     const nota = await api.crea({});
     setElenco(await api.elenca());
     setNuovaId(nota.id);
@@ -76,9 +104,7 @@ export function FinestraPrincipale(): ReactElement {
             key={aperta.id}
             nota={aperta}
             nuova={aperta.id === nuovaId}
-            onModifica={() => {
-              /* Salvataggio: attività 7. */
-            }}
+            onModifica={(dati) => coda.modifica(aperta.id, dati)}
           />
         ) : (
           <div className="area-nota-vuota">

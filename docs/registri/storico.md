@@ -206,3 +206,4 @@
 | 28/09/2026 | Manuel Cucca | SC-01: all'avvio si apre la nota modificata più di recente; CMP-20: larghezza di lettura 640 confermata | Scelta di Manuel Cucca (deduzioni confermate) |
 | 28/09/2026 | Manuel Cucca | Attività 5: editor CodeMirror con anteprima dal vivo (simboli visibili solo sulla riga in cui si scrive e solo con il focus), scorciatoie di formattazione, casella della checklist cliccabile, Ctrl + Invio per spuntare | DEC-27, RF-02 |
 | 28/09/2026 | Manuel Cucca | Attività 6: pillola di formattazione e di inserimento (senza Immagine), menu con "/", menu del tasto destro con sottomenu, Alt + F10; i menu non prendono il focus e si usano con frecce, Invio ed Esc | RF-02, CMP-09, CMP-10 |
+| 28/09/2026 | Manuel Cucca | Attività 7: salvataggio automatico dopo 2 s di pausa e subito al cambio di nota, alla perdita del focus e alla chiusura; l'elenco si aggiorna dopo ogni salvataggio; un salvataggio fallito tiene il testo da salvare | RB-06, RB-60, RB-61 |

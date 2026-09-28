@@ -13,13 +13,20 @@ export class ErroreApi extends Error {
   }
 }
 
-async function chiama<T>(metodo: string, percorso: string, corpo?: DatiNota): Promise<T> {
+async function chiama<T>(
+  metodo: string,
+  percorso: string,
+  corpo?: DatiNota,
+  keepalive = false,
+): Promise<T> {
   let risposta: Response;
   try {
     risposta = await fetch(INDIRIZZO_API + percorso, {
       method: metodo,
       headers: corpo ? { "Content-Type": "application/json" } : undefined,
       body: corpo ? JSON.stringify(corpo) : undefined,
+      // Alla chiusura della finestra la richiesta deve arrivare anche se la pagina se ne va.
+      keepalive,
     });
   } catch {
     throw new ErroreApi(null, "L'API non risponde");
@@ -32,5 +39,6 @@ export const api = {
   elenca: () => chiama<VoceElenco[]>("GET", "/note"),
   leggi: (id: string) => chiama<Nota>("GET", `/note/${id}`),
   crea: (dati: DatiNota = {}) => chiama<Nota>("POST", "/note", dati),
-  salva: (id: string, dati: DatiNota) => chiama<Nota>("PUT", `/note/${id}`, dati),
+  salva: (id: string, dati: DatiNota, opzioni?: { keepalive?: boolean }) =>
+    chiama<Nota>("PUT", `/note/${id}`, dati, opzioni?.keepalive),
 };
