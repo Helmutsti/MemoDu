@@ -17,6 +17,8 @@ Impostazione generale della Fase 4: **desktop-first**. Il pubblico della prima f
 - **Esportazioni:** `immagini/SC-01.png`, `immagini/SC-01-vuoto.png`, `immagini/SC-01-ricerca.png`, `immagini/SC-01-conferma.png`, `immagini/SC-01-sezione-chiusa.png`, `immagini/SC-01-menu.png`, `immagini/SC-01-tasto-destro-cartella.png`
 - **Mockup:** [stato normale](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=5-718) (in revisione)
 - **Mockup della versione ridotta (frammento Must A, approvati da Manuel Cucca il 27/09/2026):** [con note](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=17-214) · [vuota, primo utilizzo](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=17-425); esportazioni `immagini/SC-01-ridotta-mockup.png`, `immagini/SC-01-ridotta-vuota-mockup.png`. Nella nota aperta niente menu `···` e niente riga dei metadati (tag e data di modifica): torna con RF-04
+- **Mockup della versione per il frammento Must B «Smistare» (approvati da Manuel Cucca il 28/09/2026):** [con cartelle](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=43-310) · [trascinamento](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-1950) · [nuova cartella](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-2027) · [nome già esistente](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-2104) · [albero vuoto](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-2942) · [errore](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-3074) · [menu della nota](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-3092) · [Sposta in](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-3214); esportazioni `immagini/SC-01-smistare-*-mockup.png`.
+- **Versione per il frammento Must B:** la colonna ha le sezioni Non organizzate e Cartelle, con l'albero (CMP-14); niente ricerca. La nota aperta non ha la riga dei tag e delle date. Il menu `···` in alto a destra ha solo «Sposta in…», «Elimina» e «Cestino» (DEC-36).
 - **Versione ridotta per il frammento Must A:** la colonna sinistra ha solo la sezione Non organizzate con il suo + (FL-09); niente ricerca e niente sezione Cartelle. Le cartelle si aggiungeranno sotto con il frammento Must. Finché non ci sono le cartelle la sezione si intitola "Note" (diventerà "Non organizzate"); il + ha il suggerimento "Nuova nota"; con l'elenco vuoto compare "Le note che scrivi compaiono qui."
 
 La finestra è sempre la stessa: cambia solo cosa c'è dentro l'area della nota. All'avvio, se ci sono note, si apre la modificata più di recente. Il programma mostra una nota alla volta (RF-01), quindi non esistono schede né più note affiancate (RF-12 è *Should*, fuori dalla prima fase).
@@ -62,7 +64,7 @@ Sono al centro della finestra, con un velo sul resto. L'azione principale sta a 
 | Stato | Descrizione | Testo mostrato |
 |---|---|---|
 | Vuoto | Nessuna nota e nessuna cartella (primo utilizzo): l'area della nota mostra l'invito a scrivere e il pulsante per creare la prima nota; le non organizzate sono vuote | Testo definitivo in Fase 6 |
-| Vuoto (albero) | Albero senza cartelle: al posto dell'albero una riga che spiega come crearne una (SF-16), vedi lo stato vuoto | Testo definitivo in Fase 6 |
+| Vuoto (albero) | Albero senza cartelle: al posto dell'albero una riga che spiega come crearne una (SF-16), vedi lo stato vuoto | «Nessuna cartella. Creane una con +» |
 | Caricamento | Solo al primo accesso su un dispositivo, mentre arriva la copia di lavoro: l'ossatura resta, le liste e la nota mostrano segnaposto ([wireframe](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=32-192), `immagini/SC-01-caricamento.png`) | Nessun messaggio |
 | Errore | Avviso di sincronizzazione in cima all'area della nota, non bloccante (RB-40) | Testo definitivo in Fase 6 |
 | Successo | Non previsto: la sincronizzazione riuscita è invisibile (RB-40) | — |
@@ -73,6 +75,8 @@ Sono al centro della finestra, con un velo sul resto. L'azione principale sta a 
 |---|---|
 | SF-30 Server irraggiungibile oltre la soglia | Fase 6 (RB-40) |
 | SF-32 Errore di sincronizzazione | Fase 6 (RB-40) |
+| SF-32 Operazione su cartelle o cestino non riuscita (DEC-37) | «Non è stato possibile completare l'operazione. La colonna mostra com'è adesso.» con il pulsante «Ho capito» (avviso CMP-15, stato Errore) |
+| SF-19 Nome di cartella già esistente (RB-31) | Titolo «Esiste già «‹nome›» in ‹cartella›» (al primo livello: «tra le cartelle»); testo «Puoi aggiungere un numero al nome, unire le due cartelle o annullare.»; pulsanti «Annulla», «Unisci», «Aggiungi un numero» |
 
 ---
 

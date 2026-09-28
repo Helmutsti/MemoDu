@@ -226,3 +226,8 @@
 | 28/09/2026 | Manuel Cucca | API di albero, cartelle, spostamento delle note e cestino; oggetto Nota con `cartella`; GET /note limitato alle non organizzate; struttura di `.cestino` | DEC-37 |
 | 28/09/2026 | Manuel Cucca | SC-04: elementi del cestino dal più recente | DEC-37 (deduzione confermata) |
 | 28/09/2026 | Manuel Cucca | FL-05: sfiga SF-32 gestita, avviso e colonna ricaricata | DEC-37 (deduzione confermata) |
+| 28/09/2026 | Manuel Cucca | CMP-14: note dentro le cartelle nell'albero, allineate ai nomi delle sottocartelle (in Figma, tutti gli stati) | RB-65 |
+| 28/09/2026 | Manuel Cucca | CMP-14: «Nuova cartella» al suo posto in ordine alfabetico | RB-64 |
+| 28/09/2026 | Manuel Cucca | SC-01 (versione Must B, 8 stati) e SC-04 (4 stati): mockup e testi definitivi di albero vuoto, nome già esistente, errore, cestino vuoto, conferme e dettagli degli elementi | DEC-36, DEC-37 |
+| 28/09/2026 | Manuel Cucca | Varianti dei testi di SC-01 e SC-04 confermate | Scelta di Manuel Cucca (deduzione confermata) |
+| 28/09/2026 | Manuel Cucca | Must B: Fase 6 chiusa senza prototipo né test di usabilità, Fase 7 chiusa | DEC-38 |

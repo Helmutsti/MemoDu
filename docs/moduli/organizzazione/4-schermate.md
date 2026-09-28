@@ -26,20 +26,28 @@ L'impostazione generale (breakpoint, scala z-index, inventario dei componenti) �
 
 - **Wireframe:** [cestino](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=37-246) · [vuoto](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=37-314) · [conferma svuotamento](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=37-357)
 - **Esportazioni:** `immagini/SC-04.png`, `immagini/SC-04-vuoto.png`, `immagini/SC-04-svuota.png`
-- **Mockup:** [Fase 6]
+- **Mockup (frammento Must B, approvati da Manuel Cucca il 28/09/2026):** [con elementi](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-3727) · [vuoto](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-3935) · [conferma svuotamento](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-4040) · [conferma eliminazione definitiva](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-4238); esportazioni `immagini/SC-04-mockup.png`, `immagini/SC-04-vuoto-mockup.png`, `immagini/SC-04-svuota-mockup.png`, `immagini/SC-04-elimina-mockup.png`. In alto il titolo «Cestino» (Interfaccia/Titolo di schermata) e il pulsante secondario «Svuota cestino»; sotto gli elementi (CMP-17), larghi 560.
 
 Si apre dalla voce Cestino del menu `···`, al posto della nota; la colonna resta. Gli elementi sono in ordine di eliminazione, il più recente in cima. Ogni elemento mostra tipo (nota o cartella con il numero di note), da dove veniva e quando è stato eliminato, con Ripristina ed Elimina definitivamente (icona del cestino, con conferma: RB-55, DEC-17). In cima, Svuota cestino.
 
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |
 |---|---|---|
-| Vuoto | Nessun elemento: solo il messaggio, senza Svuota cestino | Testo definitivo in Fase 6 |
+| Vuoto | Nessun elemento: solo il messaggio, senza Svuota cestino | «Il cestino è vuoto» · «Le note e le cartelle eliminate restano qui finché non svuoti il cestino.» |
 | Caricamento | Non previsto: il cestino è sulla copia di lavoro | — |
-| Errore | Non previsto | — |
+| Errore | Ripristino, eliminazione o svuotamento non riusciti (DEC-37): avviso e cestino ricaricato, come in SC-01 | Vedi SC-01, SF-32 |
 | Successo | Ripristina: l'elemento sparisce dall'elenco e torna nella radice (RB-28), senza messaggio. Elimina definitivamente: dopo la conferma l'elemento sparisce (RB-55). Svuota: dopo la conferma il cestino è vuoto (RB-32) | — |
 | Contenuto lungo | L'elenco scorre; resta tutto finché non si svuota (RB-27, SF-17) | — |
 
 ### Messaggi di errore
 | Sfiga | Testo definitivo |
 |---|---|
-| — | Nessun messaggio di errore; il testo della conferma si scrive in Fase 6 |
+| SF-32 Operazione non riuscita (DEC-37) | Lo stesso avviso di SC-01: «Non è stato possibile completare l'operazione. La colonna mostra com'è adesso.» |
+
+### Testi definitivi
+| Dove | Testo |
+|---|---|
+| Elemento nota | «Nota · da ‹Cartella› › ‹Sottocartella› · eliminata il gg/mm/aaaa»; dalla radice «Nota · dalle non organizzate · eliminata il gg/mm/aaaa» |
+| Elemento cartella | «Cartella con ‹n› note · da ‹cartella› · eliminata il gg/mm/aaaa» (una nota: «con 1 nota»; dal primo livello: «dalle cartelle») |
+| Conferma svuotamento (RB-32) | «Svuotare il cestino?» · «‹n› elementi verranno eliminati per sempre.» (uno: «1 elemento verrà eliminato per sempre.») · «Annulla», «Svuota» |
+| Conferma eliminazione definitiva (RB-55) | «Eliminare per sempre «‹nome›»?» · cartella: «La cartella e le sue ‹n› note verranno eliminate per sempre.»; nota: «La nota verrà eliminata per sempre.» · «Annulla», «Elimina definitivamente» |
