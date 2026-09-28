@@ -1,12 +1,18 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Capability for the main window",
+  "description": "Finestra principale e note rapide",
   "windows": [
-    "main"
+    "main",
+    "rapida-*"
   ],
   "permissions": [
     "core:default",
-    "core:window:allow-destroy"
+    "core:window:allow-destroy",
+    "core:window:allow-hide",
+    "core:window:allow-show",
+    "core:window:allow-set-focus",
+    "core:window:allow-unminimize",
+    "core:window:allow-start-dragging"
   ]
 }

@@ -23,7 +23,9 @@ Finestra di sistema, solo su desktop (RF-01). Niente cromatura dell'applicazione
 
 **Nessuna cornice:** niente barra del titolo, niente divisori, niente bordo. La finestra è una superficie bianca con ombra. Si trascina dalla fascia in alto, che non si vede; ✕ e azioni sono tenui e si scuriscono al passaggio del mouse.
 
-Dimensione iniziale 480 × 320, ridimensionabile. La finestra non è un componente del design system: è costruita con token (`sfondo-nota`, `raggio-contenitore`, `spazio-finestra`, `ombra-flottante`), un pulsante solo icona con `x` per la chiusura e un pulsante tenue per Apri nel programma. Il ✕ sta nella fascia di trascinamento in alto, sopra il testo. Resta in primo piano rispetto agli altri programmi finché non si chiude.
+Dimensione iniziale 480 × 320, ridimensionabile. La finestra non è un componente del design system: è costruita con token (`sfondo-nota`, `raggio-contenitore`, `spazio-finestra`, `ombra-flottante`), un pulsante solo icona con `x` per la chiusura e un pulsante tenue per Apri nel programma. Il ✕ sta nella fascia di trascinamento in alto, sopra il testo. Nell'app la finestra ha angoli squadrati e l'ombra del sistema: arrotondarli richiederebbe l'API privata di macOS (scostamento accettato da Manuel Cucca il 28/09/2026).
+
+Icona nella barra dei menu (macOS) o nell'area di notifica (Windows), con il menu «Nuova nota rapida», «Apri Memodu», «Esci da Memodu». Chiudendo la finestra principale Memodu resta attivo: la finestra si nasconde e torna da «Apri Memodu» (RF-01). Resta in primo piano rispetto agli altri programmi finché non si chiude.
 
 ### Più note rapide aperte insieme (SF-04) — rinvio risolto
 Ogni finestra è indipendente e si chiude per conto suo (RB-02, RB-04). Le finestre si dispongono **a cascata**: ognuna compare spostata di circa 32 px verso destra e verso il basso rispetto all'ultima aperta, sullo schermo dove si trova il puntatore. Arrivata al bordo dello schermo, la cascata riparte dalla posizione iniziale. Nessun affiancamento automatico e nessun limite al numero di finestre: chi ne apre molte le sposta a mano.

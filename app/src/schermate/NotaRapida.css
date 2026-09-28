@@ -1,0 +1,38 @@
+/* SC-02: superficie senza cornice, divisori o bordi; ✕ e azioni tenui. */
+.corpo-rapida {
+  background: var(--sfondo-flottante);
+}
+
+.nota-rapida {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0 var(--spazio-gruppo) var(--spazio-contenitore);
+  background: var(--sfondo-flottante);
+}
+
+/* Fascia in alto: non si vede, serve a trascinare la finestra. */
+.nota-rapida-fascia {
+  display: flex;
+  flex: none;
+  justify-content: flex-end;
+  margin-right: calc(0px - var(--spazio-blocco));
+  padding-top: var(--spazio-controllo-piccolo);
+}
+
+.nota-rapida-area {
+  flex: 1;
+  overflow-y: auto;
+  user-select: text;
+}
+
+.nota-rapida-azioni {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--spazio-controllo-piccolo);
+}
+.nota-rapida-suggerimento {
+  color: var(--testo-tenue);
+}

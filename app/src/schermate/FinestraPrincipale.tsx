@@ -11,7 +11,7 @@ import { FinestraConferma } from "../componenti/FinestraConferma";
 import { Pulsante } from "../componenti/Pulsante";
 import { RigaNota, RigaSezione } from "../componenti/RigaColonna";
 import { StatoVuoto, StatoVuotoColonna } from "../componenti/StatoVuoto";
-import { alChiudere, chiudiFinestra } from "../finestra";
+import { alChiudere, allaRichiestaDiApertura, chiudiFinestra } from "../finestra";
 import { CodaSalvataggio } from "../salvataggio";
 import { Blocco } from "./Blocco";
 import { NotaAperta } from "./NotaAperta";
@@ -100,6 +100,20 @@ export function FinestraPrincipale(): ReactElement {
       togli();
     };
   }, [coda]);
+
+  // "Apri nel programma" da una nota rapida: la nota aperta si salva e al suo posto si apre
+  // la nota rapida (RB-05); l'elenco si aggiorna perché la nota è nuova.
+  useEffect(
+    () =>
+      allaRichiestaDiApertura((id) => {
+        void (async () => {
+          const note = await protetto(api.elenca);
+          if (note) setElenco(note);
+          if (id) await apri(id);
+        })();
+      }),
+    [apri, protetto],
+  );
 
   // Riprova: prima il testo in attesa, poi di nuovo l'elenco.
   const riprova = async () => {

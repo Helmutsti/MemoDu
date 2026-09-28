@@ -8,7 +8,12 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 ## [Non rilasciato]
 
 ### Aggiunto
-- 
+- Nota rapida: con Ctrl + Alt + N (Control + Option + N su Mac) compare una finestrella per annotare un'idea da qualsiasi programma; si salva da sola, Esc la chiude e "Apri nel programma" la porta nella finestra principale (RF-01)
+- Icona nella barra dei menu (Mac) o nell'area di notifica (Windows) per aprire una nota rapida o Memodu; chiudendo la finestra, Memodu resta attivo (RF-01)
+- Scrittura in markdown formattata mentre scrivi: titoli, grassetto, corsivo, sottolineato, barrato, elenchi e checklist, con scorciatoie, strumenti sopra la selezione, menu con "/" e tasto destro (RF-02)
+- Salvataggio automatico dopo 2 secondi di pausa, senza pulsante Salva (RF-02)
+- Elenco delle note con le più recenti in cima e pulsante + per crearne una nuova (RF-02)
+- Se il server delle note non risponde, Memodu lo dice e tiene il testo finché non riesce a salvarlo (RF-01, RF-02)
 
 ### Modificato
 - 

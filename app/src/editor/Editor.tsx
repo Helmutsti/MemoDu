@@ -38,6 +38,8 @@ interface Proprieta {
   onModifica: (contenuto: string) => void;
   /** Porta il cursore nel testo appena si apre (nota nuova, FL-09). */
   focus?: boolean;
+  /** Invito nell'area vuota. */
+  invito?: string;
 }
 
 type Comparsa = { tipo: "formattazione" | "inserimento"; x: number; y: number; sotto: boolean };
@@ -58,7 +60,12 @@ function sopraOSotto(x: number, alto: number, basso: number) {
   return { x, y: sotto ? basso : alto, sotto };
 }
 
-export function Editor({ contenuto, onModifica, focus = false }: Proprieta): ReactElement {
+export function Editor({
+  contenuto,
+  onModifica,
+  focus = false,
+  invito = "Scrivi qui, oppure premi / per inserire titoli ed elenchi",
+}: Proprieta): ReactElement {
   const contenitore = useRef<HTMLDivElement>(null);
   const vista = useRef<EditorView | null>(null);
   const pillola = useRef<ManigliaPillola>(null);
@@ -135,7 +142,7 @@ export function Editor({ contenuto, onModifica, focus = false }: Proprieta): Rea
           markdown({ base: markdownLanguage }),
           anteprimaDalVivo,
           EditorView.lineWrapping,
-          placeholder("Scrivi qui, oppure premi / per inserire titoli ed elenchi"),
+          placeholder(invito),
           EditorView.contentAttributes.of({ "aria-label": "Testo della nota", spellcheck: "true" }),
           EditorView.updateListener.of((u) => {
             if (u.docChanged) suModifica.current(u.state.doc.toString());
