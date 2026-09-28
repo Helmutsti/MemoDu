@@ -1,0 +1,109 @@
+/* Stili dell'editor con i soli token (CMP-20). */
+
+.editor .cm-editor {
+  background: none;
+  color: var(--testo-primario);
+}
+.editor .cm-editor.cm-focused {
+  outline: none;
+}
+.editor .cm-scroller {
+  font-family: inherit;
+  line-height: inherit;
+  overflow: visible;
+}
+.editor .cm-content {
+  padding: 0;
+  caret-color: var(--testo-primario);
+}
+.editor .cm-line {
+  padding: 0;
+}
+.editor .cm-cursor {
+  border-left-color: var(--testo-primario);
+}
+.editor .cm-selectionBackground,
+.editor .cm-focused .cm-selectionBackground,
+.editor .cm-content ::selection {
+  background: var(--evidenziazione-selezione) !important;
+}
+.editor .cm-placeholder {
+  color: var(--testo-tenue);
+}
+
+/* Titoli dentro la nota. */
+.editor .md-titolo {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.editor .md-sottotitolo {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.editor .md-grassetto {
+  font-weight: 700;
+}
+.editor .md-corsivo {
+  font-style: italic;
+}
+.editor .md-barrato {
+  text-decoration: line-through;
+}
+.editor .md-sottolineato {
+  text-decoration: underline;
+}
+
+/* Simboli markdown sulla riga del cursore e numeri degli elenchi: testo tenue. */
+.editor .md-simbolo,
+.editor .md-segno {
+  color: var(--testo-tenue);
+  font-weight: 400;
+  font-style: normal;
+  text-decoration: none;
+}
+
+/* Segni degli elenchi in una colonna di 16 px. */
+.editor .md-punto {
+  display: inline-block;
+  width: var(--misura-icona);
+  color: var(--testo-tenue);
+}
+
+/* Casella della checklist: tonda, 16 px, contorno 1,5 in icona-tenue; spuntata piena. */
+.editor .md-casella {
+  display: inline-block;
+  width: var(--misura-icona);
+  height: var(--misura-icona);
+  margin-right: var(--spazio-icona);
+  vertical-align: -3px;
+  border: 1.5px solid var(--icona-tenue);
+  border-radius: var(--raggio-pillola);
+  cursor: default;
+}
+.editor .md-casella:hover {
+  background: var(--sfondo-hover);
+}
+.editor .md-casella-spuntata {
+  position: relative;
+  border-color: var(--sfondo-pieno);
+  background: var(--sfondo-pieno);
+}
+.editor .md-casella-spuntata::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--icona-su-pieno);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E")
+    center / 10px no-repeat;
+}
+.editor .md-casella-spuntata:hover {
+  background: var(--sfondo-pieno);
+}
+.editor .md-spuntata {
+  color: var(--testo-tenue);
+  text-decoration: line-through;
+}

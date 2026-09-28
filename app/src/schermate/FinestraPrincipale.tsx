@@ -8,14 +8,19 @@ import { api } from "../api";
 import { Pulsante } from "../componenti/Pulsante";
 import { RigaNota, RigaSezione } from "../componenti/RigaColonna";
 import { StatoVuoto, StatoVuotoColonna } from "../componenti/StatoVuoto";
+import { NotaAperta } from "./NotaAperta";
 import "./FinestraPrincipale.css";
 
 export function FinestraPrincipale(): ReactElement {
   const [elenco, setElenco] = useState<VoceElenco[] | null>(null);
   const [aperta, setAperta] = useState<Nota | null>(null);
   const [sezioneAperta, setSezioneAperta] = useState(true);
+  const [nuovaId, setNuovaId] = useState<string | null>(null);
 
-  const apri = useCallback(async (id: string) => setAperta(await api.leggi(id)), []);
+  const apri = useCallback(async (id: string) => {
+    setNuovaId(null);
+    setAperta(await api.leggi(id));
+  }, []);
 
   // All'avvio si apre la nota modificata più di recente, se c'è.
   useEffect(() => {
@@ -30,6 +35,7 @@ export function FinestraPrincipale(): ReactElement {
   const nuovaNota = async () => {
     const nota = await api.crea({});
     setElenco(await api.elenca());
+    setNuovaId(nota.id);
     setAperta(nota);
     setSezioneAperta(true);
   };
@@ -66,11 +72,14 @@ export function FinestraPrincipale(): ReactElement {
       </nav>
       <main className="area-nota">
         {aperta ? (
-          <article className="nota-aperta">
-            {/* Provvisorio: l'editor della nota arriva con l'attività 5. */}
-            <h1 className="nota-titolo">{aperta.titolo}</h1>
-            <p className="nota-corpo">{aperta.contenuto}</p>
-          </article>
+          <NotaAperta
+            key={aperta.id}
+            nota={aperta}
+            nuova={aperta.id === nuovaId}
+            onModifica={() => {
+              /* Salvataggio: attività 7. */
+            }}
+          />
         ) : (
           <div className="area-nota-vuota">
             <StatoVuoto

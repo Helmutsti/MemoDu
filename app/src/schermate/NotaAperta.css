@@ -1,0 +1,48 @@
+.nota-aperta {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Largo: testo a misura di lettura, centrato. Medio: tutta la larghezza restante. */
+.nota-aperta-intestazione,
+.nota-aperta-misura {
+  width: 100%;
+  max-width: calc(var(--misura-lettura) + 2 * var(--spazio-gruppo));
+  margin: 0 auto;
+  padding: 0 var(--spazio-gruppo);
+}
+@media (max-width: 1279px) {
+  .nota-aperta-intestazione,
+  .nota-aperta-misura {
+    max-width: none;
+  }
+}
+
+.nota-aperta-intestazione {
+  flex: none;
+  padding-top: 80px;
+  padding-bottom: var(--spazio-gruppo);
+}
+
+.nota-aperta-titolo {
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--testo-primario);
+  font-family: inherit;
+}
+.nota-aperta-titolo::placeholder {
+  color: var(--testo-tenue);
+}
+.nota-aperta-titolo:focus-visible {
+  outline: none;
+}
+
+.nota-aperta-corpo {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 80px;
+  user-select: text;
+}

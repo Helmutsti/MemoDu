@@ -71,7 +71,7 @@ describe("SC-01 ridotta con note", () => {
       id === "a" ? nota("a", "Lista della spesa") : nota("b", "", "prime parole"),
     );
     render(<FinestraPrincipale />);
-    expect(await screen.findByRole("heading", { name: "Lista della spesa" })).toBeInTheDocument();
+    expect(await screen.findByDisplayValue("Lista della spesa")).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "prime parole" }));
     await waitFor(() =>
       expect(screen.getByRole("button", { name: "prime parole" })).toHaveAttribute(
