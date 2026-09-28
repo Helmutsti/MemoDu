@@ -1,5 +1,5 @@
 // CMP-06 Riga della colonna: una nota o il titolo di una sezione. Alta 32, pillola.
-// Hover: tutto il testo passa a testo-primario (regola 7). Selezionata: sfondo pieno.
+// Hover: tutto il testo passa a testo-primario (regola 7). Selezionata: come l'hover (DEC-35).
 
 import { ChevronDown, ChevronRight, Plus } from "lucide-react";
 import type { ReactElement } from "react";

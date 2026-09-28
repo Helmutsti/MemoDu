@@ -50,8 +50,8 @@
 }
 .strumento-attivo,
 .strumento-attivo:hover {
-  background: var(--sfondo-pieno);
-  color: var(--icona-su-pieno);
+  background: var(--sfondo-hover);
+  color: var(--testo-primario);
 }
 .strumento:focus-visible {
   outline-offset: calc(0px - var(--focus-spessore));

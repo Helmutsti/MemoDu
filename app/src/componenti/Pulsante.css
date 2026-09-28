@@ -70,3 +70,58 @@
     transform: rotate(360deg);
   }
 }
+
+/* Diviso (DEC-34): solo primario; hover separato sulle due metà, divisore 1 × 16. */
+.pulsante-diviso {
+  display: inline-flex;
+  align-items: center;
+  height: var(--misura-riga);
+  overflow: hidden;
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-pieno);
+  color: var(--testo-su-pieno);
+}
+.pulsante-diviso:has(:focus-visible) {
+  overflow: visible;
+  outline: var(--focus-spessore) solid var(--focus-anello);
+  outline-offset: var(--focus-distanza);
+}
+.pulsante-diviso-azione,
+.pulsante-diviso-freccia {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: default;
+}
+.pulsante-diviso-azione {
+  padding: 0 var(--spazio-controllo) 0 var(--spazio-pulsante);
+  border-radius: var(--raggio-pillola) 0 0 var(--raggio-pillola);
+}
+.pulsante-diviso-freccia {
+  padding: 0 var(--spazio-controllo) 0 var(--spazio-controllo-piccolo);
+  border-radius: 0 var(--raggio-pillola) var(--raggio-pillola) 0;
+  color: var(--icona-su-pieno);
+}
+.pulsante-diviso-azione:focus-visible,
+.pulsante-diviso-freccia:focus-visible {
+  outline: none;
+}
+.pulsante-diviso-azione:hover,
+.pulsante-diviso-freccia:hover {
+  background: var(--sfondo-pieno-hover);
+}
+.pulsante-diviso-azione:active,
+.pulsante-diviso-freccia:active,
+.pulsante-diviso-aperto,
+.pulsante-diviso-aperto:hover {
+  background: var(--sfondo-pieno-premuto);
+}
+.pulsante-diviso-divisore {
+  flex: none;
+  width: 1px;
+  height: var(--misura-icona);
+  background: var(--sfondo-pieno-hover);
+}

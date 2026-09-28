@@ -19,3 +19,4 @@
 | RF-06 | Nello scenario compaiono "tag e categorie": le categorie sono un concetto diverso dai tag e dalle cartelle? | Manuel Cucca | Sinonimo di tag: si usa solo "tag" | |
 | RF-06 | Quali caratteri sono ammessi nei nomi dei tag (spazi, emoji, `/` all'inizio o alla fine, maiuscole e minuscole distinte)? | Manuel Cucca | Maiuscole e minuscole non contano; spazi, accenti ed emoji ammessi; `/` superflui corretti in automatico (RB-22) | |
 | RF-05 | Unendo due cartelle con lo stesso nome, cosa succede alle sottocartelle che hanno a loro volta lo stesso nome? | Manuel Cucca | Per ogni sottocartella doppia ricompare l'avviso con le tre scelte (RB-31) | |
+| RB-23, RB-63 | «Idee» e «idee» contano come lo stesso nome di cartella, visto che su macOS e Windows il disco non le distingue? Deduzione dell'agente | Manuel Cucca | Sì, stesso nome | DEC-36 |

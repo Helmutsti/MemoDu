@@ -33,8 +33,8 @@
 }
 .riga-selezionata,
 .riga-selezionata:hover {
-  background: var(--sfondo-pieno);
-  color: var(--testo-su-pieno);
+  background: var(--sfondo-hover);
+  color: var(--testo-primario);
 }
 
 /* Titolo di sezione: freccia 12, titolo e numero in testo tenue, + a destra. */

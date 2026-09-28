@@ -33,6 +33,8 @@ interface Proprieta {
   onFine?: () => void;
   /** Sottomenu: i tasti li gestisce lui finché è aperto. */
   annidato?: boolean;
+  /** Bordo superiore del controllo che lo apre: se sotto non c'è spazio, si apre sopra. */
+  sopra?: number;
 }
 
 interface Sottomenu {
@@ -42,6 +44,8 @@ interface Sottomenu {
 }
 
 const MARGINE_FINESTRA = 8;
+/** Tra il controllo che apre il menu e il menu (spazio-elemento). */
+const DISTANZA_ANCORA = 4;
 
 export function Menu({
   voci,
@@ -51,6 +55,7 @@ export function Menu({
   onChiudi,
   onFine = onChiudi,
   annidato = false,
+  sopra,
 }: Proprieta): ReactElement {
   const elemento = useRef<HTMLDivElement>(null);
   const [posizione, setPosizione] = useState({ x, y });
@@ -62,11 +67,19 @@ export function Menu({
   useLayoutEffect(() => {
     const r = elemento.current?.getBoundingClientRect();
     if (!r) return;
+    const fuori = y + r.height > window.innerHeight - MARGINE_FINESTRA;
+    if (sopra !== undefined && fuori) {
+      setPosizione({
+        x: Math.max(MARGINE_FINESTRA, Math.min(x, window.innerWidth - r.width - MARGINE_FINESTRA)),
+        y: Math.max(MARGINE_FINESTRA, sopra - DISTANZA_ANCORA - r.height),
+      });
+      return;
+    }
     setPosizione({
       x: Math.max(MARGINE_FINESTRA, Math.min(x, window.innerWidth - r.width - MARGINE_FINESTRA)),
       y: Math.max(MARGINE_FINESTRA, Math.min(y, window.innerHeight - r.height - MARGINE_FINESTRA)),
     });
-  }, [x, y]);
+  }, [x, y, sopra]);
 
   const apriSottomenu = (i: number) => {
     const r = elemento.current?.children[i]?.getBoundingClientRect();

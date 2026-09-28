@@ -1,15 +1,15 @@
-// SC-02 Nota rapida (FL-01): finestra di sistema senza cornice, pronta alla scrittura, senza
-// titolo (RB-15). Si salva dopo 2 s di pausa (RB-06); Esc, ✕ o un clic altrove salvano e
-// chiudono (RB-02); chiusa vuota non crea niente (RB-03). La scorciatoia premuta di nuovo
-// la salva e la lascia aperta (RB-04). "Apri nel programma" la porta nella finestra
-// principale (RB-05). Se l'API non risponde: SC-07 e conferma alla chiusura (RB-61, RB-62).
+// SC-02 Nota rapida (FL-01, CMP-23): finestra di sistema senza cornice, pronta alla scrittura, senza
+// titolo (RB-15). Si salva dopo 2 s di pausa (RB-06); Salva, Esc per chiudere, il tasto Esc
+// o un clic altrove salvano e chiudono: Esc vuol dire «ho finito», non annulla (RB-02,
+// DEC-34); chiusa vuota non crea niente (RB-03). La scorciatoia premuta di nuovo la salva e
+// la lascia aperta (RB-04). "Apri nel programma", dalla freccia di Salva, la porta nella
+// finestra principale (RB-05). Se l'API non risponde: SC-07 e conferma alla chiusura
+// (RB-61, RB-62).
 
-import { X } from "lucide-react";
 import { useEffect, useRef, useState, type ReactElement } from "react";
 import { api } from "../api";
 import { FinestraConferma } from "../componenti/FinestraConferma";
-import { Icona } from "../componenti/Icona";
-import { Pulsante, PulsanteIcona } from "../componenti/Pulsante";
+import { Pulsante, PulsanteDiviso } from "../componenti/Pulsante";
 import { Editor } from "../editor/Editor";
 import {
   alleAltreNoteRapide,
@@ -115,9 +115,7 @@ export function NotaRapida(): ReactElement {
 
   return (
     <div className="nota-rapida">
-      <div className="nota-rapida-fascia" data-tauri-drag-region>
-        <PulsanteIcona nome="Chiudi" icona={<Icona di={X} />} onClick={() => void chiudi()} />
-      </div>
+      <div className="nota-rapida-fascia" data-tauri-drag-region />
       <div className="nota-rapida-area">
         <Editor
           contenuto=""
@@ -131,10 +129,21 @@ export function NotaRapida(): ReactElement {
         />
       </div>
       <div className="nota-rapida-azioni" data-tauri-drag-region>
-        <span className="nota-rapida-suggerimento interfaccia-dettaglio">Esc per chiudere</span>
-        <Pulsante tipo="tenue" onClick={() => void apriNelProgrammaCompleto()}>
-          Apri nel programma
+        <Pulsante tipo="tenue" onClick={() => void chiudi()}>
+          Esc per chiudere
         </Pulsante>
+        <PulsanteDiviso
+          etichetta="Salva"
+          onClick={() => void chiudi()}
+          nomeAltre="Altre azioni"
+          voci={[
+            {
+              tipo: "voce",
+              etichetta: "Apri nel programma",
+              azione: () => void apriNelProgrammaCompleto(),
+            },
+          ]}
+        />
       </div>
       {bloccata && <Blocco inCorso={riprovando} onRiprova={() => void riprova()} />}
       {conferma && (

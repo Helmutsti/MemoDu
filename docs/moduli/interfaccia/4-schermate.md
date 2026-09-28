@@ -27,7 +27,7 @@ La finestra è sempre la stessa: cambia solo cosa c'è dentro l'area della nota.
 | 1 | Area della nota (centro-destra) | La nota aperta: SC-03. È la zona più grande e la prima che si nota: aprire e scrivere viene prima di tutto (RNF-01) |
 | 2 | Colonna sinistra, in cima | Ricerca (FL-06) |
 | 3 | Colonna sinistra, sezione **Non organizzate** | Le note nella radice (RF-05), in cima, una riga ciascuna con il solo titolo, la modificata più di recente in cima (RB-60): sono quelle appena scritte, ed è da qui che si trascinano nell'albero. Il **+** accanto al titolo della sezione crea una nuova nota (FL-09) |
-| 4 | Colonna sinistra, sezione **Cartelle** | Albero delle cartelle, sotto, con il pulsante **+** in cima alla sezione (FL-05) |
+| 4 | Colonna sinistra, sezione **Cartelle** | Albero delle cartelle, sotto, con il pulsante **+** in cima alla sezione (FL-05). Aprendo una cartella compaiono le sottocartelle e poi le sue note, in ordine alfabetico (RB-64, RB-65) |
 
 Nessuna barra superiore: la colonna sinistra e l'area della nota occupano tutta l'altezza della finestra, divise da una sola linea verticale. Nessun pulsante Nuova nota in evidenza: si crea dal + delle non organizzate, dalla scorciatoia o dal tasto destro su una cartella.
 
@@ -160,7 +160,7 @@ Ogni freccia è un'azione dell'utente o un evento del sistema. Lo stesso percors
 ```mermaid
 flowchart LR
     Esterno[Un altro programma] -- scorciatoia globale --> SC02[SC-02 Nota rapida]
-    SC02 -- Esc, ✕, clic altrove --> Esterno
+    SC02 -- Salva, Esc, clic altrove --> Esterno
     SC02 -- scorciatoia di nuovo --> SC02b[SC-02 Più note a cascata]
     SC02 -- Apri nel programma --> SC01
     SC02b -- Apri nel programma --> SC01

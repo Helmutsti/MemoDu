@@ -2,11 +2,11 @@
 
 <!-- Fase 5 della guida. Copia il blocco per ogni componente. -->
 
-I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE), che diventa la libreria: pagina **Componenti base** (CMP-01 … CMP-08) e pagina **Componenti composti** (CMP-09 … CMP-22). Ogni componente usa solo token semantici, anche per gli spazi (regola 12, vedi `tokens.md`) e ha un'anteprima in modo scuro.
+I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE), che diventa la libreria: pagina **Componenti base** (CMP-01 … CMP-08) e pagina **Componenti composti** (CMP-09 … CMP-23). Ogni componente usa solo token semantici, anche per gli spazi (regola 12, vedi `tokens.md`) e ha un'anteprima in modo scuro.
 
 | Codice | Componente | Tipo | Stato |
 |---|---|---|---|
-| CMP-01 | Pulsante | base | Disegnato |
+| CMP-01 | Pulsante (con la variante Diviso, DEC-34) | base | Disegnato |
 | CMP-02 | Icona | base | 34 icone, 4 dimensioni |
 | CMP-03 | Campo di testo | base | Disegnato |
 | CMP-04 | Interruttore | base | Disegnato |
@@ -28,6 +28,7 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-20 | Testo della nota (campo titolo e stili dell'editor) | composto | Disegnato |
 | CMP-21 | Immagine nel testo e area di trascinamento | composto | Disegnato |
 | CMP-22 | Modulo di accesso (progettato, non attivo: DEC-19) | composto | Disegnato |
+| CMP-23 | Nota rapida | composto | Disegnato |
 
 L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'icona di sistema e non è un componente.
 
@@ -74,6 +75,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 - **Secondario:** sfondo `sfondo-campo`, testo `testo-primario`. Azioni di supporto accanto al primario (Annulla).
 - **Tenue:** senza sfondo, testo `testo-tenue`. Azioni minori in liste e pannelli (Ripristina nel cestino).
 - **Solo icona:** 32 × 32, icona `icona-tenue`. Azioni ripetute con un'icona chiara (+ delle non organizzate, ···).
+- **Diviso** (DEC-34): solo primario. A sinistra l'azione (Salva, margini 16 e 12), a destra la freccia ▾ (`chevron-down`, `icona-su-pieno`, margini 8 e 12) che apre un menu (CMP-09) con le azioni collegate; tra le due un divisore di 1 × 16 in `sfondo-pieno-hover`. Hover separato sulle due metà (`sfondo-pieno-hover`); con il menu aperto la freccia è `sfondo-pieno-premuto`; l'anello di focus segue la pillola intera. La freccia ha il nome accessibile e il suggerimento «Altre azioni» (CMP-08). In Figma è il componente [Pulsante diviso](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=136-703), con la proprietà Etichetta. Usato in SC-02.
 - Una sola dimensione: alto 32 (`misura-riga`), pillola (`raggio-pillola`), margini laterali 16 (8 per il solo icona), distanza tra icona e testo 8, testo Interfaccia/Controllo attivo.
 - Proprietà: **Etichetta** (testo), **Mostra icona** (icona a sinistra del testo, spenta di default), **Icona** (una qualsiasi icona di CMP-02).
 
@@ -221,7 +223,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 | Default | Come sopra |
 | Hover | `sfondo-hover`; il testo resta `testo-primario` (regola 7) |
 | Focus | Anello `focus-anello` di 2 px staccato 2 px |
-| Attivo | Selezionato: filtro attivo nella ricerca, `sfondo-pieno` con testo e ✕ in `testo-su-pieno` e `icona-su-pieno` |
+| Attivo | Selezionato: filtro attivo nella ricerca, `sfondo-hover` come l'hover, con testo in `testo-primario` (DEC-35) |
 | Disabilitato | Opacità 40% |
 | Errore | Non previsto: un nome non valido si segnala nel campo in cui si scrive il tag (RB-22) |
 | Caricamento | Non previsto |
@@ -258,7 +260,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 | Default | Senza sfondo, sulla colonna |
 | Hover | `sfondo-hover`; tutto il testo passa a `testo-primario`, anche l'etichetta della sezione e il numero (regola 7) |
 | Focus | Anello `focus-anello` di 2 px staccato 2 px |
-| Attivo | Selezionata: la nota aperta nella colonna, o la cartella attuale (in Sposta in, CMP-11); `sfondo-pieno` con testo Interfaccia/Controllo attivo in `testo-su-pieno` |
+| Attivo | Selezionata: la nota aperta nella colonna, o la cartella attuale (in Sposta in, CMP-11); `sfondo-hover` come l'hover, con testo Interfaccia/Controllo attivo in `testo-primario`: la distingue dall'hover il peso del testo (DEC-35) |
 | Trascinamento sopra | Solo cartella: mentre si trascina una nota o una cartella, quella che la riceverebbe ha `sfondo-hover` e un contorno di 1,5 in `icona-tenue` |
 | Disabilitato | Non previsto |
 | Errore | Non previsto: gli errori di spostamento si mostrano con un avviso (CMP-15) |
@@ -349,7 +351,7 @@ Compare e sparisce con `movimento-durata-breve` (120 ms). Compare dopo 500 ms di
 
 **Scopo:** offrire le azioni possibili in quel punto, senza spostarsi (RF-11).
 **Quando usarlo:** per più di due azioni legate a un oggetto (la nota, una cartella, il testo selezionato) o per scegliere cosa inserire.
-**Quando non usarlo:** per una sola azione (pulsante, CMP-01) o per scegliere una data o una cartella (pannello a comparsa, CMP-11).
+**Quando non usarlo:** per una sola azione (pulsante, CMP-01) o per scegliere una data o una cartella (pannello a comparsa, CMP-11). Eccezione: il menu della freccia del pulsante diviso può avere una sola voce (Apri nel programma in SC-02, DEC-34).
 
 ### Varianti e dimensioni
 - Contenitore `sfondo-flottante`, `raggio-contenitore` (20), margini 8 sopra e sotto e 0 ai lati, `ombra-flottante`, livello 20 (`z-comparsa`). Largo 236 negli esempi; si allarga fino alla voce più lunga.
@@ -401,7 +403,7 @@ Compare con `movimento-durata-breve` (120 ms) e `movimento-spostamento` (4 px). 
 - Tra i gruppi, il **divisore della pillola**: linea di 1 px in `bordo-divisore-tenue` a tutta altezza (da bordo a bordo della pillola), con 4 px ai lati. È lo stesso segno leggero dei divisori dei menu. Scelta tra solo spazio, linea corta leggera, linea corta visibile, linea a tutta altezza e puntino.
 - **Strumento della pillola:** pulsante tondo 32 × 32 con icona Lucide 16 in `icona-tenue`; proprietà **Icona**.
 - Compare 8 px sopra la selezione o il punto del clic, centrata; se non c'è spazio sopra, sotto. Sparisce quando si riprende a scrivere, con Esc o con un clic altrove.
-- Inizialmente la pillola era scura (`sfondo-pieno`); è stata invertita perché in mezzo al testo era troppo pesante. Ora parla come menu e colonna: l'unica cosa scura è ciò che è attivo.
+- Inizialmente la pillola era scura (`sfondo-pieno`); è stata invertita perché in mezzo al testo era troppo pesante. Ora parla come menu e colonna. Dal 28/09/2026 anche ciò che è attivo non è più scuro: ha il colore dell'hover (DEC-35).
 
 ### Stati
 | Stato | Descrizione |
@@ -409,7 +411,7 @@ Compare con `movimento-durata-breve` (120 ms) e `movimento-spostamento` (4 px). 
 | Default | Strumento senza sfondo, icona `icona-tenue` |
 | Hover | `sfondo-hover` |
 | Focus | Anello interno di 2 px in `focus-anello` |
-| Attivo | Formato già applicato alla selezione (es. il testo è in grassetto): cerchio `sfondo-pieno` con icona `icona-su-pieno`, come la riga selezionata |
+| Attivo | Formato già applicato alla selezione (es. il testo è in grassetto): cerchio `sfondo-hover` come l'hover, con icona in `testo-primario`, come la riga selezionata (DEC-35) |
 | Disabilitato | Opacità 40% (es. titoli dentro una checklist, se non ammessi) |
 | Errore | Non previsto |
 | Caricamento | Non previsto |
@@ -482,7 +484,7 @@ Si chiude con Esc, con un clic fuori o (Sposta in) scegliendo una cartella. Comp
 | Oggi | Numero Interfaccia/Controllo attivo e un puntino di 4 px sotto: non si confonde con focus e selezione |
 | Hover | `sfondo-hover` |
 | Focus | Anello interno di 2 px in `focus-anello` |
-| Attivo | Selezionato: `sfondo-pieno` con numero in `testo-su-pieno` (se è anche oggi, il puntino diventa chiaro) |
+| Attivo | Selezionato: `sfondo-hover` come l'hover, con numero in `testo-primario` (DEC-35) |
 | Disabilitato | Non previsto: nessuna data è vietata (RB-20) |
 | Errore · Caricamento | Non previsti |
 
@@ -544,7 +546,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 **Quando non usarlo:** per scegliere una cartella in un pannello (Sposta in, CMP-11, che usa le voci di menu).
 
 ### Varianti e dimensioni
-- Righe CMP-06 su `sfondo-colonna`, larghe 256, dentro la colonna larga `misura-colonna` (288) con `spazio-contenitore` (16) ai lati e in cima, `spazio-blocco` (16) tra la ricerca e l'albero; `spazio-elemento` (4) tra le righe, `spazio-gruppo` (24) tra le sezioni. Titoli di sezione in maiuscolo grassetto: scelta 6 tra sette alternative (spazio, maiuscolo, grassetto, linea), confronto nella pagina Prove. Sezione **Non organizzate** con le note e il loro numero (la nota aperta è selezionata), sezione **Cartelle** con l'albero e il numero di note accanto a ogni cartella (RB-56); 16 px di rientro per livello.
+- Righe CMP-06 su `sfondo-colonna`, larghe 256, dentro la colonna larga `misura-colonna` (288) con `spazio-contenitore` (16) ai lati e in cima, `spazio-blocco` (16) tra la ricerca e l'albero; `spazio-elemento` (4) tra le righe, `spazio-gruppo` (24) tra le sezioni. Titoli di sezione in maiuscolo grassetto: scelta 6 tra sette alternative (spazio, maiuscolo, grassetto, linea), confronto nella pagina Prove. Sezione **Non organizzate** con le note e il loro numero (la nota aperta è selezionata), sezione **Cartelle** con l'albero e il numero di note accanto a ogni cartella (RB-56); 16 px di rientro per livello. Una cartella aperta mostra prima le sottocartelle, poi le sue note come righe Nota, tutte in ordine alfabetico (RB-64, RB-65): da disegnare in Figma.
 - **Nuova cartella:** il campo nome compare sul posto, su `sfondo-campo` con l'anello di focus e il nome "Nuova cartella" già selezionato (RB-48). Invio conferma, Esc annulla.
 - **Trascinamento:** la cartella che riceverebbe è evidenziata (CMP-06, trascinamento sopra) e in fondo alla colonna compare il **cestino di trascinamento** (`sfondo-campo`, icona elimina, "Trascina qui per eliminare").
 - **Trascinamento sul cestino:** il cestino diventa `sfondo-errore` con testo e icona in `testo-errore` e `icona-errore` ("Rilascia per spostare nel cestino").
@@ -829,3 +831,34 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 - ✅ Corretto: un solo messaggio per email o password sbagliate, senza dire quale delle due.
 - ❌ Scorretto: svuotare il campo Email dopo un errore.
 
+---
+
+## CMP-23 – Nota rapida
+**Tipo:** composto (usa CMP-01 tenue e diviso, CMP-09, CMP-20) · **Usato in:** SC-02 · **Figma:** pagina Componenti composti, [Nota rapida](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=140-3837)
+
+**Scopo:** la finestra per annotare un'idea da qualsiasi programma (RF-01, FL-01).
+**Quando usarlo:** solo per SC-02, una finestra per ogni nota rapida.
+**Quando non usarlo:** per scrivere nel programma completo (SC-03, con CMP-20).
+
+### Varianti e dimensioni
+- **Vuota:** «Scrivi qui…» in `testo-tenue`. **Con testo:** il testo della nota in Nota/Corpo, `testo-primario`.
+- Finestra senza cornice 480 × 320 (ridimensionabile), `sfondo-nota`, `raggio-contenitore`, `ombra-flottante`; `spazio-finestra` (24) ai bordi, `spazio-blocco` (16) tra testo e azioni. Nessun titolo (RB-15), nessuna barra, nessun divisore.
+- In basso: a sinistra **Esc per chiudere** (CMP-01 tenue), a destra **Salva** (CMP-01 diviso) con **Apri nel programma** nel menu della freccia (DEC-34). Nessuna ✕.
+- Il margine in alto non si vede e serve a trascinare la finestra. Nell'app gli angoli sono squadrati (scostamento accettato, vedi SC-02).
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Default | Vuota o con testo |
+| Hover · Focus · Attivo | Li gestiscono i pulsanti |
+| Errore | Se l'API non risponde compare SC-07 sopra la finestra; chiudendo, la finestra di conferma (CMP-16, RB-61, RB-62) |
+| Disabilitato · Caricamento | Non previsti: la finestra compare già pronta (RNF-01) |
+
+### Accessibilità
+- **Tastiera:** il cursore è nel testo all'apertura; Esc salva e chiude; Tab raggiunge Esc per chiudere, Salva e la freccia «Altre azioni».
+- **Lettori di schermo:** la freccia si annuncia come «Altre azioni», con un menu.
+- **Contrasti:** come CMP-01 e CMP-20.
+
+### Esempi
+- ✅ Corretto: scrivere un'idea e premere Esc: la nota è salvata tra le non organizzate.
+- ❌ Scorretto: aggiungere una ✕ in alto: la chiusura c'è già in basso (DEC-34).

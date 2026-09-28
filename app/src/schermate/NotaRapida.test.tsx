@@ -30,11 +30,24 @@ beforeEach(() => {
 });
 
 describe("SC-02 Nota rapida (FL-01)", () => {
-  it("mostra la chiusura, il suggerimento Esc e Apri nel programma", () => {
+  it("mostra Esc per chiudere e Salva, senza ✕ (DEC-34)", () => {
     render(<NotaRapida />);
-    expect(screen.getByRole("button", { name: "Chiudi" })).toBeInTheDocument();
-    expect(screen.getByText("Esc per chiudere")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Apri nel programma" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Esc per chiudere" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Salva" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Altre azioni" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Chiudi" })).not.toBeInTheDocument();
+  });
+
+  it("Salva e Esc per chiudere salvano e chiudono (CA-01.2, RB-02)", async () => {
+    render(<NotaRapida />);
+    await userEvent.type(screen.getByLabelText("Testo"), "idea");
+    await userEvent.click(screen.getByRole("button", { name: "Salva" }));
+    await waitFor(() => expect(chiudiNotaRapida).toHaveBeenCalledTimes(1));
+    expect(api.crea).toHaveBeenCalledWith({ contenuto: "idea" });
+    await userEvent.type(screen.getByLabelText("Testo"), " bis");
+    await userEvent.click(screen.getByRole("button", { name: "Esc per chiudere" }));
+    await waitFor(() => expect(chiudiNotaRapida).toHaveBeenCalledTimes(2));
+    expect(api.salva).toHaveBeenCalledWith("r1", { contenuto: "idea bis" });
   });
 
   it("Esc salva la nota nella radice e chiude (CA-01.2, RB-01, RB-02)", async () => {
@@ -47,7 +60,7 @@ describe("SC-02 Nota rapida (FL-01)", () => {
 
   it("chiusa vuota non crea nessuna nota (CA-01.3, RB-03)", async () => {
     render(<NotaRapida />);
-    await userEvent.click(screen.getByRole("button", { name: "Chiudi" }));
+    await userEvent.click(screen.getByRole("button", { name: "Esc per chiudere" }));
     await waitFor(() => expect(chiudiNotaRapida).toHaveBeenCalled());
     expect(api.crea).not.toHaveBeenCalled();
   });
@@ -65,10 +78,11 @@ describe("SC-02 Nota rapida (FL-01)", () => {
     vi.useRealTimers();
   });
 
-  it("Apri nel programma salva e passa la nota alla finestra principale (CA-01.5, RB-05)", async () => {
+  it("dalla freccia di Salva, Apri nel programma salva e passa la nota alla finestra principale (CA-01.5, RB-05)", async () => {
     render(<NotaRapida />);
     await userEvent.type(screen.getByLabelText("Testo"), "idea");
-    await userEvent.click(screen.getByRole("button", { name: "Apri nel programma" }));
+    await userEvent.click(screen.getByRole("button", { name: "Altre azioni" }));
+    await userEvent.click(screen.getByRole("menuitem", { name: "Apri nel programma" }));
     await waitFor(() => expect(apriNelProgramma).toHaveBeenCalledWith("r1"));
     expect(chiudiNotaRapida).toHaveBeenCalled();
   });
@@ -77,7 +91,7 @@ describe("SC-02 Nota rapida (FL-01)", () => {
     vi.mocked(api.crea).mockRejectedValue(new Error("spento"));
     render(<NotaRapida />);
     await userEvent.type(screen.getByLabelText("Testo"), "da non perdere");
-    await userEvent.click(screen.getByRole("button", { name: "Chiudi" }));
+    await userEvent.click(screen.getByRole("button", { name: "Salva" }));
     expect(await screen.findByText("Memodu non riesce a collegarsi")).toBeInTheDocument();
     expect(
       await screen.findByRole("alertdialog", { name: "La nota non è salvata" }),

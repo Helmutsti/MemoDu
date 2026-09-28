@@ -5,7 +5,7 @@
 L'impostazione generale (desktop-first, breakpoint, scala z-index, inventario dei componenti) è in `moduli/interfaccia/4-schermate.md`.
 
 ## SC-02 – Nota rapida
-**Flussi:** FL-01 · **Componenti:** editor markdown, stato vuoto
+**Flussi:** FL-01 · **Componenti:** CMP-23 Nota rapida (con CMP-01, CMP-09, CMP-20)
 
 - **Wireframe:** [finestra singola](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=2-2) · [più finestre a cascata](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=2-14)
 - **Esportazioni:** `immagini/SC-02.png`, `immagini/SC-02-cascata.png`
@@ -18,12 +18,12 @@ Finestra di sistema, solo su desktop (RF-01). Niente cromatura dell'applicazione
 | Elemento | Nota |
 |---|---|
 | Area di scrittura | Occupa quasi tutta la finestra. Nessun campo titolo: il titolo si mette dopo, nel programma completo (RB-15) |
-| **Apri nel programma** | Testo tenue in basso a destra. Salva e chiude la nota aperta nel programma, e ci porta questa (RB-05) |
-| Chiusura (✕ tenue in alto a destra, `Esc`, clic altrove) | Salva e chiude (RB-02). Nessun pulsante Salva e chiudi: sarebbe un doppione. In basso a sinistra un suggerimento tenue: "Esc per chiudere" |
+| **Salva** | Pulsante primario diviso in basso a destra (CMP-01, variante Diviso). Salva salva e chiude (RB-02); la freccia ▾ apre un menu con **Apri nel programma**, che salva e chiude la nota aperta nel programma, e ci porta questa (RB-05). DEC-34 |
+| **Esc per chiudere** | Pulsante tenue in basso a sinistra: salva e chiude, come il tasto `Esc` e il clic altrove (RB-02). Esc vuol dire «ho finito», non annulla: per cancellare una nota rapida si entra nel programma. Nessuna ✕ (DEC-34) |
 
-**Nessuna cornice:** niente barra del titolo, niente divisori, niente bordo. La finestra è una superficie bianca con ombra. Si trascina dalla fascia in alto, che non si vede; ✕ e azioni sono tenui e si scuriscono al passaggio del mouse.
+**Nessuna cornice:** niente barra del titolo, niente divisori, niente bordo. La finestra è una superficie bianca con ombra. Si trascina dal margine in alto, che non si vede; Esc per chiudere è tenue e si scurisce al passaggio del mouse.
 
-Dimensione iniziale 480 × 320, ridimensionabile. La finestra non è un componente del design system: è costruita con token (`sfondo-nota`, `raggio-contenitore`, `spazio-finestra`, `ombra-flottante`), un pulsante solo icona con `x` per la chiusura e un pulsante tenue per Apri nel programma. Il ✕ sta nella fascia di trascinamento in alto, sopra il testo. Nell'app la finestra ha angoli squadrati e l'ombra del sistema: arrotondarli richiederebbe l'API privata di macOS (scostamento accettato da Manuel Cucca il 28/09/2026).
+Dimensione iniziale 480 × 320, ridimensionabile. La finestra è il componente composto CMP-23 Nota rapida del design system, costruito con token (`sfondo-nota`, `raggio-contenitore`, `spazio-finestra`, `ombra-flottante`), un pulsante tenue per Esc per chiudere, un pulsante diviso per Salva e un menu (CMP-09) con la sola voce Apri nel programma. Nell'app la finestra ha angoli squadrati e l'ombra del sistema: arrotondarli richiederebbe l'API privata di macOS (scostamento accettato da Manuel Cucca il 28/09/2026).
 
 Icona nella barra dei menu (macOS) o nell'area di notifica (Windows), con il menu «Nuova nota rapida», «Apri Memodu», «Esci da Memodu». Chiudendo la finestra principale Memodu resta attivo: la finestra si nasconde e torna da «Apri Memodu» (RF-01). Resta in primo piano rispetto agli altri programmi finché non si chiude.
 
@@ -41,7 +41,7 @@ Stessi tasti fisici sui due sistemi, libere nelle configurazioni di default di e
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |
 |---|---|---|
-| Vuoto | Finestra appena aperta, nessun testo | "Scrivi qui…" nell'area vuota; in basso "Esc per chiudere" e "Apri nel programma" |
+| Vuoto | Finestra appena aperta, nessun testo | "Scrivi qui…" nell'area vuota; in basso "Esc per chiudere" e "Salva" |
 | Caricamento | Non previsto: la finestra compare già pronta (RNF-01) | — |
 | Errore | Non previsto: la nota rapida non dipende dalla rete (SF-08) | — |
 | Successo | Non previsto: la chiusura è la conferma. Chiusa vuota, non crea nulla e non lo dice (RB-03) | — |

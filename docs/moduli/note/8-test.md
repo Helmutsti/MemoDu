@@ -6,10 +6,10 @@
 | Codice | Riferimento | Caso di prova | Ambiente | Set di dati | Esito |
 |---|---|---|---|---|---|
 | TC-01 | RF-01 CA-01.1 | Da un altro programma premere la scorciatoia: SC-02 compare entro 0,2 s con il cursore pronto | Locale | Nessuna nota | |
-| TC-02 | RF-01 CA-01.2 | Scrivere in una nota rapida e chiuderla con Esc, poi con ✕, poi con un clic fuori: ogni volta la nota è in cima all'elenco | Locale | Tre note di prova | |
+| TC-02 | RF-01 CA-01.2 | Scrivere in una nota rapida e chiuderla con Salva, poi con Esc per chiudere, poi con il tasto Esc, poi con un clic fuori: ogni volta la nota è in cima all'elenco | Locale | Quattro note di prova | |
 | TC-03 | RF-01 CA-01.3 | Aprire e chiudere una nota rapida senza scrivere: l'elenco non cambia | Locale | Una nota di prova | |
 | TC-04 | RF-01 CA-01.4 | Con una nota rapida aperta premere di nuovo la scorciatoia, tre volte: finestre a cascata di 32 px, le precedenti salvate | Locale | Nessuna nota | |
-| TC-05 | RF-01 CA-01.5 | Con una nota aperta nel programma, premere Apri nel programma da una nota rapida: la prima è salvata e chiusa, la rapida la sostituisce | Locale | Una nota di prova aperta | |
+| TC-05 | RF-01 CA-01.5 | Con una nota aperta nel programma, scegliere Apri nel programma dalla freccia di Salva di una nota rapida: la prima è salvata e chiusa, la rapida la sostituisce | Locale | Una nota di prova aperta | |
 | TC-06 | RF-01 CA-01.6 | Dall'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) aprire la nota rapida e il programma | Locale | — | |
 | TC-07 | RF-01 CA-01.7 | Spegnere il server, scrivere in una nota rapida: compare SC-07; avviare il server e premere Riprova: la nota è salvata con tutto il testo | Locale | Server spento | |
 | TC-08 | RF-01 CA-01.8 | Con SC-07 visibile chiudere la nota rapida: compare la conferma; Annulla lascia il testo, Chiudi comunque chiude | Locale | Server spento | |
@@ -58,4 +58,5 @@ Frammento Must A. Ambiente Locale, l'unico della prima fase (`architettura/ambie
 | EN-02 | Eliminando una nota, le sue immagini la seguono nel cestino e tornano con lei se viene ripristinata? | Manuel Cucca | Sì, anche nell'eliminazione definitiva (RB-58) | |
 | RF-02 | Il comando Annulla (Ctrl+Z / Cmd+Z) vale per tutte le modifiche della nota aperta, non solo per le immagini tolte (RB-46)? | Manuel Cucca | Sì, tutte le modifiche della nota aperta (RB-59) | |
 | SC-02 | La nota rapida si apre a 480 × 320 come nel wireframe, o più grande ("circa un quarto di schermo")? Deduzione dell'agente | Manuel Cucca | 480 × 320, ridimensionabile | |
+| SC-02, CMP-01 | La freccia del pulsante diviso «Salva» si chiama «Altre azioni» (nome per i lettori di schermo e suggerimento)? Deduzione dell'agente | Manuel Cucca | Sì, «Altre azioni» | DEC-34 |
 | RF-01 | Nel frammento Must A la scorciatoia si può cambiare, visto che le impostazioni (SC-06) non ci sono? | Manuel Cucca | No: fissa fino al frammento Must; con un conflitto la nota rapida si apre dall'icona | |

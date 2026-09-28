@@ -49,8 +49,8 @@ Scale semantiche: a parità di gradino hanno la stessa luminosità dei grigi.
 | `sfondo-nota` | `grigio-0` | `grigio-950` | Area della nota |
 | `sfondo-colonna` | `grigio-50` | `grigio-900` | Colonna sinistra |
 | `sfondo-campo` | `grigio-100` | `grigio-750` | Campi, ricerca, tag, pulsante secondario. Deve staccarsi da nota, colonna e flottante (vedi "Fondi dei controlli sulle superfici") |
-| `sfondo-hover` | `grigio-200` | `grigio-700` | Passaggio del mouse (pillola chiara) |
-| `sfondo-pieno` | `grigio-900` | `grigio-50` | Riga selezionata, strumento attivo della pillola, suggerimento, pulsante primario |
+| `sfondo-hover` | `grigio-200` | `grigio-700` | Passaggio del mouse (pillola chiara) ed elementi selezionati (DEC-35) |
+| `sfondo-pieno` | `grigio-900` | `grigio-50` | Suggerimento, pulsante primario, interruttore acceso. Non più per gli elementi selezionati, che usano `sfondo-hover` (DEC-35) |
 | `sfondo-pieno-hover` | `grigio-700` | `grigio-200` | Pulsante primario al passaggio del mouse |
 | `sfondo-pieno-premuto` | `grigio-800` | `grigio-100` | Pulsante primario premuto |
 | `sfondo-premuto` | `grigio-300` | `grigio-600` | Pulsanti secondario, tenue e solo icona premuti |

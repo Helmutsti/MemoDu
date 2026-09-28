@@ -45,6 +45,8 @@ Contenuto in markdown
 - Anteprima nell'elenco (RB-15): le prime parole del contenuto senza simboli markdown, al massimo 80 caratteri. Confermato da Manuel Cucca il 28/09/2026.
 - I file `.md` senza questa intestazione non sono note di Memodu e si ignorano.
 - La cartella è `Documenti/Memodu`; la variabile d'ambiente `MEMODU_CARTELLA` la sostituisce (prove e sviluppo).
+- **Cartelle** (frammento Must B, DEC-36, provvisorio): ogni cartella di Memodu è una sottocartella vera di `Documenti/Memodu`, con lo stesso nome; le note stanno nella sottocartella della loro cartella, le non organizzate direttamente in `Documenti/Memodu`. Il nome segue le regole dei nomi dei file qui sopra (RB-63); maiuscole e minuscole non contano (RB-23).
+- **Cestino** (DEC-36): una cartella nascosta `.cestino` dentro `Documenti/Memodu`. Eliminare sposta lì la nota o la cartella con tutto il contenuto; ripristinare la riporta nella radice (RB-28); svuotare o eliminare per sempre cancella da lì. La `.cestino` non compare mai come cartella nell'albero. Scelta di Manuel Cucca il 28/09/2026, al posto del cestino del sistema, che il sistema può svuotare senza Memodu.
 
 ## Schema generale
 ```mermaid

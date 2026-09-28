@@ -43,7 +43,7 @@ Regole decise da Manuel Cucca dopo la scelta della direzione. Diventano token (r
 | 4 | **Niente linee di separazione:** le zone si distinguono per il fondo (colonna grigia, nota bianca). Linee sottili solo dove servono davvero | Divisori nei menu, elenco del cestino |
 | 5 | **Ombre solo su ciò che fluttua:** un'ombra sola, morbida; tutto il resto è piatto | Pillola degli strumenti, menu, pannelli, avvisi, finestre di conferma, nota rapida (livelli 20–50) |
 | 6 | **Densità compatta:** righe da 32 px nella colonna e nelle liste | Colonna, menu, elenchi |
-| 7 | **Passaggio del mouse:** pillola grigio chiaro dietro la riga o il pulsante e tutto il testo della riga in testo primario; la selezione è la pillola scura, stessa forma | Righe, voci di menu, pulsanti |
+| 7 | **Passaggio del mouse:** pillola grigio chiaro dietro la riga o il pulsante e tutto il testo della riga in testo primario; la selezione ha la stessa pillola chiara dell'hover, e si distingue per il testo in peso medio (DEC-35, che supera la pillola scura) | Righe, voci di menu, pulsanti |
 | 8 | **Icone di linea:** 16 px, tratto 1,5 px con estremità arrotondate, grigio tenue; chiare sulla riga selezionata | Colonna, menu, pulsanti |
 | 9 | **Modo scuro:** stessi grigi neutri e stessi ruoli, segue l'impostazione del sistema | Tutta l'interfaccia |
 | 10 | **Animazioni brevi:** dissolvenza di circa 120 ms con uno spostamento di 4 px; nessun movimento se il sistema chiede di ridurlo | Pillola, menu, pannelli, avvisi |

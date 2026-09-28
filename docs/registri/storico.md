@@ -211,3 +211,15 @@
 | 28/09/2026 | Manuel Cucca | Attività 9 e 10: scorciatoia globale, icona con menu «Nuova nota rapida», «Apri Memodu», «Esci da Memodu», note rapide senza cornice a cascata, Apri nel programma; la finestra principale si nasconde alla chiusura; angoli squadrati accettati. Note di rilascio in CHANGELOG | RF-01, SC-02, DEC-30 |
 | 28/09/2026 | Manuel Cucca | CMP-06, CMP-14: 4 px (`spazio-elemento`) tra le righe della colonna, perché le pillole dell'hover non si tocchino; aggiornati design system, mockup SC-01 e SC-03 e codice | Scelta di Manuel Cucca |
 | 28/09/2026 | Manuel Cucca | CMP-06: 4 px anche tra il titolo della sezione e la prima riga | Scelta di Manuel Cucca |
+| 28/09/2026 | Manuel Cucca | SC-02: via la ✕, «Esc per chiudere» diventa un pulsante, «Apri nel programma» passa nel menu del pulsante diviso «Salva»; nuova variante Diviso di CMP-01; aggiornati FL-01, RB-02, RB-62, CA-01.2, CA-01.5, TC-02, TC-05, CMP-09 | DEC-34 |
+| 28/09/2026 | Manuel Cucca | Regola visiva 7, CMP-05, CMP-06, CMP-10, CMP-12, token: gli elementi selezionati hanno il colore dell'hover invece della pillola scura | DEC-35 |
+| 28/09/2026 | Manuel Cucca | CMP-01 variante Diviso, SC-02: la freccia di Salva si chiama «Altre azioni» | Scelta di Manuel Cucca (deduzione confermata) |
+| 28/09/2026 | Manuel Cucca | CMP-23: la nota rapida diventa un componente composto del design system (prima era costruita solo con token); SC-02 lo usa | Scelta di Manuel Cucca |
+| 28/09/2026 | Manuel Cucca | Nuovo frammento Must B «Smistare»: cartelle, cestino e Sposta in; cartelle come sottocartelle del disco con lo stesso nome, provvisorio | DEC-36 |
+| 28/09/2026 | Manuel Cucca | RB-63: il nome della cartella è quello sul disco; i caratteri vietati si sostituiscono come per le note | DEC-36 |
+| 28/09/2026 | Manuel Cucca | RB-23: maiuscole e minuscole non contano nei nomi delle cartelle | DEC-36 (deduzione confermata) |
+| 28/09/2026 | Manuel Cucca | Architettura: cartelle come sottocartelle di Documenti/Memodu e cestino nella cartella nascosta `.cestino` | DEC-36 |
+| 28/09/2026 | Manuel Cucca | RB-64: cartelle dell'albero in ordine alfabetico | Scelta di Manuel Cucca |
+| 28/09/2026 | Manuel Cucca | RB-65: note dentro le cartelle in ordine alfabetico per titolo | Scelta di Manuel Cucca |
+| 28/09/2026 | Manuel Cucca | RB-65, SC-01, CMP-14: le note di una cartella compaiono nell'albero dopo le sottocartelle | Scelta di Manuel Cucca |
+| 28/09/2026 | Manuel Cucca | RB-66: la nota aperta spostata resta aperta e la cartella di destinazione si apre | Scelta di Manuel Cucca |

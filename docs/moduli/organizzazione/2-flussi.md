@@ -125,7 +125,7 @@ stateDiagram-v2
 ## Regole di business
 | Codice | Regola | Usata in |
 |---|---|---|
-| RB-23 | Nella stessa cartella non possono esserci due cartelle con lo stesso nome | FL-05 |
+| RB-23 | Nella stessa cartella non possono esserci due cartelle con lo stesso nome; maiuscole e minuscole non contano («Idee» e «idee» sono lo stesso nome), come per il disco su macOS e Windows (DEC-36) | FL-05 |
 | RB-24 | Le cartelle si annidano senza limiti di profondità; una cartella non si può spostare dentro sé stessa o dentro una sua sottocartella | FL-05 |
 | RB-25 | Eliminare una cartella la manda nel cestino insieme a tutto il suo contenuto (note e sottocartelle) | FL-05 |
 | RB-26 | Eliminare una nota la manda nel cestino | FL-05 |
@@ -138,6 +138,10 @@ stateDiagram-v2
 | RB-55 | Nel cestino un singolo elemento si può eliminare per sempre con "Elimina definitivamente"; prima si chiede conferma, indicando il nome e, per una cartella, quante note contiene (DEC-17) | FL-05 |
 | RB-56 | Accanto a ogni cartella e alla sezione Non organizzate si mostra il numero di note che contiene, sottocartelle comprese; le note nel cestino non contano. Il numero si aggiorna subito (ID-15) | FL-05 |
 | RB-60 | Nella sezione Non organizzate le note si ordinano per ultima modifica: la più recente in cima | FL-05, FL-09 |
+| RB-63 | Solo con le cartelle sul file system (DEC-36): il nome di una cartella in Memodu è il nome della sottocartella sul disco. Creando o rinominando, i caratteri vietati si sostituiscono con `-` senza avvisi, con le stesse regole dei nomi dei file delle note (DEC-29, `architettura.md`) | FL-05 |
+| RB-64 | Nell'albero le cartelle di ogni livello si ordinano alfabeticamente, dalla A alla Z, senza distinguere maiuscole e minuscole | FL-05 |
+| RB-65 | Le note di una cartella si vedono nell'albero: aprendo la cartella compaiono prima le sottocartelle (RB-64), poi le note, in ordine alfabetico per titolo, dalla A alla Z, senza distinguere maiuscole e minuscole | FL-05 |
+| RB-66 | Spostare la nota aperta (Sposta in o trascinamento) non la chiude: si continua a scrivere, e nella colonna la cartella di destinazione si apre per mostrare la nota selezionata | FL-05 |
 | RB-33 | La ricerca parte mentre si scrive, dopo una brevissima pausa, senza premere Invio | FL-06 |
 | RB-34 | I risultati si ordinano per pertinenza: prima le note con la parola nel titolo o nei tag, poi quelle con la parola solo nel testo. La card a discesa li mostra tutti e si scorre | FL-06 |
 | RB-35 | Senza risultati la card resta aperta con il messaggio "Nessuna nota trovata" | FL-06 |
