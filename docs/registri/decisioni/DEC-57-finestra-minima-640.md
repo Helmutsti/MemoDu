@@ -1,6 +1,6 @@
 # DEC-57 – Finestra principale più piccola: minimo 640 × 480
 
-**Data:** 2026-09-29 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-29 · **Stato:** Superata da DEC-58 · **Idea di origine:** —
 
 ## Contesto
 Dal 25/09/2026 la finestra desktop non scende sotto 1024 × 640 (`breakpoint-medio`, `tokens.md`), perché la colonna era sempre visibile. Con il foglio unico (DEC-55) la colonna si nasconde, e Manuel Cucca ha trovato la finestra «con le dimensioni bloccate».

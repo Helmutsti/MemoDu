@@ -4,7 +4,15 @@
 // (FL-05, RB-24); tasto destro su una cartella o su una nota; tastiera come CMP-06 (RNF-04).
 // In fondo la riga Cestino, che durante il trascinamento diventa la zona di rilascio (DEC-40).
 
-import { useState, type DragEvent, type ReactElement, type ReactNode } from "react";
+import {
+  useRef,
+  useState,
+  type CSSProperties,
+  type DragEvent,
+  type ReactElement,
+  type ReactNode,
+} from "react";
+import { useBarraScorrimento } from "../componenti/BarraScorrimento";
 import type { Albero, Cartella, Percorso, VoceElenco } from "@memodu/condiviso";
 import {
   CampoNomeCartella,
@@ -53,6 +61,8 @@ interface Proprieta {
   stato: "chiusa" | "aperta" | "fissata";
   /** In cima alla colonna: «← |» e la puntina (DEC-55). */
   testata: ReactNode;
+  /** Larghezza scelta trascinando la maniglia (DEC-62). */
+  larghezza: number;
 }
 
 const stesso = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
@@ -74,6 +84,8 @@ export function accetta(t: Trascinato, d: Destinazione): boolean {
 
 export function Colonna(p: Proprieta): ReactElement {
   const [sezioni, setSezioni] = useState({ nonOrganizzate: true, cartelle: true });
+  const nav = useRef<HTMLElement>(null);
+  useBarraScorrimento(nav);
   const [sopra, setSopra] = useState<string | null>(null);
 
   /** Gestori del trascinamento per una destinazione. */
@@ -210,7 +222,12 @@ export function Colonna(p: Proprieta): ReactElement {
   const alberoVuoto = cartelle.length === 0 && p.campo?.tipo !== "nuova";
 
   return (
-    <nav className={`colonna colonna-${p.stato}`} aria-label="Note e cartelle">
+    <nav
+      ref={nav}
+      className={`colonna colonna-${p.stato}`}
+      aria-label="Note e cartelle"
+      style={{ width: p.larghezza, "--larghezza-colonna": `${p.larghezza}px` } as CSSProperties}
+    >
       <div className="colonna-testata" data-tauri-drag-region>
         {p.testata}
       </div>

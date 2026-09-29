@@ -1,28 +1,24 @@
+/* Scorre tutta la pagina: titolo, metadati e testo insieme (DEC-59). */
 .nota-aperta {
   display: flex;
   flex-direction: column;
   height: 100%;
+  overflow-y: auto;
 }
 
-/* Largo: testo a misura di lettura, centrato. Medio: tutta la larghezza restante. */
+/* Testo sempre allineato a sinistra, a misura di lettura (DEC-58). */
 .nota-aperta-intestazione,
 .nota-aperta-misura {
   width: 100%;
   max-width: calc(var(--misura-lettura) + 2 * var(--spazio-gruppo));
-  margin: 0 auto;
   padding: 0 var(--spazio-gruppo);
-}
-@media (max-width: 1279px) {
-  .nota-aperta-intestazione,
-  .nota-aperta-misura {
-    max-width: none;
-  }
 }
 
 .nota-aperta-intestazione {
   flex: none;
-  padding-top: 80px;
-  padding-bottom: var(--spazio-gruppo);
+  /* Subito sotto la fascia in alto (32) con 16 di respiro (DEC-58). */
+  padding-top: calc(var(--misura-riga) + var(--spazio-blocco));
+  padding-bottom: var(--spazio-blocco);
 }
 
 .nota-aperta-titolo {
@@ -40,12 +36,12 @@
   outline: none;
 }
 
-/* Riga dei metadati (CMP-20): 16 sotto il titolo, 8 tra data e tag, tag che vanno a capo. */
+/* Riga dei metadati (CMP-20): 8 sotto il titolo e tra data e tag (DEC-58), tag che vanno a capo. */
 .nota-aperta-metadati {
   display: flex;
   flex-direction: column;
   gap: var(--spazio-icona);
-  margin-top: var(--spazio-blocco);
+  margin-top: var(--spazio-icona);
 }
 .nota-aperta-modificata {
   margin: 0;
@@ -58,8 +54,7 @@
 }
 
 .nota-aperta-corpo {
-  flex: 1;
-  overflow-y: auto;
-  padding-bottom: 80px;
+  flex: 1 0 auto;
+  padding-bottom: var(--spazio-finestra);
   user-select: text;
 }

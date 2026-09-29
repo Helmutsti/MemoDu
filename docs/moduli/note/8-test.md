@@ -14,11 +14,11 @@
 | TC-07 | RF-01 CA-01.7 | Spegnere il server, scrivere in una nota rapida: compare SC-07; avviare il server e premere Riprova: la nota è salvata con tutto il testo | Locale | Server spento | |
 | TC-08 | RF-01 CA-01.8 | Con SC-07 visibile chiudere la nota rapida: compare la conferma; Annulla lascia il testo, Chiudi comunque chiude | Locale | Server spento | |
 | TC-09 | RF-02 CA-02.1 | Premere + e Nuova nota: nasce una nota vuota in cima con il cursore nel corpo; lasciata vuota aprendo un'altra nota sparisce dall'elenco e dal database; con del testo resta | Locale | Nessuna nota e poi tre note | |
-| TC-10 | RF-02 CA-02.2 | Scrivere ogni sintassi markdown prevista: il testo si formatta, i simboli restano solo sulla riga del cursore | Locale | Nota vuota | |
-| TC-11 | RF-02 CA-02.3 | Applicare le quattro scorciatoie su una parola; controllare nel database che il sottolineato sia `<u>…</u>` | Locale | Nota con testo | |
-| TC-12 | RF-02 CA-02.4 | Selezionare testo, cliccare sul vuoto, scrivere / su riga vuota: compaiono pillole e menu giusti, senza Immagine; spariscono scrivendo, con Esc e con un clic altrove | Locale | Nota con testo | |
-| TC-13 | RF-02 CA-02.5 | Solo tastiera: Alt + F10 porta sulla pillola, frecce tra gli strumenti, Esc torna al testo; controllo con un lettore di schermo (RNF-04) | Locale | Nota con testo | |
-| TC-14 | RF-02 CA-02.6 | Tasto destro sul testo: voci e scorciatoie del menu Testo, sottomenu Titolo ed Elenco | Locale | Nota con testo | |
+| TC-10 | RF-02 CA-02.2 | Scrivere ogni sintassi markdown prevista: il testo si formatta e i simboli spariscono anche sulla riga del cursore; le frecce saltano i simboli nascosti, Canc all'inizio di un titolo o di un elenco lo riporta a testo normale (DEC-58) | Locale | Nota vuota | Sospeso con DEC-64 (per ora testo puro) |
+| TC-11 | RF-02 CA-02.3 | Applicare le quattro scorciatoie su una parola; controllare nel database che il sottolineato sia `<u>…</u>` | Locale | Nota con testo | Sospeso con DEC-64 (per ora testo puro) |
+| TC-12 | RF-02 CA-02.4 | Selezionare testo, cliccare sul vuoto, scrivere / su riga vuota: compaiono pillole e menu giusti, senza Immagine; spariscono scrivendo, con Esc e con un clic altrove | Locale | Nota con testo | Sospeso con DEC-64 (per ora testo puro) |
+| TC-13 | RF-02 CA-02.5 | Solo tastiera: Alt + F10 porta sulla pillola, frecce tra gli strumenti, Esc torna al testo; controllo con un lettore di schermo (RNF-04) | Locale | Nota con testo | Sospeso con DEC-64 (per ora testo puro) |
+| TC-14 | RF-02 CA-02.6 | Tasto destro sul testo: voci e scorciatoie del menu Testo, sottomenu Titolo ed Elenco | Locale | Nota con testo | Sospeso con DEC-64 (per ora testo puro) |
 | TC-15 | RF-02 CA-02.7 | Scrivere e fermarsi 2 s; poi cambiare nota, chiudere, passare a un'altra finestra: ogni volta il database è aggiornato e la nota sale in cima | Locale | Tre note di prova | |
 | TC-16 | RF-02 CA-02.8 | Incollare testo da Word, da una pagina web e da un'email: entra senza formattazione | Locale | Testi di prova formattati | |
 | TC-17 | RF-02 CA-02.9 | Scrivere e incollare `<script>` e HTML con eventi: niente viene eseguito | Locale | Testi malevoli di prova | |

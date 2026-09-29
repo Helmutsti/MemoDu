@@ -67,7 +67,7 @@ Stessi tasti fisici sui due sistemi, libere nelle configurazioni di default di e
 ### Zone e gerarchia
 | Ordine di lettura | Zona | Contenuto |
 |---|---|---|
-| 1 | Corpo della nota | Testo formattato mentre si scrive; i simboli markdown si vedono solo sulla riga del cursore (RF-02) |
+| 1 | Corpo della nota | Testo formattato mentre si scrive; i simboli markdown non si vedono mai, nemmeno sulla riga del cursore (RF-02, DEC-58). Testo allineato a sinistra con spazi discreti; barra di scorrimento sottile e a scomparsa, che non occupa spazio (DEC-58) |
 | 2 | Campo titolo | In cima, stessa larghezza del testo, più grande. Può restare vuoto (RB-15) |
 | 3 | Strumenti di formattazione | Nessuna barra fissa: compaiono solo quando servono (livello 20), vedi sotto |
 | 4 | Menu `···` | In alto a destra: sopra tag, date, sposta, elimina (FL-04); sotto le voci del programma. Dettaglio in `interfaccia/4-schermate.md` |
@@ -79,7 +79,7 @@ Stessi tasti fisici sui due sistemi, libere nelle configurazioni di default di e
 | Cosa | Come |
 |---|---|
 | Tasto destro sul testo | Taglia, Copia, Incolla; poi grassetto, corsivo, sottolineato, barrato con le scorciatoie accanto; poi Titolo ▸ ed Elenco ▸ (RF-11) |
-| Simboli markdown | Si vedono in grigio solo sulla riga del cursore (es. `## ` davanti a un titolo); sulle altre righe il testo è solo formattato (RF-02) |
+| Simboli markdown | Non si vedono mai: si scrivono (es. `## ` davanti a un titolo) e spariscono appena riconosciuti; le frecce li saltano e Canc li toglie in un colpo solo (RF-02, DEC-58) |
 | Trascinamento di un'immagine | Tutta l'area della nota si copre di un bordo tratteggiato con "Rilascia qui l'immagine" e i limiti (solo immagini, fino a 25 MB). File non validi: messaggio in linea (RB-11, RB-12) |
 
 ### Metadati (FL-04)
@@ -117,12 +117,12 @@ Il testo ha una larghezza massima di lettura anche su schermi larghi: oltre una 
 | Stato | Descrizione | Testo mostrato |
 |---|---|---|
 | Vuoto (nessuna nota aperta) | Primo utilizzo o nota appena eliminata: invito a scrivere più pulsante per creare la prima nota | Titolo "Nessuna nota, per ora." · spiegazione "Inizia a scrivere." · pulsante "Nuova nota" (stato vuoto, CMP-19) |
-| Vuoto (nota nuova) | Nota creata e ancora senza testo: titolo e corpo vuoti con il loro invito. La nota esiste già; lasciata vuota, sparisce (RB-10, DEC-39) | Titolo: "Titolo" · corpo: "Scrivi qui, oppure premi / per inserire titoli ed elenchi" |
+| Vuoto (nota nuova) | Nota creata e ancora senza testo: titolo e corpo vuoti con il loro invito. La nota esiste già; lasciata vuota, sparisce (RB-10, DEC-39) | Titolo: "Titolo" · corpo: "Scrivi qui…" (per ora testo puro, DEC-64) |
 | Caricamento | Non previsto: la nota arriva dalla copia di lavoro sul dispositivo | — |
 | Errore | Immagine rifiutata: messaggio accanto al punto di inserimento, non bloccante (RB-11, RB-12) | Testo definitivo in Fase 6 |
 | Successo | Non previsto: il salvataggio è silenzioso (RB-06) | — |
 | Contenuto parziale | Immagine in arrivo da un altro dispositivo non ancora sincronizzata: segnaposto tratteggiato al suo posto ([wireframe](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=32-103), `immagini/SC-03-immagine-in-arrivo.png`) | Testo definitivo in Fase 6 |
-| Contenuto lungo | Nota molto lunga: scorre il solo corpo, il titolo resta fisso | — |
+| Contenuto lungo | Nota molto lunga: scorre tutta la pagina, titolo e metadati compresi, sotto la fascia in alto (DEC-59) | — |
 | Immagine selezionata | Maniglie sull'immagine e pannello impostazioni (dimensione, allineamento, ritaglio, rotazione, testo alternativo) al livello 20 | — |
 | Nota in conflitto | Nota nata da un conflitto (DEC-06): stesso titolo seguito da "(copia in conflitto)", nella stessa cartella; all'arrivo compare un avviso con il collegamento (RB-39) ([wireframe](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=32-147), `immagini/SC-03-conflitto.png`) | Testo definitivo in Fase 6 |
 

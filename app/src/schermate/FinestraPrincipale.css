@@ -39,6 +39,48 @@
   }
 }
 
+/* Il contenuto della colonna non si deforma (DEC-62): sotto la larghezza normale resta largo
+   come sempre e il bordo lo taglia; sopra, le righe si allargano. */
+
+.colonna > * {
+  min-width: calc(var(--misura-colonna) - 2 * var(--spazio-contenitore));
+}
+
+/* Maniglia sul bordo destro della colonna aperta o fissata: si trascina per cambiarne la
+   larghezza, doppio clic la riporta a 288; con il focus, le frecce la spostano di 16 px. */
+.colonna-maniglia {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: calc(var(--z-comparsa) + 1);
+  width: 8px;
+  margin-left: -4px;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.colonna-maniglia::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3px;
+  width: 2px;
+  background: var(--bordo-divisore);
+  opacity: 0;
+  transition: opacity var(--movimento-durata-breve);
+}
+
+.colonna-maniglia:hover::after,
+.colonna-maniglia:focus-visible::after,
+.colonna-maniglia-attiva::after {
+  opacity: 1;
+}
+
+.colonna-maniglia:focus-visible {
+  outline: none;
+}
+
 /* In cima alla colonna, una riga da 32 a 8 px dai bordi: «← |» a sinistra, la puntina a destra. */
 .colonna-testata {
   display: flex;
@@ -65,7 +107,17 @@
   flex: none;
   flex-direction: column;
   width: var(--misura-colonna);
-  padding: var(--spazio-contenitore);
+  padding-top: var(--spazio-contenitore);
+  padding-bottom: var(--spazio-contenitore);
+  /* Stretta: sparisce prima il margine di destra, poi quello di sinistra; il contenuto resta
+     dov'è e il bordo lo taglia, fino a 10 px. */
+  padding-right: clamp(
+    0px,
+    calc(var(--larghezza-colonna) - var(--misura-colonna) + var(--spazio-contenitore)),
+    var(--spazio-contenitore)
+  );
+  padding-left: min(var(--spazio-contenitore), var(--larghezza-colonna));
+  overflow-x: hidden;
   overflow-y: auto;
   border-right: 1px solid var(--bordo-divisore);
   background: var(--sfondo-colonna);
@@ -103,33 +155,63 @@
   align-items: center;
   height: var(--misura-riga);
   padding: 0 var(--spazio-controllo-piccolo);
+  /* Trasparente: il testo scorre sotto i tasti, che restano sopra in un gruppo flottante (DEC-60). */
 }
 
 .barra-con-pulsanti {
-  padding-right: 0;
-}
-
-/* Accanto ai pulsanti della finestra il ··· diventa uno di loro: quadrato, 46 × 32, a filo. */
-.barra-con-pulsanti .barra-destra {
-  gap: 0;
-}
-
-.barra-con-pulsanti .barra-destra .pulsante-icona {
-  width: 46px;
-  height: var(--misura-riga);
-  border-radius: 0;
+  padding-right: var(--spazio-controllo-piccolo);
 }
 
 .sistema-mac .barra-finestra {
   padding-left: 80px;
 }
 
+/* In alto a destra, 8 px dal bordo in alto e da destra: il ··· e i pulsanti della finestra in
+   due pillole separate, 8 px l'una dall'altra, per non premere Chiudi al posto delle opzioni
+   della nota (DEC-60, DEC-62, DEC-63). */
 .barra-destra {
+  position: absolute;
+  top: var(--spazio-controllo-piccolo);
+  right: var(--spazio-controllo-piccolo);
   display: flex;
   align-items: center;
   gap: var(--spazio-controllo-piccolo);
-  height: 100%;
-  margin-left: auto;
+}
+
+/* Pillola flottante: alta 32, 4 px di margine e tra i pulsanti tondi da 24, con sfondo e ombra
+   dei flottanti. */
+.barra-pillola {
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-elemento);
+  height: var(--misura-riga);
+  padding: var(--spazio-elemento);
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-flottante);
+  box-shadow: var(--ombra);
+}
+
+.barra-destra:empty {
+  display: none;
+}
+
+.barra-destra .pulsante-icona {
+  width: var(--misura-controllo-piccolo);
+  height: var(--misura-controllo-piccolo);
+}
+
+/* Per ora il gruppo compare solo con il mouse vicino al bordo in alto, con il suo menu aperto
+   o con il focus da tastiera (DEC-61, provvisorio). */
+.barra-destra {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--movimento-durata-breve);
+}
+
+.barra-destra-visibile,
+.barra-destra:focus-within {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* «| →» compare con il mouse vicino al bordo sinistro o con il focus da tastiera. */

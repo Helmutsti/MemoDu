@@ -311,3 +311,13 @@
 | 29/09/2026 | Manuel Cucca | Foglio unico accettato: niente barra del programma, colonna chiusa, aperta sopra il foglio o fissata con la puntina; DEC-54 superata, ID-30 accettata, SC-01 aggiornata, Fase 5 riaperta per tre icone | DEC-55 |
 | 29/09/2026 | Manuel Cucca | SC-01: la colonna aperta e non fissata si chiude anche con un clic sul foglio; la colonna scorre da sinistra aprendosi e chiudendosi (nuovo token movimento-durata-media, da confermare) | DEC-56 |
 | 29/09/2026 | Manuel Cucca | Finestra desktop: minimo 640 × 480 invece di 1024 × 640 | DEC-57 |
+| 29/09/2026 | Manuel Cucca | CMP-01, SC-01: documentata l'eccezione del ··· quadrato 46 × 32 accanto ai pulsanti della finestra su Windows; mockup allineati | DEC-55 |
+| 29/09/2026 | Manuel Cucca | Foglio di scrittura: simboli markdown sempre nascosti (CA-02.2, TC-10, SC-03, CMP-20), finestra senza minimo (DEC-57 superata), testo allineato a sinistra con spazi più discreti, barra di scorrimento a scomparsa che non occupa spazio | DEC-58 |
+| 29/09/2026 | Manuel Cucca | SC-03: titolo e metadati scorrono con il testo; la fascia in alto ha lo sfondo del foglio | DEC-59 |
+| 29/09/2026 | Manuel Cucca | SC-01: fascia in alto trasparente, il testo passa sotto; ··· e i pulsanti della finestra in un gruppo flottante | DEC-60 |
+| 29/09/2026 | Manuel Cucca | SC-01: per ora il gruppo di ··· e dei pulsanti della finestra compare solo avvicinandosi al bordo in alto (provvisorio) | DEC-61 |
+| 29/09/2026 | Manuel Cucca | SC-01: il gruppo di destra compare solo con il mouse in alto a destra (240 px), non insieme a «| →» | DEC-61 |
+| 29/09/2026 | Manuel Cucca | ID-26 accettata: Tab e Maiusc + Tab nel testo rientrano le voci di elenco o scrivono e tolgono una tabulazione; Esc e poi Tab per uscire dall'editor | ID-26 |
+| 29/09/2026 | Manuel Cucca | SC-01: colonna ridimensionabile dal bordo destro (10 px … finestra meno 48), contenuto che non si deforma; ··· e pulsanti della finestra in una pillola con pulsanti tondi; tolta l'eccezione del ··· quadrato da CMP-01 | DEC-62 |
+| 29/09/2026 | Manuel Cucca | SC-01: il ··· in una pillola separata dai pulsanti della finestra | DEC-63 |
+| 29/09/2026 | Manuel Cucca | Testo della nota per ora puro: sospesi CA-02.2 … CA-02.6 e TC-10 … TC-14, invito «Scrivi qui…», nuovo rinvio per il markdown | DEC-64 |

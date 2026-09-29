@@ -75,7 +75,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 - **Primario:** sfondo `sfondo-pieno`, testo `testo-su-pieno`. L'azione principale della zona, al massimo uno (es. "Svuota" nella finestra di conferma).
 - **Secondario:** sfondo `sfondo-campo`, testo `testo-primario`. Azioni di supporto accanto al primario (Annulla).
 - **Tenue:** senza sfondo, testo `testo-tenue`. Azioni minori in liste e pannelli (Ripristina nel cestino).
-- **Solo icona:** 32 × 32, icona `icona-tenue`. Azioni ripetute con un'icona chiara (+ delle non organizzate, ···).
+- **Solo icona:** 32 × 32, icona `icona-tenue`. Azioni ripetute con un'icona chiara (+ delle non organizzate, ···). Nella fascia in alto di SC-01 il ··· sta nella pillola flottante con i pulsanti della finestra, tutti tondi da 24 (DEC-62).
 - **Diviso** (DEC-34): solo primario. A sinistra l'azione (Chiudi nella nota rapida, margini 16 e 12), a destra la freccia ▾ (`chevron-down`, `icona-su-pieno`, margini 8 e 12) che apre un menu (CMP-09) con le azioni collegate; tra le due un divisore di 1 × 16 in `sfondo-pieno-hover`. Hover separato sulle due metà (`sfondo-pieno-hover`); con il menu aperto la freccia è `sfondo-pieno-premuto`; l'anello di focus segue la pillola intera. La freccia ha il nome accessibile e il suggerimento «Altre azioni» (CMP-08). In Figma è il componente [Pulsante diviso](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=136-703), con la proprietà Etichetta. Usato in SC-02.
 - Una sola dimensione: alto 32 (`misura-riga`), pillola (`raggio-pillola`), margini laterali 16 (8 per il solo icona), distanza tra icona e testo 8, testo Interfaccia/Controllo attivo.
 - Proprietà: **Etichetta** (testo), **Mostra icona** (icona a sinistra del testo, spenta di default), **Icona** (una qualsiasi icona di CMP-02).
@@ -739,7 +739,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 ### Varianti e dimensioni
 - **Riga dei metadati** (parte interna), sotto il titolo, su due righe larghe quanto la nota (DEC-44): in alto la data di ultima modifica in Interfaccia/Dettaglio e `testo-tenue` (es. «Modificata oggi alle 11:42»); sotto i tag in sola lettura (CMP-05 senza ✕, `spazio-elemento` tra l'uno e l'altro), che vanno a capo. Date e tag si modificano nella finestra dei dettagli (CMP-24). Sta `spazio-blocco` (16) sotto il titolo e `spazio-gruppo` (24) sopra il testo; tra le due righe `spazio-icona` (8). Proprietà **Data** e **Mostra tag**; nella nota nuova niente tag e "Creata ora". Il componente ha la proprietà **Mostra metadati** per nasconderla dove non c'è il titolo (nota rapida, SC-02).
 - **Con testo:** titolo (Nota/Titolo), riga dei metadati, corpo (Nota/Corpo), sottotitolo (Nota/Sottotitolo), checklist, elenco puntato, elenco numerato; `spazio-blocco` (16) tra i blocchi, `spazio-elemento` (4) tra le voci, `spazio-gruppo` (24) tra intestazione e testo. Larghezza di lettura 640, confermata come misura massima il 28/09/2026.
-- **Simboli markdown:** in `testo-tenue`, solo sulla riga del cursore (es. `##` davanti al sottotitolo).
+- **Simboli markdown:** non si vedono mai, nemmeno sulla riga del cursore (DEC-58).
 - **Elenchi:** segni (•, 1.) in `testo-tenue`, in una colonna di 16 px.
 - **Checklist:** casella tonda di 16, coerente con le pillole: vuota con contorno `icona-tenue` 1,5; spuntata `sfondo-pieno` con spunta `icona-su-pieno`; la voce spuntata va in `testo-tenue` barrato.
 - **Selezione:** `evidenziazione-selezione` dietro il testo.
@@ -755,7 +755,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 | Disabilitato · Errore · Caricamento | Non previsti |
 
 ### Accessibilità
-- **Tastiera:** le scorciatoie di formattazione (CMP-09); Ctrl + Invio spunta la voce della checklist in cui si trova il cursore.
+- **Tastiera:** le scorciatoie di formattazione (CMP-09); Ctrl + Invio spunta la voce della checklist in cui si trova il cursore. Tab porta una voce di elenco un livello più dentro, altrove scrive una tabulazione; Maiusc + Tab torna indietro. Per uscire dal testo da tastiera: Esc e poi Tab (ID-26).
 - **Lettori di schermo:** titoli come intestazioni, elenchi come elenchi, voci della checklist come caselle di controllo.
 - **Contrasti:** testo primario ≥ 16,48:1 su `sfondo-nota`; simboli e segni in `testo-tenue` 5,49:1 e 7,30:1; voce spuntata 5,49:1.
 

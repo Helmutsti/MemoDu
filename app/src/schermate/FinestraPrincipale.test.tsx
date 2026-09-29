@@ -712,3 +712,29 @@ describe("clic fuori dalla colonna (DEC-56)", () => {
     expect(colonna()).toHaveClass("colonna-fissata");
   });
 });
+
+describe("larghezza della colonna (DEC-62)", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    vi.mocked(api.albero).mockResolvedValue(alberoDiProva());
+    vi.mocked(api.leggi).mockResolvedValue(nota("r", "Riunione di lunedì"));
+  });
+
+  it("la maniglia cambia la larghezza con le frecce, la ricorda e il doppio clic la riporta a 288", async () => {
+    render(<FinestraPrincipale />);
+    await riga("Riunione di lunedì");
+    expect(
+      screen.queryByRole("separator", { name: "Larghezza della colonna" }),
+    ).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Apri la colonna" }));
+    const maniglia = screen.getByRole("separator", { name: "Larghezza della colonna" });
+    fireEvent.keyDown(maniglia, { key: "ArrowLeft" });
+    expect(maniglia).toHaveAttribute("aria-valuenow", "272");
+    expect(screen.getByRole("navigation", { name: "Note e cartelle" })).toHaveStyle({
+      width: "272px",
+    });
+    expect(localStorage.getItem("memodu.colonna-larghezza")).toBe("272");
+    fireEvent.doubleClick(maniglia);
+    expect(maniglia).toHaveAttribute("aria-valuenow", "288");
+  });
+});

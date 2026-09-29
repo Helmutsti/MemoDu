@@ -8,6 +8,10 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 ## [Non rilasciato]
 
 ### Cambiato
+- Per ora il testo della nota è semplice, come in un editor di testo: quello che scrivi resta com'è, senza formattazione; Tab rientra, Maiusc + Tab torna indietro. La formattazione arriverà più avanti (RF-02)
+- Il testo della nota è allineato a sinistra, con spazi più discreti; la barra di scorrimento è sottile e compare solo quando scorri (RF-02)
+- La finestra si può ridimensionare liberamente (RF-02)
+- La colonna delle note si allarga o si stringe trascinandone il bordo destro; doppio clic per tornare alla larghezza normale (RF-05)
 - Le note, le cartelle e il cestino non sono più file nella cartella Documenti\Memodu: stanno in un database nella cartella dei dati di Memodu, fuori da OneDrive e iCloud. Le note scritte finora nella cartella Documenti non vengono spostate
 
 ### Aggiunto
@@ -15,7 +19,6 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 - Tag: si scrivono con i suggerimenti dei tag esistenti, anche a più livelli come «lavoro/clienti»; la ✕ toglie un tag dalla nota e «Elimina tag…» lo toglie da tutte le note (RF-06)
 - Nota rapida: con Ctrl + Alt + N (Control + Option + N su Mac) compare una finestrella per annotare un'idea da qualsiasi programma; si salva da sola; Esc o il pulsante Chiudi la chiudono tenendo il testo, e dalla freccia accanto a Chiudi "Apri nel programma" la porta nella finestra principale (RF-01)
 - Icona nella barra dei menu (Mac) o nell'area di notifica (Windows) per aprire una nota rapida o Memodu; chiudendo la finestra, Memodu resta attivo (RF-01)
-- Scrittura in markdown formattata mentre scrivi: titoli, grassetto, corsivo, sottolineato, barrato, elenchi e checklist, con scorciatoie, strumenti sopra la selezione, menu con "/" e tasto destro (RF-02)
 - Salvataggio automatico dopo 2 secondi di pausa, senza pulsante Salva (RF-02)
 - Elenco delle note con le più recenti in cima e pulsante + per crearne una nuova (RF-02)
 - Cartelle: crea, rinomina e sposta le cartelle, e trascina le note non organizzate nella cartella giusta; le cartelle e le note al loro interno sono in ordine alfabetico, con il numero di note accanto (RF-05)
@@ -32,8 +35,6 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 - Se il server non risponde più volte di fila, dopo Riprova si salva l'ultimo testo scritto e non uno precedente (RF-01, RF-02)
 - «Esci da Memodu» e Alt + F4 sulla nota rapida salvano prima di chiudere; se il testo non si può salvare, Memodu chiede conferma (RF-01)
 - Una nota rapida cancellata fino a restare vuota non lascia più una «Nota vuota» nell'elenco (RF-01)
-- Scrivendo / e premendo Invio si va a capo invece di perdere il tasto (RF-02)
-- La barra degli strumenti sopra il testo resta dentro la finestra anche quando è stretta, e si chiude con Esc o con un clic fuori, dovunque (RF-02)
 - Unendo cartelle con sottocartelle dallo stesso nome non restano cartelle vuote, anche ripristinando dal cestino (RF-05, RF-15)
 - Dopo aver creato una cartella o usato «Sposta in…» da tastiera si resta sulla riga giusta (RF-05)
 

@@ -1,10 +1,11 @@
 // SC-03 Schermata di scrittura: campo titolo (può restare vuoto, RB-15), sotto la riga dei
-// metadati (ultima modifica e tag in sola lettura, DEC-44) e il testo della nota. Titolo e
-// riga restano fissi e scorre il solo corpo.
+// metadati (ultima modifica e tag in sola lettura, DEC-44) e il testo della nota. Scorre
+// tutta la pagina insieme (DEC-59).
 // Le modifiche risalgono con onModifica: il salvataggio lo fa la finestra principale (RB-06).
 
-import type { ReactElement } from "react";
+import { useRef, type ReactElement } from "react";
 import type { DatiNota, Nota } from "@memodu/condiviso";
+import { useBarraScorrimento } from "../componenti/BarraScorrimento";
 import { Tag } from "../componenti/Tag";
 import { testoModificata } from "../date";
 import { Editor } from "../editor/Editor";
@@ -18,8 +19,10 @@ interface Proprieta {
 }
 
 export function NotaAperta({ nota, nuova, onModifica }: Proprieta): ReactElement {
+  const pagina = useRef<HTMLElement>(null);
+  useBarraScorrimento(pagina);
   return (
-    <article className="nota-aperta">
+    <article ref={pagina} className="nota-aperta">
       <header className="nota-aperta-intestazione">
         <input
           className="nota-aperta-titolo nota-titolo"

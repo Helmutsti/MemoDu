@@ -105,12 +105,44 @@ interface Conflitto {
 const CHIAVE_COLONNA_FISSATA = "memodu.colonna-fissata";
 /** Entro questa distanza dal bordo sinistro compare «| →» (DEC-55). */
 const DISTANZA_BORDO_PX = 48;
+/** Il gruppo di destra compare solo con il mouse in alto e vicino a lui, non nell'angolo di
+ * «| →» (DEC-61). */
+const ZONA_TASTI_DESTRA_PX = 240;
 
 function leggiColonnaFissata(): boolean {
   try {
     return localStorage.getItem(CHIAVE_COLONNA_FISSATA) === "1";
   } catch {
     return false;
+  }
+}
+
+/** Larghezza della colonna (DEC-62): normale 288, da 10 fino a lasciare 48 px al foglio. */
+const CHIAVE_LARGHEZZA_COLONNA = "memodu.colonna-larghezza";
+const LARGHEZZA_COLONNA = 288;
+const LARGHEZZA_COLONNA_MINIMA = 10;
+const SPAZIO_FOGLIO_MINIMO = 48;
+const PASSO_TASTIERA_PX = 16;
+
+function limitaLarghezza(larghezza: number): number {
+  const massima = Math.max(LARGHEZZA_COLONNA_MINIMA, window.innerWidth - SPAZIO_FOGLIO_MINIMO);
+  return Math.round(Math.max(LARGHEZZA_COLONNA_MINIMA, Math.min(larghezza, massima)));
+}
+
+function leggiLarghezzaColonna(): number {
+  try {
+    const salvata = Number(localStorage.getItem(CHIAVE_LARGHEZZA_COLONNA));
+    return salvata > 0 ? limitaLarghezza(salvata) : LARGHEZZA_COLONNA;
+  } catch {
+    return LARGHEZZA_COLONNA;
+  }
+}
+
+function salvaLarghezzaColonna(larghezza: number): void {
+  try {
+    localStorage.setItem(CHIAVE_LARGHEZZA_COLONNA, String(larghezza));
+  } catch {
+    // Senza memoria del browser la larghezza vale fino alla chiusura.
   }
 }
 
@@ -168,6 +200,9 @@ export function FinestraPrincipale(): ReactElement {
   const [colonnaFissata, setColonnaFissata] = useState(leggiColonnaFissata);
   const [colonnaAperta, setColonnaAperta] = useState(false);
   const [vicinoAlBordo, setVicinoAlBordo] = useState(false);
+  // Per ora il gruppo di ··· e dei pulsanti della finestra compare solo con il mouse vicino al
+  // bordo in alto (DEC-61, provvisorio).
+  const [vicinoInAlto, setVicinoInAlto] = useState(false);
   const statoColonna = colonnaFissata ? "fissata" : colonnaAperta ? "aperta" : "chiusa";
   const pulsanteApriColonna = useRef<HTMLButtonElement>(null);
   const pulsanteChiudiColonna = useRef<HTMLButtonElement>(null);
@@ -184,6 +219,13 @@ export function FinestraPrincipale(): ReactElement {
     setColonnaFissata(fissata);
     setColonnaAperta(false);
     salvaColonnaFissata(fissata);
+  };
+  // Larghezza della colonna aperta o fissata, dalla maniglia sul bordo destro (DEC-62).
+  const [larghezzaColonna, setLarghezzaColonna] = useState(leggiLarghezzaColonna);
+  const cambiaLarghezza = (larghezza: number) => {
+    const nuova = limitaLarghezza(larghezza);
+    setLarghezzaColonna(nuova);
+    salvaLarghezzaColonna(nuova);
   };
   /** Finestra Dettagli aperta (CMP-24, DEC-44): la nota e tutti i tag per i suggerimenti. */
   const [dettagli, setDettagli] = useState<Nota | null>(null);
@@ -806,11 +848,18 @@ export function FinestraPrincipale(): ReactElement {
           onMouseMove={(e) => {
             const vicino = e.clientX <= DISTANZA_BORDO_PX;
             if (vicino !== vicinoAlBordo) setVicinoAlBordo(vicino);
+            const destra = e.currentTarget.getBoundingClientRect().right - e.clientX;
+            const inAlto = e.clientY <= DISTANZA_BORDO_PX && destra <= ZONA_TASTI_DESTRA_PX;
+            if (inAlto !== vicinoInAlto) setVicinoInAlto(inAlto);
           }}
-          onMouseLeave={() => setVicinoAlBordo(false)}
+          onMouseLeave={() => {
+            setVicinoAlBordo(false);
+            setVicinoInAlto(false);
+          }}
         >
           <Colonna
             stato={statoColonna}
+            larghezza={larghezzaColonna}
             testata={
               <>
                 {statoColonna === "aperta" && (
@@ -857,6 +906,39 @@ export function FinestraPrincipale(): ReactElement {
             cestinoAperto={vista === "cestino"}
             onApriCestino={() => void apriCestino()}
           />
+          {statoColonna !== "chiusa" && (
+            <div
+              className="colonna-maniglia"
+              role="separator"
+              aria-orientation="vertical"
+              aria-label="Larghezza della colonna"
+              aria-valuenow={larghezzaColonna}
+              aria-valuemin={LARGHEZZA_COLONNA_MINIMA}
+              tabIndex={0}
+              style={{ left: larghezzaColonna }}
+              onPointerDown={(e) => {
+                e.preventDefault();
+                e.currentTarget.setPointerCapture(e.pointerId);
+                e.currentTarget.classList.add("colonna-maniglia-attiva");
+              }}
+              onPointerMove={(e) => {
+                if (e.currentTarget.hasPointerCapture(e.pointerId)) cambiaLarghezza(e.clientX);
+              }}
+              onPointerUp={(e) => {
+                e.currentTarget.releasePointerCapture(e.pointerId);
+                e.currentTarget.classList.remove("colonna-maniglia-attiva");
+              }}
+              onDoubleClick={() => cambiaLarghezza(LARGHEZZA_COLONNA)}
+              onKeyDown={(e) => {
+                const passo = { ArrowLeft: -PASSO_TASTIERA_PX, ArrowRight: PASSO_TASTIERA_PX }[
+                  e.key as "ArrowLeft" | "ArrowRight"
+                ];
+                if (passo === undefined) return;
+                e.preventDefault();
+                cambiaLarghezza(larghezzaColonna + passo);
+              }}
+            />
+          )}
           <main
             className="area-nota"
             // Clic sul foglio: la colonna aperta e non fissata si chiude (DEC-56).
@@ -877,23 +959,27 @@ export function FinestraPrincipale(): ReactElement {
                   onClick={apriColonna}
                 />
               )}
-              <div className="barra-destra">
+              <div
+                className={`barra-destra ${vicinoInAlto || menuNota ? "barra-destra-visibile" : ""}`}
+              >
                 {mostraNota && (
-                  <PulsanteIcona
-                    ref={pulsanteMenu}
-                    nome="Altre azioni"
-                    icona={<Icona di={Ellipsis} />}
-                    aria-haspopup="menu"
-                    aria-expanded={menuNota !== null}
-                    onClick={(e) => {
-                      const r = e.currentTarget.getBoundingClientRect();
-                      // Aperto da tastiera (Invio o Spazio): la prima voce è già evidenziata.
-                      const tastiera = e.detail === 0;
-                      setMenuNota(
-                        menuNota ? null : { x: r.right - 236, y: r.bottom + 4, tastiera },
-                      );
-                    }}
-                  />
+                  <div className="barra-pillola">
+                    <PulsanteIcona
+                      ref={pulsanteMenu}
+                      nome="Altre azioni"
+                      icona={<Icona di={Ellipsis} />}
+                      aria-haspopup="menu"
+                      aria-expanded={menuNota !== null}
+                      onClick={(e) => {
+                        const r = e.currentTarget.getBoundingClientRect();
+                        // Aperto da tastiera (Invio o Spazio): la prima voce è già evidenziata.
+                        const tastiera = e.detail === 0;
+                        setMenuNota(
+                          menuNota ? null : { x: r.right - 236, y: r.bottom + 4, tastiera },
+                        );
+                      }}
+                    />
+                  </div>
                 )}
                 {PULSANTI_FINESTRA && <PulsantiFinestra />}
               </div>

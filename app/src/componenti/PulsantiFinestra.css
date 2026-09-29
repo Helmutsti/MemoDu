@@ -1,17 +1,19 @@
+/* Dentro la pillola flottante della fascia in alto: tondi da 24 (DEC-62). */
 .pulsanti-finestra {
   display: flex;
-  height: 100%;
+  gap: var(--spazio-elemento);
 }
 
 .pulsante-finestra {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 46px;
-  height: 100%;
+  width: var(--misura-controllo-piccolo);
+  height: var(--misura-controllo-piccolo);
   padding: 0;
   border: none;
-  color: var(--testo-primario);
+  border-radius: var(--raggio-pillola);
+  color: var(--icona-tenue);
   background: none;
 }
 
@@ -27,7 +29,7 @@
   outline-offset: calc(0px - var(--focus-spessore));
 }
 
-/* Come Windows: Chiudi rosso con la croce bianca, in chiaro e in scuro. */
+/* Come su Windows: Chiudi rosso con la croce bianca, in chiaro e in scuro. */
 .pulsante-finestra-chiudi:hover,
 .pulsante-finestra-chiudi:active {
   color: var(--grigio-0);

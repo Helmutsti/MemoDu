@@ -1,6 +1,14 @@
 import { EditorSelection, EditorState, type Transaction } from "@codemirror/state";
 import { describe, expect, it } from "vitest";
-import { barrato, corsivo, grassetto, sottolineato, spuntaVoce } from "./comandi";
+import {
+  barrato,
+  corsivo,
+  grassetto,
+  rientra,
+  rientraIndietro,
+  sottolineato,
+  spuntaVoce,
+} from "./comandi";
 
 function esegui(comando: typeof grassetto, doc: string, da: number, a = da) {
   let stato = EditorState.create({ doc, selection: EditorSelection.range(da, a) });
@@ -46,5 +54,26 @@ describe("spunta della checklist con Ctrl + Invio (CMP-20)", () => {
 
   it("fuori da una checklist non fa niente", () => {
     expect(esegui(spuntaVoce, "testo", 2).testo).toBe("testo");
+  });
+});
+
+describe("Tab e Maiusc + Tab (ID-26)", () => {
+  it("una voce di elenco va un livello più dentro e torna fuori", () => {
+    expect(esegui(rientra, "- uno\n- due", 8).testo).toBe("- uno\n  - due");
+    expect(esegui(rientraIndietro, "- uno\n  - due", 10).testo).toBe("- uno\n- due");
+    expect(esegui(rientra, "1. uno\n2. due", 9).testo).toBe("1. uno\n   2. due");
+    expect(esegui(rientra, "- [ ] fare", 6).testo).toBe("  - [ ] fare");
+  });
+
+  it("più voci selezionate rientrano insieme", () => {
+    expect(esegui(rientra, "- a\n- b", 0, 7).testo).toBe("  - a\n  - b");
+  });
+
+  it("fuori dagli elenchi scrive una tabulazione e Maiusc + Tab la toglie", () => {
+    expect(esegui(rientra, "ab", 1).testo).toBe("a\tb");
+    expect(esegui(rientraIndietro, "a\tb", 2).testo).toBe("ab");
+    expect(esegui(rientraIndietro, "\ttesto", 5).testo).toBe("testo");
+    expect(esegui(rientraIndietro, "testo", 2).testo).toBe("testo");
+    expect(esegui(rientraIndietro, "a	b più avanti", 14).testo).toBe("ab più avanti");
   });
 });

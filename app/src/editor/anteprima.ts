@@ -1,5 +1,7 @@
 // Anteprima dal vivo del markdown (RF-02, DEC-27, CMP-20): il testo si vede formattato e i
-// simboli si vedono, in testo tenue, solo sulle righe dove c'è il cursore o la selezione.
+// simboli non si vedono mai, nemmeno sulla riga in cui si scrive (DEC-58): si scrivono come
+// prima (#, ##, -, **…) e spariscono appena il markdown li riconosce. I simboli nascosti sono
+// atomici: le frecce li saltano e Canc li toglie in un colpo solo.
 // calcolaSegni() è una funzione pura sullo stato, così si prova senza il DOM; il plugin
 // la trasforma in decorazioni di CodeMirror.
 
@@ -171,10 +173,11 @@ class Casella extends WidgetType {
   }
 }
 
-function decorazioni(view: EditorView): DecorationSet {
+function decorazioni(view: EditorView): { tutte: DecorationSet; atomiche: DecorationSet } {
   const tutti: { da: number; a: number; dec: Decoration }[] = [];
   for (const { from, to } of view.visibleRanges) {
-    for (const s of calcolaSegni(view.state, from, to, view.hasFocus)) {
+    // Nessuna riga attiva: i simboli restano nascosti anche dove c'è il cursore (DEC-58).
+    for (const s of calcolaSegni(view.state, from, to, false)) {
       if (s.tipo === "riga")
         tutti.push({ da: s.da, a: s.da, dec: Decoration.line({ class: s.classe }) });
       else if (s.tipo === "tratto")
@@ -193,8 +196,12 @@ function decorazioni(view: EditorView): DecorationSet {
   // Il RangeSetBuilder vuole le decorazioni in ordine; a parità di inizio, prima quelle di riga.
   tutti.sort((x, y) => x.da - y.da || x.dec.startSide - y.dec.startSide || x.a - y.a);
   const builder = new RangeSetBuilder<Decoration>();
-  for (const d of tutti) builder.add(d.da, d.a, d.dec);
-  return builder.finish();
+  const atomiche = new RangeSetBuilder<Decoration>();
+  for (const d of tutti) {
+    builder.add(d.da, d.a, d.dec);
+    if (d.a > d.da && d.dec.spec.class === undefined) atomiche.add(d.da, d.a, d.dec);
+  }
+  return { tutte: builder.finish(), atomiche: atomiche.finish() };
 }
 
 /** Clic su una casella della checklist: la spunta o la toglie ("[ ]" ↔ "[x]"). */
@@ -213,11 +220,12 @@ function clicSuCasella(evento: MouseEvent, view: EditorView): boolean {
   return true;
 }
 
-export const anteprimaDalVivo = ViewPlugin.fromClass(
+const pluginAnteprima = ViewPlugin.fromClass(
   class {
     decorations: DecorationSet;
+    atomiche: DecorationSet;
     constructor(view: EditorView) {
-      this.decorations = decorazioni(view);
+      ({ tutte: this.decorations, atomiche: this.atomiche } = decorazioni(view));
     }
     update(u: ViewUpdate) {
       if (
@@ -227,7 +235,7 @@ export const anteprimaDalVivo = ViewPlugin.fromClass(
         u.viewportChanged ||
         syntaxTree(u.startState) !== syntaxTree(u.state)
       ) {
-        this.decorations = decorazioni(u.view);
+        ({ tutte: this.decorations, atomiche: this.atomiche } = decorazioni(u.view));
       }
     }
   },
@@ -236,3 +244,8 @@ export const anteprimaDalVivo = ViewPlugin.fromClass(
     eventHandlers: { mousedown: clicSuCasella },
   },
 );
+
+export const anteprimaDalVivo = [
+  pluginAnteprima,
+  EditorView.atomicRanges.of((view) => view.plugin(pluginAnteprima)?.atomiche ?? Decoration.none),
+];
