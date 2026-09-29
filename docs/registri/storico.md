@@ -257,3 +257,4 @@
 | 29/09/2026 | Manuel Cucca | Voce «Dettagli» nel menu della nota per date, tag e gli altri aspetti; sotto il titolo solo tag in lettura e ultima modifica; Fase 6 di Must C riaperta | DEC-44, ID-27 |
 | 29/09/2026 | Manuel Cucca | SC-03: Dettagli si apre in una finestra modale al centro della pagina | DEC-44 |
 | 29/09/2026 | Manuel Cucca | SC-03: contenuto della finestra Dettagli (date, tag, cartella in lettura); RF-04 entra in Must C | DEC-44 |
+| 29/09/2026 | Manuel Cucca | SC-03: in Dettagli ogni modifica vale subito, chiusura con ✕ o Esc | DEC-44 |
