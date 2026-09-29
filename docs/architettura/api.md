@@ -369,3 +369,44 @@ Cancella per sempre tutti gli elementi del cestino.
 | 500 | Cestino non svuotato del tutto: gli elementi rimasti restano nel cestino | SF-32 |
 
 **Come reagisce l'app agli errori di cartelle e cestino:** per 404 e 500 l'app ricarica l'albero e mostra un avviso (CMP-15); testi definitivi in Fase 6 con i mockup. 409 apre l'avviso con tre scelte (RB-31); 422 non mostra niente, lo spostamento semplicemente non avviene (RB-24).
+
+
+---
+
+## Tag e dettagli (frammento Must C)
+Comandi di DEC-51 per la finestra Dettagli (CMP-24, DEC-44). Valgono le regole generali delle note. L'oggetto Nota ha in più:
+
+```json
+{
+  "creataScelta": "2026-09-12",
+  "fineValidita": null,
+  "tag": ["lavoro/clienti", "riunioni"]
+}
+```
+
+`creataScelta` e `fineValidita` sono giorni (`AAAA-MM-GG`) o `null` (DEC-28). `tag` sono i percorsi completi, con i livelli separati da `/` (RB-18), scritti come la prima volta (RB-22), in ordine alfabetico. Cambiare date o tag aggiorna `modificata` (DEC-51).
+
+**Nomi dei tag:** senza distinguere maiuscole e minuscole (RB-22); i `/` all'inizio, alla fine e ripetuti si tolgono, gli spazi ai lati di ogni livello pure; un nome vuoto dà 400.
+
+## PUT /note/:id/dettagli
+**Input:** `{ "creataScelta": "2026-09-12", "fineValidita": null }`; un campo assente resta com'è, `null` lo svuota. Qualsiasi data è ammessa (RB-20).
+**Output:** l'oggetto Nota.
+**Errori:** 400 (data non valida), 404 (nota non trovata o nel cestino, con `cestino` come per `PUT /note/:id`), 500.
+
+## GET /tag
+**Output:** `[{ "nome": "lavoro/clienti", "note": 3 }, …]`: tutti i tag, anche quelli senza note (RB-49), in ordine alfabetico; `note` conta le note fuori dal cestino che hanno quel tag.
+
+## POST /note/:id/tag
+**Input:** `{ "nome": "Lavoro/Clienti" }`. Se il tag c'è già (senza distinguere maiuscole e minuscole) si usa quello; altrimenti nasce, con i livelli che mancano (RB-17, RB-18).
+**Output:** l'oggetto Nota.
+**Errori:** 400 (nome vuoto), 404, 500.
+
+## DELETE /note/:id/tag
+**Input:** `{ "nome": "lavoro/clienti" }`. Toglie il tag dalla nota; il tag resta anche se nessuna nota lo usa più (RB-49).
+**Output:** l'oggetto Nota.
+**Errori:** 404 (nota o tag non trovati), 500.
+
+## DELETE /tag
+**Input:** `{ "nome": "lavoro/fornitori" }`. Elimina il tag e i suoi sotto-tag e li toglie da tutte le note, senza toccare altro (RB-19). La conferma con il numero di note la chiede l'app prima.
+**Output:** `204`.
+**Errori:** 404 (tag non trovato), 500.

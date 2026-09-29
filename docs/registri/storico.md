@@ -285,3 +285,4 @@
 | 29/09/2026 | Manuel Cucca | Corretti quattro difetti già presenti: limite dei 10 MB controllato dall'app, nota rapida chiudibile con SC-07 (deduzione su RB-62), ritorno dal cestino alla nota già aperta, «Nota vuota» tenue sulla riga aperta | DEC-49 |
 | 29/09/2026 | Manuel Cucca | RB-68: nota eliminata altrove mentre è aperta, avviso con Ripristina; CMP-15 con l'azione facoltativa accanto a «Ho capito»; API: 404 con l'elemento del cestino; token dell'avviso ambra nel codice | Scelta di Manuel Cucca |
 | 29/09/2026 | Manuel Cucca | RB-62: confermata la chiusura della nota rapida con SC-07 davanti; Must D pronto per il rilascio | Scelta di Manuel Cucca (deduzione confermata) |
+| 29/09/2026 | Manuel Cucca | API di tag e dettagli della nota; Fase 7 di Must C chiusa | DEC-51 |
