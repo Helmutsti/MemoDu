@@ -279,3 +279,4 @@
 | 29/09/2026 | Manuel Cucca | SC-02, CMP-23: via «Esc per chiudere», il pulsante diviso si chiama «Chiudi»; aggiornati FL-01, RB-02, RB-62, CA-01.2, CA-01.5, TC-02, TC-05 | DEC-50 |
 | 29/09/2026 | Manuel Cucca | SC-02: mockup ed esportazioni aggiornati con il pulsante Chiudi | DEC-50 |
 | 29/09/2026 | Manuel Cucca | Must D: prove a mano rifatte sul database, revisione del codice con correzioni (unione, nomi con emoji, cartella dati locale), TC-31 allineato a DEC-39; nota rapida con il pulsante Chiudi nel codice; cartella vuota aperta senza spazio in più; righe Cestino dei mockup larghe come le altre | DEC-39, DEC-46, DEC-49, DEC-50 |
+| 29/09/2026 | Manuel Cucca | Mockup di SC-01, SC-03, SC-04: la colonna usa l'auto-layout come il codice (contenuto che riempie, riga Cestino in fondo come ultimo elemento, senza posizione assoluta); nel mockup del trascinamento il cestino di trascinamento sta in fondo alla colonna (DEC-40) | DEC-40 |
