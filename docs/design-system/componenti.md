@@ -889,7 +889,8 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 | Default | Come sopra; ogni modifica vale subito, senza Salva |
 | Hover · Focus · Attivo | Li gestiscono i controlli |
 | Suggerimenti e calendario | Si aprono sopra la finestra (regola degli elementi di livello 20 aperti da un overlay) e si chiudono con lei |
-| Errore · Disabilitato · Caricamento | Non previsti per ora |
+| Errore | Solo nei campi delle date: una data che non esiste, confermata con Invio, mostra sotto il campo «Data non valida: scrivi GG/MM/AAAA» (stato Errore di CMP-03) finché non è corretta; le etichette della riga restano in alto. Uscendo dal campo torna la data di prima (DEC-52) |
+| Disabilitato · Caricamento | Non previsti per ora |
 
 ### Accessibilità
 - **Tastiera:** all'apertura il focus va sulla prima data; Tab passa da un controllo all'altro; Esc chiude (prima un suggerimento o il calendario aperto, poi la finestra) e il focus torna dove era.

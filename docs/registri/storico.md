@@ -291,3 +291,4 @@
 | 29/09/2026 | Manuel Cucca | Must C: sviluppo di tag e dettagli (API, riga sotto il titolo, finestra Dettagli, calendario); GET /tag conta le note del tag e dei sotto-tag; due deduzioni da confermare | DEC-44, DEC-51 |
 | 29/09/2026 | Manuel Cucca | CA-04.3, CA-06.4: confermate le due deduzioni dello sviluppo di Must C | Scelta di Manuel Cucca (deduzioni confermate) |
 | 29/09/2026 | Manuel Cucca | Must C: prove a mano TC-51 … TC-62 e correzioni della revisione (focus, suggerimenti, calendario, rientro, titolo delle note senza titolo); anteprima delle note in condiviso | DEC-44, DEC-51 |
+| 29/09/2026 | Manuel Cucca | CA-04.3, CMP-24, TC-53: una data scritta che non esiste mostra «Data non valida: scrivi GG/MM/AAAA» sotto il campo | DEC-52 |

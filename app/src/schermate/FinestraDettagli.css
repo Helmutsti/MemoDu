@@ -77,6 +77,33 @@
   outline: var(--focus-spessore) solid var(--focus-anello);
   outline-offset: var(--focus-distanza);
 }
+/* Errore (CMP-03, DEC-52): anello in icona-errore e il messaggio 8 sotto l'anello, allineato al
+   testo del campo; le etichette restano in alto accanto al campo. */
+.dettagli-riga-errore {
+  align-items: flex-start;
+}
+.dettagli-colonna-data {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spazio-icona) + var(--focus-spessore) + var(--focus-distanza));
+  width: 200px;
+}
+.dettagli-data.dettagli-data-errore {
+  outline: var(--focus-spessore) solid var(--icona-errore);
+  outline-offset: var(--focus-distanza);
+}
+.dettagli-errore-data {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spazio-icona-piccola);
+  margin: 0;
+  padding-left: var(--spazio-controllo);
+  color: var(--testo-errore);
+}
+.dettagli-errore-data svg {
+  flex-shrink: 0;
+  color: var(--icona-errore);
+}
 .dettagli-campo-data {
   flex: 1;
   min-width: 0;

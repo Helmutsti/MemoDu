@@ -57,15 +57,38 @@ describe("CMP-24 Finestra dei dettagli", () => {
     expect(f.onChiudi).toHaveBeenCalledTimes(2);
   });
 
-  it("una data scritta si salva con Invio; una non valida torna com'era (CA-04.3)", async () => {
+  it("una data scritta si salva con Invio (CA-04.3)", async () => {
     apri();
     const campo = screen.getByRole("textbox", { name: "Data di creazione" });
     await userEvent.type(campo, "01/01/2020{Enter}");
     expect(f.onDettagli).toHaveBeenCalledWith({ creataScelta: "2020-01-01" });
+  });
+
+  it("una data che non esiste: messaggio sotto il campo finché non è corretta (DEC-52)", async () => {
+    apri();
     const fine = screen.getByRole("textbox", { name: "Fine validità" });
     await userEvent.type(fine, "30/02/2026{Enter}");
+    const messaggio = screen.getByRole("alert");
+    expect(messaggio).toHaveTextContent("Data non valida: scrivi GG/MM/AAAA");
+    expect(fine).toHaveValue("30/02/2026");
+    expect(fine).toHaveAttribute("aria-invalid", "true");
+    expect(fine).toHaveAccessibleDescription("Data non valida: scrivi GG/MM/AAAA");
+    await userEvent.clear(fine);
+    await userEvent.type(fine, "28/02/2026");
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    await userEvent.keyboard("{Enter}");
+    expect(f.onDettagli).toHaveBeenCalledWith({ fineValidita: "2026-02-28" });
+  });
+
+  it("uscendo dal campo una data che non esiste torna com'era, senza messaggio (DEC-52)", async () => {
+    apri();
+    const fine = screen.getByRole("textbox", { name: "Fine validità" });
+    await userEvent.type(fine, "abc{Enter}");
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+    await userEvent.tab();
     expect(fine).toHaveValue("");
-    expect(f.onDettagli).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(f.onDettagli).not.toHaveBeenCalled();
   });
 
   it("dal calendario «Nessuna data» toglie la fine validità (CA-04.4)", async () => {

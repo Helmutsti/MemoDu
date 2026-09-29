@@ -4,8 +4,8 @@
 // era. Suggerimenti, calendario e menu si aprono sopra la finestra; la conferma di
 // eliminazione di un tag sopra tutto (livello 40).
 
-import { Calendar, Plus, Trash2, X } from "lucide-react";
-import { useEffect, useRef, useState, type ReactElement } from "react";
+import { Calendar, CircleAlert, Plus, Trash2, X } from "lucide-react";
+import { useEffect, useId, useRef, useState, type ReactElement } from "react";
 import { createPortal } from "react-dom";
 import type { DatiDettagli, Nota, VoceTag } from "@memodu/condiviso";
 import { Calendario } from "../componenti/Calendario";
@@ -274,6 +274,9 @@ function RigaData(p: {
 }): ReactElement {
   const scritto = p.valore ? scriviGiorno(p.valore) : "";
   const [testo, setTesto] = useState(scritto);
+  // Data scritta che non esiste, confermata con Invio: messaggio sotto il campo (CMP-03, DEC-52).
+  const [errore, setErrore] = useState(false);
+  const idErrore = useId();
   const [calendario, setCalendario] = useState<DOMRect | null>(null);
   const campo = useRef<HTMLDivElement>(null);
   const casella = useRef<HTMLInputElement>(null);
@@ -285,6 +288,7 @@ function RigaData(p: {
     setPrecedente(p.valore);
     setInviato(p.valore);
     setTesto(scritto);
+    setErrore(false);
   }
 
   const cambia = (giorno: string | null) => {
@@ -293,51 +297,76 @@ function RigaData(p: {
     p.onCambia(giorno);
   };
 
-  // Una data scritta vale quando si conferma; una non valida torna quella di prima.
-  const conferma = () => {
+  // Una data scritta vale quando si conferma. Una che non esiste: con Invio resta nel campo con
+  // il messaggio; uscendo dal campo torna quella di prima e il messaggio sparisce (DEC-52).
+  const conferma = (uscita: boolean) => {
     if (testo.trim() === "") {
+      setErrore(false);
       cambia(null);
       return;
     }
     const giorno = leggiGiorno(testo);
-    if (giorno) cambia(giorno);
-    else setTesto(scritto);
+    if (giorno) {
+      setErrore(false);
+      cambia(giorno);
+    } else if (uscita) {
+      setErrore(false);
+      setTesto(scritto);
+    } else setErrore(true);
   };
 
   return (
-    <div className="dettagli-riga">
+    <div className={`dettagli-riga ${errore ? "dettagli-riga-errore" : ""}`}>
       <div className="dettagli-testi">
         <span className="interfaccia-messaggio">{p.etichetta}</span>
         <span className="dettagli-tenue interfaccia-dettaglio">{p.descrizione}</span>
       </div>
-      <div ref={campo} className={`dettagli-data ${calendario ? "dettagli-data-aperta" : ""}`}>
-        <input
-          ref={casella}
-          className="dettagli-campo-data interfaccia-messaggio"
-          aria-label={p.etichetta}
-          placeholder={p.vuoto}
-          value={testo}
-          onChange={(e) => setTesto(e.target.value)}
-          onBlur={conferma}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              conferma();
-            }
-          }}
-        />
-        <button
-          type="button"
-          className="dettagli-apri-calendario"
-          aria-label={`Scegli ${p.etichetta.toLowerCase()} dal calendario`}
-          aria-expanded={calendario !== null}
-          data-apre-calendario=""
-          onClick={() =>
-            setCalendario(calendario ? null : (campo.current?.getBoundingClientRect() ?? null))
-          }
+      <div className="dettagli-colonna-data">
+        <div
+          ref={campo}
+          className={`dettagli-data ${calendario ? "dettagli-data-aperta" : ""} ${errore ? "dettagli-data-errore" : ""}`}
         >
-          <Icona di={Calendar} />
-        </button>
+          <input
+            ref={casella}
+            className="dettagli-campo-data interfaccia-messaggio"
+            aria-label={p.etichetta}
+            aria-invalid={errore}
+            aria-describedby={errore ? idErrore : undefined}
+            placeholder={p.vuoto}
+            value={testo}
+            onChange={(e) => {
+              const nuovo = e.target.value;
+              setTesto(nuovo);
+              // Il messaggio resta finché la data non è corretta.
+              if (errore && (nuovo.trim() === "" || leggiGiorno(nuovo))) setErrore(false);
+            }}
+            onBlur={() => conferma(true)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                conferma(false);
+              }
+            }}
+          />
+          <button
+            type="button"
+            className="dettagli-apri-calendario"
+            aria-label={`Scegli ${p.etichetta.toLowerCase()} dal calendario`}
+            aria-expanded={calendario !== null}
+            data-apre-calendario=""
+            onClick={() =>
+              setCalendario(calendario ? null : (campo.current?.getBoundingClientRect() ?? null))
+            }
+          >
+            <Icona di={Calendar} />
+          </button>
+        </div>
+        {errore && (
+          <p id={idErrore} className="dettagli-errore-data interfaccia-dettaglio" role="alert">
+            <Icona di={CircleAlert} />
+            Data non valida: scrivi GG/MM/AAAA
+          </p>
+        )}
       </div>
       {calendario && (
         <Calendario
@@ -346,6 +375,7 @@ function RigaData(p: {
           sopraOverlay
           onScegli={(giorno) => {
             setCalendario(null);
+            setErrore(false);
             setTesto(giorno ? scriviGiorno(giorno) : "");
             cambia(giorno);
             casella.current?.focus();
