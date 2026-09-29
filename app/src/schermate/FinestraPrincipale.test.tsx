@@ -332,6 +332,11 @@ describe("menu ··· e Sposta in (CA-05.4, CA-15.1)", () => {
         .getAllByRole("option")
         .map((o) => o.textContent),
     ).toEqual(["Lavoro", "Clienti"]);
+    // Evidenziata è la cartella che corrisponde, non il suo antenato: Invio la sceglie.
+    expect(within(pannello).getByRole("option", { name: "Clienti" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
     await userEvent.click(within(pannello).getByRole("option", { name: "Clienti" }));
     await waitFor(() => expect(api.spostaNota).toHaveBeenCalledWith("r", "Lavoro/Clienti"));
     expect(screen.getByDisplayValue("Riunione di lunedì")).toBeInTheDocument();

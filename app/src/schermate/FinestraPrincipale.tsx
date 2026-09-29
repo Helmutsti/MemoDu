@@ -205,7 +205,11 @@ export function FinestraPrincipale(): ReactElement {
     const nota = apertaAttuale.current;
     if (nota && dentro(nota.cartella, prima)) {
       const aggiornata = await api.leggi(nota.id).catch(() => null);
-      if (aggiornata) setAperta((a) => (a ? { ...a, cartella: aggiornata.cartella } : a));
+      if (aggiornata) {
+        setAperta((a) => (a ? { ...a, cartella: aggiornata.cartella } : a));
+        // La nota aperta resta visibile nella colonna, anche dopo un'unione (RB-66).
+        setCartelleAperte((aperte) => new Set([...aperte, ...catena(aggiornata.cartella)]));
+      }
     }
   };
 

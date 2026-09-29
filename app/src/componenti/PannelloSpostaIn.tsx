@@ -54,7 +54,8 @@ export function PannelloSpostaIn({
   const campo = useRef<HTMLInputElement>(null);
   const [filtro, setFiltro] = useState("");
   const [aperte, setAperte] = useState(() => new Set(antenati(attuale).concat(attuale)));
-  const [attiva, setAttiva] = useState(0);
+  /** Voce evidenziata; -1 finché non ci si muove: vale la prima cartella che corrisponde. */
+  const [attiva, setAttiva] = useState(-1);
   const [posizione, setPosizione] = useState({ x: destra, y });
 
   // Si apre sotto il ···, allineato a destra, e resta dentro la finestra.
@@ -101,7 +102,10 @@ export function PannelloSpostaIn({
   }, [cartelle, aperte, filtro]);
 
   // La voce evidenziata resta dentro l'elenco anche quando il filtro lo accorcia.
-  const indice = Math.min(attiva, Math.max(0, voci.length - 1));
+  const indice =
+    attiva < 0
+      ? Math.max(0, filtro === "" ? 0 : voci.findIndex((v) => contiene(v.nome, filtro)))
+      : Math.min(attiva, Math.max(0, voci.length - 1));
 
   const apriChiudi = (percorso: Percorso, apri?: boolean) =>
     setAperte((prima) => {
@@ -161,7 +165,7 @@ export function PannelloSpostaIn({
           value={filtro}
           onChange={(e) => {
             setFiltro(e.target.value);
-            setAttiva(0);
+            setAttiva(-1);
           }}
         />
       </div>

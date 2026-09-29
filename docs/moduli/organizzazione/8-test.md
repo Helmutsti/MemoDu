@@ -5,12 +5,12 @@
 ## Piano di test
 | Codice | Riferimento | Caso di prova | Ambiente | Set di dati | Esito |
 |---|---|---|---|---|---|
-| TC-33 | RF-05 CA-05.1, CA-05.2 | Creare «Lavoro» con le sottocartelle «progetti» e «Clienti» e le note «budget» e «Agenda»: l'ordine è Clienti, progetti, Agenda, budget; i numeri contano le note delle sottocartelle e non quelle nel cestino | Locale | Cartella di prova vuota | |
-| TC-34 | RF-05 CA-05.3 | Trascinare una nota non organizzata su «Lavoro»: si evidenzia, al rilascio esce dalle non organizzate; nel Finder il file è in `Memodu/Lavoro` | Locale | Tre note non organizzate | |
-| TC-35 | RF-05 CA-05.4 | Con una nota aperta, Sposta in… → «Clienti»: la nota resta aperta, «Lavoro» e «Clienti» si aprono con la nota selezionata; nel pannello scrivere «cli» filtra l'albero | Locale | Albero di prova | |
-| TC-36 | RF-05 CA-05.5 | Premere il + delle Cartelle, scrivere «Idee» e Invio: nasce «Idee» in ordine alfabetico; ripetere premendo Esc: non nasce niente, né in Memodu né sul disco | Locale | Albero di prova | |
-| TC-37 | RF-05 CA-05.6 | Rinominare «Idee» in «Idee: 2026?» con F2: diventa «Idee- 2026-» anche sul disco; rinominare e premere Esc: resta il nome di prima | Locale | Albero di prova | |
-| TC-38 | RF-05 CA-05.7 | Rinominare una cartella in «clienti» accanto a «Clienti»: compare la finestra; provare Annulla, Aggiungi un numero («clienti (2)») e Unisci con una sottocartella omonima (la finestra ricompare) | Locale | Due cartelle con sottocartelle omonime | |
+| TC-33 | RF-05 CA-05.1, CA-05.2 | Creare «Lavoro» con le sottocartelle «progetti» e «Clienti» e le note «budget» e «Agenda»: l'ordine è Clienti, progetti, Agenda, budget; i numeri contano le note delle sottocartelle e non quelle nel cestino | Locale | Cartella di prova vuota || Superato il 29/09/2026 (Chrome, cartella di prova) |
+| TC-34 | RF-05 CA-05.3 | Trascinare una nota non organizzata su «Lavoro»: si evidenzia, al rilascio esce dalle non organizzate; nel Finder il file è in `Memodu/Lavoro` | Locale | Tre note non organizzate || Superato il 29/09/2026 (Chrome, cartella di prova) |
+| TC-35 | RF-05 CA-05.4 | Con una nota aperta, Sposta in… → «Clienti»: la nota resta aperta, «Lavoro» e «Clienti» si aprono con la nota selezionata; nel pannello scrivere «cli» filtra l'albero | Locale | Albero di prova || Superato il 29/09/2026 (Chrome, cartella di prova) |
+| TC-36 | RF-05 CA-05.5 | Premere il + delle Cartelle, scrivere «Idee» e Invio: nasce «Idee» in ordine alfabetico; ripetere premendo Esc: non nasce niente, né in Memodu né sul disco | Locale | Albero di prova || Superato il 29/09/2026 (Chrome, cartella di prova) |
+| TC-37 | RF-05 CA-05.6 | Rinominare «Idee» in «Idee: 2026?» con F2: diventa «Idee- 2026-» anche sul disco; rinominare e premere Esc: resta il nome di prima | Locale | Albero di prova || Superato il 29/09/2026 (Chrome, cartella di prova) |
+| TC-38 | RF-05 CA-05.7 | Rinominare una cartella in «clienti» accanto a «Clienti»: compare la finestra; provare Annulla, Aggiungi un numero («clienti (2)») e Unisci con una sottocartella omonima (la finestra ricompare) | Locale | Due cartelle con sottocartelle omonime || Superato il 29/09/2026 (Chrome, cartella di prova) |
 | TC-39 | RF-05 CA-05.8 | Trascinare «Lavoro» su «Clienti», sua sottocartella: nessuna evidenziazione, nessuna modifica | Locale | Albero di prova | |
 | TC-40 | RF-05 CA-05.9 | Tasto destro su «Lavoro» → Nuova nota qui: la nota nasce in «Lavoro», aperta; poi il + delle Non organizzate con quella nota aperta: la nuova nasce tra le non organizzate | Locale | Albero di prova | |
 | TC-41 | RF-05 CA-05.10 | Cancellare «Clienti» dal Finder con Memodu aperto, poi rinominarla in Memodu: compare l'avviso e la colonna si aggiorna | Locale | Albero di prova | |
