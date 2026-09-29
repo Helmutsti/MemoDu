@@ -1,6 +1,6 @@
 # DEC-28 – Note come file markdown
 
-**Data:** 2026-09-25 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-25 · **Stato:** Superata da DEC-45 · **Idea di origine:** —
 
 ## Contesto
 Sul dispositivo l'app tiene la copia di lavoro delle note (DEC-02). Per il frammento Must A serve scegliere dove e in che formato, pensando anche a ricerca (RF-08) e sincronizzazione (RF-10), che vengono dopo.

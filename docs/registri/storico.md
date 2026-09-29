@@ -264,3 +264,4 @@
 | 29/09/2026 | Manuel Cucca | CMP-20, SC-03: riga sotto il titolo su due righe, ultima modifica sopra e tag in sola lettura sotto | DEC-44 |
 | 29/09/2026 | Manuel Cucca | SC-03, SC-01: mockup della finestra Dettagli (8 stati), da approvare; CMP-09 menu della nota con Dettagli (tolti Tag…, Date… e il Cestino rimasto da DEC-40); CMP-11 tipo Date non più usato | DEC-44 |
 | 29/09/2026 | Manuel Cucca | SC-03, SC-01: mockup della finestra Dettagli approvati; Fase 6 di Must C richiusa | DEC-43, DEC-44 |
+| 29/09/2026 | Manuel Cucca | Note, tag, cartelle e cestino in un database al posto dei file; DEC-28 e DEC-29 superate | DEC-45 |

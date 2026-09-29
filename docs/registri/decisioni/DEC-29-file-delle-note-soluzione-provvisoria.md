@@ -1,6 +1,6 @@
 # DEC-29 – File delle note: soluzione provvisoria
 
-**Data:** 2026-09-25 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-25 · **Stato:** Superata da DEC-45 · **Idea di origine:** —
 
 ## Contesto
 DEC-28 tiene le note sul dispositivo come file markdown. Per il frammento Must A restavano da fissare dove sta la cartella, come si chiamano i file e cosa fare se un altro programma li modifica. Manuel Cucca ha chiarito che il file system è una soluzione temporanea: più avanti la copia locale passerà a un database vero.
