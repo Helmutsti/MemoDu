@@ -252,3 +252,58 @@ describe("DELETE /note/:id (DEC-39)", () => {
     );
   });
 });
+
+describe("tag e dettagli (DEC-51)", () => {
+  it("aggiunge e toglie tag, elenca, elimina e salva i dettagli", async () => {
+    const nota = await crea({ titolo: "A" });
+    const conTag = await server.inject({
+      method: "POST",
+      url: `/note/${nota.id}/tag`,
+      payload: { nome: "lavoro/clienti" },
+    });
+    expect(conTag.statusCode).toBe(200);
+    expect(conTag.json()).toMatchObject({ tag: ["lavoro/clienti"] });
+    expect((await server.inject({ method: "GET", url: "/tag" })).json()).toEqual([
+      { nome: "lavoro", note: 0 },
+      { nome: "lavoro/clienti", note: 1 },
+    ]);
+    const tolto = await server.inject({
+      method: "DELETE",
+      url: `/note/${nota.id}/tag`,
+      payload: { nome: "lavoro/clienti" },
+    });
+    expect(tolto.json()).toMatchObject({ tag: [] });
+    expect(
+      (await server.inject({ method: "DELETE", url: "/tag", payload: { nome: "lavoro" } }))
+        .statusCode,
+    ).toBe(204);
+    expect(
+      (await server.inject({ method: "DELETE", url: "/tag", payload: { nome: "lavoro" } }))
+        .statusCode,
+    ).toBe(404);
+    const dettagli = await server.inject({
+      method: "PUT",
+      url: `/note/${nota.id}/dettagli`,
+      payload: { creataScelta: "2020-01-01", fineValidita: null },
+    });
+    expect(dettagli.json()).toMatchObject({ creataScelta: "2020-01-01", fineValidita: null });
+    expect(
+      (
+        await server.inject({
+          method: "PUT",
+          url: `/note/${nota.id}/dettagli`,
+          payload: { creataScelta: "2026-02-30" },
+        })
+      ).statusCode,
+    ).toBe(400);
+    expect(
+      (
+        await server.inject({
+          method: "POST",
+          url: `/note/${nota.id}/tag`,
+          payload: { nome: " / " },
+        })
+      ).statusCode,
+    ).toBe(400);
+  });
+});

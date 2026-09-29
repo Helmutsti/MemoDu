@@ -33,6 +33,9 @@ const nota = (id: string, titolo: string, contenuto = "", cartella = ""): Nota =
   creata: "2026-09-28T08:00:00Z",
   modificata: "2026-09-28T08:00:00Z",
   cartella,
+  creataScelta: null,
+  fineValidita: null,
+  tag: [],
 });
 const voce = (
   id: string,

@@ -1,6 +1,7 @@
 import Fastify, { type FastifyInstance } from "fastify";
 import {
   LIMITE_CORPO_BYTE,
+  type DatiDettagli,
   type DatiNota,
   type DatiNuovaNota,
   type SeEsiste,
@@ -8,12 +9,14 @@ import {
 import {
   ArchivioNote,
   CartellaNonTrovata,
+  DataNonValida,
   ElementoNonTrovato,
   NomeEsistente,
   NotaNonTrovata,
   NotaNonVuota,
   PercorsoNonValido,
   SpostamentoImpossibile,
+  TagNonTrovato,
 } from "./archivio.ts";
 
 // Endpoint di note, cartelle e cestino (architettura/api.md, DEC-37). Fastify controlla
@@ -29,7 +32,17 @@ const ORIGINI_APP = new Set([
 
 const schemaNota = {
   type: "object",
-  required: ["id", "titolo", "contenuto", "creata", "modificata", "cartella"],
+  required: [
+    "id",
+    "titolo",
+    "contenuto",
+    "creata",
+    "modificata",
+    "cartella",
+    "creataScelta",
+    "fineValidita",
+    "tag",
+  ],
   properties: {
     id: { type: "string" },
     titolo: { type: "string" },
@@ -37,6 +50,9 @@ const schemaNota = {
     creata: { type: "string" },
     modificata: { type: "string" },
     cartella: { type: "string" },
+    creataScelta: { type: ["string", "null"] },
+    fineValidita: { type: ["string", "null"] },
+    tag: { type: "array", items: { type: "string" } },
   },
 } as const;
 
@@ -70,6 +86,8 @@ const CODICI: [new (...argomenti: never[]) => Error, number][] = [
   [CartellaNonTrovata, 404],
   [ElementoNonTrovato, 404],
   [PercorsoNonValido, 400],
+  [DataNonValida, 400],
+  [TagNonTrovato, 404],
   [SpostamentoImpossibile, 422],
   [NotaNonVuota, 409],
 ];
@@ -182,6 +200,72 @@ export function creaServer(archivio: ArchivioNote): FastifyInstance {
       },
     },
     (richiesta) => archivio.spostaNota(richiesta.params.id, richiesta.body.cartella),
+  );
+
+  // ——— Dettagli e tag (DEC-51) ———
+
+  const giornoONull = { type: ["string", "null"] } as const;
+  const schemaNomeTag = {
+    type: "object",
+    additionalProperties: false,
+    required: ["nome"],
+    properties: { nome: { type: "string" } },
+  } as const;
+
+  server.put<{ Params: { id: string }; Body: DatiDettagli }>(
+    "/note/:id/dettagli",
+    {
+      schema: {
+        params: schemaId,
+        body: {
+          type: "object",
+          additionalProperties: false,
+          properties: { creataScelta: giornoONull, fineValidita: giornoONull },
+        },
+        response: { 200: schemaNota },
+      },
+    },
+    (richiesta) => archivio.salvaDettagli(richiesta.params.id, richiesta.body),
+  );
+
+  server.get(
+    "/tag",
+    {
+      schema: {
+        response: {
+          200: {
+            type: "array",
+            items: {
+              type: "object",
+              required: ["nome", "note"],
+              properties: { nome: { type: "string" }, note: { type: "integer" } },
+            },
+          },
+        },
+      },
+    },
+    () => archivio.elencaTag(),
+  );
+
+  server.post<{ Params: { id: string }; Body: { nome: string } }>(
+    "/note/:id/tag",
+    { schema: { params: schemaId, body: schemaNomeTag, response: { 200: schemaNota } } },
+    (richiesta) => archivio.aggiungiTag(richiesta.params.id, richiesta.body.nome),
+  );
+
+  server.delete<{ Params: { id: string }; Body: { nome: string } }>(
+    "/note/:id/tag",
+    { schema: { params: schemaId, body: schemaNomeTag, response: { 200: schemaNota } } },
+    (richiesta) => archivio.togliTag(richiesta.params.id, richiesta.body.nome),
+  );
+
+  server.delete<{ Body: { nome: string } }>(
+    "/tag",
+    { schema: { body: schemaNomeTag } },
+    async (richiesta, risposta) => {
+      await archivio.eliminaTag(richiesta.body.nome);
+      return risposta.code(204).send();
+    },
   );
 
   // ——— Albero e cartelle ———

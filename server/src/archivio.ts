@@ -11,6 +11,7 @@ import Database from "better-sqlite3";
 import type {
   Albero,
   Cartella,
+  DatiDettagli,
   DatiNota,
   DatiNuovaNota,
   ElementoCestino,
@@ -19,6 +20,7 @@ import type {
   Percorso,
   SeEsiste,
   VoceElenco,
+  VoceTag,
 } from "@memodu/condiviso";
 
 const FILE_DATABASE = "memodu.db";
@@ -106,6 +108,16 @@ export class NomeEsistente extends Error {
 /** Cartella spostata dentro sé stessa o una sua sottocartella: 422 (RB-24, SF-18). */
 export class SpostamentoImpossibile extends Error {}
 
+/** Tag non trovato: 404. */
+export class TagNonTrovato extends Error {
+  constructor(readonly nome: string) {
+    super(`Nessun tag «${nome}»`);
+  }
+}
+
+/** Data che non è un giorno AAAA-MM-GG valido: 400. */
+export class DataNonValida extends Error {}
+
 /** La nota non è vuota e non si cancella da sola: 409 (DEC-39). */
 export class NotaNonVuota extends Error {}
 
@@ -131,9 +143,17 @@ interface RigaNota {
   contenuto: string;
   cartella: string | null;
   creata: string;
+  creata_scelta: string | null;
   modificata: string;
+  fine_validita: string | null;
   eliminata_il: string | null;
   provenienza: string | null;
+}
+
+interface RigaTag {
+  id: string;
+  nome: string;
+  padre: string | null;
 }
 
 interface RigaCartella {
@@ -495,6 +515,74 @@ export class ArchivioNote {
     });
   }
 
+  // ——— Dettagli e tag (DEC-51) ———
+
+  /** Cambia data di creazione scelta e fine validità; aggiorna l'ultima modifica (DEC-51). */
+  async salvaDettagli(id: string, dati: DatiDettagli): Promise<Nota> {
+    return this.conRiconnessione(async () => {
+      const attuale = this.trova(id);
+      const creata = dati.creataScelta === undefined ? attuale.creata_scelta : dati.creataScelta;
+      const fine = dati.fineValidita === undefined ? attuale.fine_validita : dati.fineValidita;
+      for (const giorno of [creata, fine]) if (giorno !== null) validaGiorno(giorno);
+      this.db
+        .prepare(
+          "UPDATE note SET creata_scelta = ?, fine_validita = ?, modificata = ? WHERE id = ?",
+        )
+        .run(creata, fine, this.adesso().toISOString(), id);
+      return this.leggi(id);
+    });
+  }
+
+  /** Tutti i tag, anche senza note (RB-49), con quante note fuori dal cestino li usano. */
+  async elencaTag(): Promise<VoceTag[]> {
+    return this.conRiconnessione(async () => {
+      const righe = this.db.prepare("SELECT id FROM tag").all() as { id: string }[];
+      const conta = this.db.prepare(
+        "SELECT count(*) AS n FROM note_tag nt JOIN note n ON n.id = nt.nota WHERE nt.tag = ? AND n.eliminata_il IS NULL",
+      );
+      return righe
+        .map((r) => ({ nome: this.percorsoTag(r.id), note: (conta.get(r.id) as { n: number }).n }))
+        .sort((a, b) => ordine(a.nome, b.nome));
+    });
+  }
+
+  /** Aggiunge un tag alla nota; se non esiste nasce con i livelli mancanti (RB-17, RB-18). */
+  async aggiungiTag(id: string, nome: string): Promise<Nota> {
+    return this.conRiconnessione(async () => {
+      this.trova(id);
+      const livelli = livelliTag(nome);
+      return this.db.transaction(() => {
+        const tag = this.idTag(livelli, true)!;
+        const nuovo = this.db
+          .prepare("INSERT OR IGNORE INTO note_tag (nota, tag) VALUES (?, ?)")
+          .run(id, tag);
+        if (nuovo.changes > 0) this.tocca(id);
+        return this.nota(this.trova(id));
+      })();
+    });
+  }
+
+  /** Toglie un tag dalla nota; il tag resta anche se nessuna nota lo usa più (RB-49). */
+  async togliTag(id: string, nome: string): Promise<Nota> {
+    return this.conRiconnessione(async () => {
+      this.trova(id);
+      const tag = this.idTag(livelliTag(nome), false);
+      if (!tag) throw new TagNonTrovato(nome);
+      const tolto = this.db.prepare("DELETE FROM note_tag WHERE nota = ? AND tag = ?").run(id, tag);
+      if (tolto.changes > 0) this.tocca(id);
+      return this.leggi(id);
+    });
+  }
+
+  /** Elimina un tag e i suoi sotto-tag da tutte le note, senza toccare altro (RB-19). */
+  async eliminaTag(nome: string): Promise<void> {
+    return this.conRiconnessione(async () => {
+      const tag = this.idTag(livelliTag(nome), false);
+      if (!tag) throw new TagNonTrovato(nome);
+      this.db.prepare("DELETE FROM tag WHERE id = ?").run(tag);
+    });
+  }
+
   // ——— Interni ———
 
   /** La nota fuori dal cestino e non dentro una cartella eliminata: altrimenti 404. */
@@ -525,7 +613,57 @@ export class ArchivioNote {
       creata: riga.creata,
       modificata: riga.modificata,
       cartella: this.percorso(riga.cartella) ?? "",
+      creataScelta: riga.creata_scelta,
+      fineValidita: riga.fine_validita,
+      tag: this.tagDellaNota(riga.id),
     };
+  }
+
+  /** I tag della nota come percorsi completi, in ordine alfabetico (RB-18). */
+  private tagDellaNota(id: string): string[] {
+    const righe = this.db.prepare("SELECT tag FROM note_tag WHERE nota = ?").all(id) as {
+      tag: string;
+    }[];
+    return righe.map((r) => this.percorsoTag(r.tag)).sort(ordine);
+  }
+
+  /** Percorso completo di un tag: i nomi dai livelli più alti, separati da "/". */
+  private percorsoTag(id: string): string {
+    const nomi: string[] = [];
+    for (let attuale: string | null = id; attuale !== null;) {
+      const riga = this.db.prepare("SELECT * FROM tag WHERE id = ?").get(attuale) as RigaTag;
+      nomi.unshift(riga.nome);
+      attuale = riga.padre;
+    }
+    return nomi.join("/");
+  }
+
+  /** Id del tag con quei livelli, senza distinguere maiuscole e minuscole (RB-22). */
+  private idTag(livelli: string[], crea: boolean): string | undefined {
+    let padre: string | null = null;
+    for (const nome of livelli) {
+      const riga = this.db
+        .prepare("SELECT id FROM tag WHERE ifnull(padre, '') = ? AND chiave = ?")
+        .get(padre ?? "", chiave(nome)) as { id: string } | undefined;
+      if (riga) {
+        padre = riga.id;
+        continue;
+      }
+      if (!crea) return undefined;
+      // Un tag nuovo nasce con i livelli che mancano, scritti come la prima volta (RB-17, RB-18).
+      const id = randomUUID();
+      this.db
+        .prepare("INSERT INTO tag (id, nome, chiave, padre) VALUES (?, ?, ?, ?)")
+        .run(id, nome, chiave(nome), padre);
+      padre = id;
+    }
+    return padre ?? undefined;
+  }
+
+  private tocca(id: string): void {
+    this.db
+      .prepare("UPDATE note SET modificata = ? WHERE id = ?")
+      .run(this.adesso().toISOString(), id);
   }
 
   private cartella(id: string): RigaCartella {
@@ -730,6 +868,27 @@ function apri(file: string): Database.Database {
 function solaLettura(errore: unknown): boolean {
   const codice = (errore as { code?: unknown }).code;
   return typeof codice === "string" && codice.startsWith("SQLITE_READONLY");
+}
+
+/**
+ * Livelli di un tag (RB-18, RB-22): separati da "/", senza spazi ai lati; i "/" all'inizio,
+ * alla fine e ripetuti si tolgono. Senza livelli il nome è vuoto: 400.
+ */
+export function livelliTag(nome: string): string[] {
+  const livelli = nome
+    .split("/")
+    .map((l) => l.replace(/\s+/g, " ").trim())
+    .filter((l) => l !== "");
+  if (livelli.length === 0) throw new PercorsoNonValido("Il nome del tag è vuoto");
+  return livelli;
+}
+
+/** Un giorno del calendario AAAA-MM-GG che esiste davvero (DEC-28, RB-20). */
+function validaGiorno(giorno: string): void {
+  const data = new Date(`${giorno}T00:00:00Z`);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(giorno) || data.toISOString().slice(0, 10) !== giorno) {
+    throw new DataNonValida(`Data non valida: ${giorno}`);
+  }
 }
 
 /** Controlla un percorso di cartella (DEC-37); `radice` dice se "" è ammesso. */

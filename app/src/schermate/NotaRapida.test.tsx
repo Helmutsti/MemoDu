@@ -28,6 +28,9 @@ const nota = {
   creata: "c",
   modificata: "m",
   cartella: "",
+  creataScelta: null,
+  fineValidita: null,
+  tag: [],
 };
 
 beforeEach(() => {

@@ -9,6 +9,9 @@ const nota = (id: string, dati: DatiNota): Nota => ({
   creata: "c",
   modificata: "m",
   cartella: "",
+  creataScelta: null,
+  fineValidita: null,
+  tag: [],
 });
 
 let salva: Mock<(id: string, dati: DatiNota, opzioni?: { keepalive?: boolean }) => Promise<Nota>>;
