@@ -268,3 +268,4 @@
 | 29/09/2026 | Manuel Cucca | Il database sta per ora nell'API Node, al posto dei file | DEC-45 |
 | 29/09/2026 | Manuel Cucca | Architettura: database SQLite nell'API Node | DEC-46 |
 | 29/09/2026 | Manuel Cucca | Libreria better-sqlite3 per SQLite nell'API | DEC-47 |
+| 29/09/2026 | Manuel Cucca | Architettura: il file del database sta nella cartella dei dati delle applicazioni | DEC-46 |
