@@ -139,7 +139,8 @@ export function RigaCartella({
 interface ProprietaCampo {
   valore: string;
   livello: number;
-  onConferma: (valore: string) => void;
+  /** `daTastiera` è falso quando conferma il clic altrove. */
+  onConferma: (valore: string, daTastiera: boolean) => void;
   onAnnulla: () => void;
 }
 
@@ -158,10 +159,10 @@ export function CampoNomeCartella({
     campo.current?.select();
   }, []);
 
-  const chiudi = (conferma: boolean) => {
+  const chiudi = (conferma: boolean, daTastiera = true) => {
     if (finito.current) return;
     finito.current = true;
-    if (conferma) onConferma(campo.current?.value ?? valore);
+    if (conferma) onConferma(campo.current?.value ?? valore, daTastiera);
     else onAnnulla();
   };
 
@@ -185,7 +186,7 @@ export function CampoNomeCartella({
             chiudi(false);
           }
         }}
-        onBlur={() => chiudi(true)}
+        onBlur={() => chiudi(true, false)}
       />
     </div>
   );

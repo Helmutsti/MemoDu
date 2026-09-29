@@ -38,7 +38,7 @@ interface Proprieta {
   onNuovaNota: () => void;
   onNuovaCartella: (genitore: Percorso) => void;
   campo: Campo | null;
-  onConfermaCampo: (valore: string) => void;
+  onConfermaCampo: (valore: string, daTastiera: boolean) => void;
   onAnnullaCampo: () => void;
   onMenuCartella: (percorso: Percorso, x: number, y: number) => void;
   onMenuNota: (id: string, cartella: Percorso, x: number, y: number) => void;

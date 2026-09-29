@@ -561,7 +561,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 | Disabilitato · Errore · Caricamento | Non previsti; un nome già esistente apre la finestra con tre scelte (CMP-16, RB-31) |
 
 ### Accessibilità
-- **Tastiera:** come CMP-06; F2 rinomina la cartella in focus con il campo nome; lo spostamento da tastiera passa da Sposta in (CMP-11), non dal trascinamento.
+- **Tastiera:** come CMP-06; F2 rinomina la cartella in focus con il campo nome; chiuso il campo con Invio o con Esc il focus torna sulla riga della cartella; lo spostamento da tastiera passa da Sposta in (CMP-11), non dal trascinamento.
 - **Lettori di schermo:** albero con i livelli; il cestino di trascinamento si annuncia quando compare.
 - **Contrasti:** come CMP-06; cestino di trascinamento in `testo-tenue` su `sfondo-campo` 4,61:1 e 4,65:1; sopra, `testo-errore` su `sfondo-errore` 5,48:1 e 5,44:1.
 

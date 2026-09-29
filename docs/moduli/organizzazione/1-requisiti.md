@@ -31,7 +31,7 @@ Frammento Must B «Smistare» (DEC-36): cartelle come sottocartelle di Documenti
 - **CA-05.8** *Dato* una cartella, *quando* la trascino dentro sé stessa o dentro una sua sottocartella, *allora* la destinazione non si evidenzia e al rilascio non cambia niente (RB-24, SF-18).
 - **CA-05.9** *Dato* una cartella, *quando* scelgo «Nuova nota qui» dal tasto destro, *allora* nasce una nota vuota in quella cartella, aperta con il cursore nel corpo; il + delle Non organizzate invece crea sempre nella radice (RB-09).
 - **CA-05.10** *Dato* una cartella o una nota tolta dal disco da fuori Memodu, *quando* provo a spostarla, rinominarla o eliminarla, *allora* compare l'avviso «Non è stato possibile completare l'operazione. La colonna mostra com'è adesso.» e la colonna si ricarica (SF-32, DEC-37).
-- **CA-05.11** *Dato* il solo uso della tastiera, *allora* nella colonna le frecce su e giù passano da una riga all'altra, destra e sinistra aprono e chiudono le cartelle, Invio apre la nota e F2 rinomina la cartella in focus; un lettore di schermo annuncia la colonna come albero, con livello e stato aperta o chiusa (CMP-06, CMP-14, RNF-04).
+- **CA-05.11** *Dato* il solo uso della tastiera, *allora* nella colonna le frecce su e giù passano da una riga all'altra, destra e sinistra aprono e chiudono le cartelle, Invio apre la nota e F2 rinomina la cartella in focus; chiuso il campo nome, con Invio o con Esc, il focus torna sulla riga della cartella; un lettore di schermo annuncia la colonna come albero, con livello e stato aperta o chiusa (CMP-06, CMP-14, RNF-04).
 - **CA-05.12** *Dato* nessuna cartella, *allora* sotto il titolo Cartelle compare «Nessuna cartella. Creane una con +» (SF-16).
 
 ---

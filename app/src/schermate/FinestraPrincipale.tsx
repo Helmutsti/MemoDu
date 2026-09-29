@@ -80,6 +80,8 @@ export function FinestraPrincipale(): ReactElement {
   const [nuovaId, setNuovaId] = useState<string | null>(null);
   const [cartelleAperte, setCartelleAperte] = useState<Set<Percorso>>(() => new Set());
   const [campo, setCampo] = useState<Campo | null>(null);
+  /** Cartella su cui torna il focus quando il campo della rinomina si chiude (CA-05.11). */
+  const rigaDelFocus = useRef<Percorso | null>(null);
   const [trascinato, setTrascinato] = useState<Trascinato | null>(null);
   const [menuCartella, setMenuCartella] = useState<{
     percorso: Percorso;
@@ -352,8 +354,15 @@ export function FinestraPrincipale(): ReactElement {
     setCampo({ tipo: "nuova", genitore, proposta });
   };
 
-  const confermaCampo = async (valore: string) => {
+  const annullaCampo = () => {
+    if (campo?.tipo === "rinomina") rigaDelFocus.current = campo.percorso;
+    setCampo(null);
+  };
+
+  const confermaCampo = async (valore: string, daTastiera: boolean) => {
     const attuale = campo;
+    const segueFocus = daTastiera && attuale?.tipo === "rinomina";
+    if (segueFocus) rigaDelFocus.current = attuale.percorso;
     setCampo(null);
     if (!attuale || valore.trim() === "") return;
     if (attuale.tipo === "nuova") {
@@ -367,10 +376,24 @@ export function FinestraPrincipale(): ReactElement {
       const esito = await esegui(() =>
         conNome((s) => api.rinominaCartella(attuale.percorso, valore, s), padre(attuale.percorso)),
       );
-      if (esito) await seguiCartella(attuale.percorso, esito.cartella.percorso);
+      if (esito) {
+        if (segueFocus) rigaDelFocus.current = esito.cartella.percorso;
+        await seguiCartella(attuale.percorso, esito.cartella.percorso);
+      }
     }
     await ricarica().catch(() => setBloccata(true));
   };
+
+  // Chiuso il campo con Invio o Esc, il focus torna sulla riga della cartella; dopo un clic
+  // altrove resta dove si è cliccato.
+  useEffect(() => {
+    const percorso = rigaDelFocus.current;
+    if (percorso === null || campo) return;
+    const riga = document.querySelector<HTMLElement>(`[data-cartella="${CSS.escape(percorso)}"]`);
+    if (!riga) return;
+    rigaDelFocus.current = null;
+    if (document.activeElement === document.body || document.activeElement === null) riga.focus();
+  }, [albero, campo]);
 
   const spostaCartella = async (percorso: Percorso, destinazione: Percorso) => {
     const esito = await esegui(() =>
@@ -406,6 +429,7 @@ export function FinestraPrincipale(): ReactElement {
     const fatto = await esegui(() => api.cestinaNota(id));
     if (fatto && apertaAttuale.current?.id === id) setAperta(null);
     await ricarica().catch(() => setBloccata(true));
+    if (vista === "cestino") await ricaricaCestino();
   };
 
   const cestinaCartella = async (percorso: Percorso) => {
@@ -415,6 +439,8 @@ export function FinestraPrincipale(): ReactElement {
     const nota = apertaAttuale.current;
     if (fatto && nota && dentro(nota.cartella, percorso)) setAperta(null);
     await ricarica().catch(() => setBloccata(true));
+    // Con il cestino aperto, l'elemento appena eliminato compare subito nell'elenco.
+    if (vista === "cestino") await ricaricaCestino();
   };
 
   const ripristina = async (elemento: ElementoCestino) => {
@@ -555,8 +581,8 @@ export function FinestraPrincipale(): ReactElement {
             onNuovaNota={() => void nuovaNota()}
             onNuovaCartella={nuovaCartella}
             campo={campo}
-            onConfermaCampo={(valore) => void confermaCampo(valore)}
-            onAnnullaCampo={() => setCampo(null)}
+            onConfermaCampo={(valore, daTastiera) => void confermaCampo(valore, daTastiera)}
+            onAnnullaCampo={annullaCampo}
             onMenuCartella={(percorso, x, y) => setMenuCartella({ percorso, x, y })}
             onMenuNota={(id, cartella, x, y) => setMenuRiga({ id, cartella, x, y })}
             onRinomina={(percorso) =>

@@ -244,3 +244,5 @@
 | 29/09/2026 | Manuel Cucca | RB-48, FL-05, SC-01, SC-04: confermate le cinque deduzioni del codice di Must B | Scelta di Manuel Cucca (deduzioni confermate) |
 | 29/09/2026 | Manuel Cucca | Prove finali di Must B: TC-33 … TC-38 superati; corretti la voce evidenziata di Sposta in con il filtro e la cartella della nota aperta dopo un'unione | DEC-36 |
 | 29/09/2026 | Manuel Cucca | Ambienti: set di dati «Smistare» e script `scripts/dati-di-prova.sh` per le prove a mano; avanzamento con le istruzioni per riprendere | DEC-36 |
+| 29/09/2026 | Manuel Cucca | CMP-14, CA-05.11, TC-42: chiuso il campo nome il focus torna sulla riga della cartella | Scelta di Manuel Cucca (prove finali di Must B) |
+| 29/09/2026 | Manuel Cucca | Prove finali di Must B: TC-39 … TC-50 superati (Chrome su Windows); corretti il focus alla chiusura del campo nome e l'aggiornamento del cestino aperto quando si elimina dalla colonna | DEC-36 |

@@ -251,6 +251,33 @@ describe("SC-01, cartelle (RF-05)", () => {
     expect(api.rinominaCartella).toHaveBeenCalledWith("Personale", "Ufficio", "chiedi");
   });
 
+  it("chiuso il campo nome con Esc o Invio, il focus torna sulla riga della cartella (CA-05.11)", async () => {
+    vi.mocked(api.rinominaCartella).mockResolvedValue({
+      cartella: cartella("Ufficio"),
+      daRisolvere: [],
+    });
+    render(<FinestraPrincipale />);
+    (await riga(/Personale/)).focus();
+    await userEvent.keyboard("{F2}{Escape}");
+    await waitFor(async () => expect(await riga(/Personale/)).toHaveFocus());
+    vi.mocked(api.albero).mockResolvedValue(
+      albero(alberoDiProva().nonOrganizzate.note, [
+        alberoDiProva().cartelle[0]!,
+        cartella("Ufficio"),
+      ]),
+    );
+    await userEvent.keyboard("{F2}Ufficio{Enter}");
+    await waitFor(async () => expect(await riga(/Ufficio/)).toHaveFocus());
+  });
+
+  it("dopo un clic altrove il focus resta dove si è cliccato", async () => {
+    render(<FinestraPrincipale />);
+    (await riga(/Personale/)).focus();
+    await userEvent.keyboard("{F2}");
+    await userEvent.click(await riga("Riunione di lunedì"));
+    await waitFor(async () => expect(await riga("Riunione di lunedì")).toHaveFocus());
+  });
+
   it("frecce destra e sinistra aprono e chiudono la cartella in focus (CA-05.11)", async () => {
     render(<FinestraPrincipale />);
     (await riga(/Lavoro/)).focus();
@@ -434,6 +461,25 @@ describe("SC-04 Cestino (RF-15)", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText("Cartella con 1 nota · dalle cartelle · eliminata il 20/09/2026"),
+    ).toBeInTheDocument();
+  });
+
+  it("con il cestino aperto, un elemento eliminato dalla colonna compare subito", async () => {
+    const personale: ElementoCestino = {
+      id: "e3",
+      tipo: "cartella",
+      nome: "Personale",
+      provenienza: "",
+      eliminato: "2026-09-29T10:00:00Z",
+      conteggio: 0,
+    };
+    vi.mocked(api.cestinaCartella).mockResolvedValue(personale);
+    await apriCestino();
+    vi.mocked(api.cestino).mockResolvedValue([personale, ...elementi]);
+    fireEvent.contextMenu(await riga(/Personale/));
+    await userEvent.click(screen.getByRole("menuitem", { name: "Elimina" }));
+    expect(
+      await screen.findByText("Cartella con 0 note · dalle cartelle · eliminata il 29/09/2026"),
     ).toBeInTheDocument();
   });
 

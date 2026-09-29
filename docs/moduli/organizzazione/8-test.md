@@ -11,18 +11,18 @@
 | TC-36 | RF-05 CA-05.5 | Premere il + delle Cartelle, scrivere «Idee» e Invio: nasce «Idee» in ordine alfabetico; ripetere premendo Esc: non nasce niente, né in Memodu né sul disco | Locale | Albero di prova || Superato il 29/09/2026 (Chrome, cartella di prova) |
 | TC-37 | RF-05 CA-05.6 | Rinominare «Idee» in «Idee: 2026?» con F2: diventa «Idee- 2026-» anche sul disco; rinominare e premere Esc: resta il nome di prima | Locale | Albero di prova || Superato il 29/09/2026 (Chrome, cartella di prova) |
 | TC-38 | RF-05 CA-05.7 | Rinominare una cartella in «clienti» accanto a «Clienti»: compare la finestra; provare Annulla, Aggiungi un numero («clienti (2)») e Unisci con una sottocartella omonima (la finestra ricompare) | Locale | Due cartelle con sottocartelle omonime || Superato il 29/09/2026 (Chrome, cartella di prova) |
-| TC-39 | RF-05 CA-05.8 | Trascinare «Lavoro» su «Clienti», sua sottocartella: nessuna evidenziazione, nessuna modifica | Locale | Albero di prova | |
-| TC-40 | RF-05 CA-05.9 | Tasto destro su «Lavoro» → Nuova nota qui: la nota nasce in «Lavoro», aperta; poi il + delle Non organizzate con quella nota aperta: la nuova nasce tra le non organizzate | Locale | Albero di prova | |
-| TC-41 | RF-05 CA-05.10 | Cancellare «Clienti» dal Finder con Memodu aperto, poi rinominarla in Memodu: compare l'avviso e la colonna si aggiorna | Locale | Albero di prova | |
-| TC-42 | RF-05 CA-05.11 | Solo tastiera: frecce, destra e sinistra, Invio, F2 nella colonna; controllo con VoiceOver (RNF-04) | Locale | Albero di prova | |
-| TC-43 | RF-05 CA-05.12 | Senza cartelle: sotto «Cartelle» compare «Nessuna cartella. Creane una con +» | Locale | Solo note non organizzate | |
-| TC-44 | RF-15 CA-15.1, CA-15.2 | Eliminare la nota aperta dal menu `···`, poi una cartella che contiene la nota aperta dal tasto destro: nessuna conferma, stato vuoto nell'area della nota, entrambe nel cestino con il contenuto | Locale | Albero di prova | |
-| TC-45 | RF-15 CA-15.3 | Trascinare una nota e poi una cartella sul cestino in fondo alla colonna: compare, diventa rosso, al rilascio l'elemento è nel cestino | Locale | Albero di prova | |
-| TC-46 | RF-15 CA-15.4 | Eliminare tre elementi in momenti diversi: la riga Cestino in fondo alla colonna mostra 3; aprirla: il più recente in cima, testi di tipo, provenienza e data corretti | Locale | Tre elementi eliminati | |
-| TC-47 | RF-15 CA-15.5 | Ripristinare una nota di «Clienti» e una sottocartella: tornano tra le non organizzate e al primo livello; ripristinare una cartella con un nome già al primo livello: compare la finestra | Locale | Cestino con elementi | |
-| TC-48 | RF-15 CA-15.6 | Elimina definitivamente: Annulla lascia l'elemento; confermando sparisce anche da `.cestino` sul disco | Locale | Cestino con elementi | |
-| TC-49 | RF-15 CA-15.7 | Svuota cestino: la conferma indica il numero di elementi; dopo, «Il cestino è vuoto» e niente pulsante Svuota | Locale | Cestino con tre elementi | |
-| TC-50 | RF-15 CA-15.8 | Chiudere e riaprire Memodu: gli elementi del cestino ci sono ancora | Locale | Cestino con elementi | |
+| TC-39 | RF-05 CA-05.8 | Trascinare «Lavoro» su «Clienti», sua sottocartella: nessuna evidenziazione, nessuna modifica | Locale | Albero di prova | Superato il 29/09/2026 (Chrome su Windows, cartella di prova) |
+| TC-40 | RF-05 CA-05.9 | Tasto destro su «Lavoro» → Nuova nota qui: la nota nasce in «Lavoro», aperta; poi il + delle Non organizzate con quella nota aperta: la nuova nasce tra le non organizzate | Locale | Albero di prova | Superato il 29/09/2026 (Chrome su Windows, cartella di prova) |
+| TC-41 | RF-05 CA-05.10 | Cancellare «Clienti» dal Finder con Memodu aperto, poi rinominarla in Memodu: compare l'avviso e la colonna si aggiorna | Locale | Albero di prova | Superato il 29/09/2026 (Chrome su Windows, cartella di prova); la cartella è stata cancellata dal disco al posto del Finder |
+| TC-42 | RF-05 CA-05.11 | Solo tastiera: frecce, destra e sinistra, Invio, F2 nella colonna; dopo F2, con Invio e con Esc il focus torna sulla riga della cartella; controllo con VoiceOver (RNF-04) | Locale | Albero di prova | Superato il 29/09/2026 (Chrome su Windows, cartella di prova) dopo la correzione del focus alla chiusura del campo nome; VoiceOver da provare su macOS |
+| TC-43 | RF-05 CA-05.12 | Senza cartelle: sotto «Cartelle» compare «Nessuna cartella. Creane una con +» | Locale | Solo note non organizzate | Superato il 29/09/2026 (Chrome su Windows, cartella di prova) |
+| TC-44 | RF-15 CA-15.1, CA-15.2 | Eliminare la nota aperta dal menu `···`, poi una cartella che contiene la nota aperta dal tasto destro: nessuna conferma, stato vuoto nell'area della nota, entrambe nel cestino con il contenuto | Locale | Albero di prova | Superato il 29/09/2026 (Chrome su Windows, cartella di prova) |
+| TC-45 | RF-15 CA-15.3 | Trascinare una nota e poi una cartella sul cestino in fondo alla colonna: compare, diventa rosso, al rilascio l'elemento è nel cestino | Locale | Albero di prova | Superato il 29/09/2026 (Chrome su Windows, cartella di prova), con gli eventi di trascinamento mandati alla pagina |
+| TC-46 | RF-15 CA-15.4 | Eliminare tre elementi in momenti diversi: la riga Cestino in fondo alla colonna mostra 3; aprirla: il più recente in cima, testi di tipo, provenienza e data corretti | Locale | Tre elementi eliminati | Superato il 29/09/2026 (Chrome su Windows, cartella di prova) |
+| TC-47 | RF-15 CA-15.5 | Ripristinare una nota di «Clienti» e una sottocartella: tornano tra le non organizzate e al primo livello; ripristinare una cartella con un nome già al primo livello: compare la finestra | Locale | Cestino con elementi | Superato il 29/09/2026 (Chrome su Windows, cartella di prova); «Unisci» non provato |
+| TC-48 | RF-15 CA-15.6 | Elimina definitivamente: Annulla lascia l'elemento; confermando sparisce anche da `.cestino` sul disco | Locale | Cestino con elementi | Superato il 29/09/2026 (Chrome su Windows, cartella di prova) |
+| TC-49 | RF-15 CA-15.7 | Svuota cestino: la conferma indica il numero di elementi; dopo, «Il cestino è vuoto» e niente pulsante Svuota | Locale | Cestino con tre elementi | Superato il 29/09/2026 (Chrome su Windows, cartella di prova) |
+| TC-50 | RF-15 CA-15.8 | Chiudere e riaprire Memodu: gli elementi del cestino ci sono ancora | Locale | Cestino con elementi | Superato il 29/09/2026 (Chrome su Windows, cartella di prova), riavviando il server |
 
 ## Domande aperte
 | Riguarda | Domanda | Chi risponde | Risposta | Decisione |
@@ -44,3 +44,5 @@
 | FL-05 | Una nota trascinata sul titolo «Non organizzate» torna nella radice, una cartella sul titolo «Cartelle» va al primo livello? Deduzione dell'agente | Manuel Cucca | Sì | |
 | SC-04 | Testi per cartella vuota e con una sola nota nella conferma di eliminazione definitiva? Deduzione dell'agente | Manuel Cucca | Sì | |
 | SC-01, RB-67 | Con note ma nessuna aperta, «Nessuna nota aperta» con il testo del componente? Deduzione dell'agente | Manuel Cucca | Sì | |
+| CMP-14, RNF-04 | Chiuso il campo nome dopo F2 (Invio o Esc), dove torna il focus? Nelle prove finali finiva sulla pagina | Manuel Cucca | Sulla riga della cartella | |
+| SC-04, FL-05 | Con il cestino aperto, un elemento eliminato dalla colonna deve comparire subito nell'elenco? Nelle prove finali restava l'elenco vecchio | Manuel Cucca | Sì | |
