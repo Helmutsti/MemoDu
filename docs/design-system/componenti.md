@@ -381,7 +381,7 @@ Compare e sparisce con `movimento-durata-breve` (120 ms). Compare dopo 500 ms di
 Compare con `movimento-durata-breve` (120 ms) e `movimento-spostamento` (4 px). Si chiude con Esc, con un clic fuori o scegliendo una voce. Se non c'è spazio sotto si apre sopra.
 
 ### Accessibilità
-- **Tastiera:** come in CMP-07. Nel menu di inserimento si continua a scrivere per filtrare le voci (es. "/tit"); nei suggerimenti dei tag le frecce scelgono e Invio conferma.
+- **Tastiera:** come in CMP-07. Nel menu di inserimento si continua a scrivere per filtrare le voci (es. "/tit"), e Invio senza una voce evidenziata chiude il menu e va a capo; negli altri menu Invio senza voce evidenziata chiude soltanto; nei suggerimenti dei tag le frecce scelgono e Invio conferma.
 - **Lettori di schermo:** ruolo "menu" con il nome di ciò che lo ha aperto (es. "Menu della nota"); alla chiusura il focus torna dove era.
 - **Contrasti:** vedi CMP-07.
 

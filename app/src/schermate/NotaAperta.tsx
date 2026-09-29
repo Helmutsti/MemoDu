@@ -1,7 +1,7 @@
 // SC-03 Schermata di scrittura: campo titolo (può restare vuoto, RB-15), sotto la riga dei
 // metadati (ultima modifica e tag in sola lettura, DEC-44) e il testo della nota. Titolo e
 // riga restano fissi e scorre il solo corpo.
-// Il salvataggio arriva con l'attività 7: qui le modifiche risalgono con onModifica.
+// Le modifiche risalgono con onModifica: il salvataggio lo fa la finestra principale (RB-06).
 
 import type { ReactElement } from "react";
 import type { DatiNota, Nota } from "@memodu/condiviso";

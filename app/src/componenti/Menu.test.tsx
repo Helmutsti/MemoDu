@@ -56,4 +56,28 @@ describe("CMP-09 Menu", () => {
     apri([{ tipo: "voce", etichetta: "Grassetto", icona: Bold, scorciatoia: "Ctrl + B" }]);
     expect(screen.getByRole("menuitem")).toHaveTextContent("GrassettoCtrl + B");
   });
+
+  it("Invio senza voce evidenziata chiude il menu e non passa il tasto", () => {
+    const onChiudi = apri([{ tipo: "voce", etichetta: "Voce", azione: vi.fn() }]);
+    expect(fireEvent.keyDown(window, { key: "Enter" })).toBe(false);
+    expect(onChiudi).toHaveBeenCalled();
+  });
+
+  it("nel menu «/» Invio senza voce evidenziata chiude e va a capo nel testo", () => {
+    const azione = vi.fn();
+    const onChiudi = vi.fn();
+    render(
+      <Menu
+        etichetta="Inserisci"
+        voci={[{ tipo: "voce", etichetta: "Voce", azione }]}
+        x={10}
+        y={10}
+        onChiudi={onChiudi}
+        invioAlTesto
+      />,
+    );
+    expect(fireEvent.keyDown(window, { key: "Enter" })).toBe(true);
+    expect(onChiudi).toHaveBeenCalled();
+    expect(azione).not.toHaveBeenCalled();
+  });
 });

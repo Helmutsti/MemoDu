@@ -28,7 +28,13 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 - 
 
 ### Corretto
-- 
+- Le note lunghe si salvano anche chiudendo la finestra subito dopo aver scritto (RF-02)
+- Se il server non risponde più volte di fila, dopo Riprova si salva l'ultimo testo scritto e non uno precedente (RF-01, RF-02)
+- «Esci da Memodu» e Alt + F4 sulla nota rapida salvano prima di chiudere; se il testo non si può salvare, Memodu chiede conferma (RF-01)
+- Una nota rapida cancellata fino a restare vuota non lascia più una «Nota vuota» nell'elenco (RF-01)
+- Scrivendo / e premendo Invio si va a capo invece di perdere il tasto (RF-02)
+- Unendo cartelle con sottocartelle dallo stesso nome non restano cartelle vuote, anche ripristinando dal cestino (RF-05, RF-15)
+- Dopo aver creato una cartella o usato «Sposta in…» da tastiera si resta sulla riga giusta (RF-05)
 
 <!--
 Modello per una versione rilasciata:

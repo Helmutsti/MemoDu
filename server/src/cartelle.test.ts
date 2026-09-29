@@ -108,9 +108,8 @@ describe("cartelle (RB-23, RB-24, RB-31, RB-48, RB-63)", () => {
   it("dà il nome «Nuova cartella» con un numero se c'è già", async () => {
     expect((await archivio.creaCartella("")).cartella.nome).toBe("Nuova cartella");
     expect((await archivio.creaCartella("")).cartella.nome).toBe("Nuova cartella (2)");
-    expect((await archivio.creaCartella("", "Nuova cartella")).cartella.nome).toBe(
-      "Nuova cartella (3)",
-    );
+    // Scritto a mano non è più il nome proposto: con un omonimo compare la finestra (CA-05.7).
+    await expect(archivio.creaCartella("", "Nuova cartella")).rejects.toBeInstanceOf(NomeEsistente);
   });
 
   it("sostituisce i caratteri vietati e rifiuta un nome vuoto", async () => {
@@ -325,5 +324,52 @@ describe("note vuote (RB-10, DEC-39)", () => {
     await expect(archivio.eliminaSeVuota(piena.id)).rejects.toBeInstanceOf(NotaNonVuota);
     expect((await archivio.elenca()).map((v) => v.id)).toEqual([piena.id]);
     expect(await archivio.elencaCestino()).toEqual([]);
+  });
+});
+
+describe("unione su più livelli (RB-31, CA-05.7, CA-15.5)", () => {
+  const nomi = (cartelle: { nome: string; cartelle: unknown[] }[]): unknown =>
+    cartelle.map((c) => ({ [c.nome]: nomi(c.cartelle as never) }));
+  const crea = async (...percorsi: string[]) => {
+    for (const p of percorsi) {
+      const parti = p.split("/");
+      await nuova(parti.slice(0, -1).join("/"), parti.at(-1)!);
+    }
+  };
+
+  it("spostando e unendo livello per livello non restano cartelle di partenza vuote", async () => {
+    await crea("A", "A/X", "A/X/Y", "B", "B/A", "B/A/X", "B/A/X/Y", "Vuota");
+    await archivio.crea({ titolo: "n", contenuto: "t", cartella: "A/X/Y" });
+    let esito = await archivio.spostaCartella("A", "B", "unisci");
+    expect(esito.daRisolvere).toEqual(["A/X"]);
+    esito = await archivio.spostaCartella("A/X", "B/A", "unisci", true);
+    expect(esito.daRisolvere).toEqual(["A/X/Y"]);
+    await archivio.spostaCartella("A/X/Y", "B/A/X", "unisci", true);
+    expect(nomi(await radice())).toEqual([{ B: [{ A: [{ X: [{ Y: [] }] }] }] }, { Vuota: [] }]);
+  });
+
+  it("ripristinando con Unisci non resta la cartella provvisoria vuota", async () => {
+    await crea("I", "I/Ar", "I/Ar/25");
+    const elemento = await archivio.cestinaCartella("I");
+    await crea("I", "I/Ar", "I/Ar/25");
+    const esito = (await archivio.ripristina(elemento.id, "unisci")) as EsitoCartella;
+    let passo = await archivio.spostaCartella(esito.daRisolvere[0]!, "I", "unisci", true);
+    passo = await archivio.spostaCartella(passo.daRisolvere[0]!, "I/Ar", "unisci", true);
+    expect(passo.daRisolvere).toEqual([]);
+    expect(nomi(await radice())).toEqual([{ I: [{ Ar: [{ "25": [] }] }] }]);
+  });
+
+  it("la cartella che conteneva quella spostata resta, anche se vuota", async () => {
+    await crea("Progetti", "Progetti/X", "Altro", "Altro/X");
+    await archivio.spostaCartella("Progetti/X", "Altro", "unisci");
+    expect(nomi(await radice())).toEqual([{ Altro: [{ X: [] }] }, { Progetti: [] }]);
+  });
+});
+
+describe("nomi fatti solo di caratteri vietati (RB-63, CA-05.6)", () => {
+  it("«???» diventa «---», non «Senza titolo»", async () => {
+    await nuova("", "Idee");
+    const esito = await archivio.rinominaCartella("Idee", "???");
+    expect(esito.cartella.nome).toBe("---");
   });
 });

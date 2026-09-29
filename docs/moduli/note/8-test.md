@@ -6,11 +6,11 @@
 | Codice | Riferimento | Caso di prova | Ambiente | Set di dati | Esito |
 |---|---|---|---|---|---|
 | TC-01 | RF-01 CA-01.1 | Da un altro programma premere la scorciatoia: SC-02 compare entro 0,2 s con il cursore pronto | Locale | Nessuna nota | |
-| TC-02 | RF-01 CA-01.2 | Scrivere in una nota rapida e chiuderla con Chiudi, poi con il tasto Esc, poi con un clic fuori: ogni volta la nota è in cima all'elenco | Locale | Quattro note di prova | |
+| TC-02 | RF-01 CA-01.2 | Scrivere in una nota rapida e chiuderla con Chiudi, poi con il tasto Esc: ogni volta la nota è in cima all'elenco. Un clic su un altro programma salva e la lascia aperta (DEC-53) | Locale | Quattro note di prova | |
 | TC-03 | RF-01 CA-01.3 | Aprire e chiudere una nota rapida senza scrivere: l'elenco non cambia | Locale | Una nota di prova | |
-| TC-04 | RF-01 CA-01.4 | Con una nota rapida aperta premere di nuovo la scorciatoia, tre volte: finestre a cascata di 32 px, le precedenti salvate | Locale | Nessuna nota | |
+| TC-04 | RF-01 CA-01.4 | Con una nota rapida aperta premere di nuovo la scorciatoia, tre volte: finestre a cascata di 32 px, le precedenti salvate | Locale | Nessuna nota | Superato il 29/09/2026 (Manuel Cucca, Tauri su Windows): tre note rapide a cascata, tutte aperte, dopo la correzione di RB-04 e DEC-53 |
 | TC-05 | RF-01 CA-01.5 | Con una nota aperta nel programma, scegliere Apri nel programma dalla freccia di Chiudi di una nota rapida: la prima è salvata e chiusa, la rapida la sostituisce | Locale | Una nota di prova aperta | |
-| TC-06 | RF-01 CA-01.6 | Dall'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) aprire la nota rapida e il programma | Locale | — | |
+| TC-06 | RF-01 CA-01.6 | Dall'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) aprire la nota rapida e il programma | Locale | — | In parte il 29/09/2026 (Manuel Cucca, Tauri su Windows): «Nuova nota rapida» dall'icona superata; «Apri Memodu» e macOS da provare |
 | TC-07 | RF-01 CA-01.7 | Spegnere il server, scrivere in una nota rapida: compare SC-07; avviare il server e premere Riprova: la nota è salvata con tutto il testo | Locale | Server spento | |
 | TC-08 | RF-01 CA-01.8 | Con SC-07 visibile chiudere la nota rapida: compare la conferma; Annulla lascia il testo, Chiudi comunque chiude | Locale | Server spento | |
 | TC-09 | RF-02 CA-02.1 | Premere + e Nuova nota: nasce una nota vuota in cima con il cursore nel corpo; lasciata vuota aprendo un'altra nota sparisce dall'elenco e dal database; con del testo resta | Locale | Nessuna nota e poi tre note | |
@@ -26,7 +26,7 @@
 | TC-19 | RF-02 CA-02.11 | Fare testo, formattazione e cancellazioni, poi Ctrl + Z più volte: ogni modifica si annulla in ordine | Locale | Nota con testo | |
 | TC-20 | RF-02 CA-02.12 | Chiudere a forza il programma e poi il server durante la scrittura; riaprire: c'è l'ultimo salvataggio e il database si apre | Locale | Nota con testo | |
 | TC-21 | RF-02 CA-02.13 | Server spento o errore di scrittura (database in sola lettura, nota oltre 10 MB, nota eliminata da fuori): SC-07, testo in memoria, conferma alla chiusura | Locale | Server spento, nota da 11 MB | |
-| TC-22 | FL-01 × SF-01, SF-04 | Scorciatoia ripetuta con note rapide aperte (vedi CA-01.4) | Locale | Nessuna nota | |
+| TC-22 | FL-01 × SF-01, SF-04 | Scorciatoia ripetuta con note rapide aperte (vedi CA-01.4) | Locale | Nessuna nota | Superato il 29/09/2026 (Manuel Cucca, Tauri su Windows), vedi TC-04 |
 | TC-23 | FL-01 × SF-02 | Chiudere la finestra senza scegliere: nota salvata (vedi CA-01.2) | Locale | — | |
 | TC-24 | FL-01 × SF-16 | Nota rapida chiusa vuota (vedi CA-01.3) | Locale | — | |
 | TC-25 | FL-01 × SF-30 | Server spento durante la nota rapida (vedi CA-01.7, CA-01.8) | Locale | Server spento | |
@@ -37,12 +37,12 @@
 | TC-30 | FL-02 × SF-36 | Input malevolo (vedi CA-02.9) | Locale | — | |
 | TC-31 | FL-09 × SF-01 | Premere + più volte di fila: a ogni clic nasce una nota vuota e quella lasciata vuota sparisce, ne resta una sola (DEC-39, RB-10) | Locale | Nessuna nota | |
 | TC-32 | FL-09 × SF-16 | Nuova nota lasciata vuota (vedi CA-02.1) | Locale | — | |
-| TC-51 | RF-04 CA-04.1 | Aprire una nota con due tag e una senza: sotto il titolo «Modificata oggi alle …» e i tag senza ✕; senza tag solo la data. Una nota modificata ieri: «Modificata il … alle …» | Locale | Note con e senza tag | |
-| TC-52 | RF-04 CA-04.2 | Aprire Dettagli dal `···` e poi dal tasto destro su una nota della colonna: finestra al centro con il velo e il titolo della nota; Esc e ✕ la chiudono e il focus torna sul `···` o sulla riga | Locale | Note con e senza tag | |
-| TC-53 | RF-04 CA-04.3 | Scegliere 01/01/2020 come data di creazione: riaprendo Dettagli c'è ancora; «Creata il … alle …» non cambia. Scrivere 31/02/2021 e Invio: sotto il campo «Data non valida: scrivi GG/MM/AAAA», che sparisce correggendo la data; uscendo con una data che non esiste torna quella di prima (DEC-52) | Locale | Una nota | |
-| TC-54 | RF-04 CA-04.4 | Scegliere una fine validità già passata, poi toglierla con «Nessuna data»: si salva ogni volta, e con la data passata non succede niente | Locale | Una nota | |
-| TC-55 | RF-04 CA-04.5 | Dettagli di una nota in «Lavoro › Clienti» e di una non organizzata: «Lavoro › Clienti» e «Non organizzata», non modificabili | Locale | Albero di prova | |
-| TC-56 | RF-04 CA-04.6 | Cambiare una data e poi un tag di una nota in fondo all'elenco: sale in cima e «Modificata» diventa «oggi» | Locale | Tre note non organizzate | |
+| TC-51 | RF-04 CA-04.1 | Aprire una nota con due tag e una senza: sotto il titolo «Modificata oggi alle …» e i tag senza ✕; senza tag solo la data. Una nota modificata ieri: «Modificata il … alle …» | Locale | Note con e senza tag | Superato il 29/09/2026 (agente, Chrome su Windows) |
+| TC-52 | RF-04 CA-04.2 | Aprire Dettagli dal `···` e poi dal tasto destro su una nota della colonna: finestra al centro con il velo e il titolo della nota; Esc e ✕ la chiudono e il focus torna sul `···` o sulla riga | Locale | Note con e senza tag | Superato il 29/09/2026 (agente, Chrome su Windows) |
+| TC-53 | RF-04 CA-04.3 | Scegliere 01/01/2020 come data di creazione: riaprendo Dettagli c'è ancora; «Creata il … alle …» non cambia. Scrivere 31/02/2021 e Invio: sotto il campo «Data non valida: scrivi GG/MM/AAAA», che sparisce correggendo la data; uscendo con una data che non esiste torna quella di prima (DEC-52) | Locale | Una nota | Superato il 29/09/2026 (agente, Chrome su Windows) |
+| TC-54 | RF-04 CA-04.4 | Scegliere una fine validità già passata, poi toglierla con «Nessuna data»: si salva ogni volta, e con la data passata non succede niente | Locale | Una nota | Superato il 29/09/2026 (agente, Chrome su Windows) |
+| TC-55 | RF-04 CA-04.5 | Dettagli di una nota in «Lavoro › Clienti» e di una non organizzata: «Lavoro › Clienti» e «Non organizzata», non modificabili | Locale | Albero di prova | Superato il 29/09/2026 (agente, Chrome su Windows) |
+| TC-56 | RF-04 CA-04.6 | Cambiare una data e poi un tag di una nota in fondo all'elenco: sale in cima e «Modificata» diventa «oggi» | Locale | Tre note non organizzate | Superato il 29/09/2026 (agente, Chrome su Windows) |
 
 Frammento Must A. Ambiente Locale, l'unico della prima fase (`architettura/ambienti.md`); set di dati inventati, senza dati personali reali. FL-09 × SF-20 riguarda la sincronizzazione ed è fuori da Must A.
 

@@ -175,6 +175,9 @@ const ordine = (a: string, b: string) => a.localeCompare(b, "it", { sensitivity:
 
 export class ArchivioNote {
   private db: Database.Database;
+  /** Cartelle di partenza di un'unione con sottocartelle ancora da risolvere (RB-31): quando
+   * l'ultima esce, spariscono anche loro, un livello alla volta. */
+  private originiUnione = new Set<string>();
   private readonly file: string;
   private chiuso = false;
 
@@ -320,12 +323,9 @@ export class ArchivioNote {
       valida(genitore);
       const idGenitore = this.idCartella(genitore);
       const voluto = nome === undefined ? NUOVA_CARTELLA : nomeCartella(nome);
-      // Il nome proposto prende da solo un numero (RB-48); un nome scelto segue RB-31.
-      const scelta = this.risolvi(
-        idGenitore,
-        voluto,
-        voluto === NUOVA_CARTELLA ? "numero" : seEsiste,
-      );
+      // Il nome proposto (senza `nome`) prende da solo un numero (RB-48); un nome scritto,
+      // anche «Nuova cartella», segue RB-31.
+      const scelta = this.risolvi(idGenitore, voluto, nome === undefined ? "numero" : seEsiste);
       // Unendo una cartella nuova, e quindi vuota, a una esistente non c'è niente da spostare.
       const id = scelta.unisci ? scelta.id! : this.inserisciCartella(scelta.nome, idGenitore);
       return { cartella: this.descrivi(id, scelta.nome, genitore), daRisolvere: [] };
@@ -827,6 +827,7 @@ export class ArchivioNote {
     this.db
       .prepare("UPDATE note SET cartella = ? WHERE cartella = ? AND eliminata_il IS NULL")
       .run(arrivo, origine);
+    if (daRisolvere.length > 0) this.originiUnione.add(origine);
     this.togliSeVuota(origine);
     return daRisolvere;
   }
@@ -842,10 +843,17 @@ export class ArchivioNote {
     const note = this.db
       .prepare("SELECT 1 FROM note WHERE cartella = ? AND eliminata_il IS NULL")
       .get(id);
-    if (cartelle || note) return;
+    const riga = this.db.prepare("SELECT madre FROM cartelle WHERE id = ?").get(id) as
+      { madre: string | null } | undefined;
+    // Già tolta risalendo da una sottocartella unita.
+    if (cartelle || note || !riga) return;
+    const { madre } = riga;
     this.db.prepare("UPDATE cartelle SET madre = NULL WHERE madre = ?").run(id);
     this.db.prepare("UPDATE note SET cartella = NULL WHERE cartella = ?").run(id);
     this.db.prepare("DELETE FROM cartelle WHERE id = ?").run(id);
+    this.originiUnione.delete(id);
+    // Unione su più livelli: se anche la madre era una cartella di partenza, può sparire.
+    if (madre !== null && this.originiUnione.has(madre)) this.togliSeVuota(madre);
   }
 
   /**
@@ -919,6 +927,10 @@ function valida(percorso: Percorso, radice = true): void {
 /** Nome di una cartella: i caratteri vietati diventano "-" (RB-63); vuoto non è ammesso. */
 function nomeCartella(nome: string): string {
   if (nome.trim() === "") throw new PercorsoNonValido("Il nome è vuoto");
+  // Un nome fatto solo di caratteri vietati resta di trattini («???» → «---»), non «Senza
+  // titolo», che è il ripiego delle note; «.» e «..» restano esclusi da baseNome.
+  const trattini = nome.replace(/[<>:"/\\|?*\p{Cc}]/gu, "-").replace(/\s+/g, "");
+  if (/^-+$/.test(trattini)) return trattini.slice(0, LUNGHEZZA_MASSIMA_NOME);
   return baseNome(nome);
 }
 

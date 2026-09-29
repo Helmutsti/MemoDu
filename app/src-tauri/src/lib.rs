@@ -7,14 +7,17 @@
 //   o il programma (CA-01.6).
 // - Note rapide: finestre senza cornice, sempre in primo piano, 480 × 320, a cascata di 32 px
 //   sullo schermo del puntatore; arrivata al bordo, la cascata riparte (SF-04).
+// - «Esci da Memodu»: ogni finestra salva e risponde; con testo non salvato chiede prima
+//   conferma (RB-62). Si esce quando tutte hanno risposto.
 
+use std::collections::HashSet;
 use std::sync::Mutex;
 
 use tauri::menu::{Menu, MenuItem, PredefinedMenuItem};
 use tauri::tray::TrayIconBuilder;
 use tauri::{
-    AppHandle, Emitter, Manager, PhysicalPosition, PhysicalSize, RunEvent, WebviewUrl,
-    WebviewWindowBuilder,
+    AppHandle, Emitter, Manager, PhysicalPosition, PhysicalSize, RunEvent, State, WebviewUrl,
+    WebviewWindow, WebviewWindowBuilder, WindowEvent,
 };
 use tauri_plugin_global_shortcut::{Code, Modifiers, Shortcut, ShortcutState};
 
@@ -75,10 +78,9 @@ fn prossima_posizione(app: &AppHandle, cascata: &mut Cascata) -> Option<(f64, f6
     Some((posizione.x as f64 / scala, posizione.y as f64 / scala))
 }
 
-/// Apre una nuova nota rapida. Le note rapide già aperte ricevono "nuova-rapida": così non si
-/// chiudono perdendo il focus, ma si salvano e restano aperte (RB-04).
+/// Apre una nuova nota rapida. Quelle già aperte perdono il focus: si salvano e restano aperte
+/// (RB-04, DEC-53).
 fn apri_nota_rapida(app: &AppHandle) {
-    let _ = app.emit("nuova-rapida", ());
     let stato = app.state::<Mutex<Cascata>>();
     let mut cascata = stato.lock().unwrap();
     cascata.contatore += 1;
@@ -98,6 +100,9 @@ fn apri_nota_rapida(app: &AppHandle) {
     .always_on_top(true)
     .skip_taskbar(true)
     .resizable(true)
+    // Come la finestra principale (dragDropEnabled: false): il trascinamento di testo arriva
+    // all'editor invece che al gestore dei file di Tauri.
+    .disable_drag_drop_handler()
     .focused(true);
     if let Some((x, y)) = posizione {
         finestra = finestra.position(x, y);
@@ -116,6 +121,49 @@ fn mostra_programma(app: &AppHandle) {
     }
 }
 
+/// Finestre che devono ancora rispondere a «Esci da Memodu»; None se non si sta uscendo.
+#[derive(Default)]
+struct Uscita {
+    attese: Option<HashSet<String>>,
+}
+
+/// «Esci da Memodu»: le finestre ricevono "esci-richiesto", salvano e rispondono con
+/// `pronta_a_uscire`; con testo non salvato mostrano prima la conferma (RB-62).
+fn richiedi_uscita(app: &AppHandle) {
+    let finestre: HashSet<String> = app.webview_windows().keys().cloned().collect();
+    if finestre.is_empty() {
+        app.exit(0);
+        return;
+    }
+    app.state::<Mutex<Uscita>>().lock().unwrap().attese = Some(finestre);
+    let _ = app.emit("esci-richiesto", ());
+}
+
+/// Una finestra ha risposto (o è stata chiusa): quando mancano zero finestre, si esce.
+fn finestra_pronta(app: &AppHandle, etichetta: &str) {
+    let stato = app.state::<Mutex<Uscita>>();
+    let mut uscita = stato.lock().unwrap();
+    if let Some(attese) = uscita.attese.as_mut() {
+        attese.remove(etichetta);
+        if attese.is_empty() {
+            uscita.attese = None;
+            drop(uscita);
+            app.exit(0);
+        }
+    }
+}
+
+#[tauri::command]
+fn pronta_a_uscire(app: AppHandle, window: WebviewWindow) {
+    finestra_pronta(&app, window.label());
+}
+
+/// Annulla nella conferma: Memodu resta aperto.
+#[tauri::command]
+fn uscita_annullata(stato: State<Mutex<Uscita>>) {
+    stato.lock().unwrap().attese = None;
+}
+
 fn scorciatoia_nota_rapida() -> Shortcut {
     Shortcut::new(Some(Modifiers::CONTROL | Modifiers::ALT), Code::KeyN)
 }
@@ -124,6 +172,13 @@ fn scorciatoia_nota_rapida() -> Shortcut {
 pub fn run() {
     tauri::Builder::default()
         .manage(Mutex::new(Cascata::default()))
+        .manage(Mutex::new(Uscita::default()))
+        .invoke_handler(tauri::generate_handler![pronta_a_uscire, uscita_annullata])
+        .on_window_event(|finestra, evento| {
+            if let WindowEvent::Destroyed = evento {
+                finestra_pronta(finestra.app_handle(), finestra.label());
+            }
+        })
         .plugin(
             tauri_plugin_global_shortcut::Builder::new()
                 .with_handler(|app, scorciatoia, evento| {
@@ -156,7 +211,7 @@ pub fn run() {
                 .on_menu_event(|app, evento| match evento.id().as_ref() {
                     "nota-rapida" => apri_nota_rapida(app),
                     "programma" => mostra_programma(app),
-                    "esci" => app.exit(0),
+                    "esci" => richiedi_uscita(app),
                     _ => {}
                 })
                 .build(app)?;
@@ -164,12 +219,12 @@ pub fn run() {
         })
         .build(tauri::generate_context!())
         .expect("Memodu non è riuscito ad avviarsi")
-        .run(|app, evento| match evento {
+        .run(|_app, evento| match evento {
             // Memodu resta attivo in background anche senza finestre aperte (RF-01).
             RunEvent::ExitRequested { api, code, .. } if code.is_none() => api.prevent_exit(),
             // macOS: clic sull'icona nel Dock con la finestra nascosta.
             #[cfg(target_os = "macos")]
-            RunEvent::Reopen { .. } => mostra_programma(app),
+            RunEvent::Reopen { .. } => mostra_programma(_app),
             _ => {}
         });
 }

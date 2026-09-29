@@ -28,7 +28,7 @@ Premo la scorciatoia e compare la finestra della nota rapida. A quel punto posso
 Frammento Must A: la scorciatoia è fissa (Ctrl + Alt + N su Windows, Control + Option + N su macOS); cambiarla dalle impostazioni (RF-11, SC-06) arriva con il frammento Must.
 
 - **CA-01.1** *Dato* Memodu in background, *quando* premo la scorciatoia da un altro programma, *allora* entro 0,2 s compare SC-02 con il cursore nell'area di scrittura (RNF-01).
-- **CA-01.2** *Dato* una nota rapida con del testo, *quando* la chiudo con Chiudi, con il tasto Esc o con un clic fuori, *allora* la finestra si chiude e la nota compare in cima all'elenco del programma, nella radice (RB-01, RB-02, RB-60).
+- **CA-01.2** *Dato* una nota rapida con del testo, *quando* la chiudo con Chiudi o con il tasto Esc, *allora* la finestra si chiude e la nota compare in cima all'elenco del programma, nella radice (RB-01, RB-02, RB-60).
 - **CA-01.3** *Dato* una nota rapida vuota, *quando* la chiudo, *allora* non nasce nessuna nota (RB-03, SF-16).
 - **CA-01.4** *Dato* una nota rapida aperta, *quando* premo di nuovo la scorciatoia, *allora* la prima viene salvata e resta aperta, e ne compare un'altra spostata di 32 px a destra e in basso (RB-04, SF-01, SF-04).
 - **CA-01.5** *Dato* una nota rapida con del testo e un'altra nota aperta nel programma, *quando* dalla freccia di Chiudi scelgo Apri nel programma, *allora* la nota del programma viene salvata e chiusa e al suo posto si apre la nota rapida (RB-05).

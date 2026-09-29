@@ -29,7 +29,15 @@ import { Menu, type VoceMenu } from "../componenti/Menu";
 import { PannelloSpostaIn } from "../componenti/PannelloSpostaIn";
 import { Pulsante, PulsanteIcona } from "../componenti/Pulsante";
 import { StatoVuoto } from "../componenti/StatoVuoto";
-import { alChiudere, allaRichiestaDiApertura, chiudiFinestra } from "../finestra";
+import {
+  alChiudere,
+  allaRichiestaDiApertura,
+  allUscita,
+  annullaUscita,
+  chiudiFinestra,
+  confermaUscita,
+  mostraFinestra,
+} from "../finestra";
 import { CodaSalvataggio } from "../salvataggio";
 import { Blocco } from "./Blocco";
 import { Cestino } from "./Cestino";
@@ -108,6 +116,8 @@ export function FinestraPrincipale(): ReactElement {
     cartella: Percorso;
     destra: number;
     y: number;
+    /** Aperto dal ··· della nota o dal tasto destro su una riga: il focus ci torna. */
+    daRiga?: boolean;
   } | null>(null);
   const [conflitto, setConflitto] = useState<Conflitto | null>(null);
   const [avviso, setAvviso] = useState(false);
@@ -116,13 +126,15 @@ export function FinestraPrincipale(): ReactElement {
   const [bloccata, setBloccata] = useState(false);
   const [riprovando, setRiprovando] = useState(false);
   const [confermaChiusura, setConfermaChiusura] = useState(false);
+  /** La conferma di chiusura è comparsa per «Esci da Memodu». */
+  const uscendo = useRef(false);
+  /** Finestra Dettagli aperta (CMP-24, DEC-44): la nota e tutti i tag per i suggerimenti. */
+  const [dettagli, setDettagli] = useState<Nota | null>(null);
+  const [tuttiTag, setTuttiTag] = useState<VoceTag[]>([]);
   /**
    * Nota sparita mentre era aperta: nel cestino (`elemento` da ripristinare) o eliminata per
    * sempre. Il testo non salvato resta qui finché l'avviso è aperto.
    */
-  /** Finestra Dettagli aperta (CMP-24, DEC-44): la nota e tutti i tag per i suggerimenti. */
-  const [dettagli, setDettagli] = useState<Nota | null>(null);
-  const [tuttiTag, setTuttiTag] = useState<VoceTag[]>([]);
   const [sparita, setSparita] = useState<{
     id: string;
     dati: DatiNota;
@@ -168,7 +180,8 @@ export function FinestraPrincipale(): ReactElement {
         return await chiamata();
       } catch (errore) {
         if (errore instanceof ErroreApi && errore.stato !== null) {
-          setAvviso(true);
+          // 422 (spostamento dentro sé stessa): nessun avviso, solo l'albero aggiornato (api.md).
+          if (errore.stato !== 422) setAvviso(true);
           await ricarica().catch(() => setBloccata(true));
         } else {
           setBloccata(true);
@@ -198,16 +211,22 @@ export function FinestraPrincipale(): ReactElement {
   const conNome = async (
     operazione: (seEsiste: SeEsiste) => Promise<EsitoCartella>,
     dove: Percorso,
+    /** Dopo l'operazione e le sottocartelle da risolvere, anche se una di queste fallisce. */
+    dopo?: (esito: EsitoCartella) => Promise<void>,
   ): Promise<EsitoCartella | null> => {
     let scelta: SeEsiste = "chiedi";
     for (;;) {
       try {
         const esito = await operazione(scelta);
-        for (const resto of esito.daRisolvere) {
-          await conNome(
-            (s) => api.spostaCartella(resto, esito.cartella.percorso, s, true),
-            esito.cartella.percorso,
-          );
+        try {
+          for (const resto of esito.daRisolvere) {
+            await conNome(
+              (s) => api.spostaCartella(resto, esito.cartella.percorso, s, true),
+              esito.cartella.percorso,
+            );
+          }
+        } finally {
+          await dopo?.(esito);
         }
         return esito;
       } catch (errore) {
@@ -305,25 +324,31 @@ export function FinestraPrincipale(): ReactElement {
   useEffect(() => {
     const suPerditaFocus = () => void coda.scarica();
     window.addEventListener("blur", suPerditaFocus);
-    const togli = alChiudere(
-      async () => {
-        await coda.scarica({ keepalive: true });
-        if (!coda.haModifiche) {
-          // La finestra si nasconde: una nota vuota lasciata aperta sparisce (DEC-39).
-          if (await lasciaVuota({ keepalive: true })) {
-            setAperta(null);
-            await ricarica().catch(() => setBloccata(true));
-          }
-          return true;
+    const puoChiudere = async () => {
+      await coda.scarica({ keepalive: true });
+      if (!coda.haModifiche) {
+        // La finestra si nasconde: una nota vuota lasciata aperta sparisce (DEC-39).
+        if (await lasciaVuota({ keepalive: true })) {
+          setAperta(null);
+          await ricarica().catch(() => setBloccata(true));
         }
-        setConfermaChiusura(true);
-        return false;
-      },
-      () => coda.haModifiche,
-    );
+        return true;
+      }
+      setConfermaChiusura(true);
+      return false;
+    };
+    const togli = alChiudere(puoChiudere, () => coda.haModifiche);
+    // «Esci da Memodu»: con testo non salvato la finestra ricompare con la conferma (RB-62).
+    const togliUscita = allUscita(async () => {
+      if (await puoChiudere()) return true;
+      uscendo.current = true;
+      await mostraFinestra();
+      return false;
+    });
     return () => {
       window.removeEventListener("blur", suPerditaFocus);
       togli();
+      togliUscita();
     };
   }, [coda, lasciaVuota, ricarica]);
 
@@ -384,32 +409,39 @@ export function FinestraPrincipale(): ReactElement {
     setCampo({ tipo: "nuova", genitore, proposta });
   };
 
+  // Chiuso il campo nome, il focus torna su una riga (CA-05.11): la cartella rinominata o
+  // creata; annullando una cartella nuova, la cartella madre o il + delle Cartelle ("").
   const annullaCampo = () => {
-    if (campo?.tipo === "rinomina") rigaDelFocus.current = campo.percorso;
+    if (campo) rigaDelFocus.current = campo.tipo === "rinomina" ? campo.percorso : campo.genitore;
     setCampo(null);
   };
 
   const confermaCampo = async (valore: string, daTastiera: boolean) => {
     const attuale = campo;
-    const segueFocus = daTastiera && attuale?.tipo === "rinomina";
-    if (segueFocus) rigaDelFocus.current = attuale.percorso;
+    const segueFocus = daTastiera && attuale !== null;
+    if (segueFocus)
+      rigaDelFocus.current = attuale.tipo === "rinomina" ? attuale.percorso : attuale.genitore;
     setCampo(null);
     if (!attuale || valore.trim() === "") return;
     if (attuale.tipo === "nuova") {
       // Il nome proposto lo numera il server (RB-48); un nome scelto segue RB-31.
       const nome = valore === attuale.proposta ? undefined : valore;
-      await esegui(() =>
+      const esito = await esegui(() =>
         conNome((s) => api.creaCartella(attuale.genitore, nome, s), attuale.genitore),
       );
+      if (esito && segueFocus) rigaDelFocus.current = esito.cartella.percorso;
     } else {
       if (valore === attuale.nome) return;
-      const esito = await esegui(() =>
-        conNome((s) => api.rinominaCartella(attuale.percorso, valore, s), padre(attuale.percorso)),
+      await esegui(() =>
+        conNome(
+          (s) => api.rinominaCartella(attuale.percorso, valore, s),
+          padre(attuale.percorso),
+          async (esito) => {
+            if (segueFocus) rigaDelFocus.current = esito.cartella.percorso;
+            await seguiCartella(attuale.percorso, esito.cartella.percorso);
+          },
+        ),
       );
-      if (esito) {
-        if (segueFocus) rigaDelFocus.current = esito.cartella.percorso;
-        await seguiCartella(attuale.percorso, esito.cartella.percorso);
-      }
     }
     await ricarica().catch(() => setBloccata(true));
   };
@@ -419,18 +451,32 @@ export function FinestraPrincipale(): ReactElement {
   useEffect(() => {
     const percorso = rigaDelFocus.current;
     if (percorso === null || campo) return;
-    const riga = document.querySelector<HTMLElement>(`[data-cartella="${CSS.escape(percorso)}"]`);
+    const riga =
+      percorso === ""
+        ? document.querySelector<HTMLElement>('button[aria-label="Nuova cartella"]')
+        : document.querySelector<HTMLElement>(`[data-cartella="${CSS.escape(percorso)}"]`);
     if (!riga) return;
     rigaDelFocus.current = null;
     if (document.activeElement === document.body || document.activeElement === null) riga.focus();
   }, [albero, campo]);
 
   const spostaCartella = async (percorso: Percorso, destinazione: Percorso) => {
-    const esito = await esegui(() =>
-      conNome((s) => api.spostaCartella(percorso, destinazione, s), destinazione),
+    await esegui(() =>
+      conNome(
+        (s) => api.spostaCartella(percorso, destinazione, s),
+        destinazione,
+        (esito) => seguiCartella(percorso, esito.cartella.percorso),
+      ),
     );
-    if (esito) await seguiCartella(percorso, esito.cartella.percorso);
     await ricarica().catch(() => setBloccata(true));
+  };
+
+  /** Chiuso Sposta in, il focus torna dove era stato aperto: il ··· o la riga della nota. */
+  const ridaiFocus = (id: string, daRiga?: boolean) => {
+    const riga = daRiga
+      ? document.querySelector<HTMLElement>(`[data-nota="${CSS.escape(id)}"]`)
+      : null;
+    (riga ?? pulsanteMenu.current)?.focus();
   };
 
   /** Sposta una nota; se è quella aperta resta aperta e la sua cartella si apre (RB-66). */
@@ -635,7 +681,13 @@ export function FinestraPrincipale(): ReactElement {
       etichetta: "Sposta in…",
       icona: FolderInput,
       azione: () =>
-        setSpostaIn({ id: riga.id, cartella: riga.cartella, destra: riga.x + 236, y: riga.y }),
+        setSpostaIn({
+          id: riga.id,
+          cartella: riga.cartella,
+          destra: riga.x + 236,
+          y: riga.y,
+          daRiga: true,
+        }),
     },
     { tipo: "separatore" },
     {
@@ -684,7 +736,9 @@ export function FinestraPrincipale(): ReactElement {
       : []),
   ];
 
-  const ciSonoNote = albero !== null && piuRecente(albero) !== undefined;
+  // «Nessuna nota, per ora.» solo al primo utilizzo: nessuna nota e nessuna cartella (SC-01).
+  const ciSonoNote =
+    albero !== null && (piuRecente(albero) !== undefined || albero.cartelle.length > 0);
 
   return (
     <>
@@ -834,12 +888,13 @@ export function FinestraPrincipale(): ReactElement {
           destra={spostaIn.destra}
           y={spostaIn.y}
           onScegli={(percorso) => {
+            const { id, daRiga } = spostaIn;
             setSpostaIn(null);
-            void spostaNota(spostaIn.id, percorso);
+            void spostaNota(id, percorso).then(() => ridaiFocus(id, daRiga));
           }}
           onChiudi={() => {
             setSpostaIn(null);
-            pulsanteMenu.current?.focus();
+            ridaiFocus(spostaIn.id, spostaIn.daRiga);
           }}
         />
       )}
@@ -877,8 +932,12 @@ export function FinestraPrincipale(): ReactElement {
           titolo="La nota non è salvata"
           testo="Chiudendo, il testo va perso."
           azione="Chiudi comunque"
-          onAnnulla={() => setConfermaChiusura(false)}
-          onConferma={() => void chiudiFinestra()}
+          onAnnulla={() => {
+            setConfermaChiusura(false);
+            if (uscendo.current) void annullaUscita();
+            uscendo.current = false;
+          }}
+          onConferma={() => void (uscendo.current ? confermaUscita() : chiudiFinestra())}
         />
       )}
     </>

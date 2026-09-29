@@ -105,6 +105,7 @@ export function Colonna(p: Proprieta): ReactElement {
   const rigaNota = (v: VoceElenco, cartella: Percorso, livelloCartella?: number) => (
     <RigaNota
       key={v.id}
+      id={v.id}
       titolo={v.titolo || v.anteprima}
       vuota={!v.titolo && !v.anteprima}
       selezionata={v.id === p.apertaId}

@@ -31,6 +31,9 @@ export class ErroreApi extends Error {
   }
 }
 
+/** Limite del browser per i corpi delle richieste keepalive (standard fetch: 64 KiB). */
+export const LIMITE_KEEPALIVE_BYTE = 60 * 1024;
+
 async function chiama<T>(
   metodo: string,
   percorso: string,
@@ -38,9 +41,10 @@ async function chiama<T>(
   keepalive = false,
 ): Promise<T> {
   const testo = corpo ? JSON.stringify(corpo) : undefined;
+  const byte = testo ? new TextEncoder().encode(testo).length : 0;
   // Oltre il limite l'API rifiuta il corpo e chiude la connessione prima di rispondere 413:
   // lo si controlla qui, così l'errore è quello giusto (EN-01, SF-17).
-  if (testo && new TextEncoder().encode(testo).length > LIMITE_CORPO_BYTE) {
+  if (byte > LIMITE_CORPO_BYTE) {
     throw new ErroreApi(413, "Il corpo supera il limite dell'API");
   }
   let risposta: Response;
@@ -50,7 +54,9 @@ async function chiama<T>(
       headers: corpo ? { "Content-Type": "application/json" } : undefined,
       body: testo,
       // Alla chiusura della finestra la richiesta deve arrivare anche se la pagina se ne va.
-      keepalive,
+      // Il browser rifiuta keepalive oltre 64 KB: le note più grandi partono senza (nell'app
+      // la finestra si nasconde soltanto, quindi la richiesta arriva lo stesso).
+      keepalive: keepalive && byte <= LIMITE_KEEPALIVE_BYTE,
     });
   } catch {
     throw new ErroreApi(null, "L'API non risponde");

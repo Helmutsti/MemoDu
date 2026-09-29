@@ -18,11 +18,11 @@ Finestra di sistema, solo su desktop (RF-01). Niente cromatura dell'applicazione
 | Elemento | Nota |
 |---|---|
 | Area di scrittura | Occupa quasi tutta la finestra. Nessun campo titolo: il titolo si mette dopo, nel programma completo (RB-15) |
-| **Chiudi** | Pulsante primario diviso in basso a destra (CMP-01, variante Diviso), l'unico della finestra. Salva e chiude, come il tasto `Esc` e il clic altrove (RB-02); la freccia ▾ apre un menu con **Apri nel programma**, che salva e chiude la nota aperta nel programma, e ci porta questa (RB-05). Esc vuol dire «ho finito», non annulla: per cancellare una nota rapida si entra nel programma. Nessuna ✕ (DEC-34, DEC-50) |
+| **Chiudi** | Pulsante primario diviso in basso a destra (CMP-01, variante Diviso), l'unico della finestra. Salva e chiude, come il tasto `Esc`; un clic altrove salva ma non chiude (RB-02, DEC-53); la freccia ▾ apre un menu con **Apri nel programma**, che salva e chiude la nota aperta nel programma, e ci porta questa (RB-05). Esc vuol dire «ho finito», non annulla: per cancellare una nota rapida si entra nel programma. Nessuna ✕ (DEC-34, DEC-50) |
 
-**Nessuna cornice:** niente barra del titolo, niente divisori, niente bordo. La finestra è una superficie bianca con ombra. Si trascina dal margine in alto, che non si vede; Esc per chiudere è tenue e si scurisce al passaggio del mouse.
+**Nessuna cornice:** niente barra del titolo, niente divisori, niente bordo. La finestra è una superficie bianca con ombra. Si trascina dal margine in alto, che non si vede.
 
-Dimensione iniziale 480 × 320, ridimensionabile. La finestra è il componente composto CMP-23 Nota rapida del design system, costruito con token (`sfondo-nota`, `raggio-contenitore`, `spazio-finestra`, `ombra-flottante`), un pulsante tenue per Esc per chiudere, un pulsante diviso per Salva e un menu (CMP-09) con la sola voce Apri nel programma. Nell'app la finestra ha angoli squadrati e l'ombra del sistema: arrotondarli richiederebbe l'API privata di macOS (scostamento accettato da Manuel Cucca il 28/09/2026).
+Dimensione iniziale 480 × 320, ridimensionabile. La finestra è il componente composto CMP-23 Nota rapida del design system, costruito con token (`sfondo-nota`, `raggio-contenitore`, `spazio-finestra`, `ombra-flottante`), un pulsante diviso per Chiudi e un menu (CMP-09) con la sola voce Apri nel programma. Nell'app la finestra ha angoli squadrati e l'ombra del sistema: arrotondarli richiederebbe l'API privata di macOS (scostamento accettato da Manuel Cucca il 28/09/2026).
 
 Icona nella barra dei menu (macOS) o nell'area di notifica (Windows), con il menu «Nuova nota rapida», «Apri Memodu», «Esci da Memodu». Chiudendo la finestra principale Memodu resta attivo: la finestra si nasconde e torna da «Apri Memodu» (RF-01). Resta in primo piano rispetto agli altri programmi finché non si chiude.
 
@@ -42,7 +42,7 @@ Stessi tasti fisici sui due sistemi, libere nelle configurazioni di default di e
 |---|---|---|
 | Vuoto | Finestra appena aperta, nessun testo | "Scrivi qui…" nell'area vuota; in basso "Chiudi" |
 | Caricamento | Non previsto: la finestra compare già pronta (RNF-01) | — |
-| Errore | Non previsto: la nota rapida non dipende dalla rete (SF-08) | — |
+| Errore | L'API delle note non risponde o non salva: SC-07 al posto del contenuto, il testo resta in memoria e chiudendo compare la conferma (RB-61, RB-62) | Vedi SC-07 |
 | Successo | Non previsto: la chiusura è la conferma. Chiusa vuota, non crea nulla e non lo dice (RB-03) | — |
 | Contenuto lungo | Il testo scorre dentro la finestra, che non cresce da sola | — |
 
@@ -117,7 +117,7 @@ Il testo ha una larghezza massima di lettura anche su schermi larghi: oltre una 
 | Stato | Descrizione | Testo mostrato |
 |---|---|---|
 | Vuoto (nessuna nota aperta) | Primo utilizzo o nota appena eliminata: invito a scrivere più pulsante per creare la prima nota | Titolo "Nessuna nota, per ora." · spiegazione "Inizia a scrivere." · pulsante "Nuova nota" (stato vuoto, CMP-19) |
-| Vuoto (nota nuova) | Nota creata e ancora senza testo: titolo e corpo vuoti con il loro invito. La nota esiste già e resta (RB-10) | Titolo: "Titolo" · corpo: "Scrivi qui, oppure premi / per inserire titoli ed elenchi" |
+| Vuoto (nota nuova) | Nota creata e ancora senza testo: titolo e corpo vuoti con il loro invito. La nota esiste già; lasciata vuota, sparisce (RB-10, DEC-39) | Titolo: "Titolo" · corpo: "Scrivi qui, oppure premi / per inserire titoli ed elenchi" |
 | Caricamento | Non previsto: la nota arriva dalla copia di lavoro sul dispositivo | — |
 | Errore | Immagine rifiutata: messaggio accanto al punto di inserimento, non bloccante (RB-11, RB-12) | Testo definitivo in Fase 6 |
 | Successo | Non previsto: il salvataggio è silenzioso (RB-06) | — |

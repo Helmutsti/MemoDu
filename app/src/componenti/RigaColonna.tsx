@@ -37,6 +37,7 @@ const rientroCartella = (livello: number): CSSProperties | undefined =>
     : undefined;
 
 interface ProprietaNota extends Trascinamento {
+  id: string;
   titolo: string;
   /** Senza titolo né testo: «Nota vuota» in testo tenue (RB-15). */
   vuota: boolean;
@@ -49,6 +50,7 @@ interface ProprietaNota extends Trascinamento {
 }
 
 export function RigaNota({
+  id,
   titolo,
   vuota,
   selezionata,
@@ -69,6 +71,7 @@ export function RigaNota({
         type="button"
         role="treeitem"
         data-riga=""
+        data-nota={id}
         aria-level={livelloCartella === undefined ? 1 : livelloCartella + 2}
         aria-selected={selezionata}
         aria-current={selezionata ? "true" : undefined}

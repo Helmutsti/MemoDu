@@ -1,7 +1,8 @@
 // Finestre dell'app (Tauri) e del browser usato per lo sviluppo: chiusura con conferma
 // (RB-62), finestra principale che resta in background (RF-01), note rapide (SC-02).
 
-import { emit, emitTo, listen } from "@tauri-apps/api/event";
+import { invoke } from "@tauri-apps/api/core";
+import { emitTo, listen } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 
 export const IN_TAURI = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
@@ -72,16 +73,45 @@ export function allaRichiestaDiApertura(apri: (id: string | null) => void): () =
 }
 
 /**
- * In una nota rapida: il nucleo apre un'altra nota rapida (la scorciatoia premuta di nuovo)
- * o un'altra nota rapida prende il focus. In questi casi la perdita del focus non chiude.
+ * Chiusura della finestra dal sistema (Alt + F4, Cmd + W): la nota rapida la tratta come
+ * Chiudi, cioè salva e chiude, o chiede conferma (RB-02, RB-62).
  */
-export function alleAltreNoteRapide(avviso: () => void): () => void {
+export function allaRichiestaDiChiusura(gestore: () => void): () => void {
   if (!IN_TAURI) return () => {};
-  const promesse = [listen("nuova-rapida", avviso), listen("rapida-attiva", avviso)];
-  return () => promesse.forEach((p) => void p.then((togli) => togli()));
+  const promessa = getCurrentWindow().onCloseRequested((evento) => {
+    evento.preventDefault();
+    gestore();
+  });
+  return () => void promessa.then((togli) => togli());
 }
 
-/** Avvisa le altre note rapide che questa ha preso il focus. */
-export async function annunciaFocus(): Promise<void> {
-  if (IN_TAURI) await emit("rapida-attiva");
+/**
+ * «Esci da Memodu» dall'icona: `prepara` salva e risponde se la finestra può uscire. Se no,
+ * la finestra mostra la conferma (RB-62) e poi chiama `confermaUscita` o `annullaUscita`.
+ */
+export function allUscita(prepara: () => Promise<boolean>): () => void {
+  if (!IN_TAURI) return () => {};
+  const promessa = listen("esci-richiesto", async () => {
+    if (await prepara()) await confermaUscita();
+  });
+  return () => void promessa.then((togli) => togli());
+}
+
+/** Questa finestra è pronta: quando lo sono tutte, Memodu esce. */
+export async function confermaUscita(): Promise<void> {
+  if (IN_TAURI) await invoke("pronta_a_uscire");
+}
+
+/** Annulla nella conferma durante l'uscita: Memodu resta aperto. */
+export async function annullaUscita(): Promise<void> {
+  if (IN_TAURI) await invoke("uscita_annullata");
+}
+
+/** Mostra questa finestra in primo piano (la principale può essere nascosta). */
+export async function mostraFinestra(): Promise<void> {
+  if (!IN_TAURI) return;
+  const finestra = getCurrentWindow();
+  await finestra.unminimize();
+  await finestra.show();
+  await finestra.setFocus();
 }

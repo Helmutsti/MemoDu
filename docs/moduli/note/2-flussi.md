@@ -15,7 +15,7 @@ flowchart TD
     D --> E{Come chiudo?}
     E -- Chiudi ▾, Apri nel programma --> F[La nota aperta nel programma viene salvata e chiusa - RB-05]
     F --> G[La nota rapida si apre nel programma completo]
-    E -- Chiudi, tasto Esc o clic altrove --> H{La nota è vuota?}
+    E -- Chiudi o tasto Esc --> H{La nota è vuota?}
     H -- Sì --> I[Non si crea nessuna nota - RB-03]
     H -- No --> J[Nota salvata sulla copia di lavoro, nella radice - RB-01, RB-02]
     I --> K[Torno a ciò che facevo]
@@ -23,7 +23,7 @@ flowchart TD
 ```
 
 ### Percorsi alternativi
-- **Chiusura** (pulsante Chiudi, tasto Esc, clic fuori dalla finestra): salva e chiude. Esc vuol dire «ho finito», non annulla; per cancellare la nota si entra nel programma (RB-02, SC-02, DEC-34, DEC-50).
+- **Chiusura** (pulsante Chiudi, tasto Esc): salva e chiude. Esc vuol dire «ho finito», non annulla; per cancellare la nota si entra nel programma. Un clic altrove salva ma non chiude: la nota resta aperta finché non la si chiude (RB-02, SC-02, DEC-34, DEC-50, DEC-53).
 - **Scorciatoia premuta con una nota rapida già aperta:** la nota aperta viene salvata e resta aperta, e se ne apre una nuova in un'altra finestra (RB-04). Ogni nota rapida si chiude poi per conto suo, seguendo lo stesso flusso.
 - **Apertura nel programma completo:** vedi RB-05.
 
@@ -66,13 +66,13 @@ flowchart TD
 ```
 
 ### Percorsi alternativi
-- **Nota lasciata vuota:** resta come nota vuota e si può cancellare a mano (RB-10). È diverso dalla nota rapida, che vuota non si crea (RB-03).
+- **Nota lasciata vuota:** si cancella per sempre quando la si lascia, senza passare dal cestino (RB-10, DEC-39). La nota rapida vuota invece non si crea proprio (RB-03).
 
 ### Sfighe gestite
 | Sfiga | Rilevamento | Comunicazione | Via d'uscita |
 |---|---|---|---|
-| SF-01 Doppio invio | Comando Nuova nota ripetuto | Si apre una nuova nota ogni volta | Le note vuote restano e si cancellano a mano (RB-10) |
-| SF-16 Vuoto | Nuova nota lasciata senza testo | Nessun messaggio | La nota vuota resta (RB-10) |
+| SF-01 Doppio invio | Comando Nuova nota ripetuto | Si apre una nuova nota ogni volta | Quella lasciata vuota sparisce: ne resta una sola (RB-10, DEC-39) |
+| SF-16 Vuoto | Nuova nota lasciata senza testo | Nessun messaggio | La nota vuota sparisce quando la si lascia (RB-10, DEC-39) |
 | SF-20 Riferimenti spariti | Alla sincronizzazione, la cartella di destinazione risulta nel cestino perché eliminata da un altro dispositivo | Nessun messaggio | La cartella esce dal cestino e torna com'era, con la nota dentro (RB-30) |
 
 ### Sfighe considerate e scartate
@@ -122,7 +122,7 @@ flowchart TD
 - SF-04 Più schede aperte: il programma mostra una nota alla volta (RF-01). La stessa nota aperta su due dispositivi è un conflitto, gestito in FL-07.
 - SF-05 Cambio idea: la nota resta sempre modificabile.
 - SF-12 Sessione scaduta: non c'è sessione, il dispositivo usa le credenziali preimpostate (RF-14, DEC-13).
-- SF-16 Vuoto: la nuova nota vuota resta (RB-10), vedi FL-09.
+- SF-16 Vuoto: la nuova nota lasciata vuota sparisce (RB-10), vedi FL-09.
 - SF-17 Troppo: una nota arriva fino a 10 MB di testo (EN-01); oltre, il salvataggio fallisce e compare SC-07 (RB-61). Nessuna soglia sulla digitazione (RNF-01).
 - SF-22 Modifica simultanea: gestita in FL-07.
 - SF-13 … SF-15, SF-18 … SF-21, SF-23 … SF-31, SF-33 … SF-35: nessuna data, valore limite, file, permesso o sistema esterno coinvolto. I file sono in FL-03.
@@ -228,7 +228,7 @@ La posizione di una nota (radice, cartella, cestino) è descritta nel diagramma 
 | Codice | Regola | Usata in |
 |---|---|---|
 | RB-01 | Una nota rapida salvata va nella radice e diventa una nota non organizzata (RF-05) | FL-01 |
-| RB-02 | Chiudere la nota rapida (Chiudi, tasto Esc, clic altrove) la salva. Esc non annulla (DEC-34, DEC-50) | FL-01 |
+| RB-02 | La nota rapida si chiude solo in modo esplicito: Chiudi, tasto Esc o chiusura della finestra dal sistema (Alt + F4); chiudendola si salva. Esc non annulla. Un clic altrove la salva e la lascia aperta (DEC-34, DEC-50, DEC-53) | FL-01 |
 | RB-03 | Una nota rapida chiusa senza testo non crea nessuna nota | FL-01 |
 | RB-04 | Premere la scorciatoia con una nota rapida già aperta salva quella aperta, che resta aperta, e ne apre una nuova in un'altra finestra | FL-01 |
 | RB-05 | Aprendo la nota rapida nel programma completo, la nota aperta nel programma viene salvata e chiusa, e al suo posto compare la nota rapida | FL-01 |
@@ -254,5 +254,5 @@ La posizione di una nota (radice, cartella, cestino) è descritta nel diagramma 
 | RB-58 | Le immagini seguono la loro nota: eliminandola vanno nel cestino con lei, ripristinandola tornano, eliminandola definitivamente si cancellano | FL-03, FL-05 |
 | RB-59 | Annulla (Ctrl+Z / Cmd+Z) vale per tutte le modifiche della nota aperta: testo, formattazione, immagini e caselle. Non annulla le azioni fuori dalla nota (spostamenti, eliminazioni: per quelle c'è il cestino) | FL-02, FL-03 |
 | RB-61 | Solo nel frammento Must A (DEC-30): se l'API delle note non risponde o non riesce a salvare (nota non trovata, contenuto oltre 10 MB, file non scritto), la finestra (programma o nota rapida) mostra SC-07 al posto del contenuto; il testo non ancora salvato resta in memoria e si salva appena Riprova riesce. Memodu non avvia il server da solo: si avvia a mano | FL-01, FL-02, FL-09 |
-| RB-62 | Solo nel frammento Must A: se si chiude una finestra (Chiudi, Esc, clic altrove o chiusura di Memodu) mentre c'è testo non salvato per RB-61, compare una finestra di conferma (CMP-16): titolo «La nota non è salvata», testo «Chiudendo, il testo va perso.», pulsanti «Annulla» e «Chiudi comunque». Annulla lascia la finestra aperta con il testo. Con SC-07 davanti alla nota rapida, il tasto Esc apre questa conferma, così la finestra si può sempre chiudere; il clic altrove non la chiude (confermato da Manuel Cucca il 29/09/2026) | FL-01, FL-02 |
+| RB-62 | Solo nel frammento Must A: se si chiude una finestra (Chiudi, Esc o chiusura di Memodu) mentre c'è testo non salvato per RB-61, compare una finestra di conferma (CMP-16): titolo «La nota non è salvata», testo «Chiudendo, il testo va perso.», pulsanti «Annulla» e «Chiudi comunque». Annulla lascia la finestra aperta con il testo. Con SC-07 davanti alla nota rapida, il tasto Esc apre questa conferma, così la finestra si può sempre chiudere (confermato da Manuel Cucca il 29/09/2026). Con «Esci da Memodu» dall'icona ogni finestra prova a salvare; ognuna che non ci riesce mostra la sua conferma (la finestra principale torna in primo piano) e Memodu esce solo dopo «Chiudi comunque» in tutte; Annulla in una qualsiasi ferma l'uscita (scelta di Manuel Cucca il 29/09/2026). Alt + F4 su una nota rapida vale come Chiudi | FL-01, FL-02 |
 | RB-68 | Se la nota aperta non c'è più quando si salva (eliminata altrove), si chiude e l'avviso (CMP-15, tipo Avviso) dice «La nota è nel cestino.» con Ripristina, che la riporta, la riapre e salva il testo rimasto in sospeso; se è stata eliminata per sempre dice «La nota è stata eliminata.» e le modifiche non salvate si perdono. Scelta di Manuel Cucca il 29/09/2026 | FL-02 |

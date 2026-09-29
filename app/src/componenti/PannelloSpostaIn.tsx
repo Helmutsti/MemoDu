@@ -4,7 +4,15 @@
 // Esc o un clic fuori chiudono (CMP-11, FL-05).
 
 import { Check, ChevronDown, ChevronRight, Search } from "lucide-react";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactElement } from "react";
+import {
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactElement,
+} from "react";
 import { createPortal } from "react-dom";
 import type { Cartella, Percorso } from "@memodu/condiviso";
 import { Icona } from "./Icona";
@@ -123,6 +131,9 @@ export function PannelloSpostaIn({
     return () => window.removeEventListener("mousedown", suClic, true);
   }, [onChiudi]);
 
+  const idElenco = useId();
+  const idVoce = (i: number) => `${idElenco}-${i}`;
+
   const suTasto = (e: React.KeyboardEvent) => {
     const voce = voci[indice];
     const azioni: Record<string, () => void> = {
@@ -162,6 +173,11 @@ export function PannelloSpostaIn({
           className="pannello-sposta-campo interfaccia-controllo"
           placeholder="Cerca una cartella"
           aria-label="Cerca una cartella"
+          // Il focus resta nel campo: il lettore di schermo annuncia la voce evidenziata.
+          role="combobox"
+          aria-expanded="true"
+          aria-controls={idElenco}
+          aria-activedescendant={indice >= 0 && voci[indice] ? idVoce(indice) : undefined}
           value={filtro}
           onChange={(e) => {
             setFiltro(e.target.value);
@@ -170,10 +186,11 @@ export function PannelloSpostaIn({
         />
       </div>
       <div className="menu-separatore" role="separator" />
-      <ul className="pannello-sposta-elenco" role="listbox" aria-label="Cartelle">
+      <ul id={idElenco} className="pannello-sposta-elenco" role="listbox" aria-label="Cartelle">
         {voci.map((voce, i) => (
           <li
             key={voce.percorso || "radice"}
+            id={idVoce(i)}
             role="option"
             aria-selected={i === indice}
             aria-current={voce.percorso === attuale ? "true" : undefined}

@@ -93,6 +93,13 @@ describe("SC-01, primo utilizzo (SF-16)", () => {
     expect(screen.getByRole("button", { name: /Non organizzate/ })).toHaveTextContent("0");
   });
 
+  it("con delle cartelle ma nessuna nota non è il primo utilizzo: «Nessuna nota aperta» (RB-67)", async () => {
+    vi.mocked(api.albero).mockResolvedValue(albero([], [cartella("Lavoro")]));
+    render(<FinestraPrincipale />);
+    expect(await screen.findByText("Nessuna nota aperta")).toBeInTheDocument();
+    expect(screen.queryByText("Nessuna nota, per ora.")).not.toBeInTheDocument();
+  });
+
   it("Nuova nota crea una nota vuota nella radice e la apre (FL-09, RB-09, RB-10)", async () => {
     vi.mocked(api.albero)
       .mockResolvedValueOnce(albero())
@@ -343,6 +350,19 @@ describe("SC-01, cartelle (RF-05)", () => {
     await userEvent.click(screen.getByRole("button", { name: "Ho capito" }));
     expect(screen.queryByRole("status", { name: "Errore" })).not.toBeInTheDocument();
   });
+
+  it("un 422 non mostra l'avviso: la colonna si ricarica e basta (api.md)", async () => {
+    vi.mocked(api.rinominaCartella).mockRejectedValue(new ErroreApi(422, "dentro sé stessa"));
+    render(<FinestraPrincipale />);
+    (await riga(/Personale/)).focus();
+    await userEvent.keyboard("{F2}Ufficio{Enter}");
+    await waitFor(() => expect(vi.mocked(api.albero).mock.calls.length).toBeGreaterThan(1));
+    expect(
+      screen.queryByText(
+        "Non è stato possibile completare l'operazione. La colonna mostra com'è adesso.",
+      ),
+    ).not.toBeInTheDocument();
+  });
 });
 
 describe("menu ··· e Sposta in (CA-05.4, CA-15.1)", () => {
@@ -364,7 +384,10 @@ describe("menu ··· e Sposta in (CA-05.4, CA-15.1)", () => {
       "aria-current",
       "true",
     );
-    await userEvent.type(within(pannello).getByRole("textbox"), "cli");
+    await userEvent.type(
+      within(pannello).getByRole("combobox", { name: "Cerca una cartella" }),
+      "cli",
+    );
     expect(
       within(pannello)
         .getAllByRole("option")

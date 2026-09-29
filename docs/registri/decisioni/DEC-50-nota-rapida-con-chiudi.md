@@ -1,6 +1,6 @@
 # DEC-50 – Nota rapida: un solo pulsante «Chiudi»
 
-**Data:** 2026-09-29 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-29 · **Stato:** Superata da DEC-53 (clic altrove) · **Idea di origine:** —
 
 ## Contesto
 DEC-34 ha dato alla nota rapida due azioni che fanno la stessa cosa: il pulsante tenue «Esc per chiudere» e il pulsante diviso «Salva», entrambi salvano e chiudono. Manuel Cucca ha tolto «Esc per chiudere» dal componente CMP-23; si è valutato di spostarlo come voce «Chiudi» nel menu della freccia, ma sarebbe rimasto un doppione di Salva.

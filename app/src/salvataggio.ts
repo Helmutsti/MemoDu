@@ -14,6 +14,10 @@ export class CodaSalvataggio {
   private pendenti: DatiNota = {};
   private timer: ReturnType<typeof setTimeout> | undefined;
   private inCorso: Promise<void> = Promise.resolve();
+  /** Numero dell'ultima modifica di ogni campo: un salvataggio fallito non rimette un testo
+   * più vecchio sopra uno scritto dopo. */
+  private versioni = new Map<string, number>();
+  private contatore = 0;
 
   constructor(
     private readonly salva: Salva,
@@ -42,6 +46,7 @@ export class CodaSalvataggio {
     if (this.id !== null && this.id !== id) void this.scarica();
     this.id = id;
     this.pendenti = { ...this.pendenti, ...dati };
+    for (const campo of Object.keys(dati)) this.versioni.set(campo, ++this.contatore);
     clearTimeout(this.timer);
     this.timer = setTimeout(() => void this.scarica(), PAUSA_MS);
   }
@@ -52,13 +57,20 @@ export class CodaSalvataggio {
     if (!this.haModifiche) return this.inCorso;
     const id = this.id!;
     const dati = this.pendenti;
+    const versioni = new Map(Object.keys(dati).map((c) => [c, this.versioni.get(c)]));
     this.pendenti = {};
     this.inCorso = this.inCorso.then(async () => {
       try {
         this.onSalvata(await this.salva(id, dati, opzioni));
       } catch (errore) {
-        // Il testo non va perso: torna tra le modifiche da salvare, sotto quelle più recenti.
-        if (this.id === id) this.pendenti = { ...dati, ...this.pendenti };
+        // Il testo non va perso: torna tra le modifiche da salvare, ma solo i campi che nel
+        // frattempo non sono stati riscritti (RB-61).
+        if (this.id === id) {
+          const ancora = Object.fromEntries(
+            Object.entries(dati).filter(([c]) => this.versioni.get(c) === versioni.get(c)),
+          );
+          this.pendenti = { ...ancora, ...this.pendenti };
+        }
         this.onErrore(errore);
       }
     });

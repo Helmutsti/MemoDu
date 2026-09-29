@@ -2,15 +2,27 @@ import { act, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { api } from "../api";
-import { apriNelProgramma, chiudiNotaRapida } from "../finestra";
+import { apriNelProgramma, chiudiNotaRapida, confermaUscita } from "../finestra";
 import { NotaRapida } from "./NotaRapida";
 
 vi.mock("../api", () => ({
-  api: { elenca: vi.fn(), leggi: vi.fn(), crea: vi.fn(), salva: vi.fn() },
+  api: { elenca: vi.fn(), leggi: vi.fn(), crea: vi.fn(), salva: vi.fn(), eliminaSeVuota: vi.fn() },
+}));
+const sistema = vi.hoisted(() => ({
+  chiusura: undefined as undefined | (() => void),
+  uscita: undefined as undefined | (() => Promise<boolean>),
 }));
 vi.mock("../finestra", () => ({
-  alleAltreNoteRapide: () => () => {},
-  annunciaFocus: vi.fn(),
+  allaRichiestaDiChiusura: (g: () => void) => {
+    sistema.chiusura = g;
+    return () => {};
+  },
+  allUscita: (p: () => Promise<boolean>) => {
+    sistema.uscita = p;
+    return () => {};
+  },
+  annullaUscita: vi.fn(),
+  confermaUscita: vi.fn(),
   apriNelProgramma: vi.fn(),
   chiudiNotaRapida: vi.fn(),
 }));
@@ -37,6 +49,7 @@ beforeEach(() => {
   vi.resetAllMocks();
   vi.mocked(api.crea).mockResolvedValue(nota);
   vi.mocked(api.salva).mockResolvedValue(nota);
+  vi.mocked(api.eliminaSeVuota).mockResolvedValue(undefined);
 });
 
 describe("SC-02 Nota rapida (FL-01)", () => {
@@ -119,5 +132,59 @@ describe("SC-02 Nota rapida (FL-01)", () => {
     fireEvent.keyDown(window, { key: "Escape" });
     await userEvent.click(await screen.findByRole("button", { name: "Chiudi comunque" }));
     expect(chiudiNotaRapida).toHaveBeenCalled();
+  });
+
+  it("scritta, salvata e poi svuotata, chiudendo non lascia una nota vuota (CA-01.3, DEC-39)", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    render(<NotaRapida />);
+    fireEvent.change(screen.getByLabelText("Testo"), { target: { value: "x" } });
+    await act(() => vi.advanceTimersByTimeAsync(2000));
+    fireEvent.change(screen.getByLabelText("Testo"), { target: { value: "" } });
+    fireEvent.keyDown(window, { key: "Escape" });
+    await waitFor(() => expect(chiudiNotaRapida).toHaveBeenCalled());
+    expect(api.eliminaSeVuota).toHaveBeenCalledWith("r1");
+    vi.useRealTimers();
+  });
+
+  it("con SC-07 davanti il contenuto non riceve la tastiera (RB-61)", async () => {
+    vi.mocked(api.crea).mockRejectedValue(new Error("spento"));
+    render(<NotaRapida />);
+    await userEvent.type(screen.getByLabelText("Testo"), "testo");
+    await userEvent.click(screen.getByRole("button", { name: "Chiudi" }));
+    await screen.findByText("Memodu non riesce a collegarsi");
+    expect(screen.getByLabelText("Testo").closest("[inert]")).not.toBeNull();
+  });
+
+  it("Alt + F4 salva e chiude come Chiudi (RB-02)", async () => {
+    render(<NotaRapida />);
+    await userEvent.type(screen.getByLabelText("Testo"), "idea");
+    act(() => sistema.chiusura?.());
+    await waitFor(() => expect(chiudiNotaRapida).toHaveBeenCalled());
+    expect(api.crea).toHaveBeenCalledWith({ contenuto: "idea" });
+  });
+
+  it("Esci da Memodu con il server spento chiede conferma prima di uscire (RB-62)", async () => {
+    vi.mocked(api.crea).mockRejectedValue(new Error("spento"));
+    render(<NotaRapida />);
+    await userEvent.type(screen.getByLabelText("Testo"), "da non perdere");
+    let pronta: boolean | undefined;
+    await act(async () => {
+      pronta = await sistema.uscita?.();
+    });
+    expect(pronta).toBe(false);
+    await userEvent.click(await screen.findByRole("button", { name: "Chiudi comunque" }));
+    expect(confermaUscita).toHaveBeenCalled();
+    expect(chiudiNotaRapida).not.toHaveBeenCalled();
+  });
+
+  it("perdendo il focus salva e resta aperta: si chiude solo con Chiudi o Esc (RB-02, RB-04, DEC-53)", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    render(<NotaRapida />);
+    fireEvent.change(screen.getByLabelText("Testo"), { target: { value: "prima" } });
+    fireEvent.blur(window);
+    await act(() => vi.advanceTimersByTimeAsync(1000));
+    expect(api.crea).toHaveBeenCalledWith({ contenuto: "prima" });
+    expect(chiudiNotaRapida).not.toHaveBeenCalled();
+    vi.useRealTimers();
   });
 });

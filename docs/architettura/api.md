@@ -73,7 +73,7 @@ Elenco delle note non organizzate (nella radice), la modificata più di recente 
 ## POST /note
 **Flusso:** FL-01 (prima pausa di scrittura in una nota rapida), FL-09 (+ o Nuova nota) · **Ruoli autorizzati:** —
 
-Crea una nota nella radice (RB-01, RB-09), o nella cartella indicata con «Nuova nota qui» (RB-09, frammento Must B). La nota rapida si crea solo quando c'è del testo: chiusa vuota non chiama l'API (RB-03). Dal + nasce vuota e resta (RB-10).
+Crea una nota nella radice (RB-01, RB-09), o nella cartella indicata con «Nuova nota qui» (RB-09, frammento Must B). La nota rapida si crea solo quando c'è del testo: chiusa vuota non chiama l'API (RB-03). Dal + nasce vuota; se la si lascia vuota, l'app la cancella con `DELETE /note/{id}` (RB-10, DEC-39).
 
 **Input**
 ```json
@@ -196,7 +196,7 @@ Le non organizzate sono ordinate come in `GET /note` (RB-60). `cestino` è il nu
 ## POST /cartelle
 **Flusso:** FL-05 (+ in cima all'albero, tasto destro → Nuova sottocartella) · **Ruoli autorizzati:** —
 
-Crea una cartella dentro `genitore`. L'app la chiama solo quando il nome è confermato con Invio: con Esc la cartella non nasce e l'API non viene chiamata (RB-48). Senza `nome` vale «Nuova cartella»; con un nome già usato segue RB-31 con `seEsiste`, e per il nome proposto «Nuova cartella» aggiunge da sola un numero (RB-48).
+Crea una cartella dentro `genitore`. L'app la chiama solo quando il nome è confermato con Invio: con Esc la cartella non nasce e l'API non viene chiamata (RB-48). Senza `nome` vale «Nuova cartella», il nome proposto, e se è già usato l'API aggiunge da sola un numero (RB-48); con un nome scritto, anche «Nuova cartella», un nome già usato segue RB-31 con `seEsiste`.
 
 **Input**
 ```json

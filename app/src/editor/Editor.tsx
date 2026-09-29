@@ -496,6 +496,7 @@ export function Editor({
         <Menu
           etichetta="Inserisci"
           voci={vociBarra}
+          invioAlTesto
           x={menuBarra.x}
           y={menuBarra.y}
           onChiudi={() => setMenuBarra(null)}

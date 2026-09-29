@@ -1,8 +1,8 @@
 // SC-02 Nota rapida (FL-01, CMP-23): finestra di sistema senza cornice, pronta alla scrittura, senza
-// titolo (RB-15). Si salva dopo 2 s di pausa (RB-06); Chiudi, il tasto Esc o un clic altrove
-// salvano e chiudono: Esc vuol dire «ho finito», non annulla (RB-02, DEC-34, DEC-50);
-// chiusa vuota non crea niente (RB-03). La scorciatoia premuta di nuovo la salva e
-// la lascia aperta (RB-04). "Apri nel programma", dalla freccia di Chiudi, la porta nella
+// titolo (RB-15). Si salva dopo 2 s di pausa e perdendo il focus (RB-06); si chiude solo con
+// Chiudi o il tasto Esc, che salvano: Esc vuol dire «ho finito», non annulla (RB-02, DEC-34,
+// DEC-50, DEC-53); chiusa vuota non crea niente (RB-03). Un clic altrove o la scorciatoia
+// premuta di nuovo la salvano e la lasciano aperta (RB-04). "Apri nel programma", dalla freccia di Chiudi, la porta nella
 // finestra principale (RB-05). Se l'API non risponde: SC-07 e conferma alla chiusura
 // (RB-61, RB-62).
 
@@ -12,17 +12,17 @@ import { FinestraConferma } from "../componenti/FinestraConferma";
 import { PulsanteDiviso } from "../componenti/Pulsante";
 import { Editor } from "../editor/Editor";
 import {
-  alleAltreNoteRapide,
-  annunciaFocus,
+  allaRichiestaDiChiusura,
+  allUscita,
+  annullaUscita,
   apriNelProgramma,
   chiudiNotaRapida,
+  confermaUscita,
 } from "../finestra";
 import { PAUSA_MS } from "../salvataggio";
 import { Blocco } from "./Blocco";
 import "./NotaRapida.css";
 
-/** Attesa dopo la perdita del focus: un'altra nota rapida può averlo preso nel frattempo. */
-const ATTESA_CLIC_ALTROVE_MS = 200;
 
 export function NotaRapida(): ReactElement {
   const testo = useRef("");
@@ -30,10 +30,11 @@ export function NotaRapida(): ReactElement {
   const id = useRef<string | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const inCorso = useRef<Promise<boolean>>(Promise.resolve(true));
-  const restaAperta = useRef(false);
   const [bloccata, setBloccata] = useState(false);
   const [riprovando, setRiprovando] = useState(false);
   const [conferma, setConferma] = useState(false);
+  /** La conferma è comparsa per «Esci da Memodu». */
+  const uscendo = useRef(false);
 
   /** Salva quello che manca; `false` se l'API non risponde (SC-07). */
   const salva = (): Promise<boolean> => {
@@ -56,8 +57,18 @@ export function NotaRapida(): ReactElement {
     return inCorso.current;
   };
 
+  /** Salva; una nota nata e poi svuotata si cancella (RB-03, DEC-39). `false` se l'API non
+   * risponde. */
+  const salvaPerChiudere = async (): Promise<boolean> => {
+    if (!(await salva())) return false;
+    if (id.current !== null && testo.current.trim() === "") {
+      await api.eliminaSeVuota(id.current).catch(() => {});
+    }
+    return true;
+  };
+
   const chiudi = async () => {
-    if (await salva()) await chiudiNotaRapida();
+    if (await salvaPerChiudere()) await chiudiNotaRapida();
     else setConferma(true);
   };
 
@@ -86,39 +97,45 @@ export function NotaRapida(): ReactElement {
     return () => window.removeEventListener("keydown", suTasto);
   });
 
-  // Clic altrove: salva e chiude. Non se il focus passa a un'altra nota rapida o se la
-  // scorciatoia ne apre un'altra: allora si salva e resta aperta (RB-04).
+  // Chiusura dal sistema (Alt + F4) come Chiudi; con SC-07 davanti, la conferma (RB-62).
+  // «Esci da Memodu»: salva, o chiede conferma prima di uscire.
+  const gestori = useRef({ chiudi, salvaPerChiudere, bloccata });
   useEffect(() => {
-    let attesa: ReturnType<typeof setTimeout> | undefined;
-    const suPerdita = () => {
-      void salva();
-      restaAperta.current = false;
-      attesa = setTimeout(() => {
-        if (!restaAperta.current && !bloccata && !conferma) void chiudi();
-      }, ATTESA_CLIC_ALTROVE_MS);
-    };
-    const suFocus = () => {
-      clearTimeout(attesa);
-      void annunciaFocus();
-    };
-    const togli = alleAltreNoteRapide(() => {
-      restaAperta.current = true;
-      void salva();
-    });
-    window.addEventListener("blur", suPerdita);
-    window.addEventListener("focus", suFocus);
-    return () => {
-      clearTimeout(attesa);
-      togli();
-      window.removeEventListener("blur", suPerdita);
-      window.removeEventListener("focus", suFocus);
-    };
+    gestori.current = { chiudi, salvaPerChiudere, bloccata };
   });
+  useEffect(() => {
+    const togliChiusura = allaRichiestaDiChiusura(() => {
+      if (gestori.current.bloccata) setConferma(true);
+      else void gestori.current.chiudi();
+    });
+    const togliUscita = allUscita(async () => {
+      if (await gestori.current.salvaPerChiudere()) return true;
+      uscendo.current = true;
+      setConferma(true);
+      return false;
+    });
+    return () => {
+      togliChiusura();
+      togliUscita();
+    };
+  }, []);
+
+  // Perdendo il focus (clic altrove, un'altra nota rapida) si salva e si resta aperti: la
+  // nota rapida si chiude solo con Chiudi o Esc (RB-02, RB-04, DEC-53).
+  const salvaOra = useRef(salva);
+  useEffect(() => {
+    salvaOra.current = salva;
+  });
+  useEffect(() => {
+    const suPerdita = () => void salvaOra.current();
+    window.addEventListener("blur", suPerdita);
+    return () => window.removeEventListener("blur", suPerdita);
+  }, []);
 
   return (
     <div className="nota-rapida">
-      <div className="nota-rapida-fascia" data-tauri-drag-region />
-      <div className="nota-rapida-area">
+      <div className="nota-rapida-fascia" data-tauri-drag-region inert={bloccata} />
+      <div className="nota-rapida-area" inert={bloccata}>
         <Editor
           contenuto=""
           focus
@@ -130,7 +147,7 @@ export function NotaRapida(): ReactElement {
           }}
         />
       </div>
-      <div className="nota-rapida-azioni" data-tauri-drag-region>
+      <div className="nota-rapida-azioni" data-tauri-drag-region inert={bloccata}>
         <PulsanteDiviso
           etichetta="Chiudi"
           onClick={() => void chiudi()}
@@ -150,8 +167,12 @@ export function NotaRapida(): ReactElement {
           titolo="La nota non è salvata"
           testo="Chiudendo, il testo va perso."
           azione="Chiudi comunque"
-          onAnnulla={() => setConferma(false)}
-          onConferma={() => void chiudiNotaRapida()}
+          onAnnulla={() => {
+            setConferma(false);
+            if (uscendo.current) void annullaUscita();
+            uscendo.current = false;
+          }}
+          onConferma={() => void (uscendo.current ? confermaUscita() : chiudiNotaRapida())}
         />
       )}
     </div>

@@ -45,6 +45,8 @@ interface Proprieta {
   attivaIniziale?: number;
   /** Un altro menu è aperto sopra questo: tasti e clic fuori li gestisce l'altro. */
   inPausa?: boolean;
+  /** Menu «/» mentre si scrive: Invio senza voce evidenziata chiude e va a capo. */
+  invioAlTesto?: boolean;
 }
 
 interface Sottomenu {
@@ -69,6 +71,7 @@ export function Menu({
   sopraOverlay = false,
   attivaIniziale = -1,
   inPausa = false,
+  invioAlTesto = false,
 }: Proprieta): ReactElement {
   const elemento = useRef<HTMLDivElement>(null);
   const [posizione, setPosizione] = useState({ x, y });
@@ -122,6 +125,11 @@ export function Menu({
         const pos = scelte.indexOf(attiva);
         setAttiva(scelte[(pos + d + scelte.length) % scelte.length]);
       };
+      // Menu «/»: Invio senza voce evidenziata chiude il menu e va a capo nel testo.
+      if (invioAlTesto && e.key === "Enter" && attiva < 0) {
+        onChiudi();
+        return;
+      }
       const gestito: Record<string, () => void> = {
         ArrowDown: () => passo(1),
         ArrowUp: () => passo(attiva < 0 ? 0 : -1),

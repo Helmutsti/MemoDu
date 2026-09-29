@@ -80,4 +80,28 @@ describe("salvataggio automatico (RB-06, CA-02.7)", () => {
     expect(salva).toHaveBeenLastCalledWith("a", { contenuto: "importante" }, undefined);
     expect(coda.haModifiche).toBe(false);
   });
+
+  it("due salvataggi falliti di fila non rimettono il testo più vecchio (RB-61)", async () => {
+    salva.mockRejectedValueOnce(new Error("spento")).mockRejectedValueOnce(new Error("spento"));
+    coda.modifica("a", { contenuto: "A" });
+    const primo = coda.scarica();
+    coda.modifica("a", { contenuto: "B" });
+    const secondo = coda.scarica();
+    await primo;
+    await secondo;
+    expect(coda.haModifiche).toBe(true);
+    await coda.scarica();
+    expect(salva).toHaveBeenLastCalledWith("a", { contenuto: "B" }, undefined);
+    expect(coda.haModifiche).toBe(false);
+  });
+
+  it("un salvataggio fallito prima di uno riuscito non sovrascrive il testo nuovo", async () => {
+    salva.mockRejectedValueOnce(new Error("spento"));
+    coda.modifica("a", { contenuto: "A" });
+    const primo = coda.scarica();
+    coda.modifica("a", { contenuto: "B" });
+    await coda.scarica();
+    await primo;
+    expect(coda.haModifiche).toBe(false);
+  });
 });
