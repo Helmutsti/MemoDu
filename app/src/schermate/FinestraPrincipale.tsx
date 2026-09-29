@@ -238,7 +238,11 @@ export function FinestraPrincipale(): ReactElement {
     async (id: string) => {
       await coda.scarica();
       if (coda.haModifiche) return;
-      if (id === apertaAttuale.current?.id) return;
+      // La nota è già aperta: se l'area mostra il cestino, si torna alla nota.
+      if (id === apertaAttuale.current?.id) {
+        setVista("nota");
+        return;
+      }
       if (await lasciaVuota()) await ricarica().catch(() => setBloccata(true));
       const nota = await esegui(() => api.leggi(id));
       if (!nota) return;

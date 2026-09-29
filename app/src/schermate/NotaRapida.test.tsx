@@ -106,4 +106,15 @@ describe("SC-02 Nota rapida (FL-01)", () => {
     await waitFor(() => expect(api.crea).toHaveBeenLastCalledWith({ contenuto: "da non perdere" }));
     expect(screen.queryByText("Memodu non riesce a collegarsi")).not.toBeInTheDocument();
   });
+
+  it("con SC-07 davanti, Esc chiede conferma e si può chiudere lo stesso (RB-62)", async () => {
+    vi.mocked(api.crea).mockRejectedValue(new Error("spento"));
+    render(<NotaRapida />);
+    await userEvent.type(screen.getByLabelText("Testo"), "da non perdere");
+    await userEvent.click(screen.getByRole("button", { name: "Chiudi" }));
+    await userEvent.click(await screen.findByRole("button", { name: "Annulla" }));
+    fireEvent.keyDown(window, { key: "Escape" });
+    await userEvent.click(await screen.findByRole("button", { name: "Chiudi comunque" }));
+    expect(chiudiNotaRapida).toHaveBeenCalled();
+  });
 });

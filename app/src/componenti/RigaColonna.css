@@ -36,6 +36,10 @@
   background: var(--sfondo-hover);
   color: var(--testo-primario);
 }
+/* «Nota vuota» resta tenue anche sulla riga aperta. */
+.riga-selezionata.riga-vuota {
+  color: var(--testo-tenue);
+}
 
 /* Titolo di sezione: freccia 12, titolo e numero in testo tenue, + a destra. */
 .riga-sezione {

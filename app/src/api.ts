@@ -3,6 +3,7 @@
 
 import {
   INDIRIZZO_API,
+  LIMITE_CORPO_BYTE,
   type Albero,
   type DatiNota,
   type DatiNuovaNota,
@@ -32,12 +33,18 @@ async function chiama<T>(
   corpo?: object,
   keepalive = false,
 ): Promise<T> {
+  const testo = corpo ? JSON.stringify(corpo) : undefined;
+  // Oltre il limite l'API rifiuta il corpo e chiude la connessione prima di rispondere 413:
+  // lo si controlla qui, così l'errore è quello giusto (EN-01, SF-17).
+  if (testo && new TextEncoder().encode(testo).length > LIMITE_CORPO_BYTE) {
+    throw new ErroreApi(413, "Il corpo supera il limite dell'API");
+  }
   let risposta: Response;
   try {
     risposta = await fetch(INDIRIZZO_API + percorso, {
       method: metodo,
       headers: corpo ? { "Content-Type": "application/json" } : undefined,
-      body: corpo ? JSON.stringify(corpo) : undefined,
+      body: testo,
       // Alla chiusura della finestra la richiesta deve arrivare anche se la pagina se ne va.
       keepalive,
     });

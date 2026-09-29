@@ -472,6 +472,13 @@ describe("SC-04 Cestino (RF-15)", () => {
     ).toBeInTheDocument();
   });
 
+  it("con il cestino aperto, il clic sulla nota già aperta torna alla nota", async () => {
+    await apriCestino();
+    await userEvent.click(await riga("Riunione di lunedì"));
+    expect(await screen.findByDisplayValue("Riunione di lunedì")).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Cestino" })).not.toBeInTheDocument();
+  });
+
   it("con il cestino aperto, un elemento eliminato dalla colonna compare subito", async () => {
     const personale: ElementoCestino = {
       id: "e3",

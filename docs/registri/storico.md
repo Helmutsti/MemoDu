@@ -282,3 +282,4 @@
 | 29/09/2026 | Manuel Cucca | Mockup di SC-01, SC-03, SC-04: la colonna usa l'auto-layout come il codice (contenuto che riempie, riga Cestino in fondo come ultimo elemento, senza posizione assoluta); nel mockup del trascinamento il cestino di trascinamento sta in fondo alla colonna (DEC-40) | DEC-40 |
 | 29/09/2026 | Manuel Cucca | CA-15.6: eliminare per sempre cancella dal database, il testo può restare nel file fino alla cifratura; nuovo rischio accettato | DEC-46 |
 | 29/09/2026 | Manuel Cucca | Architettura: riconnessione al database dopo un errore di sola lettura, in un'unica funzione per tutte le operazioni | DEC-46 |
+| 29/09/2026 | Manuel Cucca | Corretti quattro difetti già presenti: limite dei 10 MB controllato dall'app, nota rapida chiudibile con SC-07 (deduzione su RB-62), ritorno dal cestino alla nota già aperta, «Nota vuota» tenue sulla riga aperta | DEC-49 |

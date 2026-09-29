@@ -73,12 +73,14 @@ export function NotaRapida(): ReactElement {
     setRiprovando(false);
   };
 
-  // Esc chiude, se nessuna pillola, menu o finestra l'ha già usato.
+  // Esc chiude, se nessuna pillola, menu o finestra l'ha già usato. Con SC-07 davanti il
+  // testo non è salvato: Esc chiede conferma (RB-62), così la finestra si può sempre chiudere.
   useEffect(() => {
     const suTasto = (e: KeyboardEvent) => {
-      if (e.key !== "Escape" || e.defaultPrevented || bloccata || conferma) return;
+      if (e.key !== "Escape" || e.defaultPrevented || conferma) return;
       e.preventDefault();
-      void chiudi();
+      if (bloccata) setConferma(true);
+      else void chiudi();
     };
     window.addEventListener("keydown", suTasto);
     return () => window.removeEventListener("keydown", suTasto);
