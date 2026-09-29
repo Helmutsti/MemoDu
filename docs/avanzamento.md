@@ -53,10 +53,7 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 ## Deduzioni da confermare
 Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui non valgono come regole.
 
-- **CA-06.4 (29/09/2026, Must C):** testi della conferma di eliminazione anche per 1 nota («Lo usa 1 nota: resterà intatta, solo senza questo tag.») e per nessuna nota («Nessuna nota lo usa.»), sempre seguiti da «Vengono eliminati anche i suoi sotto-tag.».
-- **CA-04.3, CA-04.4 (29/09/2026, Must C):** nel campo si può anche scrivere la data (GG/MM/AAAA, anche con 1 cifra o con - e .); una data che non esiste torna quella di prima. Se la data di creazione non è stata scelta, il campo mostra in grigio quella di sistema.
-
-Prima: confermate il 29/09/2026 la chiusura della nota rapida con SC-07 (RB-62) e la nuova formulazione di CA-05.10 per il database. Prima: confermate da Manuel Cucca il 29/09/2026 le cinque scelte fatte scrivendo il codice di Must B (nome «Altre azioni» del ···, campo nome, trascinamento sui titoli di sezione, testi di eliminazione per cartelle vuote o con una nota, «Nessuna nota aperta»).
+Nessuna: confermati il 29/09/2026 i testi della conferma per 1 e 0 note (CA-06.4) e le date scritte nei campi (CA-04.3, CA-04.4). Prima: confermate il 29/09/2026 la chiusura della nota rapida con SC-07 (RB-62) e la nuova formulazione di CA-05.10 per il database. Prima: confermate da Manuel Cucca il 29/09/2026 le cinque scelte fatte scrivendo il codice di Must B (nome «Altre azioni» del ···, campo nome, trascinamento sui titoli di sezione, testi di eliminazione per cartelle vuote o con una nota, «Nessuna nota aperta»).
 
 ## Rischi accettati
 | Rischio | Decisione | Da rivedere |
