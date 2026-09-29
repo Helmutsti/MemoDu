@@ -277,3 +277,4 @@
 | 29/09/2026 | Manuel Cucca | CA-05.10 per il database confermato | Scelta di Manuel Cucca (deduzione confermata) |
 | 29/09/2026 | Manuel Cucca | Architettura: su Windows il database sta in %LOCALAPPDATA%\Memodu invece che in %APPDATA%, per non seguire il profilo nei domini aziendali | DEC-46 |
 | 29/09/2026 | Manuel Cucca | SC-02, CMP-23: via «Esc per chiudere», il pulsante diviso si chiama «Chiudi»; aggiornati FL-01, RB-02, RB-62, CA-01.2, CA-01.5, TC-02, TC-05 | DEC-50 |
+| 29/09/2026 | Manuel Cucca | SC-02: mockup ed esportazioni aggiornati con il pulsante Chiudi | DEC-50 |
