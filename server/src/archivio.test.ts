@@ -1,3 +1,4 @@
+import { chmodSync } from "node:fs";
 import { mkdtemp, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -23,6 +24,7 @@ beforeEach(async () => {
 });
 afterEach(async () => {
   for (const a of aperti.splice(0)) a.chiudi();
+  chmodSync(join(cartella, "memodu.db"), 0o644);
   await rm(cartella, { recursive: true, force: true });
 });
 
@@ -38,6 +40,19 @@ describe("database (DEC-46, DEC-48)", () => {
     const db = new Database(join(cartella, "memodu.db"));
     expect(db.pragma("user_version", { simple: true })).toBe(1);
     db.close();
+  });
+
+  it("tornato scrivibile il file, riprende a salvare senza riavviare (riconnessione)", async () => {
+    archivio.chiudi();
+    aperti.splice(0);
+    const file = join(cartella, "memodu.db");
+    chmodSync(file, 0o444);
+    const a = apri();
+    await expect(a.crea({ titolo: "non entra" })).rejects.toMatchObject({
+      code: expect.stringMatching(/^SQLITE_READONLY/),
+    });
+    chmodSync(file, 0o644);
+    expect((await a.crea({ titolo: "entra" })).titolo).toBe("entra");
   });
 
   it("ritrova le note riaprendo il database", async () => {

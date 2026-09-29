@@ -147,16 +147,17 @@ const unisciPercorso = (a: Percorso, b: string) => (a === "" ? b : `${a}/${b}`);
 const ordine = (a: string, b: string) => a.localeCompare(b, "it", { sensitivity: "base" });
 
 export class ArchivioNote {
-  private readonly db: Database.Database;
+  private db: Database.Database;
+  private readonly file: string;
+  private chiuso = false;
 
   constructor(
     cartella: string,
     private readonly adesso: () => Date = () => new Date(),
   ) {
     mkdirSync(cartella, { recursive: true });
-    this.db = new Database(join(cartella, FILE_DATABASE));
-    this.db.pragma("journal_mode = WAL");
-    this.db.pragma("foreign_keys = ON");
+    this.file = join(cartella, FILE_DATABASE);
+    this.db = apri(this.file);
     if (this.db.pragma("user_version", { simple: true }) === 0) {
       this.db.transaction(() => {
         this.db.exec(SCHEMA);
@@ -167,83 +168,116 @@ export class ArchivioNote {
 
   /** Chiude il database: dopo, ogni operazione fallisce. */
   chiudi(): void {
+    this.chiuso = true;
     this.db.close();
+  }
+
+  /**
+   * Unico punto di passaggio di ogni operazione. SQLite decide all'apertura se il file si può
+   * scrivere: se era in sola lettura, la connessione resta tale anche quando il permesso
+   * torna. Con un errore di sola lettura si riapre la connessione e si riprova una volta;
+   * riprovare è sicuro, perché l'errore arriva prima di scrivere e le operazioni composte
+   * stanno in transazioni. Un database chiuso con chiudi() resta chiuso.
+   */
+  private async conRiconnessione<T>(operazione: () => Promise<T>): Promise<T> {
+    try {
+      return await operazione();
+    } catch (errore) {
+      if (this.chiuso || !solaLettura(errore)) throw errore;
+      this.db.close();
+      this.db = apri(this.file);
+      return await operazione();
+    }
   }
 
   // ——— Note ———
 
   /** Elenco per GET /note: le non organizzate, la modificata più di recente in cima (RB-60). */
   async elenca(): Promise<VoceElenco[]> {
-    const righe = this.db
-      .prepare(
-        "SELECT * FROM note WHERE cartella IS NULL AND eliminata_il IS NULL ORDER BY modificata DESC",
-      )
-      .all() as RigaNota[];
-    return righe.map(voce);
+    return this.conRiconnessione(async () => {
+      const righe = this.db
+        .prepare(
+          "SELECT * FROM note WHERE cartella IS NULL AND eliminata_il IS NULL ORDER BY modificata DESC",
+        )
+        .all() as RigaNota[];
+      return righe.map(voce);
+    });
   }
 
   /** Cancella per sempre la nota, solo se titolo e testo sono vuoti (RB-10, DEC-39). */
   async eliminaSeVuota(id: string): Promise<void> {
-    const riga = this.trova(id);
-    if (riga.titolo.trim() !== "" || riga.contenuto.trim() !== "") {
-      throw new NotaNonVuota("La nota non è vuota");
-    }
-    this.db.prepare("DELETE FROM note WHERE id = ?").run(id);
+    return this.conRiconnessione(async () => {
+      const riga = this.trova(id);
+      if (riga.titolo.trim() !== "" || riga.contenuto.trim() !== "") {
+        throw new NotaNonVuota("La nota non è vuota");
+      }
+      this.db.prepare("DELETE FROM note WHERE id = ?").run(id);
+    });
   }
 
   async leggi(id: string): Promise<Nota> {
-    return this.nota(this.trova(id));
+    return this.conRiconnessione(async () => {
+      return this.nota(this.trova(id));
+    });
   }
 
   /** Crea una nota nella radice (RB-01) o nella cartella indicata (RB-09), anche vuota (RB-10). */
   async crea(dati: DatiNuovaNota): Promise<Nota> {
-    const cartella = dati.cartella ?? "";
-    valida(cartella);
-    const idCartella = this.idCartella(cartella);
-    const istante = this.adesso().toISOString();
-    const id = randomUUID();
-    this.db
-      .prepare(
-        "INSERT INTO note (id, titolo, contenuto, cartella, creata, modificata) VALUES (?, ?, ?, ?, ?, ?)",
-      )
-      .run(id, dati.titolo ?? "", dati.contenuto ?? "", idCartella, istante, istante);
-    return this.leggi(id);
+    return this.conRiconnessione(async () => {
+      const cartella = dati.cartella ?? "";
+      valida(cartella);
+      const idCartella = this.idCartella(cartella);
+      const istante = this.adesso().toISOString();
+      const id = randomUUID();
+      this.db
+        .prepare(
+          "INSERT INTO note (id, titolo, contenuto, cartella, creata, modificata) VALUES (?, ?, ?, ?, ?, ?)",
+        )
+        .run(id, dati.titolo ?? "", dati.contenuto ?? "", idCartella, istante, istante);
+      return this.leggi(id);
+    });
   }
 
   /** Salva titolo e contenuto e aggiorna la data di modifica (RB-06). */
   async salva(id: string, dati: DatiNota): Promise<Nota> {
-    const attuale = this.trova(id);
-    this.db
-      .prepare("UPDATE note SET titolo = ?, contenuto = ?, modificata = ? WHERE id = ?")
-      .run(
-        dati.titolo ?? attuale.titolo,
-        dati.contenuto ?? attuale.contenuto,
-        this.adesso().toISOString(),
-        id,
-      );
-    return this.leggi(id);
+    return this.conRiconnessione(async () => {
+      const attuale = this.trova(id);
+      this.db
+        .prepare("UPDATE note SET titolo = ?, contenuto = ?, modificata = ? WHERE id = ?")
+        .run(
+          dati.titolo ?? attuale.titolo,
+          dati.contenuto ?? attuale.contenuto,
+          this.adesso().toISOString(),
+          id,
+        );
+      return this.leggi(id);
+    });
   }
 
   /** Sposta la nota in un'altra cartella; la data di modifica non cambia (FL-05). */
   async spostaNota(id: string, cartella: Percorso): Promise<Nota> {
-    valida(cartella);
-    this.trova(id);
-    const idCartella = this.idCartella(cartella);
-    this.db.prepare("UPDATE note SET cartella = ? WHERE id = ?").run(idCartella, id);
-    return this.leggi(id);
+    return this.conRiconnessione(async () => {
+      valida(cartella);
+      this.trova(id);
+      const idCartella = this.idCartella(cartella);
+      this.db.prepare("UPDATE note SET cartella = ? WHERE id = ?").run(idCartella, id);
+      return this.leggi(id);
+    });
   }
 
   // ——— Albero e cartelle ———
 
   /** Tutta la colonna: non organizzate (RB-60) e cartelle in ordine alfabetico (RB-64, RB-65). */
   async albero(): Promise<Albero> {
-    const note = await this.elenca();
-    const cartelle = this.figlie(null).map((c) => this.descrivi(c.id, c.nome));
-    return {
-      nonOrganizzate: { conteggio: note.length, note },
-      cartelle,
-      cestino: (await this.elencaCestino()).length,
-    };
+    return this.conRiconnessione(async () => {
+      const note = await this.elenca();
+      const cartelle = this.figlie(null).map((c) => this.descrivi(c.id, c.nome));
+      return {
+        nonOrganizzate: { conteggio: note.length, note },
+        cartelle,
+        cestino: (await this.elencaCestino()).length,
+      };
+    });
   }
 
   /**
@@ -255,18 +289,20 @@ export class ArchivioNote {
     nome?: string,
     seEsiste: SeEsiste = "chiedi",
   ): Promise<EsitoCartella> {
-    valida(genitore);
-    const idGenitore = this.idCartella(genitore);
-    const voluto = nome === undefined ? NUOVA_CARTELLA : nomeCartella(nome);
-    // Il nome proposto prende da solo un numero (RB-48); un nome scelto segue RB-31.
-    const scelta = this.risolvi(
-      idGenitore,
-      voluto,
-      voluto === NUOVA_CARTELLA ? "numero" : seEsiste,
-    );
-    // Unendo una cartella nuova, e quindi vuota, a una esistente non c'è niente da spostare.
-    const id = scelta.unisci ? scelta.id! : this.inserisciCartella(scelta.nome, idGenitore);
-    return { cartella: this.descrivi(id, scelta.nome, genitore), daRisolvere: [] };
+    return this.conRiconnessione(async () => {
+      valida(genitore);
+      const idGenitore = this.idCartella(genitore);
+      const voluto = nome === undefined ? NUOVA_CARTELLA : nomeCartella(nome);
+      // Il nome proposto prende da solo un numero (RB-48); un nome scelto segue RB-31.
+      const scelta = this.risolvi(
+        idGenitore,
+        voluto,
+        voluto === NUOVA_CARTELLA ? "numero" : seEsiste,
+      );
+      // Unendo una cartella nuova, e quindi vuota, a una esistente non c'è niente da spostare.
+      const id = scelta.unisci ? scelta.id! : this.inserisciCartella(scelta.nome, idGenitore);
+      return { cartella: this.descrivi(id, scelta.nome, genitore), daRisolvere: [] };
+    });
   }
 
   /** Rinomina una cartella (RB-63); un nome già usato segue RB-31 (RB-23). */
@@ -275,18 +311,20 @@ export class ArchivioNote {
     nome: string,
     seEsiste: SeEsiste = "chiedi",
   ): Promise<EsitoCartella> {
-    valida(percorso, false);
-    const riga = this.cartella(this.idCartella(percorso)!);
-    const nuovo = nomeCartella(nome);
-    const genitore = padre(percorso);
-    if (nuovo === riga.nome || stesso(nuovo, riga.nome)) {
-      // Stesso nome, o solo maiuscole e minuscole diverse: nessun conflitto possibile.
-      this.db
-        .prepare("UPDATE cartelle SET nome = ?, chiave = ? WHERE id = ?")
-        .run(nuovo, chiave(nuovo), riga.id);
-      return { cartella: this.descrivi(riga.id, nuovo, genitore), daRisolvere: [] };
-    }
-    return this.metti(riga.id, riga.madre, genitore, nuovo, seEsiste);
+    return this.conRiconnessione(async () => {
+      valida(percorso, false);
+      const riga = this.cartella(this.idCartella(percorso)!);
+      const nuovo = nomeCartella(nome);
+      const genitore = padre(percorso);
+      if (nuovo === riga.nome || stesso(nuovo, riga.nome)) {
+        // Stesso nome, o solo maiuscole e minuscole diverse: nessun conflitto possibile.
+        this.db
+          .prepare("UPDATE cartelle SET nome = ?, chiave = ? WHERE id = ?")
+          .run(nuovo, chiave(nuovo), riga.id);
+        return { cartella: this.descrivi(riga.id, nuovo, genitore), daRisolvere: [] };
+      }
+      return this.metti(riga.id, riga.madre, genitore, nuovo, seEsiste);
+    });
   }
 
   /**
@@ -299,144 +337,158 @@ export class ArchivioNote {
     seEsiste: SeEsiste = "chiedi",
     daUnione = false,
   ): Promise<EsitoCartella> {
-    valida(percorso, false);
-    valida(destinazione);
-    const riga = this.cartella(this.idCartella(percorso)!);
-    const idDestinazione = this.idCartella(destinazione);
-    const dentro =
-      stesso(destinazione, percorso) || chiave(destinazione).startsWith(`${chiave(percorso)}/`);
-    if (dentro) throw new SpostamentoImpossibile("Una cartella non si sposta dentro sé stessa");
-    if (stesso(padre(percorso), destinazione)) {
-      return { cartella: this.descrivi(riga.id, riga.nome, destinazione), daRisolvere: [] };
-    }
-    const esito = this.metti(riga.id, idDestinazione, destinazione, riga.nome, seEsiste);
-    if (daUnione && riga.madre !== null) this.togliSeVuota(riga.madre);
-    return esito;
+    return this.conRiconnessione(async () => {
+      valida(percorso, false);
+      valida(destinazione);
+      const riga = this.cartella(this.idCartella(percorso)!);
+      const idDestinazione = this.idCartella(destinazione);
+      const dentro =
+        stesso(destinazione, percorso) || chiave(destinazione).startsWith(`${chiave(percorso)}/`);
+      if (dentro) throw new SpostamentoImpossibile("Una cartella non si sposta dentro sé stessa");
+      if (stesso(padre(percorso), destinazione)) {
+        return { cartella: this.descrivi(riga.id, riga.nome, destinazione), daRisolvere: [] };
+      }
+      const esito = this.metti(riga.id, idDestinazione, destinazione, riga.nome, seEsiste);
+      if (daUnione && riga.madre !== null) this.togliSeVuota(riga.madre);
+      return esito;
+    });
   }
 
   // ——— Cestino ———
 
   /** Manda una nota nel cestino (RB-26). */
   async cestinaNota(id: string): Promise<ElementoCestino> {
-    const riga = this.trova(id);
-    const provenienza = this.percorso(riga.cartella) ?? "";
-    const eliminato = this.adesso().toISOString();
-    this.db
-      .prepare("UPDATE note SET eliminata_il = ?, provenienza = ? WHERE id = ?")
-      .run(eliminato, provenienza, id);
-    return {
-      id,
-      tipo: "nota",
-      nome: riga.titolo || anteprima(riga.contenuto),
-      provenienza,
-      eliminato,
-    };
+    return this.conRiconnessione(async () => {
+      const riga = this.trova(id);
+      const provenienza = this.percorso(riga.cartella) ?? "";
+      const eliminato = this.adesso().toISOString();
+      this.db
+        .prepare("UPDATE note SET eliminata_il = ?, provenienza = ? WHERE id = ?")
+        .run(eliminato, provenienza, id);
+      return {
+        id,
+        tipo: "nota",
+        nome: riga.titolo || anteprima(riga.contenuto),
+        provenienza,
+        eliminato,
+      };
+    });
   }
 
   /** Manda una cartella nel cestino con tutto il contenuto (RB-25). */
   async cestinaCartella(percorso: Percorso): Promise<ElementoCestino> {
-    valida(percorso, false);
-    const riga = this.cartella(this.idCartella(percorso)!);
-    const conteggio = this.contaNote(riga.id);
-    const eliminato = this.adesso().toISOString();
-    this.db
-      .prepare("UPDATE cartelle SET eliminata_il = ?, provenienza = ? WHERE id = ?")
-      .run(eliminato, padre(percorso), riga.id);
-    return {
-      id: riga.id,
-      tipo: "cartella",
-      nome: riga.nome,
-      provenienza: padre(percorso),
-      eliminato,
-      conteggio,
-    };
+    return this.conRiconnessione(async () => {
+      valida(percorso, false);
+      const riga = this.cartella(this.idCartella(percorso)!);
+      const conteggio = this.contaNote(riga.id);
+      const eliminato = this.adesso().toISOString();
+      this.db
+        .prepare("UPDATE cartelle SET eliminata_il = ?, provenienza = ? WHERE id = ?")
+        .run(eliminato, padre(percorso), riga.id);
+      return {
+        id: riga.id,
+        tipo: "cartella",
+        nome: riga.nome,
+        provenienza: padre(percorso),
+        eliminato,
+        conteggio,
+      };
+    });
   }
 
   /** Gli elementi del cestino, l'eliminato più di recente in cima (SC-04). */
   async elencaCestino(): Promise<ElementoCestino[]> {
-    const note = this.db
-      .prepare("SELECT * FROM note WHERE eliminata_il IS NOT NULL")
-      .all() as RigaNota[];
-    const cartelle = this.db
-      .prepare("SELECT * FROM cartelle WHERE eliminata_il IS NOT NULL")
-      .all() as RigaCartella[];
-    const elementi: ElementoCestino[] = [
-      ...note.map((n) => ({
-        id: n.id,
-        tipo: "nota" as const,
-        nome: n.titolo || anteprima(n.contenuto),
-        provenienza: n.provenienza ?? "",
-        eliminato: n.eliminata_il!,
-      })),
-      ...cartelle.map((c) => ({
-        id: c.id,
-        tipo: "cartella" as const,
-        nome: c.nome,
-        provenienza: c.provenienza ?? "",
-        eliminato: c.eliminata_il!,
-        conteggio: this.contaNote(c.id),
-      })),
-    ];
-    return elementi.sort((a, b) => b.eliminato.localeCompare(a.eliminato));
+    return this.conRiconnessione(async () => {
+      const note = this.db
+        .prepare("SELECT * FROM note WHERE eliminata_il IS NOT NULL")
+        .all() as RigaNota[];
+      const cartelle = this.db
+        .prepare("SELECT * FROM cartelle WHERE eliminata_il IS NOT NULL")
+        .all() as RigaCartella[];
+      const elementi: ElementoCestino[] = [
+        ...note.map((n) => ({
+          id: n.id,
+          tipo: "nota" as const,
+          nome: n.titolo || anteprima(n.contenuto),
+          provenienza: n.provenienza ?? "",
+          eliminato: n.eliminata_il!,
+        })),
+        ...cartelle.map((c) => ({
+          id: c.id,
+          tipo: "cartella" as const,
+          nome: c.nome,
+          provenienza: c.provenienza ?? "",
+          eliminato: c.eliminata_il!,
+          conteggio: this.contaNote(c.id),
+        })),
+      ];
+      return elementi.sort((a, b) => b.eliminato.localeCompare(a.eliminato));
+    });
   }
 
   /** Riporta l'elemento nella radice (RB-28); una cartella con un nome già usato segue RB-31. */
   async ripristina(id: string, seEsiste: SeEsiste = "chiedi"): Promise<Nota | EsitoCartella> {
-    const nota = this.db
-      .prepare("SELECT * FROM note WHERE id = ? AND eliminata_il IS NOT NULL")
-      .get(id) as RigaNota | undefined;
-    if (nota) {
-      this.db
-        .prepare(
-          "UPDATE note SET cartella = NULL, eliminata_il = NULL, provenienza = NULL WHERE id = ?",
-        )
-        .run(id);
-      return this.leggi(id);
-    }
-    const cartella = this.db
-      .prepare("SELECT * FROM cartelle WHERE id = ? AND eliminata_il IS NOT NULL")
-      .get(id) as RigaCartella | undefined;
-    if (!cartella) throw new ElementoNonTrovato(id);
-    const scelta = this.risolvi(null, cartella.nome, seEsiste);
-    // Con Unisci la cartella esce prima con un nome libero, poi si unisce come in uno spostamento.
-    const nome = scelta.unisci ? this.risolvi(null, cartella.nome, "numero").nome : scelta.nome;
-    return this.db.transaction(() => {
-      this.db
-        .prepare(
-          "UPDATE cartelle SET madre = NULL, nome = ?, chiave = ?, eliminata_il = NULL, provenienza = NULL WHERE id = ?",
-        )
-        .run(nome, chiave(nome), id);
-      if (!scelta.unisci) return { cartella: this.descrivi(id, nome, ""), daRisolvere: [] };
-      const daRisolvere = this.unisci(id, nome, scelta.id!);
-      return { cartella: this.descrivi(scelta.id!, scelta.nome, ""), daRisolvere };
-    })();
+    return this.conRiconnessione(async () => {
+      const nota = this.db
+        .prepare("SELECT * FROM note WHERE id = ? AND eliminata_il IS NOT NULL")
+        .get(id) as RigaNota | undefined;
+      if (nota) {
+        this.db
+          .prepare(
+            "UPDATE note SET cartella = NULL, eliminata_il = NULL, provenienza = NULL WHERE id = ?",
+          )
+          .run(id);
+        return this.leggi(id);
+      }
+      const cartella = this.db
+        .prepare("SELECT * FROM cartelle WHERE id = ? AND eliminata_il IS NOT NULL")
+        .get(id) as RigaCartella | undefined;
+      if (!cartella) throw new ElementoNonTrovato(id);
+      const scelta = this.risolvi(null, cartella.nome, seEsiste);
+      // Con Unisci la cartella esce prima con un nome libero, poi si unisce come in uno spostamento.
+      const nome = scelta.unisci ? this.risolvi(null, cartella.nome, "numero").nome : scelta.nome;
+      return this.db.transaction(() => {
+        this.db
+          .prepare(
+            "UPDATE cartelle SET madre = NULL, nome = ?, chiave = ?, eliminata_il = NULL, provenienza = NULL WHERE id = ?",
+          )
+          .run(nome, chiave(nome), id);
+        if (!scelta.unisci) return { cartella: this.descrivi(id, nome, ""), daRisolvere: [] };
+        const daRisolvere = this.unisci(id, nome, scelta.id!);
+        return { cartella: this.descrivi(scelta.id!, scelta.nome, ""), daRisolvere };
+      })();
+    });
   }
 
   /** Cancella per sempre un elemento del cestino (RB-55). */
   async eliminaDefinitivamente(id: string): Promise<void> {
-    const nota = this.db
-      .prepare("DELETE FROM note WHERE id = ? AND eliminata_il IS NOT NULL")
-      .run(id);
-    if (nota.changes > 0) return;
-    const cartella = this.db
-      .prepare("SELECT id FROM cartelle WHERE id = ? AND eliminata_il IS NOT NULL")
-      .get(id);
-    if (!cartella) throw new ElementoNonTrovato(id);
-    this.cancellaCartella(id);
+    return this.conRiconnessione(async () => {
+      const nota = this.db
+        .prepare("DELETE FROM note WHERE id = ? AND eliminata_il IS NOT NULL")
+        .run(id);
+      if (nota.changes > 0) return;
+      const cartella = this.db
+        .prepare("SELECT id FROM cartelle WHERE id = ? AND eliminata_il IS NOT NULL")
+        .get(id);
+      if (!cartella) throw new ElementoNonTrovato(id);
+      this.cancellaCartella(id);
+    });
   }
 
   /** Svuota il cestino (RB-32). */
   async svuotaCestino(): Promise<void> {
-    this.db.transaction(() => {
-      this.db.prepare("DELETE FROM note WHERE eliminata_il IS NOT NULL").run();
-      const cartelle = this.db
-        .prepare("SELECT id FROM cartelle WHERE eliminata_il IS NOT NULL")
-        .all() as { id: string }[];
-      for (const { id } of cartelle) {
-        if (this.db.prepare("SELECT 1 FROM cartelle WHERE id = ?").get(id))
-          this.cancellaCartella(id);
-      }
-    })();
+    return this.conRiconnessione(async () => {
+      this.db.transaction(() => {
+        this.db.prepare("DELETE FROM note WHERE eliminata_il IS NOT NULL").run();
+        const cartelle = this.db
+          .prepare("SELECT id FROM cartelle WHERE eliminata_il IS NOT NULL")
+          .all() as { id: string }[];
+        for (const { id } of cartelle) {
+          if (this.db.prepare("SELECT 1 FROM cartelle WHERE id = ?").get(id))
+            this.cancellaCartella(id);
+        }
+      })();
+    });
   }
 
   // ——— Interni ———
@@ -651,6 +703,20 @@ export class ArchivioNote {
       this.db.prepare("DELETE FROM cartelle WHERE id = ?").run(id);
     })();
   }
+}
+
+/** Apre il database con le impostazioni di ogni connessione. */
+function apri(file: string): Database.Database {
+  const db = new Database(file);
+  db.pragma("journal_mode = WAL");
+  db.pragma("foreign_keys = ON");
+  return db;
+}
+
+/** Errore di SQLite per un file che non si può scrivere (SQLITE_READONLY e varianti). */
+function solaLettura(errore: unknown): boolean {
+  const codice = (errore as { code?: unknown }).code;
+  return typeof codice === "string" && codice.startsWith("SQLITE_READONLY");
 }
 
 /** Controlla un percorso di cartella (DEC-37); `radice` dice se "" è ammesso. */
