@@ -1,6 +1,6 @@
 # DEC-36 – Frammento Must B «Smistare» e cartelle sul file system
 
-**Data:** 2026-09-28 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-28 · **Stato:** Superata da DEC-48 (solo le cartelle sul disco) · **Idea di origine:** —
 
 ## Contesto
 Chiuso il frammento Must A (scrivere), il passo successivo è organizzare le note: spostare le non organizzate nelle cartelle (FL-05). Restavano da scegliere il perimetro del frammento e dove vivono le cartelle, visto che le note sono file markdown in una cartella del disco, soluzione provvisoria (DEC-29).

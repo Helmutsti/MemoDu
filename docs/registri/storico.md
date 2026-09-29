@@ -271,3 +271,4 @@
 | 29/09/2026 | Manuel Cucca | Architettura: il file del database sta nella cartella dei dati delle applicazioni | DEC-46 |
 | 29/09/2026 | Manuel Cucca | Cifratura a riposo del database rinviata alla sincronizzazione; nuovo rischio accettato | DEC-46 |
 | 29/09/2026 | Manuel Cucca | Il database parte vuoto: nessun passaggio delle note di prova scritte come file | DEC-45 |
+| 29/09/2026 | Manuel Cucca | Schema del database approvato; DEC-36 superata per le cartelle sul disco | DEC-48 |

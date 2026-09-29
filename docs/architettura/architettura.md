@@ -26,6 +26,19 @@ Un solo repository con workspace npm (DEC-33):
 
 Prove con Vitest, controllo del codice con ESLint e Prettier.
 
+## Schema del database (DEC-48)
+SQLite nell'API (DEC-46, DEC-47). Solo ciò che serve a Must A, B e C; immagini, avvisi, impostazioni e indice di ricerca arrivano con i loro frammenti.
+
+| Tabella | Colonne principali | Regole |
+|---|---|---|
+| `note` | id, titolo, contenuto (markdown), cartella, creata, creata scelta, modificata, fine validità, eliminata il, provenienza | Una sola cartella o nessuna (RF-05); nel cestino se «eliminata il» è compilato (DEC-37) |
+| `cartelle` | id, nome, chiave del nome, cartella madre, eliminata il, provenienza | Nome unico tra le sorelle senza maiuscole (RB-23); nel cestino con tutto il contenuto (RB-25) |
+| `tag` | id, nome come scritto la prima volta, chiave del nome, tag padre | Unico senza maiuscole (RB-22); un livello per tag (RB-18); i sotto-tag seguono il padre (RB-19) |
+| `note_tag` | nota, tag | Un tag può restare senza note (RB-49) |
+
+- La chiave del nome è il nome in minuscolo calcolato dall'API, perché il confronto di SQLite ignora le maiuscole solo senza accenti.
+- Istanti in ora universale ISO 8601, date del calendario come giorno. La versione dello schema è segnata nel database.
+
 ## File delle note (frammento Must A, da sostituire con il database: DEC-45, DEC-46)
 Li scrive solo l'API (`server/src/archivio.ts`), secondo DEC-28 e DEC-29:
 
