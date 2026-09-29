@@ -29,6 +29,7 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-21 | Immagine nel testo e area di trascinamento | composto | Disegnato |
 | CMP-22 | Modulo di accesso (progettato, non attivo: DEC-19) | composto | Disegnato |
 | CMP-23 | Nota rapida | composto | Disegnato |
+| CMP-24 | Finestra dei dettagli | composto | Disegnato, da approvare |
 
 L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'icona di sistema e non è un componente.
 
@@ -864,3 +865,37 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 ### Esempi
 - ✅ Corretto: scrivere un'idea e premere Esc: la nota è salvata tra le non organizzate.
 - ❌ Scorretto: aggiungere una ✕ in alto: la chiusura c'è già in basso (DEC-34).
+
+---
+
+## CMP-24 – Finestra dei dettagli
+**Tipo:** composto (usa CMP-01 solo icona, CMP-03 con icona e normale, CMP-05, CMP-18, suggerimenti CMP-09 e calendario CMP-12 sopra) · **Usato in:** SC-03, SC-01 (dal tasto destro sulla nota) · **Figma:** pagina Componenti composti, [Finestra dei dettagli](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=160-3916)
+
+**Scopo:** vedere e modificare date, tag e gli altri aspetti di una nota (DEC-44, RF-04, RF-06).
+**Quando usarlo:** dalla voce «Dettagli» del menu `···` della nota aperta o del tasto destro sulla nota nella colonna.
+**Quando non usarlo:** per azioni non reversibili (finestra di conferma, CMP-16) o per spostare la nota (Sposta in, CMP-11).
+
+### Varianti e dimensioni
+- Finestra modale al centro della pagina, **livello 30** con il velo (scala dei livelli). Larga 608, `spazio-finestra` (24) ai bordi, `raggio-contenitore`, `ombra-flottante`, `sfondo-flottante`; `spazio-blocco` (16) tra le parti.
+- **Intestazione:** «Dettagli» (Interfaccia/Titolo) con sotto il titolo della nota (Interfaccia/Messaggio, `testo-tenue`); a destra la ✕ (CMP-01 solo icona, Icona/Chiudi).
+- **Date:** titolo di gruppo di CMP-18, poi due righe di CMP-18 con campo e calendario (CMP-03 con icona): «Data di creazione», con sotto «Creata il … alle …» (la data di sistema, RB-21), e «Fine validità» (RF-04). Sotto, in Interfaccia/Dettaglio e `testo-tenue`, «Ultima modifica: …» in sola lettura.
+- **Tag:** titolo di gruppo, poi i tag (CMP-05 rimovibili, `spazio-elemento` tra l'uno e l'altro, vanno a capo) e il campo «Aggiungi un tag» (CMP-03, largo 200).
+- **Cartella:** titolo di gruppo, poi il percorso in sola lettura (es. «Lavoro › Clienti»).
+- Le righe senza CMP-18 hanno lo stesso rientro di CMP-18 (`spazio-controllo`, 12).
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Default | Come sopra; ogni modifica vale subito, senza Salva |
+| Hover · Focus · Attivo | Li gestiscono i controlli |
+| Suggerimenti e calendario | Si aprono sopra la finestra (regola degli elementi di livello 20 aperti da un overlay) e si chiudono con lei |
+| Errore · Disabilitato · Caricamento | Non previsti per ora |
+
+### Accessibilità
+- **Tastiera:** all'apertura il focus va sulla prima data; Tab passa da un controllo all'altro; Esc chiude (prima un suggerimento o il calendario aperto, poi la finestra) e il focus torna dove era.
+- **Lettori di schermo:** ruolo «dialog» con il nome «Dettagli di ‹titolo›»; la ✕ si chiama «Chiudi».
+- **Contrasti:** come CMP-03, CMP-05 e CMP-18.
+
+### Esempi
+- ✅ Corretto: togliere un tag con la ✕: la nota è aggiornata subito, la finestra resta aperta.
+- ❌ Scorretto: aggiungere Salva e Annulla: ogni modifica vale subito, come nel resto dell'app.
