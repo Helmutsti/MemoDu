@@ -252,3 +252,4 @@
 | 29/09/2026 | Manuel Cucca | SC-03: dettagli della nota nella prima riga sotto il titolo, tag nella seconda | DEC-42 |
 | 29/09/2026 | Manuel Cucca | CMP-20: Riga dei metadati su due righe, date di creazione e modifica sopra e tag sotto (Fase 5 riaperta per Must C) | DEC-42 |
 | 29/09/2026 | Manuel Cucca | SC-03: mockup di Must C (dettagli e tag, 6 stati), da approvare | DEC-41, DEC-42 |
+| 29/09/2026 | Manuel Cucca | SC-03: mockup di Must C approvati, con il campo del tag alto 32 e i testi della conferma del wireframe | DEC-41, DEC-42 |
