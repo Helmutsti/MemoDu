@@ -33,3 +33,4 @@
 | ID-25 | Invio nel titolo della nota porta il cursore all'inizio del testo, invece di restare nel titolo | Manuel Cucca, da sviluppo di Must A | 28/09/2026 | Proposta | — | — |
 | ID-26 | Tab dentro l'editor rientra il testo (per esempio gli elenchi) invece di spostare il focus al controllo successivo; serve comunque un modo da tastiera per uscire dall'editor | Manuel Cucca, da sviluppo di Must A | 28/09/2026 | Proposta | — | — |
 | ID-27 | Pagina «Dettagli» della nota per modificare tutti i suoi metadati (date, tag e il resto), aperta da una voce «Dettagli» sia nel menu `···` della nota aperta sia nel tasto destro sulla nota nella colonna | Manuel Cucca, da Must C | 29/09/2026 | Accettata | Must C | Sostituisce «Tag…» e «Date…»; la pagina della nota mostra solo tag e ultima modifica (DEC-44) |
+| ID-28 | Conteggio di parole e caratteri della nota nella finestra Dettagli | Manuel Cucca, da Must C | 29/09/2026 | Proposta | — | — |
