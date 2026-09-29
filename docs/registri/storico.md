@@ -254,3 +254,4 @@
 | 29/09/2026 | Manuel Cucca | SC-03: mockup di Must C (dettagli e tag, 6 stati), da approvare | DEC-41, DEC-42 |
 | 29/09/2026 | Manuel Cucca | SC-03: mockup di Must C approvati, con il campo del tag alto 32 e i testi della conferma del wireframe | DEC-41, DEC-42 |
 | 29/09/2026 | Manuel Cucca | Fase 6 di Must C chiusa senza prototipo né test di usabilità | DEC-43 |
+| 29/09/2026 | Manuel Cucca | Voce «Dettagli» nel menu della nota per date, tag e gli altri aspetti; sotto il titolo solo tag in lettura e ultima modifica; Fase 6 di Must C riaperta | DEC-44, ID-27 |

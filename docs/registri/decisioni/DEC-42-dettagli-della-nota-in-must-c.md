@@ -1,6 +1,6 @@
 # DEC-42 – Posto dei dettagli della nota nel frammento Must C
 
-**Data:** 2026-09-29 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-29 · **Stato:** Superata da DEC-44 · **Idea di origine:** —
 
 ## Contesto
 DEC-41 lascia da decidere se i dettagli della nota entrano in Must C. RF-04 vuole la data di creazione di sistema «sempre visibile nei dettagli della nota», ma nessuna schermata ha un posto per i dettagli (domanda aperta di RF-04, SC-03). La Fase 6 di Must C disegna la riga sotto il titolo, dove vanno i tag: decidere i tag senza i dettagli rischia di far ridisegnare la riga subito dopo.
