@@ -53,9 +53,7 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 ## Deduzioni da confermare
 Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui non valgono come regole.
 
-- **CA-05.10 (29/09/2026, Must D):** con il database una cartella non si può più togliere «dal disco da fuori Memodu»; il criterio ora parla di una cartella o nota che non c'è più, per esempio eliminata da un'altra finestra di Memodu, e TC-41 la simula con una chiamata all'API.
-
-Prima: confermate da Manuel Cucca il 29/09/2026 le cinque scelte fatte scrivendo il codice di Must B (nome «Altre azioni» del ···, campo nome, trascinamento sui titoli di sezione, testi di eliminazione per cartelle vuote o con una nota, «Nessuna nota aperta»).
+Nessuna: confermata il 29/09/2026 la nuova formulazione di CA-05.10 per il database. Prima: confermate da Manuel Cucca il 29/09/2026 le cinque scelte fatte scrivendo il codice di Must B (nome «Altre azioni» del ···, campo nome, trascinamento sui titoli di sezione, testi di eliminazione per cartelle vuote o con una nota, «Nessuna nota aperta»).
 
 ## Rischi accettati
 | Rischio | Decisione | Da rivedere |

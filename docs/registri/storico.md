@@ -274,3 +274,4 @@
 | 29/09/2026 | Manuel Cucca | Schema del database approvato; DEC-36 superata per le cartelle sul disco | DEC-48 |
 | 29/09/2026 | Manuel Cucca | Nuovo frammento Must D · Database, da fare subito prima di Must C | DEC-49 |
 | 29/09/2026 | Manuel Cucca | Must D: l'API salva in SQLite; architettura, API, ambienti, criteri e casi di prova passati dal disco al database; deduzione su CA-05.10 | DEC-45, DEC-46, DEC-47, DEC-48, DEC-49 |
+| 29/09/2026 | Manuel Cucca | CA-05.10 per il database confermato | Scelta di Manuel Cucca (deduzione confermata) |
