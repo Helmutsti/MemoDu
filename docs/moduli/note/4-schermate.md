@@ -89,7 +89,8 @@ Stessi tasti fisici sui due sistemi, libere nelle configurazioni di default di e
 
 | Cosa | Dove | Come |
 |---|---|---|
-| Tag | Nella riga sotto il titolo | I tag diventano modificabili: × per toglierli, un campo per aggiungerne con i suggerimenti sotto (livello 20) e "Crea il tag «…»" per uno nuovo (RB-17, RB-18, RB-22). "Tag…" nel menu `···` porta il cursore nel campo |
+| Dettagli (DEC-42) | Prima riga sotto il titolo, sopra la riga dei tag | In `testo-tenue`: data di creazione e di ultima modifica, sempre visibili (RF-04). Formato dei testi da decidere con il mockup. Scelta di Manuel Cucca il 29/09/2026 |
+| Tag | Seconda riga sotto il titolo, sotto i dettagli | I tag diventano modificabili: × per toglierli, un campo per aggiungerne con i suggerimenti sotto (livello 20) e "Crea il tag «…»" per uno nuovo (RB-17, RB-18, RB-22). "Tag…" nel menu `···` porta il cursore nel campo |
 | Eliminare un tag del tutto | Tasto destro su un suggerimento | "Elimina tag…", poi finestra di conferma con il numero di note coinvolte (RB-19) |
 | Date | Pannello sotto il `···` (livello 20) | Data di creazione scelta e fine validità, con calendario. Sotto la data di creazione compare quella di sistema, che non cambia (RB-21). Nessun avviso sulle combinazioni (RB-20) |
 | Sposta in | Pannello sotto il `···` (livello 20) | Campo per cercare una cartella, poi la radice e l'albero; la cartella attuale è evidenziata. Clic su una cartella: la nota si sposta e il pannello si chiude |
