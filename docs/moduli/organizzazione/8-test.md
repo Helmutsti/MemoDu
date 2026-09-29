@@ -23,6 +23,12 @@
 | TC-48 | RF-15 CA-15.6 | Elimina definitivamente: Annulla lascia l'elemento; confermando sparisce anche dal database | Locale | Cestino con elementi | Superato il 29/09/2026 (Chrome su Windows, cartella di prova) |
 | TC-49 | RF-15 CA-15.7 | Svuota cestino: la conferma indica il numero di elementi; dopo, «Il cestino è vuoto» e niente pulsante Svuota | Locale | Cestino con tre elementi | Superato il 29/09/2026 (Chrome su Windows, cartella di prova) |
 | TC-50 | RF-15 CA-15.8 | Chiudere e riaprire Memodu: gli elementi del cestino ci sono ancora | Locale | Cestino con elementi | Superato il 29/09/2026 (Chrome su Windows, cartella di prova), riavviando il server |
+| TC-57 | RF-06 CA-06.1 | Con «lavoro» e «lavoro/fornitori» esistenti scrivere «lav»: i due suggerimenti sopra la finestra e «Crea il tag «lav»»; Invio assegna «lavoro». Scrivere «progetto x» e scegliere «Crea il tag «progetto x»»: nasce e si assegna. Entrambi compaiono anche sotto il titolo | Locale | Tag di prova | |
+| TC-58 | RF-06 CA-06.2 | Con «lavoro» esistente scrivere «Lavoro/Clienti»: la nota mostra «lavoro/Clienti»; nel database «Clienti» è figlio di «lavoro» e non nasce un secondo «Lavoro» | Locale | Tag di prova | |
+| TC-59 | RF-06 CA-06.3 | Togliere un tag con la ✕: sparisce dalla finestra e da sotto il titolo; riscrivendolo compare ancora tra i suggerimenti | Locale | Tag di prova | |
+| TC-60 | RF-06 CA-06.4 | Tasto destro su «lavoro» tra i suggerimenti, con 3 note che usano «lavoro» o «lavoro/fornitori»: la conferma dice 3 note; Annulla non cambia niente; confermando «lavoro» e «lavoro/fornitori» spariscono da tutte le note e dai suggerimenti | Locale | Tag di prova su tre note | |
+| TC-61 | RF-06 CA-06.5 | Scrivere «  /viaggi//estate 🏖️/ »: diventa «viaggi/estate 🏖️»; «Città» e «città» sono lo stesso tag; Invio con il campo vuoto non crea niente | Locale | Una nota | |
+| TC-62 | RF-06 CA-06.6 | Solo tastiera: Tab fino a un tag e Canc lo toglie; nel campo frecce e Invio scelgono un suggerimento; Esc chiude prima i suggerimenti, poi la finestra | Locale | Tag di prova | |
 
 ## Domande aperte
 | Riguarda | Domanda | Chi risponde | Risposta | Decisione |

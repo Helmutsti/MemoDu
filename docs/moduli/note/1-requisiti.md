@@ -123,7 +123,14 @@ Come *utente* voglio associare dei metadati a ogni nota per descriverla con tito
 Scrivo la nota. Le note non ancora organizzate compaiono in una barra laterale e da lì le trascino nell'albero delle cartelle. Quando apro una nota, dal menu in alto a destra posso aggiungere tag, spostarla in un'altra cartella o modificarne i metadati. Il titolo è l'unico metadato che modifico direttamente nella schermata di scrittura.
 
 ### Criteri di accettazione
-- [Da compilare]
+Frammento Must C (DEC-44): sotto il titolo l'ultima modifica e i tag in sola lettura; date, tag e cartella nella finestra Dettagli (CMP-24). Criteri approvati da Manuel Cucca il 29/09/2026.
+
+- **CA-04.1** *Dato* una nota aperta, *allora* sotto il titolo compaiono «Modificata …» e i suoi tag in sola lettura; senza tag solo la data. Una modifica di oggi si scrive «Modificata oggi alle 11:42», una più vecchia «Modificata il 12/09/2026 alle 10:14» (DEC-44).
+- **CA-04.2** *Dato* una nota, *quando* scelgo «Dettagli» dal menu `···` o dal tasto destro sulla nota nella colonna, *allora* si apre la finestra al centro con il velo (CMP-24); Esc o ✕ la chiudono e il focus torna dove era.
+- **CA-04.3** *Dato* la finestra Dettagli, *quando* scelgo la data di creazione con il calendario, *allora* si salva subito e sotto resta «Creata il … alle …», la data di sistema, che non cambia (RB-21); qualsiasi data è ammessa (RB-20).
+- **CA-04.4** *Dato* la finestra Dettagli, *quando* scelgo la fine validità o la tolgo con «Nessuna data», *allora* si salva subito; alla scadenza non succede niente.
+- **CA-04.5** *Dato* la finestra Dettagli, *allora* la cartella si vede in sola lettura («Lavoro › Clienti»); per una nota senza cartella «Non organizzata».
+- **CA-04.6** *Dato* una nota, *quando* ne cambio le date o i tag, *allora* l'ultima modifica si aggiorna e la nota sale in cima all'elenco (DEC-51, RB-60).
 
 ---
 

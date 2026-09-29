@@ -37,6 +37,12 @@
 | TC-30 | FL-02 × SF-36 | Input malevolo (vedi CA-02.9) | Locale | — | |
 | TC-31 | FL-09 × SF-01 | Premere + più volte di fila: a ogni clic nasce una nota vuota e quella lasciata vuota sparisce, ne resta una sola (DEC-39, RB-10) | Locale | Nessuna nota | |
 | TC-32 | FL-09 × SF-16 | Nuova nota lasciata vuota (vedi CA-02.1) | Locale | — | |
+| TC-51 | RF-04 CA-04.1 | Aprire una nota con due tag e una senza: sotto il titolo «Modificata oggi alle …» e i tag senza ✕; senza tag solo la data. Una nota modificata ieri: «Modificata il … alle …» | Locale | Note con e senza tag | |
+| TC-52 | RF-04 CA-04.2 | Aprire Dettagli dal `···` e poi dal tasto destro su una nota della colonna: finestra al centro con il velo e il titolo della nota; Esc e ✕ la chiudono e il focus torna sul `···` o sulla riga | Locale | Note con e senza tag | |
+| TC-53 | RF-04 CA-04.3 | Scegliere 01/01/2020 come data di creazione: riaprendo Dettagli c'è ancora; «Creata il … alle …» non cambia | Locale | Una nota | |
+| TC-54 | RF-04 CA-04.4 | Scegliere una fine validità già passata, poi toglierla con «Nessuna data»: si salva ogni volta, e con la data passata non succede niente | Locale | Una nota | |
+| TC-55 | RF-04 CA-04.5 | Dettagli di una nota in «Lavoro › Clienti» e di una non organizzata: «Lavoro › Clienti» e «Non organizzata», non modificabili | Locale | Albero di prova | |
+| TC-56 | RF-04 CA-04.6 | Cambiare una data e poi un tag di una nota in fondo all'elenco: sale in cima e «Modificata» diventa «oggi» | Locale | Tre note non organizzate | |
 
 Frammento Must A. Ambiente Locale, l'unico della prima fase (`architettura/ambienti.md`); set di dati inventati, senza dati personali reali. FL-09 × SF-20 riguarda la sincronizzazione ed è fuori da Must A.
 

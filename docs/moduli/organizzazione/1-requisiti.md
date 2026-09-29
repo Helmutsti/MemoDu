@@ -53,7 +53,14 @@ Come *utente* voglio assegnare tag alle note per raggrupparle in modo trasversal
 Condiviso con RF-04 e RF-05: vedi lo scenario di RF-05.
 
 ### Criteri di accettazione
-- [Da compilare]
+Frammento Must C (DEC-41, DEC-44): i tag si modificano nella finestra Dettagli; trovare le note per tag arriva con la ricerca (RF-08). Criteri approvati da Manuel Cucca il 29/09/2026.
+
+- **CA-06.1** *Dato* la finestra Dettagli, *quando* scrivo nel campo «Aggiungi un tag», *allora* sopra la finestra compaiono i tag esistenti che contengono il testo e «Crea il tag «…»» se non esiste; con Invio o un clic il tag si assegna e compare nella finestra e sotto il titolo (RB-17).
+- **CA-06.2** *Dato* il tag «lavoro», *quando* scrivo «Lavoro/Clienti», *allora* si usa «lavoro» e sotto nasce «Clienti» (RB-18, RB-22).
+- **CA-06.3** *Dato* un tag della nota, *quando* premo la sua ✕, *allora* il tag esce dalla nota e resta tra i suggerimenti (RB-49).
+- **CA-06.4** *Dato* un tag tra i suggerimenti, *quando* scelgo «Elimina tag…» dal tasto destro, *allora* compare «Eliminare il tag «…»?» con il numero di note; confermando il tag e i suoi sotto-tag spariscono da tutte le note, Annulla non cambia niente (RB-19).
+- **CA-06.5** *Dato* il campo dei tag, *allora* spazi, accenti ed emoji sono ammessi, i `/` all'inizio, alla fine o doppi si correggono da soli e un nome vuoto non crea niente (RB-22).
+- **CA-06.6** *Dato* il solo uso della tastiera, *allora* Tab raggiunge i tag e Canc o Backspace toglie quello in focus (CMP-05); nel campo le frecce scorrono i suggerimenti, Invio sceglie, Esc chiude prima i suggerimenti e poi la finestra.
 
 ---
 
