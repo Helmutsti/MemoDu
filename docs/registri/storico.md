@@ -260,3 +260,4 @@
 | 29/09/2026 | Manuel Cucca | SC-03: in Dettagli ogni modifica vale subito, chiusura con ✕ o Esc | DEC-44 |
 | 29/09/2026 | Manuel Cucca | Scala dei livelli: finestra Dettagli al livello 30; i flottanti aperti da dentro un overlay stanno sopra di esso | DEC-44 |
 | 29/09/2026 | Manuel Cucca | CMP-24 Finestra dei dettagli disegnato (Fase 5 riaperta per Must C), da approvare | DEC-44 |
+| 29/09/2026 | Manuel Cucca | CMP-24 approvato con i testi proposti, il comportamento da tastiera e il titolo della nota sotto «Dettagli» | DEC-44 |

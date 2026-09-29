@@ -29,7 +29,7 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-21 | Immagine nel testo e area di trascinamento | composto | Disegnato |
 | CMP-22 | Modulo di accesso (progettato, non attivo: DEC-19) | composto | Disegnato |
 | CMP-23 | Nota rapida | composto | Disegnato |
-| CMP-24 | Finestra dei dettagli | composto | Disegnato, da approvare |
+| CMP-24 | Finestra dei dettagli | composto | Disegnato |
 
 L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'icona di sistema e non è un componente.
 
@@ -871,7 +871,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 ## CMP-24 – Finestra dei dettagli
 **Tipo:** composto (usa CMP-01 solo icona, CMP-03 con icona e normale, CMP-05, CMP-18, suggerimenti CMP-09 e calendario CMP-12 sopra) · **Usato in:** SC-03, SC-01 (dal tasto destro sulla nota) · **Figma:** pagina Componenti composti, [Finestra dei dettagli](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=160-3916)
 
-**Scopo:** vedere e modificare date, tag e gli altri aspetti di una nota (DEC-44, RF-04, RF-06).
+**Scopo:** vedere e modificare date, tag e gli altri aspetti di una nota (DEC-44, RF-04, RF-06). Approvato da Manuel Cucca il 29/09/2026, con testi, tastiera e lettori di schermo come sotto.
 **Quando usarlo:** dalla voce «Dettagli» del menu `···` della nota aperta o del tasto destro sulla nota nella colonna.
 **Quando non usarlo:** per azioni non reversibili (finestra di conferma, CMP-16) o per spostare la nota (Sposta in, CMP-11).
 
