@@ -140,6 +140,11 @@ export function Colonna(p: Proprieta): ReactElement {
 
   const cartella = (c: Cartella, livello: number): ReactNode => {
     const aperta = p.cartelleAperte.has(c.percorso);
+    // Una cartella aperta ma vuota non ha l'elenco: il suo margine sposterebbe le righe sotto.
+    const conContenuto =
+      c.cartelle.length > 0 ||
+      c.note.length > 0 ||
+      (p.campo?.tipo === "nuova" && p.campo.genitore === c.percorso);
     const d: Destinazione = { tipo: "cartella", percorso: c.percorso };
     return (
       <li role="none" key={c.percorso}>
@@ -164,7 +169,7 @@ export function Colonna(p: Proprieta): ReactElement {
             {...destinazione(d)}
           />
         )}
-        {aperta && (
+        {aperta && conContenuto && (
           <ul role="group" className="colonna-elenco">
             {sottocartelle(c.cartelle, c.percorso, livello + 1)}
             {c.note.map((v) => rigaNota(v, c.percorso, livello))}

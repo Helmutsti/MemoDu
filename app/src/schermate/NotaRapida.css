@@ -1,4 +1,4 @@
-/* SC-02: superficie senza cornice, divisori o bordi; Esc per chiudere tenue, Salva diviso. Come il mockup:
+/* SC-02: superficie senza cornice, divisori o bordi; un solo pulsante, Chiudi diviso, in basso a destra (DEC-50). Come il mockup:
    fondo della nota, spazio-finestra ai bordi e spazio-blocco tra fascia, testo e azioni. */
 .corpo-rapida {
   background: var(--sfondo-nota);
@@ -30,5 +30,5 @@
   display: flex;
   flex: none;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
 }

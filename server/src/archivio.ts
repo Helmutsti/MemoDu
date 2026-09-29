@@ -107,12 +107,13 @@ export class NotaNonVuota extends Error {}
 
 /**
  * Cartella del database: la cartella dei dati delle applicazioni (DEC-46), fuori da OneDrive
- * e iCloud. MEMODU_CARTELLA la sostituisce, per le prove.
+ * e iCloud; su Windows quella locale, che non segue il profilo nei domini aziendali.
+ * MEMODU_CARTELLA la sostituisce, per le prove.
  */
 export function cartellaPredefinita(): string {
   if (process.env.MEMODU_CARTELLA) return process.env.MEMODU_CARTELLA;
   if (process.platform === "win32") {
-    return join(process.env.APPDATA ?? join(homedir(), "AppData", "Roaming"), "Memodu");
+    return join(process.env.LOCALAPPDATA ?? join(homedir(), "AppData", "Local"), "Memodu");
   }
   if (process.platform === "darwin") {
     return join(homedir(), "Library", "Application Support", "Memodu");
@@ -440,7 +441,7 @@ export class ArchivioNote {
 
   // ——— Interni ———
 
-  /** La nota fuori dal cestino, anche dentro le cartelle eliminate: altrimenti 404. */
+  /** La nota fuori dal cestino e non dentro una cartella eliminata: altrimenti 404. */
   private trova(id: string): RigaNota {
     const riga = this.db
       .prepare("SELECT * FROM note WHERE id = ? AND eliminata_il IS NULL")
@@ -614,11 +615,21 @@ export class ArchivioNote {
     return daRisolvere;
   }
 
-  /** Toglie la cartella se non contiene più niente, nemmeno elementi eliminati a parte. */
+  /**
+   * Toglie la cartella se non ha più contenuto visibile. Gli elementi nel cestino che venivano
+   * da lì si staccano prima: tornano comunque nella radice (RB-28) e la provenienza resta.
+   */
   private togliSeVuota(id: string): void {
-    const cartelle = this.db.prepare("SELECT 1 FROM cartelle WHERE madre = ?").get(id);
-    const note = this.db.prepare("SELECT 1 FROM note WHERE cartella = ?").get(id);
-    if (!cartelle && !note) this.db.prepare("DELETE FROM cartelle WHERE id = ?").run(id);
+    const cartelle = this.db
+      .prepare("SELECT 1 FROM cartelle WHERE madre = ? AND eliminata_il IS NULL")
+      .get(id);
+    const note = this.db
+      .prepare("SELECT 1 FROM note WHERE cartella = ? AND eliminata_il IS NULL")
+      .get(id);
+    if (cartelle || note) return;
+    this.db.prepare("UPDATE cartelle SET madre = NULL WHERE madre = ?").run(id);
+    this.db.prepare("UPDATE note SET cartella = NULL WHERE cartella = ?").run(id);
+    this.db.prepare("DELETE FROM cartelle WHERE id = ?").run(id);
   }
 
   /**
@@ -671,13 +682,13 @@ function voce(riga: RigaNota): VoceElenco {
 
 /** Nome pulito: i caratteri vietati nei nomi dei file diventano "-" (RB-63). */
 export function baseNome(titolo: string): string {
-  const pulito = titolo
+  const intero = titolo
     .replace(/[<>:"/\\|?*\p{Cc}]/gu, "-")
     .replace(/\s+/g, " ")
     .trim()
-    .replace(/[. ]+$/, "")
-    .slice(0, LUNGHEZZA_MASSIMA_NOME)
-    .trim();
+    .replace(/[. ]+$/, "");
+  // Si contano i caratteri veri, non le unità interne: un'emoji non si spezza a metà.
+  const pulito = Array.from(intero).slice(0, LUNGHEZZA_MASSIMA_NOME).join("").trim();
   if (pulito === "" || /^[-.]+$/.test(pulito)) return SENZA_TITOLO;
   return NOMI_RISERVATI.test(pulito) ? `${pulito}-` : pulito;
 }

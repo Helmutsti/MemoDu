@@ -1,15 +1,15 @@
 // SC-02 Nota rapida (FL-01, CMP-23): finestra di sistema senza cornice, pronta alla scrittura, senza
-// titolo (RB-15). Si salva dopo 2 s di pausa (RB-06); Salva, Esc per chiudere, il tasto Esc
-// o un clic altrove salvano e chiudono: Esc vuol dire «ho finito», non annulla (RB-02,
-// DEC-34); chiusa vuota non crea niente (RB-03). La scorciatoia premuta di nuovo la salva e
-// la lascia aperta (RB-04). "Apri nel programma", dalla freccia di Salva, la porta nella
+// titolo (RB-15). Si salva dopo 2 s di pausa (RB-06); Chiudi, il tasto Esc o un clic altrove
+// salvano e chiudono: Esc vuol dire «ho finito», non annulla (RB-02, DEC-34, DEC-50);
+// chiusa vuota non crea niente (RB-03). La scorciatoia premuta di nuovo la salva e
+// la lascia aperta (RB-04). "Apri nel programma", dalla freccia di Chiudi, la porta nella
 // finestra principale (RB-05). Se l'API non risponde: SC-07 e conferma alla chiusura
 // (RB-61, RB-62).
 
 import { useEffect, useRef, useState, type ReactElement } from "react";
 import { api } from "../api";
 import { FinestraConferma } from "../componenti/FinestraConferma";
-import { Pulsante, PulsanteDiviso } from "../componenti/Pulsante";
+import { PulsanteDiviso } from "../componenti/Pulsante";
 import { Editor } from "../editor/Editor";
 import {
   alleAltreNoteRapide,
@@ -129,11 +129,8 @@ export function NotaRapida(): ReactElement {
         />
       </div>
       <div className="nota-rapida-azioni" data-tauri-drag-region>
-        <Pulsante tipo="tenue" onClick={() => void chiudi()}>
-          Esc per chiudere
-        </Pulsante>
         <PulsanteDiviso
-          etichetta="Salva"
+          etichetta="Chiudi"
           onClick={() => void chiudi()}
           nomeAltre="Altre azioni"
           voci={[

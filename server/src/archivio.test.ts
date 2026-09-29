@@ -74,6 +74,8 @@ describe("nomi delle cartelle (RB-63)", () => {
     expect(baseNome("CON")).toBe("CON-");
     expect(baseNome("   ")).toBe("Senza titolo");
     expect(baseNome("x".repeat(300))).toHaveLength(100);
+    expect(baseNome("a".repeat(99) + "🚀")).toBe("a".repeat(99) + "🚀");
+    expect(baseNome("📁 Progetti 🚀")).toBe("📁 Progetti 🚀");
   });
 });
 

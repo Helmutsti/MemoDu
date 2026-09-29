@@ -182,6 +182,32 @@ describe("cartelle (RB-23, RB-24, RB-31, RB-48, RB-63)", () => {
     expect((await radice()).map((c) => c.nome)).toEqual(["B"]);
   });
 
+  it("unendo, l'origine sparisce anche se ha elementi nel cestino, che restano ripristinabili", async () => {
+    await nuova("", "A");
+    await nuova("", "B");
+    const via = await archivio.crea({ titolo: "Via", cartella: "A" });
+    await archivio.crea({ titolo: "Resta", cartella: "A" });
+    await archivio.cestinaNota(via.id);
+    await archivio.rinominaCartella("A", "B", "unisci");
+    expect((await radice()).map((c) => `${c.nome} ${c.conteggio}`)).toEqual(["B 1"]);
+    expect((await archivio.elencaCestino()).map((e) => e.nome)).toEqual(["Via"]);
+    expect(await archivio.ripristina(via.id)).toMatchObject({ cartella: "" });
+  });
+
+  it("ripristinando con Unisci non resta la cartella di appoggio numerata", async () => {
+    await nuova("", "Clienti");
+    await nuova("Clienti", "Archivio");
+    const vecchia = await archivio.crea({ titolo: "Vecchia", cartella: "Clienti/Archivio" });
+    await archivio.cestinaNota(vecchia.id);
+    const c = await archivio.cestinaCartella("Clienti");
+    await nuova("", "clienti");
+    await nuova("clienti", "Archivio");
+    const esito = (await archivio.ripristina(c.id, "unisci")) as EsitoCartella;
+    expect(esito.daRisolvere).toEqual(["Clienti (2)/Archivio"]);
+    await archivio.spostaCartella("Clienti (2)/Archivio", "clienti", "unisci", true);
+    expect((await radice()).map((x) => x.nome)).toEqual(["clienti"]);
+  });
+
   it("rifiuta percorsi non validi", async () => {
     for (const percorso of ["../fuori", "a//b", "a/./b"]) {
       await expect(archivio.creaCartella(percorso, "x")).rejects.toBeInstanceOf(PercorsoNonValido);

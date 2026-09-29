@@ -11,7 +11,7 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 - Le note, le cartelle e il cestino non sono più file nella cartella Documenti\Memodu: stanno in un database nella cartella dei dati di Memodu, fuori da OneDrive e iCloud. Le note scritte finora nella cartella Documenti non vengono spostate
 
 ### Aggiunto
-- Nota rapida: con Ctrl + Alt + N (Control + Option + N su Mac) compare una finestrella per annotare un'idea da qualsiasi programma; si salva da sola; Esc o il pulsante Salva la chiudono tenendo il testo, e dalla freccia accanto a Salva "Apri nel programma" la porta nella finestra principale (RF-01)
+- Nota rapida: con Ctrl + Alt + N (Control + Option + N su Mac) compare una finestrella per annotare un'idea da qualsiasi programma; si salva da sola; Esc o il pulsante Chiudi la chiudono tenendo il testo, e dalla freccia accanto a Chiudi "Apri nel programma" la porta nella finestra principale (RF-01)
 - Icona nella barra dei menu (Mac) o nell'area di notifica (Windows) per aprire una nota rapida o Memodu; chiudendo la finestra, Memodu resta attivo (RF-01)
 - Scrittura in markdown formattata mentre scrivi: titoli, grassetto, corsivo, sottolineato, barrato, elenchi e checklist, con scorciatoie, strumenti sopra la selezione, menu con "/" e tasto destro (RF-02)
 - Salvataggio automatico dopo 2 secondi di pausa, senza pulsante Salva (RF-02)

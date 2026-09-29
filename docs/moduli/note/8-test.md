@@ -35,7 +35,7 @@
 | TC-28 | FL-02 × SF-10 | Sospendere il computer durante la scrittura: si perde al massimo l'ultima pausa | Locale | Nota con testo | |
 | TC-29 | FL-02 × SF-30, SF-32 | Server spento ed errori di scrittura (vedi CA-02.12, CA-02.13) | Locale | — | |
 | TC-30 | FL-02 × SF-36 | Input malevolo (vedi CA-02.9) | Locale | — | |
-| TC-31 | FL-09 × SF-01 | Premere + più volte di fila: nasce una nota vuota a ogni clic, restano tutte | Locale | Nessuna nota | |
+| TC-31 | FL-09 × SF-01 | Premere + più volte di fila: a ogni clic nasce una nota vuota e quella lasciata vuota sparisce, ne resta una sola (DEC-39, RB-10) | Locale | Nessuna nota | |
 | TC-32 | FL-09 × SF-16 | Nuova nota lasciata vuota (vedi CA-02.1) | Locale | — | |
 
 Frammento Must A. Ambiente Locale, l'unico della prima fase (`architettura/ambienti.md`); set di dati inventati, senza dati personali reali. FL-09 × SF-20 riguarda la sincronizzazione ed è fuori da Must A.

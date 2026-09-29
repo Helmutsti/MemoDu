@@ -278,6 +278,14 @@ describe("SC-01, cartelle (RF-05)", () => {
     await waitFor(async () => expect(await riga("Riunione di lunedì")).toHaveFocus());
   });
 
+  it("una cartella vuota aperta non aggiunge un elenco vuoto sotto la riga", async () => {
+    render(<FinestraPrincipale />);
+    const personale = await riga(/Personale/);
+    await userEvent.click(personale);
+    expect(personale).toHaveAttribute("aria-expanded", "true");
+    expect(personale.nextElementSibling).toBeNull();
+  });
+
   it("frecce destra e sinistra aprono e chiudono la cartella in focus (CA-05.11)", async () => {
     render(<FinestraPrincipale />);
     (await riga(/Lavoro/)).focus();
