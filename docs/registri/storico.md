@@ -267,3 +267,4 @@
 | 29/09/2026 | Manuel Cucca | Note, tag, cartelle e cestino in un database al posto dei file; DEC-28 e DEC-29 superate | DEC-45 |
 | 29/09/2026 | Manuel Cucca | Il database sta per ora nell'API Node, al posto dei file | DEC-45 |
 | 29/09/2026 | Manuel Cucca | Architettura: database SQLite nell'API Node | DEC-46 |
+| 29/09/2026 | Manuel Cucca | Libreria better-sqlite3 per SQLite nell'API | DEC-47 |
