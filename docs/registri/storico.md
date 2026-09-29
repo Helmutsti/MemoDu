@@ -287,3 +287,4 @@
 | 29/09/2026 | Manuel Cucca | RB-62: confermata la chiusura della nota rapida con SC-07 davanti; Must D pronto per il rilascio | Scelta di Manuel Cucca (deduzione confermata) |
 | 29/09/2026 | Manuel Cucca | API di tag e dettagli della nota; Fase 7 di Must C chiusa | DEC-51 |
 | 29/09/2026 | Manuel Cucca | RF-04, RF-06: criteri di accettazione di Must C approvati; piano di test TC-51 … TC-62 scritto, da approvare | DEC-41, DEC-44, DEC-51 |
+| 29/09/2026 | Manuel Cucca | Piano di test TC-51 … TC-62 approvato; Fase 8 di Must C chiusa | DEC-41, DEC-44 |
