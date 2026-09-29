@@ -321,3 +321,4 @@
 | 29/09/2026 | Manuel Cucca | SC-01: colonna ridimensionabile dal bordo destro (10 px … finestra meno 48), contenuto che non si deforma; ··· e pulsanti della finestra in una pillola con pulsanti tondi; tolta l'eccezione del ··· quadrato da CMP-01 | DEC-62 |
 | 29/09/2026 | Manuel Cucca | SC-01: il ··· in una pillola separata dai pulsanti della finestra | DEC-63 |
 | 29/09/2026 | Manuel Cucca | Testo della nota per ora puro: sospesi CA-02.2 … CA-02.6 e TC-10 … TC-14, invito «Scrivi qui…», nuovo rinvio per il markdown | DEC-64 |
+| 29/09/2026 | Manuel Cucca | Design system: Pulsante Solo icona piccolo (24), CMP-25 Barra di scorrimento, CMP-20 con la variante Testo puro e distanze 8 e 16; mockup di SC-01, SC-03, SC-04 e della proposta allineati a DEC-58 … DEC-64 (pillole separate, foglio a sinistra, frame del markdown SOSPESO) ed esportazioni rigenerate | DEC-58, DEC-62, DEC-63, DEC-64 |

@@ -2,7 +2,7 @@
 
 <!-- Fase 5 della guida. Copia il blocco per ogni componente. -->
 
-I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE), che diventa la libreria: pagina **Componenti base** (CMP-01 … CMP-08) e pagina **Componenti composti** (CMP-09 … CMP-23). Ogni componente usa solo token semantici, anche per gli spazi (regola 12, vedi `tokens.md`) e ha un'anteprima in modo scuro.
+I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE), che diventa la libreria: pagina **Componenti base** (CMP-01 … CMP-08) e pagina **Componenti composti** (CMP-09 … CMP-25). Ogni componente usa solo token semantici, anche per gli spazi (regola 12, vedi `tokens.md`) e ha un'anteprima in modo scuro.
 
 | Codice | Componente | Tipo | Stato |
 |---|---|---|---|
@@ -30,6 +30,7 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-22 | Modulo di accesso (progettato, non attivo: DEC-19) | composto | Disegnato |
 | CMP-23 | Nota rapida | composto | Disegnato |
 | CMP-24 | Finestra dei dettagli | composto | Disegnato |
+| CMP-25 | Barra di scorrimento | composto | Disegnato |
 
 L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'icona di sistema e non è un componente.
 
@@ -58,6 +59,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 | CMP-19 Stato vuoto | ✓ | ✓ (riga) | ✓ (card dei risultati) | pieno (pulsante) |
 | CMP-20 Testo della nota | ✓ | | | pieno (casella spuntata), evidenziazione |
 | CMP-21 Immagine nel testo | ✓ | | | campo (segnaposto), pieno (selezione) |
+| CMP-25 Barra di scorrimento | ✓ | ✓ | | nessuno: `icona-tenue` al 50 % o all'80 % |
 | CMP-09 Menu · CMP-10 Pillola · CMP-11 Pannello · CMP-12 Date picker · CMP-13 Card dei risultati · CMP-15 Avviso · CMP-16 Finestra di conferma | sopra la nota | sopra la colonna | sono la superficie | flottante, con ombra; dentro: hover, pieno, campo |
 
 **Verifica per ogni componente nuovo:** prima di segnarlo come Disegnato, (1) elencare le superfici su cui compare in questa tabella; (2) controllare nella tabella dei token che ogni suo fondo sia sopra la soglia su quelle superfici, in entrambi i modi; (3) controllarlo a occhio nell'anteprima scura, meglio se dentro un menu o un pannello, dove i grigi sono più vicini.
@@ -75,9 +77,10 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 - **Primario:** sfondo `sfondo-pieno`, testo `testo-su-pieno`. L'azione principale della zona, al massimo uno (es. "Svuota" nella finestra di conferma).
 - **Secondario:** sfondo `sfondo-campo`, testo `testo-primario`. Azioni di supporto accanto al primario (Annulla).
 - **Tenue:** senza sfondo, testo `testo-tenue`. Azioni minori in liste e pannelli (Ripristina nel cestino).
-- **Solo icona:** 32 × 32, icona `icona-tenue`. Azioni ripetute con un'icona chiara (+ delle non organizzate, ···). Nella fascia in alto di SC-01 il ··· sta nella pillola flottante con i pulsanti della finestra, tutti tondi da 24 (DEC-62).
+- **Solo icona:** 32 × 32, icona `icona-tenue`. Azioni ripetute con un'icona chiara (+ delle non organizzate, ···). Nella fascia in alto di SC-01 il ··· sta in una pillola flottante sua, separata da quella dei pulsanti della finestra, e usa il solo icona piccolo (DEC-62, DEC-63).
+- **Solo icona piccolo:** 24 × 24 (`misura-controllo-piccolo`), tondo (`raggio-pillola`), margini 4 (`spazio-elemento`), icona 16 in `icona-tenue`; stessi stati del solo icona da 32 (in Figma `Tipo=Solo icona piccolo`). Solo dentro le pillole flottanti in alto a destra di SC-01: il ··· e, disegnati allo stesso modo, i pulsanti della finestra _ [] X (DEC-62, DEC-63). L'anello di focus è largo 32.
 - **Diviso** (DEC-34): solo primario. A sinistra l'azione (Chiudi nella nota rapida, margini 16 e 12), a destra la freccia ▾ (`chevron-down`, `icona-su-pieno`, margini 8 e 12) che apre un menu (CMP-09) con le azioni collegate; tra le due un divisore di 1 × 16 in `sfondo-pieno-hover`. Hover separato sulle due metà (`sfondo-pieno-hover`); con il menu aperto la freccia è `sfondo-pieno-premuto`; l'anello di focus segue la pillola intera. La freccia ha il nome accessibile e il suggerimento «Altre azioni» (CMP-08). In Figma è il componente [Pulsante diviso](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=136-703), con la proprietà Etichetta. Usato in SC-02.
-- Una sola dimensione: alto 32 (`misura-riga`), pillola (`raggio-pillola`), margini laterali 16 (8 per il solo icona), distanza tra icona e testo 8, testo Interfaccia/Controllo attivo.
+- Una sola dimensione, a parte il solo icona piccolo: alto 32 (`misura-riga`), pillola (`raggio-pillola`), margini laterali 16 (8 per il solo icona), distanza tra icona e testo 8, testo Interfaccia/Controllo attivo.
 - Proprietà: **Etichetta** (testo), **Mostra icona** (icona a sinistra del testo, spenta di default), **Icona** (una qualsiasi icona di CMP-02).
 
 ### Stati
@@ -94,7 +97,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 ### Accessibilità
 - **Tastiera:** si raggiunge con Tab, si attiva con Invio o Spazio. Nelle finestre di conferma il focus parte dal pulsante secondario (Annulla), per non confermare per errore un'azione non reversibile.
 - **Lettori di schermo:** ruolo "pulsante" con il nome dell'etichetta. Il solo icona ha sempre un nome accessibile e un suggerimento (CMP-08) con lo stesso testo (es. "Nuova nota"). In caricamento si annuncia "in corso".
-- **Contrasti:** testo su tutti gli sfondi ≥ 4,5:1, icone ≥ 3:1 (verificati in `tokens.md`); l'area cliccabile del solo icona è 32 × 32.
+- **Contrasti:** testo su tutti gli sfondi ≥ 4,5:1, icone ≥ 3:1 (verificati in `tokens.md`); l'area cliccabile del solo icona è 32 × 32 (24 × 24 il piccolo, dentro la pillola alta 32).
 
 ### Esempi
 - ✅ Corretto: nella finestra "Svuotare il cestino?" un primario "Svuota" a destra e un secondario "Annulla" a sinistra.
@@ -737,7 +740,8 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 **Quando non usarlo:** per il testo dell'interfaccia (stili Interfaccia/…).
 
 ### Varianti e dimensioni
-- **Riga dei metadati** (parte interna), sotto il titolo, su due righe larghe quanto la nota (DEC-44): in alto la data di ultima modifica in Interfaccia/Dettaglio e `testo-tenue` (es. «Modificata oggi alle 11:42»); sotto i tag in sola lettura (CMP-05 senza ✕, `spazio-elemento` tra l'uno e l'altro), che vanno a capo. Date e tag si modificano nella finestra dei dettagli (CMP-24). Sta `spazio-blocco` (16) sotto il titolo e `spazio-gruppo` (24) sopra il testo; tra le due righe `spazio-icona` (8). Proprietà **Data** e **Mostra tag**; nella nota nuova niente tag e "Creata ora". Il componente ha la proprietà **Mostra metadati** per nasconderla dove non c'è il titolo (nota rapida, SC-02).
+- **Riga dei metadati** (parte interna), sotto il titolo, su due righe larghe quanto la nota (DEC-44): in alto la data di ultima modifica in Interfaccia/Dettaglio e `testo-tenue` (es. «Modificata oggi alle 11:42»); sotto i tag in sola lettura (CMP-05 senza ✕, `spazio-elemento` tra l'uno e l'altro), che vanno a capo. Date e tag si modificano nella finestra dei dettagli (CMP-24). Sta `spazio-icona` (8) sotto il titolo e `spazio-blocco` (16) sopra il testo; tra le due righe `spazio-icona` (8) (DEC-58, anche nel componente in Figma). Proprietà **Data** e **Mostra tag**; nella nota nuova niente tag e "Creata ora". Il componente ha la proprietà **Mostra metadati** per nasconderla dove non c'è il titolo (nota rapida, SC-02).
+- **Testo puro** (DEC-64, la variante in uso finché non torna il markdown): titolo, riga dei metadati e un solo paragrafo in Nota/Corpo, dove `#`, `-`, `**` e le tabulazioni si vedono come caratteri, senza formattazione. In Figma è la variante `Tipo=Testo puro`.
 - **Con testo:** titolo (Nota/Titolo), riga dei metadati, corpo (Nota/Corpo), sottotitolo (Nota/Sottotitolo), checklist, elenco puntato, elenco numerato; `spazio-blocco` (16) tra i blocchi, `spazio-elemento` (4) tra le voci, `spazio-gruppo` (24) tra intestazione e testo. Larghezza di lettura 640, confermata come misura massima il 28/09/2026.
 - **Simboli markdown:** non si vedono mai, nemmeno sulla riga del cursore (DEC-58).
 - **Elenchi:** segni (•, 1.) in `testo-tenue`, in una colonna di 16 px.
@@ -900,3 +904,33 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 ### Esempi
 - ✅ Corretto: togliere un tag con la ✕: la nota è aggiornata subito, la finestra resta aperta.
 - ❌ Scorretto: aggiungere Salva e Annulla: ogni modifica vale subito, come nel resto dell'app.
+
+---
+
+## CMP-25 – Barra di scorrimento
+**Tipo:** composto · **Usato in:** SC-03 (il foglio), SC-01 (la colonna) · **Figma:** pagina Componenti composti, [Barra di scorrimento](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=182-5587)
+
+**Scopo:** mostrare dove si è in un contenuto che scorre e permettere di spostarsi trascinando, senza togliere spazio al testo (DEC-58).
+**Quando usarlo:** nelle aree che scorrono: il foglio della nota (tutta la pagina, DEC-59) e la colonna.
+**Quando non usarlo:** nei menu e nei pannelli corti, che non scorrono; al posto della barra del sistema, che non si vede.
+
+### Varianti e dimensioni
+- Cursore largo 6, tondo (`raggio-pillola`), in `icona-tenue`; sta sopra il contenuto, a 2 px dal bordo destro e dai bordi in alto e in basso dell'area che scorre, e non occupa spazio. L'altezza segue la parte visibile del contenuto, almeno 24 (in Figma 120 di esempio, si cambia sull'istanza).
+- Nessun binario: si vede solo il cursore.
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Nascosta | Default: non si vede e non riceve clic |
+| Visibile | Compare scorrendo o con il mouse sull'area; opacità 50 %. Sparisce dopo 0,8 s senza scorrere né mouse sopra (dissolvenza di `movimento-durata-media`, nessuna con il movimento ridotto) |
+| Trascinata · sotto il mouse | Opacità 80 %; trascinandola il contenuto scorre |
+| Focus · Disabilitato · Errore · Caricamento | Non previsti |
+
+### Accessibilità
+- **Tastiera:** non si raggiunge con Tab: il contenuto scorre con le frecce, Pagina su e giù, Inizio e Fine come sempre.
+- **Lettori di schermo:** è solo visiva, nascosta ai lettori di schermo; l'area che scorre resta quella nativa.
+- **Contrasti:** è un indicatore non essenziale e non ha una soglia; `icona-tenue` al 50 % resta visibile sui fondi della nota e della colonna, in chiaro e in scuro.
+
+### Esempi
+- ✅ Corretto: scorrendo una nota lunga il cursore compare a destra sopra il testo e sparisce poco dopo.
+- ❌ Scorretto: una barra sempre visibile che restringe il testo, o un binario colorato sotto il cursore.
