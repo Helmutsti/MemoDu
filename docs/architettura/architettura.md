@@ -12,7 +12,7 @@
 | Token nel codice | Variabili CSS in `app/src/stili/token.css`, stili di testo come classi in `app/src/stili/base.css`; il modo chiaro o scuro segue il sistema | DEC-21, DEC-22 |
 | Server (API) | Node con TypeScript e Fastify | DEC-24, DEC-32 |
 | Archivio del server | File system: documenti e immagini cifrati come file | DEC-25 |
-| Note | Per ora le gestisce l'API: file markdown in `Documenti\Memodu` sulla macchina di sviluppo (intestazione YAML, titolo come prima riga, date in UTC o solo giorno). Provvisorio: poi database e copia di lavoro sul dispositivo | DEC-28, DEC-29, DEC-30 |
+| Note | Le gestisce l'API (DEC-30). Deciso: note, tag, cartelle e cestino in un database SQLite nell'API; il testo resta markdown in una colonna. Il codice di oggi scrive ancora file markdown in `Documenti\Memodu` (sezione sotto) finché non si passa al database. Poi la copia di lavoro sul dispositivo | DEC-30, DEC-45, DEC-46 |
 | Hosting | Per ora la macchina di sviluppo (ambiente Locale). L'hosting definitivo è rinviato; deve avere un disco persistente (DEC-25) | — |
 
 ## Struttura del repository
@@ -26,7 +26,7 @@ Un solo repository con workspace npm (DEC-33):
 
 Prove con Vitest, controllo del codice con ESLint e Prettier.
 
-## File delle note (frammento Must A)
+## File delle note (frammento Must A, da sostituire con il database: DEC-45, DEC-46)
 Li scrive solo l'API (`server/src/archivio.ts`), secondo DEC-28 e DEC-29:
 
 ```
