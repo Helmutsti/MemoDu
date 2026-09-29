@@ -1,6 +1,63 @@
 .finestra {
+  position: relative;
   display: flex;
   height: 100%;
+}
+
+/* Colonna (DEC-55): chiusa non si vede; aperta sta sopra il foglio con l'ombra dei flottanti;
+   fissata sta accanto e il foglio si sposta. */
+.colonna.colonna-chiusa,
+.colonna.colonna-aperta {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: var(--z-comparsa);
+  transition:
+    transform var(--movimento-durata-media) ease-out,
+    box-shadow var(--movimento-durata-media) ease-out;
+}
+
+/* Chiusa: fuori dal bordo sinistro; sparisce (anche per tastiera e lettori di schermo) solo
+   quando ha finito di scorrere. */
+.colonna.colonna-chiusa {
+  visibility: hidden;
+  transform: translateX(-100%);
+  transition:
+    transform var(--movimento-durata-media) ease-out,
+    visibility 0s linear var(--movimento-durata-media);
+}
+
+.colonna.colonna-aperta {
+  box-shadow: var(--ombra);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .colonna.colonna-chiusa,
+  .colonna.colonna-aperta {
+    transition: none;
+  }
+}
+
+/* In cima alla colonna, una riga da 32 a 8 px dai bordi: «← |» a sinistra, la puntina a destra. */
+.colonna-testata {
+  display: flex;
+  flex: none;
+  align-items: center;
+  height: var(--misura-riga);
+  margin: calc(var(--spazio-controllo-piccolo) - var(--spazio-contenitore))
+    calc(var(--spazio-controllo-piccolo) - var(--spazio-contenitore))
+    var(--spazio-controllo-piccolo);
+}
+
+/* La puntina sta sempre a destra: l'ultimo elemento è l'involucro del suggerimento. */
+.colonna-testata > :last-child {
+  margin-left: auto;
+}
+
+/* Su macOS i tre pallini del sistema stanno in alto a sinistra. */
+.sistema-mac .colonna-testata {
+  padding-left: 72px;
 }
 
 .colonna {
@@ -34,12 +91,58 @@
   position: relative;
 }
 
-/* ··· in alto a destra dell'area della nota (SC-01). */
-.area-nota-menu {
+/* Fascia in alto (DEC-55): da qui si trascina la finestra; «| →» a sinistra, ··· e i pulsanti
+   della finestra a destra. */
+.barra-finestra {
   position: absolute;
-  top: var(--spazio-controllo);
-  right: var(--spazio-controllo);
+  top: 0;
+  right: 0;
+  left: 0;
   z-index: var(--z-fisso);
+  display: flex;
+  align-items: center;
+  height: var(--misura-riga);
+  padding: 0 var(--spazio-controllo-piccolo);
+}
+
+.barra-con-pulsanti {
+  padding-right: 0;
+}
+
+/* Accanto ai pulsanti della finestra il ··· diventa uno di loro: quadrato, 46 × 32, a filo. */
+.barra-con-pulsanti .barra-destra {
+  gap: 0;
+}
+
+.barra-con-pulsanti .barra-destra .pulsante-icona {
+  width: 46px;
+  height: var(--misura-riga);
+  border-radius: 0;
+}
+
+.sistema-mac .barra-finestra {
+  padding-left: 80px;
+}
+
+.barra-destra {
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-controllo-piccolo);
+  height: 100%;
+  margin-left: auto;
+}
+
+/* «| →» compare con il mouse vicino al bordo sinistro o con il focus da tastiera. */
+.barra-apri-colonna {
+  opacity: 0;
+  transition: opacity var(--movimento-durata-breve);
+  /* Stesso posto di «← |» nella colonna aperta: 8 px dal bordo in alto, non a filo. */
+  transform: translateY(var(--spazio-controllo-piccolo));
+}
+
+.barra-apri-visibile,
+.barra-apri-colonna:focus-visible {
+  opacity: 1;
 }
 
 /* Tra il titolo della sezione e le righe, e tra una riga e l'altra: le pillole non si toccano. */

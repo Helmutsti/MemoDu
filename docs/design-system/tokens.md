@@ -113,6 +113,7 @@ I primitivi `spazio-4` … `spazio-48` (4, 8, 12, 16, 24, 32, 48) non si usano d
 | `opacita-disabilitato` | 40% | Opacità di un controllo disabilitato |
 | `movimento-durata-breve` | 120 ms | Comparsa di pillola, menu, pannelli, avvisi (regola 10) |
 | `movimento-spostamento` | 4 px | Spostamento durante la comparsa |
+| `movimento-durata-media` | 200 ms | La colonna che scorre da sinistra quando si apre e si chiude sopra il foglio (DEC-55); senza movimento se il sistema chiede di ridurre le animazioni. Proposta dell'agente, da confermare |
 
 ## Breakpoint
 Desktop-first (vedi `moduli/interfaccia/4-schermate.md`). Solo Windows e macOS (DEC-13).
@@ -120,7 +121,7 @@ Desktop-first (vedi `moduli/interfaccia/4-schermate.md`). Solo Windows e macOS (
 | Token | Valore | Uso |
 |---|---|---|
 | `breakpoint-largo` | 1280 | Da 1280 px: colonna sinistra, nota aperta e spazio di respiro ai lati del testo |
-| `breakpoint-medio` | 1024 | Da 1024 a 1279 px: colonna più stretta, il testo occupa tutta la larghezza restante. È anche la larghezza minima della finestra desktop |
+| `breakpoint-medio` | 1024 | Da 1024 a 1279 px: colonna più stretta, il testo occupa tutta la larghezza restante. Non è più la larghezza minima della finestra desktop, ora 640 × 480 (DEC-57) |
 
 Il breakpoint stretto (sotto 1024 px, con la colonna come drawer) serviva solo al web ed è rinviato con ID-19.
 

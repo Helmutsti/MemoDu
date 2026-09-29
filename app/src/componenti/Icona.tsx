@@ -7,9 +7,20 @@ import type { ReactElement } from "react";
 export function Icona({
   di: Componente,
   misura = 16,
+  piena = false,
 }: {
   di: LucideIcon;
   misura?: 12 | 16 | 24;
+  /** Riempita del colore del tratto: per uno stato attivo, come la puntina della colonna fissata. */
+  piena?: boolean;
 }): ReactElement {
-  return <Componente size={misura} strokeWidth={1.5} absoluteStrokeWidth aria-hidden="true" />;
+  return (
+    <Componente
+      size={misura}
+      strokeWidth={1.5}
+      absoluteStrokeWidth
+      fill={piena ? "currentColor" : "none"}
+      aria-hidden="true"
+    />
+  );
 }

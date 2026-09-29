@@ -1,9 +1,17 @@
 // CMP-10 Pillola degli strumenti: formattazione sopra la selezione, inserimento sopra il
 // punto del clic sul vuoto. Compare 8 px sopra, centrata; se sopra non c'è spazio, sotto.
 // Non ruba il focus mentre si scrive; Alt + F10 ci porta il focus, le frecce passano da uno
-// strumento all'altro ed Esc torna al testo.
+// strumento all'altro ed Esc torna al testo. Resta almeno 8 px dentro i bordi della finestra,
+// come i menu (CMP-09).
 
-import { forwardRef, useImperativeHandle, useRef, type ReactElement } from "react";
+import {
+  forwardRef,
+  useImperativeHandle,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactElement,
+} from "react";
 import { createPortal } from "react-dom";
 import type { LucideIcon } from "lucide-react";
 import { Icona } from "./Icona";
@@ -13,6 +21,8 @@ import "./Pillola.css";
 export type Strumento =
   | { tipo: "strumento"; nome: string; icona: LucideIcon; attivo?: boolean; azione: () => void }
   | { tipo: "divisore" };
+
+const MARGINE_FINESTRA = 8;
 
 export interface ManigliaPillola {
   /** Porta il focus sul primo strumento (Alt + F10). */
@@ -35,6 +45,14 @@ export const Pillola = forwardRef<ManigliaPillola, Proprieta>(function Pillola(
   maniglia,
 ): ReactElement {
   const barra = useRef<HTMLDivElement>(null);
+  // Centro della pillola spostato quanto basta per restare dentro la finestra.
+  const [centro, setCentro] = useState(x);
+  useLayoutEffect(() => {
+    const larghezza = barra.current?.offsetWidth ?? 0;
+    const minimo = MARGINE_FINESTRA + larghezza / 2;
+    const massimo = window.innerWidth - MARGINE_FINESTRA - larghezza / 2;
+    setCentro(Math.max(minimo, Math.min(x, massimo)));
+  }, [x, strumenti.length]);
   const pulsanti = () => [...(barra.current?.querySelectorAll("button") ?? [])];
 
   useImperativeHandle(maniglia, () => ({ focus: () => pulsanti()[0]?.focus() }));
@@ -58,7 +76,7 @@ export const Pillola = forwardRef<ManigliaPillola, Proprieta>(function Pillola(
       role="toolbar"
       aria-label={etichetta}
       className={`pillola ${sotto ? "pillola-sotto" : ""}`}
-      style={{ left: x, top: y }}
+      style={{ left: centro, top: y }}
       onMouseDown={(e) => e.preventDefault()}
       onKeyDown={suTasto}
     >

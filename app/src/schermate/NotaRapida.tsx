@@ -23,7 +23,6 @@ import { PAUSA_MS } from "../salvataggio";
 import { Blocco } from "./Blocco";
 import "./NotaRapida.css";
 
-
 export function NotaRapida(): ReactElement {
   const testo = useRef("");
   const salvato = useRef("");

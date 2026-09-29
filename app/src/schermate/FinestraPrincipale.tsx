@@ -6,7 +6,18 @@
 // avviso e ricarica la colonna (DEC-37); un nome già usato apre la finestra con tre scelte
 // (RB-31).
 
-import { Ellipsis, FileText, Folder, FolderInput, Info, Pencil, Trash2 } from "lucide-react";
+import {
+  Ellipsis,
+  FileText,
+  Folder,
+  FolderInput,
+  Info,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Pencil,
+  Pin,
+  Trash2,
+} from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type ReactElement } from "react";
 import type {
   Albero,
@@ -27,6 +38,7 @@ import { FinestraConferma } from "../componenti/FinestraConferma";
 import { Icona } from "../componenti/Icona";
 import { Menu, type VoceMenu } from "../componenti/Menu";
 import { PannelloSpostaIn } from "../componenti/PannelloSpostaIn";
+import { PulsantiFinestra } from "../componenti/PulsantiFinestra";
 import { Pulsante, PulsanteIcona } from "../componenti/Pulsante";
 import { StatoVuoto } from "../componenti/StatoVuoto";
 import {
@@ -37,6 +49,8 @@ import {
   chiudiFinestra,
   confermaUscita,
   mostraFinestra,
+  PULSANTI_FINESTRA,
+  SU_MAC,
 } from "../finestra";
 import { CodaSalvataggio } from "../salvataggio";
 import { Blocco } from "./Blocco";
@@ -87,6 +101,27 @@ interface Conflitto {
   risolvi: (scelta: SeEsiste | null) => void;
 }
 
+/** Memodu ricorda se la colonna è fissata (DEC-55). */
+const CHIAVE_COLONNA_FISSATA = "memodu.colonna-fissata";
+/** Entro questa distanza dal bordo sinistro compare «| →» (DEC-55). */
+const DISTANZA_BORDO_PX = 48;
+
+function leggiColonnaFissata(): boolean {
+  try {
+    return localStorage.getItem(CHIAVE_COLONNA_FISSATA) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function salvaColonnaFissata(fissata: boolean): void {
+  try {
+    localStorage.setItem(CHIAVE_COLONNA_FISSATA, fissata ? "1" : "0");
+  } catch {
+    // Senza memoria del browser la scelta vale fino alla chiusura.
+  }
+}
+
 export function FinestraPrincipale(): ReactElement {
   const [albero, setAlbero] = useState<Albero | null>(null);
   const [aperta, setAperta] = useState<Nota | null>(null);
@@ -128,6 +163,28 @@ export function FinestraPrincipale(): ReactElement {
   const [confermaChiusura, setConfermaChiusura] = useState(false);
   /** La conferma di chiusura è comparsa per «Esci da Memodu». */
   const uscendo = useRef(false);
+  // Colonna (DEC-55): chiusa, aperta sopra il foglio o fissata accanto; «| →» compare con il
+  // mouse vicino al bordo sinistro.
+  const [colonnaFissata, setColonnaFissata] = useState(leggiColonnaFissata);
+  const [colonnaAperta, setColonnaAperta] = useState(false);
+  const [vicinoAlBordo, setVicinoAlBordo] = useState(false);
+  const statoColonna = colonnaFissata ? "fissata" : colonnaAperta ? "aperta" : "chiusa";
+  const pulsanteApriColonna = useRef<HTMLButtonElement>(null);
+  const pulsanteChiudiColonna = useRef<HTMLButtonElement>(null);
+  const apriColonna = () => {
+    setColonnaAperta(true);
+    requestAnimationFrame(() => pulsanteChiudiColonna.current?.focus());
+  };
+  const chiudiColonna = () => {
+    setColonnaAperta(false);
+    requestAnimationFrame(() => pulsanteApriColonna.current?.focus());
+  };
+  const fissaColonna = () => {
+    const fissata = !colonnaFissata;
+    setColonnaFissata(fissata);
+    setColonnaAperta(false);
+    salvaColonnaFissata(fissata);
+  };
   /** Finestra Dettagli aperta (CMP-24, DEC-44): la nota e tutti i tag per i suggerimenti. */
   const [dettagli, setDettagli] = useState<Nota | null>(null);
   const [tuttiTag, setTuttiTag] = useState<VoceTag[]>([]);
@@ -743,8 +800,35 @@ export function FinestraPrincipale(): ReactElement {
   return (
     <>
       {albero !== null && (
-        <div className={`finestra ${bloccata ? "finestra-nascosta" : ""}`} inert={bloccata}>
+        <div
+          className={`finestra ${bloccata ? "finestra-nascosta" : ""} ${SU_MAC ? "sistema-mac" : ""}`}
+          inert={bloccata}
+          onMouseMove={(e) => {
+            const vicino = e.clientX <= DISTANZA_BORDO_PX;
+            if (vicino !== vicinoAlBordo) setVicinoAlBordo(vicino);
+          }}
+          onMouseLeave={() => setVicinoAlBordo(false)}
+        >
           <Colonna
+            stato={statoColonna}
+            testata={
+              <>
+                {statoColonna === "aperta" && (
+                  <PulsanteIcona
+                    ref={pulsanteChiudiColonna}
+                    nome="Chiudi la colonna"
+                    icona={<Icona di={PanelLeftClose} />}
+                    onClick={chiudiColonna}
+                  />
+                )}
+                <PulsanteIcona
+                  nome={colonnaFissata ? "Sblocca la colonna" : "Fissa la colonna"}
+                  aria-pressed={colonnaFissata}
+                  icona={<Icona di={Pin} piena={colonnaFissata} />}
+                  onClick={fissaColonna}
+                />
+              </>
+            }
             albero={albero}
             apertaId={vista === "nota" ? (aperta?.id ?? null) : null}
             cartelleAperte={cartelleAperte}
@@ -773,24 +857,47 @@ export function FinestraPrincipale(): ReactElement {
             cestinoAperto={vista === "cestino"}
             onApriCestino={() => void apriCestino()}
           />
-          <main className="area-nota">
-            {mostraNota && (
-              <div className="area-nota-menu">
+          <main
+            className="area-nota"
+            // Clic sul foglio: la colonna aperta e non fissata si chiude (DEC-56).
+            onMouseDown={() => {
+              if (statoColonna === "aperta") setColonnaAperta(false);
+            }}
+          >
+            <div
+              className={`barra-finestra ${PULSANTI_FINESTRA ? "barra-con-pulsanti" : ""}`}
+              data-tauri-drag-region
+            >
+              {statoColonna === "chiusa" && (
                 <PulsanteIcona
-                  ref={pulsanteMenu}
-                  nome="Altre azioni"
-                  icona={<Icona di={Ellipsis} />}
-                  aria-haspopup="menu"
-                  aria-expanded={menuNota !== null}
-                  onClick={(e) => {
-                    const r = e.currentTarget.getBoundingClientRect();
-                    // Aperto da tastiera (Invio o Spazio): la prima voce è già evidenziata.
-                    const tastiera = e.detail === 0;
-                    setMenuNota(menuNota ? null : { x: r.right - 236, y: r.bottom + 4, tastiera });
-                  }}
+                  ref={pulsanteApriColonna}
+                  className={`barra-apri-colonna ${vicinoAlBordo ? "barra-apri-visibile" : ""}`}
+                  nome="Apri la colonna"
+                  icona={<Icona di={PanelLeftOpen} />}
+                  onClick={apriColonna}
                 />
+              )}
+              <div className="barra-destra">
+                {mostraNota && (
+                  <PulsanteIcona
+                    ref={pulsanteMenu}
+                    nome="Altre azioni"
+                    icona={<Icona di={Ellipsis} />}
+                    aria-haspopup="menu"
+                    aria-expanded={menuNota !== null}
+                    onClick={(e) => {
+                      const r = e.currentTarget.getBoundingClientRect();
+                      // Aperto da tastiera (Invio o Spazio): la prima voce è già evidenziata.
+                      const tastiera = e.detail === 0;
+                      setMenuNota(
+                        menuNota ? null : { x: r.right - 236, y: r.bottom + 4, tastiera },
+                      );
+                    }}
+                  />
+                )}
+                {PULSANTI_FINESTRA && <PulsantiFinestra />}
               </div>
-            )}
+            </div>
             {sparita ? (
               <Avviso
                 tipo="avviso"

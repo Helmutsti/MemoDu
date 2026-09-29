@@ -88,6 +88,27 @@ export function Editor({
     comparsaAttuale.current = comparsa;
   }, [comparsa]);
 
+  // Con la pillola aperta, Esc e un clic fuori la chiudono dovunque sia il focus (CA-02.4):
+  // anche sul margine del foglio, sulla colonna o sulla fascia in alto.
+  const aperta = comparsa !== null;
+  useEffect(() => {
+    if (!aperta) return;
+    const suTasto = (e: KeyboardEvent) => {
+      if (e.key !== "Escape" || (e.target as Element).closest?.(".pillola")) return;
+      e.preventDefault();
+      setComparsa(null);
+    };
+    const suClic = (e: MouseEvent) => {
+      if (!(e.target as Element).closest?.(".pillola")) setComparsa(null);
+    };
+    window.addEventListener("keydown", suTasto, true);
+    window.addEventListener("mousedown", suClic, true);
+    return () => {
+      window.removeEventListener("keydown", suTasto, true);
+      window.removeEventListener("mousedown", suClic, true);
+    };
+  }, [aperta]);
+
   // Pillola di formattazione sopra la selezione, centrata sulla prima riga selezionata.
   const comparsaSelezione = (view: EditorView): Comparsa | null => {
     const { from, to } = view.state.selection.main;

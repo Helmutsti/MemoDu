@@ -1,0 +1,35 @@
+.pulsanti-finestra {
+  display: flex;
+  height: 100%;
+}
+
+.pulsante-finestra {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 100%;
+  padding: 0;
+  border: none;
+  color: var(--testo-primario);
+  background: none;
+}
+
+.pulsante-finestra:hover {
+  background: var(--sfondo-hover);
+}
+
+.pulsante-finestra:active {
+  background: var(--sfondo-premuto);
+}
+
+.pulsante-finestra:focus-visible {
+  outline-offset: calc(0px - var(--focus-spessore));
+}
+
+/* Come Windows: Chiudi rosso con la croce bianca, in chiaro e in scuro. */
+.pulsante-finestra-chiudi:hover,
+.pulsante-finestra-chiudi:active {
+  color: var(--grigio-0);
+  background: var(--rosso-500);
+}

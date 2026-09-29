@@ -305,3 +305,9 @@
 | 29/09/2026 | Manuel Cucca | Nota rapida: si chiude solo con Chiudi, Esc o Alt + F4; il clic altrove salva e la lascia aperta. Aggiornati RB-02, RB-62, FL-01, CA-01.2, SC-02, TC-02 | DEC-53 |
 | 29/09/2026 | Manuel Cucca | Nota rapida chiusa dal clic altrove quando se ne apriva un'altra con la scorciatoia: corretta (RB-04) | RB-04 |
 | 29/09/2026 | Manuel Cucca | Prove in Tauri su Windows: TC-04 e TC-22 superati, TC-06 in parte; su Windows chiudendo la nota rapida torna davanti il programma di prima (il difetto visto su macOS il 28/09 resta da riprovare lì) | — |
+| 29/09/2026 | Manuel Cucca | SC-01: su Windows 11 la barra del titolo prende il colore dello sfondo dell'app e segue il tema, con i pulsanti del sistema | DEC-54 (proposta) |
+| 29/09/2026 | Manuel Cucca | ID-30: proposta del foglio unico disegnata nel file Mockup (pagina Proposta · Foglio unico) | Proposta di Manuel Cucca |
+| 29/09/2026 | Manuel Cucca | ID-30: la colonna si fissa con una puntina; l'icona «| →» compare solo con il mouse vicino al bordo sinistro; proposta ridisegnata in quattro stati | Proposta di Manuel Cucca |
+| 29/09/2026 | Manuel Cucca | Foglio unico accettato: niente barra del programma, colonna chiusa, aperta sopra il foglio o fissata con la puntina; DEC-54 superata, ID-30 accettata, SC-01 aggiornata, Fase 5 riaperta per tre icone | DEC-55 |
+| 29/09/2026 | Manuel Cucca | SC-01: la colonna aperta e non fissata si chiude anche con un clic sul foglio; la colonna scorre da sinistra aprendosi e chiudendosi (nuovo token movimento-durata-media, da confermare) | DEC-56 |
+| 29/09/2026 | Manuel Cucca | Finestra desktop: minimo 640 × 480 invece di 1024 × 640 | DEC-57 |

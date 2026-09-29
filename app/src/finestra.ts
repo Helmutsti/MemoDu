@@ -7,6 +7,12 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 
 export const IN_TAURI = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
 
+/** Su macOS i pulsanti della finestra sono i tre pallini del sistema, su una barra trasparente. */
+export const SU_MAC = typeof navigator !== "undefined" && /Mac/.test(navigator.userAgent);
+
+/** Nell'app su Windows la finestra non ha cornice: i pulsanti _ [] X li disegna Memodu (DEC-55). */
+export const PULSANTI_FINESTRA = IN_TAURI && !SU_MAC;
+
 /** Questa finestra è una nota rapida? (index.html?rapida, aperta dal nucleo Rust) */
 export const NOTA_RAPIDA = new URLSearchParams(window.location.search).has("rapida");
 
@@ -114,4 +120,27 @@ export async function mostraFinestra(): Promise<void> {
   await finestra.unminimize();
   await finestra.show();
   await finestra.setFocus();
+}
+
+/** Pulsanti della finestra su Windows (DEC-55). Chiudi passa da alChiudere: si salva e si nasconde. */
+export const finestraSistema = {
+  riduci: async () => {
+    if (IN_TAURI) await getCurrentWindow().minimize();
+  },
+  ingrandisci: async () => {
+    if (IN_TAURI) await getCurrentWindow().toggleMaximize();
+  },
+  chiudi: async () => {
+    if (IN_TAURI) await getCurrentWindow().close();
+  },
+};
+
+/** Avvisa quando la finestra si ingrandisce o torna com'era (icona Ingrandisci o Ripristina). */
+export function allIngrandimento(avvisa: (ingrandita: boolean) => void): () => void {
+  if (!IN_TAURI) return () => {};
+  const finestra = getCurrentWindow();
+  const aggiorna = () => void finestra.isMaximized().then(avvisa);
+  aggiorna();
+  const promessa = finestra.onResized(aggiorna);
+  return () => void promessa.then((togli) => togli());
 }

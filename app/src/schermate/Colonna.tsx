@@ -49,6 +49,10 @@ interface Proprieta {
   /** Il cestino è aperto nell'area della nota. */
   cestinoAperto: boolean;
   onApriCestino: () => void;
+  /** Chiusa (non si vede), aperta sopra il foglio o fissata accanto (DEC-55). */
+  stato: "chiusa" | "aperta" | "fissata";
+  /** In cima alla colonna: «← |» e la puntina (DEC-55). */
+  testata: ReactNode;
 }
 
 const stesso = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
@@ -206,7 +210,10 @@ export function Colonna(p: Proprieta): ReactElement {
   const alberoVuoto = cartelle.length === 0 && p.campo?.tipo !== "nuova";
 
   return (
-    <nav className="colonna" aria-label="Note e cartelle">
+    <nav className={`colonna colonna-${p.stato}`} aria-label="Note e cartelle">
+      <div className="colonna-testata" data-tauri-drag-region>
+        {p.testata}
+      </div>
       <div
         className="colonna-contenuto"
         role="tree"

@@ -642,3 +642,73 @@ describe("nota eliminata da fuori mentre è aperta", () => {
     expect(screen.queryByRole("button", { name: "Ripristina" })).not.toBeInTheDocument();
   });
 });
+
+describe("colonna del foglio unico (DEC-55)", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    vi.mocked(api.albero).mockResolvedValue(alberoDiProva());
+    vi.mocked(api.leggi).mockResolvedValue(nota("r", "Riunione di lunedì"));
+  });
+  const colonna = () => screen.getByRole("navigation", { name: "Note e cartelle" });
+
+  it("all'inizio è chiusa; «| →» compare con il mouse vicino al bordo sinistro", async () => {
+    render(<FinestraPrincipale />);
+    await riga("Riunione di lunedì");
+    expect(colonna()).toHaveClass("colonna-chiusa");
+    const apri = screen.getByRole("button", { name: "Apri la colonna" });
+    expect(apri).not.toHaveClass("barra-apri-visibile");
+    fireEvent.mouseMove(colonna().parentElement!, { clientX: 20 });
+    expect(apri).toHaveClass("barra-apri-visibile");
+    fireEvent.mouseMove(colonna().parentElement!, { clientX: 400 });
+    expect(apri).not.toHaveClass("barra-apri-visibile");
+  });
+
+  it("«| →» la apre sopra il foglio, «← |» la richiude; scegliere una nota non la chiude", async () => {
+    render(<FinestraPrincipale />);
+    await riga("Riunione di lunedì");
+    await userEvent.click(screen.getByRole("button", { name: "Apri la colonna" }));
+    expect(colonna()).toHaveClass("colonna-aperta");
+    await userEvent.click(await riga(/Lavoro/));
+    expect(colonna()).toHaveClass("colonna-aperta");
+    await userEvent.click(screen.getByRole("button", { name: "Chiudi la colonna" }));
+    expect(colonna()).toHaveClass("colonna-chiusa");
+  });
+
+  it("la puntina la fissa e Memodu lo ricorda alla riapertura; di nuovo la sblocca", async () => {
+    const { unmount } = render(<FinestraPrincipale />);
+    await riga("Riunione di lunedì");
+    await userEvent.click(screen.getByRole("button", { name: "Apri la colonna" }));
+    await userEvent.click(screen.getByRole("button", { name: "Fissa la colonna" }));
+    expect(colonna()).toHaveClass("colonna-fissata");
+    expect(screen.queryByRole("button", { name: "Apri la colonna" })).not.toBeInTheDocument();
+    unmount();
+    render(<FinestraPrincipale />);
+    await riga("Riunione di lunedì");
+    expect(colonna()).toHaveClass("colonna-fissata");
+    const sblocca = screen.getByRole("button", { name: "Sblocca la colonna" });
+    expect(sblocca).toHaveAttribute("aria-pressed", "true");
+    await userEvent.click(sblocca);
+    expect(colonna()).toHaveClass("colonna-chiusa");
+  });
+});
+
+describe("clic fuori dalla colonna (DEC-56)", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    vi.mocked(api.albero).mockResolvedValue(alberoDiProva());
+    vi.mocked(api.leggi).mockResolvedValue(nota("r", "Riunione di lunedì"));
+  });
+  const colonna = () => screen.getByRole("navigation", { name: "Note e cartelle" });
+
+  it("un clic sul foglio chiude la colonna aperta, non quella fissata", async () => {
+    render(<FinestraPrincipale />);
+    await riga("Riunione di lunedì");
+    await userEvent.click(screen.getByRole("button", { name: "Apri la colonna" }));
+    fireEvent.mouseDown(screen.getByRole("main"));
+    expect(colonna()).toHaveClass("colonna-chiusa");
+    await userEvent.click(screen.getByRole("button", { name: "Apri la colonna" }));
+    await userEvent.click(screen.getByRole("button", { name: "Fissa la colonna" }));
+    fireEvent.mouseDown(screen.getByRole("main"));
+    expect(colonna()).toHaveClass("colonna-fissata");
+  });
+});
