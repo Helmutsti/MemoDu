@@ -23,6 +23,13 @@
   display: inline-flex;
   color: var(--icona-errore);
 }
+.avviso-avviso {
+  background: var(--sfondo-avviso);
+}
+.avviso-avviso .avviso-icona {
+  display: inline-flex;
+  color: var(--icona-avviso);
+}
 .avviso-testo {
   flex: 1;
   margin: 0;

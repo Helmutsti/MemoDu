@@ -243,6 +243,23 @@ describe("cestino (RB-25 … RB-28, RB-32, RB-55)", () => {
     expect((await radice())[0]!.cartelle).toEqual([]);
   });
 
+  it("una nota non trovata perché nel cestino dice quale elemento ripristinare", async () => {
+    await nuova("", "Lavoro");
+    await nuova("Lavoro", "Clienti");
+    const sola = await archivio.crea({ titolo: "Sola" });
+    const dentro = await archivio.crea({ titolo: "Dentro", cartella: "Lavoro/Clienti" });
+    await archivio.cestinaNota(sola.id);
+    const clienti = await archivio.cestinaCartella("Lavoro/Clienti");
+    await expect(archivio.salva(sola.id, { contenuto: "x" })).rejects.toMatchObject({
+      cestino: sola.id,
+    });
+    await expect(archivio.salva(dentro.id, { contenuto: "x" })).rejects.toMatchObject({
+      cestino: clienti.id,
+    });
+    await archivio.eliminaDefinitivamente(sola.id);
+    await expect(archivio.leggi(sola.id)).rejects.toMatchObject({ cestino: undefined });
+  });
+
   it("le note di una cartella eliminata non si aprono più", async () => {
     await nuova("", "Lavoro");
     const nota = await archivio.crea({ titolo: "Dentro", cartella: "Lavoro" });

@@ -28,6 +28,15 @@ export class CodaSalvataggio {
     return this.id !== null && Object.keys(this.pendenti).length > 0;
   }
 
+  /** Toglie dalla coda le modifiche non salvate e le restituisce, senza salvarle. */
+  abbandona(): { id: string | null; dati: DatiNota } {
+    clearTimeout(this.timer);
+    const resto = { id: this.id, dati: this.pendenti };
+    this.id = null;
+    this.pendenti = {};
+    return resto;
+  }
+
   /** Una modifica alla nota aperta: si salva dopo la pausa. */
   modifica(id: string, dati: DatiNota): void {
     if (this.id !== null && this.id !== id) void this.scarica();

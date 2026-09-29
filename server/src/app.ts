@@ -100,6 +100,12 @@ export function creaServer(archivio: ArchivioNote): FastifyInstance {
     if (errore instanceof NomeEsistente) {
       return risposta.code(409).send({ conflitto: errore.conflitto });
     }
+    // Nota nel cestino: la risposta dice quale elemento ripristinare (lei o la sua cartella).
+    if (errore instanceof NotaNonTrovata && errore.cestino) {
+      return risposta
+        .code(404)
+        .send({ statusCode: 404, message: errore.message, cestino: errore.cestino });
+    }
     const codice = CODICI.find(([classe]) => errore instanceof classe)?.[1];
     if (codice) return risposta.code(codice).send({ statusCode: codice, message: errore.message });
     return risposta.send(errore);

@@ -567,3 +567,50 @@ describe("SC-07 quando l'API non risponde (RB-61, CA-01.7, CA-02.13)", () => {
     expect(screen.getByDisplayValue("Lista della spesa")).toBeInTheDocument();
   });
 });
+
+describe("nota eliminata da fuori mentre è aperta", () => {
+  const nelCestino: ElementoCestino = {
+    id: "a",
+    tipo: "nota",
+    nome: "Lista",
+    provenienza: "",
+    eliminato: "2026-09-29T10:00:00Z",
+  };
+
+  beforeEach(() => {
+    vi.mocked(api.albero).mockResolvedValue(albero([voce("a", "Lista")]));
+    vi.mocked(api.leggi).mockResolvedValue(nota("a", "Lista"));
+  });
+
+  it("nel cestino: la nota si chiude, Ripristina la riporta e salva il testo rimasto", async () => {
+    vi.mocked(api.salva)
+      .mockRejectedValueOnce(new ErroreApi(404, "nel cestino", undefined, "a"))
+      .mockResolvedValue(nota("a", "Lista della spesa"));
+    vi.mocked(api.cestino).mockResolvedValue([nelCestino]);
+    vi.mocked(api.ripristina).mockResolvedValue(nota("a", "Lista"));
+    render(<FinestraPrincipale />);
+    await userEvent.type(await screen.findByDisplayValue("Lista"), " della spesa");
+    fireEvent.blur(window);
+    expect(await screen.findByText("La nota è nel cestino.")).toBeInTheDocument();
+    expect(screen.queryByDisplayValue("Lista della spesa")).not.toBeInTheDocument();
+    expect(screen.queryByText("Memodu non riesce a collegarsi")).not.toBeInTheDocument();
+
+    vi.mocked(api.leggi).mockResolvedValue(nota("a", "Lista della spesa"));
+    await userEvent.click(screen.getByRole("button", { name: "Ripristina" }));
+    await waitFor(() => expect(api.ripristina).toHaveBeenCalledWith("a"));
+    await waitFor(() =>
+      expect(api.salva).toHaveBeenLastCalledWith("a", { titolo: "Lista della spesa" }),
+    );
+    expect(await screen.findByDisplayValue("Lista della spesa")).toBeInTheDocument();
+    expect(screen.queryByText("La nota è nel cestino.")).not.toBeInTheDocument();
+  });
+
+  it("eliminata per sempre: avviso senza Ripristina", async () => {
+    vi.mocked(api.salva).mockRejectedValue(new ErroreApi(404, "non c'è"));
+    render(<FinestraPrincipale />);
+    await userEvent.type(await screen.findByDisplayValue("Lista"), "!");
+    fireEvent.blur(window);
+    expect(await screen.findByText("La nota è stata eliminata.")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Ripristina" })).not.toBeInTheDocument();
+  });
+});

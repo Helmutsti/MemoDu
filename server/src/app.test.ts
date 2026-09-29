@@ -218,6 +218,14 @@ describe("cartelle e cestino (DEC-37)", () => {
     expect((await chiama("POST", "/cestino", { tipo: "cartella" })).statusCode).toBe(400);
   });
 
+  it("salvando una nota nel cestino risponde 404 con l'elemento da ripristinare", async () => {
+    const nota = await crea({ titolo: "Via" });
+    await chiama("POST", "/cestino", { tipo: "nota", id: nota.id });
+    const risposta = await chiama("PUT", `/note/${nota.id}`, { contenuto: "x" });
+    expect(risposta.statusCode).toBe(404);
+    expect(risposta.json()).toMatchObject({ cestino: nota.id });
+  });
+
   it("permette all'app anche PATCH e DELETE", async () => {
     const risposta = await server.inject({
       method: "OPTIONS",

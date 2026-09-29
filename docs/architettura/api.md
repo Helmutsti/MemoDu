@@ -113,7 +113,7 @@ Salva titolo e contenuto e aggiorna `modificata`. Il database scrive tutto o nie
 | 413 | Contenuto oltre il limite del server | SF-17 |
 | 500 | Database non scritto: la versione precedente resta intatta (RB-06) | SF-32 |
 
-**Come reagisce l'app agli errori:** per 404, 413 e 500 il testo resta nella finestra e l'app mostra SC-07 come per l'API che non risponde (RB-61). Nessun testo dedicato per questi casi: vale la spiegazione di SC-07 anche se la causa non è il server spento. Scelta di Manuel Cucca, 28/09/2026.
+**Come reagisce l'app agli errori:** per 413 e 500 il testo resta nella finestra e l'app mostra SC-07 come per l'API che non risponde (RB-61). Per 404 la nota non c'è più: se è nel cestino la risposta porta `{ "cestino": "<id>" }`, l'id dell'elemento da ripristinare (la nota o la cartella eliminata che la contiene); l'app chiude la nota e mostra l'avviso «La nota è nel cestino.» con Ripristina, oppure «La nota è stata eliminata.» (scelta di Manuel Cucca il 29/09/2026). Nessun testo dedicato per questi casi: vale la spiegazione di SC-07 anche se la causa non è il server spento. Scelta di Manuel Cucca, 28/09/2026.
 
 ---
 

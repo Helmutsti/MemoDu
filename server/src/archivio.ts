@@ -70,7 +70,11 @@ const SCHEMA = `
 
 /** Nota non trovata: l'API la traduce in 404. */
 export class NotaNonTrovata extends Error {
-  constructor(readonly id: string) {
+  constructor(
+    readonly id: string,
+    /** Se la nota è nel cestino: l'id dell'elemento da ripristinare (lei o la sua cartella). */
+    readonly cestino?: string,
+  ) {
     super(`Nessuna nota con id ${id}`);
   }
 }
@@ -495,13 +499,22 @@ export class ArchivioNote {
 
   /** La nota fuori dal cestino e non dentro una cartella eliminata: altrimenti 404. */
   private trova(id: string): RigaNota {
-    const riga = this.db
-      .prepare("SELECT * FROM note WHERE id = ? AND eliminata_il IS NULL")
-      .get(id) as RigaNota | undefined;
-    if (!riga || (riga.cartella !== null && this.percorso(riga.cartella) === null)) {
-      throw new NotaNonTrovata(id);
-    }
+    const riga = this.db.prepare("SELECT * FROM note WHERE id = ?").get(id) as RigaNota | undefined;
+    if (!riga) throw new NotaNonTrovata(id);
+    if (riga.eliminata_il !== null) throw new NotaNonTrovata(id, id);
+    const cartella = this.cartellaNelCestino(riga.cartella);
+    if (cartella) throw new NotaNonTrovata(id, cartella);
     return riga;
+  }
+
+  /** La cartella più vicina nel cestino tra `id` e le sue madri, se c'è. */
+  private cartellaNelCestino(id: string | null): string | undefined {
+    for (let attuale = id; attuale !== null;) {
+      const riga = this.cartella(attuale);
+      if (riga.eliminata_il !== null) return riga.id;
+      attuale = riga.madre;
+    }
+    return undefined;
   }
 
   private nota(riga: RigaNota): Nota {

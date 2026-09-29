@@ -11,6 +11,7 @@ import { useCallback, useEffect, useRef, useState, type ReactElement } from "rea
 import type {
   Albero,
   Cartella,
+  DatiNota,
   ElementoCestino,
   EsitoCartella,
   Nota,
@@ -109,8 +110,18 @@ export function FinestraPrincipale(): ReactElement {
   const [bloccata, setBloccata] = useState(false);
   const [riprovando, setRiprovando] = useState(false);
   const [confermaChiusura, setConfermaChiusura] = useState(false);
+  /**
+   * Nota sparita mentre era aperta: nel cestino (`elemento` da ripristinare) o eliminata per
+   * sempre. Il testo non salvato resta qui finché l'avviso è aperto.
+   */
+  const [sparita, setSparita] = useState<{
+    id: string;
+    dati: DatiNota;
+    elemento?: string;
+  } | null>(null);
   const apertaAttuale = useRef<Nota | null>(null);
   const pulsanteMenu = useRef<HTMLButtonElement>(null);
+  const suErroreSalvataggio = useRef<(errore: unknown) => void>(() => setBloccata(true));
 
   // Dopo ogni salvataggio la colonna si aggiorna: titolo e ordine (RB-60, RB-65).
   const [coda] = useState(
@@ -118,7 +129,7 @@ export function FinestraPrincipale(): ReactElement {
       new CodaSalvataggio(
         api.salva,
         () => void api.albero().then(setAlbero, () => setBloccata(true)),
-        () => setBloccata(true),
+        (errore) => suErroreSalvataggio.current(errore),
       ),
   );
 
@@ -457,6 +468,41 @@ export function FinestraPrincipale(): ReactElement {
     await ricaricaCestino();
   };
 
+  // Salvataggio non riuscito. Se la nota non c'è più (404) si chiude e l'avviso dice se è
+  // nel cestino, con Ripristina; altrimenti SC-07 e il testo resta in coda (RB-61).
+  suErroreSalvataggio.current = (errore) => {
+    if (!(errore instanceof ErroreApi) || errore.stato !== 404) {
+      setBloccata(true);
+      return;
+    }
+    const { id, dati } = coda.abbandona();
+    if (id === null) return;
+    if (apertaAttuale.current?.id === id) setAperta(null);
+    setSparita({ id, dati, elemento: errore.cestino });
+    void ricarica().catch(() => setBloccata(true));
+  };
+
+  /** Ripristina l'elemento del cestino, riapre la nota e salva il testo rimasto in sospeso. */
+  const ripristinaSparita = async () => {
+    if (!sparita?.elemento) return;
+    const { id, dati, elemento } = sparita;
+    const voce = (await esegui(api.cestino))?.find((e) => e.id === elemento);
+    if (!voce) return;
+    await ripristina(voce);
+    // Ripristino annullato (per esempio davanti a un nome già usato): l'avviso resta.
+    if (
+      !(await api.leggi(id).then(
+        () => true,
+        () => false,
+      ))
+    )
+      return;
+    if (Object.keys(dati).length > 0 && !(await esegui(() => api.salva(id, dati)))) return;
+    setSparita(null);
+    await ricarica().catch(() => setBloccata(true));
+    await apri(id);
+  };
+
   const apriCestino = async () => {
     await coda.scarica();
     if (coda.haModifiche) return;
@@ -614,7 +660,20 @@ export function FinestraPrincipale(): ReactElement {
                 />
               </div>
             )}
-            {avviso && <Avviso testo={TESTO_ERRORE} onChiudi={() => setAvviso(false)} />}
+            {sparita ? (
+              <Avviso
+                tipo="avviso"
+                testo={sparita.elemento ? "La nota è nel cestino." : "La nota è stata eliminata."}
+                azione={
+                  sparita.elemento
+                    ? { etichetta: "Ripristina", onClick: () => void ripristinaSparita() }
+                    : undefined
+                }
+                onChiudi={() => setSparita(null)}
+              />
+            ) : (
+              avviso && <Avviso testo={TESTO_ERRORE} onChiudi={() => setAvviso(false)} />
+            )}
             {vista === "cestino" ? (
               <Cestino
                 elementi={cestino}

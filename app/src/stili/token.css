@@ -20,6 +20,10 @@
   --rosso-400: #fe6f69;
   --rosso-500: #be232a;
   --rosso-800: #570108;
+  --ambra-50: #fef2e5;
+  --ambra-400: #de8f0f;
+  --ambra-500: #915c02;
+  --ambra-800: #3e2501;
 
   /* Colore · chiaro */
   --sfondo-nota: var(--grigio-0);
@@ -45,6 +49,8 @@
   --sfondo-errore: var(--rosso-50);
   --testo-errore: var(--rosso-500);
   --icona-errore: var(--rosso-500);
+  --sfondo-avviso: var(--ambra-50);
+  --icona-avviso: var(--ambra-500);
 
   /* Spazi (regola 12) */
   --spazio-elemento: 4px;
@@ -115,5 +121,7 @@
     --sfondo-errore: var(--rosso-800);
     --testo-errore: var(--rosso-400);
     --icona-errore: var(--rosso-400);
+    --sfondo-avviso: var(--ambra-800);
+    --icona-avviso: var(--ambra-400);
   }
 }

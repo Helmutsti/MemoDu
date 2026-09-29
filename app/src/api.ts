@@ -22,6 +22,8 @@ export class ErroreApi extends Error {
     messaggio: string,
     /** Con 409: il nome già usato nella destinazione (RB-31). */
     readonly conflitto?: string,
+    /** Con 404 su una nota nel cestino: l'elemento da ripristinare. */
+    readonly cestino?: string,
   ) {
     super(messaggio);
   }
@@ -52,11 +54,15 @@ async function chiama<T>(
     throw new ErroreApi(null, "L'API non risponde");
   }
   if (!risposta.ok) {
-    const dettagli = (await risposta.json().catch(() => ({}))) as { conflitto?: string };
+    const dettagli = (await risposta.json().catch(() => ({}))) as {
+      conflitto?: string;
+      cestino?: string;
+    };
     throw new ErroreApi(
       risposta.status,
       `L'API ha risposto ${risposta.status}`,
       dettagli.conflitto,
+      dettagli.cestino,
     );
   }
   if (risposta.status === 204) return undefined as T;
