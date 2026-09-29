@@ -13,19 +13,19 @@
 | TC-06 | RF-01 CA-01.6 | Dall'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) aprire la nota rapida e il programma | Locale | — | |
 | TC-07 | RF-01 CA-01.7 | Spegnere il server, scrivere in una nota rapida: compare SC-07; avviare il server e premere Riprova: la nota è salvata con tutto il testo | Locale | Server spento | |
 | TC-08 | RF-01 CA-01.8 | Con SC-07 visibile chiudere la nota rapida: compare la conferma; Annulla lascia il testo, Chiudi comunque chiude | Locale | Server spento | |
-| TC-09 | RF-02 CA-02.1 | Premere + e Nuova nota: nasce una nota vuota in cima con il cursore nel corpo; lasciata vuota aprendo un'altra nota sparisce dall'elenco e dal disco; con del testo resta | Locale | Nessuna nota e poi tre note | |
+| TC-09 | RF-02 CA-02.1 | Premere + e Nuova nota: nasce una nota vuota in cima con il cursore nel corpo; lasciata vuota aprendo un'altra nota sparisce dall'elenco e dal database; con del testo resta | Locale | Nessuna nota e poi tre note | |
 | TC-10 | RF-02 CA-02.2 | Scrivere ogni sintassi markdown prevista: il testo si formatta, i simboli restano solo sulla riga del cursore | Locale | Nota vuota | |
-| TC-11 | RF-02 CA-02.3 | Applicare le quattro scorciatoie su una parola; controllare nel file che il sottolineato sia `<u>…</u>` | Locale | Nota con testo | |
+| TC-11 | RF-02 CA-02.3 | Applicare le quattro scorciatoie su una parola; controllare nel database che il sottolineato sia `<u>…</u>` | Locale | Nota con testo | |
 | TC-12 | RF-02 CA-02.4 | Selezionare testo, cliccare sul vuoto, scrivere / su riga vuota: compaiono pillole e menu giusti, senza Immagine; spariscono scrivendo, con Esc e con un clic altrove | Locale | Nota con testo | |
 | TC-13 | RF-02 CA-02.5 | Solo tastiera: Alt + F10 porta sulla pillola, frecce tra gli strumenti, Esc torna al testo; controllo con un lettore di schermo (RNF-04) | Locale | Nota con testo | |
 | TC-14 | RF-02 CA-02.6 | Tasto destro sul testo: voci e scorciatoie del menu Testo, sottomenu Titolo ed Elenco | Locale | Nota con testo | |
-| TC-15 | RF-02 CA-02.7 | Scrivere e fermarsi 2 s; poi cambiare nota, chiudere, passare a un'altra finestra: ogni volta il file è aggiornato e la nota sale in cima | Locale | Tre note di prova | |
+| TC-15 | RF-02 CA-02.7 | Scrivere e fermarsi 2 s; poi cambiare nota, chiudere, passare a un'altra finestra: ogni volta il database è aggiornato e la nota sale in cima | Locale | Tre note di prova | |
 | TC-16 | RF-02 CA-02.8 | Incollare testo da Word, da una pagina web e da un'email: entra senza formattazione | Locale | Testi di prova formattati | |
 | TC-17 | RF-02 CA-02.9 | Scrivere e incollare `<script>` e HTML con eventi: niente viene eseguito | Locale | Testi malevoli di prova | |
 | TC-18 | RF-02 CA-02.10 | Nota senza titolo con testo, e nota senza titolo né testo: nell'elenco le prime parole e «Nota vuota» | Locale | Due note di prova | |
 | TC-19 | RF-02 CA-02.11 | Fare testo, formattazione e cancellazioni, poi Ctrl + Z più volte: ogni modifica si annulla in ordine | Locale | Nota con testo | |
-| TC-20 | RF-02 CA-02.12 | Chiudere a forza il programma e poi il server durante la scrittura; riaprire: c'è l'ultimo salvataggio e il file si apre | Locale | Nota con testo | |
-| TC-21 | RF-02 CA-02.13 | Server spento o errore di scrittura (cartella in sola lettura, nota oltre 10 MB, file tolto): SC-07, testo in memoria, conferma alla chiusura | Locale | Server spento, nota da 11 MB | |
+| TC-20 | RF-02 CA-02.12 | Chiudere a forza il programma e poi il server durante la scrittura; riaprire: c'è l'ultimo salvataggio e il database si apre | Locale | Nota con testo | |
+| TC-21 | RF-02 CA-02.13 | Server spento o errore di scrittura (database in sola lettura, nota oltre 10 MB, nota eliminata da fuori): SC-07, testo in memoria, conferma alla chiusura | Locale | Server spento, nota da 11 MB | |
 | TC-22 | FL-01 × SF-01, SF-04 | Scorciatoia ripetuta con note rapide aperte (vedi CA-01.4) | Locale | Nessuna nota | |
 | TC-23 | FL-01 × SF-02 | Chiudere la finestra senza scegliere: nota salvata (vedi CA-01.2) | Locale | — | |
 | TC-24 | FL-01 × SF-16 | Nota rapida chiusa vuota (vedi CA-01.3) | Locale | — | |

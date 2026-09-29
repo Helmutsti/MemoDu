@@ -1,4 +1,4 @@
-import { chmod, mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -8,17 +8,23 @@ import { creaServer } from "./app.ts";
 import { ArchivioNote } from "./archivio.ts";
 
 let cartella: string;
+let archivio: ArchivioNote;
 let server: FastifyInstance;
 let orologio: Date;
 
 beforeEach(async () => {
   cartella = await mkdtemp(join(tmpdir(), "memodu-api-"));
   orologio = new Date("2026-09-28T08:00:00Z");
-  server = creaServer(new ArchivioNote(cartella, () => orologio));
+  archivio = new ArchivioNote(cartella, () => orologio);
+  server = creaServer(archivio);
 });
 afterEach(async () => {
   await server.close();
-  await chmod(cartella, 0o755).catch(() => {});
+  try {
+    archivio.chiudi();
+  } catch {
+    // già chiuso dalla prova sugli errori del database
+  }
   await rm(cartella, { recursive: true, force: true });
 });
 
@@ -97,19 +103,16 @@ describe("GET /note/:id e PUT /note/:id", () => {
     ).toBe(404);
   });
 
-  it.skipIf(process.platform === "win32")(
-    "risponde 500 se il file non si può scrivere (SF-32)",
-    async () => {
-      const nota = await crea({ titolo: "T" });
-      await chmod(cartella, 0o555);
-      const risposta = await server.inject({
-        method: "PUT",
-        url: `/note/${nota.id}`,
-        payload: { contenuto: "x" },
-      });
-      expect(risposta.statusCode).toBe(500);
-    },
-  );
+  it("risponde 500 se il database non si può usare (SF-32)", async () => {
+    const nota = await crea({ titolo: "T" });
+    archivio.chiudi();
+    const risposta = await server.inject({
+      method: "PUT",
+      url: `/note/${nota.id}`,
+      payload: { contenuto: "x" },
+    });
+    expect(risposta.statusCode).toBe(500);
+  });
 });
 
 describe("GET /note", () => {

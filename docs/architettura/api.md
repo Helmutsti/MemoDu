@@ -5,12 +5,12 @@
 Server in Node con TypeScript e Fastify (DEC-24, DEC-32). Ogni endpoint ha uno schema JSON per input e output: Fastify rifiuta da solo le richieste che non lo rispettano.
 
 ## Note (frammento Must A)
-Per Must A le note passano dall'API, che è l'unica a scrivere i file (DEC-30); formato e cartella dei file sono in DEC-28 e DEC-29. Il protocollo di sincronizzazione e il resto delle API arrivano con il frammento Must.
+Le note passano dall'API, che è l'unica a scrivere i dati (DEC-30), nel database SQLite (DEC-45, DEC-46, DEC-48). Il protocollo di sincronizzazione e il resto delle API arrivano con il frammento Must.
 
 **Valgono per tutti gli endpoint delle note:**
 - **Indirizzo:** l'API ascolta solo sulla macchina stessa (`127.0.0.1`), perché per ora gira sulla macchina di sviluppo (ambiente Locale). Confermato da Manuel Cucca il 27/09/2026.
 - **Autorizzazione:** nessuna nel frammento Must A: l'API non è raggiungibile da fuori. Le credenziali preimpostate (DEC-13, RB-57) entrano con la sincronizzazione, e sono obbligatorie appena l'API si sposta fuori dalla macchina. Confermato da Manuel Cucca il 27/09/2026.
-- **Identificativo:** UUID generato dall'API alla creazione, scritto nell'intestazione YAML del file (DEC-29); non cambia se cambia il titolo (EN-01). Confermato da Manuel Cucca il 28/09/2026.
+- **Identificativo:** UUID generato dall'API alla creazione, chiave della riga nel database (DEC-48); non cambia se cambia il titolo (EN-01). Confermato da Manuel Cucca il 28/09/2026.
 - **Lunghezza:** corpo della richiesta fino a 10 MB (`bodyLimit` di Fastify; il valore di default è 1 MB), circa 5.000 pagine di testo (EN-01, SF-17). Le immagini hanno il loro limite (RB-12). Scelta di Manuel Cucca, 28/09/2026.
 - **Origini ammesse:** l'API risponde alle chiamate del browser solo dall'interfaccia dell'app (`http://localhost:1420` in sviluppo, `tauri://localhost` e `http://tauri.localhost` nell'app installata); le altre origini non ricevono l'intestazione `Access-Control-Allow-Origin`.
 - **Controllo dei dati:** nessuna conversione silenziosa. Un campo che non è testo o un campo in più danno 400.
@@ -28,7 +28,7 @@ Per Must A le note passano dall'API, che è l'unica a scrivere i file (DEC-30); 
   "cartella": "Lavoro/Clienti"
 }
 ```
-`titolo` può essere vuoto (RB-15) e `contenuto` pure (RB-10). `cartella` (dal frammento Must B, DEC-37) è il percorso della cartella che contiene la nota; `""` per le non organizzate. Si cambia solo con `PUT /note/:id/cartella`. Gli istanti sono in UTC, formato ISO 8601 (DEC-28). Nel file il titolo è la prima riga `# Titolo`: l'API la compone e la separa, l'app vede solo i due campi.
+`titolo` può essere vuoto (RB-15) e `contenuto` pure (RB-10). `cartella` (dal frammento Must B, DEC-37) è il percorso della cartella che contiene la nota; `""` per le non organizzate. Si cambia solo con `PUT /note/:id/cartella`. Gli istanti sono in UTC, formato ISO 8601 (DEC-28).
 
 ---
 
@@ -65,8 +65,8 @@ Elenco delle note non organizzate (nella radice), la modificata più di recente 
 | Codice | Significato | Sfiga |
 |---|---|---|
 | 400 | `id` non è un UUID | SF-34 |
-| 404 | Nessuna nota con questo `id` (per esempio file tolto da fuori, rischio accettato di DEC-29) | SF-32 |
-| 500 | File illeggibile | SF-32 |
+| 404 | Nessuna nota con questo `id`, o nota dentro una cartella nel cestino | SF-32 |
+| 500 | Database non leggibile | SF-32 |
 
 ---
 
@@ -89,14 +89,14 @@ Tutti facoltativi, ma il corpo è sempre un oggetto JSON, anche vuoto (`{}`). Se
 | 400 | Campi non di tipo testo o percorso non valido | SF-06 |
 | 404 | La `cartella` non esiste | SF-32 |
 | 413 | Contenuto oltre il limite del server | SF-17 |
-| 500 | File non scritto | SF-32 |
+| 500 | Database non scritto | SF-32 |
 
 ---
 
 ## PUT /note/:id
 **Flusso:** FL-02 (salvataggio dopo 2 s di pausa, alla chiusura, al cambio di nota, alla perdita del focus, RB-06), FL-01 (RB-02, RB-04, RB-05) · **Ruoli autorizzati:** —
 
-Salva titolo e contenuto e aggiorna `modificata`. Il file si scrive in modo sicuro, prima un file temporaneo e poi lo scambio (RB-06). Se cambia il titolo cambia anche il nome del file (DEC-29), non l'`id`.
+Salva titolo e contenuto e aggiorna `modificata`. Il database scrive tutto o niente (RB-06). Se cambia il titolo l'`id` resta lo stesso.
 
 **Input**
 ```json
@@ -111,7 +111,7 @@ Salva titolo e contenuto e aggiorna `modificata`. Il file si scrive in modo sicu
 | 400 | `id` non è un UUID o campi non di tipo testo | SF-06, SF-34 |
 | 404 | Nessuna nota con questo `id` | SF-32 |
 | 413 | Contenuto oltre il limite del server | SF-17 |
-| 500 | File non scritto: il file precedente resta intatto (RB-06) | SF-32 |
+| 500 | Database non scritto: la versione precedente resta intatta (RB-06) | SF-32 |
 
 **Come reagisce l'app agli errori:** per 404, 413 e 500 il testo resta nella finestra e l'app mostra SC-07 come per l'API che non risponde (RB-61). Nessun testo dedicato per questi casi: vale la spiegazione di SC-07 anche se la causa non è il server spento. Scelta di Manuel Cucca, 28/09/2026.
 
@@ -130,18 +130,18 @@ Cancella per sempre la nota, senza cestino, **solo se è vuota**: titolo e conte
 | 400 | `id` non è un UUID | SF-34 |
 | 404 | Nessuna nota con questo `id` | SF-32 |
 | 409 | La nota non è vuota: resta com'è | — |
-| 500 | File non cancellato | SF-32 |
+| 500 | Nota non cancellata | SF-32 |
 
 ---
 
 ## Cartelle e cestino (frammento Must B)
-Cartelle come sottocartelle di Documenti/Memodu e cestino nella cartella nascosta `.cestino` (DEC-36); endpoint e identificativi in DEC-37. Valgono le regole generali delle note (indirizzo, autorizzazione, origini, controllo dei dati).
+Cartelle e cestino nel database (DEC-48): una cartella ha un id e una cartella madre, un elemento nel cestino ha la data di eliminazione; endpoint e identificativi in DEC-37. Valgono le regole generali delle note (indirizzo, autorizzazione, origini, controllo dei dati).
 
 **Valgono per tutti gli endpoint di cartelle e cestino:**
-- **Percorso di una cartella:** i nomi dal primo livello in giù separati da `/`, per esempio `"Lavoro/Clienti"`; `""` è la radice. Viaggia nel corpo JSON. Un percorso con `..`, con `.cestino` o con una parte vuota dà 400.
-- **Nomi:** l'API applica RB-63 (caratteri vietati sostituiti con `-`, come per i file delle note) e confronta i nomi senza distinguere maiuscole e minuscole (RB-23). Nelle risposte c'è sempre il nome come è stato scritto sul disco.
+- **Percorso di una cartella:** i nomi dal primo livello in giù separati da `/`, per esempio `"Lavoro/Clienti"`; `""` è la radice. Viaggia nel corpo JSON. Un percorso con `..` o con una parte vuota dà 400.
+- **Nomi:** l'API applica RB-63 (caratteri vietati nei nomi dei file sostituiti con `-`) e confronta i nomi senza distinguere maiuscole e minuscole (RB-23). Nelle risposte c'è sempre il nome come è stato scritto.
 - **Nome già esistente** (RB-31, SF-19): `409` con `{ "conflitto": "Idee" }`. L'app mostra l'avviso con tre scelte e ripete la richiesta con `"seEsiste": "numero"` (diventa «Idee (2)») o `"seEsiste": "unisci"`; Annulla non chiama l'API. Senza `seEsiste` vale `"chiedi"`.
-- **Unisci:** le note passano nella cartella di destinazione (un nome di file già usato prende un numero, come in DEC-29); le sottocartelle senza omonimi passano anche loro; quelle con un omonimo restano dove sono e tornano in `daRisolvere`. L'app chiede per ognuna (RB-31) e chiama `POST /cartelle/sposta`. La cartella di partenza sparisce quando resta vuota.
+- **Unisci:** le note passano nella cartella di destinazione (i titoli possono ripetersi, RB-16); le sottocartelle senza omonimi passano anche loro; quelle con un omonimo restano dove sono e tornano in `daRisolvere`. L'app chiede per ognuna (RB-31) e chiama `POST /cartelle/sposta`. La cartella di partenza sparisce quando resta vuota.
 - **Implementazione:** `server/src/app.ts` e `server/src/archivio.ts`, prove accanto.
 
 ### Oggetto Cartella
@@ -167,7 +167,7 @@ Cartelle come sottocartelle di Documenti/Memodu e cestino nella cartella nascost
   "conteggio": 7
 }
 ```
-`tipo` è `"nota"` o `"cartella"`; `nome` è il titolo della nota o il nome della cartella; `provenienza` il percorso da cui veniva (`""` la radice); `conteggio` solo per le cartelle. Sul disco è la cartella `.cestino/<id>/` con dentro l'elemento e il file `elemento.json` (DEC-37).
+`tipo` è `"nota"` o `"cartella"`; `nome` è il titolo della nota o il nome della cartella; `provenienza` il percorso da cui veniva (`""` la radice); `conteggio` solo per le cartelle. `id` è l'id della nota o della cartella eliminata (DEC-48).
 
 ---
 
@@ -264,7 +264,7 @@ Sposta la cartella con tutto il contenuto dentro `destinazione` (`""` per il pri
 ## PUT /note/:id/cartella
 **Flusso:** FL-05 (trascinamento di una nota, Sposta in del menu `···`) · **Ruoli autorizzati:** —
 
-Sposta la nota nella cartella indicata, o tra le non organizzate con `""`. Il file cambia sottocartella; se il nome del file c'è già, prende un numero (DEC-29). La data di modifica non cambia. La nota aperta resta aperta (RB-66): lo gestisce l'app.
+Sposta la nota nella cartella indicata, o tra le non organizzate con `""`. La data di modifica non cambia. La nota aperta resta aperta (RB-66): lo gestisce l'app.
 
 **Input**
 ```json
@@ -278,7 +278,7 @@ Sposta la nota nella cartella indicata, o tra le non organizzate con `""`. Il fi
 |---|---|---|
 | 400 | `id` non è un UUID o percorso non valido | SF-06, SF-34 |
 | 404 | La nota o la cartella non esistono | SF-32 |
-| 500 | File non spostato: resta dov'era | SF-32 |
+| 500 | Nota non spostata: resta dov'era | SF-32 |
 
 ---
 
@@ -321,7 +321,7 @@ Gli elementi del cestino, l'eliminato più di recente in cima.
 ## POST /cestino/:id/ripristina
 **Flusso:** FL-05 (Ripristina in SC-04) · **Ruoli autorizzati:** —
 
-Riporta l'elemento nella radice: la nota tra le non organizzate, la cartella al primo livello (RB-28). Una cartella con un nome già presente al primo livello segue RB-31, con `seEsiste`; una nota con un nome di file già usato prende un numero (DEC-29).
+Riporta l'elemento nella radice: la nota tra le non organizzate, la cartella al primo livello (RB-28). Una cartella con un nome già presente al primo livello segue RB-31, con `seEsiste`.
 
 **Input**
 ```json
@@ -343,7 +343,7 @@ Riporta l'elemento nella radice: la nota tra le non organizzate, la cartella al 
 ## DELETE /cestino/:id
 **Flusso:** FL-05 (Elimina definitivamente, dopo la conferma, RB-55) · **Ruoli autorizzati:** —
 
-Cancella per sempre l'elemento dal disco. La conferma la chiede l'app prima di chiamare l'API.
+Cancella per sempre l'elemento dal database; per una cartella anche il contenuto, tranne gli elementi eliminati a parte, che restano nel cestino. La conferma la chiede l'app prima di chiamare l'API.
 
 **Output:** `204`.
 

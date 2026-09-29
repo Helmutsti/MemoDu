@@ -1,54 +1,50 @@
-import { mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import Database from "better-sqlite3";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import {
-  analizza,
-  anteprima,
-  ArchivioNote,
-  baseNome,
-  componi,
-  NotaNonTrovata,
-} from "./archivio.ts";
+import { anteprima, ArchivioNote, baseNome, NotaNonTrovata } from "./archivio.ts";
 
 let cartella: string;
 let orologio: Date;
 let archivio: ArchivioNote;
+const aperti: ArchivioNote[] = [];
+const apri = (dove = cartella) => {
+  const a = new ArchivioNote(dove, () => orologio);
+  aperti.push(a);
+  return a;
+};
 const passa = (secondi: number) => (orologio = new Date(orologio.getTime() + secondi * 1000));
 
 beforeEach(async () => {
   cartella = await mkdtemp(join(tmpdir(), "memodu-"));
   orologio = new Date("2026-09-28T08:00:00Z");
-  archivio = new ArchivioNote(cartella, () => orologio);
+  archivio = apri();
 });
-afterEach(() => rm(cartella, { recursive: true, force: true }));
+afterEach(async () => {
+  for (const a of aperti.splice(0)) a.chiudi();
+  await rm(cartella, { recursive: true, force: true });
+});
 
-describe("formato del file (DEC-28)", () => {
-  it("scrive intestazione YAML, titolo come prima riga e contenuto", async () => {
-    const nota = await archivio.crea({
-      titolo: "Lista della spesa",
-      contenuto: "- latte\n- <u>pane</u>",
-    });
-    const testo = await readFile(join(cartella, "Lista della spesa.md"), "utf8");
-    expect(testo).toBe(
-      `---\nid: ${nota.id}\ncreata: 2026-09-28T08:00:00.000Z\nmodificata: 2026-09-28T08:00:00.000Z\n---\n# Lista della spesa\n\n- latte\n- <u>pane</u>`,
-    );
+describe("database (DEC-46, DEC-48)", () => {
+  it("crea il file del database e la cartella se non esiste", async () => {
+    apri(join(cartella, "sotto"));
+    expect(await readdir(join(cartella, "sotto"))).toContain("memodu.db");
   });
 
-  it("rilegge esattamente ciò che ha scritto, anche con titolo vuoto e contenuto che inizia con un titolo", () => {
-    const nota = {
-      id: "a",
-      titolo: "",
-      contenuto: "## Sottotitolo\n\ntesto",
-      creata: "c",
-      modificata: "m",
-    };
-    expect(analizza(componi(nota))).toEqual(nota);
+  it("segna la versione dello schema", () => {
+    archivio.chiudi();
+    aperti.splice(0);
+    const db = new Database(join(cartella, "memodu.db"));
+    expect(db.pragma("user_version", { simple: true })).toBe(1);
+    db.close();
   });
 
-  it("ignora i file senza intestazione di Memodu", async () => {
-    await writeFile(join(cartella, "estraneo.md"), "# Non è di Memodu\n");
-    expect(await archivio.elenca()).toEqual([]);
+  it("ritrova le note riaprendo il database", async () => {
+    const nota = await archivio.crea({ titolo: "Lista della spesa", contenuto: "- <u>pane</u>" });
+    archivio.chiudi();
+    aperti.splice(0);
+    expect(await apri().leggi(nota.id)).toEqual(nota);
   });
 });
 
@@ -56,54 +52,28 @@ describe("creazione (RB-01, RB-10)", () => {
   it("crea una nota vuota con id UUID e le date uguali", async () => {
     const nota = await archivio.crea({});
     expect(nota.id).toMatch(/^[0-9a-f-]{36}$/);
-    expect(nota).toMatchObject({ titolo: "", contenuto: "", creata: nota.modificata });
-    expect(await readdir(cartella)).toEqual(["Senza titolo.md"]);
+    expect(nota).toMatchObject({
+      titolo: "",
+      contenuto: "",
+      creata: nota.modificata,
+      cartella: "",
+    });
   });
 
-  it("crea la cartella se non esiste", async () => {
-    const nuova = new ArchivioNote(join(cartella, "sotto"), () => orologio);
-    await nuova.crea({ contenuto: "x" });
-    expect(await readdir(join(cartella, "sotto"))).toEqual(["Senza titolo.md"]);
+  it("ammette titoli ripetuti (RB-16)", async () => {
+    await archivio.crea({ titolo: "Idee" });
+    await archivio.crea({ titolo: "Idee" });
+    expect((await archivio.elenca()).map((v) => v.titolo)).toEqual(["Idee", "Idee"]);
   });
 });
 
-describe("nomi dei file (DEC-29)", () => {
-  it("numera i titoli già usati e le note senza titolo", async () => {
-    await archivio.crea({ titolo: "Idee" });
-    await archivio.crea({ titolo: "idee" });
-    await archivio.crea({});
-    await archivio.crea({});
-    expect((await readdir(cartella)).sort()).toEqual([
-      "Idee.md",
-      "Senza titolo 2.md",
-      "Senza titolo.md",
-      "idee 2.md",
-    ]);
-  });
-
+describe("nomi delle cartelle (RB-63)", () => {
   it("sostituisce i caratteri vietati e rende validi i nomi riservati", () => {
     expect(baseNome('Piano: a/b "c"?')).toBe("Piano- a-b -c--");
     expect(baseNome("fine. ")).toBe("fine");
     expect(baseNome("CON")).toBe("CON-");
     expect(baseNome("   ")).toBe("Senza titolo");
     expect(baseNome("x".repeat(300))).toHaveLength(100);
-  });
-
-  it("rinomina il file quando cambia il titolo, senza cambiare l'id", async () => {
-    const nota = await archivio.crea({ titolo: "Bozza" });
-    const salvata = await archivio.salva(nota.id, { titolo: "Definitiva" });
-    expect(salvata.id).toBe(nota.id);
-    expect(await readdir(cartella)).toEqual(["Definitiva.md"]);
-  });
-
-  it("cambiando solo maiuscole e minuscole non perde la nota", async () => {
-    const nota = await archivio.crea({ titolo: "Idee" });
-    await archivio.salva(nota.id, { titolo: "idee", contenuto: "ancora qui" });
-    expect(await archivio.leggi(nota.id)).toMatchObject({
-      titolo: "idee",
-      contenuto: "ancora qui",
-    });
-    expect(await readdir(cartella)).toHaveLength(1);
   });
 });
 
@@ -117,10 +87,10 @@ describe("salvataggio (RB-06)", () => {
     expect(await archivio.leggi(nota.id)).toEqual(salvata);
   });
 
-  it("non lascia file temporanei", async () => {
-    const nota = await archivio.crea({ titolo: "T" });
-    await archivio.salva(nota.id, { contenuto: "x" });
-    expect(await readdir(cartella)).toEqual(["T.md"]);
+  it("cambia il titolo senza cambiare l'id", async () => {
+    const nota = await archivio.crea({ titolo: "Bozza" });
+    const salvata = await archivio.salva(nota.id, { titolo: "Definitiva" });
+    expect(salvata).toMatchObject({ id: nota.id, titolo: "Definitiva" });
   });
 
   it("segnala una nota che non esiste", async () => {
@@ -148,7 +118,7 @@ describe("elenco (RB-60, RB-15)", () => {
     expect(anteprima("parola ".repeat(30)).length).toBeLessThanOrEqual(80);
   });
 
-  it("è vuoto se la cartella non esiste ancora", async () => {
-    expect(await new ArchivioNote(join(cartella, "manca")).elenca()).toEqual([]);
+  it("è vuoto con un database nuovo", async () => {
+    expect(await archivio.elenca()).toEqual([]);
   });
 });

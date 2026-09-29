@@ -51,7 +51,7 @@ Formattazioni previste:
 - titoli e sottotitoli;
 - elenchi puntati, numerati e checklist.
 
-La nota si vede formattata mentre si scrive: i simboli markdown compaiono solo dove c'è il cursore, e il file resta markdown. La formattazione si applica scrivendo i simboli, con le scorciatoie da tastiera, con la barra degli strumenti o con il menu del tasto destro.
+La nota si vede formattata mentre si scrive: i simboli markdown compaiono solo dove c'è il cursore, e il testo resta markdown. La formattazione si applica scrivendo i simboli, con le scorciatoie da tastiera, con la barra degli strumenti o con il menu del tasto destro.
 
 Ogni modifica si salva da sola, senza pulsante Salva (RB-06). Il testo incollato da fuori entra come testo semplice (RB-07).
 
@@ -74,7 +74,7 @@ Frammento Must A: senza immagini (RF-03), senza menu `···` e senza riga dei m
 - **CA-02.9** *Dato* uno script o dell'HTML attivo nel testo, *quando* la nota si mostra, *allora* il codice non viene eseguito: si vede come testo o viene rimosso (RB-08, SF-36).
 - **CA-02.10** *Dato* una nota senza titolo, *allora* nell'elenco compaiono le prime parole del testo; senza titolo né testo compare «Nota vuota» in grigio chiaro (RB-15).
 - **CA-02.11** *Dato* una nota aperta, *quando* premo Ctrl + Z (⌘ + Z), *allora* si annulla l'ultima modifica, qualunque sia (RB-59).
-- **CA-02.12** *Dato* un'interruzione improvvisa (crash o spegnimento), *quando* riapro la nota, *allora* trovo l'ultimo salvataggio e il file non è rovinato (RB-06, SF-10, SF-32).
+- **CA-02.12** *Dato* un'interruzione improvvisa (crash o spegnimento), *quando* riapro la nota, *allora* trovo l'ultimo salvataggio e i dati non sono rovinati (RB-06, SF-10, SF-32).
 - **CA-02.13** *Dato* il server spento o un errore di salvataggio, *allora* valgono SC-07, il testo in memoria e la conferma alla chiusura, come in CA-01.7 e CA-01.8 (RB-61, RB-62).
 
 ---

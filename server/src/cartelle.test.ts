@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, readdir, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -8,6 +8,7 @@ import {
   CartellaNonTrovata,
   ElementoNonTrovato,
   NomeEsistente,
+  NotaNonTrovata,
   NotaNonVuota,
   PercorsoNonValido,
   SpostamentoImpossibile,
@@ -26,11 +27,13 @@ beforeEach(async () => {
   archivio = new ArchivioNote(cartella, () => orologio);
 });
 afterEach(async () => {
+  archivio.chiudi();
   await rm(cartella, { recursive: true, force: true });
 });
 
 const nuova = async (genitore: string, nome: string) =>
   (await archivio.creaCartella(genitore, nome)).cartella.percorso;
+const radice = async () => (await archivio.albero()).cartelle;
 
 describe("albero (RB-56, RB-64, RB-65)", () => {
   it("mette sottocartelle e note in ordine alfabetico e conta le note delle sottocartelle", async () => {
@@ -46,11 +49,12 @@ describe("albero (RB-56, RB-64, RB-65)", () => {
     expect(albero.nonOrganizzate.conteggio).toBe(1);
     const lavoro = albero.cartelle[0]!;
     expect(lavoro.cartelle.map((c) => c.nome)).toEqual(["Clienti", "progetti"]);
+    expect(lavoro.cartelle[0]).toMatchObject({ percorso: "Lavoro/Clienti", conteggio: 1 });
     expect(lavoro.note.map((n) => n.titolo)).toEqual(["Agenda", "budget"]);
     expect(lavoro.conteggio).toBe(3);
   });
 
-  it("non mostra il cestino e non conta le note eliminate", async () => {
+  it("non conta le note eliminate", async () => {
     await nuova("", "Lavoro");
     const nota = await archivio.crea({ titolo: "Via", cartella: "Lavoro" });
     await archivio.cestinaNota(nota.id);
@@ -73,25 +77,28 @@ describe("note nelle cartelle", () => {
     await nuova("", "Lavoro");
     const nota = await archivio.crea({ titolo: "Budget", cartella: "Lavoro" });
     expect(nota.cartella).toBe("Lavoro");
-    expect(await readdir(join(cartella, "Lavoro"))).toEqual(["Budget.md"]);
     expect(await archivio.leggi(nota.id)).toMatchObject({ titolo: "Budget", cartella: "Lavoro" });
     const salvata = await archivio.salva(nota.id, { titolo: "Budget 2026" });
-    expect(await readdir(join(cartella, "Lavoro"))).toEqual(["Budget 2026.md"]);
     expect(salvata.cartella).toBe("Lavoro");
+  });
+
+  it("trova la cartella senza distinguere le maiuscole", async () => {
+    await nuova("", "Lavoro");
+    expect((await archivio.crea({ cartella: "lavoro" })).cartella).toBe("Lavoro");
   });
 
   it("rifiuta una cartella che non esiste", async () => {
     await expect(archivio.crea({ cartella: "Manca" })).rejects.toBeInstanceOf(CartellaNonTrovata);
   });
 
-  it("sposta la nota senza cambiare la data di modifica, con un numero se il nome c'è già", async () => {
+  it("sposta la nota senza cambiare la data di modifica, anche con un titolo già presente", async () => {
     await nuova("", "Lavoro");
     await archivio.crea({ titolo: "Idee", cartella: "Lavoro" });
-    const nota = await archivio.crea({ titolo: "idee" });
+    const nota = await archivio.crea({ titolo: "Idee" });
     passa(10);
     const spostata = await archivio.spostaNota(nota.id, "Lavoro");
     expect(spostata).toMatchObject({ cartella: "Lavoro", modificata: nota.modificata });
-    expect((await readdir(join(cartella, "Lavoro"))).sort()).toEqual(["Idee.md", "idee 2.md"]);
+    expect((await radice())[0]!.note.map((n) => n.titolo)).toEqual(["Idee", "Idee"]);
     await archivio.spostaNota(nota.id, "");
     expect(await archivio.leggi(nota.id)).toMatchObject({ cartella: "" });
   });
@@ -111,7 +118,7 @@ describe("cartelle (RB-23, RB-24, RB-31, RB-48, RB-63)", () => {
     await expect(archivio.creaCartella("", "  ")).rejects.toBeInstanceOf(PercorsoNonValido);
   });
 
-  it("chiede se il nome esiste già, anche con maiuscole diverse", async () => {
+  it("chiede se il nome esiste già, anche con maiuscole diverse e lettere accentate", async () => {
     await nuova("", "Clienti");
     await expect(archivio.creaCartella("", "clienti")).rejects.toMatchObject({
       conflitto: "Clienti",
@@ -120,13 +127,15 @@ describe("cartelle (RB-23, RB-24, RB-31, RB-48, RB-63)", () => {
     expect((await archivio.creaCartella("", "clienti", "numero")).cartella.nome).toBe(
       "clienti (2)",
     );
+    await nuova("", "Èventi");
+    await expect(archivio.creaCartella("", "èventi")).rejects.toBeInstanceOf(NomeEsistente);
   });
 
   it("rinomina, anche cambiando solo maiuscole e minuscole", async () => {
     await nuova("", "idee");
     await archivio.crea({ titolo: "Una", cartella: "idee" });
     await archivio.rinominaCartella("idee", "Idee");
-    expect(await readdir(cartella)).toEqual(["Idee"]);
+    expect((await radice()).map((c) => c.nome)).toEqual(["Idee"]);
     const esito = await archivio.rinominaCartella("Idee", "Progetti");
     expect(esito.cartella).toMatchObject({ nome: "Progetti", percorso: "Progetti", conteggio: 1 });
   });
@@ -138,7 +147,7 @@ describe("cartelle (RB-23, RB-24, RB-31, RB-48, RB-63)", () => {
     await archivio.crea({ titolo: "Una", cartella: "Personale/Idee" });
     const esito = await archivio.spostaCartella("Personale/Idee", "Lavoro");
     expect(esito.cartella).toMatchObject({ percorso: "Lavoro/Idee", conteggio: 1 });
-    expect(await readdir(join(cartella, "Personale"))).toEqual([]);
+    expect((await radice()).find((c) => c.nome === "Personale")!.cartelle).toEqual([]);
   });
 
   it("non sposta una cartella dentro sé stessa o una sua sottocartella", async () => {
@@ -152,7 +161,7 @@ describe("cartelle (RB-23, RB-24, RB-31, RB-48, RB-63)", () => {
     );
   });
 
-  it("unisce: note con un numero, sottocartelle omonime da risolvere, origine tolta se vuota", async () => {
+  it("unisce: note insieme, sottocartelle omonime da risolvere, origine tolta se vuota", async () => {
     await nuova("", "A");
     await nuova("A", "Archivio");
     await nuova("A", "Solo in A");
@@ -164,29 +173,25 @@ describe("cartelle (RB-23, RB-24, RB-31, RB-48, RB-63)", () => {
     const esito: EsitoCartella = await archivio.rinominaCartella("A", "b", "unisci");
     expect(esito.cartella.percorso).toBe("B");
     expect(esito.daRisolvere).toEqual(["A/Archivio"]);
-    expect((await readdir(join(cartella, "B"))).sort()).toEqual([
-      "Nota 2.md",
-      "Nota.md",
-      "Solo in A",
-      "archivio",
-    ]);
+    expect(esito.cartella.cartelle.map((c) => c.nome)).toEqual(["archivio", "Solo in A"]);
+    expect(esito.cartella.note.map((n) => n.titolo)).toEqual(["Nota", "Nota"]);
 
     // L'app risolve la sottocartella rimasta: con daUnione, «A» sparisce quando si svuota.
     const secondo = await archivio.spostaCartella("A/Archivio", "B", "unisci", true);
     expect(secondo.daRisolvere).toEqual([]);
-    expect((await readdir(cartella)).sort()).toEqual(["B"]);
+    expect((await radice()).map((c) => c.nome)).toEqual(["B"]);
   });
 
   it("rifiuta percorsi non validi", async () => {
-    for (const percorso of ["../fuori", "a//b", ".cestino", "a/./b"]) {
+    for (const percorso of ["../fuori", "a//b", "a/./b"]) {
       await expect(archivio.creaCartella(percorso, "x")).rejects.toBeInstanceOf(PercorsoNonValido);
     }
     await expect(archivio.rinominaCartella("", "x")).rejects.toBeInstanceOf(PercorsoNonValido);
   });
 
-  it("segnala una cartella tolta da fuori", async () => {
+  it("segnala una cartella eliminata nel frattempo", async () => {
     await nuova("", "Lavoro");
-    await rm(join(cartella, "Lavoro"), { recursive: true });
+    await archivio.cestinaCartella("Lavoro");
     await expect(archivio.rinominaCartella("Lavoro", "X")).rejects.toBeInstanceOf(
       CartellaNonTrovata,
     );
@@ -209,7 +214,14 @@ describe("cestino (RB-25 … RB-28, RB-32, RB-55)", () => {
       { tipo: "nota", nome: "Riunione", provenienza: "Lavoro/Clienti" },
     ]);
     expect(elementi[1]!.eliminato).toBe("2026-09-28T08:00:00.000Z");
-    expect((await archivio.albero()).cartelle[0]!.cartelle).toEqual([]);
+    expect((await radice())[0]!.cartelle).toEqual([]);
+  });
+
+  it("le note di una cartella eliminata non si aprono più", async () => {
+    await nuova("", "Lavoro");
+    const nota = await archivio.crea({ titolo: "Dentro", cartella: "Lavoro" });
+    await archivio.cestinaCartella("Lavoro");
+    await expect(archivio.leggi(nota.id)).rejects.toBeInstanceOf(NotaNonTrovata);
   });
 
   it("ripristina nella radice: la nota tra le non organizzate, la cartella al primo livello", async () => {
@@ -232,7 +244,8 @@ describe("cestino (RB-25 … RB-28, RB-32, RB-55)", () => {
     await expect(archivio.ripristina(c.id)).rejects.toBeInstanceOf(NomeEsistente);
     const esito = await archivio.ripristina(c.id, "unisci");
     expect(esito).toMatchObject({ cartella: { percorso: "clienti", conteggio: 1 } });
-    expect((await readdir(cartella)).filter((n) => n !== ".cestino")).toEqual(["clienti"]);
+    expect((await radice()).map((x) => x.nome)).toEqual(["clienti"]);
+    expect(await archivio.elencaCestino()).toEqual([]);
   });
 
   it("elimina per sempre un elemento e svuota il cestino", async () => {
@@ -242,14 +255,22 @@ describe("cestino (RB-25 … RB-28, RB-32, RB-55)", () => {
     expect((await archivio.elencaCestino()).map((e) => e.nome)).toEqual(["B"]);
     await archivio.svuotaCestino();
     expect(await archivio.elencaCestino()).toEqual([]);
-    expect(await readdir(join(cartella, ".cestino"))).toEqual([]);
     await expect(archivio.eliminaDefinitivamente(a.id)).rejects.toBeInstanceOf(ElementoNonTrovato);
   });
 
-  it("ignora una cartella rovinata nel cestino", async () => {
-    await mkdir(join(cartella, ".cestino", "rovinata"), { recursive: true });
-    await writeFile(join(cartella, ".cestino", "rovinata", "x.txt"), "x");
-    expect(await archivio.elencaCestino()).toEqual([]);
+  it("cancellando per sempre una cartella, gli elementi eliminati a parte restano nel cestino", async () => {
+    await nuova("", "Lavoro");
+    await nuova("Lavoro", "Clienti");
+    const sola = await archivio.crea({ titolo: "Sola", cartella: "Lavoro" });
+    const dentro = await archivio.crea({ titolo: "Dentro", cartella: "Lavoro" });
+    await archivio.cestinaNota(sola.id);
+    await archivio.cestinaCartella("Lavoro/Clienti");
+    const lavoro = await archivio.cestinaCartella("Lavoro");
+    await archivio.eliminaDefinitivamente(lavoro.id);
+
+    expect((await archivio.elencaCestino()).map((e) => e.nome).sort()).toEqual(["Clienti", "Sola"]);
+    await expect(archivio.leggi(dentro.id)).rejects.toBeInstanceOf(NotaNonTrovata);
+    expect(await archivio.ripristina(sola.id)).toMatchObject({ cartella: "" });
   });
 });
 
