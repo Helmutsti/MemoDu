@@ -29,7 +29,7 @@ servizi-esterni:
 ## Set di dati
 | Nome | Contenuto | Versione schema | Come si genera |
 |---|---|---|---|
-| | | | |
+| Smistare (Locale, frammento Must B) | Tre note non organizzate; «Lavoro» con «Clienti» (nota «Rossi»), «Progetti» e le note «Budget 2026» e «Riunione con i fornitori»; «Personale» vuota. Nessun dato personale | File markdown (DEC-28, DEC-36) | Server avviato con `MEMODU_CARTELLA="$HOME/Documents/Memodu-prove" npm run server` su una cartella vuota, poi `sh scripts/dati-di-prova.sh`. Mai sulla cartella delle note vere: la variabile `MEMODU_CARTELLA` tiene le prove separate da Documenti/Memodu |
 
 ## Regole
 - **Promozione:** come una versione passa da un ambiente al successivo e chi la autorizza.
