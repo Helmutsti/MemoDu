@@ -12,7 +12,7 @@
 | Token nel codice | Variabili CSS in `app/src/stili/token.css`, stili di testo come classi in `app/src/stili/base.css`; il modo chiaro o scuro segue il sistema | DEC-21, DEC-22 |
 | Server (API) | Node con TypeScript e Fastify | DEC-24, DEC-32 |
 | Archivio del server | File system: documenti e immagini cifrati come file | DEC-25 |
-| Note | Le gestisce l'API (DEC-30). Note, tag, cartelle e cestino in un database SQLite nell'API; il testo resta markdown in una colonna. Il file del database sta nella cartella dei dati delle applicazioni (`%APPDATA%\Memodu` su Windows, `~/Library/Application Support/Memodu` su macOS), fuori da OneDrive e iCloud; per le prove la variabile `MEMODU_CARTELLA` lo sposta (scelta di Manuel Cucca il 29/09/2026). Dal frammento Must D (DEC-49) il codice scrive nel database. Poi la copia di lavoro sul dispositivo | DEC-30, DEC-45, DEC-46, DEC-47 |
+| Note | Le gestisce l'API (DEC-30). Note, tag, cartelle e cestino in un database SQLite nell'API; il testo resta markdown in una colonna. Il file del database sta nella cartella dei dati delle applicazioni (`%LOCALAPPDATA%\Memodu` su Windows, `~/Library/Application Support/Memodu` su macOS), fuori da OneDrive e iCloud; su Windows la cartella locale e non quella «Roaming», che nei domini aziendali può seguire il profilo sul server; per le prove la variabile `MEMODU_CARTELLA` lo sposta (scelte di Manuel Cucca il 29/09/2026). Dal frammento Must D (DEC-49) il codice scrive nel database. Poi la copia di lavoro sul dispositivo | DEC-30, DEC-45, DEC-46, DEC-47 |
 | Hosting | Per ora la macchina di sviluppo (ambiente Locale). L'hosting definitivo è rinviato; deve avere un disco persistente (DEC-25) | — |
 
 ## Struttura del repository
