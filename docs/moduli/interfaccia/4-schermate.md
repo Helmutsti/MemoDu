@@ -48,7 +48,7 @@ L'unico menu della finestra. È diviso in due parti:
 
 | Parte | Voci |
 |---|---|
-| Sopra: **questa nota** | Tag, Date, Sposta in, Elimina (FL-04, RB-25) |
+| Sopra: **questa nota** | Dettagli, Sposta in, Elimina (FL-04, RB-25, DEC-44). Le stesse voci nel tasto destro sulla nota nella colonna |
 | Sotto: **Memodu** | Impostazioni (SC-06). Il Cestino non è più nel menu: si apre dalla riga in fondo alla colonna (DEC-40) |
 
 Senza una nota aperta (stato vuoto) il menu mostra solo la parte sotto.
@@ -187,9 +187,10 @@ flowchart LR
     SC01 -- clic su un'immagine --> Img
 
     SC01 -- ··· --> Menu[Menu ···]
-    Menu -- Tag… --> Tag[Tag con suggerimenti]
+    Menu -- Dettagli --> Dett[Finestra Dettagli: date, tag, cartella]
+    Dett -- scrivo un tag --> Tag[Suggerimenti dei tag]
     Tag -- tasto destro su un suggerimento --> TdTag[Elimina tag…] --> Conf[Conferma con il numero di note]
-    Menu -- Date… --> Date[Pannello date]
+    Dett -- clic su una data --> Date[Calendario]
     Menu -- Sposta in… --> Sposta[Pannello Sposta in]
 
     SC01 -- scrivo nella ricerca --> Ric[Card dei risultati] -- apro un risultato --> SC01

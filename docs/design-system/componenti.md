@@ -359,7 +359,7 @@ Compare e sparisce con `movimento-durata-breve` (120 ms). Compare dopo 500 ms di
 - Contenitore `sfondo-flottante`, `raggio-contenitore` (20), margini 8 sopra e sotto e 0 ai lati, `ombra-flottante`, livello 20 (`z-comparsa`). Largo 236 negli esempi; si allarga fino alla voce più lunga.
 - La pillola dell'evidenziazione sta a 8 px dai lati (margine della voce); i divisori vanno da lato a lato e sono leggeri (`bordo-divisore-tenue`). Scelta tra sei alternative (divisori rientrati o da lato a lato, pieni o leggeri; margine 8 o 12; pillola, rettangolo con raggio 12 o fascia a tutta larghezza): la pillola resta per coerenza con colonna, pulsanti e tag.
 - **Icone:** tutte le voci dei menu di azioni (nota, cartella, testo, inserimento) hanno la loro icona, così i testi restano allineati ed Elimina si riconosce anche dal cestino, non solo dal rosso. Le liste di valori (suggerimenti dei tag, filtri) restano senza: sono nomi o periodi, non azioni; fa eccezione Crea il tag con il +. Scelta tra cinque alternative (nessuna icona, icone su tutte, solo Elimina a sinistra, a destra o con spazio riservato); il confronto resta nella pagina Prove.
-- **Nota** (`···`): Tag… (tag), Date… (calendario), Sposta in… (sposta) · Elimina (elimina) · Impostazioni (impostazioni). Senza una nota aperta resta solo l'ultimo gruppo. Il Cestino non è nel menu: si apre dalla riga in fondo alla colonna (DEC-40).
+- **Nota** (`···` e tasto destro sulla nota nella colonna): Dettagli (informazione, apre CMP-24), Sposta in… (sposta) · Elimina (elimina) · Impostazioni (impostazioni, solo nel `···`) (DEC-44). Senza una nota aperta resta solo l'ultimo gruppo. Il Cestino non è nel menu: si apre dalla riga in fondo alla colonna (DEC-40).
 - **Nota nella colonna** (tasto destro): Sposta in… (sposta) · Elimina (elimina).
 - **Cartella** (tasto destro): Nuova nota qui (nota), Nuova sottocartella (cartella), Rinomina (rinomina) · Elimina (elimina).
 - **Testo** (tasto destro): Taglia, Copia, Incolla · Grassetto, Corsivo, Sottolineato, Barrato, con le scorciatoie · Titolo ›, Elenco › (elenco puntato); ogni voce con l'icona del suo nome.
@@ -431,7 +431,7 @@ Compare con `movimento-durata-breve` (120 ms) e `movimento-spostamento` (4 px). 
 ---
 
 ## CMP-11 – Pannello a comparsa
-**Tipo:** composto (usa CMP-03 e CMP-07) · **Usato in:** SC-03 (voci Date… e Sposta in… del menu `···`) · **Figma:** pagina Componenti composti, [Pannello a comparsa](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=60-1780)
+**Tipo:** composto (usa CMP-03 e CMP-07) · **Usato in:** SC-03 (voce Sposta in… del menu `···`; il tipo Date non si usa più: le date stanno nella finestra dei dettagli, CMP-24, DEC-44) · **Figma:** pagina Componenti composti, [Pannello a comparsa](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=60-1780)
 
 **Scopo:** modificare un'informazione della nota che ha bisogno di più di una voce di menu: una data, una cartella.
 **Quando usarlo:** quando la scelta richiede un campo, una ricerca o un albero, aperto dalla voce con "…" del menu.

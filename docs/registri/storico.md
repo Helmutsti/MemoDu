@@ -262,3 +262,4 @@
 | 29/09/2026 | Manuel Cucca | CMP-24 Finestra dei dettagli disegnato (Fase 5 riaperta per Must C), da approvare | DEC-44 |
 | 29/09/2026 | Manuel Cucca | CMP-24 approvato con i testi proposti, il comportamento da tastiera e il titolo della nota sotto «Dettagli» | DEC-44 |
 | 29/09/2026 | Manuel Cucca | CMP-20, SC-03: riga sotto il titolo su due righe, ultima modifica sopra e tag in sola lettura sotto | DEC-44 |
+| 29/09/2026 | Manuel Cucca | SC-03, SC-01: mockup della finestra Dettagli (8 stati), da approvare; CMP-09 menu della nota con Dettagli (tolti Tag…, Date… e il Cestino rimasto da DEC-40); CMP-11 tipo Date non più usato | DEC-44 |
