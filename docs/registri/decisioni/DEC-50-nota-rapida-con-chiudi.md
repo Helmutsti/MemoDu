@@ -17,4 +17,4 @@ Scelta di Manuel Cucca: **B**.
 
 ## Conseguenze
 - DEC-34 è superata per il pulsante «Esc per chiudere» e per il nome «Salva».
-- Aggiornati CMP-23, SC-02, FL-01, RB-02, CA-01.2, CA-01.5, TC-02, TC-05; mockup di SC-02 aggiornati il 29/09/2026; codice della nota rapida da cambiare.
+- Aggiornati CMP-23, SC-02, FL-01, RB-02, CA-01.2, CA-01.5, TC-02, TC-05; mockup di SC-02 da aggiornare dopo la pubblicazione della libreria; codice della nota rapida da cambiare.
