@@ -104,7 +104,7 @@ Condiviso con RF-02: vedi lo scenario di RF-02.
 ---
 
 ## RF-04 – Metadati della nota
-**Priorità:** Must · **Origine:** — · **Fase:** 6 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 9 (frammento Must C, nella finestra Dettagli) · **Stato:** Pronto
 
 Come *utente* voglio associare dei metadati a ogni nota per descriverla con titolo, date e tag.
 

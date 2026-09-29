@@ -37,7 +37,7 @@ Frammento Must B «Smistare» (DEC-36): cartelle come sottocartelle di Documenti
 ---
 
 ## RF-06 – Tag
-**Priorità:** Must · **Origine:** — · **Fase:** 6 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 9 (frammento Must C; trovare le note per tag con la ricerca, RF-08) · **Stato:** Pronto
 
 Come *utente* voglio assegnare tag alle note per raggrupparle in modo trasversale alle cartelle.
 

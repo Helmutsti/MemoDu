@@ -292,3 +292,5 @@
 | 29/09/2026 | Manuel Cucca | CA-04.3, CA-06.4: confermate le due deduzioni dello sviluppo di Must C | Scelta di Manuel Cucca (deduzioni confermate) |
 | 29/09/2026 | Manuel Cucca | Must C: prove a mano TC-51 … TC-62 e correzioni della revisione (focus, suggerimenti, calendario, rientro, titolo delle note senza titolo); anteprima delle note in condiviso | DEC-44, DEC-51 |
 | 29/09/2026 | Manuel Cucca | CA-04.3, CMP-24, TC-53: una data scritta che non esiste mostra «Data non valida: scrivi GG/MM/AAAA» sotto il campo | DEC-52 |
+| 29/09/2026 | Manuel Cucca | RF-04, RF-06: Fase 9 · Pronto; TC-42, TC-62: il controllo con VoiceOver non interessa per ora, rinviato senza data | Scelta di Manuel Cucca |
+| 29/09/2026 | Manuel Cucca | TC-47: «Unisci» nel ripristino dal cestino provato e superato | DEC-36 |
