@@ -92,7 +92,11 @@ export function Calendario({
   // Clic fuori: si chiude.
   useEffect(() => {
     const suClic = (e: MouseEvent) => {
-      if (!elemento.current?.contains(e.target as Node)) onChiudi();
+      // Il clic sull'icona che lo apre lo gestisce l'icona stessa (apre e chiude).
+      const bersaglio = e.target as Element;
+      if (elemento.current?.contains(bersaglio) || bersaglio.closest?.("[data-apre-calendario]"))
+        return;
+      onChiudi();
     };
     window.addEventListener("mousedown", suClic, true);
     return () => window.removeEventListener("mousedown", suClic, true);

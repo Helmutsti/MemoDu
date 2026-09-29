@@ -63,6 +63,19 @@ export function FinestraDettagli(p: Proprieta): ReactElement {
     return () => prima?.focus?.();
   }, []);
 
+  // Esc chiude anche se il focus non è più dentro la finestra; menu, calendario e conferma
+  // lo usano prima di lei.
+  useEffect(() => {
+    const suEsc = (e: KeyboardEvent) => {
+      if (e.key !== "Escape" || e.defaultPrevented || menuTag || daEliminare) return;
+      if (finestra.current?.contains(document.activeElement)) return;
+      e.preventDefault();
+      p.onChiudi();
+    };
+    window.addEventListener("keydown", suEsc);
+    return () => window.removeEventListener("keydown", suEsc);
+  });
+
   const suTasto = (e: React.KeyboardEvent) => {
     if (e.key === "Escape" && !e.defaultPrevented) {
       e.preventDefault();
@@ -160,7 +173,14 @@ export function FinestraDettagli(p: Proprieta): ReactElement {
         <p className="dettagli-gruppo interfaccia-titolo-gruppo">Tag</p>
         <div className="dettagli-rientro dettagli-tag">
           {p.nota.tag.map((nome) => (
-            <Tag key={nome} nome={nome} onTogli={() => p.onTogliTag(nome)} />
+            <Tag
+              key={nome}
+              nome={nome}
+              onTogli={() => {
+                p.onTogliTag(nome);
+                campoTag.current?.focus();
+              }}
+            />
           ))}
           <input
             ref={campoTag}
@@ -168,6 +188,13 @@ export function FinestraDettagli(p: Proprieta): ReactElement {
             aria-label="Aggiungi un tag"
             placeholder="Aggiungi un tag"
             value={testoTag}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && cercato && !mostraSuggerimenti) {
+                e.preventDefault();
+                p.onAggiungiTag(cercato);
+                setTestoTag("");
+              }
+            }}
             onChange={(e) => {
               setTestoTag(e.target.value);
               setRettangoloCampo(e.currentTarget.getBoundingClientRect());
@@ -221,11 +248,13 @@ export function FinestraDettagli(p: Proprieta): ReactElement {
           azione="Elimina tag"
           onAnnulla={() => {
             setDaEliminare(null);
+            setSuggerimentiChiusi(true);
             campoTag.current?.focus();
           }}
           onConferma={() => {
             p.onEliminaTag(daEliminare);
             setDaEliminare(null);
+            setSuggerimentiChiusi(true);
             campoTag.current?.focus();
           }}
         />
@@ -247,6 +276,7 @@ function RigaData(p: {
   const [testo, setTesto] = useState(scritto);
   const [calendario, setCalendario] = useState<DOMRect | null>(null);
   const campo = useRef<HTMLDivElement>(null);
+  const casella = useRef<HTMLInputElement>(null);
   // L'ultimo valore inviato: Invio e poi l'uscita dal campo non lo mandano due volte.
   const [inviato, setInviato] = useState(p.valore);
   // Quando il valore cambia da fuori, il campo lo mostra.
@@ -282,6 +312,7 @@ function RigaData(p: {
       </div>
       <div ref={campo} className={`dettagli-data ${calendario ? "dettagli-data-aperta" : ""}`}>
         <input
+          ref={casella}
           className="dettagli-campo-data interfaccia-messaggio"
           aria-label={p.etichetta}
           placeholder={p.vuoto}
@@ -299,7 +330,11 @@ function RigaData(p: {
           type="button"
           className="dettagli-apri-calendario"
           aria-label={`Scegli ${p.etichetta.toLowerCase()} dal calendario`}
-          onClick={() => setCalendario(campo.current?.getBoundingClientRect() ?? null)}
+          aria-expanded={calendario !== null}
+          data-apre-calendario=""
+          onClick={() =>
+            setCalendario(calendario ? null : (campo.current?.getBoundingClientRect() ?? null))
+          }
         >
           <Icona di={Calendar} />
         </button>
@@ -313,8 +348,12 @@ function RigaData(p: {
             setCalendario(null);
             setTesto(giorno ? scriviGiorno(giorno) : "");
             cambia(giorno);
+            casella.current?.focus();
           }}
-          onChiudi={() => setCalendario(null)}
+          onChiudi={() => {
+            setCalendario(null);
+            casella.current?.focus();
+          }}
         />
       )}
     </div>

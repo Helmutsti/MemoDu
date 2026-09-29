@@ -20,6 +20,7 @@ import type {
   SeEsiste,
   VoceTag,
 } from "@memodu/condiviso";
+import { anteprima } from "@memodu/condiviso";
 import { api, ErroreApi } from "../api";
 import { Avviso } from "../componenti/Avviso";
 import { FinestraConferma } from "../componenti/FinestraConferma";
@@ -92,7 +93,9 @@ export function FinestraPrincipale(): ReactElement {
     x: number;
     y: number;
   } | null>(null);
-  const [menuNota, setMenuNota] = useState<{ x: number; y: number } | null>(null);
+  const [menuNota, setMenuNota] = useState<{ x: number; y: number; tastiera?: boolean } | null>(
+    null,
+  );
   const [menuRiga, setMenuRiga] = useState<{
     id: string;
     cartella: Percorso;
@@ -727,7 +730,9 @@ export function FinestraPrincipale(): ReactElement {
                   aria-expanded={menuNota !== null}
                   onClick={(e) => {
                     const r = e.currentTarget.getBoundingClientRect();
-                    setMenuNota(menuNota ? null : { x: r.right - 236, y: r.bottom + 4 });
+                    // Aperto da tastiera (Invio o Spazio): la prima voce è già evidenziata.
+                    const tastiera = e.detail === 0;
+                    setMenuNota(menuNota ? null : { x: r.right - 236, y: r.bottom + 4, tastiera });
                   }}
                 />
               </div>
@@ -809,6 +814,7 @@ export function FinestraPrincipale(): ReactElement {
           etichetta="Altre azioni"
           x={menuNota.x}
           y={menuNota.y}
+          attivaIniziale={menuNota.tastiera ? 0 : -1}
           onChiudi={() => setMenuNota(null)}
         />
       )}
@@ -840,7 +846,7 @@ export function FinestraPrincipale(): ReactElement {
       {dettagli && (
         <FinestraDettagli
           nota={dettagli}
-          titolo={dettagli.titolo || dettagli.contenuto.trim().split("\n")[0] || "Nota vuota"}
+          titolo={dettagli.titolo || anteprima(dettagli.contenuto) || "Nota vuota"}
           tutti={tuttiTag}
           onDettagli={(dati: DatiDettagli) =>
             void cambiaDettagli(() => api.salvaDettagli(dettagli.id, dati))

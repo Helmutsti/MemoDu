@@ -22,13 +22,16 @@ import type {
   VoceElenco,
   VoceTag,
 } from "@memodu/condiviso";
+import { anteprima } from "@memodu/condiviso";
+
+/** Prime parole delle note senza titolo (RB-15): la funzione sta in condiviso, per l'app e l'API. */
+export { anteprima };
 
 const FILE_DATABASE = "memodu.db";
 const VERSIONE_SCHEMA = 1;
 const SENZA_TITOLO = "Senza titolo";
 const NUOVA_CARTELLA = "Nuova cartella";
 const LUNGHEZZA_MASSIMA_NOME = 100;
-const LUNGHEZZA_ANTEPRIMA = 80;
 // Nomi che Windows non accetta come nome di file: restano esclusi anche per le cartelle (RB-63).
 const NOMI_RISERVATI = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/i;
 
@@ -939,18 +942,4 @@ export function baseNome(titolo: string): string {
   const pulito = Array.from(intero).slice(0, LUNGHEZZA_MASSIMA_NOME).join("").trim();
   if (pulito === "" || /^[-.]+$/.test(pulito)) return SENZA_TITOLO;
   return NOMI_RISERVATI.test(pulito) ? `${pulito}-` : pulito;
-}
-
-/** Prime parole del contenuto senza simboli markdown, per le note senza titolo (RB-15). */
-export function anteprima(contenuto: string): string {
-  const testo = contenuto
-    .replace(/<\/?u>/g, "")
-    .replace(/^\s*(#{1,6}|[-*+]|\d+\.)\s+(\[[ xX]\]\s+)?/gm, "")
-    .replace(/(\*\*|__|\*|_|~~)/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-  if (testo.length <= LUNGHEZZA_ANTEPRIMA) return testo;
-  const taglio = testo.slice(0, LUNGHEZZA_ANTEPRIMA);
-  const spazio = taglio.lastIndexOf(" ");
-  return spazio > 0 ? taglio.slice(0, spazio) : taglio;
 }

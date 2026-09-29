@@ -117,6 +117,7 @@ describe("CMP-24 Finestra dei dettagli", () => {
     );
     await userEvent.click(within(conferma).getByRole("button", { name: "Annulla" }));
     expect(f.onEliminaTag).not.toHaveBeenCalled();
+    await userEvent.type(screen.getByRole("textbox", { name: "Aggiungi un tag" }), "o");
     fireEvent.contextMenu(screen.getByRole("menuitem", { name: "lavoro" }));
     await userEvent.click(screen.getByRole("menuitem", { name: "Elimina tag…" }));
     await userEvent.click(screen.getByRole("button", { name: "Elimina tag" }));
@@ -128,5 +129,52 @@ describe("CMP-24 Finestra dei dettagli", () => {
     screen.getByText("riunioni").focus();
     await userEvent.keyboard("{Delete}");
     expect(f.onTogliTag).toHaveBeenCalledWith("riunioni");
+  });
+
+  it("dopo Canc su un tag il focus va nel campo e Esc chiude ancora (CA-06.6)", async () => {
+    apri();
+    screen.getByText("riunioni").focus();
+    await userEvent.keyboard("{Delete}");
+    expect(screen.getByRole("textbox", { name: "Aggiungi un tag" })).toHaveFocus();
+    await userEvent.keyboard("{Escape}");
+    expect(f.onChiudi).toHaveBeenCalled();
+  });
+
+  it("Esc chiude anche se il focus è finito fuori dalla finestra", () => {
+    apri();
+    (document.activeElement as HTMLElement).blur();
+    fireEvent.keyDown(window, { key: "Escape" });
+    expect(f.onChiudi).toHaveBeenCalled();
+  });
+
+  it("dopo Annulla nella conferma i suggerimenti sono chiusi (CA-06.4)", async () => {
+    apri();
+    await userEvent.type(screen.getByRole("textbox", { name: "Aggiungi un tag" }), "lav");
+    fireEvent.contextMenu(screen.getByRole("menuitem", { name: "lavoro" }));
+    await userEvent.click(screen.getByRole("menuitem", { name: "Elimina tag…" }));
+    await userEvent.click(screen.getByRole("button", { name: "Annulla" }));
+    expect(screen.queryByRole("menu", { name: "Suggerimenti dei tag" })).not.toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: "Aggiungi un tag" })).toHaveFocus();
+  });
+
+  it("Invio con i suggerimenti chiusi assegna il tag scritto (CA-06.1)", async () => {
+    apri();
+    await userEvent.type(screen.getByRole("textbox", { name: "Aggiungi un tag" }), "lav");
+    await userEvent.keyboard("{Escape}{Enter}");
+    expect(f.onAggiungiTag).toHaveBeenCalledWith("lav");
+    expect(f.onChiudi).not.toHaveBeenCalled();
+  });
+
+  it("chiuso il calendario il focus torna sul campo; l'icona lo apre e lo chiude (CMP-12)", async () => {
+    apri();
+    const icona = screen.getByRole("button", { name: "Scegli fine validità dal calendario" });
+    await userEvent.click(icona);
+    expect(screen.getByRole("dialog", { name: "Calendario" })).toBeInTheDocument();
+    await userEvent.click(icona);
+    expect(screen.queryByRole("dialog", { name: "Calendario" })).not.toBeInTheDocument();
+    await userEvent.click(icona);
+    await userEvent.keyboard("{Escape}");
+    expect(screen.getByRole("textbox", { name: "Fine validità" })).toHaveFocus();
+    expect(f.onChiudi).not.toHaveBeenCalled();
   });
 });
