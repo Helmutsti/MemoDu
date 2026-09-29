@@ -13,7 +13,7 @@ B) I file restano la fonte e il database fa solo da indice per ricerca e tag; la
 Scelta di Manuel Cucca: **A**. Note, tag, cartelle e cestino stanno in un database; le note non sono più file leggibili da altri programmi.
 
 ## Conseguenze
-- DEC-28 e DEC-29 sono superate. DEC-36 (cartelle come sottocartelle del disco) va rivista con lo schema del database.
+- DEC-28 e DEC-29 sono superate per dove e come si conservano le note. Di DEC-28 restano validi il formato del testo (markdown, titolo come prima riga, sottolineato come `<u>`) e quello delle date (istanti in ora universale ISO 8601, date del calendario come giorno), che valgono dentro il database e nell'esportazione. DEC-36 (cartelle come sottocartelle del disco) va rivista con lo schema del database.
 - Il codice di Must A e Must B, che scrive file, andrà portato sul database, con il passaggio delle note già scritte.
 - L'esportazione in markdown (RF-13) diventa l'unico modo per leggere le note fuori da Memodu: da valutare se anticiparla.
 - Da decidere: dove sta il database (oggi le note passano dall'API, DEC-30), quale motore, lo schema, la cifratura a riposo.
