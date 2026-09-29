@@ -1,9 +1,12 @@
-// SC-03 Schermata di scrittura, frammento Must A: campo titolo (può restare vuoto, RB-15)
-// e testo della nota. Il titolo resta fisso e scorre il solo corpo.
+// SC-03 Schermata di scrittura: campo titolo (può restare vuoto, RB-15), sotto la riga dei
+// metadati (ultima modifica e tag in sola lettura, DEC-44) e il testo della nota. Titolo e
+// riga restano fissi e scorre il solo corpo.
 // Il salvataggio arriva con l'attività 7: qui le modifiche risalgono con onModifica.
 
 import type { ReactElement } from "react";
 import type { DatiNota, Nota } from "@memodu/condiviso";
+import { Tag } from "../componenti/Tag";
+import { testoModificata } from "../date";
 import { Editor } from "../editor/Editor";
 import "./NotaAperta.css";
 
@@ -25,6 +28,18 @@ export function NotaAperta({ nota, nuova, onModifica }: Proprieta): ReactElement
           defaultValue={nota.titolo}
           onChange={(e) => onModifica({ titolo: e.target.value })}
         />
+        <div className="nota-aperta-metadati">
+          <p className="nota-aperta-modificata interfaccia-dettaglio">
+            {testoModificata(nota.modificata)}
+          </p>
+          {nota.tag.length > 0 && (
+            <div className="nota-aperta-tag" aria-label="Tag">
+              {nota.tag.map((nome) => (
+                <Tag key={nome} nome={nome} />
+              ))}
+            </div>
+          )}
+        </div>
       </header>
       <div className="nota-aperta-corpo">
         <div className="nota-aperta-misura">

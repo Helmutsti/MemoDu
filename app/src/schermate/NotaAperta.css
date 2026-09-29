@@ -40,6 +40,23 @@
   outline: none;
 }
 
+/* Riga dei metadati (CMP-20): 16 sotto il titolo, 8 tra data e tag, tag che vanno a capo. */
+.nota-aperta-metadati {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spazio-icona);
+  margin-top: var(--spazio-blocco);
+}
+.nota-aperta-modificata {
+  margin: 0;
+  color: var(--testo-tenue);
+}
+.nota-aperta-tag {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spazio-elemento);
+}
+
 .nota-aperta-corpo {
   flex: 1;
   overflow-y: auto;

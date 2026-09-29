@@ -51,7 +51,7 @@ describe("tag delle note (RB-17, RB-18, RB-22, RB-49)", () => {
     expect(con.tag).toEqual(["Lavoro/Clienti"]);
     expect(con.modificata).toBe("2026-09-29T08:00:05.000Z");
     expect(await archivio.elencaTag()).toEqual([
-      { nome: "Lavoro", note: 0 },
+      { nome: "Lavoro", note: 1 },
       { nome: "Lavoro/Clienti", note: 1 },
     ]);
   });
@@ -83,6 +83,15 @@ describe("tag delle note (RB-17, RB-18, RB-22, RB-49)", () => {
 });
 
 describe("eliminare un tag (RB-19)", () => {
+  it("conta le note distinte che usano il tag o un sotto-tag", async () => {
+    const a = await archivio.crea({ titolo: "A" });
+    const b = await archivio.crea({ titolo: "B" });
+    await archivio.aggiungiTag(a.id, "lavoro");
+    await archivio.aggiungiTag(a.id, "lavoro/fornitori");
+    await archivio.aggiungiTag(b.id, "lavoro/fornitori");
+    expect((await archivio.elencaTag()).find((t) => t.nome === "lavoro")?.note).toBe(2);
+  });
+
   it("toglie il tag e i sotto-tag da tutte le note, senza cambiarle altrimenti", async () => {
     const a = await archivio.crea({ titolo: "A" });
     const b = await archivio.crea({ titolo: "B" });

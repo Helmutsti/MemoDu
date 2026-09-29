@@ -6,17 +6,19 @@
 // avviso e ricarica la colonna (DEC-37); un nome già usato apre la finestra con tre scelte
 // (RB-31).
 
-import { Ellipsis, FileText, Folder, FolderInput, Pencil, Trash2 } from "lucide-react";
+import { Ellipsis, FileText, Folder, FolderInput, Info, Pencil, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type ReactElement } from "react";
 import type {
   Albero,
   Cartella,
+  DatiDettagli,
   DatiNota,
   ElementoCestino,
   EsitoCartella,
   Nota,
   Percorso,
   SeEsiste,
+  VoceTag,
 } from "@memodu/condiviso";
 import { api, ErroreApi } from "../api";
 import { Avviso } from "../componenti/Avviso";
@@ -30,6 +32,7 @@ import { alChiudere, allaRichiestaDiApertura, chiudiFinestra } from "../finestra
 import { CodaSalvataggio } from "../salvataggio";
 import { Blocco } from "./Blocco";
 import { Cestino } from "./Cestino";
+import { FinestraDettagli } from "./FinestraDettagli";
 import { Colonna, type Campo, type Destinazione, type Trascinato } from "./Colonna";
 import { NotaAperta } from "./NotaAperta";
 import "./FinestraPrincipale.css";
@@ -114,6 +117,9 @@ export function FinestraPrincipale(): ReactElement {
    * Nota sparita mentre era aperta: nel cestino (`elemento` da ripristinare) o eliminata per
    * sempre. Il testo non salvato resta qui finché l'avviso è aperto.
    */
+  /** Finestra Dettagli aperta (CMP-24, DEC-44): la nota e tutti i tag per i suggerimenti. */
+  const [dettagli, setDettagli] = useState<Nota | null>(null);
+  const [tuttiTag, setTuttiTag] = useState<VoceTag[]>([]);
   const [sparita, setSparita] = useState<{
     id: string;
     dati: DatiNota;
@@ -128,7 +134,13 @@ export function FinestraPrincipale(): ReactElement {
     () =>
       new CodaSalvataggio(
         api.salva,
-        () => void api.albero().then(setAlbero, () => setBloccata(true)),
+        (salvata) => {
+          // La riga sotto il titolo mostra l'ultima modifica (CA-04.1).
+          setAperta((a) =>
+            a && a.id === salvata.id ? { ...a, modificata: salvata.modificata } : a,
+          );
+          void api.albero().then(setAlbero, () => setBloccata(true));
+        },
         (errore) => suErroreSalvataggio.current(errore),
       ),
   );
@@ -559,8 +571,62 @@ export function FinestraPrincipale(): ReactElement {
     },
   ];
 
+  // ——— Dettagli e tag (DEC-44, DEC-51) ———
+
+  /** Apre la finestra Dettagli di una nota, aperta o no, dopo aver salvato il testo in sospeso. */
+  const apriDettagli = async (id: string) => {
+    await coda.scarica();
+    if (coda.haModifiche) return;
+    const letti = await esegui(() => Promise.all([api.leggi(id), api.elencaTag()]));
+    if (!letti) return;
+    setTuttiTag(letti[1]);
+    setDettagli(letti[0]);
+  };
+
+  /** Dopo una modifica nei Dettagli: la finestra, la nota aperta e l'elenco si aggiornano. */
+  const aggiornaDettagli = async (nota: Nota) => {
+    setDettagli(nota);
+    setAperta((a) =>
+      a && a.id === nota.id
+        ? {
+            ...a,
+            modificata: nota.modificata,
+            creataScelta: nota.creataScelta,
+            fineValidita: nota.fineValidita,
+            tag: nota.tag,
+          }
+        : a,
+    );
+    const tag = await esegui(api.elencaTag);
+    if (tag) setTuttiTag(tag);
+    await ricarica().catch(() => setBloccata(true));
+  };
+
+  const cambiaDettagli = async (chiamata: () => Promise<Nota>) => {
+    const nota = await esegui(chiamata);
+    if (nota) await aggiornaDettagli(nota);
+  };
+
+  /** Elimina un tag da tutte le note (RB-19): si rileggono la nota dei Dettagli e quella aperta. */
+  const eliminaTag = async (id: string, nome: string) => {
+    await esegui(() => api.eliminaTag(nome));
+    const nota = await esegui(() => api.leggi(id));
+    if (nota) await aggiornaDettagli(nota);
+    const aperta = apertaAttuale.current;
+    if (aperta && aperta.id !== id) {
+      const riletta = await api.leggi(aperta.id).catch(() => null);
+      if (riletta) setAperta((a) => (a && a.id === riletta.id ? { ...a, tag: riletta.tag } : a));
+    }
+  };
+
   /** Tasto destro su una nota della colonna: lo stesso menu della nota, senza aprirla. */
   const vociRiga = (riga: { id: string; cartella: Percorso; x: number; y: number }): VoceMenu[] => [
+    {
+      tipo: "voce",
+      etichetta: "Dettagli",
+      icona: Info,
+      azione: () => void apriDettagli(riga.id),
+    },
     {
       tipo: "voce",
       etichetta: "Sposta in…",
@@ -582,6 +648,12 @@ export function FinestraPrincipale(): ReactElement {
   const vociNota: VoceMenu[] = [
     ...(mostraNota
       ? ([
+          {
+            tipo: "voce",
+            etichetta: "Dettagli",
+            icona: Info,
+            azione: () => aperta && void apriDettagli(aperta.id),
+          },
           {
             tipo: "voce",
             etichetta: "Sposta in…",
@@ -763,6 +835,20 @@ export function FinestraPrincipale(): ReactElement {
             setSpostaIn(null);
             pulsanteMenu.current?.focus();
           }}
+        />
+      )}
+      {dettagli && (
+        <FinestraDettagli
+          nota={dettagli}
+          titolo={dettagli.titolo || dettagli.contenuto.trim().split("\n")[0] || "Nota vuota"}
+          tutti={tuttiTag}
+          onDettagli={(dati: DatiDettagli) =>
+            void cambiaDettagli(() => api.salvaDettagli(dettagli.id, dati))
+          }
+          onAggiungiTag={(nome) => void cambiaDettagli(() => api.aggiungiTag(dettagli.id, nome))}
+          onTogliTag={(nome) => void cambiaDettagli(() => api.togliTag(dettagli.id, nome))}
+          onEliminaTag={(nome) => void eliminaTag(dettagli.id, nome)}
+          onChiudi={() => setDettagli(null)}
         />
       )}
       {conflitto && (

@@ -533,12 +533,22 @@ export class ArchivioNote {
     });
   }
 
-  /** Tutti i tag, anche senza note (RB-49), con quante note fuori dal cestino li usano. */
+  /**
+   * Tutti i tag, anche senza note (RB-49), con quante note fuori dal cestino usano il tag o un
+   * suo sotto-tag: è il numero della conferma di eliminazione (RB-19).
+   */
   async elencaTag(): Promise<VoceTag[]> {
     return this.conRiconnessione(async () => {
       const righe = this.db.prepare("SELECT id FROM tag").all() as { id: string }[];
       const conta = this.db.prepare(
-        "SELECT count(*) AS n FROM note_tag nt JOIN note n ON n.id = nt.nota WHERE nt.tag = ? AND n.eliminata_il IS NULL",
+        `WITH RECURSIVE ramo(id) AS (
+           SELECT ?
+           UNION ALL
+           SELECT t.id FROM tag t JOIN ramo r ON t.padre = r.id
+         )
+         SELECT count(DISTINCT nt.nota) AS n FROM note_tag nt
+         JOIN note n ON n.id = nt.nota
+         WHERE nt.tag IN (SELECT id FROM ramo) AND n.eliminata_il IS NULL`,
       );
       return righe
         .map((r) => ({ nome: this.percorsoTag(r.id), note: (conta.get(r.id) as { n: number }).n }))

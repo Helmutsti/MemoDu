@@ -264,7 +264,7 @@ describe("tag e dettagli (DEC-51)", () => {
     expect(conTag.statusCode).toBe(200);
     expect(conTag.json()).toMatchObject({ tag: ["lavoro/clienti"] });
     expect((await server.inject({ method: "GET", url: "/tag" })).json()).toEqual([
-      { nome: "lavoro", note: 0 },
+      { nome: "lavoro", note: 1 },
       { nome: "lavoro/clienti", note: 1 },
     ]);
     const tolto = await server.inject({

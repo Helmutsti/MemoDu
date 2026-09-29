@@ -394,7 +394,7 @@ Comandi di DEC-51 per la finestra Dettagli (CMP-24, DEC-44). Valgono le regole g
 **Errori:** 400 (data non valida), 404 (nota non trovata o nel cestino, con `cestino` come per `PUT /note/:id`), 500.
 
 ## GET /tag
-**Output:** `[{ "nome": "lavoro/clienti", "note": 3 }, …]`: tutti i tag, anche quelli senza note (RB-49), in ordine alfabetico; `note` conta le note fuori dal cestino che hanno quel tag.
+**Output:** `[{ "nome": "lavoro/clienti", "note": 3 }, …]`: tutti i tag, anche quelli senza note (RB-49), in ordine alfabetico; `note` conta le note fuori dal cestino che hanno quel tag o un suo sotto-tag, ciascuna una volta: è il numero della conferma di eliminazione (RB-19).
 
 ## POST /note/:id/tag
 **Input:** `{ "nome": "Lavoro/Clienti" }`. Se il tag c'è già (senza distinguere maiuscole e minuscole) si usa quello; altrimenti nasce, con i livelli che mancano (RB-17, RB-18).

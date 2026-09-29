@@ -20,6 +20,8 @@ export type VoceMenu =
       sottomenu?: VoceMenu[];
       /** Azione che toglie qualcosa (Elimina): testo e icona di errore (CMP-07). */
       errore?: boolean;
+      /** Tasto destro sulla voce (per esempio «Elimina tag…» su un suggerimento). */
+      alTastoDestro?: (x: number, y: number) => void;
     }
   | { tipo: "separatore" };
 
@@ -37,6 +39,12 @@ interface Proprieta {
   annidato?: boolean;
   /** Bordo superiore del controllo che lo apre: se sotto non c'è spazio, si apre sopra. */
   sopra?: number;
+  /** Aperto da dentro un overlay (finestra Dettagli): sta sopra di lui e si chiude con lui. */
+  sopraOverlay?: boolean;
+  /** Voce evidenziata all'apertura (suggerimenti: Invio sceglie subito la prima). */
+  attivaIniziale?: number;
+  /** Un altro menu è aperto sopra questo: tasti e clic fuori li gestisce l'altro. */
+  inPausa?: boolean;
 }
 
 interface Sottomenu {
@@ -58,10 +66,17 @@ export function Menu({
   onFine = onChiudi,
   annidato = false,
   sopra,
+  sopraOverlay = false,
+  attivaIniziale = -1,
+  inPausa = false,
 }: Proprieta): ReactElement {
   const elemento = useRef<HTMLDivElement>(null);
   const [posizione, setPosizione] = useState({ x, y });
-  const [attiva, setAttiva] = useState(-1);
+  // Le voci cambiano mentre si scrive (suggerimenti): l'evidenziata torna quella iniziale.
+  const firmaVoci = voci.map((v) => (v.tipo === "voce" ? v.etichetta : "|")).join("/");
+  const [scelta, setScelta] = useState({ firma: firmaVoci, indice: attivaIniziale });
+  const attiva = scelta.firma === firmaVoci ? scelta.indice : attivaIniziale;
+  const setAttiva = (indice: number) => setScelta({ firma: firmaVoci, indice });
   const [sottomenu, setSottomenu] = useState<Sottomenu | null>(null);
   const scelte = voci.map((v, i) => (v.tipo === "voce" ? i : -1)).filter((i) => i >= 0);
 
@@ -100,6 +115,7 @@ export function Menu({
   };
 
   useEffect(() => {
+    if (inPausa) return;
     const suTasto = (e: KeyboardEvent) => {
       if (sottomenu !== null) return;
       const passo = (d: number) => {
@@ -146,7 +162,11 @@ export function Menu({
       className="menu"
       role="menu"
       aria-label={etichetta}
-      style={{ left: posizione.x, top: posizione.y }}
+      style={{
+        left: posizione.x,
+        top: posizione.y,
+        ...(sopraOverlay ? { zIndex: "var(--z-overlay)" } : {}),
+      }}
       onMouseDown={(e) => e.preventDefault()}
     >
       {voci.map((voce, i) =>
@@ -164,6 +184,15 @@ export function Menu({
               else setSottomenu(null);
             }}
             onClick={() => esegui(i)}
+            onContextMenu={
+              voce.alTastoDestro
+                ? (e) => {
+                    e.preventDefault();
+                    setAttiva(i);
+                    voce.alTastoDestro?.(e.clientX, e.clientY);
+                  }
+                : undefined
+            }
           >
             <span className="voce-menu-riga interfaccia-controllo">
               {voce.icona && (

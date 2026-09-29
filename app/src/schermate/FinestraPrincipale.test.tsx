@@ -382,13 +382,14 @@ describe("menu ··· e Sposta in (CA-05.4, CA-15.1)", () => {
     expect(await riga(/Clienti/)).toHaveAttribute("aria-expanded", "true");
   });
 
-  it("il tasto destro su una nota della colonna dà Sposta in ed Elimina, senza aprirla", async () => {
+  it("il tasto destro su una nota della colonna dà Dettagli, Sposta in ed Elimina, senza aprirla", async () => {
     vi.mocked(api.spostaNota).mockResolvedValue(nota("b", "Budget 2026", "", "Personale"));
     render(<FinestraPrincipale />);
     await screen.findByDisplayValue("Riunione di lunedì");
     await userEvent.click(await riga(/Lavoro/));
     fireEvent.contextMenu(await riga("Budget 2026"));
     expect(screen.getAllByRole("menuitem").map((v) => v.textContent)).toEqual([
+      "Dettagli",
       "Sposta in…",
       "Elimina",
     ]);
@@ -403,13 +404,14 @@ describe("menu ··· e Sposta in (CA-05.4, CA-15.1)", () => {
     expect(screen.getByDisplayValue("Riunione di lunedì")).toBeInTheDocument();
   });
 
-  it("il menu ··· ha solo Sposta in ed Elimina; il cestino si apre dalla riga in fondo (DEC-40)", async () => {
+  it("il menu ··· ha Dettagli, Sposta in ed Elimina; il cestino si apre dalla riga in fondo (DEC-40, DEC-44)", async () => {
     vi.mocked(api.albero).mockResolvedValue({ ...alberoDiProva(), cestino: 2 });
     render(<FinestraPrincipale />);
     await screen.findByDisplayValue("Riunione di lunedì");
     expect(screen.getByRole("button", { name: /^Cestino/ })).toHaveTextContent("2");
     await userEvent.click(screen.getByRole("button", { name: "Altre azioni" }));
     expect(screen.getAllByRole("menuitem").map((v) => v.textContent)).toEqual([
+      "Dettagli",
       "Sposta in…",
       "Elimina",
     ]);

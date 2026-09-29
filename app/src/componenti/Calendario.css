@@ -1,0 +1,82 @@
+/* CMP-12 Date picker: guscio del menu, largo 240 (7 giorni da 32 più 8 per lato). */
+.calendario {
+  position: fixed;
+  z-index: var(--z-comparsa);
+  width: 240px;
+  padding: var(--spazio-flottante);
+  border-radius: var(--raggio-contenitore);
+  background: var(--sfondo-flottante);
+  box-shadow: var(--ombra);
+  color: var(--testo-primario);
+  animation: menu-compare var(--movimento-durata-breve) ease-out;
+}
+
+.calendario-intestazione {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: var(--spazio-icona);
+}
+.calendario-frecce {
+  display: inline-flex;
+}
+
+.calendario-riga {
+  display: grid;
+  grid-template-columns: repeat(7, var(--misura-riga));
+}
+.calendario-settimana {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--misura-controllo-piccolo);
+  color: var(--testo-tenue);
+}
+
+/* Giorno: cerchio 32 × 32 (parte interna «Giorno del calendario»). */
+.calendario-giorno {
+  position: relative;
+  width: var(--misura-riga);
+  height: var(--misura-riga);
+  padding: 0;
+  border: none;
+  border-radius: var(--raggio-pillola);
+  background: none;
+  color: var(--testo-primario);
+  cursor: pointer;
+}
+.calendario-altro-mese {
+  color: var(--testo-tenue);
+}
+.calendario-giorno:hover,
+.calendario-scelto {
+  background: var(--sfondo-hover);
+  color: var(--testo-primario);
+}
+.calendario-giorno:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 var(--focus-spessore) var(--focus-anello);
+}
+/* Oggi: numero più marcato e un puntino di 4 px sotto. */
+.calendario-oggi {
+  font-weight: 500;
+}
+.calendario-oggi::after {
+  position: absolute;
+  bottom: var(--spazio-elemento);
+  left: 50%;
+  width: var(--spazio-elemento);
+  height: var(--spazio-elemento);
+  transform: translateX(-50%);
+  border-radius: var(--raggio-pillola);
+  background: currentColor;
+  content: "";
+}
+
+.calendario-piede {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--spazio-elemento);
+  padding-top: var(--spazio-elemento);
+  border-top: 1px solid var(--bordo-divisore-tenue);
+}

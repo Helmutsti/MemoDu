@@ -1,0 +1,40 @@
+/* CMP-05 Tag: pillola alta 24, margini 8, testo Interfaccia/Controllo su sfondo-campo. */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spazio-elemento);
+  height: var(--misura-controllo-piccolo);
+  padding: 0 var(--spazio-controllo-piccolo);
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-campo);
+  color: var(--testo-primario);
+  white-space: nowrap;
+}
+.tag-rimovibile {
+  padding-right: var(--spazio-elemento);
+}
+.tag-rimovibile:hover {
+  background: var(--sfondo-hover);
+}
+.tag-rimovibile:focus-visible {
+  outline: var(--focus-spessore) solid var(--focus-anello);
+  outline-offset: var(--focus-distanza);
+}
+
+/* La ✕ di 12 px in icona-tenue. */
+.tag-togli {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--misura-icona);
+  height: var(--misura-icona);
+  padding: 0;
+  border: none;
+  border-radius: var(--raggio-pillola);
+  background: none;
+  color: var(--icona-tenue);
+  cursor: pointer;
+}
+.tag-togli:hover {
+  color: var(--testo-primario);
+}

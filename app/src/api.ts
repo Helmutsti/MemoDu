@@ -5,6 +5,7 @@ import {
   INDIRIZZO_API,
   LIMITE_CORPO_BYTE,
   type Albero,
+  type DatiDettagli,
   type DatiNota,
   type DatiNuovaNota,
   type ElementoCestino,
@@ -13,6 +14,7 @@ import {
   type Percorso,
   type SeEsiste,
   type VoceElenco,
+  type VoceTag,
 } from "@memodu/condiviso";
 
 /** L'API non risponde (stato null) o risponde con un errore (RB-61, SF-32). */
@@ -80,6 +82,14 @@ export const api = {
     chiama<void>("DELETE", `/note/${id}`, undefined, opzioni?.keepalive),
   spostaNota: (id: string, cartella: Percorso) =>
     chiama<Nota>("PUT", `/note/${id}/cartella`, { cartella }),
+
+  // Dettagli e tag della nota (DEC-51).
+  salvaDettagli: (id: string, dati: DatiDettagli) =>
+    chiama<Nota>("PUT", `/note/${id}/dettagli`, dati),
+  elencaTag: () => chiama<VoceTag[]>("GET", "/tag"),
+  aggiungiTag: (id: string, nome: string) => chiama<Nota>("POST", `/note/${id}/tag`, { nome }),
+  togliTag: (id: string, nome: string) => chiama<Nota>("DELETE", `/note/${id}/tag`, { nome }),
+  eliminaTag: (nome: string) => chiama<void>("DELETE", "/tag", { nome }),
 
   albero: () => chiama<Albero>("GET", "/albero"),
   creaCartella: (genitore: Percorso, nome?: string, seEsiste?: SeEsiste) =>

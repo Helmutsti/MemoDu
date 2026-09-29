@@ -1,0 +1,121 @@
+/* CMP-24 Finestra dei dettagli: larga 608, margini 24, raggio 20, livello 30 con il velo. */
+.velo-overlay {
+  z-index: var(--z-overlay);
+}
+
+.finestra-dettagli {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spazio-blocco);
+  width: 608px;
+  max-width: calc(100% - 2 * var(--spazio-gruppo));
+  max-height: calc(100% - 2 * var(--spazio-gruppo));
+  overflow-y: auto;
+  padding: var(--spazio-finestra);
+  border-radius: var(--raggio-contenitore);
+  background: var(--sfondo-flottante);
+  box-shadow: var(--ombra);
+  color: var(--testo-primario);
+  animation: conferma-compare var(--movimento-durata-breve) ease-out;
+}
+.finestra-dettagli p {
+  margin: 0;
+}
+
+.dettagli-intestazione {
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-icona);
+}
+.dettagli-titoli {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spazio-elemento);
+  min-width: 0;
+}
+.dettagli-nota,
+.dettagli-tenue {
+  color: var(--testo-tenue);
+}
+
+/* Titolo di gruppo e righe con il rientro di CMP-18 (spazio-controllo). */
+.dettagli-gruppo {
+  padding: 0 var(--spazio-controllo);
+  color: var(--testo-tenue);
+}
+.dettagli-rientro {
+  padding: 0 var(--spazio-controllo);
+}
+
+.dettagli-riga {
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-blocco);
+  padding: 0 var(--spazio-controllo);
+}
+.dettagli-testi {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spazio-elemento);
+}
+
+/* Campo con icona (CMP-03): pillola alta 32 su sfondo-campo, largo 200. */
+.dettagli-data {
+  display: flex;
+  align-items: center;
+  width: 200px;
+  height: var(--misura-riga);
+  padding: 0 var(--spazio-icona) 0 var(--spazio-controllo);
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-campo);
+}
+.dettagli-data:focus-within,
+.dettagli-data-aperta {
+  outline: var(--focus-spessore) solid var(--focus-anello);
+  outline-offset: var(--focus-distanza);
+}
+.dettagli-campo-data {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: none;
+  color: var(--testo-primario);
+  outline: none;
+}
+.dettagli-campo-data::placeholder {
+  color: var(--testo-tenue);
+}
+.dettagli-apri-calendario {
+  display: inline-flex;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--icona-tenue);
+  cursor: pointer;
+}
+
+/* Tag che vanno a capo, poi il campo per aggiungerne. */
+.dettagli-tag {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spazio-elemento);
+}
+.dettagli-campo {
+  width: 200px;
+  height: var(--misura-riga);
+  padding: 0 var(--spazio-controllo);
+  border: none;
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-campo);
+  color: var(--testo-primario);
+}
+.dettagli-campo::placeholder {
+  color: var(--testo-tenue);
+}
+.dettagli-campo:focus-visible {
+  outline: var(--focus-spessore) solid var(--focus-anello);
+  outline-offset: var(--focus-distanza);
+}
