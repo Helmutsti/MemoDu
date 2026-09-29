@@ -258,3 +258,4 @@
 | 29/09/2026 | Manuel Cucca | SC-03: Dettagli si apre in una finestra modale al centro della pagina | DEC-44 |
 | 29/09/2026 | Manuel Cucca | SC-03: contenuto della finestra Dettagli (date, tag, cartella in lettura); RF-04 entra in Must C | DEC-44 |
 | 29/09/2026 | Manuel Cucca | SC-03: in Dettagli ogni modifica vale subito, chiusura con ✕ o Esc | DEC-44 |
+| 29/09/2026 | Manuel Cucca | Scala dei livelli: finestra Dettagli al livello 30; i flottanti aperti da dentro un overlay stanno sopra di esso | DEC-44 |

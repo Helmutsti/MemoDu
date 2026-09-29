@@ -121,7 +121,7 @@ Vale per tutto il progetto. Non si usano numeri fuori da questa scala.
 | 0 | Contenuto base: colonna sinistra, area della nota |
 | 10 | Elementi fissi: ricerca in cima alla colonna sinistra |
 | 20 | Menu a discesa, menu del tasto destro, suggerimenti dei tag, card dei risultati di ricerca, pannello impostazioni dell'immagine, pillola degli strumenti, menu di inserimento |
-| 30 | Overlay e drawer: area di trascinamento; colonna sinistra come drawer sul web stretto (rinviato, ID-19) di un'immagine |
+| 30 | Overlay e drawer: finestra Dettagli della nota, con il velo (DEC-44); area di trascinamento; colonna sinistra come drawer sul web stretto (rinviato, ID-19) di un'immagine |
 | 40 | Finestre di conferma (svuota cestino, elimina tag) |
 | 50 | Avvisi (RB-40) |
 
@@ -129,6 +129,7 @@ Regole di comportamento:
 - **Mai due finestre di conferma sovrapposte.** Finché una è aperta, i comandi che ne aprirebbero un'altra non rispondono.
 - **Un avviso non viene mai coperto:** resta visibile anche sopra una finestra di conferma e non blocca l'interazione. Resta finché non viene visto (SF-31).
 - **Sotto un drawer o una finestra di conferma** il contenuto resta visibile ma non si può usare; `Esc` chiude l'elemento più in alto.
+- **Gli elementi di livello 20 aperti da dentro un overlay** (per esempio calendario e suggerimenti dei tag nella finestra Dettagli) stanno sopra l'overlay e si chiudono con lui. Scelta di Manuel Cucca il 29/09/2026.
 - **Gli elementi di livello 20 si chiudono** al clic fuori, con `Esc` o quando il contenuto sotto scorre.
 - **La finestra della nota rapida è una finestra di sistema:** sta fuori da questa scala e resta in primo piano rispetto agli altri programmi.
 
