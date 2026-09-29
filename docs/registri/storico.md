@@ -246,3 +246,5 @@
 | 29/09/2026 | Manuel Cucca | Ambienti: set di dati «Smistare» e script `scripts/dati-di-prova.sh` per le prove a mano; avanzamento con le istruzioni per riprendere | DEC-36 |
 | 29/09/2026 | Manuel Cucca | CMP-14, CA-05.11, TC-42: chiuso il campo nome il focus torna sulla riga della cartella | Scelta di Manuel Cucca (prove finali di Must B) |
 | 29/09/2026 | Manuel Cucca | Prove finali di Must B: TC-39 … TC-50 superati (Chrome su Windows); corretti il focus alla chiusura del campo nome e l'aggiornamento del cestino aperto quando si elimina dalla colonna | DEC-36 |
+| 29/09/2026 | Manuel Cucca | RF-04, SC-03: domanda aperta e rinvio su dove mettere i dettagli della singola nota | Segnalazione di Manuel Cucca |
+| 29/09/2026 | Manuel Cucca | Nuovo frammento Must C · Etichettare con RF-06, solo tag | DEC-41 |
