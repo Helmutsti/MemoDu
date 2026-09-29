@@ -13,9 +13,9 @@ flowchart TD
     B -- No --> C[Compare una nuova nota rapida entro 0,2 s - RNF-01]
     C --> D[Scrivo]
     D --> E{Come chiudo?}
-    E -- Salva ▾, Apri nel programma --> F[La nota aperta nel programma viene salvata e chiusa - RB-05]
+    E -- Chiudi ▾, Apri nel programma --> F[La nota aperta nel programma viene salvata e chiusa - RB-05]
     F --> G[La nota rapida si apre nel programma completo]
-    E -- Salva, Esc per chiudere, tasto Esc o clic altrove --> H{La nota è vuota?}
+    E -- Chiudi, tasto Esc o clic altrove --> H{La nota è vuota?}
     H -- Sì --> I[Non si crea nessuna nota - RB-03]
     H -- No --> J[Nota salvata sulla copia di lavoro, nella radice - RB-01, RB-02]
     I --> K[Torno a ciò che facevo]
@@ -23,7 +23,7 @@ flowchart TD
 ```
 
 ### Percorsi alternativi
-- **Chiusura** (Salva, pulsante Esc per chiudere, tasto Esc, clic fuori dalla finestra): salva e chiude. Esc vuol dire «ho finito», non annulla; per cancellare la nota si entra nel programma (RB-02, SC-02, DEC-34).
+- **Chiusura** (pulsante Chiudi, tasto Esc, clic fuori dalla finestra): salva e chiude. Esc vuol dire «ho finito», non annulla; per cancellare la nota si entra nel programma (RB-02, SC-02, DEC-34, DEC-50).
 - **Scorciatoia premuta con una nota rapida già aperta:** la nota aperta viene salvata e resta aperta, e se ne apre una nuova in un'altra finestra (RB-04). Ogni nota rapida si chiude poi per conto suo, seguendo lo stesso flusso.
 - **Apertura nel programma completo:** vedi RB-05.
 
@@ -228,7 +228,7 @@ La posizione di una nota (radice, cartella, cestino) è descritta nel diagramma 
 | Codice | Regola | Usata in |
 |---|---|---|
 | RB-01 | Una nota rapida salvata va nella radice e diventa una nota non organizzata (RF-05) | FL-01 |
-| RB-02 | Chiudere la nota rapida (Salva, Esc per chiudere, tasto Esc, clic altrove) la salva. Esc non annulla (DEC-34) | FL-01 |
+| RB-02 | Chiudere la nota rapida (Chiudi, tasto Esc, clic altrove) la salva. Esc non annulla (DEC-34, DEC-50) | FL-01 |
 | RB-03 | Una nota rapida chiusa senza testo non crea nessuna nota | FL-01 |
 | RB-04 | Premere la scorciatoia con una nota rapida già aperta salva quella aperta, che resta aperta, e ne apre una nuova in un'altra finestra | FL-01 |
 | RB-05 | Aprendo la nota rapida nel programma completo, la nota aperta nel programma viene salvata e chiusa, e al suo posto compare la nota rapida | FL-01 |
@@ -254,4 +254,4 @@ La posizione di una nota (radice, cartella, cestino) è descritta nel diagramma 
 | RB-58 | Le immagini seguono la loro nota: eliminandola vanno nel cestino con lei, ripristinandola tornano, eliminandola definitivamente si cancellano | FL-03, FL-05 |
 | RB-59 | Annulla (Ctrl+Z / Cmd+Z) vale per tutte le modifiche della nota aperta: testo, formattazione, immagini e caselle. Non annulla le azioni fuori dalla nota (spostamenti, eliminazioni: per quelle c'è il cestino) | FL-02, FL-03 |
 | RB-61 | Solo nel frammento Must A (DEC-30): se l'API delle note non risponde o non riesce a salvare (nota non trovata, contenuto oltre 10 MB, file non scritto), la finestra (programma o nota rapida) mostra SC-07 al posto del contenuto; il testo non ancora salvato resta in memoria e si salva appena Riprova riesce. Memodu non avvia il server da solo: si avvia a mano | FL-01, FL-02, FL-09 |
-| RB-62 | Solo nel frammento Must A: se si chiude una finestra (Salva, Esc, clic altrove o chiusura di Memodu) mentre c'è testo non salvato per RB-61, compare una finestra di conferma (CMP-16): titolo «La nota non è salvata», testo «Chiudendo, il testo va perso.», pulsanti «Annulla» e «Chiudi comunque». Annulla lascia la finestra aperta con il testo | FL-01, FL-02 |
+| RB-62 | Solo nel frammento Must A: se si chiude una finestra (Chiudi, Esc, clic altrove o chiusura di Memodu) mentre c'è testo non salvato per RB-61, compare una finestra di conferma (CMP-16): titolo «La nota non è salvata», testo «Chiudendo, il testo va perso.», pulsanti «Annulla» e «Chiudi comunque». Annulla lascia la finestra aperta con il testo | FL-01, FL-02 |

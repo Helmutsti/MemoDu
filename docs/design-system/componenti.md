@@ -76,7 +76,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 - **Secondario:** sfondo `sfondo-campo`, testo `testo-primario`. Azioni di supporto accanto al primario (Annulla).
 - **Tenue:** senza sfondo, testo `testo-tenue`. Azioni minori in liste e pannelli (Ripristina nel cestino).
 - **Solo icona:** 32 × 32, icona `icona-tenue`. Azioni ripetute con un'icona chiara (+ delle non organizzate, ···).
-- **Diviso** (DEC-34): solo primario. A sinistra l'azione (Salva, margini 16 e 12), a destra la freccia ▾ (`chevron-down`, `icona-su-pieno`, margini 8 e 12) che apre un menu (CMP-09) con le azioni collegate; tra le due un divisore di 1 × 16 in `sfondo-pieno-hover`. Hover separato sulle due metà (`sfondo-pieno-hover`); con il menu aperto la freccia è `sfondo-pieno-premuto`; l'anello di focus segue la pillola intera. La freccia ha il nome accessibile e il suggerimento «Altre azioni» (CMP-08). In Figma è il componente [Pulsante diviso](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=136-703), con la proprietà Etichetta. Usato in SC-02.
+- **Diviso** (DEC-34): solo primario. A sinistra l'azione (Chiudi nella nota rapida, margini 16 e 12), a destra la freccia ▾ (`chevron-down`, `icona-su-pieno`, margini 8 e 12) che apre un menu (CMP-09) con le azioni collegate; tra le due un divisore di 1 × 16 in `sfondo-pieno-hover`. Hover separato sulle due metà (`sfondo-pieno-hover`); con il menu aperto la freccia è `sfondo-pieno-premuto`; l'anello di focus segue la pillola intera. La freccia ha il nome accessibile e il suggerimento «Altre azioni» (CMP-08). In Figma è il componente [Pulsante diviso](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=136-703), con la proprietà Etichetta. Usato in SC-02.
 - Una sola dimensione: alto 32 (`misura-riga`), pillola (`raggio-pillola`), margini laterali 16 (8 per il solo icona), distanza tra icona e testo 8, testo Interfaccia/Controllo attivo.
 - Proprietà: **Etichetta** (testo), **Mostra icona** (icona a sinistra del testo, spenta di default), **Icona** (una qualsiasi icona di CMP-02).
 
@@ -846,7 +846,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 ### Varianti e dimensioni
 - **Vuota:** «Scrivi qui…» in `testo-tenue`. **Con testo:** il testo della nota in Nota/Corpo, `testo-primario`.
 - Finestra senza cornice 480 × 320 (ridimensionabile), `sfondo-nota`, `raggio-contenitore`, `ombra-flottante`; `spazio-finestra` (24) ai bordi, `spazio-blocco` (16) tra testo e azioni. Nessun titolo (RB-15), nessuna barra, nessun divisore.
-- In basso: a sinistra **Esc per chiudere** (CMP-01 tenue), a destra **Salva** (CMP-01 diviso) con **Apri nel programma** nel menu della freccia (DEC-34). Nessuna ✕.
+- In basso a destra **Chiudi** (CMP-01 diviso): salva e chiude; nel menu della freccia **Apri nel programma** (DEC-34, DEC-50). Nessuna ✕ e nessun altro pulsante.
 - Il margine in alto non si vede e serve a trascinare la finestra. Nell'app gli angoli sono squadrati (scostamento accettato, vedi SC-02).
 
 ### Stati
@@ -858,7 +858,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 | Disabilitato · Caricamento | Non previsti: la finestra compare già pronta (RNF-01) |
 
 ### Accessibilità
-- **Tastiera:** il cursore è nel testo all'apertura; Esc salva e chiude; Tab raggiunge Esc per chiudere, Salva e la freccia «Altre azioni».
+- **Tastiera:** il cursore è nel testo all'apertura; Esc salva e chiude; Tab raggiunge Chiudi e la freccia «Altre azioni».
 - **Lettori di schermo:** la freccia si annuncia come «Altre azioni», con un menu.
 - **Contrasti:** come CMP-01 e CMP-20.
 

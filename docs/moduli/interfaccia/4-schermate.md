@@ -170,7 +170,7 @@ Ogni freccia è un'azione dell'utente o un evento del sistema. Lo stesso percors
 ```mermaid
 flowchart LR
     Esterno[Un altro programma] -- scorciatoia globale --> SC02[SC-02 Nota rapida]
-    SC02 -- Salva, Esc, clic altrove --> Esterno
+    SC02 -- Chiudi, Esc, clic altrove --> Esterno
     SC02 -- scorciatoia di nuovo --> SC02b[SC-02 Più note a cascata]
     SC02 -- Apri nel programma --> SC01
     SC02b -- Apri nel programma --> SC01

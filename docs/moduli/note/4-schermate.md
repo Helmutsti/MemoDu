@@ -18,8 +18,7 @@ Finestra di sistema, solo su desktop (RF-01). Niente cromatura dell'applicazione
 | Elemento | Nota |
 |---|---|
 | Area di scrittura | Occupa quasi tutta la finestra. Nessun campo titolo: il titolo si mette dopo, nel programma completo (RB-15) |
-| **Salva** | Pulsante primario diviso in basso a destra (CMP-01, variante Diviso). Salva salva e chiude (RB-02); la freccia ▾ apre un menu con **Apri nel programma**, che salva e chiude la nota aperta nel programma, e ci porta questa (RB-05). DEC-34 |
-| **Esc per chiudere** | Pulsante tenue in basso a sinistra: salva e chiude, come il tasto `Esc` e il clic altrove (RB-02). Esc vuol dire «ho finito», non annulla: per cancellare una nota rapida si entra nel programma. Nessuna ✕ (DEC-34) |
+| **Chiudi** | Pulsante primario diviso in basso a destra (CMP-01, variante Diviso), l'unico della finestra. Salva e chiude, come il tasto `Esc` e il clic altrove (RB-02); la freccia ▾ apre un menu con **Apri nel programma**, che salva e chiude la nota aperta nel programma, e ci porta questa (RB-05). Esc vuol dire «ho finito», non annulla: per cancellare una nota rapida si entra nel programma. Nessuna ✕ (DEC-34, DEC-50) |
 
 **Nessuna cornice:** niente barra del titolo, niente divisori, niente bordo. La finestra è una superficie bianca con ombra. Si trascina dal margine in alto, che non si vede; Esc per chiudere è tenue e si scurisce al passaggio del mouse.
 
@@ -41,7 +40,7 @@ Stessi tasti fisici sui due sistemi, libere nelle configurazioni di default di e
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |
 |---|---|---|
-| Vuoto | Finestra appena aperta, nessun testo | "Scrivi qui…" nell'area vuota; in basso "Esc per chiudere" e "Salva" |
+| Vuoto | Finestra appena aperta, nessun testo | "Scrivi qui…" nell'area vuota; in basso "Chiudi" |
 | Caricamento | Non previsto: la finestra compare già pronta (RNF-01) | — |
 | Errore | Non previsto: la nota rapida non dipende dalla rete (SF-08) | — |
 | Successo | Non previsto: la chiusura è la conferma. Chiusa vuota, non crea nulla e non lo dice (RB-03) | — |

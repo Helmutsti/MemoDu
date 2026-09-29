@@ -1,6 +1,6 @@
 # DEC-34 – Azioni della nota rapida: Esc per chiudere e Salva diviso
 
-**Data:** 2026-09-28 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-28 · **Stato:** Superata da DEC-50 (pulsante Esc per chiudere e nome Salva) · **Idea di origine:** —
 
 ## Contesto
 Dalla revisione dei wireframe del 25/09/2026 la nota rapida (SC-02) si chiudeva con ✕ tenue in alto a destra, Esc o clic altrove, con il suggerimento «Esc per chiudere» in basso a sinistra e «Apri nel programma» come pulsante tenue in basso a destra. Un pulsante Salva e chiudi era stato escluso perché doppione della chiusura. Provando l'app, Manuel Cucca trova la ✕ ridondante accanto al suggerimento di Esc, e vuole un'azione di salvataggio esplicita.

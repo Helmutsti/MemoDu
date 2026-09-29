@@ -276,3 +276,4 @@
 | 29/09/2026 | Manuel Cucca | Must D: l'API salva in SQLite; architettura, API, ambienti, criteri e casi di prova passati dal disco al database; deduzione su CA-05.10 | DEC-45, DEC-46, DEC-47, DEC-48, DEC-49 |
 | 29/09/2026 | Manuel Cucca | CA-05.10 per il database confermato | Scelta di Manuel Cucca (deduzione confermata) |
 | 29/09/2026 | Manuel Cucca | Architettura: su Windows il database sta in %LOCALAPPDATA%\Memodu invece che in %APPDATA%, per non seguire il profilo nei domini aziendali | DEC-46 |
+| 29/09/2026 | Manuel Cucca | SC-02, CMP-23: via «Esc per chiudere», il pulsante diviso si chiama «Chiudi»; aggiornati FL-01, RB-02, RB-62, CA-01.2, CA-01.5, TC-02, TC-05 | DEC-50 |
