@@ -1,4 +1,4 @@
 docs
-app/src-tauri
+client/src-tauri
 *.md
 package-lock.json

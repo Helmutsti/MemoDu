@@ -4,12 +4,12 @@
   "type": "module",
   "workspaces": [
     "condiviso",
-    "server",
-    "app"
+    "api",
+    "client"
   ],
   "scripts": {
-    "server": "npm run dev --workspace @memodu/server",
-    "app": "npm run tauri dev --workspace @memodu/app",
+    "api": "npm run dev --workspace @memodu/api",
+    "client": "npm run tauri dev --workspace @memodu/client",
     "test": "npm run test --workspaces --if-present",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",

@@ -4,15 +4,15 @@ import reactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
 
 export default tseslint.config(
-  { ignores: ["**/dist", "**/node_modules", "app/src-tauri", "docs"] },
+  { ignores: ["**/dist", "**/node_modules", "client/src-tauri", "docs"] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ["server/**/*.ts", "condiviso/**/*.ts"],
+    files: ["api/**/*.ts", "condiviso/**/*.ts"],
     languageOptions: { globals: globals.node },
   },
   {
-    files: ["app/src/**/*.{ts,tsx}"],
+    files: ["client/src/**/*.{ts,tsx}"],
     languageOptions: { globals: globals.browser },
     plugins: { "react-hooks": reactHooks },
     rules: reactHooks.configs.recommended.rules,
