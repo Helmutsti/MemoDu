@@ -30,7 +30,9 @@ button {
   outline: none;
 }
 
-:focus-visible {
+/* L'anello del focus si vede solo muovendosi con la tastiera (DEC-74): la radice ha
+   data-tastiera finché non si usa il mouse (modalita.ts). */
+:root[data-tastiera] :focus-visible {
   outline: var(--focus-spessore) solid var(--focus-anello);
   outline-offset: var(--focus-distanza);
 }

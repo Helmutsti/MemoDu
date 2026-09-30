@@ -334,3 +334,4 @@
 | 30/09/2026 | Manuel Cucca | SC-03: il titolo va nel percorso al centro della fascia in alto, ultima modifica e tag in una comparsa sul titolo; nuovi CMP-26 Percorso e CMP-27 Comparsa dei metadati, CMP-20 con «Mostra titolo» | DEC-71 |
 | 30/09/2026 | Manuel Cucca | Mockup di SC-03 (Must A e Must C) con il percorso e senza titolo e metadati nel foglio; nuovi mockup della comparsa dei metadati e del titolo in modifica; 11 esportazioni rigenerate | DEC-71 |
 | 30/09/2026 | Manuel Cucca | Codice di SC-03: percorso (CMP-26) e comparsa dei metadati (CMP-27) al posto di titolo e metadati nel foglio | DEC-71 |
+| 30/09/2026 | Manuel Cucca | Design system: l'anello degli stati Focus si vede solo muovendosi con la tastiera | DEC-74 |

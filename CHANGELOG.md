@@ -38,6 +38,7 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 - 
 
 ### Corretto
+- Il bordo del focus compare solo quando ti muovi con la tastiera, non a ogni clic
 - Su Windows il clic sull'icona nell'area di notifica apre Memodu; il menu compare con il tasto destro (RF-01)
 - L'icona nell'area di notifica è bianca con la barra delle applicazioni scura e nera con quella chiara (RF-01)
 - Trascinando una nota o una cartella la pillola non ha più gli angoli neri (RF-05)

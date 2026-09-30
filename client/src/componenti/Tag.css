@@ -16,7 +16,7 @@
 .tag-rimovibile:hover {
   background: var(--sfondo-hover);
 }
-.tag-rimovibile:focus-visible {
+:root[data-tastiera] .tag-rimovibile:focus-visible {
   outline: var(--focus-spessore) solid var(--focus-anello);
   outline-offset: var(--focus-distanza);
 }

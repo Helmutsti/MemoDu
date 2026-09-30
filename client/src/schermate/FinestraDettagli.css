@@ -72,8 +72,8 @@
   border-radius: var(--raggio-pillola);
   background: var(--sfondo-campo);
 }
-.dettagli-data:focus-within,
-.dettagli-data-aperta {
+:root[data-tastiera] .dettagli-data:focus-within,
+:root[data-tastiera] .dettagli-data-aperta {
   outline: var(--focus-spessore) solid var(--focus-anello);
   outline-offset: var(--focus-distanza);
 }
@@ -143,7 +143,7 @@
 .dettagli-campo::placeholder {
   color: var(--testo-tenue);
 }
-.dettagli-campo:focus-visible {
+:root[data-tastiera] .dettagli-campo:focus-visible {
   outline: var(--focus-spessore) solid var(--focus-anello);
   outline-offset: var(--focus-distanza);
 }

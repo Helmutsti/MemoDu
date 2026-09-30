@@ -81,7 +81,7 @@
   background: var(--sfondo-pieno);
   color: var(--testo-su-pieno);
 }
-.pulsante-diviso:has(:focus-visible) {
+:root[data-tastiera] .pulsante-diviso:has(:focus-visible) {
   overflow: visible;
   outline: var(--focus-spessore) solid var(--focus-anello);
   outline-offset: var(--focus-distanza);

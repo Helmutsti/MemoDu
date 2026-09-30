@@ -117,6 +117,8 @@
   border-radius: var(--raggio-pillola);
   background: var(--sfondo-campo);
   color: var(--testo-primario);
+}
+:root[data-tastiera] .riga-campo-nome {
   outline: var(--focus-spessore) solid var(--focus-anello);
   outline-offset: var(--focus-distanza);
 }
