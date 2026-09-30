@@ -3,7 +3,7 @@
 // l'hover (DEC-35). Nell'albero (CMP-14) il rientro allarga il margine: 16 px per livello,
 // e il titolo di una nota si allinea al nome delle sottocartelle sorelle (+20).
 
-import { ChevronDown, ChevronRight, Plus, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronRight, Plus, Settings, Trash2 } from "lucide-react";
 import {
   useEffect,
   useRef,
@@ -266,6 +266,29 @@ export function RigaCestino({
       </span>
       <span className="riga-nome">Cestino</span>
       <span className="riga-conteggio interfaccia-dettaglio">{conteggio}</span>
+    </button>
+  );
+}
+
+/** Riga Impostazioni, sotto il Cestino e senza numero (CMP-06, DEC-91). */
+export function RigaImpostazioni({
+  selezionata,
+  onApri,
+}: {
+  selezionata: boolean;
+  onApri: () => void;
+}): ReactElement {
+  return (
+    <button
+      type="button"
+      className={`riga riga-cartella riga-cestino ${selezionata ? "riga-selezionata interfaccia-controllo-attivo" : "interfaccia-controllo"}`}
+      aria-current={selezionata ? "page" : undefined}
+      onClick={onApri}
+    >
+      <span className="riga-freccia">
+        <Icona di={Settings} />
+      </span>
+      <span className="riga-nome">Impostazioni</span>
     </button>
   );
 }

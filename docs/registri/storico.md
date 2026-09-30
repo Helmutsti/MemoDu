@@ -358,3 +358,6 @@
 | 30/09/2026 | Manuel Cucca | Design system: icone Sgancia e Riaggancia; CMP-06 riga Impostazioni; CMP-07 voce Spuntata; CMP-18 varianti Scelta, Scorciatoia, Informazione; CMP-19 Nota sganciata; nuovo CMP-28 Scelta a segmenti | DEC-91 DEC-92 |
 | 30/09/2026 | Manuel Cucca | Mockup: SC-06 Impostazioni (e scorciatoia già usata); note sganciate (menu con Sgancia, nota sganciata, finestra sganciata con il suo menu); riga Impostazioni in SC-01, SC-03, SC-04; ··· con l'icona giusta; esportazioni rifatte | DEC-91 DEC-92 |
 | 30/09/2026 | Manuel Cucca | CMP-01: nella variante Solo icona piccolo l'icona segue la proprietà Icona, come nelle altre (prima restava sempre «Più») | — |
+| 30/09/2026 | Manuel Cucca | Note sganciate tolte: RF-12 torna Should, via CA-12.1 … CA-12.7 e «Sgancia in una finestra»; SC-06 ed EN-07 con «Tieni Memodu in primo piano» (posizione da rivedere) | DEC-93 |
+| 30/09/2026 | Manuel Cucca | Tolte da Figma le parti delle note sganciate: icone Sgancia e Riaggancia, CMP-07 Spuntata, CMP-19 Nota sganciata e i tre mockup; componenti.md e SC-03 aggiornati | DEC-93 |
+| 30/09/2026 | Manuel Cucca | Mockup di SC-06 con «Tieni Memodu in primo piano» in Generale (posizione da rivedere) | DEC-93 |

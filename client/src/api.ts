@@ -89,4 +89,36 @@ export const api = {
     comando<Nota | EsitoCartella>("ripristina", { id, seEsiste }),
   eliminaDefinitivamente: (id: string) => comando<void>("elimina_definitivamente", { id }),
   svuotaCestino: () => comando<void>("svuota_cestino"),
+
+  // Impostazioni (SC-06, DEC-91).
+  impostazioni: () => comando<Impostazioni>("leggi_impostazioni"),
+  /** Nel formato del nucleo («Control+Alt+KeyN»); null torna a quella di default. Se un altro
+   * programma la usa già l'errore è 409, se non si può usare 400. */
+  cambiaScorciatoia: (combinazione: string | null) =>
+    comando<void>("cambia_scorciatoia", { combinazione }),
+  cambiaTema: (tema: Tema) => comando<void>("cambia_tema", { tema }),
+  cambiaAvvio: (attivo: boolean) => comando<void>("cambia_avvio", { attivo }),
+  cambiaPrimoPiano: (attivo: boolean) => comando<void>("cambia_primo_piano", { attivo }),
+  /** Restituisce il nome che vale: vuoto torna il nome del computer (RB-51). */
+  cambiaNomeDispositivo: (nome: string) => comando<string>("cambia_nome_dispositivo", { nome }),
+  statoSincronizzazione: () => comando<StatoSincronizzazione>("stato_sincronizzazione"),
 };
+
+export type Tema = "sistema" | "chiaro" | "scuro";
+
+export interface Impostazioni {
+  sistema: "windows" | "macos";
+  scorciatoia: string;
+  scorciatoiaPredefinita: boolean;
+  tema: Tema;
+  avvioAutomatico: boolean;
+  inPrimoPiano: boolean;
+  nomeDispositivo: string;
+}
+
+export interface StatoSincronizzazione {
+  /** C'è il file delle credenziali (DEC-84). */
+  collegata: boolean;
+  ultimaRiuscita: string | null;
+  problema: "rete" | "rifiutate" | "protocollo" | "errore" | null;
+}

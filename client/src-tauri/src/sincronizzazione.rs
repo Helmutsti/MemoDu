@@ -18,6 +18,7 @@ use tauri::{AppHandle, Emitter, Manager};
 use crate::archivio::sinc::{DaInviare, Ricevuta};
 use crate::archivio::{cartella_predefinita, Archivio, Errore};
 use crate::comandi::Dati;
+use crate::impostazioni::{applica_scorciatoia, ProblemaSinc};
 
 /// Versione del protocollo, la stessa del server (DEC-83).
 const PROTOCOLLO: &str = "1";
@@ -103,8 +104,20 @@ fn ciclo(app: AppHandle, segnali: Receiver<()>) {
             }
             Err(RecvTimeoutError::Disconnected) => return,
         }
-        match sincronizza(&app) {
+        let esito = sincronizza(&app);
+        // Per lo stato nella pagina delle impostazioni (DEC-91).
+        let problema = match &esito {
+            Ok(()) | Err(Problema::SenzaCredenziali) => None,
+            Err(Problema::Rete) => Some("rete"),
+            Err(Problema::Rifiutate) => Some("rifiutate"),
+            Err(Problema::Protocollo) => Some("protocollo"),
+            Err(Problema::Altro) => Some("errore"),
+        };
+        app.state::<ProblemaSinc>().imposta(&app, problema);
+        match esito {
             Ok(()) => {
+                // Una scorciatoia cambiata su un altro dispositivo vale anche qui (RB-52).
+                applica_scorciatoia(&app);
                 bloccata = false;
                 ritentativo = PRIMO_RITENTATIVO;
                 attesa = INTERVALLO;

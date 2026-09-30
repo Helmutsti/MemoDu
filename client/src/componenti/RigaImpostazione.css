@@ -1,0 +1,51 @@
+/* CMP-18: larga quanto la pagina (560), margini 12, 16 tra testo e controllo. */
+.riga-impostazione {
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-blocco);
+  width: 100%;
+  padding: var(--spazio-controllo-piccolo) var(--spazio-controllo);
+  border: none;
+  border-radius: var(--raggio-interno);
+  background: none;
+  text-align: left;
+}
+.riga-impostazione-testi {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+.riga-impostazione-etichetta {
+  color: var(--testo-primario);
+}
+.riga-impostazione-descrizione {
+  color: var(--testo-tenue);
+}
+
+/* Con l'interruttore tutta la riga si clicca: hover con la descrizione in primario (regola 7). */
+.riga-impostazione-interruttore {
+  cursor: pointer;
+}
+.riga-impostazione-interruttore:hover {
+  background: var(--sfondo-hover);
+}
+.riga-impostazione-interruttore:hover .riga-impostazione-descrizione {
+  color: var(--testo-primario);
+}
+/* Anello interno sulla riga (CMP-18). */
+:root[data-tastiera] .riga-impostazione-interruttore:focus-visible {
+  outline-offset: calc(-1 * var(--focus-spessore));
+}
+
+.titolo-gruppo {
+  display: flex;
+  align-items: flex-end;
+  height: var(--misura-riga);
+  margin: var(--spazio-blocco) 0 0;
+  padding: 0 var(--spazio-controllo) var(--spazio-elemento);
+  color: var(--testo-tenue);
+}
+.titolo-gruppo:first-child {
+  margin-top: 0;
+}

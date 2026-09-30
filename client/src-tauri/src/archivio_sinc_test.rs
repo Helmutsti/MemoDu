@@ -311,3 +311,50 @@ fn il_testo_della_nota_aperta_non_sovrascrive_una_modifica_ricevuta() {
     assert!(anteprime.contains(&(id.clone(), "da A".to_string())));
     assert!(anteprime.contains(&(conflitti[0].copia.clone(), "comune, scritto in B e continuato".to_string())));
 }
+
+// ——— Impostazioni (DEC-91, RB-52) ———
+
+use super::super::impostazioni::Sistema;
+
+#[test]
+fn la_scorciatoia_arriva_sugli_altri_dispositivi_separata_per_sistema() {
+    let (mut a, mut b, mut s) = due();
+    assert_eq!(b.a.scorciatoia(Sistema::Windows).unwrap(), None);
+    a.a.imposta_scorciatoia(Sistema::Windows, Some("Control+Shift+Space")).unwrap();
+    a.sincronizza(&mut s);
+    b.sincronizza(&mut s);
+    assert_eq!(b.a.scorciatoia(Sistema::Windows).unwrap().as_deref(), Some("Control+Shift+Space"));
+    assert_eq!(b.a.scorciatoia(Sistema::Macos).unwrap(), None);
+    // Cambiate insieme su due sistemi diversi: restano tutte e due.
+    a.passa(10);
+    b.passa(10);
+    a.a.imposta_scorciatoia(Sistema::Windows, Some("Control+Alt+KeyM")).unwrap();
+    b.a.imposta_scorciatoia(Sistema::Macos, Some("Super+Alt+KeyM")).unwrap();
+    a.sincronizza(&mut s);
+    b.sincronizza(&mut s);
+    a.sincronizza(&mut s);
+    for d in [&mut a, &mut b] {
+        assert_eq!(d.a.scorciatoia(Sistema::Windows).unwrap().as_deref(), Some("Control+Alt+KeyM"));
+        assert_eq!(d.a.scorciatoia(Sistema::Macos).unwrap().as_deref(), Some("Super+Alt+KeyM"));
+    }
+    // «Ripristina» torna al default anche altrove.
+    a.passa(10);
+    a.a.imposta_scorciatoia(Sistema::Windows, None).unwrap();
+    a.sincronizza(&mut s);
+    b.sincronizza(&mut s);
+    assert_eq!(b.a.scorciatoia(Sistema::Windows).unwrap(), None);
+}
+
+#[test]
+fn tema_e_nome_del_dispositivo_restano_sul_dispositivo() {
+    let (mut a, mut b, mut s) = due();
+    a.a.imposta_valore_dispositivo("tema", Some("scuro")).unwrap();
+    a.a.imposta_valore_dispositivo("nome", Some("Portatile di lavoro")).unwrap();
+    assert!(a.a.da_inviare().unwrap().is_empty());
+    a.sincronizza(&mut s);
+    b.sincronizza(&mut s);
+    assert_eq!(b.a.valore_dispositivo("tema").unwrap(), None);
+    assert_eq!(a.a.valore_dispositivo("tema").unwrap().as_deref(), Some("scuro"));
+    a.a.imposta_valore_dispositivo("tema", None).unwrap();
+    assert_eq!(a.a.valore_dispositivo("tema").unwrap(), None);
+}

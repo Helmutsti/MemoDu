@@ -420,7 +420,8 @@ Comandi di DEC-51 per la finestra Dettagli (CMP-24, DEC-44). Valgono le regole g
 - **Chi le fa:** il nucleo Rust del client, in background (`client/src-tauri/src/sincronizzazione.rs`), non l'interfaccia.
 - **Autorizzazione:** intestazione `Authorization: Bearer <gettone>` con il gettone delle credenziali dell'installazione (DEC-79); senza o sbagliato `401`, e il client mostra la schermata di blocco (RB-57).
 - **Protocollo:** intestazione `Memodu-Protocollo: 1`; con una versione diversa `426`, e il client mostra l'avviso di errore e continua sulla copia di lavoro (DEC-83).
-- **Blocchi:** testo opaco per il server. Oggi JSON in chiaro, `{ "formato": "chiaro", "tipo": "nota" | "cartella" | "tag", "modificato_il": "<UTC>", "eliminato": false, "campi": { … } }` (DEC-78).
+- **Blocchi:** testo opaco per il server. Oggi JSON in chiaro, `{ "formato": "chiaro", "tipo": "nota" | "cartella" | "tag" | "impostazioni", "modificato_il": "<UTC>", "eliminato": false, "campi": { … } }` (DEC-78).
+- **Impostazioni:** la scorciatoia della nota rapida viaggia in un solo elemento di tipo `impostazioni`, con l'id fisso `00000000-0000-4000-8000-000000000001`, lo stesso su tutti i dispositivi (DEC-91, RB-52).
 - **Implementazione:** `api/src/sincronizzazione.ts` (deposito: file dei blocchi e indice `sincronizzazione/indice.db`) e `api/src/rotteSincronizzazione.ts`, prove in `api/src/sincronizzazione.test.ts`.
 - **Credenziali:** al primo avvio l'API genera identificativo, gettone e chiave, conserva solo l'impronta del gettone e scrive `{ "indirizzo", "installazione", "gettone", "chiave" }` nel file `credenziali` della cartella dei dati, se non c'è (sulla stessa macchina è quello dell'app); le mostra una volta nel terminale.
 

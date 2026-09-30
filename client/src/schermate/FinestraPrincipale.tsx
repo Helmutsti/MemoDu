@@ -4,7 +4,7 @@
 // SC-07 al posto del contenuto, che resta in memoria (RB-61); chiudendo con testo non salvato
 // si chiede conferma (RB-62). Un'operazione su cartelle o cestino che non riesce mostra un
 // avviso e ricarica la colonna (DEC-37); un nome già usato apre la finestra con tre scelte
-// (RB-31).
+// (RB-31). La riga Impostazioni sotto il Cestino apre SC-06 al posto della nota (DEC-91).
 
 import {
   Ellipsis,
@@ -60,6 +60,7 @@ import { CodaSalvataggio } from "../salvataggio";
 import { Blocco } from "./Blocco";
 import { Cestino } from "./Cestino";
 import { FinestraDettagli } from "./FinestraDettagli";
+import { Impostazioni } from "./Impostazioni";
 import { Colonna, type Campo, type Destinazione, type Trascinato } from "./Colonna";
 import { NotaAperta } from "./NotaAperta";
 import "./FinestraPrincipale.css";
@@ -208,7 +209,7 @@ export function FinestraPrincipale(): ReactElement {
   } | null>(null);
   const [conflitto, setConflitto] = useState<Conflitto | null>(null);
   const [avviso, setAvviso] = useState(false);
-  const [vista, setVista] = useState<"nota" | "cestino">("nota");
+  const [vista, setVista] = useState<"nota" | "cestino" | "impostazioni">("nota");
   const [cestino, setCestino] = useState<ElementoCestino[]>([]);
   const [bloccata, setBloccata] = useState(false);
   const [riprovando, setRiprovando] = useState(false);
@@ -788,6 +789,17 @@ export function FinestraPrincipale(): ReactElement {
     setVista("cestino");
   };
 
+  /** Le impostazioni al posto della nota, come il cestino (DEC-91). */
+  const apriImpostazioni = async () => {
+    await coda.scarica();
+    if (coda.haModifiche) return;
+    if (await lasciaVuota()) {
+      setAperta(null);
+      await ricarica().catch(() => setBloccata(true));
+    }
+    setVista("impostazioni");
+  };
+
   const rilascia = async (destinazione: Destinazione) => {
     const t = trascinato;
     setTrascinato(null);
@@ -1039,6 +1051,8 @@ export function FinestraPrincipale(): ReactElement {
             onRilascia={(d) => void rilascia(d)}
             cestinoAperto={vista === "cestino"}
             onApriCestino={() => void apriCestino()}
+            impostazioniAperte={vista === "impostazioni"}
+            onApriImpostazioni={() => void apriImpostazioni()}
           />
           {statoColonna !== "chiusa" && (
             <div
@@ -1158,7 +1172,9 @@ export function FinestraPrincipale(): ReactElement {
                 />
               ))
             )}
-            {vista === "cestino" ? (
+            {vista === "impostazioni" ? (
+              <Impostazioni esegui={esegui} />
+            ) : vista === "cestino" ? (
               <Cestino
                 elementi={cestino}
                 onRipristina={(e) => void ripristina(e)}

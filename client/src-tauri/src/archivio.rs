@@ -22,7 +22,7 @@ pub const FILE_DATABASE: &str = "copia-di-lavoro.db";
 /// File dell'API quando girava sulla stessa macchina (DEC-46): da lì si copiano le note alla
 /// prima apertura, così non si perde niente.
 pub const FILE_API: &str = "memodu.db";
-const VERSIONE_SCHEMA: i64 = 2;
+const VERSIONE_SCHEMA: i64 = 3;
 const SENZA_TITOLO: &str = "Senza titolo";
 const NUOVA_CARTELLA: &str = "Nuova cartella";
 const LUNGHEZZA_MASSIMA_NOME: usize = 100;
@@ -88,9 +88,21 @@ const SCHEMA_SINCRONIZZAZIONE: &str = "
     SELECT id, 'tag', 1, adesso_utc() FROM tag;
 ";
 
+/// Schema 3 (DEC-91): le impostazioni che si sincronizzano, in un solo elemento
+/// «impostazioni» (RB-52), e quelle che restano sul dispositivo, senza trigger.
+const SCHEMA_IMPOSTAZIONI: &str = "
+  CREATE TABLE impostazioni (
+    id TEXT PRIMARY KEY,
+    scorciatoia_windows TEXT,
+    scorciatoia_macos TEXT
+  );
+  CREATE TABLE dispositivo (chiave TEXT PRIMARY KEY, valore TEXT NOT NULL);
+";
+
 /// Trigger che segnano un elemento come modificato qui: (tabella, tipo, id nel caso di
 /// inserimento o modifica, id nel caso di eliminazione, eventi).
-const TRIGGER: [(&str, &str, &str, &str); 4] = [
+type Trigger = (&'static str, &'static str, &'static str, &'static str);
+const TRIGGER: [Trigger; 4] = [
     ("note", "nota", "NEW.id", "OLD.id"),
     ("cartelle", "cartella", "NEW.id", "OLD.id"),
     ("tag", "tag", "NEW.id", "OLD.id"),
@@ -98,9 +110,11 @@ const TRIGGER: [(&str, &str, &str, &str); 4] = [
     ("note_tag", "nota", "NEW.nota", "OLD.nota"),
 ];
 
-fn schema_trigger() -> String {
+const TRIGGER_IMPOSTAZIONI: [Trigger; 1] = [("impostazioni", "impostazioni", "NEW.id", "OLD.id")];
+
+fn schema_trigger(trigger: &[Trigger]) -> String {
     let mut sql = String::new();
-    for (tabella, tipo, nuovo, vecchio) in TRIGGER {
+    for &(tabella, tipo, nuovo, vecchio) in trigger {
         for (evento, id) in [("INSERT", nuovo), ("UPDATE", nuovo), ("DELETE", vecchio)] {
             if tabella == "note_tag" && evento == "UPDATE" {
                 continue;
@@ -155,6 +169,10 @@ pub enum Errore {
     /// La copia di lavoro non si apre: l'interfaccia mostra SC-07 come quando l'API non
     /// rispondeva (RB-61).
     NonDisponibile(String),
+    /// Combinazione che non si può usare per la nota rapida (DEC-91).
+    ScorciatoiaNonValida(String),
+    /// Combinazione già usata da un altro programma: resta quella di prima (DEC-91).
+    ScorciatoiaOccupata,
     Database(rusqlite::Error),
 }
 
@@ -172,8 +190,10 @@ impl Errore {
             | Errore::CartellaNonTrovata(_)
             | Errore::ElementoNonTrovato(_)
             | Errore::TagNonTrovato(_) => Some(404),
-            Errore::PercorsoNonValido(_) | Errore::DataNonValida(_) => Some(400),
-            Errore::NomeEsistente(_) | Errore::NotaNonVuota => Some(409),
+            Errore::PercorsoNonValido(_)
+            | Errore::DataNonValida(_)
+            | Errore::ScorciatoiaNonValida(_) => Some(400),
+            Errore::NomeEsistente(_) | Errore::NotaNonVuota | Errore::ScorciatoiaOccupata => Some(409),
             Errore::SpostamentoImpossibile => Some(422),
             Errore::NonDisponibile(_) => None,
             Errore::Database(_) => Some(500),
@@ -190,7 +210,8 @@ impl Errore {
             Errore::SpostamentoImpossibile => "Una cartella non si sposta dentro sé stessa".into(),
             Errore::TagNonTrovato(nome) => format!("Nessun tag «{nome}»"),
             Errore::NotaNonVuota => "La nota non è vuota".into(),
-            Errore::NonDisponibile(testo) => testo.clone(),
+            Errore::NonDisponibile(testo) | Errore::ScorciatoiaNonValida(testo) => testo.clone(),
+            Errore::ScorciatoiaOccupata => "Combinazione già usata da un altro programma".into(),
             Errore::Database(errore) => errore.to_string(),
         }
     }
@@ -495,7 +516,11 @@ impl Archivio {
             }
             if versione < 2 {
                 tx.execute_batch(SCHEMA_SINCRONIZZAZIONE)?;
-                tx.execute_batch(&schema_trigger())?;
+                tx.execute_batch(&schema_trigger(&TRIGGER))?;
+            }
+            if versione < 3 {
+                tx.execute_batch(SCHEMA_IMPOSTAZIONI)?;
+                tx.execute_batch(&schema_trigger(&TRIGGER_IMPOSTAZIONI))?;
             }
             tx.pragma_update(None, "user_version", VERSIONE_SCHEMA)?;
             tx.commit()?;
@@ -1598,6 +1623,9 @@ pub fn cartella_predefinita() -> PathBuf {
 
 #[path = "archivio_sinc.rs"]
 pub mod sinc;
+
+#[path = "archivio_impostazioni.rs"]
+pub mod impostazioni;
 
 #[cfg(test)]
 #[path = "archivio_test.rs"]

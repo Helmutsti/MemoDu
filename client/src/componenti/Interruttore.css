@@ -1,0 +1,44 @@
+/* CMP-04: spento, contorno e pallino di 8 in icona-tenue a sinistra; acceso, pista piena e
+   pallino di 12 in icona-su-pieno a destra. Il pallino scorre in 120 ms. */
+.interruttore {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+  width: 28px;
+  height: 16px;
+  border: 1.5px solid var(--icona-tenue);
+  border-radius: var(--raggio-pillola);
+  transition: background-color var(--movimento-durata-breve);
+}
+.interruttore-pallino {
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--raggio-pillola);
+  background: var(--icona-tenue);
+  transform: translateY(-50%);
+  transition:
+    left var(--movimento-durata-breve),
+    width var(--movimento-durata-breve),
+    height var(--movimento-durata-breve);
+}
+.interruttore-acceso {
+  border-color: var(--sfondo-pieno);
+  background: var(--sfondo-pieno);
+}
+.interruttore-acceso .interruttore-pallino {
+  left: 12.5px;
+  width: 12px;
+  height: 12px;
+  background: var(--icona-su-pieno);
+}
+/* Hover sulla riga che lo contiene. */
+.riga-impostazione:hover .interruttore:not(.interruttore-acceso) {
+  background: var(--sfondo-hover);
+}
+.riga-impostazione:hover .interruttore-acceso {
+  border-color: var(--sfondo-pieno-hover);
+  background: var(--sfondo-pieno-hover);
+}

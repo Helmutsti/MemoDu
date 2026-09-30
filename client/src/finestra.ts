@@ -176,3 +176,13 @@ export function allaSincronizzazione(
 export async function riprovaSincronizzazione(): Promise<void> {
   if (IN_TAURI) await invoke("riprova_sincronizzazione");
 }
+
+/** Lo stato della sincronizzazione è cambiato: la pagina delle impostazioni lo rilegge (DEC-91). */
+export function alCambioDelloStatoSinc(aggiorna: () => void): () => void {
+  if (!IN_TAURI) return () => {};
+  const promesse = [
+    listen("stato-sincronizzazione", () => aggiorna()),
+    listen("sincronizzazione", () => aggiorna()),
+  ];
+  return () => promesse.forEach((p) => void p.then((togli) => togli()));
+}

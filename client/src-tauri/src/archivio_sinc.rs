@@ -147,7 +147,7 @@ impl Archivio {
                 Err(_) => continue,
             };
             let tipo = remoto["tipo"].as_str().unwrap_or("").to_string();
-            if !["nota", "cartella", "tag"].contains(&tipo.as_str()) {
+            if !["nota", "cartella", "tag", "impostazioni"].contains(&tipo.as_str()) {
                 continue;
             }
             let voce = self.voce(&r.id)?;
@@ -362,6 +362,19 @@ impl Archivio {
                     },
                 )
                 .optional()?,
+            "impostazioni" => self
+                .db
+                .query_row(
+                    "SELECT scorciatoia_windows, scorciatoia_macos FROM impostazioni WHERE id = ?",
+                    [id],
+                    |r| {
+                        Ok(json!({
+                            "scorciatoia_windows": r.get::<_, Option<String>>(0)?,
+                            "scorciatoia_macos": r.get::<_, Option<String>>(1)?,
+                        }))
+                    },
+                )
+                .optional()?,
             _ => self
                 .db
                 .query_row("SELECT nome, padre FROM tag WHERE id = ?", [id], |r| {
@@ -393,6 +406,7 @@ impl Archivio {
         let tabella = match tipo {
             "nota" => "note",
             "cartella" => "cartelle",
+            "impostazioni" => "impostazioni",
             _ => "tag",
         };
         if blocco["eliminato"] == json!(true) {
@@ -433,6 +447,13 @@ impl Archivio {
                         )?;
                     }
                 }
+            }
+            "impostazioni" => {
+                self.db.execute(
+                    "INSERT INTO impostazioni (id, scorciatoia_windows, scorciatoia_macos) VALUES (?1, ?2, ?3)
+                     ON CONFLICT(id) DO UPDATE SET scorciatoia_windows = ?2, scorciatoia_macos = ?3",
+                    params![id, testo("scorciatoia_windows"), testo("scorciatoia_macos")],
+                )?;
             }
             "cartella" => {
                 let madre = testo("madre");

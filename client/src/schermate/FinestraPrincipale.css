@@ -128,7 +128,11 @@
 /* Riga Cestino e cestino di trascinamento restano in fondo alla colonna anche se scorre. */
 /* La riga Cestino resta sul fondo mentre la colonna scorre (DEC-40); il margine sotto è suo,
    così il suo fondo copre fino al bordo e il contenuto non si intravede sotto. */
+/* Cestino e Impostazioni (DEC-91), 4 tra le due righe. */
 .colonna-fondo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spazio-elemento);
   position: sticky;
   bottom: 0;
   margin-top: var(--spazio-blocco);

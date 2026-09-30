@@ -2,7 +2,8 @@
 // Cartelle con l'albero: sottocartelle poi note, in ordine alfabetico (RB-64, RB-65), con il
 // numero di note (RB-56). Trascinamento su cartelle, titoli di sezione e cestino in fondo
 // (FL-05, RB-24); tasto destro su una cartella o su una nota; tastiera come CMP-06 (RNF-04).
-// In fondo la riga Cestino, che durante il trascinamento diventa la zona di rilascio (DEC-40).
+// In fondo la riga Cestino, che durante il trascinamento diventa la zona di rilascio (DEC-40), e
+// sotto la riga Impostazioni (DEC-91).
 
 import {
   useState,
@@ -17,6 +18,7 @@ import {
   CestinoTrascinamento,
   RigaCartella,
   RigaCestino,
+  RigaImpostazioni,
   RigaNota,
   RigaSezione,
 } from "../componenti/RigaColonna";
@@ -57,6 +59,9 @@ interface Proprieta {
   /** Il cestino è aperto nell'area della nota. */
   cestinoAperto: boolean;
   onApriCestino: () => void;
+  /** Le impostazioni sono aperte nell'area della nota (DEC-91). */
+  impostazioniAperte: boolean;
+  onApriImpostazioni: () => void;
   /** Chiusa (non si vede), aperta sopra il foglio o fissata accanto (DEC-55). */
   stato: "chiusa" | "aperta" | "fissata";
   /** In cima alla colonna: «← |» e la puntina (DEC-55). */
@@ -295,6 +300,10 @@ export function Colonna(p: Proprieta): ReactElement {
                 onApri={p.onApriCestino}
               />
             )}
+            <RigaImpostazioni
+              selezionata={p.impostazioniAperte}
+              onApri={p.onApriImpostazioni}
+            />
           </div>
         </div>
       </AreaScorrevole>

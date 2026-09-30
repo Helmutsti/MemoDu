@@ -51,7 +51,8 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui non valgono come regole.
 
 - Sincronizzazione: testi degli avvisi (conflitto, server irraggiungibile, errore, versioni diverse) e della schermata di blocco per le credenziali rifiutate, provvisori fino alla Fase 6; l'API scrive le credenziali nel file dell'app della cartella dei dati; nella fusione di un conflitto di testo l'originale prende la versione del server e la copia quella del dispositivo.
-- CA-12.1 … CA-12.7: criteri delle note sganciate scritti dall'agente (DEC-92).
+- SC-06 (DEC-91): la combinazione della nota rapida vuole almeno due tasti tra Ctrl, Alt, Maiusc e Win più una lettera, una cifra, un tasto funzione o Spazio; Esc lascia il campo senza cambiarla; il nome del dispositivo è lungo al massimo 100 caratteri e vuoto torna il nome del computer; i testi dello stato della sincronizzazione («In attesa della prima sincronizzazione», «Server non raggiungibile: le modifiche restano su questo computer», «Non riuscita: riprovo da sola», «Memodu e il server hanno versioni diverse»); avviato all'accensione, Memodu parte senza mostrare la finestra principale.
+- DEC-93: «Tieni Memodu in primo piano» è un interruttore in Generale, spento di default, solo su questo dispositivo, per la sola finestra principale.
 - CA-10.1 … CA-10.11 e CA-14.1 … CA-14.5: criteri di accettazione di RF-10 e RF-14 scritti dall'agente.
 - DEC-79: il server genera identificativo, gettone e chiave in una riga da copiare, conserva solo l'impronta del gettone; 401 per un gettone sbagliato.
 - DEC-77: anche gli elementi eliminati per sempre tengono le versioni precedenti per 30 giorni.

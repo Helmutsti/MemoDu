@@ -1,0 +1,68 @@
+/* SC-06 Impostazioni: il titolo e i gruppi di righe (CMP-18), larghi 560, alla stessa altezza
+   del cestino (SC-04). */
+.impostazioni {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  height: 100%;
+  overflow-y: auto;
+  padding: 80px var(--spazio-gruppo);
+}
+.impostazioni > * {
+  width: 100%;
+  max-width: 560px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.impostazioni-titolo {
+  margin-top: 0;
+  margin-bottom: var(--spazio-blocco);
+  color: var(--testo-primario);
+}
+
+/* Campo (CMP-03): pillola alta 32 su sfondo-campo, larga 200. */
+.campo-impostazione {
+  flex-shrink: 0;
+  width: 200px;
+  height: var(--misura-riga);
+  padding: 0 var(--spazio-controllo);
+  border: none;
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-campo);
+  color: var(--testo-primario);
+}
+.campo-impostazione::placeholder {
+  color: var(--testo-tenue);
+}
+:root[data-tastiera] .campo-impostazione:focus-visible {
+  outline: var(--focus-spessore) solid var(--focus-anello);
+  outline-offset: var(--focus-distanza);
+}
+/* La scorciatoia si sceglie con i tasti: il campo non mostra il cursore del testo. */
+.campo-scorciatoia .campo-impostazione {
+  caret-color: transparent;
+  cursor: pointer;
+}
+
+/* Errore (CMP-03, DEC-52): anello in icona-errore e il messaggio 8 sotto, allineato al testo. */
+.campo-scorciatoia {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spazio-icona) + var(--focus-spessore) + var(--focus-distanza));
+  width: 200px;
+}
+.campo-impostazione.campo-impostazione-errore {
+  outline: var(--focus-spessore) solid var(--icona-errore);
+  outline-offset: var(--focus-distanza);
+}
+.campo-impostazione-messaggio {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spazio-icona-piccola);
+  padding-left: var(--spazio-controllo);
+  color: var(--testo-errore);
+}
+.campo-impostazione-messaggio svg {
+  flex-shrink: 0;
+  color: var(--icona-errore);
+}

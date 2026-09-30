@@ -158,8 +158,29 @@ fn segna_la_versione_dello_schema() {
     p.chiudi();
     let db = Connection::open(p.file()).unwrap();
     let versione: i64 = db.pragma_query_value(None, "user_version", |r| r.get(0)).unwrap();
-    // Schema 2: le tabelle della sincronizzazione (DEC-75, DEC-76).
-    assert_eq!(versione, 2);
+    // Schema 3: le tabelle della sincronizzazione (DEC-75, DEC-76) e delle impostazioni (DEC-91).
+    assert_eq!(versione, 3);
+}
+
+#[test]
+fn una_copia_di_lavoro_con_lo_schema_2_riceve_le_impostazioni() {
+    let mut p = prova();
+    p.chiudi();
+    let db = Connection::open(p.file()).unwrap();
+    db.execute_batch(
+        "DROP TRIGGER sinc_impostazioni_INSERT; DROP TRIGGER sinc_impostazioni_UPDATE;
+         DROP TRIGGER sinc_impostazioni_DELETE; DROP TABLE impostazioni; DROP TABLE dispositivo;
+         PRAGMA user_version = 2;",
+    )
+    .unwrap();
+    drop(db);
+    let mut a = p.apri(&p.cartella.clone());
+    a.imposta_scorciatoia(super::impostazioni::Sistema::Windows, Some("Control+Shift+KeyM")).unwrap();
+    assert_eq!(
+        a.scorciatoia(super::impostazioni::Sistema::Windows).unwrap().as_deref(),
+        Some("Control+Shift+KeyM")
+    );
+    assert_eq!(a.da_inviare().unwrap().iter().filter(|b| b.id == super::impostazioni::ID).count(), 1);
 }
 
 #[test]

@@ -1,6 +1,6 @@
 # DEC-92 – Note sganciate in una finestra propria
 
-**Data:** 2026-09-30 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-30 · **Stato:** Superata da DEC-93 · **Idea di origine:** —
 
 ## Contesto
 RF-12 (finestre multiple e sganciabili) era *Should*, fuori dalla prima fase (DEC-01), ferma alla Fase 1. Manuel Cucca vuole poter sganciare una nota, vedere «Questa nota è sganciata» quando la si apre nella finestra principale e poterla tenere in primo piano dal suo menu.

@@ -1,0 +1,26 @@
+/* CMP-28: pillola alta 32 su sfondo-campo, margine 4; segmenti alti 24, larghi quanto il
+   testo, margini 12. Scelto: sfondo-pieno con testo-su-pieno. */
+.scelta-segmenti {
+  display: inline-flex;
+  flex-shrink: 0;
+  height: var(--misura-riga);
+  padding: var(--spazio-elemento);
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-campo);
+}
+.segmento {
+  height: var(--misura-controllo-piccolo);
+  padding: 0 var(--spazio-controllo);
+  border: none;
+  border-radius: var(--raggio-pillola);
+  background: none;
+  color: var(--testo-primario);
+  cursor: pointer;
+}
+.segmento:hover:not(.segmento-scelto) {
+  background: var(--sfondo-hover);
+}
+.segmento-scelto {
+  background: var(--sfondo-pieno);
+  color: var(--testo-su-pieno);
+}

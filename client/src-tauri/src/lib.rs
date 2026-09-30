@@ -2,8 +2,10 @@
 // delle note sul dispositivo (DEC-67), che l'interfaccia legge e scrive con i comandi di
 // `comandi.rs`. Il client funziona anche senza l'API.
 //
-// - Scorciatoia globale Ctrl + Alt + N (Control + Option + N su macOS): apre una nota rapida
-//   anche con Memodu in background (RF-01, SC-02).
+// - Scorciatoia globale, di default Ctrl + Alt + N (Control + Option + N su macOS), che si
+//   cambia dalle impostazioni: apre una nota rapida anche con Memodu in background (RF-01,
+//   SC-02, DEC-91).
+// - Avviato all'accensione (DEC-91) parte in background, senza mostrare la finestra principale.
 // - Icona nell'area di notifica (Windows) o nella barra dei menu (macOS): apre la nota rapida
 //   o il programma (CA-01.6); su Windows il clic sinistro apre il programma, il destro il menu.
 // - Note rapide: finestre senza cornice, sempre in primo piano, 480 × 320, a cascata di 32 px
@@ -13,6 +15,7 @@
 
 mod archivio;
 mod comandi;
+mod impostazioni;
 mod sincronizzazione;
 
 use std::collections::HashSet;
@@ -25,7 +28,8 @@ use tauri::{
     AppHandle, Emitter, Manager, PhysicalPosition, PhysicalSize, RunEvent, State, WebviewUrl,
     WebviewWindow, WebviewWindowBuilder, WindowEvent,
 };
-use tauri_plugin_global_shortcut::{Code, Modifiers, Shortcut, ShortcutState};
+use tauri_plugin_autostart::MacosLauncher;
+use tauri_plugin_global_shortcut::ShortcutState;
 
 const LARGHEZZA_RAPIDA: f64 = 480.0;
 const ALTEZZA_RAPIDA: f64 = 320.0;
@@ -198,10 +202,6 @@ fn uscita_annullata(stato: State<Mutex<Uscita>>) {
     stato.lock().unwrap().attese = None;
 }
 
-fn scorciatoia_nota_rapida() -> Shortcut {
-    Shortcut::new(Some(Modifiers::CONTROL | Modifiers::ALT), Code::KeyN)
-}
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     // La sincronizzazione aspetta i segnali in un filo a parte (DEC-80).
@@ -212,6 +212,8 @@ pub fn run() {
         .manage(Mutex::new(Uscita::default()))
         .manage(comandi::Dati::apri())
         .manage(sincronizzazione::Segnale(Mutex::new(segnale)))
+        .manage(impostazioni::ScorciatoiaAttiva::default())
+        .manage(impostazioni::ProblemaSinc::default())
         .invoke_handler(tauri::generate_handler![
             pronta_a_uscire,
             uscita_annullata,
@@ -237,6 +239,13 @@ pub fn run() {
             comandi::elimina_definitivamente,
             comandi::svuota_cestino,
             comandi::riprova_sincronizzazione,
+            impostazioni::leggi_impostazioni,
+            impostazioni::cambia_scorciatoia,
+            impostazioni::cambia_tema,
+            impostazioni::cambia_avvio,
+            impostazioni::cambia_primo_piano,
+            impostazioni::cambia_nome_dispositivo,
+            impostazioni::stato_sincronizzazione,
         ])
         .on_window_event(|finestra, evento| {
             match evento {
@@ -254,19 +263,25 @@ pub fn run() {
             tauri_plugin_global_shortcut::Builder::new()
                 .with_handler(|app, scorciatoia, evento| {
                     if evento.state == ShortcutState::Pressed
-                        && *scorciatoia == scorciatoia_nota_rapida()
+                        && app.state::<impostazioni::ScorciatoiaAttiva>().e(scorciatoia)
                     {
                         apri_nota_rapida(app);
                     }
                 })
                 .build(),
         )
+        .plugin(tauri_plugin_autostart::init(
+            MacosLauncher::LaunchAgent,
+            Some(vec![impostazioni::IN_BACKGROUND]),
+        ))
         .setup(move |app| {
-            use tauri_plugin_global_shortcut::GlobalShortcutExt;
-            // Se un altro programma usa già la combinazione, la nota rapida resta
-            // raggiungibile dall'icona (scorciatoia fissa nel frammento Must A).
-            if let Err(errore) = app.global_shortcut().register(scorciatoia_nota_rapida()) {
-                eprintln!("Scorciatoia della nota rapida non disponibile: {errore}");
+            impostazioni::applica_scorciatoia(app.handle());
+            impostazioni::applica_tema(app.handle());
+            impostazioni::applica_primo_piano(app.handle());
+            // La finestra principale parte nascosta: si mostra, tranne quando il sistema avvia
+            // Memodu all'accensione (DEC-91).
+            if !std::env::args().any(|a| a == impostazioni::IN_BACKGROUND) {
+                mostra_programma(app.handle());
             }
 
             let nota_rapida =
