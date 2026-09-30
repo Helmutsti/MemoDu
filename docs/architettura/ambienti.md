@@ -30,6 +30,7 @@ servizi-esterni:
 | Nome | Contenuto | Versione schema | Come si genera |
 |---|---|---|---|
 | Smistare (Locale, frammento Must B) | Tre note non organizzate; «Lavoro» con «Clienti» (nota «Rossi»), «Progetti» e le note «Budget 2026» e «Riunione con i fornitori»; «Personale» vuota. Nessun dato personale | Database SQLite, schema 1 (DEC-48) | Da rifare: lo script `scripts/dati-di-prova.sh` usava le richieste delle note dell'API, tolte con DEC-85. Per ora le note di prova si creano a mano nell'app, con `MEMODU_CARTELLA` su una cartella vuota; mai sulla cartella dei dati vera |
+| Ricerca (Locale, RF-08) | Il set Smistare più: «Rilascio della versione 2» e «Bozza del rilascio» in «Lavoro» (tag «lavoro»), «Riunione di lunedì» in «Clienti» (tag «lavoro», «clienti», testo con «rilascio» e «venerdì»), «Idee per il sito» non organizzata (testo «note di rilascio»), una nota con «perché»; «Rossi» con il solo tag «lavoro/clienti»; «Vecchia scaletta» nel cestino e una cartella nel cestino con una nota che contiene «rilascio»; una nota modificata 10 giorni prima e una con la data di creazione scelta. Nessun dato personale | Copia di lavoro, schema 4 (DEC-95) | A mano nell'app, con `MEMODU_CARTELLA` su una cartella vuota; le date vecchie si spostano nel database con un comando SQL. Per TC-78 le 5.000 note le genera la prova automatica |
 
 ## Regole
 - **Promozione:** come una versione passa da un ambiente al successivo e chi la autorizza.

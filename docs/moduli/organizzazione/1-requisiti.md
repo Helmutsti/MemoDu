@@ -111,7 +111,7 @@ Nella prima fase la separazione tra ambiti si ottiene con le cartelle principali
 ---
 
 ## RF-08 – Ricerca e filtro
-**Priorità:** Must · **Origine:** — · **Fase:** 8 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 8 (completa, prossimo lo sviluppo) · **Stato:** Pronto
 
 Come *utente* voglio cercare e filtrare le note per trovare subito quella che mi serve.
 
@@ -133,7 +133,23 @@ Le note nel cestino compaiono tra i risultati, segnalate come "nel cestino"; si 
 Inizio a scrivere nella barra di ricerca dell'interfaccia e i risultati compaiono in sovraimpressione, in una card a discesa.
 
 ### Criteri di accettazione
-- [Da compilare]
+Scritti dall'agente da FL-06, DEC-94 e DEC-95; approvati da Manuel Cucca il 30/09/2026, con la soglia di 200 ms di CA-08.16.
+- **CA-08.1** *Dato* la colonna chiusa, *quando* premo Ctrl + K (⌘ + K su macOS), *allora* la colonna si apre, il cursore è nel campo di ricerca e la card mostra solo i filtri Tag, Creazione e Modifica; con un clic nel campo succede lo stesso (RB-71, RB-33).
+- **CA-08.2** *Dato* il campo di ricerca, *quando* scrivo «rilascio», *allora* dopo una breve pausa, senza Invio, la card mostra tutte le note con la parola nel titolo, nel testo o nei nomi dei tag: prima quelle con la parola nel titolo o nei tag, poi quelle con la parola solo nel testo, ciascun gruppo per ultima modifica; ogni risultato mostra titolo, la frase con la parola evidenziata, cartella e data (RB-33, RB-34, RB-69).
+- **CA-08.3** *Dato* delle note con «rilascio» e «perché», *quando* cerco «lascio», «PERCHE» o «ri», *allora* le trovo: la parola si trova anche dentro le altre, maiuscole e accenti non contano, e anche con una o due lettere; cercando «rilascio venerdì» escono solo le note che hanno tutte e due le parole (RB-69).
+- **CA-08.4** *Dato* una nota con il tag «lavoro/clienti» e senza la parola nel testo, *quando* cerco «lavoro», *allora* la trovo (RB-69, RF-06).
+- **CA-08.5** *Dato* la card aperta, *quando* nel filtro Tag scelgo «lavoro» e «clienti», *allora* la pillola diventa «Tag: 2» ed escono solo le note che hanno tutti e due i tag, ciascuno anche con i suoi sotto-tag; «Togli il filtro» li toglie (RB-70, CMP-09).
+- **CA-08.6** *Dato* il campo vuoto, *quando* scelgo il filtro Tag «lavoro», *allora* escono le note con «lavoro» o un suo sotto-tag, per ultima modifica, con l'inizio del testo al posto della frase (RB-70, DEC-95).
+- **CA-08.7** *Dato* il filtro Modifica, *quando* scelgo «Ultimi 7 giorni», *allora* escono solo le note modificate negli ultimi 7 giorni secondo l'ora di questo computer e la pillola mostra il periodo; con «Scegli le date…» il periodo si sceglie sul calendario; per la Creazione vale la data scelta nei Dettagli, se c'è; ogni risultato mostra la data del filtro attivo (RF-04, DEC-95).
+- **CA-08.8** *Dato* una ricerca senza risultati, *allora* la card resta aperta con i filtri e mostra «Nessuna nota trovata» e «Prova con un'altra parola o togli un filtro.» (RB-35).
+- **CA-08.9** *Dato* una nota nel cestino, o dentro una cartella nel cestino, che contiene la parola cercata, *quando* cerco, *allora* compare attenuata con l'etichetta «nel cestino» e aprendola si vede che è nel cestino e si può ripristinare; spento «Mostra le note del cestino nei risultati» in SC-06 non compare più, anche sull'altro dispositivo dopo la sincronizzazione (RB-29, RB-28, RB-52).
+- **CA-08.10** *Dato* dei risultati, *quando* ne apro uno con un clic o con Invio, *allora* la nota si apre al posto di quella aperta, già salvata, la card si chiude e testo e filtri si svuotano; se la colonna l'aveva aperta Ctrl + K si richiude, se era fissata o aperta a mano resta com'era (RB-06, RB-71, RB-72).
+- **CA-08.11** *Dato* la card aperta, *quando* premo Esc, *allora* la card si chiude senza aprire niente e la ricerca si svuota; se la colonna l'aveva aperta Ctrl + K si richiude e il cursore torna dov'era nel foglio (RB-71, RB-72).
+- **CA-08.12** *Dato* la card aperta, *quando* un risultato viene modificato o eliminato altrove (per esempio dalla sincronizzazione), *allora* i risultati restano quelli della ricerca e aprendolo si vede la versione aggiornata (RB-45, SF-20).
+- **CA-08.13** *Dato* il computer senza rete, *quando* cerco, *allora* la ricerca funziona come sempre (SF-08, DEC-02).
+- **CA-08.14** *Dato* il solo uso della tastiera, *allora* dal campo freccia giù entra nei risultati, su e giù si muovono, Invio apre, Tab raggiunge i filtri; un lettore di schermo annuncia il numero di risultati e legge titolo, cartella, data e «nel cestino» (CMP-13, RNF-04).
+- **CA-08.15** *Dato* un testo come `"a*" OR b`, *quando* lo cerco, *allora* non c'è nessun errore e si cercano quei caratteri così come sono (RB-08, DEC-95).
+- **CA-08.16** *Dato* una copia di lavoro con 5.000 note, *quando* scrivo nel campo, *allora* i risultati compaiono entro 200 ms dalla fine della pausa (RNF-01).
 
 ---
 
