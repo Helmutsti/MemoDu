@@ -859,4 +859,14 @@ describe("ricerca nella colonna (RF-08, DEC-94)", () => {
     expect(await screen.findByText("La nota è nel cestino.")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ripristina" })).toBeInTheDocument();
   });
+
+  it("un clic nella colonna aperta da Ctrl + K chiude la card ma non la colonna", async () => {
+    render(<FinestraPrincipale />);
+    await riga("Riunione di lunedì");
+    await userEvent.keyboard("{Control>}k{/Control}");
+    await waitFor(() => expect(campo()).toHaveFocus());
+    await userEvent.click(await riga(/Lavoro/));
+    expect(screen.queryByRole("dialog", { name: "Risultati della ricerca" })).toBeNull();
+    expect(colonna()).toHaveClass("colonna-aperta");
+  });
 });

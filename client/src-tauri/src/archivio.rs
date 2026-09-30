@@ -22,7 +22,7 @@ pub const FILE_DATABASE: &str = "copia-di-lavoro.db";
 /// File dell'API quando girava sulla stessa macchina (DEC-46): da lì si copiano le note alla
 /// prima apertura, così non si perde niente.
 pub const FILE_API: &str = "memodu.db";
-const VERSIONE_SCHEMA: i64 = 4;
+const VERSIONE_SCHEMA: i64 = 5;
 const SENZA_TITOLO: &str = "Senza titolo";
 const NUOVA_CARTELLA: &str = "Nuova cartella";
 const LUNGHEZZA_MASSIMA_NOME: usize = 100;
@@ -99,37 +99,66 @@ const SCHEMA_IMPOSTAZIONI: &str = "
   CREATE TABLE dispositivo (chiave TEXT PRIMARY KEY, valore TEXT NOT NULL);
 ";
 
-/// Schema 4 (DEC-95): l'indice di ricerca a trigrammi, senza maiuscole e accenti, tenuto
+/// Schema 4 (DEC-95): l'impostazione delle note del cestino nei risultati, che si sincronizza
+/// con le altre (RB-29, RB-52); vuota vale accesa.
+const SCHEMA_CESTINO_IN_RICERCA: &str =
+    "ALTER TABLE impostazioni ADD COLUMN cestino_in_ricerca INTEGER;";
+
+/// Schema 5 (DEC-95): l'indice di ricerca a trigrammi, senza maiuscole e accenti, tenuto
 /// aggiornato dai trigger anche per le modifiche ricevute; in `tag` i percorsi completi dei tag
-/// della nota, uno per riga (`tag_della_nota`). E l'impostazione delle note del cestino nei
-/// risultati, che si sincronizza con le altre (RB-29, RB-52); vuota vale accesa.
+/// della nota, uno per riga (`tag_della_nota`). `ricerca_righe` lega ogni nota alla sua riga
+/// dell'indice, così i trigger la trovano senza scorrere tutto l'indice.
 const SCHEMA_RICERCA: &str = "
   CREATE VIRTUAL TABLE ricerca USING fts5(
     id UNINDEXED, titolo, contenuto, tag,
     tokenize = 'trigram remove_diacritics 1'
   );
+  CREATE TABLE ricerca_righe (id TEXT PRIMARY KEY, riga INTEGER NOT NULL UNIQUE);
   INSERT INTO ricerca (id, titolo, contenuto, tag)
     SELECT id, titolo, contenuto, tag_della_nota(id) FROM note;
+  INSERT INTO ricerca_righe (id, riga) SELECT id, rowid FROM ricerca;
   CREATE TRIGGER ricerca_note_INSERT AFTER INSERT ON note BEGIN
-    INSERT INTO ricerca (id, titolo, contenuto, tag)
-    VALUES (NEW.id, NEW.titolo, NEW.contenuto, tag_della_nota(NEW.id));
+    INSERT INTO ricerca_righe (id, riga)
+    VALUES (NEW.id, (SELECT ifnull(max(riga), 0) + 1 FROM ricerca_righe));
+    INSERT INTO ricerca (rowid, id, titolo, contenuto, tag)
+    VALUES ((SELECT riga FROM ricerca_righe WHERE id = NEW.id), NEW.id, NEW.titolo, NEW.contenuto,
+            tag_della_nota(NEW.id));
   END;
   CREATE TRIGGER ricerca_note_UPDATE AFTER UPDATE OF titolo, contenuto ON note BEGIN
-    UPDATE ricerca SET titolo = NEW.titolo, contenuto = NEW.contenuto WHERE id = NEW.id;
+    UPDATE ricerca SET titolo = NEW.titolo, contenuto = NEW.contenuto
+    WHERE rowid = (SELECT riga FROM ricerca_righe WHERE id = NEW.id);
   END;
   CREATE TRIGGER ricerca_note_DELETE AFTER DELETE ON note BEGIN
-    DELETE FROM ricerca WHERE id = OLD.id;
+    DELETE FROM ricerca WHERE rowid = (SELECT riga FROM ricerca_righe WHERE id = OLD.id);
+    DELETE FROM ricerca_righe WHERE id = OLD.id;
   END;
   CREATE TRIGGER ricerca_note_tag_INSERT AFTER INSERT ON note_tag BEGIN
-    UPDATE ricerca SET tag = tag_della_nota(NEW.nota) WHERE id = NEW.nota;
+    UPDATE ricerca SET tag = tag_della_nota(NEW.nota)
+    WHERE rowid = (SELECT riga FROM ricerca_righe WHERE id = NEW.nota);
   END;
   CREATE TRIGGER ricerca_note_tag_DELETE AFTER DELETE ON note_tag BEGIN
-    UPDATE ricerca SET tag = tag_della_nota(OLD.nota) WHERE id = OLD.nota;
+    UPDATE ricerca SET tag = tag_della_nota(OLD.nota)
+    WHERE rowid = (SELECT riga FROM ricerca_righe WHERE id = OLD.nota);
   END;
-  CREATE TRIGGER ricerca_tag_UPDATE AFTER UPDATE OF nome, padre ON tag BEGIN
-    UPDATE ricerca SET tag = tag_della_nota(id) WHERE id IN (SELECT nota FROM note_tag);
+  -- Unendo due tag doppi (sincronizzazione) le note passano all'altro tag.
+  CREATE TRIGGER ricerca_note_tag_UPDATE AFTER UPDATE ON note_tag BEGIN
+    UPDATE ricerca SET tag = tag_della_nota(id)
+    WHERE rowid IN (SELECT riga FROM ricerca_righe WHERE id IN (OLD.nota, NEW.nota));
   END;
-  ALTER TABLE impostazioni ADD COLUMN cestino_in_ricerca INTEGER;
+  -- Solo se il nome o il padre cambiano davvero: la sincronizzazione riscrive ogni tag ricevuto.
+  CREATE TRIGGER ricerca_tag_UPDATE AFTER UPDATE OF nome, padre ON tag
+  WHEN OLD.nome IS NOT NEW.nome OR OLD.padre IS NOT NEW.padre BEGIN
+    UPDATE ricerca SET tag = tag_della_nota(id)
+    WHERE rowid IN (SELECT riga FROM ricerca_righe WHERE id IN (SELECT nota FROM note_tag));
+  END;
+";
+
+/// Lo schema 4 della prima versione aveva l'indice senza `ricerca_righe`: si rifà.
+const TOGLI_RICERCA_4: &str = "
+  DROP TRIGGER IF EXISTS ricerca_note_INSERT; DROP TRIGGER IF EXISTS ricerca_note_UPDATE;
+  DROP TRIGGER IF EXISTS ricerca_note_DELETE; DROP TRIGGER IF EXISTS ricerca_note_tag_INSERT;
+  DROP TRIGGER IF EXISTS ricerca_note_tag_DELETE; DROP TRIGGER IF EXISTS ricerca_tag_UPDATE;
+  DROP TABLE IF EXISTS ricerca;
 ";
 
 /// Trigger che segnano un elemento come modificato qui: (tabella, tipo, id nel caso di
@@ -556,6 +585,10 @@ impl Archivio {
                 tx.execute_batch(&schema_trigger(&TRIGGER_IMPOSTAZIONI))?;
             }
             if versione < 4 {
+                tx.execute_batch(SCHEMA_CESTINO_IN_RICERCA)?;
+            }
+            if versione < 5 {
+                tx.execute_batch(TOGLI_RICERCA_4)?;
                 tx.execute_batch(SCHEMA_RICERCA)?;
             }
             tx.pragma_update(None, "user_version", VERSIONE_SCHEMA)?;

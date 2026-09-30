@@ -396,3 +396,28 @@ fn le_note_ricevute_si_trovano_con_la_ricerca() {
     assert_eq!(cerca(&mut b, "venerdì"), 0);
     assert_eq!(cerca(&mut b, "sabato"), 1);
 }
+
+#[test]
+fn le_impostazioni_senza_il_campo_del_cestino_non_lo_azzerano() {
+    // Revisione del codice: un dispositivo con la versione di prima rimanda le impostazioni senza
+    // cestino_in_ricerca; qui la scelta resta.
+    let (mut a, mut b, mut s) = due();
+    a.a.imposta_cestino_in_ricerca(false).unwrap();
+    a.sincronizza(&mut s);
+    b.sincronizza(&mut s);
+    let id = super::super::impostazioni::ID;
+    let (versione, dati, _) = s.attuali[id].clone();
+    let mut blocco: serde_json::Value = serde_json::from_str(&dati).unwrap();
+    blocco["campi"].as_object_mut().unwrap().remove("cestino_in_ricerca");
+    blocco["campi"]["scorciatoia_windows"] = serde_json::json!("Control+Shift+KeyM");
+    blocco["modificato_il"] = serde_json::json!("2026-09-30T09:00:00.000Z");
+    s.ordine += 1;
+    let ordine = s.ordine;
+    s.attuali.insert(id.to_string(), (versione + 1, blocco.to_string(), ordine));
+    b.sincronizza(&mut s);
+    assert!(!b.a.cestino_in_ricerca().unwrap());
+    assert_eq!(
+        b.a.scorciatoia(super::super::impostazioni::Sistema::Windows).unwrap().as_deref(),
+        Some("Control+Shift+KeyM")
+    );
+}

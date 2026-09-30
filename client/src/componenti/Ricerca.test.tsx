@@ -38,8 +38,11 @@ const TROVATI = [
 const disegna = (focus = 0) => {
   const onApri = vi.fn();
   const onChiusa = vi.fn();
-  const utils = render(<Ricerca focus={focus} onApri={onApri} onChiusa={onChiusa} />);
-  return { onApri, onChiusa, ...utils };
+  const onErrore = vi.fn();
+  const utils = render(
+    <Ricerca focus={focus} onApri={onApri} onChiusa={onChiusa} onErrore={onErrore} />,
+  );
+  return { onApri, onChiusa, onErrore, ...utils };
 };
 
 const campo = () => screen.getByRole("combobox", { name: "Cerca nelle note" });
@@ -69,14 +72,14 @@ describe("Ricerca (RF-08, CMP-13)", () => {
   });
 
   it("Ctrl + K porta il cursore nel campo e apre la card, anche se il cursore era già lì (RB-71)", async () => {
-    const { rerender, onApri, onChiusa } = disegna(0);
-    rerender(<Ricerca focus={1} onApri={onApri} onChiusa={onChiusa} />);
+    const { rerender, onApri, onChiusa, onErrore } = disegna(0);
+    rerender(<Ricerca focus={1} onApri={onApri} onChiusa={onChiusa} onErrore={onErrore} />);
     expect(campo()).toHaveFocus();
     expect(card()).toBeInTheDocument();
     await userEvent.keyboard("{Escape}");
     expect(screen.queryByRole("dialog")).toBeNull();
     campo().focus();
-    rerender(<Ricerca focus={2} onApri={onApri} onChiusa={onChiusa} />);
+    rerender(<Ricerca focus={2} onApri={onApri} onChiusa={onChiusa} onErrore={onErrore} />);
     expect(card()).toBeInTheDocument();
   });
 
@@ -214,5 +217,14 @@ describe("Ricerca (RF-08, CMP-13)", () => {
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(onChiusa).toHaveBeenCalledWith(false);
     expect(onApri).not.toHaveBeenCalled();
+  });
+
+  it("una ricerca non riuscita non dice «Nessuna nota trovata» (RB-61)", async () => {
+    const errore = new Error("non risponde");
+    vi.mocked(api.cerca).mockRejectedValue(errore);
+    const { onErrore } = disegna();
+    await userEvent.type(campo(), "rilascio");
+    await waitFor(() => expect(onErrore).toHaveBeenCalledWith(errore));
+    expect(within(card()).queryByText("Nessuna nota trovata")).toBeNull();
   });
 });

@@ -43,14 +43,18 @@ interface Proprieta {
   onApri: (risultato: RisultatoRicerca) => void;
   /** La card si è chiusa senza aprire niente; con Esc il cursore torna dov'era (RB-71). */
   onChiusa: (conEsc: boolean) => void;
+  /** La ricerca non è riuscita: non vuol dire «nessuna nota» (RB-61, SF-32). */
+  onErrore: (errore: unknown) => void;
 }
 
 type Filtro = "tag" | "creata" | "modificata";
 
 /** Tra il campo e la card (spazio-flottante). */
 const DISTANZA_CARD = 8;
+/** Quanto la card segue il campo dopo l'apertura: la colonna scorre in 200 ms (DEC-55). */
+const DURATA_INSEGUIMENTO_MS = 400;
 
-export function Ricerca({ focus, onApri, onChiusa }: Proprieta): ReactElement {
+export function Ricerca({ focus, onApri, onChiusa, onErrore }: Proprieta): ReactElement {
   const campo = useRef<HTMLInputElement>(null);
   const card = useRef<HTMLDivElement>(null);
   const idElenco = useId();
@@ -65,6 +69,10 @@ export function Ricerca({ focus, onApri, onChiusa }: Proprieta): ReactElement {
   const [calendario, setCalendario] = useState<{ filtro: Filtro; ancora: DOMRect } | null>(null);
   const [tuttiTag, setTuttiTag] = useState<string[]>([]);
   const [cercaTag, setCercaTag] = useState("");
+  const suErrore = useRef(onErrore);
+  useEffect(() => {
+    suErrore.current = onErrore;
+  });
 
   useEffect(() => {
     if (focus === 0 || !campo.current) return;
@@ -93,7 +101,8 @@ export function Ricerca({ focus, onApri, onChiusa }: Proprieta): ReactElement {
         })
         .then(
           (trovati) => valida && setRisultati(trovati),
-          () => valida && setRisultati([]),
+          // I risultati di prima restano: non si dice «Nessuna nota trovata» per un errore.
+          (errore) => valida && suErrore.current(errore),
         );
     }, PAUSA_RICERCA_MS);
     return () => {
@@ -104,10 +113,12 @@ export function Ricerca({ focus, onApri, onChiusa }: Proprieta): ReactElement {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [aperta, firma]);
 
-  // La card segue il campo, anche mentre la colonna si apre scorrendo (DEC-55).
+  // La card segue il campo mentre la colonna si apre scorrendo (DEC-55) e quando la finestra
+  // cambia misura; poi resta ferma.
   useLayoutEffect(() => {
     if (!aperta) return;
     let giro = 0;
+    const fine = performance.now() + DURATA_INSEGUIMENTO_MS;
     const segui = () => {
       const r = campo.current?.getBoundingClientRect();
       if (r) {
@@ -117,10 +128,15 @@ export function Ricerca({ focus, onApri, onChiusa }: Proprieta): ReactElement {
             : { x: r.left, y: r.bottom + DISTANZA_CARD },
         );
       }
-      giro = requestAnimationFrame(segui);
+      if (performance.now() < fine) giro = requestAnimationFrame(segui);
     };
     giro = requestAnimationFrame(segui);
-    return () => cancelAnimationFrame(giro);
+    const suMisura = () => requestAnimationFrame(segui);
+    window.addEventListener("resize", suMisura);
+    return () => {
+      cancelAnimationFrame(giro);
+      window.removeEventListener("resize", suMisura);
+    };
   }, [aperta]);
 
   /** Entrando nel campo la card si apre subito sotto di lui (RB-33). */
@@ -130,7 +146,8 @@ export function Ricerca({ focus, onApri, onChiusa }: Proprieta): ReactElement {
     setAperta(true);
   };
 
-  const chiudi = (conEsc: boolean) => {
+  /** Card chiusa, testo e filtri svuotati (RB-72). */
+  const svuota = () => {
     setAperta(false);
     setTesto("");
     setTag([]);
@@ -139,6 +156,10 @@ export function Ricerca({ focus, onApri, onChiusa }: Proprieta): ReactElement {
     setRisultati(null);
     setMenu(null);
     setCalendario(null);
+  };
+
+  const chiudi = (conEsc: boolean) => {
+    svuota();
     onChiusa(conEsc);
   };
 
@@ -155,7 +176,7 @@ export function Ricerca({ focus, onApri, onChiusa }: Proprieta): ReactElement {
   });
 
   const apri = (r: RisultatoRicerca) => {
-    chiudi(false);
+    svuota();
     onApri(r);
   };
 

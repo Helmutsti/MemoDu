@@ -6,6 +6,8 @@
 //   modifica (RB-70). I periodi li calcola l'interfaccia nell'ora locale.
 // - Prima le note con il testo nel titolo o nei tag, poi le altre, per ultima modifica (RB-34).
 
+use std::collections::HashMap;
+
 use chrono::{DateTime, Local, NaiveDate, Utc};
 use rusqlite::params_from_iter;
 use serde::{Deserialize, Serialize};
@@ -88,7 +90,9 @@ impl Archivio {
     pub fn cerca(&mut self, richiesta: &Richiesta) -> Esito<Vec<Risultato>> {
         let creata = richiesta.creata.as_ref().map(Periodo::da).transpose()?;
         let modificata = richiesta.modificata.as_ref().map(Periodo::da).transpose()?;
-        let parole: Vec<String> = richiesta.testo.split_whitespace().map(normalizza).collect();
+        // Una parola fatta solo di segni diacritici resta vuota: non conta (RB-69).
+        let parole: Vec<String> =
+            richiesta.testo.split_whitespace().map(normalizza).filter(|p| !p.is_empty()).collect();
         if parole.is_empty() && richiesta.tag.is_empty() && creata.is_none() && modificata.is_none() {
             // La card mostra solo i filtri (RB-33).
             return Ok(Vec::new());
@@ -138,6 +142,11 @@ impl Archivio {
             );
             valori.push(id);
         }
+        if !cestino {
+            // Le note eliminate da sole si escludono qui; quelle dentro una cartella nel cestino
+            // più sotto, con l'albero delle cartelle (RB-29).
+            condizioni.push("n.eliminata_il IS NULL".to_string());
+        }
         let dove = if condizioni.is_empty() { String::new() } else { format!("WHERE {}", condizioni.join(" AND ")) };
         let sql = format!(
             "SELECT n.*, r.tag AS percorsi_tag FROM ricerca r JOIN note n ON n.id = r.id {dove}"
@@ -147,6 +156,7 @@ impl Archivio {
             .query_map(params_from_iter(&valori), |r| Ok((RigaNota::da(r)?, r.get::<_, String>("percorsi_tag")?)))?
             .collect::<Result<Vec<_>, _>>()?;
 
+        let cartelle = Cartelle::leggi(self)?;
         let mut trovati = Vec::new();
         for (riga, percorsi_tag) in righe {
             let momento_modifica = istante(&riga.modificata);
@@ -164,15 +174,14 @@ impl Archivio {
                     continue;
                 }
             }
-            let nel_cestino =
-                riga.eliminata_il.is_some() || self.cartella_nel_cestino(riga.cartella.as_deref())?.is_some();
+            let nel_cestino = riga.eliminata_il.is_some() || cartelle.nel_cestino(riga.cartella.as_deref());
             if nel_cestino && !cestino {
                 continue;
             }
             let cartella = if riga.eliminata_il.is_some() {
                 riga.provenienza.clone().unwrap_or_default()
             } else {
-                self.percorso_intero(riga.cartella.as_deref())?
+                cartelle.percorso(riga.cartella.as_deref())
             };
             // Prima le note con una parola nel titolo o nei tag (RB-34).
             let in_evidenza = normalizza(&format!("{}\n{}", riga.titolo, percorsi_tag));
@@ -203,17 +212,35 @@ impl Archivio {
         trovati.sort_by(|a, b| a.0.cmp(&b.0).then_with(|| b.1.cmp(&a.1)));
         Ok(trovati.into_iter().map(|(_, _, r)| r).collect())
     }
+}
 
-    /// Percorso di una cartella con i nomi di tutte le madri, anche se sono nel cestino.
-    fn percorso_intero(&self, id: Option<&str>) -> Esito<String> {
-        let mut nomi = Vec::new();
-        let mut attuale = id.map(str::to_string);
-        while let Some(id) = attuale {
-            let riga = self.cartella(&id)?;
-            nomi.insert(0, riga.nome);
-            attuale = riga.madre;
-        }
-        Ok(nomi.join("/"))
+/// Tutte le cartelle, lette una volta per ricerca: nome, madre e se sono nel cestino.
+struct Cartelle(HashMap<String, (String, Option<String>, bool)>);
+
+impl Cartelle {
+    fn leggi(archivio: &Archivio) -> Esito<Self> {
+        let mut stmt = archivio.db.prepare("SELECT id, nome, madre, eliminata_il IS NOT NULL FROM cartelle")?;
+        let righe = stmt
+            .query_map([], |r| Ok((r.get::<_, String>(0)?, (r.get(1)?, r.get(2)?, r.get(3)?))))?
+            .collect::<Result<HashMap<_, _>, _>>()?;
+        Ok(Cartelle(righe))
+    }
+
+    /// Le madri della cartella, dalla più vicina; si ferma se una non c'è.
+    fn catena<'a>(&'a self, id: Option<&'a str>) -> impl Iterator<Item = &'a (String, Option<String>, bool)> + 'a {
+        std::iter::successors(id.and_then(|i| self.0.get(i)), |c| c.1.as_deref().and_then(|m| self.0.get(m)))
+            .take(self.0.len())
+    }
+
+    fn nel_cestino(&self, id: Option<&str>) -> bool {
+        self.catena(id).any(|c| c.2)
+    }
+
+    /// Il percorso con i nomi di tutte le madri, anche se sono nel cestino.
+    fn percorso(&self, id: Option<&str>) -> String {
+        let mut nomi: Vec<&str> = self.catena(id).map(|c| c.0.as_str()).collect();
+        nomi.reverse();
+        nomi.join("/")
     }
 }
 
@@ -258,6 +285,9 @@ pub fn estratto(contenuto: &str, parole: &[String]) -> Option<(String, [usize; 2
         .iter()
         .filter_map(|p| {
             let cercata: Vec<char> = p.chars().collect();
+            if cercata.is_empty() {
+                return None;
+            }
             let posizione = normale.windows(cercata.len()).position(|w| w == cercata.as_slice())?;
             Some((origine[posizione], origine[posizione + cercata.len() - 1] + 1))
         })

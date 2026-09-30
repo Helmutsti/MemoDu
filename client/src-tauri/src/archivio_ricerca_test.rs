@@ -256,7 +256,8 @@ fn una_copia_di_lavoro_con_lo_schema_3_riempie_l_indice() {
     db.execute_batch(
         "DROP TRIGGER ricerca_note_INSERT; DROP TRIGGER ricerca_note_UPDATE; DROP TRIGGER ricerca_note_DELETE;
          DROP TRIGGER ricerca_note_tag_INSERT; DROP TRIGGER ricerca_note_tag_DELETE; DROP TRIGGER ricerca_tag_UPDATE;
-         DROP TABLE ricerca; ALTER TABLE impostazioni DROP COLUMN cestino_in_ricerca;
+         DROP TRIGGER ricerca_note_tag_UPDATE; DROP TABLE ricerca; DROP TABLE ricerca_righe;
+         ALTER TABLE impostazioni DROP COLUMN cestino_in_ricerca;
          PRAGMA user_version = 3;",
     )
     .unwrap();
@@ -321,4 +322,75 @@ fn con_cinquemila_note_si_cerca_entro_200_ms() {
         println!("«{}» {:?}: {quanti} risultati in {tempo:?}", richiesta.testo, richiesta.tag);
         assert!(tempo.as_millis() < 200, "troppo lenta: {tempo:?}");
     }
+}
+
+// ——— Correzioni della revisione del codice ———
+
+#[test]
+fn una_parola_di_soli_segni_diacritici_non_rompe_la_ricerca() {
+    let mut p = set_ricerca();
+    assert!(p.cerca("\u{301}").is_empty());
+    assert_eq!(p.titoli("rilascio \u{301}").len(), 3);
+    assert!(estratto("testo", &[String::new()]).is_none());
+}
+
+#[test]
+fn unendo_due_tag_doppi_l_indice_prende_il_percorso_nuovo() {
+    // Come fa la sincronizzazione con due tag uguali nati su due dispositivi.
+    let mut p = set_ricerca();
+    let id = p.nota("Bozza", "niente", "");
+    p.a.aggiungi_tag(&id, "viaggi").unwrap();
+    p.a.aggiungi_tag(&id, "estate").unwrap();
+    p.a.togli_tag(&id, "estate").unwrap();
+    p.a.db
+        .execute(
+            "UPDATE note_tag SET tag = (SELECT id FROM tag WHERE chiave = 'estate')
+             WHERE tag = (SELECT id FROM tag WHERE chiave = 'viaggi')",
+            [],
+        )
+        .unwrap();
+    assert_eq!(p.titoli("estate"), ["Bozza"]);
+    assert!(p.titoli("viaggi").is_empty());
+}
+
+#[test]
+fn una_copia_di_lavoro_con_il_primo_schema_4_rifa_l_indice() {
+    let mut p = set_ricerca();
+    let file = p.cartella.join(super::super::FILE_DATABASE);
+    drop(std::mem::replace(&mut p.a, Archivio::con_orologio(&p.cartella.join("altra"), Box::new(Utc::now)).unwrap()));
+    let db = rusqlite::Connection::open(&file).unwrap();
+    // L'indice della prima versione: senza ricerca_righe, i trigger cercavano per id.
+    db.execute_batch(
+        "DROP TRIGGER ricerca_note_INSERT; DROP TRIGGER ricerca_note_UPDATE; DROP TRIGGER ricerca_note_DELETE;
+         DROP TRIGGER ricerca_note_tag_INSERT; DROP TRIGGER ricerca_note_tag_DELETE; DROP TRIGGER ricerca_tag_UPDATE;
+         DROP TRIGGER ricerca_note_tag_UPDATE; DROP TABLE ricerca_righe;
+         CREATE TRIGGER ricerca_note_UPDATE AFTER UPDATE OF titolo, contenuto ON note BEGIN
+           UPDATE ricerca SET titolo = NEW.titolo, contenuto = NEW.contenuto WHERE id = NEW.id;
+         END;
+         PRAGMA user_version = 4;",
+    )
+    .unwrap();
+    drop(db);
+    let o = Arc::clone(&p.orologio);
+    p.a = Archivio::con_orologio(&p.cartella, Box::new(move || *o.lock().unwrap())).unwrap();
+    assert_eq!(p.titoli("rilascio").len(), 3);
+    let id = p.nota("Nuova", "con il fornitore", "");
+    p.a.salva(&id, &DatiNota { titolo: None, contenuto: Some("con il cliente".into()) }).unwrap();
+    assert_eq!(p.titoli("cliente"), ["Nuova"]);
+    assert!(p.titoli("fornitore").is_empty());
+}
+
+#[test]
+fn spenta_l_impostazione_non_compaiono_nemmeno_le_note_dentro_una_cartella_nel_cestino() {
+    let mut p = set_ricerca();
+    p.cartella("", "Archivio");
+    p.cartella("Archivio", "Vecchio");
+    p.nota("Appunti", "rilascio vecchio", "Archivio/Vecchio");
+    p.a.cestina_cartella("Archivio").unwrap();
+    let r = p.cerca("rilascio");
+    let appunti = r.iter().find(|r| r.titolo == "Appunti").unwrap();
+    assert!(appunti.nel_cestino);
+    assert_eq!(appunti.cartella, "Archivio/Vecchio");
+    p.a.imposta_cestino_in_ricerca(false).unwrap();
+    assert!(!p.titoli("rilascio").contains(&"Appunti".to_string()));
 }

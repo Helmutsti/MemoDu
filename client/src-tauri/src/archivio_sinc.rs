@@ -244,7 +244,10 @@ impl Archivio {
         let mut conflitto_di_testo = false;
         let chiavi: BTreeSet<&String> = l.keys().chain(r.keys()).collect();
         for k in chiavi {
-            let (vb, vl, vr) = (b.get(k), l.get(k), r.get(k));
+            // Un campo che manca in una base che c'è non esisteva ancora (per esempio
+            // cestino_in_ricerca, DEC-95): valeva null.
+            let vb = if base.is_null() { b.get(k) } else { Some(b.get(k).unwrap_or(&Value::Null)) };
+            let (vl, vr) = (l.get(k), r.get(k));
             let valore = if vl == vr || vl == vb {
                 vr
             } else if vr == vb {
@@ -454,7 +457,7 @@ impl Archivio {
                     "INSERT INTO impostazioni (id, scorciatoia_windows, scorciatoia_macos, cestino_in_ricerca)
                      VALUES (?1, ?2, ?3, ?4)
                      ON CONFLICT(id) DO UPDATE SET scorciatoia_windows = ?2, scorciatoia_macos = ?3,
-                       cestino_in_ricerca = ?4",
+                       cestino_in_ricerca = coalesce(?4, cestino_in_ricerca)",
                     params![
                         id,
                         testo("scorciatoia_windows"),

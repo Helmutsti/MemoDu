@@ -642,11 +642,26 @@ export function FinestraPrincipale(): ReactElement {
     colonnaDallaRicerca.current = false;
   };
 
+  /**
+   * Card chiusa senza aprire niente. Con Esc la colonna aperta da Ctrl + K si richiude e il
+   * cursore torna dov'era; con un clic fuori la colonna resta come aperta a mano: un clic sul
+   * foglio la chiude comunque (DEC-56), uno nella colonna no.
+   */
   const chiusaRicerca = (conEsc: boolean) => {
     const dallaScorciatoia = colonnaDallaRicerca.current;
-    lasciaRicerca();
-    if (conEsc && dallaScorciatoia) primaDellaRicerca.current?.focus();
+    if (conEsc) {
+      lasciaRicerca();
+      if (dallaScorciatoia) primaDellaRicerca.current?.focus();
+    } else {
+      colonnaDallaRicerca.current = false;
+    }
     primaDellaRicerca.current = null;
+  };
+
+  /** La ricerca non è riuscita: SC-07 se la copia di lavoro non risponde, altrimenti l'avviso. */
+  const erroreRicerca = (errore: unknown) => {
+    if (errore instanceof ErroreApi && errore.stato !== null) setAvviso(true);
+    else setBloccata(true);
   };
 
   /**
@@ -1093,6 +1108,7 @@ export function FinestraPrincipale(): ReactElement {
                 focus={focusRicerca}
                 onApri={(r) => void apriRisultato(r)}
                 onChiusa={chiusaRicerca}
+                onErrore={erroreRicerca}
               />
             }
             albero={albero}
