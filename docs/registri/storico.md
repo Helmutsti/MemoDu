@@ -325,3 +325,4 @@
 | 29/09/2026 | Manuel Cucca | Mockup: testo della nota nella variante Testo puro e ··· nella variante Solo icona piccolo della libreria ripubblicata; 23 esportazioni rigenerate | DEC-63, DEC-64 |
 | 30/09/2026 | Manuel Cucca | Nota rapida: Maiusc + Invio chiude come Chiudi, con le icone ⇧ ↵ accanto all'etichetta; CMP-01 Diviso con la scorciatoia; aggiornati RB-02, CA-01.2, TC-02, SC-02, CMP-23 | DEC-65 |
 | 30/09/2026 | Manuel Cucca | SC-02, SC-03: un clic nel vuoto porta il cursore nel punto di testo più vicino | DEC-66 |
+| 30/09/2026 | Manuel Cucca | Mockup di SC-02 con Chiudi ⇧ ↵ (nota rapida della libreria ripubblicata) ed esportazioni rigenerate | DEC-65 |
