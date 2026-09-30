@@ -415,13 +415,52 @@ Comandi di DEC-51 per la finestra Dettagli (CMP-24, DEC-44). Valgono le regole g
 
 ---
 
+## Ricerca (RF-08, DEC-94, DEC-95)
+Comando del nucleo, sulla copia di lavoro: la ricerca non passa mai dal server. Valgono le regole generali delle note.
+
+## cerca
+**Input:**
+```json
+{
+  "testo": "rilascio",
+  "tag": ["lavoro", "lavoro/clienti"],
+  "creata": { "da": "2026-09-23T22:00:00Z", "a": null },
+  "modificata": null
+}
+```
+`testo` può essere vuoto; gli spazi separano le parole, che devono esserci tutte (RB-69). `tag` sono percorsi: la nota deve avere ogni tag, o un suo sotto-tag (RB-70). `creata` e `modificata` sono intervalli in UTC, con `da` e `a` compresi e `null` per un estremo aperto; li calcola l'app nell'ora locale. Per `creata` vale `creataScelta`, se c'è, altrimenti `creata` (RF-04). Senza testo e senza filtri il risultato è vuoto: la card mostra solo i filtri (RB-33).
+
+**Output:**
+```json
+[{
+  "id": "3f6c1b2e-9a4d-4c8e-8f1a-2b7d5e6a9c10",
+  "titolo": "Rilascio della versione 2",
+  "estratto": "…il rilascio è fissato per venerdì, dopo le prove…",
+  "evidenza": [4, 12],
+  "cartella": "Lavoro",
+  "data": "2026-09-25T09:12:00Z",
+  "nelCestino": false
+}]
+```
+- **Ordine:** prima le note con il testo nel titolo o nei tag, poi quelle con il testo solo nel contenuto (RB-34); in ogni gruppo, e senza testo, per ultima modifica, la più recente in cima (RB-70). Tutte, senza limite (RB-34).
+- **Trovare:** dalla terza lettera l'indice FTS5 a trigrammi, senza maiuscole e accenti; con una o due lettere si scorrono le note (DEC-94, DEC-95). Il testo non è una query: virgolette, asterischi e operatori valgono come caratteri (RB-08).
+- **`estratto`:** circa 80 caratteri attorno alla prima parola trovata nel contenuto, a parole intere, con «…» dove si taglia; `evidenza` è l'intervallo della parola, in caratteri dell'estratto, o `null`. Con la parola solo nel titolo o nei tag, o senza testo, è l'anteprima (RB-15) e `evidenza` è `null`.
+- **`data`:** quella del filtro di data attivo (con tutti e due, la modifica); senza filtri di data l'ultima modifica.
+- **Cestino:** le note nel cestino, o dentro una cartella nel cestino, ci sono con `nelCestino: true` se l'impostazione è accesa (RB-29); `cartella` è quella da cui venivano.
+**Errori:** 400 (intervallo con `da` dopo `a`, istante non valido), 500.
+
+## impostazione_ricerca · imposta_ricerca
+`impostazione_ricerca` restituisce `{ "cestinoInRicerca": true }`; `imposta_ricerca` riceve lo stesso oggetto. Si sincronizza con l'elemento `impostazioni` (RB-52); senza un valore vale `true` (RB-29).
+
+---
+
 ## Sincronizzazione (RF-10, DEC-75 … DEC-84)
 **Valgono per tutte le richieste della sincronizzazione:**
 - **Chi le fa:** il nucleo Rust del client, in background (`client/src-tauri/src/sincronizzazione.rs`), non l'interfaccia.
 - **Autorizzazione:** intestazione `Authorization: Bearer <gettone>` con il gettone delle credenziali dell'installazione (DEC-79); senza o sbagliato `401`, e il client mostra la schermata di blocco (RB-57).
 - **Protocollo:** intestazione `Memodu-Protocollo: 1`; con una versione diversa `426`, e il client mostra l'avviso di errore e continua sulla copia di lavoro (DEC-83).
 - **Blocchi:** testo opaco per il server. Oggi JSON in chiaro, `{ "formato": "chiaro", "tipo": "nota" | "cartella" | "tag" | "impostazioni", "modificato_il": "<UTC>", "eliminato": false, "campi": { … } }` (DEC-78).
-- **Impostazioni:** la scorciatoia della nota rapida viaggia in un solo elemento di tipo `impostazioni`, con l'id fisso `00000000-0000-4000-8000-000000000001`, lo stesso su tutti i dispositivi (DEC-91, RB-52).
+- **Impostazioni:** la scorciatoia della nota rapida e le note del cestino nella ricerca (`cestino_in_ricerca`, DEC-95) viaggiano in un solo elemento di tipo `impostazioni`, con l'id fisso `00000000-0000-4000-8000-000000000001`, lo stesso su tutti i dispositivi (DEC-91, RB-52).
 - **Implementazione:** `api/src/sincronizzazione.ts` (deposito: file dei blocchi e indice `sincronizzazione/indice.db`) e `api/src/rotteSincronizzazione.ts`, prove in `api/src/sincronizzazione.test.ts`.
 - **Credenziali:** al primo avvio l'API genera identificativo, gettone e chiave, conserva solo l'impronta del gettone e scrive `{ "indirizzo", "installazione", "gettone", "chiave" }` nel file `credenziali` della cartella dei dati, se non c'è (sulla stessa macchina è quello dell'app); le mostra una volta nel terminale.
 

@@ -111,7 +111,7 @@ Nella prima fase la separazione tra ambiti si ottiene con le cartelle principali
 ---
 
 ## RF-08 – Ricerca e filtro
-**Priorità:** Must · **Origine:** — · **Fase:** 6 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** — · **Fase:** 8 · **Stato:** In progettazione
 
 Come *utente* voglio cercare e filtrare le note per trovare subito quella che mi serve.
 
