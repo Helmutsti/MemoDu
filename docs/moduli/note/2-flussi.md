@@ -228,7 +228,7 @@ La posizione di una nota (radice, cartella, cestino) è descritta nel diagramma 
 | Codice | Regola | Usata in |
 |---|---|---|
 | RB-01 | Una nota rapida salvata va nella radice e diventa una nota non organizzata (RF-05) | FL-01 |
-| RB-02 | La nota rapida si chiude solo in modo esplicito: Chiudi, tasto Esc o chiusura della finestra dal sistema (Alt + F4); chiudendola si salva. Esc non annulla. Un clic altrove la salva e la lascia aperta (DEC-34, DEC-50, DEC-53) | FL-01 |
+| RB-02 | La nota rapida si chiude solo in modo esplicito: Chiudi, Maiusc + Invio (DEC-65), tasto Esc o chiusura della finestra dal sistema (Alt + F4); chiudendola si salva. Esc non annulla. Un clic altrove la salva e la lascia aperta (DEC-34, DEC-50, DEC-53) | FL-01 |
 | RB-03 | Una nota rapida chiusa senza testo non crea nessuna nota | FL-01 |
 | RB-04 | Premere la scorciatoia con una nota rapida già aperta salva quella aperta, che resta aperta, e ne apre una nuova in un'altra finestra | FL-01 |
 | RB-05 | Aprendo la nota rapida nel programma completo, la nota aperta nel programma viene salvata e chiusa, e al suo posto compare la nota rapida | FL-01 |

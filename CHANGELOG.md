@@ -15,6 +15,8 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 - Le note, le cartelle e il cestino non sono più file nella cartella Documenti\Memodu: stanno in un database nella cartella dei dati di Memodu, fuori da OneDrive e iCloud. Le note scritte finora nella cartella Documenti non vengono spostate
 
 ### Aggiunto
+- Cliccando in un punto vuoto della nota, sotto o accanto al testo, il cursore va nel testo più vicino (RF-01, RF-02)
+- Nota rapida: Maiusc + Invio la salva e la chiude; accanto a Chiudi si vede la scorciatoia (RF-01)
 - Dettagli della nota: dal menu ··· o con il tasto destro sulla nota si apre la finestra con la data di creazione, la fine validità e i tag; sotto il titolo della nota compaiono l'ultima modifica e i tag (RF-04, RF-06)
 - Tag: si scrivono con i suggerimenti dei tag esistenti, anche a più livelli come «lavoro/clienti»; la ✕ toglie un tag dalla nota e «Elimina tag…» lo toglie da tutte le note (RF-06)
 - Nota rapida: con Ctrl + Alt + N (Control + Option + N su Mac) compare una finestrella per annotare un'idea da qualsiasi programma; si salva da sola; Esc o il pulsante Chiudi la chiudono tenendo il testo, e dalla freccia accanto a Chiudi "Apri nel programma" la porta nella finestra principale (RF-01)

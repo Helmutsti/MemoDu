@@ -6,11 +6,12 @@
 // finestra principale (RB-05). Se l'API non risponde: SC-07 e conferma alla chiusura
 // (RB-61, RB-62).
 
+import { ArrowBigUp, CornerDownLeft } from "lucide-react";
 import { useEffect, useRef, useState, type ReactElement } from "react";
 import { api } from "../api";
 import { FinestraConferma } from "../componenti/FinestraConferma";
 import { PulsanteDiviso } from "../componenti/Pulsante";
-import { Editor } from "../editor/Editor";
+import { cursoreDalClic, Editor } from "../editor/Editor";
 import {
   allaRichiestaDiChiusura,
   allUscita,
@@ -96,6 +97,22 @@ export function NotaRapida(): ReactElement {
     return () => window.removeEventListener("keydown", suTasto);
   });
 
+  // Maiusc + Invio chiude come Chiudi (DEC-65): si intercetta prima dell'editor, che
+  // altrimenti andrebbe a capo. Con SC-07 davanti chiede conferma, come Esc (RB-62).
+  useEffect(() => {
+    const suTasto = (e: KeyboardEvent) => {
+      if (e.key !== "Enter" || !e.shiftKey || e.ctrlKey || e.altKey || e.metaKey || conferma)
+        return;
+      if ((e.target as Element).closest?.(".menu")) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (bloccata) setConferma(true);
+      else void chiudi();
+    };
+    window.addEventListener("keydown", suTasto, true);
+    return () => window.removeEventListener("keydown", suTasto, true);
+  });
+
   // Chiusura dal sistema (Alt + F4) come Chiudi; con SC-07 davanti, la conferma (RB-62).
   // «Esci da Memodu»: salva, o chiede conferma prima di uscire.
   const gestori = useRef({ chiudi, salvaPerChiudere, bloccata });
@@ -134,7 +151,12 @@ export function NotaRapida(): ReactElement {
   return (
     <div className="nota-rapida">
       <div className="nota-rapida-fascia" data-tauri-drag-region inert={bloccata} />
-      <div className="nota-rapida-area" inert={bloccata}>
+      <div
+        className="nota-rapida-area"
+        inert={bloccata}
+        // Un clic nel vuoto porta il cursore nel testo (DEC-66).
+        onMouseDown={(e) => cursoreDalClic(e.currentTarget, e)}
+      >
         <Editor
           contenuto=""
           focus
@@ -149,6 +171,7 @@ export function NotaRapida(): ReactElement {
       <div className="nota-rapida-azioni" data-tauri-drag-region inert={bloccata}>
         <PulsanteDiviso
           etichetta="Chiudi"
+          scorciatoia={{ icone: [ArrowBigUp, CornerDownLeft], tasti: "Shift+Enter" }}
           onClick={() => void chiudi()}
           nomeAltre="Altre azioni"
           voci={[

@@ -1,7 +1,7 @@
 // CMP-01 Pulsante: primario, secondario, tenue, solo icona e diviso. Alto 32, pillola.
 // Il solo icona ha sempre nome accessibile e suggerimento con lo stesso testo.
 
-import { ChevronDown, LoaderCircle } from "lucide-react";
+import { ChevronDown, LoaderCircle, type LucideIcon } from "lucide-react";
 import {
   useRef,
   useState,
@@ -80,6 +80,9 @@ interface ProprietaDiviso {
   /** Nome della freccia, anche come suggerimento. */
   nomeAltre: string;
   voci: VoceMenu[];
+  /** Scorciatoia dell'azione, mostrata con le icone dei tasti accanto all'etichetta (DEC-65);
+   * `tasti` per i lettori di schermo, nel formato di aria-keyshortcuts (es. "Shift+Enter"). */
+  scorciatoia?: { icone: LucideIcon[]; tasti: string };
 }
 
 /** Variante divisa (DEC-34): l'azione a sinistra, la freccia ▾ apre il menu delle azioni collegate. */
@@ -88,6 +91,7 @@ export function PulsanteDiviso({
   onClick,
   nomeAltre,
   voci,
+  scorciatoia,
 }: ProprietaDiviso): ReactElement {
   const freccia = useRef<HTMLButtonElement>(null);
   const [menu, setMenu] = useState<{ x: number; y: number; sopra: number } | null>(null);
@@ -102,9 +106,17 @@ export function PulsanteDiviso({
       <button
         type="button"
         className="pulsante-diviso-azione interfaccia-controllo-attivo"
+        aria-keyshortcuts={scorciatoia?.tasti}
         onClick={onClick}
       >
         {etichetta}
+        {scorciatoia && (
+          <span className="pulsante-diviso-scorciatoia" aria-hidden>
+            {scorciatoia.icone.map((icona, i) => (
+              <Icona key={i} di={icona} misura={12} />
+            ))}
+          </span>
+        )}
       </button>
       <span className="pulsante-diviso-divisore" aria-hidden />
       <Suggerimento testo={nomeAltre}>

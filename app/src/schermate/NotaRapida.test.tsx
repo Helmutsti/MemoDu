@@ -31,6 +31,7 @@ vi.mock("../editor/Editor", () => ({
   Editor: ({ onModifica }: { onModifica: (t: string) => void }) => (
     <textarea aria-label="Testo" onChange={(e) => onModifica(e.target.value)} />
   ),
+  cursoreDalClic: () => false,
 }));
 
 const nota = {
@@ -186,5 +187,17 @@ describe("SC-02 Nota rapida (FL-01)", () => {
     expect(api.crea).toHaveBeenCalledWith({ contenuto: "prima" });
     expect(chiudiNotaRapida).not.toHaveBeenCalled();
     vi.useRealTimers();
+  });
+
+  it("Maiusc + Invio salva e chiude come Chiudi, e il pulsante mostra la scorciatoia (DEC-65)", async () => {
+    render(<NotaRapida />);
+    await userEvent.type(screen.getByLabelText("Testo"), "idea");
+    expect(screen.getByRole("button", { name: /Chiudi/ })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Shift+Enter",
+    );
+    fireEvent.keyDown(screen.getByLabelText("Testo"), { key: "Enter", shiftKey: true });
+    await waitFor(() => expect(chiudiNotaRapida).toHaveBeenCalled());
+    expect(api.crea).toHaveBeenCalledWith({ contenuto: "idea" });
   });
 });

@@ -63,3 +63,26 @@ export function Editor({
 
   return <div ref={contenitore} className="editor nota-corpo" />;
 }
+
+/**
+ * Clic nel vuoto attorno al testo (sotto l'ultima riga, a destra o a sinistra): il cursore va
+ * nel punto di testo più vicino, come in ogni programma di scrittura. `area` contiene l'editor.
+ * Restituisce false se il clic non va gestito (tasto diverso dal sinistro, controlli, testo).
+ */
+export function cursoreDalClic(area: HTMLElement, e: React.MouseEvent): boolean {
+  const bersaglio = e.target as Element;
+  if (e.button !== 0 || bersaglio.closest("input, textarea, button, a, [role], .cm-editor")) {
+    return false;
+  }
+  const radice = area.querySelector<HTMLElement>(".cm-editor");
+  const view = radice ? EditorView.findFromDOM(radice) : null;
+  if (!view) return false;
+  const r = view.contentDOM.getBoundingClientRect();
+  const x = Math.min(Math.max(e.clientX, r.left + 1), r.right - 1);
+  const y = Math.min(Math.max(e.clientY, r.top + 1), r.bottom - 1);
+  const pos = view.posAtCoords({ x, y }) ?? view.state.doc.length;
+  e.preventDefault();
+  view.focus();
+  view.dispatch({ selection: { anchor: pos }, scrollIntoView: true });
+  return true;
+}

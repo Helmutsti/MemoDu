@@ -8,7 +8,7 @@ import type { DatiNota, Nota } from "@memodu/condiviso";
 import { useBarraScorrimento } from "../componenti/BarraScorrimento";
 import { Tag } from "../componenti/Tag";
 import { testoModificata } from "../date";
-import { Editor } from "../editor/Editor";
+import { cursoreDalClic, Editor } from "../editor/Editor";
 import "./NotaAperta.css";
 
 interface Proprieta {
@@ -22,7 +22,15 @@ export function NotaAperta({ nota, nuova, onModifica }: Proprieta): ReactElement
   const pagina = useRef<HTMLElement>(null);
   useBarraScorrimento(pagina);
   return (
-    <article ref={pagina} className="nota-aperta">
+    <article
+      ref={pagina}
+      className="nota-aperta"
+      // Un clic nel vuoto del foglio porta il cursore nel testo (DEC-66); non nel titolo.
+      onMouseDown={(e) => {
+        if (pagina.current && !(e.target as Element).closest(".nota-aperta-intestazione"))
+          cursoreDalClic(pagina.current, e);
+      }}
+    >
       <header className="nota-aperta-intestazione">
         <input
           className="nota-aperta-titolo nota-titolo"

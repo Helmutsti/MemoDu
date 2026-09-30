@@ -100,6 +100,15 @@
   padding: 0 var(--spazio-controllo) 0 var(--spazio-pulsante);
   border-radius: var(--raggio-pillola) 0 0 var(--raggio-pillola);
 }
+/* Icone dei tasti della scorciatoia accanto all'etichetta, più tenui (DEC-65). */
+.pulsante-diviso-scorciatoia {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spazio-elemento);
+  margin-left: var(--spazio-icona);
+  color: var(--icona-su-pieno);
+  opacity: 0.7;
+}
 .pulsante-diviso-freccia {
   padding: 0 var(--spazio-controllo) 0 var(--spazio-controllo-piccolo);
   border-radius: 0 var(--raggio-pillola) var(--raggio-pillola) 0;

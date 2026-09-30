@@ -17,8 +17,8 @@ Finestra di sistema, solo su desktop (RF-01). Niente cromatura dell'applicazione
 ### Ingombri e contenuto
 | Elemento | Nota |
 |---|---|
-| Area di scrittura | Occupa quasi tutta la finestra. Nessun campo titolo: il titolo si mette dopo, nel programma completo (RB-15) |
-| **Chiudi** | Pulsante primario diviso in basso a destra (CMP-01, variante Diviso), l'unico della finestra. Salva e chiude, come il tasto `Esc`; un clic altrove salva ma non chiude (RB-02, DEC-53); la freccia ▾ apre un menu con **Apri nel programma**, che salva e chiude la nota aperta nel programma, e ci porta questa (RB-05). Esc vuol dire «ho finito», non annulla: per cancellare una nota rapida si entra nel programma. Nessuna ✕ (DEC-34, DEC-50) |
+| Area di scrittura | Occupa quasi tutta la finestra; un clic nel vuoto porta il cursore nel testo (DEC-66). Nessun campo titolo: il titolo si mette dopo, nel programma completo (RB-15) |
+| **Chiudi** | Pulsante primario diviso in basso a destra (CMP-01, variante Diviso), l'unico della finestra, con accanto all'etichetta le icone della scorciatoia ⇧ ↵ (Maiusc + Invio, DEC-65). Salva e chiude, come il tasto `Esc`; un clic altrove salva ma non chiude (RB-02, DEC-53); la freccia ▾ apre un menu con **Apri nel programma**, che salva e chiude la nota aperta nel programma, e ci porta questa (RB-05). Esc vuol dire «ho finito», non annulla: per cancellare una nota rapida si entra nel programma. Nessuna ✕ (DEC-34, DEC-50) |
 
 **Nessuna cornice:** niente barra del titolo, niente divisori, niente bordo. La finestra è una superficie bianca con ombra. Si trascina dal margine in alto, che non si vede.
 
@@ -67,7 +67,7 @@ Stessi tasti fisici sui due sistemi, libere nelle configurazioni di default di e
 ### Zone e gerarchia
 | Ordine di lettura | Zona | Contenuto |
 |---|---|---|
-| 1 | Corpo della nota | Testo formattato mentre si scrive; i simboli markdown non si vedono mai, nemmeno sulla riga del cursore (RF-02, DEC-58). Testo allineato a sinistra con spazi discreti; barra di scorrimento sottile e a scomparsa, che non occupa spazio (DEC-58) |
+| 1 | Corpo della nota | Testo formattato mentre si scrive; i simboli markdown non si vedono mai, nemmeno sulla riga del cursore (RF-02, DEC-58). Testo allineato a sinistra con spazi discreti; barra di scorrimento sottile e a scomparsa, che non occupa spazio (DEC-58). Un clic in un punto vuoto del foglio porta il cursore nel testo più vicino (DEC-66) |
 | 2 | Campo titolo | In cima, stessa larghezza del testo, più grande. Può restare vuoto (RB-15) |
 | 3 | Strumenti di formattazione | Nessuna barra fissa: compaiono solo quando servono (livello 20), vedi sotto |
 | 4 | Menu `···` | In alto a destra: sopra tag, date, sposta, elimina (FL-04); sotto le voci del programma. Dettaglio in `interfaccia/4-schermate.md` |
