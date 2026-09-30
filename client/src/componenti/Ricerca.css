@@ -1,0 +1,193 @@
+/* CMP-03 Campo di testo, tipo Ricerca: pillola alta 32 su sfondo-campo, lente a sinistra e ✕
+   a destra quando c'è del testo. In cima alla colonna, largo quanto lei. */
+.ricerca {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  margin-bottom: var(--spazio-gruppo);
+}
+.ricerca-lente {
+  position: absolute;
+  left: var(--spazio-controllo);
+  display: inline-flex;
+  color: var(--icona-tenue);
+  pointer-events: none;
+}
+.ricerca-campo {
+  width: 100%;
+  min-width: 0;
+  height: var(--misura-riga);
+  padding: 0 calc(var(--spazio-controllo) + var(--misura-icona) + var(--spazio-icona)) 0
+    calc(var(--spazio-controllo) + var(--misura-icona) + var(--spazio-icona));
+  border: none;
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-campo);
+  color: var(--testo-primario);
+}
+.ricerca-campo::placeholder {
+  color: var(--testo-tenue);
+}
+:root[data-tastiera] .ricerca-campo:focus-visible {
+  outline: var(--focus-spessore) solid var(--focus-anello);
+  outline-offset: var(--focus-distanza);
+}
+.ricerca-cancella {
+  position: absolute;
+  right: var(--spazio-controllo);
+  display: inline-flex;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--icona-tenue);
+  cursor: pointer;
+}
+.ricerca-cancella:hover {
+  color: var(--testo-primario);
+}
+
+/* CMP-13 Card dei risultati: guscio del menu, larga 480, livello 20, senza velo. */
+.card-ricerca {
+  position: fixed;
+  z-index: var(--z-comparsa);
+  display: flex;
+  flex-direction: column;
+  width: 480px;
+  max-width: calc(100vw - 2 * var(--spazio-flottante));
+  max-height: calc(100vh - 96px);
+  padding: var(--spazio-flottante) 0;
+  border-radius: var(--raggio-contenitore);
+  background: var(--sfondo-flottante);
+  box-shadow: var(--ombra);
+  animation: menu-compare var(--movimento-durata-breve) ease-out;
+}
+
+/* Filtri: pillole alte 24 come il tag, 8 tra l'una e l'altra, 12 sopra e sotto la fila. */
+.card-ricerca-filtri {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spazio-flottante);
+  padding: calc(var(--spazio-controllo) - var(--spazio-flottante)) var(--spazio-controllo);
+}
+.filtro-ricerca {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spazio-elemento);
+  height: var(--misura-controllo-piccolo);
+  padding: 0 var(--spazio-controllo-piccolo);
+  border: none;
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-campo);
+  color: var(--testo-primario);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.filtro-ricerca:hover {
+  background: var(--sfondo-hover);
+}
+.filtro-ricerca-attivo,
+.filtro-ricerca-attivo:hover {
+  background: var(--sfondo-pieno);
+  color: var(--testo-su-pieno);
+}
+.filtro-ricerca-freccia {
+  display: inline-flex;
+}
+:root[data-tastiera] .filtro-ricerca:focus-visible {
+  outline: var(--focus-spessore) solid var(--focus-anello);
+  outline-offset: var(--focus-distanza);
+}
+
+/* Risultati: tutti, per pertinenza, la card scorre (RB-34). */
+.card-ricerca-elenco {
+  margin: 0;
+  padding: 0 var(--spazio-flottante);
+  overflow-y: auto;
+  list-style: none;
+}
+.risultato-ricerca {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--spazio-flottante) var(--spazio-controllo);
+  border-radius: var(--raggio-interno);
+  cursor: default;
+}
+.risultato-ricerca:hover {
+  background: var(--sfondo-hover);
+}
+.risultato-ricerca:focus {
+  outline: none;
+}
+.risultato-ricerca:focus-visible {
+  box-shadow: inset 0 0 0 var(--focus-spessore) var(--focus-anello);
+}
+.risultato-ricerca-titolo {
+  overflow: hidden;
+  color: var(--testo-primario);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.risultato-ricerca-estratto {
+  overflow: hidden;
+  color: var(--testo-tenue);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.risultato-ricerca-parola {
+  color: var(--testo-primario);
+  font-weight: 500;
+}
+.risultato-ricerca-dettagli {
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-elemento);
+  color: var(--testo-tenue);
+}
+/* Nel cestino: attenuati, con l'etichetta (RB-29). */
+.risultato-ricerca-cestino .risultato-ricerca-titolo,
+.risultato-ricerca-cestino .risultato-ricerca-parola {
+  color: var(--testo-tenue);
+}
+.risultato-ricerca-etichetta {
+  padding: 0 var(--spazio-elemento);
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-campo);
+}
+
+/* Nessun risultato: la card resta aperta (RB-35). */
+.card-ricerca-vuota {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spazio-elemento);
+  padding: var(--spazio-gruppo) var(--spazio-controllo);
+  color: var(--testo-tenue);
+}
+.card-ricerca-vuota .interfaccia-titolo {
+  color: var(--testo-primario);
+}
+
+/* Campo «Cerca un tag» nel menu del filtro. */
+.ricerca-campo-tag {
+  width: 100%;
+  height: var(--misura-riga);
+  padding: 0 var(--spazio-controllo);
+  border: none;
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-campo);
+  color: var(--testo-primario);
+}
+.ricerca-campo-tag::placeholder {
+  color: var(--testo-tenue);
+}
+
+/* Solo per i lettori di schermo. */
+.solo-lettori {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

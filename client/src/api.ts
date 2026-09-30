@@ -102,7 +102,40 @@ export const api = {
   /** Restituisce il nome che vale: vuoto torna il nome del computer (RB-51). */
   cambiaNomeDispositivo: (nome: string) => comando<string>("cambia_nome_dispositivo", { nome }),
   statoSincronizzazione: () => comando<StatoSincronizzazione>("stato_sincronizzazione"),
+  /** Si sincronizza con le altre impostazioni (RB-29, RB-52, DEC-95). */
+  cambiaCestinoInRicerca: (attivo: boolean) =>
+    comando<void>("cambia_cestino_in_ricerca", { attivo }),
+
+  // Ricerca sulla copia di lavoro (RF-08, DEC-95).
+  cerca: (richiesta: RichiestaRicerca) => comando<RisultatoRicerca[]>("cerca", { richiesta }),
 };
+
+/** Un periodo in UTC, estremi compresi; null è aperto (DEC-95). */
+export interface Intervallo {
+  da: string | null;
+  a: string | null;
+}
+
+export interface RichiestaRicerca {
+  testo: string;
+  /** Percorsi dei tag: la nota deve averli tutti, o un loro sotto-tag (RB-70). */
+  tag: string[];
+  creata: Intervallo | null;
+  modificata: Intervallo | null;
+}
+
+export interface RisultatoRicerca {
+  id: string;
+  titolo: string;
+  estratto: string;
+  /** Inizio e fine della parola da evidenziare, in caratteri dell'estratto. */
+  evidenza: [number, number] | null;
+  /** Da dove veniva, per le note nel cestino; "" per le non organizzate. */
+  cartella: string;
+  /** Istante UTC, o giorno AAAA-MM-GG per una data di creazione scelta. */
+  data: string;
+  nelCestino: boolean;
+}
 
 export type Tema = "sistema" | "chiaro" | "scuro";
 
@@ -113,6 +146,8 @@ export interface Impostazioni {
   tema: Tema;
   avvioAutomatico: boolean;
   inPrimoPiano: boolean;
+  /** Le note del cestino nei risultati della ricerca (RB-29). */
+  cestinoInRicerca: boolean;
   nomeDispositivo: string;
 }
 

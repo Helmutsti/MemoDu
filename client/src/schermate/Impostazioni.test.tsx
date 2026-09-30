@@ -14,6 +14,7 @@ vi.mock("../api", async (originale) => ({
     cambiaAvvio: vi.fn(),
     cambiaPrimoPiano: vi.fn(),
     cambiaNomeDispositivo: vi.fn(),
+    cambiaCestinoInRicerca: vi.fn(),
   },
 }));
 
@@ -24,6 +25,7 @@ const valori = (altri: Partial<Valori> = {}): Valori => ({
   tema: "sistema",
   avvioAutomatico: false,
   inPrimoPiano: false,
+  cestinoInRicerca: true,
   nomeDispositivo: "Portatile di lavoro",
   ...altri,
 });
@@ -53,13 +55,14 @@ beforeEach(() => {
 });
 
 describe("SC-06 Impostazioni (DEC-91)", () => {
-  it("mostra i quattro gruppi con i valori attuali", async () => {
+  it("mostra i cinque gruppi con i valori attuali", async () => {
     render(<Impostazioni esegui={esegui} />);
     await screen.findByRole("heading", { name: "Impostazioni" });
     expect(screen.getAllByRole("heading", { level: 2 }).map((t) => t.textContent)).toEqual([
       "Generale",
       "Tema",
       "Sincronizzazione",
+      "Ricerca",
       "Dispositivo",
     ]);
     expect(screen.getByRole("textbox", { name: "Scorciatoia della nota rapida" })).toHaveValue(
@@ -123,6 +126,18 @@ describe("SC-06 Impostazioni (DEC-91)", () => {
       "aria-checked",
       "true",
     );
+  });
+
+  it("«Mostra le note del cestino nei risultati» parte acceso e si cambia (RB-29, DEC-94)", async () => {
+    vi.mocked(api.cambiaCestinoInRicerca).mockResolvedValue(undefined);
+    render(<Impostazioni esegui={esegui} />);
+    const interruttore = await screen.findByRole("switch", {
+      name: "Mostra le note del cestino nei risultati",
+    });
+    expect(interruttore).toHaveAttribute("aria-checked", "true");
+    await userEvent.click(interruttore);
+    expect(api.cambiaCestinoInRicerca).toHaveBeenCalledWith(false);
+    expect(interruttore).toHaveAttribute("aria-checked", "false");
   });
 
   it("«Tieni Memodu in primo piano» vale subito (DEC-93)", async () => {

@@ -3,8 +3,15 @@
 // il cursore resta nel testo (menu "/") e il tasto destro non sposta la selezione.
 // Si chiude al clic fuori, con Esc o quando il contenuto sotto scorre (4-schermate.md).
 
-import { ChevronRight } from "lucide-react";
-import { useEffect, useLayoutEffect, useRef, useState, type ReactElement } from "react";
+import { Check, ChevronRight } from "lucide-react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 import { createPortal } from "react-dom";
 import type { LucideIcon } from "lucide-react";
 import { Icona } from "./Icona";
@@ -22,6 +29,10 @@ export type VoceMenu =
       errore?: boolean;
       /** Tasto destro sulla voce (per esempio «Elimina tag…» su un suggerimento). */
       alTastoDestro?: (x: number, y: number) => void;
+      /** Scelta attiva di un filtro: la spunta a destra (filtri della ricerca, CMP-13). */
+      spunta?: boolean;
+      /** Dopo la scelta il menu resta aperto (filtro Tag: si scelgono più tag). */
+      restaAperto?: boolean;
     }
   | { tipo: "separatore" };
 
@@ -47,6 +58,8 @@ interface Proprieta {
   inPausa?: boolean;
   /** Menu «/» mentre si scrive: Invio senza voce evidenziata chiude e va a capo. */
   invioAlTesto?: boolean;
+  /** In cima, sopra le voci: il campo «Cerca un tag» del filtro Tag (CMP-09). */
+  testata?: ReactNode;
 }
 
 interface Sottomenu {
@@ -72,6 +85,7 @@ export function Menu({
   attivaIniziale = -1,
   inPausa = false,
   invioAlTesto = false,
+  testata,
 }: Proprieta): ReactElement {
   const elemento = useRef<HTMLDivElement>(null);
   const [posizione, setPosizione] = useState({ x, y });
@@ -102,7 +116,11 @@ export function Menu({
   }, [x, y, sopra]);
 
   const apriSottomenu = (i: number) => {
-    const r = elemento.current?.children[i]?.getBoundingClientRect();
+    // Le voci, senza la testata: gli indici sono quelli di `voci`.
+    const righe = elemento.current?.querySelectorAll(
+      ":scope > .voce-menu, :scope > .menu-separatore",
+    );
+    const r = righe?.[i]?.getBoundingClientRect();
     if (r) setSottomenu({ indice: i, x: r.right, y: r.top - 8 });
   };
 
@@ -114,7 +132,7 @@ export function Menu({
       return;
     }
     voce.azione?.();
-    onFine();
+    if (!voce.restaAperto) onFine();
   };
 
   useEffect(() => {
@@ -177,13 +195,20 @@ export function Menu({
       }}
       onMouseDown={(e) => e.preventDefault()}
     >
+      {testata && (
+        // Il campo della testata prende il focus: il menu non glielo toglie.
+        <div className="menu-testata" onMouseDown={(e) => e.stopPropagation()}>
+          {testata}
+        </div>
+      )}
       {voci.map((voce, i) =>
         voce.tipo === "separatore" ? (
           <div key={i} className="menu-separatore" role="separator" />
         ) : (
           <div
             key={i}
-            role="menuitem"
+            role={voce.spunta === undefined ? "menuitem" : "menuitemcheckbox"}
+            aria-checked={voce.spunta}
             aria-haspopup={voce.sottomenu ? "menu" : undefined}
             className={`voce-menu ${i === attiva ? "voce-menu-evidenziata" : ""} ${voce.errore ? "voce-menu-errore" : ""}`}
             onMouseEnter={() => {
@@ -217,6 +242,11 @@ export function Menu({
               {voce.sottomenu && (
                 <span className="voce-menu-icona">
                   <Icona di={ChevronRight} />
+                </span>
+              )}
+              {voce.spunta && (
+                <span className="voce-menu-icona" aria-hidden="true">
+                  <Icona di={Check} />
                 </span>
               )}
             </span>

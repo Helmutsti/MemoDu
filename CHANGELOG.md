@@ -19,6 +19,7 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 - Le note, le cartelle e il cestino non sono più file nella cartella Documenti\Memodu: stanno in un database nella cartella dei dati di Memodu, fuori da OneDrive e iCloud. Le note scritte finora nella cartella Documenti non vengono spostate
 
 ### Aggiunto
+- Ricerca: in cima alla colonna, o con Ctrl + K (⌘ + K su Mac) da qualsiasi punto, si cercano le note per titolo, testo e tag mentre si scrive, anche con parti di parola e senza badare ad accenti e maiuscole. Si filtra per tag (anche più d'uno) e per data di creazione o di modifica, anche senza scrivere niente. Le note nel cestino compaiono segnate, e dalle impostazioni si possono escludere (RF-08)
 - Le impostazioni si aprono dalla riga Impostazioni, sotto il Cestino: scorciatoia della nota rapida, avvio di Memodu all'accensione, finestra sempre in primo piano, tema chiaro, scuro o come il sistema, stato della sincronizzazione e nome del dispositivo. Ogni cambio vale subito
 - Sincronizzazione: con il file delle credenziali Memodu si tiene allineato con il server da solo, anche senza rete; le modifiche fatte su due dispositivi non si perdono, al massimo nasce una «copia in conflitto» (RF-10)
 - Ctrl + N (⌘ + N su Mac) crea una nuova nota nella finestra principale (RF-02)

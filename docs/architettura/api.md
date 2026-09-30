@@ -448,9 +448,10 @@ Comando del nucleo, sulla copia di lavoro: la ricerca non passa mai dal server. 
 - **`data`:** quella del filtro di data attivo (con tutti e due, la modifica); senza filtri di data l'ultima modifica.
 - **Cestino:** le note nel cestino, o dentro una cartella nel cestino, ci sono con `nelCestino: true` se l'impostazione è accesa (RB-29); `cartella` è quella da cui venivano.
 **Errori:** 400 (intervallo con `da` dopo `a`, istante non valido), 500.
+**Implementazione:** `client/src-tauri/src/archivio_ricerca.rs`, comando in `comandi.rs`, prove in `archivio_ricerca_test.rs`; nell'interfaccia `client/src/componenti/Ricerca.tsx`.
 
-## impostazione_ricerca · imposta_ricerca
-`impostazione_ricerca` restituisce `{ "cestinoInRicerca": true }`; `imposta_ricerca` riceve lo stesso oggetto. Si sincronizza con l'elemento `impostazioni` (RB-52); senza un valore vale `true` (RB-29).
+## Impostazione delle note del cestino
+Come le altre impostazioni di SC-06 (`client/src-tauri/src/impostazioni.rs`): `leggi_impostazioni` ha in più `"cestinoInRicerca": true`, e `cambia_cestino_in_ricerca` riceve `{ "attivo": false }`. Si sincronizza con l'elemento `impostazioni` (RB-52); senza un valore vale `true` (RB-29). I nomi seguono quelli dei comandi delle impostazioni già esistenti, al posto di `impostazione_ricerca` e `imposta_ricerca` proposti in DEC-95.
 
 ---
 

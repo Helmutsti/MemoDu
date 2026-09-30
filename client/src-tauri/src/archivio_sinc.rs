@@ -365,12 +365,13 @@ impl Archivio {
             "impostazioni" => self
                 .db
                 .query_row(
-                    "SELECT scorciatoia_windows, scorciatoia_macos FROM impostazioni WHERE id = ?",
+                    "SELECT scorciatoia_windows, scorciatoia_macos, cestino_in_ricerca FROM impostazioni WHERE id = ?",
                     [id],
                     |r| {
                         Ok(json!({
                             "scorciatoia_windows": r.get::<_, Option<String>>(0)?,
                             "scorciatoia_macos": r.get::<_, Option<String>>(1)?,
+                            "cestino_in_ricerca": r.get::<_, Option<bool>>(2)?,
                         }))
                     },
                 )
@@ -450,9 +451,16 @@ impl Archivio {
             }
             "impostazioni" => {
                 self.db.execute(
-                    "INSERT INTO impostazioni (id, scorciatoia_windows, scorciatoia_macos) VALUES (?1, ?2, ?3)
-                     ON CONFLICT(id) DO UPDATE SET scorciatoia_windows = ?2, scorciatoia_macos = ?3",
-                    params![id, testo("scorciatoia_windows"), testo("scorciatoia_macos")],
+                    "INSERT INTO impostazioni (id, scorciatoia_windows, scorciatoia_macos, cestino_in_ricerca)
+                     VALUES (?1, ?2, ?3, ?4)
+                     ON CONFLICT(id) DO UPDATE SET scorciatoia_windows = ?2, scorciatoia_macos = ?3,
+                       cestino_in_ricerca = ?4",
+                    params![
+                        id,
+                        testo("scorciatoia_windows"),
+                        testo("scorciatoia_macos"),
+                        c.get("cestino_in_ricerca").and_then(Value::as_bool),
+                    ],
                 )?;
             }
             "cartella" => {

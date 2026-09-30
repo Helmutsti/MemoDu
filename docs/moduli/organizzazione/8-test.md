@@ -43,8 +43,8 @@
 | TC-74 | RF-08 CA-08.12 | Con la card aperta, modificare e poi eliminare un risultato dal secondo dispositivo: dopo la sincronizzazione i risultati non cambiano; aprendo quello modificato si vede il testo nuovo, quello eliminato si apre nel cestino | Locale, app e secondo dispositivo | Ricerca | |
 | TC-75 | RF-08 CA-08.13 | Con l'API spenta e la rete staccata, cercare «rilascio»: stessi risultati | Locale, app | Ricerca | |
 | TC-76 | RF-08 CA-08.14 | Solo tastiera: Ctrl + K, scrivere, freccia giù, su e giù, Invio apre; Tab raggiunge i filtri e Invio li apre; con l'Assistente vocale il campo annuncia il numero di risultati | Locale, app | Ricerca | |
-| TC-77 | RF-08 CA-08.15 | Cercare `"a*" OR b`, `(`, `NEAR` e `-`: nessun errore, nessun avviso, risultati solo se il testo c'è davvero | Locale, app e prove automatiche del nucleo | Ricerca | |
-| TC-78 | RF-08 CA-08.16 | Con 5.000 note generate, misurare il comando `cerca` per «ri», «rilascio» e un filtro Tag: sotto 200 ms | Prove automatiche del nucleo | 5.000 note generate dalla prova | |
+| TC-77 | RF-08 CA-08.15 | Cercare `"a*" OR b`, `(`, `NEAR` e `-`: nessun errore, nessun avviso, risultati solo se il testo c'è davvero | Locale, app e prove automatiche del nucleo | Ricerca | Parte automatica superata il 30/09/2026 (`virgolette_asterischi_e_operatori_sono_caratteri`); da provare nell'app |
+| TC-78 | RF-08 CA-08.16 | Con 5.000 note generate, misurare il comando `cerca` per «ri», «rilascio» e un filtro Tag: sotto 200 ms | Prove automatiche del nucleo | 5.000 note generate dalla prova | Superato il 30/09/2026 (compilato per il rilascio): «ri» 66 ms su 5.000 risultati, «rilascio» 48 ms, «zzz» 0,3 ms, filtro Tag 12 ms |
 
 ## Domande aperte
 | Riguarda | Domanda | Chi risponde | Risposta | Decisione |

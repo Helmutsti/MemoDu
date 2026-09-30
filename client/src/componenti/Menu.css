@@ -59,3 +59,10 @@
 .voce-menu-errore .voce-menu-icona {
   color: var(--testo-errore);
 }
+
+/* Testata del menu (filtro Tag, CMP-09): il campo rientrato di 8, poi il separatore. */
+.menu-testata {
+  padding: 0 var(--spazio-flottante) var(--spazio-flottante);
+  border-bottom: 1px solid var(--bordo-divisore-tenue);
+  margin-bottom: var(--spazio-elemento);
+}

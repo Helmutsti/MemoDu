@@ -68,6 +68,8 @@ pub struct Impostazioni {
     tema: String,
     avvio_automatico: bool,
     in_primo_piano: bool,
+    /// Le note del cestino nei risultati della ricerca (RB-29, DEC-95).
+    cestino_in_ricerca: bool,
     nome_dispositivo: String,
 }
 
@@ -168,6 +170,7 @@ pub async fn leggi_impostazioni(app: AppHandle, dati: State<'_, Dati>) -> Esito<
         tema: tema_salvato(&dati),
         avvio_automatico: app.autolaunch().is_enabled().unwrap_or(false),
         in_primo_piano: primo_piano_salvato(&dati),
+        cestino_in_ricerca: dati.con(|a| a.cestino_in_ricerca())?,
         nome_dispositivo: nome.unwrap_or_else(nome_del_computer),
     })
 }
@@ -206,6 +209,14 @@ pub async fn cambia_avvio(app: AppHandle, attivo: bool) -> Esito<()> {
 pub async fn cambia_primo_piano(app: AppHandle, dati: State<'_, Dati>, attivo: bool) -> Esito<()> {
     dati.con(|a| a.imposta_valore_dispositivo(CHIAVE_PRIMO_PIANO, attivo.then_some("1")))?;
     applica_primo_piano(&app);
+    Ok(())
+}
+
+/// «Mostra le note del cestino nei risultati» (RB-29): si sincronizza (RB-52, DEC-95).
+#[tauri::command]
+pub async fn cambia_cestino_in_ricerca(app: AppHandle, dati: State<'_, Dati>, attivo: bool) -> Esito<()> {
+    dati.con(|a| a.imposta_cestino_in_ricerca(attivo))?;
+    app.state::<crate::sincronizzazione::Segnale>().manda();
     Ok(())
 }
 

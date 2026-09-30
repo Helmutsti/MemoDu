@@ -358,3 +358,41 @@ fn tema_e_nome_del_dispositivo_restano_sul_dispositivo() {
     a.a.imposta_valore_dispositivo("tema", None).unwrap();
     assert_eq!(a.a.valore_dispositivo("tema").unwrap(), None);
 }
+
+#[test]
+fn la_scelta_sul_cestino_nella_ricerca_arriva_sugli_altri_dispositivi() {
+    // RB-29, RB-52, DEC-95 (TC-71 per la parte del nucleo).
+    let (mut a, mut b, mut s) = due();
+    a.a.imposta_cestino_in_ricerca(false).unwrap();
+    a.sincronizza(&mut s);
+    b.sincronizza(&mut s);
+    assert!(!b.a.cestino_in_ricerca().unwrap());
+    b.passa(10);
+    b.a.imposta_cestino_in_ricerca(true).unwrap();
+    b.sincronizza(&mut s);
+    a.sincronizza(&mut s);
+    assert!(a.a.cestino_in_ricerca().unwrap());
+}
+
+#[test]
+fn le_note_ricevute_si_trovano_con_la_ricerca() {
+    // DEC-95: l'indice segue anche le modifiche ricevute.
+    let (mut a, mut b, mut s) = due();
+    let id = nota(&mut a, "Rilascio", "venerdì dopo le prove", None);
+    a.a.aggiungi_tag(&id, "lavoro/clienti").unwrap();
+    a.sincronizza(&mut s);
+    b.sincronizza(&mut s);
+    let cerca = |d: &mut Dispositivo, testo: &str| {
+        d.a.cerca(&super::super::ricerca::Richiesta { testo: testo.into(), ..Default::default() })
+            .unwrap()
+            .len()
+    };
+    assert_eq!(cerca(&mut b, "venerdì"), 1);
+    assert_eq!(cerca(&mut b, "clienti"), 1);
+    a.passa(10);
+    a.a.salva(&id, &DatiNota { titolo: None, contenuto: Some("sabato mattina".into()) }).unwrap();
+    a.sincronizza(&mut s);
+    b.sincronizza(&mut s);
+    assert_eq!(cerca(&mut b, "venerdì"), 0);
+    assert_eq!(cerca(&mut b, "sabato"), 1);
+}

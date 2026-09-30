@@ -3,7 +3,7 @@
 // numero di note (RB-56). Trascinamento su cartelle, titoli di sezione e cestino in fondo
 // (FL-05, RB-24); tasto destro su una cartella o su una nota; tastiera come CMP-06 (RNF-04).
 // In fondo la riga Cestino, che durante il trascinamento diventa la zona di rilascio (DEC-40), e
-// sotto la riga Impostazioni (DEC-91).
+// sotto la riga Impostazioni (DEC-91). In cima, sotto la riga della puntina, la ricerca (DEC-94).
 
 import {
   useState,
@@ -66,6 +66,8 @@ interface Proprieta {
   stato: "chiusa" | "aperta" | "fissata";
   /** In cima alla colonna: «← |» e la puntina (DEC-55). */
   testata: ReactNode;
+  /** Sotto la testata: il campo di ricerca (RF-08, DEC-94). */
+  ricerca?: ReactNode;
   /** Larghezza scelta trascinando la maniglia (DEC-62). */
   larghezza: number;
 }
@@ -236,6 +238,7 @@ export function Colonna(p: Proprieta): ReactElement {
           <div className="colonna-testata" data-tauri-drag-region>
             {p.testata}
           </div>
+          {p.ricerca}
           <div
             className="colonna-contenuto"
             role="tree"
@@ -300,10 +303,7 @@ export function Colonna(p: Proprieta): ReactElement {
                 onApri={p.onApriCestino}
               />
             )}
-            <RigaImpostazioni
-              selezionata={p.impostazioniAperte}
-              onApri={p.onApriImpostazioni}
-            />
+            <RigaImpostazioni selezionata={p.impostazioniAperte} onApri={p.onApriImpostazioni} />
           </div>
         </div>
       </AreaScorrevole>

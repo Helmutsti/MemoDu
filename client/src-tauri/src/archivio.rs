@@ -22,7 +22,7 @@ pub const FILE_DATABASE: &str = "copia-di-lavoro.db";
 /// File dell'API quando girava sulla stessa macchina (DEC-46): da lì si copiano le note alla
 /// prima apertura, così non si perde niente.
 pub const FILE_API: &str = "memodu.db";
-const VERSIONE_SCHEMA: i64 = 3;
+const VERSIONE_SCHEMA: i64 = 4;
 const SENZA_TITOLO: &str = "Senza titolo";
 const NUOVA_CARTELLA: &str = "Nuova cartella";
 const LUNGHEZZA_MASSIMA_NOME: usize = 100;
@@ -97,6 +97,39 @@ const SCHEMA_IMPOSTAZIONI: &str = "
     scorciatoia_macos TEXT
   );
   CREATE TABLE dispositivo (chiave TEXT PRIMARY KEY, valore TEXT NOT NULL);
+";
+
+/// Schema 4 (DEC-95): l'indice di ricerca a trigrammi, senza maiuscole e accenti, tenuto
+/// aggiornato dai trigger anche per le modifiche ricevute; in `tag` i percorsi completi dei tag
+/// della nota, uno per riga (`tag_della_nota`). E l'impostazione delle note del cestino nei
+/// risultati, che si sincronizza con le altre (RB-29, RB-52); vuota vale accesa.
+const SCHEMA_RICERCA: &str = "
+  CREATE VIRTUAL TABLE ricerca USING fts5(
+    id UNINDEXED, titolo, contenuto, tag,
+    tokenize = 'trigram remove_diacritics 1'
+  );
+  INSERT INTO ricerca (id, titolo, contenuto, tag)
+    SELECT id, titolo, contenuto, tag_della_nota(id) FROM note;
+  CREATE TRIGGER ricerca_note_INSERT AFTER INSERT ON note BEGIN
+    INSERT INTO ricerca (id, titolo, contenuto, tag)
+    VALUES (NEW.id, NEW.titolo, NEW.contenuto, tag_della_nota(NEW.id));
+  END;
+  CREATE TRIGGER ricerca_note_UPDATE AFTER UPDATE OF titolo, contenuto ON note BEGIN
+    UPDATE ricerca SET titolo = NEW.titolo, contenuto = NEW.contenuto WHERE id = NEW.id;
+  END;
+  CREATE TRIGGER ricerca_note_DELETE AFTER DELETE ON note BEGIN
+    DELETE FROM ricerca WHERE id = OLD.id;
+  END;
+  CREATE TRIGGER ricerca_note_tag_INSERT AFTER INSERT ON note_tag BEGIN
+    UPDATE ricerca SET tag = tag_della_nota(NEW.nota) WHERE id = NEW.nota;
+  END;
+  CREATE TRIGGER ricerca_note_tag_DELETE AFTER DELETE ON note_tag BEGIN
+    UPDATE ricerca SET tag = tag_della_nota(OLD.nota) WHERE id = OLD.nota;
+  END;
+  CREATE TRIGGER ricerca_tag_UPDATE AFTER UPDATE OF nome, padre ON tag BEGIN
+    UPDATE ricerca SET tag = tag_della_nota(id) WHERE id IN (SELECT nota FROM note_tag);
+  END;
+  ALTER TABLE impostazioni ADD COLUMN cestino_in_ricerca INTEGER;
 ";
 
 /// Trigger che segnano un elemento come modificato qui: (tabella, tipo, id nel caso di
@@ -521,6 +554,9 @@ impl Archivio {
             if versione < 3 {
                 tx.execute_batch(SCHEMA_IMPOSTAZIONI)?;
                 tx.execute_batch(&schema_trigger(&TRIGGER_IMPOSTAZIONI))?;
+            }
+            if versione < 4 {
+                tx.execute_batch(SCHEMA_RICERCA)?;
             }
             tx.pragma_update(None, "user_version", VERSIONE_SCHEMA)?;
             tx.commit()?;
@@ -1451,7 +1487,8 @@ impl Archivio {
 }
 
 /// Apre il database con le impostazioni di ogni connessione. `adesso_utc()` dà ai trigger
-/// l'istante dell'orologio dell'archivio (DEC-76).
+/// l'istante dell'orologio dell'archivio (DEC-76); `tag_della_nota()` e `normalizza()`
+/// servono all'indice di ricerca (DEC-95).
 fn connetti(file: &Path, adesso: &Orologio) -> Esito<Connection> {
     let db = Connection::open(file)?;
     db.pragma_update(None, "journal_mode", "WAL")?;
@@ -1460,7 +1497,56 @@ fn connetti(file: &Path, adesso: &Orologio) -> Esito<Connection> {
     db.create_scalar_function("adesso_utc", 0, FunctionFlags::SQLITE_UTF8, move |_| {
         Ok(istante(orologio()))
     })?;
+    db.create_scalar_function("tag_della_nota", 1, FunctionFlags::SQLITE_UTF8, |ctx| {
+        let nota: String = ctx.get(0)?;
+        // Sicuro: la funzione legge soltanto, sulla stessa connessione che la chiama.
+        let db = unsafe { ctx.get_connection()? };
+        percorsi_tag(&db, &nota)
+    })?;
+    db.create_scalar_function(
+        "normalizza",
+        1,
+        FunctionFlags::SQLITE_UTF8 | FunctionFlags::SQLITE_DETERMINISTIC,
+        |ctx| Ok(normalizza(&ctx.get::<String>(0)?)),
+    )?;
     Ok(db)
+}
+
+/// I percorsi completi dei tag della nota, uno per riga, per l'indice di ricerca. Un tag che non
+/// c'è più (mentre si eliminano un tag e i suoi sotto-tag) si ferma dove arriva.
+fn percorsi_tag(db: &Connection, nota: &str) -> rusqlite::Result<String> {
+    let ids: Vec<String> = db
+        .prepare("SELECT tag FROM note_tag WHERE nota = ?")?
+        .query_map([nota], |r| r.get(0))?
+        .collect::<Result<_, _>>()?;
+    let mut percorsi = Vec::new();
+    for id in ids {
+        let mut nomi = Vec::new();
+        let mut attuale = Some(id);
+        while let Some(id) = attuale {
+            let riga: Option<(String, Option<String>)> = db
+                .query_row("SELECT nome, padre FROM tag WHERE id = ?", [&id], |r| {
+                    Ok((r.get(0)?, r.get(1)?))
+                })
+                .optional()?;
+            let Some((nome, padre)) = riga else { break };
+            nomi.insert(0, nome);
+            attuale = padre;
+        }
+        if !nomi.is_empty() {
+            percorsi.push(nomi.join("/"));
+        }
+    }
+    Ok(percorsi.join("\n"))
+}
+
+/// Testo senza accenti e in minuscolo, per confrontare come l'indice di ricerca (RB-69).
+pub fn normalizza(testo: &str) -> String {
+    testo
+        .nfd()
+        .filter(|c| !unicode_normalization::char::is_combining_mark(*c))
+        .collect::<String>()
+        .to_lowercase()
 }
 
 /// Copia il database dell'API nella copia di lavoro, senza toccare l'originale.
@@ -1626,6 +1712,9 @@ pub mod sinc;
 
 #[path = "archivio_impostazioni.rs"]
 pub mod impostazioni;
+
+#[path = "archivio_ricerca.rs"]
+pub mod ricerca;
 
 #[cfg(test)]
 #[path = "archivio_test.rs"]

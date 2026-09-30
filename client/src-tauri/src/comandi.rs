@@ -8,6 +8,7 @@ use std::sync::Mutex;
 use tauri::{AppHandle, Emitter, Manager, State};
 
 use crate::sincronizzazione::{Evento, Segnale};
+use crate::archivio::ricerca::{Richiesta, Risultato};
 use crate::archivio::{
     cartella_predefinita, Albero, Archivio, DatiDettagli, DatiNota, DatiNuovaNota,
     ElementoCestino, Errore, Esito, EsitoCartella, Nota, Ripristinato, SeEsiste, VoceElenco,
@@ -117,6 +118,12 @@ pub async fn togli_tag(app: AppHandle,
 pub async fn elimina_tag(app: AppHandle,
     dati: Stato<'_>, nome: String) -> Esito<()> {
     dati.modifica(&app, |a| a.elimina_tag(&nome))
+}
+
+/// Ricerca e filtri sulla copia di lavoro (RF-08, DEC-95).
+#[tauri::command]
+pub async fn cerca(dati: Stato<'_>, richiesta: Richiesta) -> Esito<Vec<Risultato>> {
+    dati.con(|a| a.cerca(&richiesta))
 }
 
 #[tauri::command]

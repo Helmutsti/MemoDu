@@ -229,6 +229,7 @@ pub fn run() {
             comandi::togli_tag,
             comandi::elimina_tag,
             comandi::albero,
+            comandi::cerca,
             comandi::crea_cartella,
             comandi::rinomina_cartella,
             comandi::sposta_cartella,
@@ -244,6 +245,7 @@ pub fn run() {
             impostazioni::cambia_tema,
             impostazioni::cambia_avvio,
             impostazioni::cambia_primo_piano,
+            impostazioni::cambia_cestino_in_ricerca,
             impostazioni::cambia_nome_dispositivo,
             impostazioni::stato_sincronizzazione,
         ])

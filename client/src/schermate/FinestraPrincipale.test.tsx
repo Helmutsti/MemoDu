@@ -23,6 +23,8 @@ vi.mock("../api", async (originale) => ({
     ripristina: vi.fn(),
     eliminaDefinitivamente: vi.fn(),
     svuotaCestino: vi.fn(),
+    cerca: vi.fn(),
+    elencaTag: vi.fn(),
   },
 }));
 
@@ -779,5 +781,82 @@ describe("larghezza della colonna (DEC-62)", () => {
     expect(localStorage.getItem("memodu.colonna-larghezza")).toBe("272");
     fireEvent.doubleClick(maniglia);
     expect(maniglia).toHaveAttribute("aria-valuenow", "288");
+  });
+});
+
+describe("ricerca nella colonna (RF-08, DEC-94)", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    vi.mocked(api.albero).mockResolvedValue(alberoDiProva());
+    vi.mocked(api.leggi).mockImplementation(async (id) =>
+      id === "b"
+        ? nota("b", "Budget 2026", "il rilascio", "Lavoro")
+        : nota("r", "Riunione di lunedì"),
+    );
+    vi.mocked(api.cerca).mockResolvedValue([
+      {
+        id: "b",
+        titolo: "Budget 2026",
+        estratto: "il rilascio",
+        evidenza: [3, 11],
+        cartella: "Lavoro",
+        data: "2026-09-28T08:00:00Z",
+        nelCestino: false,
+      },
+      {
+        id: "s",
+        titolo: "Vecchia scaletta",
+        estratto: "il rilascio era a settembre",
+        evidenza: [3, 11],
+        cartella: "Lavoro",
+        data: "2026-09-02T08:00:00Z",
+        nelCestino: true,
+      },
+    ]);
+  });
+  const colonna = () => screen.getByRole("navigation", { name: "Note e cartelle" });
+  const campo = () => screen.getByRole("combobox", { name: "Cerca nelle note" });
+
+  it("Ctrl + K apre la colonna con il cursore nel campo; aprendo un risultato si richiude (CA-08.1, CA-08.10)", async () => {
+    render(<FinestraPrincipale />);
+    await riga("Riunione di lunedì");
+    expect(colonna()).toHaveClass("colonna-chiusa");
+    await userEvent.keyboard("{Control>}k{/Control}");
+    expect(colonna()).toHaveClass("colonna-aperta");
+    await waitFor(() => expect(campo()).toHaveFocus());
+    await userEvent.keyboard("rilascio");
+    await userEvent.click(await screen.findByRole("option", { name: /Budget 2026/ }));
+    await waitFor(() => expect(api.leggi).toHaveBeenCalledWith("b"));
+    expect(colonna()).toHaveClass("colonna-chiusa");
+  });
+
+  it("con Esc la colonna aperta da Ctrl + K si richiude; fissata resta (CA-08.11)", async () => {
+    render(<FinestraPrincipale />);
+    await riga("Riunione di lunedì");
+    await userEvent.keyboard("{Control>}k{/Control}");
+    await waitFor(() => expect(campo()).toHaveFocus());
+    await userEvent.keyboard("{Escape}");
+    expect(colonna()).toHaveClass("colonna-chiusa");
+    await userEvent.click(screen.getByRole("button", { name: "Apri la colonna" }));
+    await userEvent.click(screen.getByRole("button", { name: "Fissa la colonna" }));
+    await userEvent.keyboard("{Control>}k{/Control}");
+    await waitFor(() => expect(campo()).toHaveFocus());
+    await userEvent.keyboard("{Escape}");
+    expect(colonna()).toHaveClass("colonna-fissata");
+  });
+
+  it("una nota del cestino mostra l'avviso con Ripristina (CA-08.9)", async () => {
+    vi.mocked(api.leggi).mockImplementation(async (id) => {
+      if (id === "s") throw new ErroreApi(404, "nel cestino", undefined, "s");
+      return nota("r", "Riunione di lunedì");
+    });
+    render(<FinestraPrincipale />);
+    await riga("Riunione di lunedì");
+    await userEvent.keyboard("{Control>}k{/Control}");
+    await waitFor(() => expect(campo()).toHaveFocus());
+    await userEvent.keyboard("rilascio");
+    await userEvent.click(await screen.findByRole("option", { name: /Vecchia scaletta/ }));
+    expect(await screen.findByText("La nota è nel cestino.")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Ripristina" })).toBeInTheDocument();
   });
 });

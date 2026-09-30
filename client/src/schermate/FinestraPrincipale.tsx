@@ -1,6 +1,7 @@
 // SC-01 Finestra principale, versione del frammento Must B «Smistare» (DEC-36): colonna con
 // Non organizzate e Cartelle (CMP-14), area della nota con il menu ··· (Sposta in, Elimina,
-// Cestino) o il cestino (SC-04). Niente ricerca, tag e date. Se l'API non risponde compare
+// Cestino) o il cestino (SC-04). In cima alla colonna la ricerca, anche con Ctrl + K (RF-08,
+// DEC-94). Se l'API non risponde compare
 // SC-07 al posto del contenuto, che resta in memoria (RB-61); chiudendo con testo non salvato
 // si chiede conferma (RB-62). Un'operazione su cartelle o cestino che non riesce mostra un
 // avviso e ricarica la colonna (DEC-37); un nome già usato apre la finestra con tre scelte
@@ -33,13 +34,14 @@ import type {
   VoceTag,
 } from "@memodu/condiviso";
 import { anteprima } from "@memodu/condiviso";
-import { api, ErroreApi } from "../api";
+import { api, ErroreApi, type RisultatoRicerca } from "../api";
 import { Avviso } from "../componenti/Avviso";
 import { FinestraConferma } from "../componenti/FinestraConferma";
 import { Icona } from "../componenti/Icona";
 import { Menu, type VoceMenu } from "../componenti/Menu";
 import { PannelloSpostaIn } from "../componenti/PannelloSpostaIn";
 import { PulsantiFinestra } from "../componenti/PulsantiFinestra";
+import { Ricerca } from "../componenti/Ricerca";
 import { Pulsante, PulsanteIcona } from "../componenti/Pulsante";
 import { StatoVuoto } from "../componenti/StatoVuoto";
 import {
@@ -588,18 +590,23 @@ export function FinestraPrincipale(): ReactElement {
 
   // Scorciatoie della finestra (⌘ al posto di Ctrl su Mac): Ctrl + N crea una nuova nota come
   // il + delle non organizzate (FL-09, DEC-69); Ctrl + W chiude la nota aperta come «Chiudi
-  // nota» (DEC-70). Con una finestra di dialogo o SC-07 davanti non fanno niente.
+  // nota» (DEC-70); Ctrl + K porta nella ricerca (RB-71). Con una finestra di dialogo o SC-07
+  // davanti non fanno niente.
   const scorciatoie = useRef<Record<string, (() => Promise<void>) | undefined>>({});
   useEffect(() => {
     scorciatoie.current = bloccata
       ? {}
-      : { n: nuovaNota, w: vista === "nota" && aperta !== null ? chiudiNota : undefined };
+      : {
+          n: nuovaNota,
+          w: vista === "nota" && aperta !== null ? chiudiNota : undefined,
+          k: async () => vaiAllaRicerca(),
+        };
   });
   useEffect(() => {
     const suTasto = (e: KeyboardEvent) => {
       const comando = SU_MAC ? e.metaKey && !e.ctrlKey : e.ctrlKey && !e.metaKey;
       const tasto = e.key.toLowerCase();
-      if (!comando || e.altKey || e.shiftKey || (tasto !== "n" && tasto !== "w")) return;
+      if (!comando || e.altKey || e.shiftKey || !["n", "w", "k"].includes(tasto)) return;
       e.preventDefault();
       if (e.repeat || document.querySelector('[role="dialog"], [role="alertdialog"]')) return;
       void scorciatoie.current[tasto]?.();
@@ -607,6 +614,63 @@ export function FinestraPrincipale(): ReactElement {
     window.addEventListener("keydown", suTasto, true);
     return () => window.removeEventListener("keydown", suTasto, true);
   }, []);
+
+  // ——— Ricerca (RF-08, DEC-94) ———
+
+  const [focusRicerca, setFocusRicerca] = useState(0);
+  /** La colonna l'ha aperta Ctrl + K: si richiude con la ricerca (RB-71). */
+  const colonnaDallaRicerca = useRef(false);
+  /** Dove era il cursore prima di Ctrl + K: ci torna con Esc (RB-71). */
+  const primaDellaRicerca = useRef<HTMLElement | null>(null);
+
+  const vaiAllaRicerca = () => {
+    // Dal campo stesso non c'è un posto a cui tornare.
+    const attivo = document.activeElement;
+    if (!attivo?.closest(".ricerca")) {
+      primaDellaRicerca.current = attivo instanceof HTMLElement ? attivo : null;
+    }
+    if (statoColonna === "chiusa") {
+      colonnaDallaRicerca.current = true;
+      setColonnaAperta(true);
+    }
+    setFocusRicerca((n) => n + 1);
+  };
+
+  /** Finita la ricerca: la colonna aperta da Ctrl + K si richiude. */
+  const lasciaRicerca = () => {
+    if (colonnaDallaRicerca.current) setColonnaAperta(false);
+    colonnaDallaRicerca.current = false;
+  };
+
+  const chiusaRicerca = (conEsc: boolean) => {
+    const dallaScorciatoia = colonnaDallaRicerca.current;
+    lasciaRicerca();
+    if (conEsc && dallaScorciatoia) primaDellaRicerca.current?.focus();
+    primaDellaRicerca.current = null;
+  };
+
+  /**
+   * Apre un risultato com'è adesso (RB-45): una nota nel cestino, anche se ci è finita mentre la
+   * card era aperta, mostra l'avviso con Ripristina (RB-29, RB-28); una eliminata per sempre lo
+   * dice.
+   */
+  const apriRisultato = async (r: RisultatoRicerca) => {
+    lasciaRicerca();
+    primaDellaRicerca.current = null;
+    await coda.scarica();
+    if (coda.haModifiche) return;
+    try {
+      await api.leggi(r.id);
+    } catch (errore) {
+      if (errore instanceof ErroreApi && errore.stato === 404) {
+        setSparita({ id: r.id, dati: {}, elemento: errore.cestino });
+      } else {
+        setBloccata(true);
+      }
+      return;
+    }
+    await apri(r.id);
+  };
 
   // ——— Cartelle ———
 
@@ -1023,6 +1087,13 @@ export function FinestraPrincipale(): ReactElement {
                   onClick={fissaColonna}
                 />
               </>
+            }
+            ricerca={
+              <Ricerca
+                focus={focusRicerca}
+                onApri={(r) => void apriRisultato(r)}
+                onChiusa={chiusaRicerca}
+              />
             }
             albero={albero}
             apertaId={vista === "nota" ? (aperta?.id ?? null) : null}

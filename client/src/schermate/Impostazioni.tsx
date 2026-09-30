@@ -1,6 +1,6 @@
 // SC-06 Impostazioni (DEC-91): dalla riga sotto il Cestino, al posto della nota come il cestino.
 // Generale (scorciatoia della nota rapida, avvio all'accensione), Tema, Sincronizzazione (solo
-// lettura) e Dispositivo. Ogni cambio vale subito, senza Salva (RB-06). Testi in 4-schermate.md.
+// lettura), Ricerca (note del cestino nei risultati, DEC-94) e Dispositivo. Ogni cambio vale subito, senza Salva (RB-06). Testi in 4-schermate.md.
 
 import { CircleAlert } from "lucide-react";
 import { useCallback, useEffect, useId, useState, type ReactElement } from "react";
@@ -261,6 +261,17 @@ export function Impostazioni({ esegui }: Proprieta): ReactElement | null {
           descrizione={maiuscola(quando(stato.ultimaRiuscita))}
         />
       )}
+
+      {/* DEC-94: tra Sincronizzazione e Dispositivo. */}
+      <TitoloGruppo>Ricerca</TitoloGruppo>
+      <RigaInterruttore
+        etichetta="Mostra le note del cestino nei risultati"
+        descrizione="Compaiono attenuate, con l’etichetta «nel cestino». Vale su tutti i dispositivi."
+        acceso={valori.cestinoInRicerca}
+        onCambia={(attivo) =>
+          void cambia(() => api.cambiaCestinoInRicerca(attivo), { cestinoInRicerca: attivo })
+        }
+      />
 
       <TitoloGruppo>Dispositivo</TitoloGruppo>
       <RigaImpostazione

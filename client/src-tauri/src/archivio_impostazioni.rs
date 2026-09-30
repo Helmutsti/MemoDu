@@ -57,6 +57,30 @@ impl Archivio {
         })
     }
 
+    /// Le note del cestino compaiono nei risultati della ricerca (RB-29): di default sì.
+    pub fn cestino_in_ricerca(&mut self) -> Esito<bool> {
+        self.con_riconnessione(|a| {
+            let valore: Option<bool> = a
+                .db
+                .query_row("SELECT cestino_in_ricerca FROM impostazioni WHERE id = ?", [ID], |r| r.get(0))
+                .optional()?
+                .flatten();
+            Ok(valore.unwrap_or(true))
+        })
+    }
+
+    /// Si sincronizza con le altre impostazioni (RB-52, DEC-95).
+    pub fn imposta_cestino_in_ricerca(&mut self, attivo: bool) -> Esito<()> {
+        self.con_riconnessione(|a| {
+            a.db.execute(
+                "INSERT INTO impostazioni (id, cestino_in_ricerca) VALUES (?1, ?2)
+                 ON CONFLICT(id) DO UPDATE SET cestino_in_ricerca = excluded.cestino_in_ricerca",
+                params![ID, attivo],
+            )?;
+            Ok(())
+        })
+    }
+
     /// Un valore che vale solo su questo dispositivo (tema, nome); None se non è mai stato scelto.
     pub fn valore_dispositivo(&mut self, chiave: &str) -> Esito<Option<String>> {
         self.con_riconnessione(|a| {

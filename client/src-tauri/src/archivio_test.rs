@@ -158,8 +158,8 @@ fn segna_la_versione_dello_schema() {
     p.chiudi();
     let db = Connection::open(p.file()).unwrap();
     let versione: i64 = db.pragma_query_value(None, "user_version", |r| r.get(0)).unwrap();
-    // Schema 3: le tabelle della sincronizzazione (DEC-75, DEC-76) e delle impostazioni (DEC-91).
-    assert_eq!(versione, 3);
+    // Schema 4: sincronizzazione (DEC-75, DEC-76), impostazioni (DEC-91) e indice di ricerca (DEC-95).
+    assert_eq!(versione, 4);
 }
 
 #[test]
@@ -170,6 +170,9 @@ fn una_copia_di_lavoro_con_lo_schema_2_riceve_le_impostazioni() {
     db.execute_batch(
         "DROP TRIGGER sinc_impostazioni_INSERT; DROP TRIGGER sinc_impostazioni_UPDATE;
          DROP TRIGGER sinc_impostazioni_DELETE; DROP TABLE impostazioni; DROP TABLE dispositivo;
+         DROP TRIGGER ricerca_note_INSERT; DROP TRIGGER ricerca_note_UPDATE; DROP TRIGGER ricerca_note_DELETE;
+         DROP TRIGGER ricerca_note_tag_INSERT; DROP TRIGGER ricerca_note_tag_DELETE; DROP TRIGGER ricerca_tag_UPDATE;
+         DROP TABLE ricerca;
          PRAGMA user_version = 2;",
     )
     .unwrap();
