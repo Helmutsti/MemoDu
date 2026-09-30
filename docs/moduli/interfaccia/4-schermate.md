@@ -19,7 +19,7 @@ Impostazione generale della Fase 4: **desktop-first**. Il pubblico della prima f
 - **Esportazioni:** `immagini/SC-01.png`, `immagini/SC-01-vuoto.png`, `immagini/SC-01-ricerca.png`, `immagini/SC-01-conferma.png`, `immagini/SC-01-sezione-chiusa.png`, `immagini/SC-01-menu.png`, `immagini/SC-01-tasto-destro-cartella.png`
 - **Mockup:** [stato normale](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=5-718) (in revisione)
 - **Mockup della versione ridotta (frammento Must A, approvati da Manuel Cucca il 27/09/2026):** [con note](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=17-214) · [vuota, primo utilizzo](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=17-425); esportazioni `immagini/SC-01-ridotta-mockup.png`, `immagini/SC-01-ridotta-vuota-mockup.png`. Nella nota aperta niente menu `···` e niente riga dei metadati (tag e data di modifica): torna con RF-04
-- **Mockup della versione per il frammento Must B «Smistare» (approvati da Manuel Cucca il 28/09/2026):** [con cartelle](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=43-310) · [trascinamento](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-1950) · [nuova cartella](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-2027) · [nome già esistente](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-2104) · [albero vuoto](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-2942) · [errore](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-3074) · [menu della nota](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-3092) · [Sposta in](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-3214); esportazioni `immagini/SC-01-smistare-*-mockup.png`. Il 30/09/2026 questi mockup e quelli di Must A sono stati aggiornati con il titolo nel percorso e senza metadati nel foglio (DEC-71), l'avviso 8 sotto la fascia (DEC-86), ed esportati di nuovo.
+- **Mockup della versione per il frammento Must B «Smistare» (approvati da Manuel Cucca il 28/09/2026):** [con cartelle](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=43-310) · [trascinamento](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-1950) · [nuova cartella](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-2027) · [nome già esistente](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-2104) · [albero vuoto](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-2942) · [errore](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-3074) · [menu della nota](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-3092) · [Sposta in](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-3214); esportazioni `immagini/SC-01-smistare-*-mockup.png`. Il 30/09/2026 questi mockup e quelli di Must A sono stati aggiornati con il titolo nel percorso e senza metadati nel foglio (DEC-71), l'avviso 8 sotto la fascia (DEC-86), ed esportati di nuovo. Sempre il 30/09/2026 hanno la riga Impostazioni sotto il Cestino (DEC-91) e il ··· con la sua icona, ed esportati di nuovo.
 - **Versione per il frammento Must B:** la colonna ha le sezioni Non organizzate e Cartelle, con l'albero (CMP-14); niente ricerca. La nota aperta non ha la riga dei tag e delle date. Il menu `···` in alto a destra ha solo «Sposta in…», «Elimina» e «Cestino» (DEC-36).
 - **Versione ridotta per il frammento Must A:** la colonna sinistra ha solo la sezione Non organizzate con il suo + (FL-09); niente ricerca e niente sezione Cartelle. Le cartelle si aggiungeranno sotto con il frammento Must. Finché non ci sono le cartelle la sezione si intitola "Note" (diventerà "Non organizzate"); il + ha il suggerimento "Nuova nota"; con l'elenco vuoto compare "Le note che scrivi compaiono qui."
 
@@ -46,14 +46,13 @@ Le **non organizzate stanno sopra le cartelle**: sono la posta in arrivo della s
 ### Menu `···` in alto a destra (livello 20)
 Il pulsante si chiama «Altre azioni» (nome per i lettori di schermo e suggerimento).
 
-L'unico menu della finestra. È diviso in due parti:
+L'unico menu della finestra. Ha solo le voci di questa nota: le impostazioni si aprono dalla riga in fondo alla colonna (DEC-91).
 
 | Parte | Voci |
 |---|---|
-| Sopra: **questa nota** | Dettagli, Sposta in, Chiudi nota, Elimina (FL-04, RB-25, DEC-44, DEC-68). Chiudi nota (Ctrl + W, ⌘ + W su macOS, DEC-70) salva la nota e lascia l'area vuota con «Nessuna nota aperta», senza aprirne un'altra; una nota vuota sparisce (DEC-39). Le stesse voci, tranne Chiudi nota, nel tasto destro sulla nota nella colonna |
-| Sotto: **Memodu** | Impostazioni (SC-06). Il Cestino non è più nel menu: si apre dalla riga in fondo alla colonna (DEC-40) |
+| Sopra: **questa nota** | Dettagli, Sposta in, Sgancia in una finestra (DEC-92), Chiudi nota, Elimina (FL-04, RB-25, DEC-44, DEC-68). Chiudi nota (Ctrl + W, ⌘ + W su macOS, DEC-70) salva la nota e lascia l'area vuota con «Nessuna nota aperta», senza aprirne un'altra; una nota vuota sparisce (DEC-39). Le stesse voci, tranne Chiudi nota, nel tasto destro sulla nota nella colonna |
 
-Senza una nota aperta (stato vuoto) il menu mostra solo la parte sotto.
+Senza una nota aperta (stato vuoto) il pulsante `···` non c'è.
 
 ### Tasto destro su una nota della colonna (livello 20)
 Sposta in… (apre il pannello Sposta in accanto alla nota) · Elimina (nel cestino, RB-26). La nota non si apre; se è quella aperta vale RB-66 o RB-67. Stesse azioni del menu `···`, senza Cestino, che non riguarda la nota. Scelta di Manuel Cucca, 28/09/2026.
@@ -92,16 +91,18 @@ Sono al centro della finestra, con un velo sul resto. L'azione principale sta a 
 
 - **Wireframe:** [impostazioni](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-227)
 - **Esportazioni:** `immagini/SC-06.png`
-- **Mockup:** [Fase 6]
+- **Mockup (DEC-91, approvati da Manuel Cucca il 30/09/2026):** [impostazioni](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=109-6661) · [scorciatoia già usata](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=109-6895); esportazioni `immagini/SC-06-mockup.png`, `immagini/SC-06-scorciatoia-usata-mockup.png`. Testi dei gruppi e delle righe come nei componenti (CMP-18, CMP-28): da confermare in Fase 6
 
-Si apre dalla voce Impostazioni del menu `···`, al posto della nota, come il cestino. Una sola schermata con quattro sezioni:
+Si apre dalla riga **Impostazioni** in fondo alla colonna, sotto il Cestino, al posto della nota come il cestino (DEC-91). Una sola schermata con quattro sezioni, in quest'ordine:
 
 | Sezione | Contenuto |
 |---|---|
-| Generale | Scorciatoia della nota rapida (separata per Windows e macOS, RB-52), avvio all'accensione (solo desktop) |
-| Ricerca | Note del cestino nei risultati (RB-29) |
-| Dispositivo | Nome di questo dispositivo (RB-51) |
-| Account | Email e password con Cambia; Esci. **Progettata ma non attiva** nella prima versione: oggi il dispositivo si collega con le credenziali preimpostate (DEC-13, DEC-19) |
+| Generale | Scorciatoia della nota rapida: clic sul campo e si preme la combinazione nuova; se un altro programma la usa già lo si dice e resta la vecchia; «Ripristina» torna al default (separata per Windows e macOS e sincronizzata, RB-52). Avvia Memodu all'accensione: interruttore, spento di default, solo su questo dispositivo |
+| Tema | Sistema · Chiaro · Scuro, di default Sistema; solo su questo dispositivo |
+| Sincronizzazione | Stato e ultima sincronizzazione riuscita, in sola lettura: «Sincronizzata alle 14:32», «Senza collegamento: le note restano su questo computer» (senza credenziali, DEC-84), «Server non raggiungibile da…» |
+| Dispositivo | Nome di questo dispositivo, di default il nome del computer (RB-51) |
+
+La sezione Ricerca (note del cestino nei risultati, RB-29) arriva con la ricerca (RF-08). La sezione Account non c'è più (DEC-13, DEC-91).
 
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |
@@ -202,7 +203,7 @@ flowchart LR
     SC01 -- trascino una cartella dentro sé stessa --> No[Nessun effetto - RB-24]
     Menu -- Cestino --> SC04[SC-04 Cestino] -- Svuota cestino --> Conf2[Conferma] --> SC04v[Cestino vuoto]
     SC04 -- Ripristina --> SC01
-    Menu -- Impostazioni --> SC06[SC-06 Impostazioni]
+    Colonna -- riga Impostazioni --> SC06[SC-06 Impostazioni]
 
     Avv[Avviso di sincronizzazione] -- Ho capito --> SC01
 ```

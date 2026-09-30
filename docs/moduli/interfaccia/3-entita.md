@@ -6,14 +6,15 @@
 Il diagramma di tutto il sistema è in `moduli/note/3-entita.md`.
 
 ## EN-07 – Impostazioni
-**Descrizione:** le preferenze dell'utente. Si sincronizzano e valgono su tutti i dispositivi (RB-52).
+**Descrizione:** le preferenze dell'utente. La scorciatoia si sincronizza e vale su tutti i dispositivi (RB-52); tema e avvio all'accensione valgono solo sul dispositivo (DEC-91).
 
 | Attributo | Tipo | Obbligatorio | Vincoli | Note |
 |---|---|---|---|---|
 | Account | EN-05 | Sì | Una sola serie di impostazioni per account | |
 | Scorciatoia globale su Windows | Combinazione di tasti | Sì | | Nota rapida (RF-01, RF-11). Default `Ctrl+Alt+N` (SC-02) |
 | Scorciatoia globale su macOS | Combinazione di tasti | Sì | | Default `Control+Option+N` (SC-02) |
-| Avvio automatico all'accensione | Sì \| No | Sì | Solo app desktop | Opzionale (RF-01) |
+| Avvio automatico all'accensione | Sì \| No | Sì | Solo app desktop; solo su questo dispositivo | Di default No (RF-01, DEC-91) |
+| Tema | Sistema \| Chiaro \| Scuro | Sì | Solo su questo dispositivo | Di default Sistema (DEC-91) |
 | Note del cestino nella ricerca | Sì \| No | Sì | | Di default Sì (RB-29) |
 
 Il nome del dispositivo non è qui: appartiene al dispositivo (EN-06, RB-51). Le credenziali appartengono all'installazione (EN-05, RB-54).

@@ -353,3 +353,8 @@
 | 30/09/2026 | Manuel Cucca | CMP-25: la barra di scorrimento è quella del sistema, sottile, al posto del cursore disegnato in JavaScript | DEC-88 |
 | 30/09/2026 | Manuel Cucca | CMP-25 e architettura: la barra di scorrimento è di OverlayScrollbars, sovrapposta al contenuto, e compare e sparisce con la dissolvenza | DEC-89 |
 | 30/09/2026 | Manuel Cucca | RB-53 superata: gli avvisi restano sul dispositivo; EN-08 locale, SC-01 avvisi, CMP-15 | DEC-90 |
+| 30/09/2026 | Manuel Cucca | SC-06: impostazioni dalla riga sotto il Cestino, sezioni Generale, Tema, Sincronizzazione, Dispositivo; niente Account; EN-07 con il tema; RB-52 con le eccezioni locali; menu ··· solo con le voci della nota | DEC-91 |
+| 30/09/2026 | Manuel Cucca | RF-12 anticipato per le note sganciate: finestra propria, «Questa nota è sganciata», «Tieni in primo piano»; criteri CA-12.1 … CA-12.7; menu ··· con «Sgancia in una finestra» | DEC-92 |
+| 30/09/2026 | Manuel Cucca | Design system: icone Sgancia e Riaggancia; CMP-06 riga Impostazioni; CMP-07 voce Spuntata; CMP-18 varianti Scelta, Scorciatoia, Informazione; CMP-19 Nota sganciata; nuovo CMP-28 Scelta a segmenti | DEC-91 DEC-92 |
+| 30/09/2026 | Manuel Cucca | Mockup: SC-06 Impostazioni (e scorciatoia già usata); note sganciate (menu con Sgancia, nota sganciata, finestra sganciata con il suo menu); riga Impostazioni in SC-01, SC-03, SC-04; ··· con l'icona giusta; esportazioni rifatte | DEC-91 DEC-92 |
+| 30/09/2026 | Manuel Cucca | CMP-01: nella variante Solo icona piccolo l'icona segue la proprietà Icona, come nelle altre (prima restava sempre «Più») | — |
