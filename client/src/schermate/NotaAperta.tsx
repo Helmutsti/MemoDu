@@ -5,7 +5,7 @@
 
 import { useRef, type ReactElement } from "react";
 import type { DatiNota, Nota, Percorso as PercorsoCartella } from "@memodu/condiviso";
-import { useBarraScorrimento } from "../componenti/BarraScorrimento";
+import { SCORRIMENTO_DISCRETO, useBarraScorrimento } from "../componenti/BarraScorrimento";
 import { Percorso } from "../componenti/Percorso";
 import { cursoreDalClic, Editor } from "../editor/Editor";
 import "./NotaAperta.css";
@@ -37,7 +37,7 @@ export function NotaAperta({ nota, nuova, onModifica, onApriCartella }: Propriet
       />
       <article
         ref={pagina}
-        className="nota-aperta"
+        className={`nota-aperta ${SCORRIMENTO_DISCRETO}`}
         // Un clic nel vuoto del foglio porta il cursore nel testo (DEC-66).
         onMouseDown={(e) => pagina.current && cursoreDalClic(pagina.current, e)}
       >

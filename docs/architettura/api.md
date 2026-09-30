@@ -4,8 +4,10 @@
 
 Server in Node con TypeScript e Fastify (DEC-24, DEC-32). Ogni endpoint ha uno schema JSON per input e output: Fastify rifiuta da solo le richieste che non lo rispettano.
 
+> **Da DEC-85 l'API offre solo la sincronizzazione** (in fondo alla pagina). Le operazioni su note, cartelle, cestino e tag descritte qui sotto sono comandi del nucleo Rust del client (`client/src-tauri/src/comandi.rs`), con gli stessi dati e gli stessi codici di errore: la pagina ne resta il contratto.
+
 ## Note (frammento Must A)
-Le note passano dall'API, che è l'unica a scrivere i dati (DEC-30), nel database SQLite (DEC-45, DEC-46, DEC-48). Il protocollo di sincronizzazione e il resto delle API arrivano con il frammento Must.
+Le note stanno nella copia di lavoro del client (DEC-67, DEC-85), in SQLite (DEC-48).
 
 **Valgono per tutti gli endpoint delle note:**
 - **Indirizzo:** l'API ascolta solo sulla macchina stessa (`127.0.0.1`), perché per ora gira sulla macchina di sviluppo (ambiente Locale). Confermato da Manuel Cucca il 27/09/2026.
@@ -14,7 +16,7 @@ Le note passano dall'API, che è l'unica a scrivere i dati (DEC-30), nel databas
 - **Lunghezza:** corpo della richiesta fino a 10 MB (`bodyLimit` di Fastify; il valore di default è 1 MB), circa 5.000 pagine di testo (EN-01, SF-17). Le immagini hanno il loro limite (RB-12). Scelta di Manuel Cucca, 28/09/2026.
 - **Origini ammesse:** l'API risponde alle chiamate del browser solo dall'interfaccia dell'app (`http://localhost:1420` in sviluppo, `tauri://localhost` e `http://tauri.localhost` nell'app installata); le altre origini non ricevono l'intestazione `Access-Control-Allow-Origin`.
 - **Controllo dei dati:** nessuna conversione silenziosa. Un campo che non è testo o un campo in più danno 400.
-- **Implementazione:** `api/src/app.ts`, prove in `api/src/app.test.ts`. Nell'app le stesse operazioni sono comandi del nucleo Rust sulla copia di lavoro, con gli stessi dati e codici di errore (`client/src-tauri/src/comandi.rs`, DEC-67).
+- **Implementazione:** comandi del nucleo in `client/src-tauri/src/comandi.rs` sull'archivio `archivio.rs`, prove in `archivio_test.rs` (DEC-85).
 - **API che non risponde** (server spento, SF-30): lo gestisce l'app, con SC-07 e il testo tenuto in memoria (RB-61, RB-62).
 
 ### Oggetto Nota
@@ -142,7 +144,7 @@ Cartelle e cestino nel database (DEC-48): una cartella ha un id e una cartella m
 - **Nomi:** l'API applica RB-63 (caratteri vietati nei nomi dei file sostituiti con `-`) e confronta i nomi senza distinguere maiuscole e minuscole (RB-23). Nelle risposte c'è sempre il nome come è stato scritto.
 - **Nome già esistente** (RB-31, SF-19): `409` con `{ "conflitto": "Idee" }`. L'app mostra l'avviso con tre scelte e ripete la richiesta con `"seEsiste": "numero"` (diventa «Idee (2)») o `"seEsiste": "unisci"`; Annulla non chiama l'API. Senza `seEsiste` vale `"chiedi"`.
 - **Unisci:** le note passano nella cartella di destinazione (i titoli possono ripetersi, RB-16); le sottocartelle senza omonimi passano anche loro; quelle con un omonimo restano dove sono e tornano in `daRisolvere`. L'app chiede per ognuna (RB-31) e chiama `POST /cartelle/sposta`. La cartella di partenza sparisce quando resta vuota.
-- **Implementazione:** `api/src/app.ts` e `api/src/archivio.ts`, prove accanto; nel client `client/src-tauri/src/archivio.rs` (DEC-67).
+- **Implementazione:** `client/src-tauri/src/archivio.rs`, prove in `archivio_test.rs` (DEC-85).
 
 ### Oggetto Cartella
 ```json

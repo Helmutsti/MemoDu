@@ -12,7 +12,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
-import { useBarraScorrimento } from "../componenti/BarraScorrimento";
+import { SCORRIMENTO_DISCRETO, useBarraScorrimento } from "../componenti/BarraScorrimento";
 import type { Albero, Cartella, Percorso, VoceElenco } from "@memodu/condiviso";
 import {
   CampoNomeCartella,
@@ -226,7 +226,7 @@ export function Colonna(p: Proprieta): ReactElement {
   return (
     <nav
       ref={nav}
-      className={`colonna colonna-${p.stato}`}
+      className={`colonna colonna-${p.stato} ${SCORRIMENTO_DISCRETO}`}
       aria-label="Note e cartelle"
       style={{ width: p.larghezza, "--larghezza-colonna": `${p.larghezza}px` } as CSSProperties}
     >

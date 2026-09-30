@@ -5,7 +5,7 @@
 ## Elenco
 | Ambiente | A cosa serve | Chi ha accesso | Codice | Dati | Servizi esterni |
 |---|---|---|---|---|---|
-| Locale | Il singolo sviluppatore lavora. Nella prima fase è l'unico ambiente: client e API girano sulla macchina di sviluppo e si avviano separatamente. Il client (`npm run client`) tiene le note nella sua copia di lavoro e non ha bisogno dell'API (DEC-67). L'API ascolta su `127.0.0.1:4317` e si avvia a mano con `npm run api`; serve al client nel browser usato per le prove e per sincronizzare: al primo avvio scrive il file `credenziali` nella cartella dei dati, che il client sulla stessa macchina usa da solo (DEC-79, DEC-84) | Manuel Cucca | Il suo ramo in corso | Minimi, generati | Nessuno |
+| Locale | Il singolo sviluppatore lavora. Nella prima fase è l'unico ambiente: client e API girano sulla macchina di sviluppo e si avviano separatamente. Il client (`npm run client`) tiene le note nella sua copia di lavoro e non ha bisogno dell'API (DEC-67). L'API ascolta su `127.0.0.1:4317` e si avvia a mano con `npm run api`; serve al client solo per sincronizzare (DEC-85): al primo avvio scrive il file `credenziali` nella cartella dei dati, che il client sulla stessa macchina usa da solo (DEC-79, DEC-84) | Manuel Cucca | Il suo ramo in corso | Minimi, generati | Nessuno |
 | Integrazione | Verificare che i pezzi funzionino insieme | | Ultima versione di ogni componente | Di prova, ricreabili | Sandbox |
 | Collaudo | Verificare prima del rilascio | | Versione candidata | Realistici, anonimizzati | Sandbox |
 | Produzione | Gli utenti veri | | Versione rilasciata | Reali | Reali |
@@ -29,7 +29,7 @@ servizi-esterni:
 ## Set di dati
 | Nome | Contenuto | Versione schema | Come si genera |
 |---|---|---|---|
-| Smistare (Locale, frammento Must B) | Tre note non organizzate; «Lavoro» con «Clienti» (nota «Rossi»), «Progetti» e le note «Budget 2026» e «Riunione con i fornitori»; «Personale» vuota. Nessun dato personale | Database SQLite, schema 1 (DEC-48) | API avviata con `MEMODU_CARTELLA="$HOME/Documents/Memodu-prove" npm run api` su una cartella vuota, poi `sh scripts/dati-di-prova.sh` (su Windows con Git Bash le lettere accentate non passano: usare Node). Mai sul database vero: la variabile `MEMODU_CARTELLA` tiene le prove separate dalla cartella dei dati delle applicazioni |
+| Smistare (Locale, frammento Must B) | Tre note non organizzate; «Lavoro» con «Clienti» (nota «Rossi»), «Progetti» e le note «Budget 2026» e «Riunione con i fornitori»; «Personale» vuota. Nessun dato personale | Database SQLite, schema 1 (DEC-48) | Da rifare: lo script `scripts/dati-di-prova.sh` usava le richieste delle note dell'API, tolte con DEC-85. Per ora le note di prova si creano a mano nell'app, con `MEMODU_CARTELLA` su una cartella vuota; mai sulla cartella dei dati vera |
 
 ## Regole
 - **Promozione:** come una versione passa da un ambiente al successivo e chi la autorizza.

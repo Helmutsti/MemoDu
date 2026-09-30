@@ -108,7 +108,6 @@
   flex-direction: column;
   width: var(--misura-colonna);
   padding-top: var(--spazio-contenitore);
-  padding-bottom: var(--spazio-contenitore);
   /* Stretta: sparisce prima il margine di destra, poi quello di sinistra; il contenuto resta
      dov'è e il bordo lo taglia, fino a 10 px. */
   padding-right: clamp(
@@ -132,10 +131,13 @@
 }
 
 /* Riga Cestino e cestino di trascinamento restano in fondo alla colonna anche se scorre. */
+/* La riga Cestino resta sul fondo mentre la colonna scorre (DEC-40); il margine sotto è suo,
+   così il suo fondo copre fino al bordo e il contenuto non si intravede sotto. */
 .colonna-fondo {
   position: sticky;
   bottom: 0;
   margin-top: var(--spazio-blocco);
+  padding-bottom: var(--spazio-contenitore);
   background: var(--sfondo-colonna);
 }
 

@@ -390,13 +390,13 @@ export function FinestraPrincipale(): ReactElement {
   // Aprendo un'altra nota, quella corrente si salva prima (RB-06); se non si salva, si resta.
   /**
    * Lasciando la nota aperta, se è vuota si cancella per sempre (RB-10, DEC-39). Il controllo
-   * lo fa l'API: una nota con del testo riceve 409 e resta. Dice se la nota è stata cancellata.
+   * lo fa l'archivio: una nota con del testo riceve 409 e resta. Dice se la nota è stata cancellata.
    */
-  const lasciaVuota = useCallback(async (opzioni?: { keepalive?: boolean }) => {
+  const lasciaVuota = useCallback(async () => {
     const nota = apertaAttuale.current;
     if (!nota) return false;
     try {
-      await api.eliminaSeVuota(nota.id, opzioni);
+      await api.eliminaSeVuota(nota.id);
       return true;
     } catch {
       return false;
@@ -449,10 +449,10 @@ export function FinestraPrincipale(): ReactElement {
     const suPerditaFocus = () => void coda.scarica();
     window.addEventListener("blur", suPerditaFocus);
     const puoChiudere = async () => {
-      await coda.scarica({ keepalive: true });
+      await coda.scarica();
       if (!coda.haModifiche) {
         // La finestra si nasconde: una nota vuota lasciata aperta sparisce (DEC-39).
-        if (await lasciaVuota({ keepalive: true })) {
+        if (await lasciaVuota()) {
           setAperta(null);
           await ricarica().catch(() => setBloccata(true));
         }

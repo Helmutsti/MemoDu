@@ -1,6 +1,6 @@
 # DEC-46 – SQLite nell'API Node
 
-**Data:** 2026-09-29 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-29 · **Stato:** Superata da DEC-85 · **Idea di origine:** —
 
 ## Contesto
 DEC-45 porta note, tag, cartelle e cestino in un database. Oggi le note passano dall'API Node sulla stessa macchina (DEC-30); l'installazione è personale, per un solo utente, su Windows e macOS (DEC-13). Il database deve reggere la ricerca nel testo (RF-08), la cifratura (RNF-02) e, più avanti, la copia sul dispositivo nel nucleo Rust (DEC-02).

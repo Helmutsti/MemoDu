@@ -7,7 +7,7 @@ import type { DatiNota, Nota } from "@memodu/condiviso";
 
 export const PAUSA_MS = 2000;
 
-type Salva = (id: string, dati: DatiNota, opzioni?: { keepalive?: boolean }) => Promise<Nota>;
+type Salva = (id: string, dati: DatiNota) => Promise<Nota>;
 
 export class CodaSalvataggio {
   private id: string | null = null;
@@ -52,7 +52,7 @@ export class CodaSalvataggio {
   }
 
   /** Salva subito quello che resta (cambio di nota, chiusura, perdita del focus). */
-  scarica(opzioni?: { keepalive?: boolean }): Promise<void> {
+  scarica(): Promise<void> {
     clearTimeout(this.timer);
     if (!this.haModifiche) return this.inCorso;
     const id = this.id!;
@@ -61,7 +61,7 @@ export class CodaSalvataggio {
     this.pendenti = {};
     this.inCorso = this.inCorso.then(async () => {
       try {
-        this.onSalvata(await this.salva(id, dati, opzioni));
+        this.onSalvata(await this.salva(id, dati));
       } catch (errore) {
         // Il testo non va perso: torna tra le modifiche da salvare, ma solo i campi che nel
         // frattempo non sono stati riscritti (RB-61).

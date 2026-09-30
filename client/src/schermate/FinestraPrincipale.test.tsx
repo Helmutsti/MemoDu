@@ -161,7 +161,7 @@ describe("SC-01, non organizzate", () => {
     render(<FinestraPrincipale />);
     await riga("Nota vuota");
     await userEvent.click(await riga("Lista"));
-    expect(api.eliminaSeVuota).toHaveBeenCalledWith("v", undefined);
+    expect(api.eliminaSeVuota).toHaveBeenCalledWith("v");
     await waitFor(() =>
       expect(screen.queryByRole("treeitem", { name: "Nota vuota" })).not.toBeInTheDocument(),
     );
@@ -633,7 +633,7 @@ describe("SC-07 quando l'API non risponde (RB-61, CA-01.7, CA-02.13)", () => {
     expect(await screen.findByText("Memodu non riesce a collegarsi")).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Riprova" }));
     await waitFor(() =>
-      expect(api.salva).toHaveBeenLastCalledWith("a", { titolo: "Lista della spesa" }, undefined),
+      expect(api.salva).toHaveBeenLastCalledWith("a", { titolo: "Lista della spesa" }),
     );
     expect(screen.getByDisplayValue("Lista della spesa")).toBeInTheDocument();
   });

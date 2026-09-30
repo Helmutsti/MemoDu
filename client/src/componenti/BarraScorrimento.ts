@@ -1,6 +1,9 @@
 // Barra di scorrimento discreta (DEC-58): quella del sistema è nascosta e non occupa spazio;
 // al suo posto un cursore sottile sopra il contenuto, che compare mentre si scorre o con il
-// mouse sull'area e sparisce poco dopo, come su macOS. Si può trascinare.
+// mouse sull'area e sparisce poco dopo, come su macOS. Si può trascinare. Il cursore sta dentro
+// l'area: si muove con lei quando la colonna si apre o si chiude e sparisce insieme a lei.
+// L'area deve avere la classe SCORRIMENTO_DISCRETO nel suo className: aggiunta da qui, React la
+// toglierebbe al primo cambio di classe e tornerebbe la barra del sistema, sotto questa.
 
 import { useEffect, type RefObject } from "react";
 import "./BarraScorrimento.css";
@@ -10,17 +13,18 @@ const RITARDO_SCOMPARSA_MS = 800;
 /** Distanza del cursore dai bordi dell'area e sua altezza minima. */
 const MARGINE = 2;
 const ALTEZZA_MINIMA = 24;
-const LARGHEZZA = 6;
+
+/** Classe che nasconde la barra del sistema, da mettere nel className dell'area. */
+export const SCORRIMENTO_DISCRETO = "scorrimento-discreto";
 
 export function useBarraScorrimento(ref: RefObject<HTMLElement | null>): void {
   useEffect(() => {
     const area = ref.current;
     if (!area) return;
-    area.classList.add("scorrimento-discreto");
     const cursore = document.createElement("div");
     cursore.className = "barra-scorrimento";
     cursore.setAttribute("aria-hidden", "true");
-    document.body.appendChild(cursore);
+    area.appendChild(cursore);
 
     let timer: ReturnType<typeof setTimeout> | undefined;
     let trascinamento: { y: number; scorrimento: number; passo: number } | null = null;
@@ -29,13 +33,13 @@ export function useBarraScorrimento(ref: RefObject<HTMLElement | null>): void {
     /** Posizione e altezza del cursore; false se non c'è niente da scorrere. */
     const aggiorna = (): boolean => {
       const { scrollHeight, clientHeight, scrollTop } = area;
-      const r = area.getBoundingClientRect();
-      if (scrollHeight <= clientHeight + 1 || r.width === 0) return false;
+      if (scrollHeight <= clientHeight + 1) return false;
       const corsa = clientHeight - 2 * MARGINE;
       const altezza = Math.max(ALTEZZA_MINIMA, (corsa * clientHeight) / scrollHeight);
       const quanto = scrollTop / (scrollHeight - clientHeight);
-      cursore.style.top = `${r.top + MARGINE + (corsa - altezza) * quanto}px`;
-      cursore.style.left = `${r.right - LARGHEZZA - MARGINE}px`;
+      // Dentro l'area il cursore scorrerebbe con il contenuto: la sua posizione parte da quanto
+      // si è scorso, così resta dentro la parte visibile.
+      cursore.style.top = `${scrollTop + MARGINE + (corsa - altezza) * quanto}px`;
       cursore.style.height = `${altezza}px`;
       return true;
     };
@@ -91,7 +95,6 @@ export function useBarraScorrimento(ref: RefObject<HTMLElement | null>): void {
       clearTimeout(timer);
       area.removeEventListener("scroll", mostra);
       area.removeEventListener("mousemove", mostra);
-      area.classList.remove("scorrimento-discreto");
       cursore.remove();
     };
   }, [ref]);

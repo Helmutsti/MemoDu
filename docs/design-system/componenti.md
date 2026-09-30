@@ -924,7 +924,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 
 ### Varianti e dimensioni
 - Cursore largo 6, tondo (`raggio-pillola`), in `icona-tenue`; sta sopra il contenuto, a 2 px dal bordo destro e dai bordi in alto e in basso dell'area che scorre, e non occupa spazio. L'altezza segue la parte visibile del contenuto, almeno 24 (in Figma 120 di esempio, si cambia sull'istanza).
-- Nessun binario: si vede solo il cursore.
+- Nessun binario: si vede solo il cursore. Quando l'area cambia stato o non si vede (per esempio la colonna che si chiude), il cursore sparisce subito, anche con il mouse sopra; la barra del sistema resta sempre nascosta.
 
 ### Stati
 | Stato | Descrizione |

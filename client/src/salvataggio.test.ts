@@ -14,7 +14,7 @@ const nota = (id: string, dati: DatiNota): Nota => ({
   tag: [],
 });
 
-let salva: Mock<(id: string, dati: DatiNota, opzioni?: { keepalive?: boolean }) => Promise<Nota>>;
+let salva: Mock<(id: string, dati: DatiNota) => Promise<Nota>>;
 let onSalvata: Mock<(nota: Nota) => void>;
 let onErrore: Mock<(errore: unknown) => void>;
 let coda: CodaSalvataggio;
@@ -39,7 +39,7 @@ describe("salvataggio automatico (RB-06, CA-02.7)", () => {
     expect(salva).not.toHaveBeenCalled();
     await vi.advanceTimersByTimeAsync(1);
     expect(salva).toHaveBeenCalledTimes(1);
-    expect(salva).toHaveBeenCalledWith("a", { contenuto: "ciao" }, undefined);
+    expect(salva).toHaveBeenCalledWith("a", { contenuto: "ciao" });
     expect(onSalvata).toHaveBeenCalled();
   });
 
@@ -47,13 +47,13 @@ describe("salvataggio automatico (RB-06, CA-02.7)", () => {
     coda.modifica("a", { titolo: "T" });
     coda.modifica("a", { contenuto: "testo" });
     await vi.advanceTimersByTimeAsync(PAUSA_MS);
-    expect(salva).toHaveBeenCalledWith("a", { titolo: "T", contenuto: "testo" }, undefined);
+    expect(salva).toHaveBeenCalledWith("a", { titolo: "T", contenuto: "testo" });
   });
 
   it("salva subito quando si cambia nota, si chiude o si perde il focus", async () => {
     coda.modifica("a", { contenuto: "uno" });
-    await coda.scarica({ keepalive: true });
-    expect(salva).toHaveBeenCalledWith("a", { contenuto: "uno" }, { keepalive: true });
+    await coda.scarica();
+    expect(salva).toHaveBeenCalledWith("a", { contenuto: "uno" });
     await vi.advanceTimersByTimeAsync(PAUSA_MS);
     expect(salva).toHaveBeenCalledTimes(1);
   });
@@ -77,7 +77,7 @@ describe("salvataggio automatico (RB-06, CA-02.7)", () => {
     expect(onErrore).toHaveBeenCalled();
     expect(coda.haModifiche).toBe(true);
     await coda.scarica();
-    expect(salva).toHaveBeenLastCalledWith("a", { contenuto: "importante" }, undefined);
+    expect(salva).toHaveBeenLastCalledWith("a", { contenuto: "importante" });
     expect(coda.haModifiche).toBe(false);
   });
 
@@ -91,7 +91,7 @@ describe("salvataggio automatico (RB-06, CA-02.7)", () => {
     await secondo;
     expect(coda.haModifiche).toBe(true);
     await coda.scarica();
-    expect(salva).toHaveBeenLastCalledWith("a", { contenuto: "B" }, undefined);
+    expect(salva).toHaveBeenLastCalledWith("a", { contenuto: "B" });
     expect(coda.haModifiche).toBe(false);
   });
 

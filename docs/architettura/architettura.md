@@ -13,7 +13,7 @@
 | Server (API) | Node con TypeScript e Fastify | DEC-24, DEC-32 |
 | Archivio del server | File system: documenti e immagini cifrati come file | DEC-25 |
 | Copia di lavoro nel client | Note, tag, cartelle e cestino in un database SQLite nel nucleo Rust del client (rusqlite), file `copia-di-lavoro.db` nella cartella dei dati delle applicazioni; l'interfaccia lo legge e scrive con comandi Tauri, uno per endpoint dell'API, con gli stessi dati e codici di errore. Il client funziona senza API. Alla prima apertura parte da una copia di `memodu.db` dell'API, se c'è nella stessa cartella | DEC-67 (proposta) |
-| Note nell'API | Le gestisce l'API (DEC-30). Note, tag, cartelle e cestino in un database SQLite nell'API; il testo resta markdown in una colonna. Il file del database sta nella cartella dei dati delle applicazioni (`%LOCALAPPDATA%\Memodu` su Windows, `~/Library/Application Support/Memodu` su macOS), fuori da OneDrive e iCloud; su Windows la cartella locale e non quella «Roaming», che nei domini aziendali può seguire il profilo sul server; per le prove la variabile `MEMODU_CARTELLA` lo sposta (scelte di Manuel Cucca il 29/09/2026). Dal frammento Must D (DEC-49) il codice scrive nel database. Poi la copia di lavoro sul dispositivo | DEC-30, DEC-45, DEC-46, DEC-47 |
+| Server (deposito della sincronizzazione) | L'API non gestisce più le note: conserva solo i blocchi della sincronizzazione come file, con un indice SQLite, e genera le credenziali (DEC-75, DEC-79, DEC-85) | DEC-85 |
 | Hosting | Per ora la macchina di sviluppo (ambiente Locale). L'hosting definitivo è rinviato; deve avere un disco persistente (DEC-25) | — |
 
 ## Struttura del repository
@@ -41,7 +41,7 @@ SQLite nell'API (DEC-46, DEC-47). Solo ciò che serve a Must A, B e C; immagini,
 - Istanti in ora universale ISO 8601, date del calendario come giorno. La versione dello schema è segnata nel database.
 
 ## Regole dei dati (frammento Must D, DEC-49)
-Le stesse regole valgono nell'API (`api/src/archivio.ts`, file `memodu.db`) e nella copia di lavoro del client (`client/src-tauri/src/archivio.rs`, file `copia-di-lavoro.db`, DEC-67). Nella copia di lavoro ogni operazione è una transazione.
+Le regole stanno solo nella copia di lavoro del client (`client/src-tauri/src/archivio.rs`, file `copia-di-lavoro.db`, DEC-67, DEC-85): l'API non ha più un archivio delle note. Nella copia di lavoro ogni operazione è una transazione.
 
 - **Nomi delle cartelle** (RB-63): i caratteri vietati nei nomi dei file (`< > : " / \ | ? *` e i caratteri di controllo) diventano `-`, senza punti e spazi finali, al massimo 100 caratteri; i nomi riservati di Windows (`CON`, `PRN`, `AUX`, `NUL`, `COM1`…, `LPT1`…) ricevono un `-` in fondo. Maiuscole e minuscole non contano (RB-23). Confermato da Manuel Cucca il 28/09/2026.
 - **Titoli delle note:** si ripetono liberamente (RB-16); non servono più numeri per distinguere i file.

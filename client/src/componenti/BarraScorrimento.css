@@ -1,5 +1,7 @@
 /* Barra di scorrimento discreta (DEC-58): quella del sistema non si vede e non occupa spazio. */
 .scorrimento-discreto {
+  /* Il cursore sta dentro l'area, posizionato rispetto a lei. */
+  position: relative;
   scrollbar-width: none;
 }
 .scorrimento-discreto::-webkit-scrollbar {
@@ -8,7 +10,8 @@
 
 /* Cursore sottile sopra il contenuto: 6 px, tondo, in icona-tenue; compare e sparisce. */
 .barra-scorrimento {
-  position: fixed;
+  position: absolute;
+  right: 2px;
   z-index: calc(var(--z-comparsa) + 1);
   width: 6px;
   border-radius: var(--raggio-pillola);
@@ -16,6 +19,12 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--movimento-durata-media) ease-out;
+}
+/* Dentro l'area il cursore non prende le misure dei figli (per esempio la larghezza minima
+   delle righe della colonna, DEC-62). */
+.scorrimento-discreto > .barra-scorrimento {
+  min-width: 0;
+  margin: 0;
 }
 .barra-scorrimento-visibile {
   opacity: 0.5;

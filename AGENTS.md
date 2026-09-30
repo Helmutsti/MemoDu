@@ -9,7 +9,7 @@ Memodu è un'applicazione di note cross-platform che mette la scrittura al primo
 Dalla cartella principale (workspace npm con `client`, `api`, `condiviso`, DEC-33, DEC-67):
 - Installazione: `npm install`
 - Avvio del client: `npm run client` (app Tauri con la copia di lavoro delle note: non serve l'API)
-- Avvio dell'API: `npm run api` (su `127.0.0.1:4317`, indipendente dal client)
+- Avvio dell'API: `npm run api` (su `127.0.0.1:4317`): è solo il deposito della sincronizzazione; al primo avvio scrive le credenziali nella cartella dei dati (DEC-79, DEC-85)
 - Test: `npm test`; prove del nucleo Rust con `cargo test` in `client/src-tauri`
 - Lint e formattazione: `npm run lint` (controllo), `npm run format` (correzione); tipi: `npm run typecheck`
 

@@ -1,6 +1,6 @@
 # DEC-30 – Note tramite l'API per il frammento Must A
 
-**Data:** 2026-09-25 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-25 · **Stato:** Superata da DEC-85 · **Idea di origine:** —
 
 ## Contesto
 Per Must A (RF-01, RF-02) restava da decidere chi gestisce le note: l'interfaccia, il nucleo Rust dell'app (DEC-23) o l'API Node (DEC-24), che per ora gira sulla macchina di sviluppo con l'archivio su file (DEC-25, ambiente Locale).

@@ -347,3 +347,4 @@
 | 30/09/2026 | Manuel Cucca | RF-10 e RF-14: criteri di accettazione CA-10.1 … CA-10.11 e CA-14.1 … CA-14.5, scritti dall'agente da confermare | DEC-75 … DEC-83 |
 | 30/09/2026 | Manuel Cucca | RB-57, FL-08, CA-14.3, CA-14.6: senza il file delle credenziali si lavora in locale; il blocco resta per le credenziali rifiutate | DEC-84 |
 | 30/09/2026 | Manuel Cucca | Codice della sincronizzazione (RF-10, RF-14): richieste in `api.md`, credenziali generate dall'API, ambienti | DEC-75 … DEC-84 |
+| 30/09/2026 | Manuel Cucca | L'API è solo il deposito della sincronizzazione: tolti il vecchio archivio delle note e le sue richieste; api.md resta il contratto dei comandi del client; set di dati «Smistare» da rifare | DEC-85 |

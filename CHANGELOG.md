@@ -39,6 +39,8 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 - 
 
 ### Corretto
+- Nella colonna non compaiono più due barre di scorrimento, e la barra si muove con la colonna quando si apre o si chiude (RF-05)
+- Sotto la riga Cestino in fondo alla colonna non si intravedono più le note che scorrono (RF-15)
 - La finestra Dettagli si chiude anche cliccando fuori (RF-04)
 - Il bordo del focus compare solo quando ti muovi con la tastiera, non a ogni clic
 - Su Windows il clic sull'icona nell'area di notifica apre Memodu; il menu compare con il tasto destro (RF-01)

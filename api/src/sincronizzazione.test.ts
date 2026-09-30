@@ -4,7 +4,6 @@ import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { FastifyInstance } from "fastify";
 import { creaServer } from "./app.ts";
-import { ArchivioNote } from "./archivio.ts";
 import { ArchivioSincronizzazione, type Credenziali } from "./sincronizzazione.ts";
 
 const A = "7d1c4a52-6b8f-4c1e-9a3d-2f5e8b7c6a10";
@@ -13,7 +12,6 @@ const B = "0b9e8d7c-6f5a-4b3c-8d2e-1a0f9e8d7c6b";
 let cartella: string;
 let orologio: Date;
 let sinc: ArchivioSincronizzazione;
-let archivio: ArchivioNote;
 let server: FastifyInstance;
 let credenziali: Credenziali;
 
@@ -22,12 +20,10 @@ beforeEach(async () => {
   orologio = new Date("2026-09-30T08:00:00Z");
   sinc = new ArchivioSincronizzazione(cartella, () => orologio);
   credenziali = sinc.preparaCredenziali("http://127.0.0.1:4317")!;
-  archivio = new ArchivioNote(cartella);
-  server = creaServer(archivio, sinc);
+  server = creaServer(sinc);
 });
 afterEach(async () => {
   await server.close();
-  archivio.chiudi();
   sinc.chiudi();
   await rm(cartella, { recursive: true, force: true });
 });
