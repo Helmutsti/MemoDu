@@ -193,10 +193,17 @@ fn tornato_scrivibile_il_file_riprende_a_salvare_senza_riavviare_riconnessione()
     p.chiudi();
     let file = p.file();
     let permessi = |sola_lettura: bool| {
-        let mut permessi = std::fs::metadata(&file).unwrap().permissions();
-        #[allow(clippy::permissions_set_readonly_false)]
-        permessi.set_readonly(sola_lettura);
-        std::fs::set_permissions(&file, permessi).unwrap();
+        // In modalità WAL anche -wal e -shm fanno parte del database: SQLite può
+        // crearli mentre il file principale è in sola lettura.
+        for suffisso in ["", "-wal", "-shm"] {
+            let percorso = PathBuf::from(format!("{}{suffisso}", file.display()));
+            if let Ok(metadati) = std::fs::metadata(&percorso) {
+                let mut permessi = metadati.permissions();
+                #[allow(clippy::permissions_set_readonly_false)]
+                permessi.set_readonly(sola_lettura);
+                std::fs::set_permissions(&percorso, permessi).unwrap();
+            }
+        }
     };
     permessi(true);
     let aperto = p.prova_ad_aprire(&p.cartella.clone());

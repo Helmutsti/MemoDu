@@ -367,3 +367,7 @@
 | 30/09/2026 | Manuel Cucca | Fase 8 di RF-08: criteri CA-08.1 … CA-08.16 (200 ms con 5.000 note), piano di test TC-63 … TC-78, set di dati Ricerca in ambienti.md; RF-08 Pronto per lo sviluppo | DEC-94 DEC-95 |
 | 30/09/2026 | Manuel Cucca | Sviluppo di RF-08: indice e comando cerca nel nucleo, ricerca nella colonna con Ctrl + K, filtri e sezione Ricerca in SC-06; api.md con i comandi dell'impostazione allineati alle altre impostazioni; esiti di TC-77 (parte automatica) e TC-78 | DEC-94 DEC-95 |
 | 30/09/2026 | Manuel Cucca | Revisione del codice di RF-08: schema 5 con `ricerca_righe` e trigger sui tag e sull'unione di tag doppi; impostazione del cestino che non si azzera; architettura.md e avanzamento aggiornati | DEC-95 |
+| 30/09/2026 | Agente IA | SC-01: su macOS i comandi della fascia si allineano ai pallini nativi; «Apri la colonna» resta visibile fino al pulsante spostato dopo i pallini | DEC-55 |
+| 30/09/2026 | Manuel Cucca | SC-01: su macOS i tre pallini e i comandi dell’app restano allineati, con più spazio sia sopra sia a sinistra dei pallini | DEC-55 |
+| 30/09/2026 | Manuel Cucca | SC-01: il primo rientro di 18 px su macOS non era percepibile; aumentato a 26 px su entrambi i bordi e spostata con i pallini l’intera fascia dei comandi | DEC-55 |
+| 30/09/2026 | Agente IA | SC-01: corretto il resoconto di macOS; i comandi dell'app si allineano in altezza ai controlli nativi senza spostarli | DEC-55 |

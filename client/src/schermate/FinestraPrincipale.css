@@ -92,6 +92,7 @@
 
 /* Su macOS i tre pallini del sistema stanno in alto a sinistra. */
 .sistema-mac .colonna-testata {
+  margin-top: calc(-1 * var(--spazio-contenitore));
   padding-left: 72px;
 }
 
@@ -179,6 +180,10 @@
   gap: var(--spazio-controllo-piccolo);
 }
 
+.sistema-mac .barra-destra {
+  top: 0;
+}
+
 /* Pillola flottante: alta 32, 4 px di margine e tra i pulsanti tondi da 24, con sfondo e ombra
    dei flottanti. */
 .barra-pillola {
@@ -190,6 +195,23 @@
   border-radius: var(--raggio-pillola);
   background: var(--sfondo-flottante);
   box-shadow: var(--ombra);
+}
+
+/* Su macOS la fascia si integra con i controlli nativi: le azioni restano icone senza pillole. */
+.sistema-mac .barra-pillola {
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* I comandi della fascia Mac restano icone anche mentre il puntatore ci passa sopra. */
+.sistema-mac .barra-apri-colonna:hover,
+.sistema-mac .barra-apri-colonna:active,
+.sistema-mac .colonna-testata .pulsante-icona:hover,
+.sistema-mac .colonna-testata .pulsante-icona:active,
+.sistema-mac .barra-pillola .pulsante-icona:hover,
+.sistema-mac .barra-pillola .pulsante-icona:active {
+  background: transparent;
 }
 
 .barra-destra:empty {
@@ -223,7 +245,12 @@
   transform: translateY(var(--spazio-controllo-piccolo));
 }
 
+.sistema-mac .barra-apri-colonna {
+  transform: none;
+}
+
 .barra-apri-visibile,
+.barra-apri-colonna:hover,
 .barra-apri-colonna:focus-visible {
   opacity: 1;
 }
