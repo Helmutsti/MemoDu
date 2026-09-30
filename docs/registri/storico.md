@@ -352,3 +352,4 @@
 | 30/09/2026 | Manuel Cucca | SC-01: la colonna ha lo stesso margine ai due lati a ogni larghezza | DEC-87 |
 | 30/09/2026 | Manuel Cucca | CMP-25: la barra di scorrimento è quella del sistema, sottile, al posto del cursore disegnato in JavaScript | DEC-88 |
 | 30/09/2026 | Manuel Cucca | CMP-25 e architettura: la barra di scorrimento è di OverlayScrollbars, sovrapposta al contenuto, e compare e sparisce con la dissolvenza | DEC-89 |
+| 30/09/2026 | Manuel Cucca | RB-53 superata: gli avvisi restano sul dispositivo; EN-08 locale, SC-01 avvisi, CMP-15 | DEC-90 |

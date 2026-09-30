@@ -18,7 +18,7 @@ In cima all'area della nota di SC-01, livello 50, uno alla volta:
 | Errore di sincronizzazione | Subito (SF-32) | Ho capito |
 | Nota in conflitto | Subito (RB-39) | Apri l'altra |
 
-Visto su un dispositivo, l'avviso sparisce su tutti (RB-53). Le credenziali rifiutate non sono un avviso: bloccano la finestra (SC-07).
+L'avviso resta sul dispositivo in cui nasce (DEC-90). Le credenziali rifiutate non sono un avviso: bloccano la finestra (SC-07).
 
 ---
 

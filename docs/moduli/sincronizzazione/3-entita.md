@@ -36,7 +36,7 @@ Il diagramma di tutto il sistema è in `moduli/note/3-entita.md`.
 - **Dati sensibili:** il nome del dispositivo è cifrato end-to-end (DEC-08).
 
 ## EN-08 – Avviso
-**Descrizione:** un avviso mostrato all'utente dalla sincronizzazione (RB-39, RB-40). Si sincronizza: visto su un dispositivo, sparisce da tutti (RB-53).
+**Descrizione:** un avviso mostrato all'utente dalla sincronizzazione (RB-39, RB-40). Resta sul dispositivo in cui nasce e non si sincronizza (DEC-90).
 
 | Attributo | Tipo | Obbligatorio | Vincoli | Note |
 |---|---|---|---|---|
@@ -51,9 +51,8 @@ Il testo dell'avviso non è un attributo: dipende dal tipo e si scrive in Fase 6
 
 - **Chi lo crea:** il sistema (FL-07).
 - **Chi lo modifica:** l'utente, vedendolo (Visto diventa Sì).
-- **Cancellazione:** un avviso visto non si mostra più, su nessun dispositivo (RB-53). Quando eliminarlo davvero si decide in Fase 7.
-- **Dati sensibili:** cifrato end-to-end come tutti i dati (DEC-08).
-- **Limite:** un avviso "server irraggiungibile" per natura non può sincronizzarsi finché il server non torna: fino ad allora esiste solo sul dispositivo che lo ha generato.
+- **Cancellazione:** un avviso chiuso non si mostra più; esiste solo sul dispositivo (DEC-90).
+- **Dati sensibili:** non lascia il dispositivo (DEC-90).
 
 ## Diagrammi a stati
 Nessuno: senza login e uscita il dispositivo non cambia stato (DEC-13).

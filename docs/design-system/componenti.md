@@ -587,7 +587,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 **Tipo:** composto (usa CMP-01 e CMP-02) · **Usato in:** tutte le schermate, in cima all'area della nota · **Figma:** pagina Componenti composti, [Avviso](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=70-2614)
 
 **Scopo:** dire qualcosa che conta senza bloccare (RB-39, RB-40).
-**Quando usarlo:** per i problemi di sincronizzazione e le note in conflitto; resta finché non si vede e, visto su un dispositivo, sparisce da tutti (RB-53).
+**Quando usarlo:** per i problemi di sincronizzazione e le note in conflitto; resta finché non lo si chiude, solo sul dispositivo in cui nasce (DEC-90).
 **Quando non usarlo:** per chiedere conferma (CMP-16) o per confermare un'azione riuscita: il successo di solito non si mostra (RB-40).
 
 ### Varianti e dimensioni
