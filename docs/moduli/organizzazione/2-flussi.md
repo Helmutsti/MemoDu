@@ -59,12 +59,16 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A[Scrivo nella barra di ricerca] --> B[Dopo una brevissima pausa la ricerca parte sul dispositivo - RB-33]
-    B --> C[Cerca in titolo, testo, tag con sotto-tag e date]
+    Z[Clic sul campo di ricerca o Ctrl + K - DEC-94] --> Y[La card si apre con i soli filtri - RB-33]
+    Y --> X{Scrivo o scelgo un filtro?}
+    X -- Scrivo --> A[Scrivo nel campo]
+    A --> B[Dopo una brevissima pausa la ricerca parte sul dispositivo - RB-33]
+    B --> C[Cerca in titolo, testo e nomi dei tag, anche dentro le parole - RB-69]
     C --> D{Aggiungo filtri su tag o date?}
-    D -- Sì --> E[Applico i filtri]
+    D -- Sì --> E[Applico i filtri - RB-70]
     E --> F
     D -- No --> F{Ci sono risultati?}
+    X -- Filtro --> E
     F -- No --> G[La card mostra: Nessuna nota trovata - RB-35]
     F -- Sì --> H[La card a discesa mostra tutti i risultati per pertinenza, scorrendo - RB-34]
     H --> I{Le note nel cestino sono incluse nelle impostazioni?}
@@ -73,17 +77,19 @@ flowchart TD
     J --> L[Clic su un risultato]
     K --> L
     L --> M[La nota si apre al posto di quella aperta, già salvata - RB-06]
+    M --> N[La card si chiude; la colonna aperta da Ctrl + K si richiude - RB-71]
 ```
 
 ### Percorsi alternativi
 - **Ricerca per tag:** cercando un tag si trovano anche le note con i suoi sotto-tag (RF-06). Maiuscole e minuscole non contano (RB-22).
-- **Filtri:** tag e date dei metadati (creazione, ultima modifica, fine validità); il loro aspetto si disegna in Fase 4.
+- **Filtri:** tag e date dei metadati (creazione, ultima modifica); il filtro sulla fine validità per ora non c'è (DEC-94). Con il campo vuoto e almeno un filtro i risultati sono in ordine di ultima modifica (RB-70).
+- **Esc:** chiude la card senza aprire niente; la colonna aperta da Ctrl + K si richiude e il cursore torna dov'era nel foglio (RB-71).
 - **Risultato nel cestino:** aprendolo si vede che è nel cestino; si può ripristinare (RB-28).
 
 ### Sfighe gestite
 | Sfiga | Rilevamento | Comunicazione | Via d'uscita |
 |---|---|---|---|
-| SF-06 Input strani | Maiuscole, accenti, spazi nella ricerca | Nessun messaggio | Maiuscole e minuscole non contano nei tag (RB-22) |
+| SF-06 Input strani | Maiuscole, accenti, spazi nella ricerca | Nessun messaggio | Maiuscole, minuscole e accenti non contano; gli spazi separano le parole (RB-22, RB-69) |
 | SF-08 Connessione che cade a metà | Assenza di rete | Nessun messaggio: la ricerca avviene sul dispositivo | Cerca nella copia di lavoro (DEC-02) |
 | SF-16 Vuoto | Nessun risultato | "Nessuna nota trovata" (testo definitivo in Fase 6) | Si cambia la ricerca o i filtri (RB-35) |
 | SF-17 Troppo | Molti risultati | La card si scorre | Tutti i risultati, per pertinenza (RB-34) |
@@ -145,7 +151,11 @@ stateDiagram-v2
 | RB-65 | Le note di una cartella si vedono nell'albero: aprendo la cartella compaiono prima le sottocartelle (RB-64), poi le note, in ordine alfabetico per titolo, dalla A alla Z, senza distinguere maiuscole e minuscole | FL-05 |
 | RB-66 | Spostare la nota aperta (Sposta in o trascinamento) non la chiude: si continua a scrivere, e nella colonna la cartella di destinazione si apre per mostrare la nota selezionata | FL-05 |
 | RB-67 | Se la nota aperta finisce nel cestino (eliminata dal menu `···`, trascinata sul cestino o dentro una cartella eliminata), l'area della nota mostra lo stato vuoto «Nessuna nota aperta» (CMP-19); nessun'altra nota si apre da sola | FL-05 |
-| RB-33 | La ricerca parte mentre si scrive, dopo una brevissima pausa, senza premere Invio | FL-06 |
+| RB-33 | La ricerca parte mentre si scrive, dopo una brevissima pausa, senza premere Invio. La card si apre appena si entra nel campo, con i soli filtri, anche prima di scrivere (DEC-94) | FL-06 |
+| RB-69 | Il testo cercato si trova in titolo, testo e nomi dei tag, anche dentro le altre parole («lascio» trova «rilascio»); maiuscole e accenti non contano; con più parole la nota deve contenerle tutte. Le date non si cercano con il testo, solo con i filtri (DEC-94) | FL-06 |
+| RB-70 | I filtri si sommano: con più tag nel filtro Tag escono le note che li hanno tutti, ciascuno con i suoi sotto-tag; con i filtri di data, le note nel periodo scelto. Con il campo vuoto e almeno un filtro i risultati sono in ordine di ultima modifica, la più recente in cima (DEC-94) | FL-06 |
+| RB-71 | Ctrl + K (⌘ + K su macOS) apre la colonna, se è chiusa, e porta il cursore nel campo di ricerca. Se la colonna l'ha aperta Ctrl + K, aprendo un risultato o premendo Esc si richiude, e con Esc il cursore torna dov'era nel foglio; fissata o aperta a mano resta com'era (DEC-94) | FL-06 |
+| RB-72 | Chiudendo la card il testo cercato e i filtri si svuotano: ogni ricerca riparte da zero (DEC-94) | FL-06 |
 | RB-34 | I risultati si ordinano per pertinenza: prima le note con la parola nel titolo o nei tag, poi quelle con la parola solo nel testo. La card a discesa li mostra tutti e si scorre | FL-06 |
 | RB-35 | Senza risultati la card resta aperta con il messaggio "Nessuna nota trovata" | FL-06 |
 | RB-45 | Mentre la card è aperta i risultati non si aggiornano; cliccando un risultato si apre sempre la versione aggiornata della nota | FL-06 |

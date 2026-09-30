@@ -115,11 +115,13 @@ Nella prima fase la separazione tra ambiti si ottiene con le cartelle principali
 
 Come *utente* voglio cercare e filtrare le note per trovare subito quella che mi serve.
 
-La ricerca e il filtro agiscono su:
-- titolo;
-- testo della nota;
-- tag, sotto-tag compresi (RF-06);
-- date dei metadati: creazione, ultima modifica, fine validità (RF-04).
+La ricerca agisce su titolo, testo della nota e nomi dei tag; i filtri su:
+- tag, sotto-tag compresi (RF-06): con più tag escono le note che li hanno tutti;
+- date dei metadati: creazione e ultima modifica (RF-04). Il filtro sulla fine validità per ora non c'è (DEC-94).
+
+Le date si cercano solo con i filtri. Una parola si trova anche dentro le altre parole, maiuscole e accenti non contano, con più parole servono tutte. Si può filtrare anche senza scrivere niente (DEC-94).
+
+La ricerca sta in cima alla colonna; Ctrl + K (⌘ + K su macOS) la apre anche con la colonna chiusa (DEC-94).
 
 Con la cifratura end-to-end (RF-10) il server non legge le note: la ricerca nel testo avviene sul dispositivo.
 

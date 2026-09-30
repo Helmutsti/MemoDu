@@ -16,7 +16,7 @@ Il diagramma di tutto il sistema è in `moduli/note/3-entita.md`.
 | Avvio automatico all'accensione | Sì \| No | Sì | Solo app desktop; solo su questo dispositivo | Di default No (RF-01, DEC-91) |
 | Tema | Sistema \| Chiaro \| Scuro | Sì | Solo su questo dispositivo | Di default Sistema (DEC-91) |
 | Finestra principale in primo piano | Sì \| No | Sì | Solo app desktop; solo su questo dispositivo | Di default No (DEC-93) |
-| Note del cestino nella ricerca | Sì \| No | Sì | | Di default Sì (RB-29) |
+| Note del cestino nella ricerca | Sì | No | Sì | Sincronizzata (RB-52) | Di default Sì (RB-29, DEC-94) |\| No | Sì | | Di default Sì (RB-29) |
 
 Il nome del dispositivo non è qui: appartiene al dispositivo (EN-06, RB-51). Le credenziali appartengono all'installazione (EN-05, RB-54).
 

@@ -20,6 +20,7 @@ Impostazione generale della Fase 4: **desktop-first**. Il pubblico della prima f
 - **Mockup:** [stato normale](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=5-718) (in revisione)
 - **Mockup della versione ridotta (frammento Must A, approvati da Manuel Cucca il 27/09/2026):** [con note](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=17-214) · [vuota, primo utilizzo](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=17-425); esportazioni `immagini/SC-01-ridotta-mockup.png`, `immagini/SC-01-ridotta-vuota-mockup.png`. Nella nota aperta niente menu `···` e niente riga dei metadati (tag e data di modifica): torna con RF-04
 - **Mockup della versione per il frammento Must B «Smistare» (approvati da Manuel Cucca il 28/09/2026):** [con cartelle](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=43-310) · [trascinamento](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-1950) · [nuova cartella](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-2027) · [nome già esistente](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-2104) · [albero vuoto](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-2942) · [errore](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-3074) · [menu della nota](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-3092) · [Sposta in](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=44-3214); esportazioni `immagini/SC-01-smistare-*-mockup.png`. Il 30/09/2026 questi mockup e quelli di Must A sono stati aggiornati con il titolo nel percorso e senza metadati nel foglio (DEC-71), l'avviso 8 sotto la fascia (DEC-86), ed esportati di nuovo. Sempre il 30/09/2026 hanno la riga Impostazioni sotto il Cestino (DEC-91) e il ··· con la sua icona, ed esportati di nuovo.
+- **Mockup della ricerca (RF-08, DEC-94, approvati da Manuel Cucca il 30/09/2026):** [solo filtri](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=124-1375) · [risultati](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=126-1449) · [filtro senza testo](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=126-1720) · [filtro Tag aperto](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=126-1932) · [filtro data aperto](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=126-2272) · [nessun risultato](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=126-2597); esportazioni `immagini/SC-01-ricerca-*-mockup.png`. Campo di ricerca in cima alla colonna, sotto la riga della puntina; con il campo vuoto e il focus il segnaposto resta e il cursore non si disegna (l'istanza di CMP-03 non lo mette prima del segnaposto)
 - **Versione per il frammento Must B:** la colonna ha le sezioni Non organizzate e Cartelle, con l'albero (CMP-14); niente ricerca. La nota aperta non ha la riga dei tag e delle date. Il menu `···` in alto a destra ha solo «Sposta in…», «Elimina» e «Cestino» (DEC-36).
 - **Versione ridotta per il frammento Must A:** la colonna sinistra ha solo la sezione Non organizzate con il suo + (FL-09); niente ricerca e niente sezione Cartelle. Le cartelle si aggiungeranno sotto con il frammento Must. Finché non ci sono le cartelle la sezione si intitola "Note" (diventerà "Non organizzate"); il + ha il suggerimento "Nuova nota"; con l'elenco vuoto compare "Le note che scrivi compaiono qui."
 
@@ -29,7 +30,7 @@ La finestra è sempre la stessa: cambia solo cosa c'è dentro l'area della nota.
 | Ordine di lettura | Zona | Contenuto |
 |---|---|---|
 | 1 | Area della nota (centro-destra) | La nota aperta: SC-03. È la zona più grande e la prima che si nota: aprire e scrivere viene prima di tutto (RNF-01) |
-| 2 | Colonna sinistra, in cima | Ricerca (FL-06) |
+| 2 | Colonna sinistra, in cima | Ricerca (FL-06), sotto la riga della puntina; Ctrl + K (⌘ + K) la raggiunge anche con la colonna chiusa (DEC-94, RB-71) |
 | 3 | Colonna sinistra, sezione **Non organizzate** | Le note nella radice (RF-05), in cima, una riga ciascuna con il solo titolo, la modificata più di recente in cima (RB-60): sono quelle appena scritte, ed è da qui che si trascinano nell'albero. Il **+** accanto al titolo della sezione crea una nuova nota (FL-09) |
 | 4 | Colonna sinistra, sezione **Cartelle** | Albero delle cartelle, sotto, con il pulsante **+** in cima alla sezione (FL-05). Aprendo una cartella compaiono le sottocartelle e poi le sue note, in ordine alfabetico (RB-64, RB-65) |
 
@@ -61,7 +62,7 @@ Sposta in… (apre il pannello Sposta in accanto alla nota) · Elimina (nel cest
 Nuova nota qui (la nota nasce in quella cartella, RB-09), Nuova sottocartella, Rinomina, Elimina (nel cestino con il contenuto, RB-25, RB-26).
 
 ### Risultati di ricerca (livello 20)
-La card si apre sotto la ricerca ed è più larga della colonna: copre l'area della nota senza velo, perché non blocca niente. In cima ci sono i filtri (tag e le tre date dei metadati, FL-06). Ogni risultato mostra il titolo, il punto del testo in cui compare la parola cercata, la cartella e la data. Le note nel cestino sono attenuate e hanno l'etichetta "nel cestino" (RB-29).
+La card si apre sotto la ricerca appena si entra nel campo (RB-33) ed è più larga della colonna: copre l'area della nota senza velo, perché non blocca niente. In cima ci sono i filtri Tag, Creazione e Modifica (FL-06; niente Fine validità per ora, DEC-94); con il campo vuoto e nessun filtro la card mostra solo i filtri. Chiudendola, testo e filtri si svuotano (RB-72). Ogni risultato mostra il titolo, il punto del testo in cui compare la parola cercata, la cartella e la data. Le note nel cestino sono attenuate e hanno l'etichetta "nel cestino" (RB-29).
 
 ### Finestre di conferma (livello 40)
 Sono al centro della finestra, con un velo sul resto. L'azione principale sta a destra, Annulla a sinistra. L'esempio disegnato è il nome di cartella già presente (RB-31). Un avviso di livello 50 resta visibile sopra il velo.
@@ -91,18 +92,19 @@ Sono al centro della finestra, con un velo sul resto. L'azione principale sta a 
 
 - **Wireframe:** [impostazioni](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-227)
 - **Esportazioni:** `immagini/SC-06.png`
-- **Mockup (DEC-91, approvati da Manuel Cucca il 30/09/2026):** [impostazioni](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=109-6661) · [scorciatoia già usata](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=109-6895); esportazioni `immagini/SC-06-mockup.png`, `immagini/SC-06-scorciatoia-usata-mockup.png`. Testi dei gruppi e delle righe come nei componenti (CMP-18, CMP-28): da confermare in Fase 6. Il 30/09/2026 hanno la riga «Tieni Memodu in primo piano» in Generale, posizione da rivedere (DEC-93), ed esportati di nuovo
+- **Mockup (DEC-91, approvati da Manuel Cucca il 30/09/2026):** [impostazioni](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=109-6661) · [scorciatoia già usata](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=109-6895); esportazioni `immagini/SC-06-mockup.png`, `immagini/SC-06-scorciatoia-usata-mockup.png`. Testi dei gruppi e delle righe come nei componenti (CMP-18, CMP-28): da confermare in Fase 6. Il 30/09/2026 hanno la riga «Tieni Memodu in primo piano» in Generale, posizione da rivedere (DEC-93), ed esportati di nuovo. Sempre il 30/09/2026 hanno la sezione Ricerca (DEC-94, approvata da Manuel Cucca il 30/09/2026) e il campo di ricerca in cima alla colonna, ed esportati di nuovo. Sempre il 30/09/2026 hanno la sezione Ricerca (DEC-94, da approvare) e il campo di ricerca in cima alla colonna, ed esportati di nuovo
 
-Si apre dalla riga **Impostazioni** in fondo alla colonna, sotto il Cestino, al posto della nota come il cestino (DEC-91). Una sola schermata con quattro sezioni, in quest'ordine:
+Si apre dalla riga **Impostazioni** in fondo alla colonna, sotto il Cestino, al posto della nota come il cestino (DEC-91). Una sola schermata con cinque sezioni, in quest'ordine:
 
 | Sezione | Contenuto |
 |---|---|
 | Generale | Scorciatoia della nota rapida: clic sul campo e si preme la combinazione nuova; se un altro programma la usa già lo si dice e resta la vecchia; «Ripristina» torna al default (separata per Windows e macOS e sincronizzata, RB-52). Avvia Memodu all'accensione: interruttore, spento di default, solo su questo dispositivo. Tieni Memodu in primo piano: interruttore, spento di default, solo su questo dispositivo; la finestra principale resta sopra gli altri programmi (DEC-93, posizione nella pagina da rivedere) |
 | Tema | Sistema · Chiaro · Scuro, di default Sistema; solo su questo dispositivo |
 | Sincronizzazione | Stato e ultima sincronizzazione riuscita, in sola lettura: «Sincronizzata alle 14:32», «Senza collegamento: le note restano su questo computer» (senza credenziali, DEC-84), «Server non raggiungibile da…» |
+| Ricerca | «Mostra le note del cestino nei risultati»: interruttore, acceso di default, sincronizzato come la scorciatoia (RB-29, RB-52, DEC-94) |
 | Dispositivo | Nome di questo dispositivo, di default il nome del computer (RB-51) |
 
-La sezione Ricerca (note del cestino nei risultati, RB-29) arriva con la ricerca (RF-08). La sezione Account non c'è più (DEC-13, DEC-91).
+La sezione Ricerca sta tra Sincronizzazione e Dispositivo (DEC-94). La sezione Account non c'è più (DEC-13, DEC-91).
 
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |

@@ -380,7 +380,7 @@ Compare e sparisce con `movimento-durata-breve` (120 ms). Compare dopo 500 ms di
 - **Inserimento** (`/` su una riga vuota): Titolo, Sottotitolo, Elenco puntato, Elenco numerato, Checklist · Immagine, ognuna con la sua icona.
 - **Tag** (sotto il campo dei tag): i tag che corrispondono a ciò che si scrive, · Crea il tag "…". Il tasto destro su un suggerimento apre "Elimina tag…" (RB-19).
 - **Filtro tag** (dalla pillola Tag della ricerca, CMP-13): campo "Cerca un tag", divisore, i tag con la spunta su quelli scelti (si possono sceglierne più d'uno), divisore, "Togli il filtro".
-- **Filtro data** (dalle pillole Creazione, Modifica, Fine validità): Qualsiasi data, Oggi, Ultimi 7 giorni, Ultimi 30 giorni, Quest'anno, con la spunta sulla scelta attiva · Scegli le date… (apre il calendario, CMP-12).
+- **Filtro data** (dalle pillole Creazione e Modifica; Fine validità per ora non c'è, DEC-94): Qualsiasi data, Oggi, Ultimi 7 giorni, Ultimi 30 giorni, Quest'anno, con la spunta sulla scelta attiva · Scegli le date… (apre il calendario, CMP-12).
 - I puntini "…" indicano che la voce apre un pannello o una conferma; la freccia › un sottomenu.
 - Le scorciatoie sono quelle di Windows; su macOS Ctrl diventa ⌘ e Maiusc ⇧.
 
@@ -522,12 +522,12 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 **Tipo:** composto (con le parti interne "Filtro della ricerca" e "Risultato della ricerca"; usa il campo di ricerca CMP-03 e il separatore di CMP-07) · **Usato in:** SC-01 · **Figma:** pagina Componenti composti, [Card dei risultati](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=66-2423)
 
 **Scopo:** mostrare mentre si scrive le note che corrispondono alla ricerca, con i filtri per tag e date (RF-08, FL-06).
-**Quando usarlo:** sotto il campo di ricerca della colonna, appena si scrive (RB-33).
+**Quando usarlo:** sotto il campo di ricerca della colonna, appena si entra nel campo, anche prima di scrivere (RB-33, DEC-94).
 **Quando non usarlo:** per scegliere una cartella (Sposta in, CMP-11) o per suggerire tag (menu dei tag, CMP-09).
 
 ### Varianti e dimensioni
 - Stesso guscio del menu: `sfondo-flottante`, raggio 20, ombra, livello 20, margini 8 sopra e sotto, contenuti rientrati di 8. Larga **480**, più della colonna: copre la nota senza velo, perché non blocca niente.
-- **Filtri** in cima: Tag, Creazione, Modifica, Fine validità (FL-06). Ognuno è una pillola alta 24 come il tag, con una freccia giù, 8 px tra l'una e l'altra, 12 px sopra e sotto la fila. Apre un menu (CMP-09, filtro tag o filtro data) 8 px sotto la pillola. Attivo: pieno scuro con il valore ("Tag: lavoro"; con più tag, "Tag: 2").
+- **Filtri** in cima: Tag, Creazione, Modifica (FL-06; Fine validità per ora non c'è, DEC-94). Con il campo vuoto e nessun filtro la card mostra solo la fila dei filtri (RB-33). Ognuno è una pillola alta 24 come il tag, con una freccia giù, 8 px tra l'una e l'altra, 12 px sopra e sotto la fila. Apre un menu (CMP-09, filtro tag o filtro data) 8 px sotto la pillola. Attivo: pieno scuro con il valore ("Tag: lavoro"; con più tag, "Tag: 2").
 - Divisore da lato a lato, poi i **risultati** per pertinenza (RB-34), tutti, scorrendo la card: titolo (Interfaccia/Titolo), la frase in cui compare la parola con la parola in `testo-primario` Medium, cartella e data (Interfaccia/Dettaglio).
 - **Nel cestino:** titolo e frase attenuati, etichetta "nel cestino" (RB-29); non compaiono se la preferenza li esclude.
 - **Nessun risultato:** filtri, divisore, "Nessuna nota trovata" e un suggerimento; la card resta aperta (RB-35).
@@ -545,7 +545,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 | Caricamento | Non previsto: i risultati arrivano mentre si scrive; la card non si aggiorna mentre è aperta (RB-45) |
 
 ### Accessibilità
-- **Tastiera:** dal campo, freccia giù entra nei risultati; frecce su e giù tra i risultati, Invio apre, Esc chiude la card e torna al campo; Tab raggiunge i filtri.
+- **Tastiera:** dal campo, freccia giù entra nei risultati; frecce su e giù tra i risultati, Invio apre, Esc chiude la card e svuota la ricerca (RB-72): il focus torna nel campo, o nel foglio se la colonna l'aveva aperta Ctrl + K e si richiude (RB-71); Tab raggiunge i filtri.
 - **Lettori di schermo:** il campo annuncia il numero di risultati; ogni risultato si legge con titolo, cartella, data e, se serve, "nel cestino".
 - **Contrasti:** titolo ≥ 12,87:1; frase e dettagli in `testo-tenue` 5,49:1 (chiaro) e 5,61:1 (scuro); filtri come il tag (CMP-05).
 
