@@ -1,6 +1,6 @@
 # DEC-62 – Colonna ridimensionabile e tasti in una pillola
 
-**Data:** 2026-09-29 · **Stato:** Superata da DEC-63 (solo la pillola unica di ··· e dei pulsanti della finestra) · **Idea di origine:** —
+**Data:** 2026-09-29 · **Stato:** Superata da DEC-63 (solo la pillola unica di ··· e dei pulsanti della finestra) e da DEC-87 (solo il contenuto che non si deforma) · **Idea di origine:** —
 
 ## Contesto
 La colonna (DEC-55) aveva la larghezza fissa di 288 px; i tasti in alto a destra stavano in un rettangolo arrotondato con i pulsanti quadrati (DEC-60, eccezione a CMP-01 di DEC-55). Manuel Cucca: «voglio poter ridimensionare la sidebar quando è aperta; il suo contenuto non deve cambiare, deve rimanere inflessibile sotto una certa larghezza utile; posso ridimensionarla fino a 10 px e anche di più del normale». E: «i tasti a destra sono poco pillolosi, solo un rettangolo molto arrotondato: deve essere allineato a tutto lo stile».

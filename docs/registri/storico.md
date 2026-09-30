@@ -348,3 +348,5 @@
 | 30/09/2026 | Manuel Cucca | RB-57, FL-08, CA-14.3, CA-14.6: senza il file delle credenziali si lavora in locale; il blocco resta per le credenziali rifiutate | DEC-84 |
 | 30/09/2026 | Manuel Cucca | Codice della sincronizzazione (RF-10, RF-14): richieste in `api.md`, credenziali generate dall'API, ambienti | DEC-75 … DEC-84 |
 | 30/09/2026 | Manuel Cucca | L'API è solo il deposito della sincronizzazione: tolti il vecchio archivio delle note e le sue richieste; api.md resta il contratto dei comandi del client; set di dati «Smistare» da rifare | DEC-85 |
+| 30/09/2026 | Manuel Cucca | Mockup di SC-01 con il percorso e senza titolo e metadati nel foglio; CMP-15: l'avviso sta 8 sotto la fascia in alto | DEC-71, DEC-86 |
+| 30/09/2026 | Manuel Cucca | SC-01: la colonna ha lo stesso margine ai due lati a ogni larghezza | DEC-87 |

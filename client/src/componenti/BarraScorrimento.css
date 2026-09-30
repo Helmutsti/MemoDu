@@ -20,12 +20,6 @@
   pointer-events: none;
   transition: opacity var(--movimento-durata-media) ease-out;
 }
-/* Dentro l'area il cursore non prende le misure dei figli (per esempio la larghezza minima
-   delle righe della colonna, DEC-62). */
-.scorrimento-discreto > .barra-scorrimento {
-  min-width: 0;
-  margin: 0;
-}
 .barra-scorrimento-visibile {
   opacity: 0.5;
   pointer-events: auto;

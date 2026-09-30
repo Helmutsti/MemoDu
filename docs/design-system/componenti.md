@@ -592,7 +592,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 
 ### Varianti e dimensioni
 - **Errore**, **Avviso**, **Informazione**, **Successo** (DEC-14): fondo `sfondo-<stato>`, icona Lucide 16 in `icona-<stato>` (`circle-alert`, `triangle-alert`, `info`, `check`), testo Interfaccia/Messaggio in `testo-primario`, a destra «Ho capito» (pulsante tenue) e, con la proprietà **Mostra azione**, un'azione tenue prima di lui (es. «Ripristina», «Apri l'altra»).
-- Largo 480, raggio 20, margini 16 a sinistra e 8 a destra, 8 sopra e sotto, `ombra-flottante`, livello 50, uno alla volta, in cima all'area della nota. Il testo va a capo.
+- Largo 480, raggio 20, margini 16 a sinistra e 8 a destra, 8 sopra e sotto, `ombra-flottante`, livello 50, uno alla volta, al centro dell'area della nota, 8 sotto la fascia in alto (a 48 dal bordo): non copre il percorso (CMP-26, DEC-86). Il testo va a capo.
 - I testi sono esempi nel tono di voce; quelli definitivi si scrivono in Fase 6.
 
 ### Stati

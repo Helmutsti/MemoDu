@@ -8,6 +8,7 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 ## [Non rilasciato]
 
 ### Cambiato
+- Gli avvisi compaiono appena sotto la fascia in alto, così non coprono il titolo della nota (RF-02)
 - Il titolo della nota è in alto, al centro, insieme alle cartelle che la contengono: si modifica cliccandolo, e una cartella del percorso si apre nella colonna. Ultima modifica e tag compaiono passando con il mouse sul titolo (RF-02, RF-04, RF-05)
 - Memodu tiene le note sul computer e funziona anche senza il server delle note; alla prima apertura ritrova le note scritte finora
 - Nuova icona dell'app
@@ -39,6 +40,7 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 - 
 
 ### Corretto
+- La colonna ha lo stesso margine a sinistra e a destra anche quando la stringi (RF-05)
 - Nella colonna non compaiono più due barre di scorrimento, e la barra si muove con la colonna quando si apre o si chiude (RF-05)
 - Sotto la riga Cestino in fondo alla colonna non si intravedono più le note che scorrono (RF-15)
 - La finestra Dettagli si chiude anche cliccando fuori (RF-04)

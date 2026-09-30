@@ -39,13 +39,6 @@
   }
 }
 
-/* Il contenuto della colonna non si deforma (DEC-62): sotto la larghezza normale resta largo
-   come sempre e il bordo lo taglia; sopra, le righe si allargano. */
-
-.colonna > * {
-  min-width: calc(var(--misura-colonna) - 2 * var(--spazio-contenitore));
-}
-
 /* Maniglia sul bordo destro della colonna aperta o fissata: si trascina per cambiarne la
    larghezza, doppio clic la riporta a 288; con il focus, le frecce la spostano di 16 px. */
 .colonna-maniglia {
@@ -108,14 +101,10 @@
   flex-direction: column;
   width: var(--misura-colonna);
   padding-top: var(--spazio-contenitore);
-  /* Stretta: sparisce prima il margine di destra, poi quello di sinistra; il contenuto resta
-     dov'è e il bordo lo taglia, fino a 10 px. */
-  padding-right: clamp(
-    0px,
-    calc(var(--larghezza-colonna) - var(--misura-colonna) + var(--spazio-contenitore)),
-    var(--spazio-contenitore)
-  );
-  padding-left: min(var(--spazio-contenitore), var(--larghezza-colonna));
+  /* Lo stesso margine ai due lati a ogni larghezza: stringendo la colonna si stringono le righe e
+     i titoli finiscono con «…» (DEC-87); sotto i 32 px i margini scendono insieme. */
+  padding-right: min(var(--spazio-contenitore), calc(var(--larghezza-colonna) / 2));
+  padding-left: min(var(--spazio-contenitore), calc(var(--larghezza-colonna) / 2));
   overflow-x: hidden;
   overflow-y: auto;
   border-right: 1px solid var(--bordo-divisore);
