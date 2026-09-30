@@ -4,7 +4,6 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow-y: auto;
 }
 
 /* Testo sempre allineato a sinistra, a misura di lettura (DEC-58). */
@@ -15,7 +14,7 @@
 }
 
 .nota-aperta-corpo {
-  flex: 1 0 auto;
+  min-height: 100%;
   /* Subito sotto la fascia in alto (32) con 16 di respiro (DEC-58). */
   padding-top: calc(var(--misura-riga) + var(--spazio-blocco));
   padding-bottom: var(--spazio-finestra);

@@ -41,7 +41,7 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ### Corretto
 - La colonna ha lo stesso margine a sinistra e a destra anche quando la stringi (RF-05)
-- Nella colonna non compaiono più due barre di scorrimento, e la barra si muove con la colonna quando si apre o si chiude (RF-05)
+- La barra di scorrimento sottile compare quando scorri o muovi il mouse sulla colonna o sul foglio, sparisce sfumando e si muove con la colonna quando si apre o si chiude (RF-02, RF-05)
 - Sotto la riga Cestino in fondo alla colonna non si intravedono più le note che scorrono (RF-15)
 - La finestra Dettagli si chiude anche cliccando fuori (RF-04)
 - Il bordo del focus compare solo quando ti muovi con la tastiera, non a ogni clic

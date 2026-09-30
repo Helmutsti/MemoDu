@@ -350,3 +350,5 @@
 | 30/09/2026 | Manuel Cucca | L'API è solo il deposito della sincronizzazione: tolti il vecchio archivio delle note e le sue richieste; api.md resta il contratto dei comandi del client; set di dati «Smistare» da rifare | DEC-85 |
 | 30/09/2026 | Manuel Cucca | Mockup di SC-01 con il percorso e senza titolo e metadati nel foglio; CMP-15: l'avviso sta 8 sotto la fascia in alto | DEC-71, DEC-86 |
 | 30/09/2026 | Manuel Cucca | SC-01: la colonna ha lo stesso margine ai due lati a ogni larghezza | DEC-87 |
+| 30/09/2026 | Manuel Cucca | CMP-25: la barra di scorrimento è quella del sistema, sottile, al posto del cursore disegnato in JavaScript | DEC-88 |
+| 30/09/2026 | Manuel Cucca | CMP-25 e architettura: la barra di scorrimento è di OverlayScrollbars, sovrapposta al contenuto, e compare e sparisce con la dissolvenza | DEC-89 |

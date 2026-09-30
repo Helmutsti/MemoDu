@@ -920,17 +920,17 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 
 **Scopo:** mostrare dove si è in un contenuto che scorre e permettere di spostarsi trascinando, senza togliere spazio al testo (DEC-58).
 **Quando usarlo:** nelle aree che scorrono: il foglio della nota (tutta la pagina, DEC-59) e la colonna.
-**Quando non usarlo:** nei menu e nei pannelli corti, che non scorrono; al posto della barra del sistema, che non si vede.
+**Quando non usarlo:** nei menu e nei pannelli corti, che non scorrono.
 
 ### Varianti e dimensioni
-- Cursore largo 6, tondo (`raggio-pillola`), in `icona-tenue`; sta sopra il contenuto, a 2 px dal bordo destro e dai bordi in alto e in basso dell'area che scorre, e non occupa spazio. L'altezza segue la parte visibile del contenuto, almeno 24 (in Figma 120 di esempio, si cambia sull'istanza).
-- Nessun binario: si vede solo il cursore. Quando l'area cambia stato o non si vede (per esempio la colonna che si chiude), il cursore sparisce subito, anche con il mouse sopra; la barra del sistema resta sempre nascosta.
+- Barra sovrapposta al contenuto di OverlayScrollbars (DEC-89): cursore largo 6, tondo (`raggio-pillola`), in `icona-tenue`, a 2 px dal bordo destro e dai bordi in alto e in basso dell'area; nessun binario; non occupa spazio. L'altezza segue la parte visibile del contenuto, almeno 24.
+- Sta nell'area che scorre (colonna e foglio): si muove e sparisce con lei.
 
 ### Stati
 | Stato | Descrizione |
 |---|---|
-| Nascosta | Default: non si vede e non riceve clic |
-| Visibile | Compare scorrendo o con il mouse sull'area; opacità 50 %. Sparisce dopo 0,8 s senza scorrere né mouse sopra (dissolvenza di `movimento-durata-media`, nessuna con il movimento ridotto) |
+| Nascosta | Default: non si vede |
+| Visibile | Compare scorrendo o muovendo il mouse sull'area; opacità 50 %. Sparisce dopo 0,8 s con la dissolvenza della libreria |
 | Trascinata · sotto il mouse | Opacità 80 %; trascinandola il contenuto scorre |
 | Focus · Disabilitato · Errore · Caricamento | Non previsti |
 

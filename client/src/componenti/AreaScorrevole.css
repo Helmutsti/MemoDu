@@ -1,0 +1,21 @@
+/* CMP-25: cursore largo 6 (10 meno 2 per lato), tondo, in icona-tenue al 50 % e all'80 % sotto
+   il mouse o mentre lo si trascina; nessun binario (DEC-89). */
+.os-theme-memodu {
+  box-sizing: border-box;
+  --os-size: 10px;
+  --os-padding-perpendicular: 2px;
+  --os-padding-axis: 2px;
+  --os-track-border-radius: var(--raggio-pillola);
+  --os-handle-border-radius: var(--raggio-pillola);
+  --os-handle-interactive-area-offset: 4px;
+  --os-handle-min-size: 24px;
+  --os-handle-bg: color-mix(in srgb, var(--icona-tenue) 50%, transparent);
+  --os-handle-bg-hover: color-mix(in srgb, var(--icona-tenue) 80%, transparent);
+  --os-handle-bg-active: color-mix(in srgb, var(--icona-tenue) 80%, transparent);
+}
+
+/* L'area occupa lo spazio che le lascia il contenitore. */
+.area-scorrevole {
+  flex: 1;
+  min-height: 0;
+}

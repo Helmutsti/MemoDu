@@ -5,14 +5,12 @@
 // In fondo la riga Cestino, che durante il trascinamento diventa la zona di rilascio (DEC-40).
 
 import {
-  useRef,
   useState,
   type CSSProperties,
   type DragEvent,
   type ReactElement,
   type ReactNode,
 } from "react";
-import { SCORRIMENTO_DISCRETO, useBarraScorrimento } from "../componenti/BarraScorrimento";
 import type { Albero, Cartella, Percorso, VoceElenco } from "@memodu/condiviso";
 import {
   CampoNomeCartella,
@@ -24,6 +22,7 @@ import {
 } from "../componenti/RigaColonna";
 import { StatoVuotoColonna } from "../componenti/StatoVuoto";
 import { avviaFantasma } from "../componenti/fantasma";
+import { AreaScorrevole } from "../componenti/AreaScorrevole";
 
 /** Cosa si sta trascinando. */
 export type Trascinato =
@@ -85,8 +84,6 @@ export function accetta(t: Trascinato, d: Destinazione): boolean {
 
 export function Colonna(p: Proprieta): ReactElement {
   const [sezioni, setSezioni] = useState({ nonOrganizzate: true, cartelle: true });
-  const nav = useRef<HTMLElement>(null);
-  useBarraScorrimento(nav);
   const [sopra, setSopra] = useState<string | null>(null);
 
   /** Gestori del trascinamento per una destinazione. */
@@ -225,77 +222,82 @@ export function Colonna(p: Proprieta): ReactElement {
 
   return (
     <nav
-      ref={nav}
-      className={`colonna colonna-${p.stato} ${SCORRIMENTO_DISCRETO}`}
+      className={`colonna colonna-${p.stato}`}
       aria-label="Note e cartelle"
       style={{ width: p.larghezza, "--larghezza-colonna": `${p.larghezza}px` } as CSSProperties}
     >
-      <div className="colonna-testata" data-tauri-drag-region>
-        {p.testata}
-      </div>
-      <div
-        className="colonna-contenuto"
-        role="tree"
-        aria-label="Note e cartelle"
-        onKeyDown={suTasto}
-      >
-        <div className="colonna-sezione">
-          <RigaSezione
-            titolo="Non organizzate"
-            conteggio={nonOrganizzate.conteggio}
-            aperta={sezioni.nonOrganizzate}
-            onApriChiudi={() => setSezioni((s) => ({ ...s, nonOrganizzate: !s.nonOrganizzate }))}
-            nomeAggiungi="Nuova nota"
-            onAggiungi={p.onNuovaNota}
-            sopra={p.trascinato?.tipo === "nota" && sopra === chiave(radice)}
-            {...(p.trascinato?.tipo === "nota" ? destinazione(radice) : {})}
-          />
-          {sezioni.nonOrganizzate &&
-            (nonOrganizzate.note.length === 0 ? (
-              <StatoVuotoColonna testo="Le note che scrivi compaiono qui." />
+      <AreaScorrevole className="colonna-scorrimento">
+        <div className="colonna-dentro">
+          <div className="colonna-testata" data-tauri-drag-region>
+            {p.testata}
+          </div>
+          <div
+            className="colonna-contenuto"
+            role="tree"
+            aria-label="Note e cartelle"
+            onKeyDown={suTasto}
+          >
+            <div className="colonna-sezione">
+              <RigaSezione
+                titolo="Non organizzate"
+                conteggio={nonOrganizzate.conteggio}
+                aperta={sezioni.nonOrganizzate}
+                onApriChiudi={() =>
+                  setSezioni((s) => ({ ...s, nonOrganizzate: !s.nonOrganizzate }))
+                }
+                nomeAggiungi="Nuova nota"
+                onAggiungi={p.onNuovaNota}
+                sopra={p.trascinato?.tipo === "nota" && sopra === chiave(radice)}
+                {...(p.trascinato?.tipo === "nota" ? destinazione(radice) : {})}
+              />
+              {sezioni.nonOrganizzate &&
+                (nonOrganizzate.note.length === 0 ? (
+                  <StatoVuotoColonna testo="Le note che scrivi compaiono qui." />
+                ) : (
+                  <ul role="group" className="colonna-elenco">
+                    {nonOrganizzate.note.map((v) => rigaNota(v, ""))}
+                  </ul>
+                ))}
+            </div>
+            <div className="colonna-sezione">
+              <RigaSezione
+                titolo="Cartelle"
+                aperta={sezioni.cartelle}
+                onApriChiudi={() => setSezioni((s) => ({ ...s, cartelle: !s.cartelle }))}
+                nomeAggiungi="Nuova cartella"
+                onAggiungi={() => {
+                  setSezioni((s) => ({ ...s, cartelle: true }));
+                  p.onNuovaCartella("");
+                }}
+                sopra={p.trascinato?.tipo === "cartella" && sopra === chiave(radice)}
+                {...(p.trascinato?.tipo === "cartella" ? destinazione(radice) : {})}
+              />
+              {sezioni.cartelle &&
+                (alberoVuoto ? (
+                  <StatoVuotoColonna testo="Nessuna cartella. Creane una con +" />
+                ) : (
+                  <ul role="group" className="colonna-elenco">
+                    {sottocartelle(cartelle, "", 0)}
+                  </ul>
+                ))}
+            </div>
+          </div>
+          <div className="colonna-fondo">
+            {p.trascinato ? (
+              <CestinoTrascinamento
+                sopra={sopra === "cestino"}
+                {...destinazione({ tipo: "cestino" })}
+              />
             ) : (
-              <ul role="group" className="colonna-elenco">
-                {nonOrganizzate.note.map((v) => rigaNota(v, ""))}
-              </ul>
-            ))}
+              <RigaCestino
+                conteggio={p.albero.cestino}
+                selezionata={p.cestinoAperto}
+                onApri={p.onApriCestino}
+              />
+            )}
+          </div>
         </div>
-        <div className="colonna-sezione">
-          <RigaSezione
-            titolo="Cartelle"
-            aperta={sezioni.cartelle}
-            onApriChiudi={() => setSezioni((s) => ({ ...s, cartelle: !s.cartelle }))}
-            nomeAggiungi="Nuova cartella"
-            onAggiungi={() => {
-              setSezioni((s) => ({ ...s, cartelle: true }));
-              p.onNuovaCartella("");
-            }}
-            sopra={p.trascinato?.tipo === "cartella" && sopra === chiave(radice)}
-            {...(p.trascinato?.tipo === "cartella" ? destinazione(radice) : {})}
-          />
-          {sezioni.cartelle &&
-            (alberoVuoto ? (
-              <StatoVuotoColonna testo="Nessuna cartella. Creane una con +" />
-            ) : (
-              <ul role="group" className="colonna-elenco">
-                {sottocartelle(cartelle, "", 0)}
-              </ul>
-            ))}
-        </div>
-      </div>
-      <div className="colonna-fondo">
-        {p.trascinato ? (
-          <CestinoTrascinamento
-            sopra={sopra === "cestino"}
-            {...destinazione({ tipo: "cestino" })}
-          />
-        ) : (
-          <RigaCestino
-            conteggio={p.albero.cestino}
-            selezionata={p.cestinoAperto}
-            onApri={p.onApriCestino}
-          />
-        )}
-      </div>
+      </AreaScorrevole>
     </nav>
   );
 }
