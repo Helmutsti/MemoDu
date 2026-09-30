@@ -128,6 +128,8 @@ interface Conflitto {
 const CHIAVE_COLONNA_FISSATA = "memodu.colonna-fissata";
 /** Entro questa distanza dal bordo sinistro compare «| →» (DEC-55). */
 const DISTANZA_BORDO_PX = 48;
+/** Su macOS il pulsante sta dopo i tre pallini nativi: la zona comprende anche il pulsante. */
+const DISTANZA_BORDO_MAC_PX = 144;
 /** Il gruppo di destra compare solo con il mouse in alto e vicino a lui, non nell'angolo di
  * «| →» (DEC-61). */
 const ZONA_TASTI_DESTRA_PX = 240;
@@ -1071,10 +1073,12 @@ export function FinestraPrincipale(): ReactElement {
           className={`finestra ${bloccata ? "finestra-nascosta" : ""} ${SU_MAC ? "sistema-mac" : ""}`}
           inert={bloccata}
           onMouseMove={(e) => {
-            const vicino = e.clientX <= DISTANZA_BORDO_PX;
+            const vicino = e.clientX <= (SU_MAC ? DISTANZA_BORDO_MAC_PX : DISTANZA_BORDO_PX);
             if (vicino !== vicinoAlBordo) setVicinoAlBordo(vicino);
             const destra = e.currentTarget.getBoundingClientRect().right - e.clientX;
-            const inAlto = e.clientY <= DISTANZA_BORDO_PX && destra <= ZONA_TASTI_DESTRA_PX;
+            const inAlto =
+              e.clientY <= (SU_MAC ? DISTANZA_BORDO_PX + 16 : DISTANZA_BORDO_PX) &&
+              destra <= ZONA_TASTI_DESTRA_PX;
             if (inAlto !== vicinoInAlto) setVicinoInAlto(inAlto);
           }}
           onMouseLeave={() => {

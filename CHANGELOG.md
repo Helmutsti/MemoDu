@@ -5,7 +5,7 @@ Il formato segue [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/).
 
 Queste note sono scritte per gli utenti. Lo storico interno della documentazione si trova in `docs/registri/storico.md`.
 
-## [Non rilasciato]
+## [0.1.1] – 2026-09-30
 
 ### Cambiato
 - Gli avvisi compaiono appena sotto la fascia in alto, così non coprono il titolo della nota (RF-02)
@@ -42,6 +42,7 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 - 
 
 ### Corretto
+- Su Mac i pulsanti della finestra hanno più spazio sopra e a sinistra; i comandi in alto sono allineati e «Apri la colonna» resta visibile mentre ci sposti sopra il puntatore (RF-01)
 - La colonna ha lo stesso margine a sinistra e a destra anche quando la stringi (RF-05)
 - La barra di scorrimento sottile compare quando scorri o muovi il mouse sulla colonna o sul foglio, sparisce sfumando e si muove con la colonna quando si apre o si chiude (RF-02, RF-05)
 - Sotto la riga Cestino in fondo alla colonna non si intravedono più le note che scorrono (RF-15)
