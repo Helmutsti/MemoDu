@@ -9,19 +9,20 @@
 | Interfaccia | React con TypeScript | DEC-26 |
 | Editor della nota | CodeMirror 6 con anteprima dal vivo | DEC-27 |
 | Icone e carattere | `lucide-react` per le icone Lucide; Inter incorporato nell'app con `@fontsource-variable/inter`, così non dipende dai caratteri installati | DEC-15, tokens.md |
-| Token nel codice | Variabili CSS in `app/src/stili/token.css`, stili di testo come classi in `app/src/stili/base.css`; il modo chiaro o scuro segue il sistema | DEC-21, DEC-22 |
+| Token nel codice | Variabili CSS in `client/src/stili/token.css`, stili di testo come classi in `client/src/stili/base.css`; il modo chiaro o scuro segue il sistema | DEC-21, DEC-22 |
 | Server (API) | Node con TypeScript e Fastify | DEC-24, DEC-32 |
 | Archivio del server | File system: documenti e immagini cifrati come file | DEC-25 |
-| Note | Le gestisce l'API (DEC-30). Note, tag, cartelle e cestino in un database SQLite nell'API; il testo resta markdown in una colonna. Il file del database sta nella cartella dei dati delle applicazioni (`%LOCALAPPDATA%\Memodu` su Windows, `~/Library/Application Support/Memodu` su macOS), fuori da OneDrive e iCloud; su Windows la cartella locale e non quella «Roaming», che nei domini aziendali può seguire il profilo sul server; per le prove la variabile `MEMODU_CARTELLA` lo sposta (scelte di Manuel Cucca il 29/09/2026). Dal frammento Must D (DEC-49) il codice scrive nel database. Poi la copia di lavoro sul dispositivo | DEC-30, DEC-45, DEC-46, DEC-47 |
+| Copia di lavoro nel client | Note, tag, cartelle e cestino in un database SQLite nel nucleo Rust del client (rusqlite), file `copia-di-lavoro.db` nella cartella dei dati delle applicazioni; l'interfaccia lo legge e scrive con comandi Tauri, uno per endpoint dell'API, con gli stessi dati e codici di errore. Il client funziona senza API. Alla prima apertura parte da una copia di `memodu.db` dell'API, se c'è nella stessa cartella | DEC-67 (proposta) |
+| Note nell'API | Le gestisce l'API (DEC-30). Note, tag, cartelle e cestino in un database SQLite nell'API; il testo resta markdown in una colonna. Il file del database sta nella cartella dei dati delle applicazioni (`%LOCALAPPDATA%\Memodu` su Windows, `~/Library/Application Support/Memodu` su macOS), fuori da OneDrive e iCloud; su Windows la cartella locale e non quella «Roaming», che nei domini aziendali può seguire il profilo sul server; per le prove la variabile `MEMODU_CARTELLA` lo sposta (scelte di Manuel Cucca il 29/09/2026). Dal frammento Must D (DEC-49) il codice scrive nel database. Poi la copia di lavoro sul dispositivo | DEC-30, DEC-45, DEC-46, DEC-47 |
 | Hosting | Per ora la macchina di sviluppo (ambiente Locale). L'hosting definitivo è rinviato; deve avere un disco persistente (DEC-25) | — |
 
 ## Struttura del repository
-Un solo repository con workspace npm (DEC-33):
+Un solo repository con workspace npm (DEC-33); client e API si avviano separatamente (DEC-67):
 
 | Cartella | Contenuto |
 |---|---|
-| `app` | App desktop: interfaccia React in `src`, nucleo Rust di Tauri in `src-tauri` |
-| `server` | API in Fastify |
+| `client` | App desktop: interfaccia React in `src`, nucleo Rust di Tauri in `src-tauri` con la copia di lavoro (DEC-67). Si avvia con `npm run client` |
+| `api` | API in Fastify. Si avvia da sola con `npm run api` |
 | `condiviso` | Tipi dei dati usati da app e server (per esempio la Nota dell'API) e indirizzo dell'API |
 
 Prove con Vitest, controllo del codice con ESLint e Prettier.
@@ -40,7 +41,7 @@ SQLite nell'API (DEC-46, DEC-47). Solo ciò che serve a Must A, B e C; immagini,
 - Istanti in ora universale ISO 8601, date del calendario come giorno. La versione dello schema è segnata nel database.
 
 ## Regole dei dati (frammento Must D, DEC-49)
-I dati li scrive solo l'API (`server/src/archivio.ts`), nel file `memodu.db`.
+Le stesse regole valgono nell'API (`api/src/archivio.ts`, file `memodu.db`) e nella copia di lavoro del client (`client/src-tauri/src/archivio.rs`, file `copia-di-lavoro.db`, DEC-67). Nella copia di lavoro ogni operazione è una transazione.
 
 - **Nomi delle cartelle** (RB-63): i caratteri vietati nei nomi dei file (`< > : " / \ | ? *` e i caratteri di controllo) diventano `-`, senza punti e spazi finali, al massimo 100 caratteri; i nomi riservati di Windows (`CON`, `PRN`, `AUX`, `NUL`, `COM1`…, `LPT1`…) ricevono un `-` in fondo. Maiuscole e minuscole non contano (RB-23). Confermato da Manuel Cucca il 28/09/2026.
 - **Titoli delle note:** si ripetono liberamente (RB-16); non servono più numeri per distinguere i file.

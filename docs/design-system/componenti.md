@@ -2,7 +2,7 @@
 
 <!-- Fase 5 della guida. Copia il blocco per ogni componente. -->
 
-I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE), che diventa la libreria: pagina **Componenti base** (CMP-01 … CMP-08) e pagina **Componenti composti** (CMP-09 … CMP-25). Ogni componente usa solo token semantici, anche per gli spazi (regola 12, vedi `tokens.md`) e ha un'anteprima in modo scuro.
+I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE), che diventa la libreria: pagina **Componenti base** (CMP-01 … CMP-08) e pagina **Componenti composti** (CMP-09 … CMP-27). Ogni componente usa solo token semantici, anche per gli spazi (regola 12, vedi `tokens.md`) e ha un'anteprima in modo scuro.
 
 | Codice | Componente | Tipo | Stato |
 |---|---|---|---|
@@ -31,11 +31,13 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-23 | Nota rapida | composto | Disegnato |
 | CMP-24 | Finestra dei dettagli | composto | Disegnato |
 | CMP-25 | Barra di scorrimento | composto | Disegnato |
+| CMP-26 | Percorso (titolo della nota con le cartelle, DEC-71) | composto | Disegnato |
+| CMP-27 | Comparsa dei metadati (DEC-71) | composto | Disegnato |
 
 L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'icona di sistema e non è un componente.
 
 ### Parti interne
-Nella sezione **Parti interne** della pagina Componenti composti ci sono i pezzi con cui sono costruiti i composti: non si usano da soli, si modificano lì e cambiano ovunque. Strumento e Divisore della pillola (CMP-10), Giorno del calendario (CMP-12), Filtro e Risultato della ricerca (CMP-13), Campo nome nell'albero e Cestino di trascinamento (CMP-14), Casella della checklist e Riga dei metadati (CMP-20).
+Nella sezione **Parti interne** della pagina Componenti composti ci sono i pezzi con cui sono costruiti i composti: non si usano da soli, si modificano lì e cambiano ovunque. Strumento e Divisore della pillola (CMP-10), Giorno del calendario (CMP-12), Filtro e Risultato della ricerca (CMP-13), Campo nome nell'albero e Cestino di trascinamento (CMP-14), Casella della checklist e Riga dei metadati (CMP-20), Segmento del percorso (CMP-26).
 
 ### Forma dell'evidenziazione
 Tutto ciò che è alto una riga ha la pillola (regola 1). I blocchi su più righe dentro un contenitore (risultati della ricerca, elementi del cestino, righe di impostazione) hanno il rettangolo con `raggio-interno` (12), concentrico al contenitore (20 − 8 di margine): una pillola alta più righe diventerebbe un ovale.
@@ -60,6 +62,8 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 | CMP-20 Testo della nota | ✓ | | | pieno (casella spuntata), evidenziazione |
 | CMP-21 Immagine nel testo | ✓ | | | campo (segnaposto), pieno (selezione) |
 | CMP-25 Barra di scorrimento | ✓ | ✓ | | nessuno: `icona-tenue` al 50 % o all'80 % |
+| CMP-26 Percorso | ✓ (fascia in alto) | | | hover, campo (titolo in modifica) |
+| CMP-27 Comparsa dei metadati | sopra la nota | | è la superficie | flottante, con ombra; dentro: tag |
 | CMP-09 Menu · CMP-10 Pillola · CMP-11 Pannello · CMP-12 Date picker · CMP-13 Card dei risultati · CMP-15 Avviso · CMP-16 Finestra di conferma | sopra la nota | sopra la colonna | sono la superficie | flottante, con ombra; dentro: hover, pieno, campo |
 
 **Verifica per ogni componente nuovo:** prima di segnarlo come Disegnato, (1) elencare le superfici su cui compare in questa tabella; (2) controllare nella tabella dei token che ogni suo fondo sia sopra la soglia su quelle superfici, in entrambi i modi; (3) controllarlo a occhio nell'anteprima scura, meglio se dentro un menu o un pannello, dove i grigi sono più vicini.
@@ -267,6 +271,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 | Focus | Anello `focus-anello` di 2 px staccato 2 px |
 | Attivo | Selezionata: la nota aperta nella colonna, o la cartella attuale (in Sposta in, CMP-11); `sfondo-hover` come l'hover, con testo Interfaccia/Controllo attivo in `testo-primario`: la distingue dall'hover il peso del testo (DEC-35) |
 | Trascinamento sopra | Solo cartella: mentre si trascina una nota o una cartella, quella che la riceverebbe ha `sfondo-hover` e un contorno di 1,5 in `icona-tenue` |
+| Trascinata | Sotto il puntatore segue una copia della riga come pillola: `sfondo-hover`, `raggio-pillola`, opacità 80 %, sopra tutto (`z-avviso`), senza ricevere eventi. La disegna l'app al posto dell'immagine del sistema, che su Windows rende neri gli angoli arrotondati. Proposta dell'agente |
 | Disabilitato | Non previsto |
 | Errore | Non previsto: gli errori di spostamento si mostrano con un avviso (CMP-15) |
 | Caricamento | Non previsto: la colonna al primo accesso usa lo stato di caricamento di SC-01 |
@@ -740,7 +745,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 **Quando non usarlo:** per il testo dell'interfaccia (stili Interfaccia/…).
 
 ### Varianti e dimensioni
-- **Riga dei metadati** (parte interna), sotto il titolo, su due righe larghe quanto la nota (DEC-44): in alto la data di ultima modifica in Interfaccia/Dettaglio e `testo-tenue` (es. «Modificata oggi alle 11:42»); sotto i tag in sola lettura (CMP-05 senza ✕, `spazio-elemento` tra l'uno e l'altro), che vanno a capo. Date e tag si modificano nella finestra dei dettagli (CMP-24). Sta `spazio-icona` (8) sotto il titolo e `spazio-blocco` (16) sopra il testo; tra le due righe `spazio-icona` (8) (DEC-58, anche nel componente in Figma). Proprietà **Data** e **Mostra tag**; nella nota nuova niente tag e "Creata ora". Il componente ha la proprietà **Mostra metadati** per nasconderla dove non c'è il titolo (nota rapida, SC-02).
+- **Riga dei metadati** (parte interna), sotto il titolo, su due righe larghe quanto la nota (DEC-44): in alto la data di ultima modifica in Interfaccia/Dettaglio e `testo-tenue` (es. «Modificata oggi alle 11:42»); sotto i tag in sola lettura (CMP-05 senza ✕, `spazio-elemento` tra l'uno e l'altro), che vanno a capo. Date e tag si modificano nella finestra dei dettagli (CMP-24). Sta `spazio-icona` (8) sotto il titolo e `spazio-blocco` (16) sopra il testo; tra le due righe `spazio-icona` (8) (DEC-58, anche nel componente in Figma). Proprietà **Data** e **Mostra tag**; nella nota nuova niente tag e "Creata ora". Il componente ha la proprietà **Mostra metadati** per nasconderla dove non c'è il titolo (nota rapida, SC-02) e **Mostra titolo**: nella nota aperta sono spenti tutti e due, perché titolo e metadati stanno nel percorso (CMP-26) e nella sua comparsa (CMP-27, DEC-71).
 - **Testo puro** (DEC-64, la variante in uso finché non torna il markdown): titolo, riga dei metadati e un solo paragrafo in Nota/Corpo, dove `#`, `-`, `**` e le tabulazioni si vedono come caratteri, senza formattazione. In Figma è la variante `Tipo=Testo puro`.
 - **Con testo:** titolo (Nota/Titolo), riga dei metadati, corpo (Nota/Corpo), sottotitolo (Nota/Sottotitolo), checklist, elenco puntato, elenco numerato; `spazio-blocco` (16) tra i blocchi, `spazio-elemento` (4) tra le voci, `spazio-gruppo` (24) tra intestazione e testo. Larghezza di lettura 640, confermata come misura massima il 28/09/2026.
 - **Simboli markdown:** non si vedono mai, nemmeno sulla riga del cursore (DEC-58).
@@ -934,3 +939,69 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 ### Esempi
 - ✅ Corretto: scorrendo una nota lunga il cursore compare a destra sopra il testo e sparisce poco dopo.
 - ❌ Scorretto: una barra sempre visibile che restringe il testo, o un binario colorato sotto il cursore.
+
+---
+
+## CMP-26 – Percorso
+**Tipo:** composto (parte interna "Segmento del percorso") · **Usato in:** SC-03 · **Figma:** pagina Componenti composti, sezione CMP-26 Percorso
+
+**Scopo:** mostrare dove sta la nota aperta e il suo titolo, al posto del titolo grande nel foglio (DEC-71).
+**Quando usarlo:** al centro della fascia in alto della nota aperta, una sola volta.
+**Quando non usarlo:** nella nota rapida (SC-02), che non ha titolo, e come navigazione in altre schermate.
+
+### Varianti e dimensioni
+- **Livelli:** Radice (solo il titolo, nota non organizzata), Una cartella, Due cartelle, Lungo (con più di due cartelle quelle di mezzo diventano «…»).
+- Segmenti alti 24 (`misura-controllo-piccolo`), pillole con margini `spazio-controllo-piccolo` (8); tra un segmento e l'altro la freccia destra 12 in `icona-tenue`, senza spazio in più.
+- **Cartella:** Interfaccia/Controllo in `testo-tenue`. **Titolo:** Interfaccia/Controllo attivo in `testo-primario`. **Senza titolo:** «Senza titolo» in Interfaccia/Controllo attivo e `testo-tenue`. **Cartelle nascoste:** «…» come una cartella.
+- Centrato nella fascia in alto del foglio, a 12 dal bordo, alla stessa altezza dei tasti flottanti (DEC-60). Ha il fondo `sfondo-nota` con `raggio-pillola`: il testo che scorre gli passa sotto senza sovrapporsi (proposta dell'agente).
+- Il titolo è un campo largo quanto il suo testo; vuoto mostra «Senza titolo».
+
+### Stati (di ogni segmento)
+| Stato | Descrizione |
+|---|---|
+| Default | Senza sfondo |
+| Hover | `sfondo-hover`; il testo di una cartella passa a `testo-primario` |
+| Focus | Anello `focus-anello` di 2 px staccato 2 px |
+| Attivo | Titolo in modifica: `sfondo-campo` con il cursore; Invio o Esc tornano al testo |
+| Disabilitato · Errore · Caricamento | Non previsti |
+
+### Accessibilità
+- **Tastiera:** i segmenti sono pulsanti in fila; Tab passa da uno all'altro, Invio apre la cartella o modifica il titolo.
+- **Lettori di schermo:** elenco con il nome «Percorso della nota»; l'ultimo elemento è il titolo, con `aria-current`.
+- **Contrasti:** come la riga della colonna: `testo-tenue` 5,49:1 e `testo-primario` 16,48:1 su `sfondo-nota`.
+
+### Esempi
+- ✅ Corretto: «Lavoro › Clienti › Rossi» per una nota nella cartella Clienti.
+- ❌ Scorretto: ripetere il titolo anche in cima al foglio.
+
+---
+
+## CMP-27 – Comparsa dei metadati
+**Tipo:** composto · **Usato in:** SC-03 · **Figma:** pagina Componenti composti, sezione CMP-27 Comparsa dei metadati
+
+**Scopo:** mostrare ultima modifica e tag della nota aperta senza occupare il foglio (DEC-71).
+**Quando usarlo:** sotto il titolo del percorso (CMP-26), passando con il mouse o con il focus sul titolo.
+**Quando non usarlo:** per modificare date e tag, che si cambiano da Dettagli (CMP-24).
+
+### Varianti e dimensioni
+- **Tag:** Con tag, Senza tag (solo la data).
+- `sfondo-flottante`, `raggio-interno` (12), margini `spazio/12`, `ombra-flottante`, livello 20 (`z-comparsa`); 8 sotto il percorso, centrata sul titolo.
+- Dentro la Riga dei metadati (CMP-20) larga 296: la data di ultima modifica in Interfaccia/Dettaglio e `testo-tenue`, sotto i tag in sola lettura (CMP-05 senza ✕) che vanno a capo.
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Default | Visibile |
+| Hover · Focus | Compare dopo 500 ms di sosta sul titolo, subito con il focus da tastiera; resta mentre il mouse è sul titolo; sparisce lasciandolo, cliccandolo o con Esc |
+| Attivo · Disabilitato · Errore · Caricamento | Non previsti: non si clicca |
+
+Compare e sparisce con `movimento-durata-breve` (120 ms).
+
+### Accessibilità
+- **Tastiera:** non riceve il focus; Esc la nasconde senza spostare il focus.
+- **Lettori di schermo:** il testo è la descrizione del titolo nel percorso («Modificata oggi alle 11:42, tag riunioni, lavoro/clienti»).
+- **Contrasti:** data in `testo-tenue` su `sfondo-flottante` come nei menu; tag come CMP-05 sulla superficie flottante.
+
+### Esempi
+- ✅ Corretto: passando sul titolo compaiono data e tag.
+- ❌ Scorretto: mettere nella comparsa pulsanti o campi da modificare.

@@ -11,6 +11,7 @@
 | Riguarda | Domanda | Chi risponde | Risposta | Decisione |
 |---|---|---|---|---|
 | RF-11 | Le scorciatoie da tastiera sono personalizzabili dall'utente? | Manuel Cucca | Solo la scorciatoia globale della nota rapida; le altre sono fisse | |
+| SC-01 | Con «Chiudi nota» (DEC-68), all'avvio si apre ancora la nota modificata più di recente, o la finestra ricorda se l'ultima volta era senza nota? | Manuel Cucca | Sì: all'avvio si apre ancora la modificata più di recente (30/09/2026) | DEC-68 |
 | RF-12 | Su quali sistemi desktop gira l'app (Windows, macOS, Linux)? | Manuel Cucca | Windows e macOS | DEC-04 |
 | RF-12 | Rientra nella prima fase, visto che DEC-01 la limita a "scrittura e stoccaggio"? | Manuel Cucca | No: rinviato dopo la prima fase (Should) | DEC-01 |
 | SC-01, SC-03 | Nel frammento Must A la nota aperta nasconde la riga dei metadati (tag e data di modifica)? Deduzione dell'agente | Manuel Cucca | Sì: tutta la riga torna con i tag (RF-04), data compresa | |

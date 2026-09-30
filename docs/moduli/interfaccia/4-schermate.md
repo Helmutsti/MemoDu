@@ -50,7 +50,7 @@ L'unico menu della finestra. È diviso in due parti:
 
 | Parte | Voci |
 |---|---|
-| Sopra: **questa nota** | Dettagli, Sposta in, Elimina (FL-04, RB-25, DEC-44). Le stesse voci nel tasto destro sulla nota nella colonna |
+| Sopra: **questa nota** | Dettagli, Sposta in, Chiudi nota, Elimina (FL-04, RB-25, DEC-44, DEC-68). Chiudi nota (Ctrl + W, ⌘ + W su macOS, DEC-70) salva la nota e lascia l'area vuota con «Nessuna nota aperta», senza aprirne un'altra; una nota vuota sparisce (DEC-39). Le stesse voci, tranne Chiudi nota, nel tasto destro sulla nota nella colonna |
 | Sotto: **Memodu** | Impostazioni (SC-06). Il Cestino non è più nel menu: si apre dalla riga in fondo alla colonna (DEC-40) |
 
 Senza una nota aperta (stato vuoto) il menu mostra solo la parte sotto.

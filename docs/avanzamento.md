@@ -55,7 +55,10 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 ## Deduzioni da confermare
 Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui non valgono come regole.
 
-Nessuna: confermati il 29/09/2026 i testi della conferma per 1 e 0 note (CA-06.4) e le date scritte nei campi (CA-04.3, CA-04.4). Prima: confermate il 29/09/2026 la chiusura della nota rapida con SC-07 (RB-62) e la nuova formulazione di CA-05.10 per il database. Prima: confermate da Manuel Cucca il 29/09/2026 le cinque scelte fatte scrivendo il codice di Must B (nome «Altre azioni» del ···, campo nome, trascinamento sui titoli di sezione, testi di eliminazione per cartelle vuote o con una nota, «Nessuna nota aperta»).
+- DEC-71: modifica del titolo con un clic nel percorso (Invio o Esc tornano al testo), clic su una cartella che la apre nella colonna, «…» con un menu per le cartelle nascoste, comparsa dei metadati dopo 500 ms o con il focus.
+- DEC-67: alla prima apertura la copia di lavoro del client parte da una copia del database dell'API (`memodu.db`) se è nella stessa cartella, così le note scritte finora restano.
+
+Prima, nessuna: confermati il 29/09/2026 i testi della conferma per 1 e 0 note (CA-06.4) e le date scritte nei campi (CA-04.3, CA-04.4). Prima: confermate il 29/09/2026 la chiusura della nota rapida con SC-07 (RB-62) e la nuova formulazione di CA-05.10 per il database. Prima: confermate da Manuel Cucca il 29/09/2026 le cinque scelte fatte scrivendo il codice di Must B (nome «Altre azioni» del ···, campo nome, trascinamento sui titoli di sezione, testi di eliminazione per cartelle vuote o con una nota, «Nessuna nota aperta»).
 
 ## Rischi accettati
 | Rischio | Decisione | Da rivedere |

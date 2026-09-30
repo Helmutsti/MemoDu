@@ -4,3 +4,7 @@ dist
 *.log
 .playwright-mcp/
 /*.png
+.vitest/
+client/src-tauri/icons/android/
+client/src-tauri/icons/ios/
+client/src-tauri/icons/64x64.png

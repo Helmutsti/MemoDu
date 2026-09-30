@@ -55,7 +55,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A{Come creo la nota?} -- + accanto a Non organizzate --> B
-    A -- Scorciatoia da tastiera --> B
+    A -- Ctrl + N, ⌘ + N su macOS - DEC-69 --> E
     A -- Tasto destro su una cartella --> C[La cartella su cui ho cliccato diventa quella selezionata]
     C --> B{C'è una cartella selezionata?}
     B -- Sì --> D[La nota nasce nella cartella selezionata - RB-09]

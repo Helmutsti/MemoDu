@@ -326,3 +326,11 @@
 | 30/09/2026 | Manuel Cucca | Nota rapida: Maiusc + Invio chiude come Chiudi, con le icone ⇧ ↵ accanto all'etichetta; CMP-01 Diviso con la scorciatoia; aggiornati RB-02, CA-01.2, TC-02, SC-02, CMP-23 | DEC-65 |
 | 30/09/2026 | Manuel Cucca | SC-02, SC-03: un clic nel vuoto porta il cursore nel punto di testo più vicino | DEC-66 |
 | 30/09/2026 | Manuel Cucca | Mockup di SC-02 con Chiudi ⇧ ↵ (nota rapida della libreria ripubblicata) ed esportazioni rigenerate | DEC-65 |
+| 30/09/2026 | Manuel Cucca | Client e API in due cartelle avviabili separatamente; copia di lavoro in SQLite nel nucleo Rust del client, che funziona senza API; aggiornati architettura, ambienti e api | DEC-67 (proposta) |
+| 30/09/2026 | Manuel Cucca | SC-01: «Chiudi nota» nel menu ··· della nota aperta, che lascia l'area vuota | DEC-68 |
+| 30/09/2026 | Manuel Cucca | Ctrl + N (⌘ + N su macOS) crea una nuova nota; CMP della riga della colonna con lo stato Trascinata | DEC-69 |
+| 30/09/2026 | Manuel Cucca | Ctrl + W (⌘ + W su macOS) chiude la nota aperta, con la scorciatoia accanto a «Chiudi nota»; confermato che all'avvio si apre la nota modificata più di recente | DEC-70, DEC-68 |
+| 30/09/2026 | Manuel Cucca | CA-01.6: su Windows il clic sinistro sull'icona dell'area di notifica apre Memodu, il destro il menu; l'icona segue il colore della barra | DEC-72, DEC-73 |
+| 30/09/2026 | Manuel Cucca | SC-03: il titolo va nel percorso al centro della fascia in alto, ultima modifica e tag in una comparsa sul titolo; nuovi CMP-26 Percorso e CMP-27 Comparsa dei metadati, CMP-20 con «Mostra titolo» | DEC-71 |
+| 30/09/2026 | Manuel Cucca | Mockup di SC-03 (Must A e Must C) con il percorso e senza titolo e metadati nel foglio; nuovi mockup della comparsa dei metadati e del titolo in modifica; 11 esportazioni rigenerate | DEC-71 |
+| 30/09/2026 | Manuel Cucca | Codice di SC-03: percorso (CMP-26) e comparsa dei metadati (CMP-27) al posto di titolo e metadati nel foglio | DEC-71 |

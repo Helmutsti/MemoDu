@@ -32,7 +32,7 @@ Frammento Must A: la scorciatoia è fissa (Ctrl + Alt + N su Windows, Control + 
 - **CA-01.3** *Dato* una nota rapida vuota, *quando* la chiudo, *allora* non nasce nessuna nota (RB-03, SF-16).
 - **CA-01.4** *Dato* una nota rapida aperta, *quando* premo di nuovo la scorciatoia, *allora* la prima viene salvata e resta aperta, e ne compare un'altra spostata di 32 px a destra e in basso (RB-04, SF-01, SF-04).
 - **CA-01.5** *Dato* una nota rapida con del testo e un'altra nota aperta nel programma, *quando* dalla freccia di Chiudi scelgo Apri nel programma, *allora* la nota del programma viene salvata e chiusa e al suo posto si apre la nota rapida (RB-05).
-- **CA-01.6** *Dato* Memodu in background, *quando* uso l'icona nell'area di notifica (Windows) o nella barra dei menu (macOS), *allora* posso aprire la nota rapida o il programma.
+- **CA-01.6** *Dato* Memodu in background, *quando* uso l'icona nell'area di notifica (Windows) o nella barra dei menu (macOS), *allora* posso aprire la nota rapida o il programma. Su Windows il clic sinistro apre il programma e il destro il menu (DEC-72); l'icona è nera con la barra chiara e bianca con quella scura (DEC-73).
 - **CA-01.7** *Dato* il server spento, *quando* la nota rapida prova a salvare, *allora* compare SC-07 con «Il server delle note non risponde. Avvialo e premi Riprova.»; avviato il server, Riprova salva la nota con tutto il testo (RB-61, SF-30).
 - **CA-01.8** *Dato* del testo non salvato perché il server non risponde, *quando* chiudo la finestra, *allora* compare la conferma «La nota non è salvata»; Annulla lascia la finestra aperta con il testo, Chiudi comunque la chiude (RB-62).
 

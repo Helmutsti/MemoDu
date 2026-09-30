@@ -17,6 +17,7 @@ import {
   Pencil,
   Pin,
   Trash2,
+  X,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type ReactElement } from "react";
 import type {
@@ -43,6 +44,7 @@ import { Pulsante, PulsanteIcona } from "../componenti/Pulsante";
 import { StatoVuoto } from "../componenti/StatoVuoto";
 import {
   alChiudere,
+  allaChiusuraDiUnaNotaRapida,
   allaRichiestaDiApertura,
   allUscita,
   annullaUscita,
@@ -464,6 +466,12 @@ export function FinestraPrincipale(): ReactElement {
     [apri, ricarica],
   );
 
+  // Una nota rapida chiusa è nuova o cambiata: la colonna si aggiorna subito.
+  useEffect(
+    () => allaChiusuraDiUnaNotaRapida(() => void ricarica().catch(() => setBloccata(true))),
+    [ricarica],
+  );
+
   // Riprova: prima il testo in attesa, poi di nuovo la colonna.
   const riprova = async () => {
     setRiprovando(true);
@@ -492,6 +500,28 @@ export function FinestraPrincipale(): ReactElement {
     setAperta(nota);
     setVista("nota");
   };
+
+  // Scorciatoie della finestra (⌘ al posto di Ctrl su Mac): Ctrl + N crea una nuova nota come
+  // il + delle non organizzate (FL-09, DEC-69); Ctrl + W chiude la nota aperta come «Chiudi
+  // nota» (DEC-70). Con una finestra di dialogo o SC-07 davanti non fanno niente.
+  const scorciatoie = useRef<Record<string, (() => Promise<void>) | undefined>>({});
+  useEffect(() => {
+    scorciatoie.current = bloccata
+      ? {}
+      : { n: nuovaNota, w: vista === "nota" && aperta !== null ? chiudiNota : undefined };
+  });
+  useEffect(() => {
+    const suTasto = (e: KeyboardEvent) => {
+      const comando = SU_MAC ? e.metaKey && !e.ctrlKey : e.ctrlKey && !e.metaKey;
+      const tasto = e.key.toLowerCase();
+      if (!comando || e.altKey || e.shiftKey || (tasto !== "n" && tasto !== "w")) return;
+      e.preventDefault();
+      if (e.repeat || document.querySelector('[role="dialog"], [role="alertdialog"]')) return;
+      void scorciatoie.current[tasto]?.();
+    };
+    window.addEventListener("keydown", suTasto, true);
+    return () => window.removeEventListener("keydown", suTasto, true);
+  }, []);
 
   // ——— Cartelle ———
 
@@ -767,6 +797,19 @@ export function FinestraPrincipale(): ReactElement {
     }
   };
 
+  /**
+   * «Chiudi nota» (DEC-68): la nota si salva e l'area mostra «Nessuna nota aperta»; se non si
+   * salva, resta aperta. Una nota vuota sparisce, come passando a un'altra (DEC-39).
+   */
+  const chiudiNota = async () => {
+    await coda.scarica();
+    if (coda.haModifiche) return;
+    const cancellata = await lasciaVuota();
+    setNuovaId(null);
+    setAperta(null);
+    if (cancellata) await ricarica().catch(() => setBloccata(true));
+  };
+
   /** Tasto destro su una nota della colonna: lo stesso menu della nota, senza aprirla. */
   const vociRiga = (riga: { id: string; cartella: Percorso; x: number; y: number }): VoceMenu[] => [
     {
@@ -822,6 +865,13 @@ export function FinestraPrincipale(): ReactElement {
                   y: r.bottom + 4,
                 });
             },
+          },
+          {
+            tipo: "voce",
+            etichetta: "Chiudi nota",
+            icona: X,
+            scorciatoia: `${SU_MAC ? "⌘" : "Ctrl"} + W`,
+            azione: () => void chiudiNota(),
           },
           { tipo: "separatore" },
           {
@@ -1023,6 +1073,11 @@ export function FinestraPrincipale(): ReactElement {
                 nota={aperta}
                 nuova={aperta.id === nuovaId}
                 onModifica={(dati) => coda.modifica(aperta.id, dati)}
+                onApriCartella={(percorso) => {
+                  // La cartella del percorso si apre nella colonna, che compare se è chiusa.
+                  apriCartelle(catena(percorso));
+                  if (statoColonna === "chiusa") apriColonna();
+                }}
               />
             ) : (
               <div className="area-nota-vuota">

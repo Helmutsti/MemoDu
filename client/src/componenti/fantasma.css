@@ -1,0 +1,12 @@
+/* La pillola trascinata: come la riga sotto il puntatore, sopra tutto e senza ricevere eventi. */
+.fantasma {
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin: 0;
+  z-index: var(--z-avviso);
+  pointer-events: none;
+  background: var(--sfondo-hover);
+  border-radius: var(--raggio-pillola);
+  opacity: 0.8;
+}

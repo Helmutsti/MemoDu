@@ -1,13 +1,12 @@
-// SC-03 Schermata di scrittura: campo titolo (può restare vuoto, RB-15), sotto la riga dei
-// metadati (ultima modifica e tag in sola lettura, DEC-44) e il testo della nota. Scorre
-// tutta la pagina insieme (DEC-59).
+// SC-03 Schermata di scrittura: in alto, al centro, il percorso con le cartelle e il titolo
+// (CMP-26, DEC-71), che passandoci sopra mostra ultima modifica e tag (CMP-27); nel foglio solo
+// il testo della nota, che scorre tutto insieme (DEC-59).
 // Le modifiche risalgono con onModifica: il salvataggio lo fa la finestra principale (RB-06).
 
 import { useRef, type ReactElement } from "react";
-import type { DatiNota, Nota } from "@memodu/condiviso";
+import type { DatiNota, Nota, Percorso as PercorsoCartella } from "@memodu/condiviso";
 import { useBarraScorrimento } from "../componenti/BarraScorrimento";
-import { Tag } from "../componenti/Tag";
-import { testoModificata } from "../date";
+import { Percorso } from "../componenti/Percorso";
 import { cursoreDalClic, Editor } from "../editor/Editor";
 import "./NotaAperta.css";
 
@@ -16,51 +15,42 @@ interface Proprieta {
   /** Nota appena creata: il cursore va nel corpo (CA-02.1). */
   nuova: boolean;
   onModifica: (dati: DatiNota) => void;
+  /** Una cartella del percorso: la si apre nella colonna. */
+  onApriCartella: (percorso: PercorsoCartella) => void;
 }
 
-export function NotaAperta({ nota, nuova, onModifica }: Proprieta): ReactElement {
+export function NotaAperta({ nota, nuova, onModifica, onApriCartella }: Proprieta): ReactElement {
   const pagina = useRef<HTMLElement>(null);
   useBarraScorrimento(pagina);
   return (
-    <article
-      ref={pagina}
-      className="nota-aperta"
-      // Un clic nel vuoto del foglio porta il cursore nel testo (DEC-66); non nel titolo.
-      onMouseDown={(e) => {
-        if (pagina.current && !(e.target as Element).closest(".nota-aperta-intestazione"))
-          cursoreDalClic(pagina.current, e);
-      }}
-    >
-      <header className="nota-aperta-intestazione">
-        <input
-          className="nota-aperta-titolo nota-titolo"
-          aria-label="Titolo della nota"
-          placeholder="Titolo"
-          defaultValue={nota.titolo}
-          onChange={(e) => onModifica({ titolo: e.target.value })}
-        />
-        <div className="nota-aperta-metadati">
-          <p className="nota-aperta-modificata interfaccia-dettaglio">
-            {testoModificata(nota.modificata)}
-          </p>
-          {nota.tag.length > 0 && (
-            <div className="nota-aperta-tag" aria-label="Tag">
-              {nota.tag.map((nome) => (
-                <Tag key={nome} nome={nome} />
-              ))}
-            </div>
-          )}
+    <>
+      <Percorso
+        cartella={nota.cartella}
+        titolo={nota.titolo}
+        modificata={nota.modificata}
+        tag={nota.tag}
+        onTitolo={(titolo) => onModifica({ titolo })}
+        onTornaAlTesto={() =>
+          pagina.current?.querySelector<HTMLElement>("[contenteditable=true]")?.focus()
+        }
+        onApriCartella={onApriCartella}
+      />
+      <article
+        ref={pagina}
+        className="nota-aperta"
+        // Un clic nel vuoto del foglio porta il cursore nel testo (DEC-66).
+        onMouseDown={(e) => pagina.current && cursoreDalClic(pagina.current, e)}
+      >
+        <div className="nota-aperta-corpo">
+          <div className="nota-aperta-misura">
+            <Editor
+              contenuto={nota.contenuto}
+              focus={nuova}
+              onModifica={(contenuto) => onModifica({ contenuto })}
+            />
+          </div>
         </div>
-      </header>
-      <div className="nota-aperta-corpo">
-        <div className="nota-aperta-misura">
-          <Editor
-            contenuto={nota.contenuto}
-            focus={nuova}
-            onModifica={(contenuto) => onModifica({ contenuto })}
-          />
-        </div>
-      </div>
-    </article>
+      </article>
+    </>
   );
 }

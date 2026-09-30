@@ -1,0 +1,89 @@
+/* CMP-26: al centro della fascia in alto (32), segmenti alti 24 a metà fascia (DEC-71). Il
+   fondo del foglio fa sì che il testo, scorrendo, passi sotto il percorso senza confondersi. */
+.percorso {
+  position: absolute;
+  top: calc(
+    var(--spazio-controllo-piccolo) + (var(--misura-riga) - var(--misura-controllo-piccolo)) / 2
+  );
+  left: 50%;
+  z-index: var(--z-fisso);
+  max-width: calc(100% - 2 * 160px);
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-nota);
+  transform: translateX(-50%);
+}
+
+.percorso-elenco {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.percorso-elemento {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.percorso-separatore {
+  display: flex;
+  color: var(--icona-tenue);
+}
+
+/* Ogni segmento è una pillola alta 24 con margini 8. */
+.percorso-segmento {
+  height: var(--misura-controllo-piccolo);
+  padding: 0 var(--spazio-controllo-piccolo);
+  border: none;
+  border-radius: var(--raggio-pillola);
+  background: none;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.percorso-segmento:hover {
+  background: var(--sfondo-hover);
+}
+
+.percorso-cartella {
+  overflow: hidden;
+  color: var(--testo-tenue);
+  text-overflow: ellipsis;
+  cursor: default;
+}
+.percorso-cartella:hover {
+  color: var(--testo-primario);
+}
+
+/* Il campo del titolo si allarga con il testo: una copia invisibile del valore gli dà la
+   misura, nella stessa cella della griglia. */
+.percorso-titolo {
+  display: inline-grid;
+  min-width: 0;
+}
+.percorso-titolo::after,
+.percorso-campo {
+  grid-area: 1 / 1;
+}
+.percorso-titolo::after {
+  content: attr(data-valore);
+  visibility: hidden;
+  height: 0;
+  padding: 0 var(--spazio-controllo-piccolo);
+  white-space: pre;
+}
+.percorso-campo {
+  width: 100%;
+  font: inherit;
+  min-width: 0;
+  color: var(--testo-primario);
+  text-overflow: ellipsis;
+}
+.percorso-campo::placeholder {
+  color: var(--testo-tenue);
+  opacity: 1;
+}
+.percorso-campo:focus {
+  background: var(--sfondo-campo);
+}

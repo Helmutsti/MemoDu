@@ -1,7 +1,7 @@
 #!/bin/sh
 # Set di dati «Smistare» per le prove a mano del frammento Must B (architettura/ambienti.md).
-# Da lanciare con il server già avviato su una cartella di prova vuota:
-#   MEMODU_CARTELLA="$HOME/Documents/Memodu-prove" npm run server
+# Da lanciare con l'API già avviata su una cartella di prova vuota:
+#   MEMODU_CARTELLA="$HOME/Documents/Memodu-prove" npm run api
 #   sh scripts/dati-di-prova.sh
 # Non usarlo sulla cartella delle note vere.
 set -e

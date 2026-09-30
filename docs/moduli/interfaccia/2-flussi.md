@@ -14,7 +14,8 @@ RF-11 non ha un flusso proprio: trascinamento, menu del tasto destro e scorciato
 | Menu della nota (in alto a destra) | FL-04 Modificare i metadati |
 | Trascinamento di note e cartelle nell'albero | FL-05 Organizzare nelle cartelle |
 | Menu del tasto destro nell'albero | FL-05, FL-09 |
-| Scorciatoia Nuova nota | FL-09 Creare una nota |
+| Scorciatoia Nuova nota: Ctrl + N, ⌘ + N su macOS (DEC-69) | FL-09 Creare una nota |
+| Scorciatoia Chiudi nota: Ctrl + W, ⌘ + W su macOS (DEC-70) | SC-01, DEC-68 |
 
 ## RF-12 – Finestre multiple
 Requisito *Should*: il flusso si scrive quando entra in progettazione.

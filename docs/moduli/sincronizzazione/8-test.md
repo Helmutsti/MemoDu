@@ -16,4 +16,6 @@
 | RF-10 | Anche con un solo utente serve un account con accesso autenticato: con quale metodo? | Manuel Cucca | Installazione personale, un solo account, accesso con email e password | DEC-05 |
 | RF-10 | Se l'utente perde la password o la chiave di cifratura, le note sono recuperabili? | Manuel Cucca | Rimandata: da decidere prima che RF-10 sia Pronto (Definition of Ready) | |
 | RF-10 | Dove compare la nota nata dal conflitto e come si riconosce? | Manuel Cucca | Nella stessa cartella dell'originale, con titolo + dispositivo e ora | DEC-06 |
+| RF-10 | Alla prima apertura la copia di lavoro del client parte da una copia del database dell'API (`memodu.db`) nella stessa cartella? Deduzione dell'agente, per non perdere le note scritte finora | Manuel Cucca | | DEC-67 |
+| SC-07 | Nel client SC-07 compare solo se la copia di lavoro non si apre o non si scrive: quale testo al posto di «Il server delle note non risponde. Avvialo e premi Riprova.»? | Manuel Cucca | | DEC-67 |
 | EN-06 | Dopo che un dispositivo è uscito, resta nell'elenco dei dispositivi o sparisce? Serve un elenco dei dispositivi collegati, per esempio per far uscire a distanza un browser dimenticato aperto (SF-26)? | Manuel Cucca | L'elenco con uscita a distanza diventa RF-16 (Should). Nella prima fase non c'è; se il dispositivo uscito resti registrato si decide con RF-16 | |

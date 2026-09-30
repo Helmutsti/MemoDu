@@ -7,13 +7,16 @@ Memodu è un'applicazione di note cross-platform che mette la scrittura al primo
 ## Avvio rapido
 ```bash
 # Installazione
-[comando]
+npm install
 
-# Avvio in locale
-[comando]
+# Client (app desktop): funziona anche senza API
+npm run client
+
+# API, da sola
+npm run api
 
 # Test
-[comando]
+npm test
 ```
 
 ## Documentazione

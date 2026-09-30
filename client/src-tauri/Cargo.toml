@@ -18,11 +18,21 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = ["tray-icon"] }
+tauri = { version = "2", features = ["tray-icon", "image-png"] }
 tauri-plugin-global-shortcut = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+# Copia di lavoro delle note sul dispositivo (DEC-67): SQLite incorporato, senza servizi.
+rusqlite = { version = "0.37", features = ["bundled"] }
+uuid = { version = "1", features = ["v4"] }
+chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
+regex = "1"
+unicode-normalization = "0.1"
 
+
+# Tema della barra delle applicazioni di Windows, per il colore dell'icona nell'area di notifica.
+[target.'cfg(windows)'.dependencies]
+winreg = "0.55"
 
 # Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
 [profile.release]

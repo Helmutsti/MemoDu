@@ -1,20 +1,25 @@
-// Nucleo Rust di Memodu. Nel frammento Must A fa solo area di notifica, scorciatoia globale
-// e finestre (DEC-30): le note passano dall'API, che l'interfaccia chiama direttamente.
+// Nucleo Rust di Memodu: area di notifica, scorciatoia globale, finestre e la copia di lavoro
+// delle note sul dispositivo (DEC-67), che l'interfaccia legge e scrive con i comandi di
+// `comandi.rs`. Il client funziona anche senza l'API.
 //
 // - Scorciatoia globale Ctrl + Alt + N (Control + Option + N su macOS): apre una nota rapida
 //   anche con Memodu in background (RF-01, SC-02).
 // - Icona nell'area di notifica (Windows) o nella barra dei menu (macOS): apre la nota rapida
-//   o il programma (CA-01.6).
+//   o il programma (CA-01.6); su Windows il clic sinistro apre il programma, il destro il menu.
 // - Note rapide: finestre senza cornice, sempre in primo piano, 480 × 320, a cascata di 32 px
 //   sullo schermo del puntatore; arrivata al bordo, la cascata riparte (SF-04).
 // - «Esci da Memodu»: ogni finestra salva e risponde; con testo non salvato chiede prima
 //   conferma (RB-62). Si esce quando tutte hanno risposto.
 
+mod archivio;
+mod comandi;
+
 use std::collections::HashSet;
 use std::sync::Mutex;
 
 use tauri::menu::{Menu, MenuItem, PredefinedMenuItem};
-use tauri::tray::TrayIconBuilder;
+use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
+use tauri::image::Image;
 use tauri::{
     AppHandle, Emitter, Manager, PhysicalPosition, PhysicalSize, RunEvent, State, WebviewUrl,
     WebviewWindow, WebviewWindowBuilder, WindowEvent,
@@ -25,6 +30,34 @@ const LARGHEZZA_RAPIDA: f64 = 480.0;
 const ALTEZZA_RAPIDA: f64 = 320.0;
 const PASSO_CASCATA: f64 = 32.0;
 const PREFISSO_RAPIDA: &str = "rapida-";
+
+/// Icona dell'area di notifica: nera per le barre chiare, bianca per le scure (DEC-73).
+const ICONA_TEMA_CHIARO: &[u8] = include_bytes!("../icons/area-di-notifica/tema-chiaro.png");
+const ICONA_TEMA_SCURO: &[u8] = include_bytes!("../icons/area-di-notifica/tema-scuro.png");
+
+/// L'icona nel colore della barra delle applicazioni. Su macOS è un modello: il sistema la
+/// colora da solo come le altre icone della barra dei menu.
+fn icona_area_di_notifica() -> Image<'static> {
+    let byte = if barra_chiara() { ICONA_TEMA_CHIARO } else { ICONA_TEMA_SCURO };
+    Image::from_bytes(byte).expect("icona dell'area di notifica non valida")
+}
+
+/// Su Windows il colore della barra segue «Scegli la modalità di Windows», che è diverso da
+/// quello delle app; senza l'impostazione vale quello predefinito di Windows 11, scuro.
+#[cfg(windows)]
+fn barra_chiara() -> bool {
+    use winreg::{enums::HKEY_CURRENT_USER, RegKey};
+    RegKey::predef(HKEY_CURRENT_USER)
+        .open_subkey(r"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize")
+        .and_then(|chiave| chiave.get_value::<u32, _>("SystemUsesLightTheme"))
+        .map(|valore| valore != 0)
+        .unwrap_or(false)
+}
+
+#[cfg(not(windows))]
+fn barra_chiara() -> bool {
+    true
+}
 
 /// Dove è comparsa l'ultima nota rapida, per la cascata.
 #[derive(Default)]
@@ -173,10 +206,42 @@ pub fn run() {
     tauri::Builder::default()
         .manage(Mutex::new(Cascata::default()))
         .manage(Mutex::new(Uscita::default()))
-        .invoke_handler(tauri::generate_handler![pronta_a_uscire, uscita_annullata])
+        .manage(comandi::Dati::apri())
+        .invoke_handler(tauri::generate_handler![
+            pronta_a_uscire,
+            uscita_annullata,
+            comandi::elenca_note,
+            comandi::leggi_nota,
+            comandi::crea_nota,
+            comandi::salva_nota,
+            comandi::elimina_se_vuota,
+            comandi::sposta_nota,
+            comandi::salva_dettagli,
+            comandi::elenca_tag,
+            comandi::aggiungi_tag,
+            comandi::togli_tag,
+            comandi::elimina_tag,
+            comandi::albero,
+            comandi::crea_cartella,
+            comandi::rinomina_cartella,
+            comandi::sposta_cartella,
+            comandi::cestina_nota,
+            comandi::cestina_cartella,
+            comandi::elenca_cestino,
+            comandi::ripristina,
+            comandi::elimina_definitivamente,
+            comandi::svuota_cestino,
+        ])
         .on_window_event(|finestra, evento| {
-            if let WindowEvent::Destroyed = evento {
-                finestra_pronta(finestra.app_handle(), finestra.label());
+            match evento {
+                WindowEvent::Destroyed => finestra_pronta(finestra.app_handle(), finestra.label()),
+                // Cambiato il tema di Windows: l'icona prende il colore della barra (DEC-73).
+                WindowEvent::ThemeChanged(_) => {
+                    if let Some(icona) = finestra.app_handle().tray_by_id("memodu") {
+                        let _ = icona.set_icon(Some(icona_area_di_notifica()));
+                    }
+                }
+                _ => {}
             }
         })
         .plugin(
@@ -205,9 +270,26 @@ pub fn run() {
             let separatore = PredefinedMenuItem::separator(app)?;
             let menu = Menu::with_items(app, &[&nota_rapida, &programma, &separatore, &esci])?;
             TrayIconBuilder::with_id("memodu")
-                .icon(app.default_window_icon().unwrap().clone())
+                .icon(icona_area_di_notifica())
+                .icon_as_template(cfg!(target_os = "macos"))
                 .tooltip("Memodu")
                 .menu(&menu)
+                // Su Windows il clic sinistro apre Memodu e il menu compare solo con il destro
+                // (DEC-72); su macOS il menu resta sul clic, come nella barra dei menu.
+                .show_menu_on_left_click(cfg!(target_os = "macos"))
+                .on_tray_icon_event(|icona, evento| {
+                    if cfg!(target_os = "macos") {
+                        return;
+                    }
+                    if let TrayIconEvent::Click {
+                        button: MouseButton::Left,
+                        button_state: MouseButtonState::Up,
+                        ..
+                    } = evento
+                    {
+                        mostra_programma(icona.app_handle());
+                    }
+                })
                 .on_menu_event(|app, evento| match evento.id().as_ref() {
                     "nota-rapida" => apri_nota_rapida(app),
                     "programma" => mostra_programma(app),

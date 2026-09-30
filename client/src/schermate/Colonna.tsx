@@ -23,6 +23,7 @@ import {
   RigaSezione,
 } from "../componenti/RigaColonna";
 import { StatoVuotoColonna } from "../componenti/StatoVuoto";
+import { avviaFantasma } from "../componenti/fantasma";
 
 /** Cosa si sta trascinando. */
 export type Trascinato =
@@ -110,6 +111,7 @@ export function Colonna(p: Proprieta): ReactElement {
     onDragStart: (e: DragEvent) => {
       e.dataTransfer.effectAllowed = "move";
       e.dataTransfer.setData("text/plain", t.tipo === "nota" ? t.id : t.percorso);
+      avviaFantasma(e);
       p.onTrascina(t);
     },
     onDragEnd: () => {

@@ -54,10 +54,19 @@ export async function chiudiFinestra(): Promise<void> {
   }
 }
 
-/** Chiude una nota rapida. */
+/** Chiude una nota rapida; la finestra principale aggiorna la colonna, dove la nota è nuova. */
 export async function chiudiNotaRapida(): Promise<void> {
-  if (IN_TAURI) await getCurrentWindow().destroy();
-  else window.close();
+  if (IN_TAURI) {
+    await emitTo("main", "nota-rapida-chiusa");
+    await getCurrentWindow().destroy();
+  } else window.close();
+}
+
+/** Nella finestra principale: quando una nota rapida si chiude. */
+export function allaChiusuraDiUnaNotaRapida(aggiorna: () => void): () => void {
+  if (!IN_TAURI) return () => {};
+  const promessa = listen("nota-rapida-chiusa", () => aggiorna());
+  return () => void promessa.then((togli) => togli());
 }
 
 /** "Apri nel programma" (RB-05): la finestra principale apre la nota `id` e si mostra. */

@@ -14,7 +14,7 @@ Le note passano dall'API, che è l'unica a scrivere i dati (DEC-30), nel databas
 - **Lunghezza:** corpo della richiesta fino a 10 MB (`bodyLimit` di Fastify; il valore di default è 1 MB), circa 5.000 pagine di testo (EN-01, SF-17). Le immagini hanno il loro limite (RB-12). Scelta di Manuel Cucca, 28/09/2026.
 - **Origini ammesse:** l'API risponde alle chiamate del browser solo dall'interfaccia dell'app (`http://localhost:1420` in sviluppo, `tauri://localhost` e `http://tauri.localhost` nell'app installata); le altre origini non ricevono l'intestazione `Access-Control-Allow-Origin`.
 - **Controllo dei dati:** nessuna conversione silenziosa. Un campo che non è testo o un campo in più danno 400.
-- **Implementazione:** `server/src/app.ts`, prove in `server/src/app.test.ts`.
+- **Implementazione:** `api/src/app.ts`, prove in `api/src/app.test.ts`. Nell'app le stesse operazioni sono comandi del nucleo Rust sulla copia di lavoro, con gli stessi dati e codici di errore (`client/src-tauri/src/comandi.rs`, DEC-67).
 - **API che non risponde** (server spento, SF-30): lo gestisce l'app, con SC-07 e il testo tenuto in memoria (RB-61, RB-62).
 
 ### Oggetto Nota
@@ -142,7 +142,7 @@ Cartelle e cestino nel database (DEC-48): una cartella ha un id e una cartella m
 - **Nomi:** l'API applica RB-63 (caratteri vietati nei nomi dei file sostituiti con `-`) e confronta i nomi senza distinguere maiuscole e minuscole (RB-23). Nelle risposte c'è sempre il nome come è stato scritto.
 - **Nome già esistente** (RB-31, SF-19): `409` con `{ "conflitto": "Idee" }`. L'app mostra l'avviso con tre scelte e ripete la richiesta con `"seEsiste": "numero"` (diventa «Idee (2)») o `"seEsiste": "unisci"`; Annulla non chiama l'API. Senza `seEsiste` vale `"chiedi"`.
 - **Unisci:** le note passano nella cartella di destinazione (i titoli possono ripetersi, RB-16); le sottocartelle senza omonimi passano anche loro; quelle con un omonimo restano dove sono e tornano in `daRisolvere`. L'app chiede per ognuna (RB-31) e chiama `POST /cartelle/sposta`. La cartella di partenza sparisce quando resta vuota.
-- **Implementazione:** `server/src/app.ts` e `server/src/archivio.ts`, prove accanto.
+- **Implementazione:** `api/src/app.ts` e `api/src/archivio.ts`, prove accanto; nel client `client/src-tauri/src/archivio.rs` (DEC-67).
 
 ### Oggetto Cartella
 ```json
