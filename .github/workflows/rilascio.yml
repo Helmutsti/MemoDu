@@ -1,6 +1,8 @@
-# Compila Memodu per Windows e macOS quando si pubblica una release su GitHub, e allega gli
-# installatori alla release. Si può anche lanciare a mano dalla scheda Actions: allora crea una
-# release in bozza con la versione di tauri.conf.json.
+# Compila Memodu per Windows e macOS e allega gli installatori a una release su GitHub:
+# - spingendo un tag v* (per esempio v0.1.0): crea e pubblica la release «Memodu v0.1.0»;
+# - pubblicando una release dal sito: gli installatori vanno in quella;
+# - a mano dalla scheda Actions: una release in bozza con la versione di tauri.conf.json.
+# La versione in client/src-tauri/tauri.conf.json deve corrispondere al tag.
 #
 # Gli installatori non sono firmati: Windows mostra l'avviso di SmartScreen («Ulteriori
 # informazioni» → «Esegui comunque»), macOS chiede di aprire l'app con il tasto destro → Apri.
@@ -8,6 +10,8 @@
 name: Rilascio
 
 on:
+  push:
+    tags: ["v*"]
   release:
     types: [published]
   workflow_dispatch:
@@ -67,9 +71,10 @@ jobs:
         with:
           projectPath: client
           args: ${{ matrix.argomenti }}
-          # Pubblicata una release: gli installatori vanno in quella.
+          # Pubblicata una release dal sito: gli installatori vanno in quella.
           releaseId: ${{ github.event.release.id }}
-          # Lanciata a mano: una release in bozza con la versione dell'app.
-          tagName: ${{ github.event_name == 'workflow_dispatch' && 'v__VERSION__' || '' }}
-          releaseName: ${{ github.event_name == 'workflow_dispatch' && 'Memodu v__VERSION__' || '' }}
-          releaseDraft: true
+          # Tag spinto: la release con quel nome; lanciata a mano: con la versione dell'app.
+          tagName: ${{ github.event_name == 'push' && github.ref_name || github.event_name == 'workflow_dispatch' && 'v__VERSION__' || '' }}
+          releaseName: ${{ github.event_name == 'push' && format('Memodu {0}', github.ref_name) || github.event_name == 'workflow_dispatch' && 'Memodu v__VERSION__' || '' }}
+          # A mano resta in bozza; con il tag si pubblica subito.
+          releaseDraft: ${{ github.event_name == 'workflow_dispatch' }}
