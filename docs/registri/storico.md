@@ -335,3 +335,15 @@
 | 30/09/2026 | Manuel Cucca | Mockup di SC-03 (Must A e Must C) con il percorso e senza titolo e metadati nel foglio; nuovi mockup della comparsa dei metadati e del titolo in modifica; 11 esportazioni rigenerate | DEC-71 |
 | 30/09/2026 | Manuel Cucca | Codice di SC-03: percorso (CMP-26) e comparsa dei metadati (CMP-27) al posto di titolo e metadati nel foglio | DEC-71 |
 | 30/09/2026 | Manuel Cucca | Design system: l'anello degli stati Focus si vede solo muovendosi con la tastiera | DEC-74 |
+| 30/09/2026 | Manuel Cucca | Architettura: la sincronizzazione viaggia per elemento, con le versioni precedenti sul server | DEC-75 |
+| 30/09/2026 | Manuel Cucca | Architettura: modifiche e conflitti per versione, «più recente» è l'ora della modifica sul dispositivo; risolto il rinvio di SF-14 | DEC-76 |
+| 30/09/2026 | Manuel Cucca | Architettura: versioni precedenti a scalare per 30 giorni | DEC-77 |
+| 30/09/2026 | Manuel Cucca | Architettura: sincronizzazione prima in chiaro, cifratura rinviata con il formato pronto e il server solo in locale | DEC-78 |
+| 30/09/2026 | Manuel Cucca | Architettura ed EN-05: credenziali nel file della cartella dei dati; il server conserva solo l'impronta del gettone | DEC-79 |
+| 30/09/2026 | Manuel Cucca | Architettura: la sincronizzazione parte all'avvio, dopo ogni salvataggio, ogni 30 s e al ritorno della rete | DEC-80 |
+| 30/09/2026 | Manuel Cucca | SC-03 e CMP-24: i Dettagli si chiudono anche con un clic fuori, sul velo | DEC-81 |
+| 30/09/2026 | Manuel Cucca | RB-40: l'avviso «server irraggiungibile» compare dopo 24 ore | DEC-82 |
+| 30/09/2026 | Manuel Cucca | FL-07: SF-33 gestita con l'avviso di errore; Fase 7 della sincronizzazione completa | DEC-83 |
+| 30/09/2026 | Manuel Cucca | RF-10 e RF-14: criteri di accettazione CA-10.1 … CA-10.11 e CA-14.1 … CA-14.5, scritti dall'agente da confermare | DEC-75 … DEC-83 |
+| 30/09/2026 | Manuel Cucca | RB-57, FL-08, CA-14.3, CA-14.6: senza il file delle credenziali si lavora in locale; il blocco resta per le credenziali rifiutate | DEC-84 |
+| 30/09/2026 | Manuel Cucca | Codice della sincronizzazione (RF-10, RF-14): richieste in `api.md`, credenziali generate dall'API, ambienti | DEC-75 … DEC-84 |

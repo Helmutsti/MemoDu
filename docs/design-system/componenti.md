@@ -905,7 +905,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 | Disabilitato · Caricamento | Non previsti per ora |
 
 ### Accessibilità
-- **Tastiera:** all'apertura il focus va sulla prima data; Tab passa da un controllo all'altro; Esc chiude (prima un suggerimento o il calendario aperto, poi la finestra) e il focus torna dove era.
+- **Tastiera:** all'apertura il focus va sulla prima data; Tab passa da un controllo all'altro; Esc chiude (prima un suggerimento o il calendario aperto, poi la finestra) e il focus torna dove era. Anche un clic sul velo chiude la finestra, dopo aver chiuso menu, calendario o conferma aperti (DEC-81).
 - **Lettori di schermo:** ruolo «dialog» con il nome «Dettagli di ‹titolo›»; la ✕ si chiama «Chiudi».
 - **Contrasti:** come CMP-03, CMP-05 e CMP-18.
 

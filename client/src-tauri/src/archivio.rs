@@ -6,12 +6,13 @@
 
 use std::cell::RefCell;
 use std::cmp::Ordering;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
-use std::sync::LazyLock;
+use std::sync::{Arc, LazyLock};
 
 use chrono::{DateTime, NaiveDate, SecondsFormat, Utc};
 use regex::Regex;
+use rusqlite::functions::FunctionFlags;
 use rusqlite::{params, params_from_iter, Connection, ErrorCode, OptionalExtension, Row};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use unicode_normalization::UnicodeNormalization;
@@ -21,7 +22,7 @@ pub const FILE_DATABASE: &str = "copia-di-lavoro.db";
 /// File dell'API quando girava sulla stessa macchina (DEC-46): da lì si copiano le note alla
 /// prima apertura, così non si perde niente.
 pub const FILE_API: &str = "memodu.db";
-const VERSIONE_SCHEMA: i64 = 1;
+const VERSIONE_SCHEMA: i64 = 2;
 const SENZA_TITOLO: &str = "Senza titolo";
 const NUOVA_CARTELLA: &str = "Nuova cartella";
 const LUNGHEZZA_MASSIMA_NOME: usize = 100;
@@ -64,6 +65,71 @@ const SCHEMA: &str = "
     PRIMARY KEY (nota, tag)
   );
 ";
+
+/// Schema 2 (DEC-75, DEC-76): per ogni elemento la versione ricevuta dal server, il suo
+/// contenuto (la base) e il segno «modificato qui» con l'istante della modifica. I trigger lo
+/// segnano da soli a ogni scrittura, tranne mentre si applicano le modifiche ricevute
+/// (riga «applicando» in sinc_stato). Gli elementi già presenti partono tutti da inviare.
+const SCHEMA_SINCRONIZZAZIONE: &str = "
+  CREATE TABLE sinc_elementi (
+    id TEXT PRIMARY KEY,
+    tipo TEXT NOT NULL,
+    versione INTEGER NOT NULL DEFAULT 0,
+    base TEXT,
+    modificato INTEGER NOT NULL DEFAULT 0,
+    modificato_il TEXT
+  );
+  CREATE TABLE sinc_stato (chiave TEXT PRIMARY KEY, valore TEXT NOT NULL);
+  INSERT INTO sinc_elementi (id, tipo, modificato, modificato_il)
+    SELECT id, 'nota', 1, adesso_utc() FROM note;
+  INSERT INTO sinc_elementi (id, tipo, modificato, modificato_il)
+    SELECT id, 'cartella', 1, adesso_utc() FROM cartelle;
+  INSERT INTO sinc_elementi (id, tipo, modificato, modificato_il)
+    SELECT id, 'tag', 1, adesso_utc() FROM tag;
+";
+
+/// Trigger che segnano un elemento come modificato qui: (tabella, tipo, id nel caso di
+/// inserimento o modifica, id nel caso di eliminazione, eventi).
+const TRIGGER: [(&str, &str, &str, &str); 4] = [
+    ("note", "nota", "NEW.id", "OLD.id"),
+    ("cartelle", "cartella", "NEW.id", "OLD.id"),
+    ("tag", "tag", "NEW.id", "OLD.id"),
+    // Aggiungere o togliere un tag modifica la nota.
+    ("note_tag", "nota", "NEW.nota", "OLD.nota"),
+];
+
+fn schema_trigger() -> String {
+    let mut sql = String::new();
+    for (tabella, tipo, nuovo, vecchio) in TRIGGER {
+        for (evento, id) in [("INSERT", nuovo), ("UPDATE", nuovo), ("DELETE", vecchio)] {
+            if tabella == "note_tag" && evento == "UPDATE" {
+                continue;
+            }
+            sql.push_str(&format!(
+                "CREATE TRIGGER sinc_{tabella}_{evento} AFTER {evento} ON {tabella}
+                 WHEN NOT EXISTS (SELECT 1 FROM sinc_stato WHERE chiave = 'applicando')
+                 BEGIN
+                   INSERT INTO sinc_elementi (id, tipo, modificato, modificato_il)
+                   VALUES ({id}, '{tipo}', 1, adesso_utc())
+                   ON CONFLICT(id) DO UPDATE SET modificato = 1, modificato_il = excluded.modificato_il;
+                 END;\n"
+            ));
+        }
+    }
+    sql
+}
+
+/// Orologio dell'archivio: lo stesso per le date delle note e per i trigger.
+type Orologio = Arc<dyn Fn() -> DateTime<Utc> + Send + Sync>;
+
+/// Un conflitto nato mentre si scriveva o sincronizzando (DEC-06, RB-39).
+#[derive(Debug, Clone, PartialEq)]
+pub struct ConflittoNato {
+    pub originale: String,
+    pub copia: String,
+    /// Nato dal testo della nota aperta, che d'ora in poi si salva nella copia.
+    pub scrivendo: bool,
+}
 
 // ——— Errori ———
 
@@ -388,10 +454,17 @@ fn segnaposto(quanti: usize) -> String {
 pub struct Archivio {
     db: Connection,
     file: PathBuf,
-    adesso: Box<dyn Fn() -> DateTime<Utc> + Send>,
+    adesso: Orologio,
     /// Cartelle di partenza di un'unione con sottocartelle ancora da risolvere (RB-31): quando
     /// l'ultima esce, spariscono anche loro, un livello alla volta.
     origini_unione: RefCell<HashSet<String>>,
+    /// Note il cui testo è cambiato per una modifica ricevuta e che l'interfaccia non ha ancora
+    /// riletto: salvarci sopra il testo vecchio della finestra lo perderebbe (DEC-06).
+    cambiate_da_sinc: RefCell<HashSet<String>>,
+    /// Note aperte il cui testo, dopo un conflitto, si salva nella copia.
+    reindirizzi: RefCell<HashMap<String, String>>,
+    /// Conflitti da far sapere all'interfaccia.
+    conflitti: RefCell<Vec<ConflittoNato>>,
 }
 
 impl Archivio {
@@ -403,8 +476,9 @@ impl Archivio {
 
     pub fn con_orologio(
         cartella: &Path,
-        adesso: Box<dyn Fn() -> DateTime<Utc> + Send>,
+        adesso: Box<dyn Fn() -> DateTime<Utc> + Send + Sync>,
     ) -> Esito<Self> {
+        let adesso: Orologio = Arc::from(adesso);
         std::fs::create_dir_all(cartella)
             .map_err(|e| Errore::NonDisponibile(format!("Cartella dei dati non disponibile: {e}")))?;
         let file = cartella.join(FILE_DATABASE);
@@ -412,15 +486,29 @@ impl Archivio {
         if !file.exists() && dell_api.exists() {
             copia_dall_api(&dell_api, &file)?;
         }
-        let db = connetti(&file)?;
+        let db = connetti(&file, &adesso)?;
         let versione: i64 = db.pragma_query_value(None, "user_version", |r| r.get(0))?;
-        if versione == 0 {
+        if versione < VERSIONE_SCHEMA {
             let tx = db.unchecked_transaction()?;
-            tx.execute_batch(SCHEMA)?;
+            if versione < 1 {
+                tx.execute_batch(SCHEMA)?;
+            }
+            if versione < 2 {
+                tx.execute_batch(SCHEMA_SINCRONIZZAZIONE)?;
+                tx.execute_batch(&schema_trigger())?;
+            }
             tx.pragma_update(None, "user_version", VERSIONE_SCHEMA)?;
             tx.commit()?;
         }
-        Ok(Archivio { db, file, adesso, origini_unione: RefCell::new(HashSet::new()) })
+        Ok(Archivio {
+            db,
+            file,
+            adesso,
+            origini_unione: RefCell::new(HashSet::new()),
+            cambiate_da_sinc: RefCell::new(HashSet::new()),
+            reindirizzi: RefCell::new(HashMap::new()),
+            conflitti: RefCell::new(Vec::new()),
+        })
     }
 
     fn ora(&self) -> String {
@@ -435,7 +523,7 @@ impl Archivio {
     fn con_riconnessione<T>(&mut self, operazione: impl Fn(&Self) -> Esito<T>) -> Esito<T> {
         match self.in_transazione(&operazione) {
             Err(Errore::Database(errore)) if sola_lettura(&errore) => {
-                self.db = connetti(&self.file)?;
+                self.db = connetti(&self.file, &self.adesso)?;
                 self.in_transazione(&operazione)
             }
             esito => esito,
@@ -468,7 +556,11 @@ impl Archivio {
         })
     }
 
+    /// Legge la nota. L'interfaccia che la rilegge vede le modifiche ricevute: da qui in poi può
+    /// salvarci sopra (DEC-06).
     pub fn leggi(&mut self, id: &str) -> Esito<Nota> {
+        self.cambiate_da_sinc.borrow_mut().remove(id);
+        self.reindirizzi.borrow_mut().remove(id);
         self.con_riconnessione(|a| a.nota_da_id(id))
     }
 
@@ -495,8 +587,33 @@ impl Archivio {
         })
     }
 
-    /// Salva titolo e contenuto e aggiorna la data di modifica (RB-06).
+    /// Salva titolo e contenuto e aggiorna la data di modifica (RB-06). Se nel frattempo la nota
+    /// è cambiata per una modifica ricevuta, il testo della finestra non la sovrascrive: va in
+    /// una copia in conflitto, dove finiscono anche i salvataggi successivi (DEC-06, RB-39).
     pub fn salva(&mut self, id: &str, dati: &DatiNota) -> Esito<Nota> {
+        let copia = self.reindirizzi.borrow().get(id).cloned();
+        if let Some(copia) = copia {
+            self.salva(&copia, dati)?;
+            return self.con_riconnessione(|a| a.nota_da_id(id));
+        }
+        if self.cambiate_da_sinc.borrow().contains(id) {
+            let attuale = self.con_riconnessione(|a| a.nota_da_id(id))?;
+            let diverso = dati.titolo.as_ref().is_some_and(|t| *t != attuale.titolo)
+                || dati.contenuto.as_ref().is_some_and(|c| *c != attuale.contenuto);
+            if diverso {
+                let titolo = dati.titolo.clone().unwrap_or_else(|| attuale.titolo.clone());
+                let contenuto = dati.contenuto.clone().unwrap_or_else(|| attuale.contenuto.clone());
+                let copia = self.con_riconnessione(|a| a.crea_copia_in_conflitto(id, &titolo, &contenuto))?;
+                self.cambiate_da_sinc.borrow_mut().remove(id);
+                self.reindirizzi.borrow_mut().insert(id.to_string(), copia.clone());
+                self.conflitti.borrow_mut().push(ConflittoNato {
+                    originale: id.to_string(),
+                    copia,
+                    scrivendo: true,
+                });
+                return Ok(attuale);
+            }
+        }
         self.con_riconnessione(|a| {
             let attuale = a.trova(id)?;
             a.db.execute(
@@ -1308,11 +1425,16 @@ impl Archivio {
     }
 }
 
-/// Apre il database con le impostazioni di ogni connessione.
-fn connetti(file: &Path) -> Esito<Connection> {
+/// Apre il database con le impostazioni di ogni connessione. `adesso_utc()` dà ai trigger
+/// l'istante dell'orologio dell'archivio (DEC-76).
+fn connetti(file: &Path, adesso: &Orologio) -> Esito<Connection> {
     let db = Connection::open(file)?;
     db.pragma_update(None, "journal_mode", "WAL")?;
     db.pragma_update(None, "foreign_keys", "ON")?;
+    let orologio = Arc::clone(adesso);
+    db.create_scalar_function("adesso_utc", 0, FunctionFlags::SQLITE_UTF8, move |_| {
+        Ok(istante(orologio()))
+    })?;
     Ok(db)
 }
 
@@ -1473,6 +1595,9 @@ pub fn cartella_predefinita() -> PathBuf {
     }
     casa().join(".local").join("share").join("Memodu")
 }
+
+#[path = "archivio_sinc.rs"]
+pub mod sinc;
 
 #[cfg(test)]
 #[path = "archivio_test.rs"]

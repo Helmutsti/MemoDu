@@ -410,3 +410,23 @@ Comandi di DEC-51 per la finestra Dettagli (CMP-24, DEC-44). Valgono le regole g
 **Input:** `{ "nome": "lavoro/fornitori" }`. Elimina il tag e i suoi sotto-tag e li toglie da tutte le note, senza toccare altro (RB-19). La conferma con il numero di note la chiede l'app prima.
 **Output:** `204`.
 **Errori:** 404 (tag non trovato), 500.
+
+---
+
+## Sincronizzazione (RF-10, DEC-75 … DEC-84)
+**Valgono per tutte le richieste della sincronizzazione:**
+- **Chi le fa:** il nucleo Rust del client, in background (`client/src-tauri/src/sincronizzazione.rs`), non l'interfaccia.
+- **Autorizzazione:** intestazione `Authorization: Bearer <gettone>` con il gettone delle credenziali dell'installazione (DEC-79); senza o sbagliato `401`, e il client mostra la schermata di blocco (RB-57).
+- **Protocollo:** intestazione `Memodu-Protocollo: 1`; con una versione diversa `426`, e il client mostra l'avviso di errore e continua sulla copia di lavoro (DEC-83).
+- **Blocchi:** testo opaco per il server. Oggi JSON in chiaro, `{ "formato": "chiaro", "tipo": "nota" | "cartella" | "tag", "modificato_il": "<UTC>", "eliminato": false, "campi": { … } }` (DEC-78).
+- **Implementazione:** `api/src/sincronizzazione.ts` (deposito: file dei blocchi e indice `sincronizzazione/indice.db`) e `api/src/rotteSincronizzazione.ts`, prove in `api/src/sincronizzazione.test.ts`.
+- **Credenziali:** al primo avvio l'API genera identificativo, gettone e chiave, conserva solo l'impronta del gettone e scrive `{ "indirizzo", "installazione", "gettone", "chiave" }` nel file `credenziali` della cartella dei dati, se non c'è (sulla stessa macchina è quello dell'app); le mostra una volta nel terminale.
+
+## GET /sincronizzazione/modifiche?dopo=N
+**Output:** `{ "modifiche": [{ "id", "versione", "ordine", "ora", "dati" }], "ultimo": M, "altre": false }`: le versioni attuali degli elementi cambiati dopo il numero d'ordine N, in ordine, al massimo 500; con `altre` si richiede da `ultimo`.
+**Errori:** 400 (`dopo` non è un numero), 401, 426.
+
+## PUT /sincronizzazione/elementi/:id
+**Input:** `{ "base": 7, "dati": "<blocco>" }`: il blocco nuovo e la versione da cui parte (0 per un elemento nuovo). `id` è un UUID.
+**Output:** `{ "versione": 8, "ordine": 1521 }`. Il server tiene le versioni precedenti a scalare per 30 giorni (DEC-77).
+**Errori:** 409 `{ "attuale": { "id", "versione", "ordine", "ora", "dati" } }` se l'elemento è già a un'altra versione: il client fonde e riprova (DEC-76); 400, 401, 413, 426.

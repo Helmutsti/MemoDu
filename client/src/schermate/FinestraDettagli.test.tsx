@@ -57,6 +57,15 @@ describe("CMP-24 Finestra dei dettagli", () => {
     expect(f.onChiudi).toHaveBeenCalledTimes(2);
   });
 
+  it("un clic fuori dalla finestra, sul velo, la chiude; un clic dentro no (DEC-81)", () => {
+    apri();
+    const finestra = screen.getByRole("dialog");
+    fireEvent.mouseDown(finestra);
+    expect(f.onChiudi).not.toHaveBeenCalled();
+    fireEvent.mouseDown(finestra.parentElement!);
+    expect(f.onChiudi).toHaveBeenCalledTimes(1);
+  });
+
   it("una data scritta si salva con Invio (CA-04.3)", async () => {
     apri();
     const campo = screen.getByRole("textbox", { name: "Data di creazione" });

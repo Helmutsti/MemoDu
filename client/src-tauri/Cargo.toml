@@ -23,7 +23,9 @@ tauri-plugin-global-shortcut = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 # Copia di lavoro delle note sul dispositivo (DEC-67): SQLite incorporato, senza servizi.
-rusqlite = { version = "0.37", features = ["bundled"] }
+rusqlite = { version = "0.37", features = ["bundled", "functions"] }
+# Richieste della sincronizzazione al server (DEC-75).
+ureq = { version = "2", features = ["json"] }
 uuid = { version = "1", features = ["v4"] }
 chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
 regex = "1"

@@ -46,12 +46,14 @@ import {
   alChiudere,
   allaChiusuraDiUnaNotaRapida,
   allaRichiestaDiApertura,
+  allaSincronizzazione,
   allUscita,
   annullaUscita,
   chiudiFinestra,
   confermaUscita,
   mostraFinestra,
   PULSANTI_FINESTRA,
+  riprovaSincronizzazione,
   SU_MAC,
 } from "../finestra";
 import { CodaSalvataggio } from "../salvataggio";
@@ -65,6 +67,22 @@ import "./FinestraPrincipale.css";
 const TESTO_ERRORE =
   "Non è stato possibile completare l'operazione. La colonna mostra com'è adesso.";
 const NUOVA_CARTELLA = "Nuova cartella";
+
+// Testi degli avvisi della sincronizzazione (SC-01, RB-39, RB-40, DEC-83): proposte
+// dell'agente, finché non ci sono i testi definitivi della Fase 6.
+const TESTO_CONFLITTO =
+  "Una nota è stata modificata su due dispositivi: ci sono tutte e due le versioni.";
+const TESTO_IRRAGGIUNGIBILE =
+  "Il server non risponde da più di un giorno: le modifiche restano su questo computer.";
+const TESTO_ERRORE_SINC = "La sincronizzazione non è riuscita: riprovo da sola.";
+const TESTO_PROTOCOLLO = "Memodu e il server hanno versioni diverse: aggiornali per sincronizzare.";
+const TESTO_CREDENZIALI =
+  "Le credenziali non sono valide. Correggi il file credenziali e premi Riprova.";
+
+type AvvisoSincronizzazione =
+  | { tipo: "conflitto"; copia: string }
+  | { tipo: "irraggiungibile" }
+  | { tipo: "errore"; protocollo: boolean };
 
 const stesso = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
 const padre = (percorso: Percorso) => percorso.split("/").slice(0, -1).join("/");
@@ -194,6 +212,11 @@ export function FinestraPrincipale(): ReactElement {
   const [cestino, setCestino] = useState<ElementoCestino[]>([]);
   const [bloccata, setBloccata] = useState(false);
   const [riprovando, setRiprovando] = useState(false);
+  /** Bloccata perché il server rifiuta le credenziali (RB-57), non per l'archivio locale. */
+  const [credenzialiRifiutate, setCredenzialiRifiutate] = useState(false);
+  const [avvisoSinc, setAvvisoSinc] = useState<AvvisoSincronizzazione | null>(null);
+  /** Cresce quando la nota aperta si rilegge per una modifica ricevuta: l'editor riparte. */
+  const [riletta, setRiletta] = useState(0);
   const [confermaChiusura, setConfermaChiusura] = useState(false);
   /** La conferma di chiusura è comparsa per «Esci da Memodu». */
   const uscendo = useRef(false);
@@ -466,15 +489,76 @@ export function FinestraPrincipale(): ReactElement {
     [apri, ricarica],
   );
 
+  // Sincronizzazione in background (RF-10): le modifiche ricevute aggiornano la colonna e, se la
+  // nota aperta non ha testo in attesa, anche lei; un conflitto nato mentre si scriveva apre la
+  // copia, dove è finito il testo (DEC-06, RB-39).
+  const gestoriSinc = useRef({ ricarica, apri });
+  useEffect(() => {
+    gestoriSinc.current = { ricarica, apri };
+  });
+  useEffect(
+    () =>
+      allaSincronizzazione((evento) => {
+        const { ricarica: ricaricaColonna, apri: apriNota } = gestoriSinc.current;
+        switch (evento.tipo) {
+          case "note-cambiate": {
+            void ricaricaColonna().catch(() => setBloccata(true));
+            const aperta = apertaAttuale.current;
+            if (aperta && evento.note.includes(aperta.id) && !coda.haModifiche) {
+              void api.leggi(aperta.id).then(
+                (nota) => {
+                  setAperta((a) => (a && a.id === nota.id ? nota : a));
+                  setRiletta((n) => n + 1);
+                },
+                () => undefined,
+              );
+            }
+            break;
+          }
+          case "conflitto":
+            setAvvisoSinc({ tipo: "conflitto", copia: evento.copia });
+            if (evento.scrivendo && apertaAttuale.current?.id === evento.originale) {
+              void apriNota(evento.copia);
+            }
+            break;
+          case "riuscita":
+            setAvvisoSinc((a) => (a?.tipo === "conflitto" ? a : null));
+            setCredenzialiRifiutate((rifiutate) => {
+              if (rifiutate) setBloccata(false);
+              return false;
+            });
+            setRiprovando(false);
+            break;
+          case "credenziali-rifiutate":
+            setCredenzialiRifiutate(true);
+            setBloccata(true);
+            setRiprovando(false);
+            break;
+          case "irraggiungibile":
+            setAvvisoSinc({ tipo: "irraggiungibile" });
+            break;
+          case "errore":
+            setAvvisoSinc({ tipo: "errore", protocollo: evento.protocollo });
+            break;
+        }
+      }),
+    [coda],
+  );
+
   // Una nota rapida chiusa è nuova o cambiata: la colonna si aggiorna subito.
   useEffect(
     () => allaChiusuraDiUnaNotaRapida(() => void ricarica().catch(() => setBloccata(true))),
     [ricarica],
   );
 
-  // Riprova: prima il testo in attesa, poi di nuovo la colonna.
+  // Riprova: prima il testo in attesa, poi di nuovo la colonna. Con le credenziali rifiutate si
+  // rilegge il file e si riprova la sincronizzazione: il blocco sparisce quando riesce (RB-57).
   const riprova = async () => {
     setRiprovando(true);
+    if (credenzialiRifiutate) {
+      await riprovaSincronizzazione();
+      return;
+    }
     try {
       await coda.scarica();
       if (coda.haModifiche) return;
@@ -1046,7 +1130,33 @@ export function FinestraPrincipale(): ReactElement {
                 onChiudi={() => setSparita(null)}
               />
             ) : (
-              avviso && <Avviso testo={TESTO_ERRORE} onChiudi={() => setAvviso(false)} />
+              (avviso && <Avviso testo={TESTO_ERRORE} onChiudi={() => setAvviso(false)} />) ||
+              (avvisoSinc && (
+                <Avviso
+                  tipo={avvisoSinc.tipo === "conflitto" ? "avviso" : "errore"}
+                  testo={
+                    avvisoSinc.tipo === "conflitto"
+                      ? TESTO_CONFLITTO
+                      : avvisoSinc.tipo === "irraggiungibile"
+                        ? TESTO_IRRAGGIUNGIBILE
+                        : avvisoSinc.protocollo
+                          ? TESTO_PROTOCOLLO
+                          : TESTO_ERRORE_SINC
+                  }
+                  azione={
+                    avvisoSinc.tipo === "conflitto"
+                      ? {
+                          etichetta: "Apri l'altra",
+                          onClick: () => {
+                            setAvvisoSinc(null);
+                            void apri(avvisoSinc.copia);
+                          },
+                        }
+                      : undefined
+                  }
+                  onChiudi={() => setAvvisoSinc(null)}
+                />
+              ))
             )}
             {vista === "cestino" ? (
               <Cestino
@@ -1069,7 +1179,7 @@ export function FinestraPrincipale(): ReactElement {
               />
             ) : aperta ? (
               <NotaAperta
-                key={aperta.id}
+                key={`${aperta.id}:${riletta}`}
                 nota={aperta}
                 nuova={aperta.id === nuovaId}
                 onModifica={(dati) => coda.modifica(aperta.id, dati)}
@@ -1174,7 +1284,13 @@ export function FinestraPrincipale(): ReactElement {
           onConferma={() => conflitto.risolvi("numero")}
         />
       )}
-      {bloccata && <Blocco inCorso={riprovando} onRiprova={riprova} />}
+      {bloccata && (
+        <Blocco
+          inCorso={riprovando}
+          onRiprova={riprova}
+          testo={credenzialiRifiutate ? TESTO_CREDENZIALI : undefined}
+        />
+      )}
       {confermaChiusura && (
         <FinestraConferma
           titolo="La nota non è salvata"

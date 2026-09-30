@@ -11,9 +11,12 @@ import "./Blocco.css";
 export function Blocco({
   inCorso,
   onRiprova,
+  testo = "Il server delle note non risponde. Avvialo e premi Riprova.",
 }: {
   inCorso: boolean;
   onRiprova: () => void;
+  /** Cosa correggere: di default il server delle note che non risponde (RB-61). */
+  testo?: string;
 }): ReactElement {
   return (
     <div className="blocco" role="alert">
@@ -21,7 +24,7 @@ export function Blocco({
         errore
         icona={CircleAlert}
         titolo="Memodu non riesce a collegarsi"
-        testo="Il server delle note non risponde. Avvialo e premi Riprova."
+        testo={testo}
         azione={
           <Pulsante inCorso={inCorso} onClick={onRiprova}>
             Riprova

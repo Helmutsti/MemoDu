@@ -5,7 +5,7 @@
 ## Elenco
 | Ambiente | A cosa serve | Chi ha accesso | Codice | Dati | Servizi esterni |
 |---|---|---|---|---|---|
-| Locale | Il singolo sviluppatore lavora. Nella prima fase è l'unico ambiente: client e API girano sulla macchina di sviluppo e si avviano separatamente. Il client (`npm run client`) tiene le note nella sua copia di lavoro e non ha bisogno dell'API (DEC-67). L'API ascolta su `127.0.0.1:4317` e si avvia a mano con `npm run api`; serve al client solo nel browser usato per le prove | Manuel Cucca | Il suo ramo in corso | Minimi, generati | Nessuno |
+| Locale | Il singolo sviluppatore lavora. Nella prima fase è l'unico ambiente: client e API girano sulla macchina di sviluppo e si avviano separatamente. Il client (`npm run client`) tiene le note nella sua copia di lavoro e non ha bisogno dell'API (DEC-67). L'API ascolta su `127.0.0.1:4317` e si avvia a mano con `npm run api`; serve al client nel browser usato per le prove e per sincronizzare: al primo avvio scrive il file `credenziali` nella cartella dei dati, che il client sulla stessa macchina usa da solo (DEC-79, DEC-84) | Manuel Cucca | Il suo ramo in corso | Minimi, generati | Nessuno |
 | Integrazione | Verificare che i pezzi funzionino insieme | | Ultima versione di ogni componente | Di prova, ricreabili | Sandbox |
 | Collaudo | Verificare prima del rilascio | | Versione candidata | Realistici, anonimizzati | Sandbox |
 | Produzione | Gli utenti veri | | Versione rilasciata | Reali | Reali |

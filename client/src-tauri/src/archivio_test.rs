@@ -158,7 +158,8 @@ fn segna_la_versione_dello_schema() {
     p.chiudi();
     let db = Connection::open(p.file()).unwrap();
     let versione: i64 = db.pragma_query_value(None, "user_version", |r| r.get(0)).unwrap();
-    assert_eq!(versione, 1);
+    // Schema 2: le tabelle della sincronizzazione (DEC-75, DEC-76).
+    assert_eq!(versione, 2);
 }
 
 #[test]

@@ -134,7 +134,16 @@ export function FinestraDettagli(p: Proprieta): ReactElement {
   const note = (nome: string) => p.tutti.find((t) => stesso(t.nome, nome))?.note ?? 0;
 
   return createPortal(
-    <div className="velo velo-overlay">
+    <div
+      className="velo velo-overlay"
+      // Un clic sul velo, fuori dalla finestra, la chiude come la ✕ (DEC-81); menu, calendario
+      // e conferma aperti lo usano prima per chiudersi loro.
+      onMouseDown={(e) => {
+        if (e.target !== e.currentTarget || menuTag || daEliminare) return;
+        if (finestra.current?.querySelector(".dettagli-data-aperta")) return;
+        p.onChiudi();
+      }}
+    >
       <div
         ref={finestra}
         className="finestra-dettagli"

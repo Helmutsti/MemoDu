@@ -13,6 +13,7 @@
 
 mod archivio;
 mod comandi;
+mod sincronizzazione;
 
 use std::collections::HashSet;
 use std::sync::Mutex;
@@ -203,10 +204,14 @@ fn scorciatoia_nota_rapida() -> Shortcut {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    // La sincronizzazione aspetta i segnali in un filo a parte (DEC-80).
+    let (segnale, segnali) = std::sync::mpsc::channel();
+    let mut segnali = Some(segnali);
     tauri::Builder::default()
         .manage(Mutex::new(Cascata::default()))
         .manage(Mutex::new(Uscita::default()))
         .manage(comandi::Dati::apri())
+        .manage(sincronizzazione::Segnale(Mutex::new(segnale)))
         .invoke_handler(tauri::generate_handler![
             pronta_a_uscire,
             uscita_annullata,
@@ -231,6 +236,7 @@ pub fn run() {
             comandi::ripristina,
             comandi::elimina_definitivamente,
             comandi::svuota_cestino,
+            comandi::riprova_sincronizzazione,
         ])
         .on_window_event(|finestra, evento| {
             match evento {
@@ -255,7 +261,7 @@ pub fn run() {
                 })
                 .build(),
         )
-        .setup(|app| {
+        .setup(move |app| {
             use tauri_plugin_global_shortcut::GlobalShortcutExt;
             // Se un altro programma usa già la combinazione, la nota rapida resta
             // raggiungibile dall'icona (scorciatoia fissa nel frammento Must A).
@@ -269,6 +275,9 @@ pub fn run() {
             let esci = MenuItem::with_id(app, "esci", "Esci da Memodu", true, None::<&str>)?;
             let separatore = PredefinedMenuItem::separator(app)?;
             let menu = Menu::with_items(app, &[&nota_rapida, &programma, &separatore, &esci])?;
+            if let Some(segnali) = segnali.take() {
+                sincronizzazione::avvia(app.handle().clone(), segnali);
+            }
             TrayIconBuilder::with_id("memodu")
                 .icon(icona_area_di_notifica())
                 .icon_as_template(cfg!(target_os = "macos"))

@@ -29,8 +29,7 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 | Markdown nel testo della nota: per ora testo puro con i soli comandi standard di CodeMirror (scelta di Manuel Cucca il 29/09/2026). Al ritorno si sceglie tra un editor nato per la scrittura (per esempio Tiptap su ProseMirror) e i pacchetti markdown di CodeMirror; il codice di prima è conservato, non collegato | RF-02 (CA-02.2 … CA-02.6), DEC-27, DEC-58, ID-26 | Quando si riprende la formattazione | `registri/decisioni/DEC-64-testo-puro-per-ora.md` |
 | Prototipo cliccabile e test di usabilità di SC-01, SC-02, SC-03 (saltati per Must A) e di SC-01, SC-04 (saltati per Must B, DEC-38) e di SC-03 per i tag (saltati per Must C, DEC-43) | RF-01, RF-02, RF-05, RF-15 | Fase 6 del frammento Must, e prima di un rilascio ad altre persone | `registri/decisioni/DEC-31-fase-6-di-must-a-senza-prototipo-e-test.md` |
 | Database al posto dei file: deciso il 29/09/2026 (DEC-45, supera DEC-28 e DEC-29). Per ora sta nell'API Node, al posto dei file, e il motore è SQLite (DEC-46) con la libreria better-sqlite3 (DEC-47). Il file sta nella cartella dei dati delle applicazioni; la cifratura a riposo arriva con la sincronizzazione (rischio accettato). Nessun passaggio delle note già scritte come file: sono solo di prova, il database parte vuoto (scelta di Manuel Cucca il 29/09/2026). Schema approvato (DEC-48). e con lui ricerca a testo pieno, cestino e cifratura a riposo della copia locale | DEC-28, DEC-29, RF-08, RF-15, RNF-02 | Fase 7 del frammento Must, prima della sincronizzazione | `registri/decisioni/DEC-29-file-delle-note-soluzione-provvisoria.md` |
-| Cifratura: libreria e algoritmo, chiavi per scopo, allegati a pezzi, portachiavi del sistema | DEC-08, RNF-02 | Fase 7 | `architettura/architettura.md` |
-| Protocollo di sincronizzazione e resto delle API | DEC-24, FL-07 | Fase 7 del frammento Must | `registri/decisioni/DEC-24-server-con-api-in-node.md` |
+| Cifratura: libreria e algoritmo, chiavi per scopo, allegati a pezzi, portachiavi del sistema. Per ora la sincronizzazione è in chiaro, con il formato pronto e il server solo in locale (DEC-78) | DEC-08, RNF-02, DEC-78 | Prima di portare il server fuori dalla macchina | `architettura/architettura.md` |
 | Organizzazione dei file sul server, elenco delle modifiche, backup | DEC-25 | Fase 7 | `registri/decisioni/DEC-25-archivio-del-server-su-file-system.md` |
 | Hosting definitivo del server personale (con disco persistente) e come si installa. Per ora il server gira sulla macchina di sviluppo | DEC-25, DEC-13 | Fase 8, prima del rilascio | `architettura/architettura.md` |
 | **In pausa:** mockup della Fase 6 per il frammento Must (SC-02 e SC-03 ripresi subito per Must A). Fatto SC-01 stato normale (in revisione); da fare gli altri stati di SC-01 e SC-04 … SC-07, contenuti definitivi, micro-interazioni, prototipo e test di usabilità. Da valutare con il mockup: ID-22 (numero di note accanto al nome) e stile dei titoli di gruppo delle impostazioni | Fase 6, frammento Must | Fase 6, prima della Fase 8 | Figma, file Mockup; `moduli/interfaccia/4-schermate.md` |
@@ -45,16 +44,17 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 | Pannello delle impostazioni dell'immagine (dimensione, allineamento, ritaglio, rotazione, testo alternativo) | CMP-21, RB-14 | Fase 6, con i mockup | `design-system/componenti.md` |
 | Testi definitivi di messaggi e avvisi | Tutti i flussi, EN-08 | Fase 6 | Flussi, colonna "Comunicazione" |
 | Come si salvano dimensione, allineamento, ritaglio e rotazione delle immagini senza rompere l'esportazione | RF-03, RF-13 | Fase 7 | `moduli/note/8-test.md` |
-| Frequenza della sincronizzazione | RF-10 | Fase 7 | `moduli/sincronizzazione/1-requisiti.md` |
-| Soglia dell'avviso "server irraggiungibile" (indicativa 24 ore) | RB-40 | Fase 7 | `moduli/sincronizzazione/2-flussi.md` |
-| Confronto "più recente" tra dispositivi (il formato delle date è fissato in DEC-28) | FL-04, FL-07 (SF-14) | Fase 7 | `moduli/note/2-flussi.md`, `moduli/sincronizzazione/2-flussi.md` |
-| Versioni diverse di app e server | FL-07 (SF-33) | Fase 7 | `moduli/sincronizzazione/2-flussi.md` |
 | Come si generano, si conservano sul dispositivo e si cambiano le credenziali dell'installazione | EN-05, RB-54 | Fase 7 | `moduli/sincronizzazione/3-entita.md` |
 | Quando eliminare davvero gli avvisi visti | EN-08 | Fase 7 | `moduli/sincronizzazione/3-entita.md` |
 
 ## Deduzioni da confermare
 Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui non valgono come regole.
 
+- Sincronizzazione: testi degli avvisi (conflitto, server irraggiungibile, errore, versioni diverse) e della schermata di blocco per le credenziali rifiutate, provvisori fino alla Fase 6; l'API scrive le credenziali nel file dell'app della cartella dei dati; nella fusione di un conflitto di testo l'originale prende la versione del server e la copia quella del dispositivo.
+- CA-10.1 … CA-10.11 e CA-14.1 … CA-14.5: criteri di accettazione di RF-10 e RF-14 scritti dall'agente.
+- DEC-79: il server genera identificativo, gettone e chiave in una riga da copiare, conserva solo l'impronta del gettone; 401 per un gettone sbagliato.
+- DEC-77: anche gli elementi eliminati per sempre tengono le versioni precedenti per 30 giorni.
+- DEC-76: meccanismo di versioni, numero d'ordine, base sul dispositivo, confronto campo per campo e blocchi «eliminato».
 - DEC-71: modifica del titolo con un clic nel percorso (Invio o Esc tornano al testo), clic su una cartella che la apre nella colonna, «…» con un menu per le cartelle nascoste, comparsa dei metadati dopo 500 ms o con il focus.
 - DEC-67: alla prima apertura la copia di lavoro del client parte da una copia del database dell'API (`memodu.db`) se è nella stessa cartella, così le note scritte finora restano.
 

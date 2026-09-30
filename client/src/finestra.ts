@@ -153,3 +153,26 @@ export function allIngrandimento(avvisa: (ingrandita: boolean) => void): () => v
   const promessa = finestra.onResized(aggiorna);
   return () => void promessa.then((togli) => togli());
 }
+
+/** Cosa arriva dalla sincronizzazione in background (RF-10). */
+export type EventoSincronizzazione =
+  | { tipo: "note-cambiate"; note: string[] }
+  | { tipo: "conflitto"; originale: string; copia: string; scrivendo: boolean }
+  | { tipo: "riuscita" }
+  | { tipo: "credenziali-rifiutate" }
+  | { tipo: "irraggiungibile" }
+  | { tipo: "errore"; protocollo: boolean };
+
+/** Ascolta la sincronizzazione del nucleo (solo nell'app). */
+export function allaSincronizzazione(
+  gestore: (evento: EventoSincronizzazione) => void,
+): () => void {
+  if (!IN_TAURI) return () => {};
+  const promessa = listen<EventoSincronizzazione>("sincronizzazione", (e) => gestore(e.payload));
+  return () => void promessa.then((togli) => togli());
+}
+
+/** Riprova della schermata di blocco: rilegge le credenziali e sincronizza subito (RB-57). */
+export async function riprovaSincronizzazione(): Promise<void> {
+  if (IN_TAURI) await invoke("riprova_sincronizzazione");
+}

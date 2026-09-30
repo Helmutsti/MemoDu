@@ -11,7 +11,7 @@ Il diagramma di tutto il sistema è in `moduli/note/3-entita.md`.
 | Attributo | Tipo | Obbligatorio | Vincoli | Note |
 |---|---|---|---|---|
 | Identificativo | Codice | Sì | Uno solo per installazione (DEC-01, DEC-13) | Tecnico, non visibile |
-| Credenziali | Segreto | Sì | Generate installando il server | Autorizzano i dispositivi e contengono la chiave di cifratura (DEC-08). Si scrivono nel file di configurazione dell'app (RB-54). Come si conservano e come si cambiano si decide in Fase 7 |
+| Credenziali | Segreto | Sì | Generate installando il server | Autorizzano i dispositivi e contengono la chiave di cifratura (DEC-08). Si scrivono nel file `credenziali` della cartella dei dati dell'app, letto a ogni avvio (RB-54, DEC-79). Il server conserva solo l'impronta del gettone. Il cambio si rivaluta con la cifratura |
 | Data di creazione | Data e ora | Sì | | All'installazione del server |
 
 - **Chi lo crea:** il sistema, all'installazione del server (FL-08).

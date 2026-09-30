@@ -18,6 +18,8 @@ import {
   SpostamentoImpossibile,
   TagNonTrovato,
 } from "./archivio.ts";
+import { rotteSincronizzazione } from "./rotteSincronizzazione.ts";
+import type { ArchivioSincronizzazione } from "./sincronizzazione.ts";
 
 // Endpoint di note, cartelle e cestino (architettura/api.md, DEC-37). Fastify controlla
 // input e output con gli schemi: le richieste fuori schema ricevono 400, i corpi oltre
@@ -92,7 +94,10 @@ const CODICI: [new (...argomenti: never[]) => Error, number][] = [
   [NotaNonVuota, 409],
 ];
 
-export function creaServer(archivio: ArchivioNote): FastifyInstance {
+export function creaServer(
+  archivio: ArchivioNote,
+  sincronizzazione?: ArchivioSincronizzazione,
+): FastifyInstance {
   const server = Fastify({
     bodyLimit: LIMITE_CORPO_BYTE,
     logger: false,
@@ -387,6 +392,9 @@ export function creaServer(archivio: ArchivioNote): FastifyInstance {
     await archivio.svuotaCestino();
     return risposta.code(204).send();
   });
+
+  // ——— Sincronizzazione (RF-10) ———
+  if (sincronizzazione) rotteSincronizzazione(server, sincronizzazione);
 
   return server;
 }

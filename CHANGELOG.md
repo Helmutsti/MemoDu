@@ -18,6 +18,7 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 - Le note, le cartelle e il cestino non sono più file nella cartella Documenti\Memodu: stanno in un database nella cartella dei dati di Memodu, fuori da OneDrive e iCloud. Le note scritte finora nella cartella Documenti non vengono spostate
 
 ### Aggiunto
+- Sincronizzazione: con il file delle credenziali Memodu si tiene allineato con il server da solo, anche senza rete; le modifiche fatte su due dispositivi non si perdono, al massimo nasce una «copia in conflitto» (RF-10)
 - Ctrl + N (⌘ + N su Mac) crea una nuova nota nella finestra principale (RF-02)
 - «Chiudi nota» nel menu ··· della nota, o Ctrl + W (⌘ + W su Mac): la nota si salva e la finestra resta senza nota aperta (RF-02)
 - Cliccando in un punto vuoto della nota, sotto o accanto al testo, il cursore va nel testo più vicino (RF-01, RF-02)
@@ -38,6 +39,7 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 - 
 
 ### Corretto
+- La finestra Dettagli si chiude anche cliccando fuori (RF-04)
 - Il bordo del focus compare solo quando ti muovi con la tastiera, non a ogni clic
 - Su Windows il clic sull'icona nell'area di notifica apre Memodu; il menu compare con il tasto destro (RF-01)
 - L'icona nell'area di notifica è bianca con la barra delle applicazioni scura e nera con quella chiara (RF-01)
