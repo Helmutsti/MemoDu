@@ -1,0 +1,75 @@
+# Compila Memodu per Windows e macOS quando si pubblica una release su GitHub, e allega gli
+# installatori alla release. Si può anche lanciare a mano dalla scheda Actions: allora crea una
+# release in bozza con la versione di tauri.conf.json.
+#
+# Gli installatori non sono firmati: Windows mostra l'avviso di SmartScreen («Ulteriori
+# informazioni» → «Esegui comunque»), macOS chiede di aprire l'app con il tasto destro → Apri.
+
+name: Rilascio
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  compila:
+    name: ${{ matrix.nome }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - nome: Windows
+            sistema: windows-latest
+            argomenti: ""
+            bersaglio: ""
+          - nome: macOS (Apple Silicon)
+            sistema: macos-latest
+            argomenti: --target aarch64-apple-darwin
+            bersaglio: aarch64-apple-darwin
+          - nome: macOS (Intel)
+            sistema: macos-latest
+            argomenti: --target x86_64-apple-darwin
+            bersaglio: x86_64-apple-darwin
+    runs-on: ${{ matrix.sistema }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.bersaglio }}
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: client/src-tauri -> target
+
+      - name: Dipendenze
+        run: npm ci
+
+      - name: Prove
+        run: |
+          npm test
+          cargo test --manifest-path client/src-tauri/Cargo.toml
+
+      - name: Compila e allega alla release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: client
+          args: ${{ matrix.argomenti }}
+          # Pubblicata una release: gli installatori vanno in quella.
+          releaseId: ${{ github.event.release.id }}
+          # Lanciata a mano: una release in bozza con la versione dell'app.
+          tagName: ${{ github.event_name == 'workflow_dispatch' && 'v__VERSION__' || '' }}
+          releaseName: ${{ github.event_name == 'workflow_dispatch' && 'Memodu v__VERSION__' || '' }}
+          releaseDraft: true
