@@ -48,6 +48,8 @@ interface Proprieta {
 }
 
 type Filtro = "tag" | "creata" | "modificata";
+/** Nell'ordine delle pillole nella card. */
+const FILTRI: Filtro[] = ["tag", "creata", "modificata"];
 
 /** Tra il campo e la card (spazio-flottante). */
 const DISTANZA_CARD = 8;
@@ -193,6 +195,19 @@ export function Ricerca({ focus, onApri, onChiusa, onErrore }: Proprieta): React
     ...(card.current?.querySelectorAll<HTMLElement>(".risultato-ricerca") ?? []),
   ];
 
+  /**
+   * Menu e calendario chiusi. Il focus torna sul filtro se era nel menu (il campo «Cerca un
+   * tag», che sparisce con lui) o se è già caduto sulla pagina; un clic altrove lo lascia lì.
+   */
+  const chiudiMenu = () => {
+    const filtro = calendario?.filtro ?? menu?.filtro;
+    const attivo = document.activeElement;
+    const perso = !attivo || attivo === document.body || attivo.closest(".menu, .calendario");
+    setCalendario(null);
+    setMenu(null);
+    if (filtro && perso) pillole()[FILTRI.indexOf(filtro)]?.focus();
+  };
+
   // Nel campo: freccia giù entra nei risultati, Tab va ai filtri, Esc chiude.
   const suTastoCampo = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Escape") {
@@ -226,7 +241,10 @@ export function Ricerca({ focus, onApri, onChiusa, onErrore }: Proprieta): React
               e.shiftKey
                 ? (j === 0 ? campo.current : p[j - 1])?.focus()
                 : (j === p.length - 1 ? campo.current : p[j + 1])?.focus()
-          : undefined,
+          : // Da un risultato: avanti i filtri, indietro il campo; il focus non esce dalla card.
+            i >= 0
+            ? () => (e.shiftKey ? campo.current : p[0])?.focus()
+            : undefined,
     };
     const azione = azioni[e.key];
     if (!azione) return;
@@ -450,10 +468,16 @@ export function Ricerca({ focus, onApri, onChiusa, onErrore }: Proprieta): React
                 value={cercaTag}
                 autoFocus
                 onChange={(e) => setCercaTag(e.target.value)}
+                onKeyDown={(e) => {
+                  // Il menu sta fuori dalla card: Tab lo chiude e il focus torna sul filtro.
+                  if (e.key !== "Tab") return;
+                  e.preventDefault();
+                  chiudiMenu();
+                }}
               />
             ) : undefined
           }
-          onChiudi={() => setMenu(null)}
+          onChiudi={chiudiMenu}
         />
       )}
       {calendario && (
@@ -467,13 +491,9 @@ export function Ricerca({ focus, onApri, onChiusa, onErrore }: Proprieta): React
             const periodo = giorno ? { giorno } : null;
             if (calendario.filtro === "creata") setCreata(periodo);
             else setModificata(periodo);
-            setCalendario(null);
-            setMenu(null);
+            chiudiMenu();
           }}
-          onChiudi={() => {
-            setCalendario(null);
-            setMenu(null);
-          }}
+          onChiudi={chiudiMenu}
         />
       )}
     </div>

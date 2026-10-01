@@ -200,6 +200,37 @@ describe("Ricerca (RF-08, CMP-13)", () => {
     expect(campo()).toHaveFocus();
   });
 
+  it("nel menu Tag, Tab ed Esc chiudono il menu e il focus torna sul filtro (CA-08.14)", async () => {
+    disegna();
+    await userEvent.click(campo());
+    await userEvent.keyboard("{Tab}{Enter}");
+    const cercaTag = await screen.findByRole("textbox", { name: "Cerca un tag" });
+    await waitFor(() => expect(cercaTag).toHaveFocus());
+    await userEvent.keyboard("{Tab}");
+    expect(screen.queryByRole("menu")).toBeNull();
+    const tag = within(card()).getByRole("button", { name: "Tag" });
+    expect(tag).toHaveFocus();
+    // Scelto un tag con freccia giù e Invio, Esc chiude il menu: il focus non cade sulla pagina.
+    await userEvent.keyboard("{Enter}");
+    await screen.findByRole("textbox", { name: "Cerca un tag" });
+    await userEvent.keyboard("lav{ArrowDown}{Enter}{Escape}");
+    expect(screen.queryByRole("menu")).toBeNull();
+    expect(within(card()).getByRole("button", { name: "Tag: lavoro" })).toHaveFocus();
+    // La card è ancora aperta e un altro Esc la chiude.
+    await userEvent.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("Tab da un risultato va ai filtri, Maiusc + Tab al campo: il focus resta nella card", async () => {
+    disegna();
+    await userEvent.type(campo(), "rilascio");
+    await within(card()).findByRole("listbox");
+    await userEvent.keyboard("{ArrowDown}{Tab}");
+    expect(within(card()).getByRole("button", { name: "Tag" })).toHaveFocus();
+    await userEvent.keyboard("{Shift>}{Tab}{/Shift}{ArrowDown}{Shift>}{Tab}{/Shift}");
+    expect(campo()).toHaveFocus();
+  });
+
   it("Esc chiude la card e svuota la ricerca (CA-08.11)", async () => {
     const { onChiusa } = disegna();
     await userEvent.type(campo(), "rilascio");

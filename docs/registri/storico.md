@@ -371,3 +371,4 @@
 | 30/09/2026 | Manuel Cucca | SC-01: su macOS i tre pallini e i comandi dell’app restano allineati, con più spazio sia sopra sia a sinistra dei pallini | DEC-55 |
 | 30/09/2026 | Manuel Cucca | SC-01: il primo rientro di 18 px su macOS non era percepibile; aumentato a 26 px su entrambi i bordi e spostata con i pallini l’intera fascia dei comandi | DEC-55 |
 | 30/09/2026 | Agente IA | SC-01: corretto il resoconto di macOS; i comandi dell'app si allineano in altezza ai controlli nativi senza spostarli | DEC-55 |
+| 01/10/2026 | Agente IA | Prove a mano di RF-08 nell'app (TC-63 … TC-77): corretti l'avviso del cestino che compariva sopra la nota di prima (CA-08.9) e il focus che usciva dalla card dal menu Tag (CA-08.14); idee ID-31 … ID-33 | Richiesta di Manuel Cucca |

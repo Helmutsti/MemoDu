@@ -680,7 +680,13 @@ export function FinestraPrincipale(): ReactElement {
       await api.leggi(r.id);
     } catch (errore) {
       if (errore instanceof ErroreApi && errore.stato === 404) {
+        // L'avviso parla del risultato: la nota di prima si chiude, come con «Chiudi nota».
+        const cancellata = await lasciaVuota();
+        setNuovaId(null);
+        setAperta(null);
+        setVista("nota");
         setSparita({ id: r.id, dati: {}, elemento: errore.cestino });
+        if (cancellata) await ricarica().catch(() => setBloccata(true));
       } else {
         setBloccata(true);
       }

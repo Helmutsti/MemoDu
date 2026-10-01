@@ -845,7 +845,7 @@ describe("ricerca nella colonna (RF-08, DEC-94)", () => {
     expect(colonna()).toHaveClass("colonna-fissata");
   });
 
-  it("una nota del cestino mostra l'avviso con Ripristina (CA-08.9)", async () => {
+  it("una nota del cestino chiude quella aperta e mostra l'avviso con Ripristina (CA-08.9)", async () => {
     vi.mocked(api.leggi).mockImplementation(async (id) => {
       if (id === "s") throw new ErroreApi(404, "nel cestino", undefined, "s");
       return nota("r", "Riunione di lunedì");
@@ -858,6 +858,8 @@ describe("ricerca nella colonna (RF-08, DEC-94)", () => {
     await userEvent.click(await screen.findByRole("option", { name: /Vecchia scaletta/ }));
     expect(await screen.findByText("La nota è nel cestino.")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ripristina" })).toBeInTheDocument();
+    // L'avviso non sta sopra la nota di prima, che sembrerebbe quella nel cestino.
+    expect(screen.getByText("Nessuna nota aperta")).toBeInTheDocument();
   });
 
   it("un clic nella colonna aperta da Ctrl + K chiude la card ma non la colonna", async () => {
