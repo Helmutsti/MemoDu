@@ -384,3 +384,4 @@
 | 01/10/2026 | Manuel Cucca | Righe di Info, «Modificata» e intestazione senza spazi ai lati: l'unico margine è quello del contenitore (CMP-24 in libreria e nel codice); campo di ricerca con la proprietà «Mostra scorciatoia», accesa solo nella colonna | DEC-98 |
 | 01/10/2026 | Manuel Cucca | Tolta dalla libreria la «Finestra delle info (superata)» di DEC-44, sostituita da Info (CMP-24) | DEC-96 |
 | 01/10/2026 | Agente IA | Mockup allineati alla libreria di DEC-98: righe di Info senza spazi ai lati, «Ctrl + K» solo nel campo della colonna; 7 esportazioni rifatte | DEC-98 |
+| 01/10/2026 | Agente IA | Righe di Info senza ritaglio in libreria (l'icona sul bordo arrotondato si tagliava); mockup allineati, 5 esportazioni rifatte | DEC-98 |
