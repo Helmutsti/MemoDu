@@ -1,4 +1,4 @@
-/* CMP-11 Sposta in: stesso aspetto del menu (CMP-09), contenuti rientrati di 8 dai lati. */
+/* CMP-11 Sposta in: stesso aspetto del menu (CMP-09), ruolo elenco: margine spazio-elenco. */
 .pannello-sposta {
   display: flex;
   flex-direction: column;
@@ -14,7 +14,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  margin: 0 0 var(--spazio-flottante);
+  margin: 0 0 var(--spazio-elenco);
 }
 .pannello-sposta-cerca {
   position: absolute;
@@ -38,12 +38,12 @@
 }
 
 .pannello-sposta-elenco {
-  margin: var(--spazio-flottante) 0 0;
+  margin: var(--spazio-elenco) 0 0;
   padding: 0;
   list-style: none;
 }
 
-/* «Non organizzate» lascia vuoto lo spazio della freccia: i nomi restano allineati. */
+/* «Non organizzate» lascia vuoto lo spazio dell'icona della cartella: i nomi restano allineati. */
 .pannello-sposta-vuoto {
   display: inline-block;
   width: var(--misura-icona);

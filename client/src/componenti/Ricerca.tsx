@@ -61,7 +61,7 @@ type Filtro = "tag" | "creata" | "modificata";
 /** Nell'ordine delle pillole nella card. */
 const FILTRI: Filtro[] = ["tag", "creata", "modificata"];
 
-/** Tra il campo e la card (spazio-flottante). */
+/** Tra il campo e la card (spazio-elenco). */
 const DISTANZA_CARD = 8;
 /** Quanto la card segue il campo dopo l'apertura: la colonna scorre in 200 ms (DEC-55). */
 const DURATA_INSEGUIMENTO_MS = 400;

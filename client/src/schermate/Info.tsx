@@ -210,8 +210,8 @@ export function Info(p: Proprieta): ReactElement {
       onKeyDown={suTasto}
     >
       <AreaScorrevole className="info-scorrimento">
-        {/* Il contenitore ha spazio-flottante su tutti i lati e tra i blocchi; le righe sono
-            pillole con spazio-controllo ai lati (DEC-97). */}
+        {/* Il contenitore ha spazio-pannello su tutti i lati e spazio-blocco tra i blocchi; le righe
+            sono pillole con spazio-controllo ai lati (DEC-100). */}
         <div className="info-contenuto">
           {!comparsa && (
             <div className="info-riga info-intestazione">

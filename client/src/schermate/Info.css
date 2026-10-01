@@ -1,8 +1,9 @@
 /* CMP-24 Info (DEC-96, proposta C di DEC-97): larga 360, sfondo-flottante, raggio 20, ombra.
    Comparsa: livello 20 sotto il titolo del percorso; Finestra: al centro, livello 30 con il velo.
-   Spazi (DEC-97): solo il contenitore (.info-contenuto) ha spazio-flottante su tutti i lati e tra
-   i blocchi; righe, «Modificata» e intestazione non hanno spazi ai lati e partono a 8. Il campo
-   del titolo e le voci tengono i loro, da componenti. */
+   Spazi (DEC-100): ruolo pannello. Il contenitore (.info-contenuto) ha spazio-pannello su tutti i
+   lati e spazio-blocco tra i blocchi; le righe stanno a spazio-elemento. Righe, «Modificata»,
+   intestazione, campo del titolo e voci sono pillole con spazio-controllo dentro: pillole a 16
+   dal bordo, icone e testi a 28. */
 .velo-overlay {
   z-index: var(--z-overlay);
 }
@@ -35,20 +36,21 @@
   animation: conferma-compare var(--movimento-durata-breve) ease-out;
 }
 
-/* Regola 1: il contenitore. */
+/* Il contenitore. */
 .info-contenuto {
   display: flex;
   flex-direction: column;
-  gap: var(--spazio-flottante);
-  padding: var(--spazio-flottante);
+  gap: var(--spazio-blocco);
+  padding: var(--spazio-pannello);
 }
 .info-righe {
   display: flex;
   flex-direction: column;
+  gap: var(--spazio-elemento);
 }
 
-/* La riga: alta 32, senza spazi ai lati, spazio-icona tra icona e testo; si evidenzia passandoci
-   sopra. */
+/* La riga: pillola alta 32 con spazio-controllo ai lati, spazio-icona tra icona e testo; si
+   evidenzia passandoci sopra. */
 .info-riga {
   position: relative;
   display: flex;
@@ -56,7 +58,7 @@
   align-items: center;
   gap: 0 var(--spazio-icona);
   min-height: var(--misura-riga);
-  padding: 0;
+  padding: 0 var(--spazio-controllo);
   border-radius: var(--raggio-pillola);
 }
 .info-riga:has(.info-riga-pulsante):hover,
@@ -219,7 +221,7 @@
   color: var(--testo-tenue);
 }
 
-/* «Modificata …»: una riga di testo, con gli stessi lati delle righe. */
+/* «Modificata …»: una riga di testo, pillola come le altre. */
 .info-modificata {
   min-height: 0;
 }
@@ -230,4 +232,6 @@
 }
 .info-intestazione {
   justify-content: space-between;
+  /* La ✕ sta sul bordo della pillola. */
+  padding-right: 0;
 }

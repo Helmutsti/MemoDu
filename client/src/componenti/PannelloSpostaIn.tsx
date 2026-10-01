@@ -1,9 +1,10 @@
 // CMP-11 Pannello a comparsa, variante Sposta in: campo di ricerca, poi «Non organizzate» e
-// l'albero delle cartelle come voci di menu, con 16 px di rientro per livello e la spunta
-// sulla cartella attuale. Scrivendo si filtra l'albero, le frecce scelgono, Invio sposta,
-// Esc o un clic fuori chiudono (CMP-11, FL-05).
+// l'albero delle cartelle come voci di menu, con spazio-rientro (24) per livello, la cartella
+// chiusa o aperta al posto della freccia (DEC-99) e la spunta sulla cartella attuale.
+// Scrivendo si filtra l'albero, le frecce scelgono, Invio sposta, Esc o un clic fuori chiudono
+// (CMP-11, FL-05).
 
-import { Check, ChevronDown, ChevronRight, Search } from "lucide-react";
+import { Check, Folder, FolderOpen, Search } from "lucide-react";
 import {
   useEffect,
   useId,
@@ -24,7 +25,7 @@ interface Voce {
   percorso: Percorso;
   nome: string;
   livello: number;
-  /** undefined per «Non organizzate», che non ha freccia. */
+  /** undefined per «Non organizzate», che non ha l'icona della cartella. */
   aperta?: boolean;
   haFigli: boolean;
 }
@@ -203,7 +204,9 @@ export function PannelloSpostaIn({
             >
               <span
                 className="voce-menu-riga interfaccia-controllo"
-                style={{ paddingLeft: `calc(var(--spazio-controllo) + ${voce.livello * 16}px)` }}
+                style={{
+                  paddingLeft: `calc(var(--spazio-controllo) + ${voce.livello} * var(--spazio-rientro))`,
+                }}
               >
                 <span
                   className="voce-menu-icona"
@@ -213,10 +216,10 @@ export function PannelloSpostaIn({
                     apriChiudi(voce.percorso);
                   }}
                 >
-                  {voce.haFigli ? (
-                    <Icona di={voce.aperta ? ChevronDown : ChevronRight} />
-                  ) : (
+                  {voce.aperta === undefined ? (
                     <span className="pannello-sposta-vuoto" />
+                  ) : (
+                    <Icona di={voce.aperta && voce.haFigli ? FolderOpen : Folder} />
                   )}
                 </span>
                 <span className="voce-menu-etichetta">{voce.nome}</span>

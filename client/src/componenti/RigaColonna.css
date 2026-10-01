@@ -41,10 +41,11 @@
   color: var(--testo-tenue);
 }
 
-/* Titolo di sezione: freccia 12, titolo e numero in testo tenue, + a destra. */
+/* Titolo di sezione: freccia 12, titolo e numero in testo tenue, + a destra. Come ogni riga ha
+   spazio-controllo a sinistra; a destra finisce con il +, e ha spazio-controllo-piccolo. */
 .riga-sezione {
   gap: var(--spazio-elemento);
-  padding: 0 var(--spazio-controllo-piccolo);
+  padding: 0 var(--spazio-controllo-piccolo) 0 var(--spazio-controllo);
   color: var(--testo-tenue);
 }
 .riga-sezione:hover {
@@ -56,7 +57,7 @@
   text-align: left;
   flex: 1;
   align-items: center;
-  gap: var(--spazio-elemento);
+  gap: var(--spazio-icona);
   min-width: 0;
   height: 100%;
   padding: 0;
@@ -76,12 +77,13 @@
   cursor: default;
 }
 
-/* Cartella (CMP-06): freccia 16, nome, numero di note in testo tenue (RB-56). Margine 8. */
+/* Cartella (CMP-06): icona 16 (chiusa o aperta, DEC-99), nome, numero di note in testo tenue
+   (RB-56). */
 .riga-cartella {
-  gap: var(--spazio-elemento);
-  padding: 0 var(--spazio-controllo-piccolo);
+  gap: var(--spazio-icona);
+  padding: 0 var(--spazio-controllo);
 }
-.riga-freccia {
+.riga-icona {
   display: inline-flex;
   flex: none;
   color: var(--icona-tenue);
@@ -105,8 +107,8 @@
 
 /* Campo nome nell'albero (CMP-14): sul posto, su sfondo-campo con l'anello di focus. */
 .riga-campo {
-  gap: var(--spazio-elemento);
-  padding: 0 var(--spazio-controllo-piccolo);
+  gap: var(--spazio-icona);
+  padding: 0 var(--spazio-controllo);
 }
 .riga-campo-nome {
   flex: 1;

@@ -1,5 +1,6 @@
 /* CMP-29 Ricerca avanzata (DEC-96): al centro, livello 30 con il velo, larga 1040 e alta 820,
-   sfondo-flottante, raggio 20, ombra; i risultati come nella card (CMP-13). */
+   sfondo-flottante, raggio 20, ombra; i risultati come nella card (CMP-13). Ruolo pannello
+   (DEC-100): barra, filtri e risultati hanno spazio-pannello su tutti i lati. */
 .ricerca-avanzata {
   display: flex;
   flex-direction: column;
@@ -23,8 +24,8 @@
   display: flex;
   flex: none;
   align-items: center;
-  gap: var(--spazio-controllo);
-  padding: var(--spazio-flottante);
+  gap: var(--spazio-icona);
+  padding: var(--spazio-pannello);
   border-bottom: 1px solid var(--bordo-divisore);
 }
 .ricerca-avanzata-campo {
@@ -48,7 +49,7 @@
   border-right: 1px solid var(--bordo-divisore);
 }
 .filtri-avanzati-contenuto {
-  padding: var(--spazio-flottante);
+  padding: var(--spazio-pannello);
 }
 .filtri-avanzati-gruppo + .filtri-avanzati-gruppo {
   margin-top: var(--spazio-blocco);
@@ -64,7 +65,7 @@
   min-width: 0;
 }
 .risultati-avanzati-contenuto {
-  padding: var(--spazio-flottante);
+  padding: var(--spazio-pannello);
 }
 .risultati-avanzati-conteggio {
   padding: var(--spazio-elemento) var(--spazio-controllo);

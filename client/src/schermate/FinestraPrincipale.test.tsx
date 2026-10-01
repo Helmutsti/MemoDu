@@ -230,8 +230,35 @@ describe("SC-01, cartelle (RF-05)", () => {
       "Budget 2026",
       "Riunione con i fornitori",
     ]);
-    // Il titolo delle note si allinea al nome delle sottocartelle: 8 + 16 + 20.
-    expect((await riga("Budget 2026")).style.paddingLeft).toContain("36px");
+    // Il titolo delle note si allinea al nome delle sottocartelle: 12 + 24 + 24 (DEC-100).
+    expect((await riga("Budget 2026")).style.paddingLeft).toContain("2 * var(--spazio-rientro)");
+    expect((await riga(/^Clienti/)).style.paddingLeft).toContain("1 * var(--spazio-rientro)");
+  });
+
+  it("la cartella ha l'icona chiusa o aperta al posto della freccia; le note e le sezioni no (DEC-99)", async () => {
+    render(<FinestraPrincipale />);
+    const lavoro = await riga(/Lavoro/);
+    expect(lavoro.querySelector("svg.lucide-folder")).toBeInTheDocument();
+    expect(lavoro.querySelector("svg.lucide-folder-open")).not.toBeInTheDocument();
+    expect(lavoro.querySelector("svg.lucide-chevron-right")).not.toBeInTheDocument();
+    await userEvent.click(lavoro);
+    expect(lavoro.querySelector("svg.lucide-folder-open")).toBeInTheDocument();
+    expect(lavoro.querySelector("svg.lucide-folder")).not.toBeInTheDocument();
+    // Anche la cartella senza sottocartelle né note ha l'icona; le note no.
+    expect((await riga(/Personale/)).querySelector("svg.lucide-folder")).toBeInTheDocument();
+    expect((await riga("Budget 2026")).querySelector("svg")).not.toBeInTheDocument();
+    // I titoli di sezione tengono la freccia.
+    const cartelle = screen.getByRole("button", { name: /^Cartelle/, expanded: true });
+    expect(cartelle.querySelector("svg.lucide-chevron-down")).toBeInTheDocument();
+    expect(cartelle.querySelector("svg.lucide-folder")).not.toBeInTheDocument();
+  });
+
+  it("il campo «Nuova cartella» ha l'icona della cartella chiusa (DEC-99)", async () => {
+    vi.mocked(api.albero).mockResolvedValue(alberoDiProva());
+    render(<FinestraPrincipale />);
+    await userEvent.click(await screen.findByRole("button", { name: "Nuova cartella" }));
+    const campo = screen.getByRole("textbox", { name: "Nome della cartella" });
+    expect(campo.parentElement!.querySelector("svg.lucide-folder")).toBeInTheDocument();
   });
 
   it("+ delle Cartelle apre il campo con «Nuova cartella»; Invio crea, Esc annulla (CA-05.5, RB-48)", async () => {
@@ -442,6 +469,35 @@ describe("menu ··· e Sposta in (CA-05.4, CA-15.1)", () => {
     ).toBeInTheDocument();
     expect(await riga(/Lavoro/)).toHaveAttribute("aria-expanded", "true");
     expect(await riga(/Clienti/)).toHaveAttribute("aria-expanded", "true");
+  });
+
+  it("in Sposta in ogni cartella ha l'icona, «Non organizzate» no; un clic sull'icona apre e chiude (DEC-99)", async () => {
+    render(<FinestraPrincipale />);
+    const info = await apriInfo("Riunione di lunedì");
+    await userEvent.click(within(info).getByRole("button", { name: /: Sposta in…$/ }));
+    const pannello = screen.getByRole("dialog", { name: "Sposta in" });
+    const voce = (nome: string | RegExp) => within(pannello).getByRole("option", { name: nome });
+    expect(
+      voce(/Non organizzate/).querySelector("svg.lucide-folder, svg.lucide-folder-open"),
+    ).toBeNull();
+    const lavoro = voce("Lavoro");
+    expect(lavoro.querySelector("svg.lucide-folder")).toBeInTheDocument();
+    // Anche la cartella senza sottocartelle ha la cartella chiusa.
+    expect(voce("Personale").querySelector("svg.lucide-folder")).toBeInTheDocument();
+    expect(within(pannello).queryByRole("option", { name: "Clienti" })).not.toBeInTheDocument();
+
+    await userEvent.click(lavoro.querySelector("svg")!);
+    expect(api.spostaNota).not.toHaveBeenCalled();
+    expect(voce("Lavoro").querySelector("svg.lucide-folder-open")).toBeInTheDocument();
+    // Le sottocartelle senza figli restano con la cartella chiusa.
+    expect(voce("Clienti").querySelector("svg.lucide-folder")).toBeInTheDocument();
+    expect(voce("Clienti").querySelector("span[style]")).toHaveStyle({
+      paddingLeft: "calc(var(--spazio-controllo) + 1 * var(--spazio-rientro))",
+    });
+
+    await userEvent.click(voce("Lavoro").querySelector("svg")!);
+    expect(voce("Lavoro").querySelector("svg.lucide-folder")).toBeInTheDocument();
+    expect(within(pannello).queryByRole("option", { name: "Clienti" })).not.toBeInTheDocument();
   });
 
   it("il tasto destro su una nota della colonna dà Info, Sposta in ed Elimina, senza aprirla", async () => {

@@ -1,9 +1,19 @@
 // CMP-06 Riga della colonna: una nota, una cartella o il titolo di una sezione. Alta 32,
-// pillola. Hover: tutto il testo passa a testo-primario (regola 7). Selezionata: come
-// l'hover (DEC-35). Nell'albero (CMP-14) il rientro allarga il margine: 16 px per livello,
-// e il titolo di una nota si allinea al nome delle sottocartelle sorelle (+20).
+// pillola con spazio-controllo ai lati (DEC-100). Hover: tutto il testo passa a testo-primario
+// (regola 7). Selezionata: come l'hover (DEC-35). Nell'albero (CMP-14) il rientro allarga il
+// margine: spazio-rientro (24) per livello, e il titolo di una nota si allinea al nome delle
+// sottocartelle sorelle (icona 16 + spazio-icona 8). La cartella ha l'icona chiusa o aperta al
+// posto della freccia (DEC-99); i titoli di sezione tengono la freccia.
 
-import { ChevronDown, ChevronRight, Plus, Settings, Trash2 } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  Folder,
+  FolderOpen,
+  Plus,
+  Settings,
+  Trash2,
+} from "lucide-react";
 import {
   useEffect,
   useRef,
@@ -26,14 +36,10 @@ export interface Trascinamento {
   onDrop?: (e: DragEvent) => void;
 }
 
-const PASSO = 16;
-/** Freccia (16) e distanza (4): il titolo della nota si allinea al nome delle cartelle. */
-const SPAZIO_FRECCIA = 20;
-
 /** Margine sinistro di una cartella al livello `livello` (0 = primo livello). */
 const rientroCartella = (livello: number): CSSProperties | undefined =>
   livello > 0
-    ? { paddingLeft: `calc(var(--spazio-controllo-piccolo) + ${livello * PASSO}px)` }
+    ? { paddingLeft: `calc(var(--spazio-controllo) + ${livello} * var(--spazio-rientro))` }
     : undefined;
 
 interface ProprietaNota extends Trascinamento {
@@ -59,11 +65,13 @@ export function RigaNota({
   livelloCartella,
   ...trascinamento
 }: ProprietaNota): ReactElement {
+  // Il titolo si allinea al nome delle sottocartelle sorelle: un livello sotto la cartella che la
+  // contiene, più icona e distanza (24, come un altro livello).
   const stile =
     livelloCartella === undefined
       ? undefined
       : {
-          paddingLeft: `calc(var(--spazio-controllo-piccolo) + ${(livelloCartella + 1) * PASSO + SPAZIO_FRECCIA}px)`,
+          paddingLeft: `calc(var(--spazio-controllo) + ${livelloCartella + 2} * var(--spazio-rientro))`,
         };
   return (
     <li role="none">
@@ -130,8 +138,8 @@ export function RigaCartella({
       }}
       {...trascinamento}
     >
-      <span className="riga-freccia">
-        <Icona di={aperta ? ChevronDown : ChevronRight} />
+      <span className="riga-icona">
+        <Icona di={aperta ? FolderOpen : Folder} />
       </span>
       <span className="riga-nome">{nome}</span>
       <span className="riga-conteggio interfaccia-dettaglio">{conteggio}</span>
@@ -171,8 +179,8 @@ export function CampoNomeCartella({
 
   return (
     <div className="riga riga-campo" style={rientroCartella(livello)}>
-      <span className="riga-freccia">
-        <Icona di={ChevronRight} />
+      <span className="riga-icona">
+        <Icona di={Folder} />
       </span>
       <input
         ref={campo}
@@ -261,7 +269,7 @@ export function RigaCestino({
       aria-current={selezionata ? "page" : undefined}
       onClick={onApri}
     >
-      <span className="riga-freccia">
+      <span className="riga-icona">
         <Icona di={Trash2} />
       </span>
       <span className="riga-nome">Cestino</span>
@@ -285,7 +293,7 @@ export function RigaImpostazioni({
       aria-current={selezionata ? "page" : undefined}
       onClick={onApri}
     >
-      <span className="riga-freccia">
+      <span className="riga-icona">
         <Icona di={Settings} />
       </span>
       <span className="riga-nome">Impostazioni</span>

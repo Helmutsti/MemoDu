@@ -61,8 +61,9 @@
   --spazio-pulsante: 16px;
   --spazio-blocco: 16px;
   --spazio-gruppo: 24px;
-  --spazio-flottante: 8px;
-  --spazio-contenitore: 16px;
+  --spazio-elenco: 8px;
+  --spazio-pannello: 16px;
+  --spazio-rientro: 24px;
   --spazio-finestra: 24px;
 
   /* Dimensioni e movimento */
