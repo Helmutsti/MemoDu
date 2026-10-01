@@ -1,6 +1,8 @@
-/* CMP-24 Info (DEC-96): larga 360, sfondo-flottante, raggio 20, margini spazio-flottante ai lati
-   e sotto. Comparsa: livello 20 sotto il titolo del percorso; Finestra: al centro, livello 30
-   con il velo. Il contenuto è rientrato di 20 (8 + 12), allineato alle icone delle voci. */
+/* CMP-24 Info (DEC-96, proposta C di DEC-97): larga 360, sfondo-flottante, raggio 20, ombra.
+   Comparsa: livello 20 sotto il titolo del percorso; Finestra: al centro, livello 30 con il velo.
+   Due regole per gli spazi (DEC-97): il contenitore (.info-contenuto) ha spazio-flottante su
+   tutti i lati e tra i blocchi; ogni riga è una pillola con spazio-controllo ai lati; i pezzi
+   dentro non hanno spazi propri. Così testi e icone partono tutti a 20, come nelle voci. */
 .velo-overlay {
   z-index: var(--z-overlay);
 }
@@ -20,12 +22,8 @@
 .info p {
   margin: 0;
 }
-/* Il contenuto scorre con la barra della libreria (DEC-89); i margini stanno dentro. */
 .info-scorrimento {
   flex: 1 1 auto;
-}
-.info-scorrimento [data-overlayscrollbars-viewport] {
-  padding: 0 var(--spazio-flottante) var(--spazio-flottante);
 }
 .info-comparsa {
   position: fixed;
@@ -37,42 +35,121 @@
   animation: conferma-compare var(--movimento-durata-breve) ease-out;
 }
 
-.info-corpo {
+/* Regola 1: il contenitore. */
+.info-contenuto {
   display: flex;
   flex-direction: column;
-  gap: var(--spazio-gruppo);
-  padding: var(--spazio-finestra) calc(var(--spazio-controllo) + var(--spazio-icona))
-    var(--spazio-controllo);
+  gap: var(--spazio-flottante);
+  padding: var(--spazio-flottante);
+}
+.info-righe {
+  display: flex;
+  flex-direction: column;
 }
 
-.info-intestazione {
+/* Regola 2: la riga è una pillola alta 32 con spazio-controllo ai lati e spazio-icona tra icona
+   e testo; si evidenzia passandoci sopra. */
+.info-riga {
+  position: relative;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  margin: calc(0px - var(--spazio-icona)) 0;
+  gap: 0 var(--spazio-icona);
+  min-height: var(--misura-riga);
+  padding: 0 var(--spazio-controllo);
+  border-radius: var(--raggio-pillola);
 }
-
-.info-gruppo {
+.info-riga:has(.info-riga-pulsante):hover,
+.info-riga-aperta {
+  background: var(--sfondo-hover);
+}
+.info-riga-pulsante {
   display: flex;
-  flex-direction: column;
-  gap: var(--spazio-controllo);
+  flex: 1;
+  align-items: center;
+  gap: var(--spazio-icona);
+  min-width: 0;
+  height: var(--misura-riga);
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--testo-primario);
+  text-align: left;
+  cursor: default;
 }
-.info-gruppo-stretto {
-  gap: var(--spazio-controllo-piccolo);
+.info-riga-pulsante svg,
+.info-riga-icona {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--icona-tenue);
 }
-.info-titolo-gruppo,
-.info-tenue {
+.info-riga-testo {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.info-tenue,
+.info-modificata {
   color: var(--testo-tenue);
 }
-
-/* Etichetta, campo e la riga sotto. */
-.info-blocco {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spazio-elemento);
+.info-riga-pulsante:focus,
+.info-ripristina:focus,
+.info-aggiungi-tag:focus {
+  outline: none;
+}
+:root[data-tastiera] .info-riga:has(.info-riga-pulsante:focus-visible) {
+  outline: var(--focus-spessore) solid var(--focus-anello);
+  outline-offset: calc(0px - var(--focus-spessore));
 }
 
-/* Campo (CMP-03): pillola alta 32 su sfondo-campo, larga quanto Info. */
+/* «Ripristina» a destra, nella riga: testo, senza spazi suoi. */
+.info-ripristina {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--testo-tenue);
+  cursor: default;
+}
+.info-ripristina:hover {
+  color: var(--testo-primario);
+}
+:root[data-tastiera] .info-ripristina:focus-visible {
+  outline: var(--focus-spessore) solid var(--focus-anello);
+  outline-offset: var(--focus-distanza);
+}
+
+/* La riga aperta: il campo al posto della frase. */
+.info-riga-campo {
+  flex: 1;
+  min-width: 0;
+  height: var(--misura-riga);
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--testo-primario);
+  outline: none;
+}
+.info-riga-campo::placeholder {
+  color: var(--testo-tenue);
+}
+.info-riga-errore {
+  outline: var(--focus-spessore) solid var(--icona-errore);
+  outline-offset: calc(0px - var(--focus-spessore));
+}
+.info-errore-data {
+  display: flex;
+  flex-basis: 100%;
+  align-items: flex-start;
+  gap: var(--spazio-icona-piccola);
+  padding-bottom: var(--spazio-icona);
+  color: var(--testo-errore);
+}
+.info-errore-data svg {
+  flex-shrink: 0;
+  color: var(--icona-errore);
+}
+
+/* Il titolo: un campo (CMP-03), pillola alta 32 con spazio-controllo ai lati. */
 .info-campo {
   width: 100%;
   height: var(--misura-riga);
@@ -91,76 +168,67 @@
   outline-offset: var(--focus-distanza);
 }
 
-/* Campo con l'icona del calendario (CMP-03 con icona). */
-.info-data {
-  display: flex;
-  align-items: center;
-  height: var(--misura-riga);
-  padding: 0 var(--spazio-icona) 0 var(--spazio-controllo);
-  border-radius: var(--raggio-pillola);
-  background: var(--sfondo-campo);
+/* Tag: vanno a capo; «+ Tag» e il campo stanno in fila con loro. */
+.info-riga-tag {
+  align-items: flex-start;
+  padding-top: var(--spazio-elemento);
+  padding-bottom: var(--spazio-elemento);
 }
-:root[data-tastiera] .info-data:focus-within,
-:root[data-tastiera] .info-data-aperta {
+.info-riga-tag .info-riga-icona {
+  height: var(--misura-controllo-piccolo);
+  align-items: center;
+}
+.info-tag {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spazio-elemento);
+  min-width: 0;
+}
+.info-aggiungi-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spazio-elemento);
+  height: var(--misura-controllo-piccolo);
+  padding: 0 var(--spazio-controllo-piccolo);
+  border: 1px dashed var(--sfondo-campo);
+  border-radius: var(--raggio-pillola);
+  background: none;
+  color: var(--testo-tenue);
+  cursor: default;
+}
+.info-aggiungi-tag:hover {
+  color: var(--testo-primario);
+}
+:root[data-tastiera] .info-aggiungi-tag:focus-visible {
   outline: var(--focus-spessore) solid var(--focus-anello);
   outline-offset: var(--focus-distanza);
 }
-/* Errore (CMP-03, DEC-52): anello in icona-errore e il messaggio al posto della riga sotto. */
-.info-data.info-data-errore {
-  outline: var(--focus-spessore) solid var(--icona-errore);
-  outline-offset: var(--focus-distanza);
-}
-.info-errore-data {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spazio-icona-piccola);
-  margin-top: calc(var(--focus-spessore) + var(--focus-distanza));
-  color: var(--testo-errore);
-}
-.info-errore-data svg {
-  flex-shrink: 0;
-  color: var(--icona-errore);
-}
-.info-campo-data {
-  flex: 1;
-  min-width: 0;
+.info-campo-tag {
+  width: 132px;
+  height: var(--misura-controllo-piccolo);
+  padding: 0 var(--spazio-controllo-piccolo);
   border: none;
-  background: none;
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-campo);
   color: var(--testo-primario);
   outline: none;
 }
-.info-campo-data::placeholder {
+.info-campo-tag::placeholder {
   color: var(--testo-tenue);
 }
-.info-apri-calendario {
-  display: inline-flex;
-  padding: 0;
-  border: none;
-  background: none;
-  color: var(--icona-tenue);
-  cursor: pointer;
-}
 
-/* Tag che vanno a capo. */
-.info-tag {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--spazio-controllo-piccolo);
-}
-
-/* Il percorso della cartella e «Sposta in…» a destra. */
-.info-cartella {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--spazio-icona);
+/* «Modificata …»: una riga di testo con gli stessi lati delle pillole. */
+.info-modificata {
+  min-height: 0;
 }
 
 .info-azioni {
   display: flex;
   flex-direction: column;
 }
-.info-azioni .voce-menu {
-  padding: 0;
+.info-intestazione {
+  justify-content: space-between;
+  padding-right: 0;
 }

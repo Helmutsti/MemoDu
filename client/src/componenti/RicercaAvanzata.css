@@ -24,7 +24,7 @@
   flex: none;
   align-items: center;
   gap: var(--spazio-controllo);
-  padding: var(--spazio-blocco) var(--spazio-blocco) var(--spazio-blocco) var(--spazio-finestra);
+  padding: var(--spazio-flottante);
   border-bottom: 1px solid var(--bordo-divisore);
 }
 .ricerca-avanzata-campo {
@@ -57,9 +57,6 @@
   padding: var(--spazio-elemento) var(--spazio-controllo);
   color: var(--testo-tenue);
 }
-.filtro-avanzato.voce-menu {
-  padding: 0;
-}
 
 /* Risultati: il conteggio, poi i risultati come nella card. */
 .risultati-avanzati {
@@ -67,9 +64,9 @@
   min-width: 0;
 }
 .risultati-avanzati-contenuto {
-  padding: var(--spazio-controllo) var(--spazio-blocco);
+  padding: var(--spazio-flottante);
 }
 .risultati-avanzati-conteggio {
-  padding: var(--spazio-elemento) var(--spazio-controllo) var(--spazio-controllo-piccolo);
+  padding: var(--spazio-elemento) var(--spazio-controllo);
   color: var(--testo-tenue);
 }

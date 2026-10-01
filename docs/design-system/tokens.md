@@ -91,7 +91,7 @@ I primitivi `spazio-4` … `spazio-48` (4, 8, 12, 16, 24, 32, 48) non si usano d
 | `spazio-pulsante` | 16 | Margine interno orizzontale del pulsante |
 | `spazio-blocco` | 16 | Tra blocchi: paragrafi della nota, titolo e metadati, campi di un modulo, gruppi di un pannello, testo e controllo di una riga di impostazione |
 | `spazio-gruppo` | 24 | Tra sezioni e gruppi: sezioni della colonna, intestazione e testo della nota, margine dello stato vuoto |
-| `spazio-flottante` | 8 | Bordo di menu e pannelli a comparsa |
+| `spazio-flottante` | 8 | Margine di tutti i contenitori flottanti (menu, pannelli, calendario, card, Info, ricerca avanzata), su tutti i lati, e distanza tra i loro blocchi (DEC-97) |
 | `spazio-contenitore` | 16 | Bordo della colonna e degli avvisi |
 | `spazio-finestra` | 24 | Bordo delle finestre di conferma |
 

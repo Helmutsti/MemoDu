@@ -48,9 +48,13 @@ interface Proprieta {
   /** Rettangolo del campo: il calendario si apre 8 px sotto, o sopra se sotto non c'è spazio. */
   ancora: DOMRect;
   onScegli: (giorno: string | null) => void;
-  onChiudi: () => void;
-  /** Aperto da dentro la finestra Dettagli: sta sopra di lei. */
+  /** Con Esc o con un clic fuori. */
+  onChiudi: (come: "esc" | "fuori") => void;
+  /** Aperto da dentro Info: sta sopra di lei. */
   sopraOverlay?: boolean;
+  /** Il focus va sul giorno: all'apertura (il default) o quando diventa vero. Falso quando il
+   *  calendario si apre sotto un campo dove si scrive (Info, DEC-97). */
+  prendeFocus?: boolean;
   /** Oggi, per le prove. */
   oggi?: Date;
 }
@@ -61,6 +65,7 @@ export function Calendario({
   onScegli,
   onChiudi,
   sopraOverlay = false,
+  prendeFocus = true,
   oggi = new Date(),
 }: Proprieta): ReactElement {
   const elemento = useRef<HTMLDivElement>(null);
@@ -84,10 +89,11 @@ export function Calendario({
 
   // All'apertura e a ogni spostamento il focus va sul giorno (CMP-12).
   useEffect(() => {
+    if (!prendeFocus) return;
     elemento.current
       ?.querySelector<HTMLButtonElement>(`[data-giorno="${giornoDi(focus)}"]`)
       ?.focus();
-  }, [focus]);
+  }, [focus, prendeFocus]);
 
   // Clic fuori: si chiude.
   useEffect(() => {
@@ -96,7 +102,7 @@ export function Calendario({
       const bersaglio = e.target as Element;
       if (elemento.current?.contains(bersaglio) || bersaglio.closest?.("[data-apre-calendario]"))
         return;
-      onChiudi();
+      onChiudi("fuori");
     };
     window.addEventListener("mousedown", suClic, true);
     return () => window.removeEventListener("mousedown", suClic, true);
@@ -121,7 +127,7 @@ export function Calendario({
     } else if (e.key === "Escape") {
       e.preventDefault();
       e.stopPropagation();
-      onChiudi();
+      onChiudi("esc");
     }
   };
 

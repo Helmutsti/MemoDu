@@ -53,14 +53,14 @@ Come *utente* voglio assegnare tag alle note per raggrupparle in modo trasversal
 Condiviso con RF-04 e RF-05: vedi lo scenario di RF-05.
 
 ### Criteri di accettazione
-Frammento Must C (DEC-41, DEC-44): i tag si modificano in Info (DEC-96); trovare le note per tag arriva con la ricerca (RF-08). Criteri approvati da Manuel Cucca il 29/09/2026.
+Frammento Must C (DEC-41, DEC-44): i tag si modificano in Info (DEC-96); trovare le note per tag arriva con la ricerca (RF-08). Criteri approvati da Manuel Cucca il 29/09/2026; CA-06.1 e CA-06.6 riscritti dall'agente il 01/10/2026 per DEC-97 e approvati da Manuel Cucca lo stesso giorno.
 
-- **CA-06.1** *Dato* Info, *quando* scrivo nel campo «Aggiungi un tag», *allora* sopra Info compaiono i tag esistenti che contengono il testo e «Crea il tag «…»» se non esiste; con Invio o un clic il tag si assegna e compare in Info (RB-17).
+- **CA-06.1** *Dato* Info, *quando* premo «+ Tag» e scrivo nel campo «Aggiungi un tag», *allora* sopra Info compaiono i tag esistenti che contengono il testo e «Crea il tag «…»» se non esiste; con Invio o un clic il tag si assegna e compare in Info (RB-17).
 - **CA-06.2** *Dato* il tag «lavoro», *quando* scrivo «Lavoro/Clienti», *allora* si usa «lavoro» e sotto nasce «Clienti» (RB-18, RB-22).
 - **CA-06.3** *Dato* un tag della nota, *quando* premo la sua ✕, *allora* il tag esce dalla nota e resta tra i suggerimenti (RB-49).
 - **CA-06.4** *Dato* un tag tra i suggerimenti, *quando* scelgo «Elimina tag…» dal tasto destro, *allora* compare «Eliminare il tag «…»?» con il numero di note; confermando il tag e i suoi sotto-tag spariscono da tutte le note, Annulla non cambia niente (RB-19). Con una sola nota: «Lo usa 1 nota: resterà intatta, solo senza questo tag.»; con nessuna: «Nessuna nota lo usa.»; sempre seguiti da «Vengono eliminati anche i suoi sotto-tag.» (confermato il 29/09/2026).
 - **CA-06.5** *Dato* il campo dei tag, *allora* spazi, accenti ed emoji sono ammessi, i `/` all'inizio, alla fine o doppi si correggono da soli e un nome vuoto non crea niente (RB-22).
-- **CA-06.6** *Dato* il solo uso della tastiera, *allora* Tab raggiunge i tag e Canc o Backspace toglie quello in focus (CMP-05); nel campo le frecce scorrono i suggerimenti, Invio sceglie, Esc chiude prima i suggerimenti e poi Info.
+- **CA-06.6** *Dato* il solo uso della tastiera, *allora* Tab raggiunge i tag e Canc o Backspace toglie quello in focus (CMP-05) e il focus passa al campo, se è aperto, o a «+ Tag» (DEC-97); nel campo le frecce scorrono i suggerimenti, Invio sceglie, Esc chiude prima i suggerimenti e poi Info.
 
 ---
 

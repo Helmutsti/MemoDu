@@ -14,7 +14,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  margin: 0 var(--spazio-flottante) var(--spazio-flottante);
+  margin: 0 0 var(--spazio-flottante);
 }
 .pannello-sposta-cerca {
   position: absolute;

@@ -1,6 +1,8 @@
-// CMP-24 Info (DEC-96, RF-04, RF-06): tutto ciò che riguarda la nota in un punto solo. Titolo,
-// date (creazione scelta con quella di sistema sotto, fine validità), tag con suggerimenti,
-// cartella con «Sposta in…», poi Chiudi nota ed Elimina. Ogni modifica vale subito.
+// CMP-24 Info (DEC-96, proposta C di DEC-97, RF-04, RF-06): tutto ciò che riguarda la nota in un
+// punto solo. In cima il titolo; sotto una riga per cosa, con la sua icona e la frase intera
+// (cartella, data di creazione con «Ripristina» se è stata cambiata, fine validità, tag con
+// «+ Tag»); l'ultima modifica; poi Chiudi nota ed Elimina. Ogni riga si apre con un clic; ogni
+// modifica vale subito.
 // - Comparsa: con un clic sul titolo del percorso, sotto di lui, livello 20 e senza velo; si
 //   chiude con un clic fuori o con Esc. In fondo Chiudi nota ed Elimina.
 // - Finestra: da «Info» nel tasto destro su una nota della colonna, al centro con il velo
@@ -9,7 +11,7 @@
 // Suggerimenti, calendario e menu si aprono sopra Info; la conferma di eliminazione di un tag
 // sopra tutto (livello 40).
 
-import { Calendar, CircleAlert, Plus, Trash2, X } from "lucide-react";
+import { Calendar, CircleAlert, Folder, Plus, Tag as TagIcona, Trash2, X } from "lucide-react";
 import { useEffect, useId, useRef, useState, type ReactElement } from "react";
 import { createPortal } from "react-dom";
 import type { DatiDettagli, Nota, VoceTag } from "@memodu/condiviso";
@@ -18,7 +20,7 @@ import { Calendario } from "../componenti/Calendario";
 import { FinestraConferma } from "../componenti/FinestraConferma";
 import { Icona } from "../componenti/Icona";
 import { Menu, type VoceMenu } from "../componenti/Menu";
-import { Pulsante, PulsanteIcona } from "../componenti/Pulsante";
+import { PulsanteIcona } from "../componenti/Pulsante";
 import { Tag } from "../componenti/Tag";
 import { VoceAzione } from "../componenti/VoceAzione";
 import { leggiGiorno, scriviGiorno, testoCreata, testoModificata } from "../date";
@@ -73,6 +75,7 @@ function testoConferma(note: number): string {
 export function Info(p: Proprieta): ReactElement {
   const finestra = useRef<HTMLDivElement>(null);
   const campoTag = useRef<HTMLInputElement>(null);
+  const pulsanteTag = useRef<HTMLButtonElement>(null);
   const [titolo, setTitolo] = useState(p.nota.titolo);
   const [testoTag, setTestoTag] = useState("");
   /** Dove sta il campo dei tag: i suggerimenti si aprono sotto. */
@@ -80,6 +83,8 @@ export function Info(p: Proprieta): ReactElement {
   const [suggerimentiChiusi, setSuggerimentiChiusi] = useState(false);
   const [menuTag, setMenuTag] = useState<{ nome: string; x: number; y: number } | null>(null);
   const [daEliminare, setDaEliminare] = useState<string | null>(null);
+  /** «+ Tag» premuto: al suo posto il campo per aggiungerne uno. */
+  const [aggiungiTag, setAggiungiTag] = useState(false);
   const comparsa = p.tipo === "comparsa";
   const suChiudi = useRef(p.onChiudi);
   useEffect(() => {
@@ -191,6 +196,9 @@ export function Info(p: Proprieta): ReactElement {
         }
       : undefined;
 
+  const cartella =
+    p.nota.cartella === "" ? "Non organizzata" : p.nota.cartella.split("/").join(" › ");
+
   const contenuto = (
     <div
       ref={finestra}
@@ -202,58 +210,71 @@ export function Info(p: Proprieta): ReactElement {
       onKeyDown={suTasto}
     >
       <AreaScorrevole className="info-scorrimento">
-        <div className="info-corpo">
+        {/* Il contenitore ha spazio-flottante su tutti i lati e tra i blocchi; le righe sono
+            pillole con spazio-controllo ai lati (DEC-97). */}
+        <div className="info-contenuto">
           {!comparsa && (
-            <div className="info-intestazione">
+            <div className="info-riga info-intestazione">
               <p className="interfaccia-titolo">Info</p>
               <PulsanteIcona nome="Chiudi" icona={<Icona di={X} />} onClick={p.onChiudi} />
             </div>
           )}
 
-          <label className="info-blocco">
-            <span className="interfaccia-controllo">Titolo</span>
-            <input
-              className="info-campo interfaccia-controllo"
-              placeholder="Senza titolo"
-              value={titolo}
-              onChange={(e) => {
-                setTitolo(e.target.value);
-                p.onTitolo(e.target.value);
-              }}
-              onKeyDown={(e) => {
-                // Invio conferma il titolo e chiude, come Esc: si torna a scrivere.
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  p.onChiudi();
-                }
-              }}
-            />
-          </label>
+          <input
+            className="info-campo interfaccia-controllo"
+            aria-label="Titolo"
+            placeholder="Senza titolo"
+            value={titolo}
+            onChange={(e) => {
+              setTitolo(e.target.value);
+              p.onTitolo(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              // Invio conferma il titolo e chiude, come Esc: si torna a scrivere.
+              if (e.key === "Enter") {
+                e.preventDefault();
+                p.onChiudi();
+              }
+            }}
+          />
 
-          <div className="info-gruppo">
-            <p className="info-titolo-gruppo interfaccia-titolo-gruppo">Date</p>
+          <div className="info-righe">
+            <div className="info-riga">
+              <button
+                type="button"
+                className="info-riga-pulsante interfaccia-controllo"
+                aria-label={`Cartella ${cartella}: Sposta in…`}
+                onClick={(e) => p.onSpostaIn(e.currentTarget.getBoundingClientRect())}
+              >
+                <Icona di={Folder} />
+                <span className="info-riga-testo">{cartella}</span>
+              </button>
+            </div>
             <RigaData
               etichetta="Data di creazione"
-              descrizione={testoCreata(p.nota.creata)}
+              testo={(valore) =>
+                `Creata il ${valore ? scriviGiorno(valore) : giornoDiSistema(p.nota.creata)}`
+              }
               valore={p.nota.creataScelta}
-              vuoto={scriviGiorno(p.nota.creata.slice(0, 10))}
+              vuoto={giornoDiSistema(p.nota.creata)}
+              suggerimento={`Data di sistema: ${testoCreata(p.nota.creata).replace("Creata il ", "")}`}
+              ripristina
               onCambia={(giorno) => p.onDettagli({ creataScelta: giorno })}
             />
             <RigaData
               etichetta="Fine validità"
-              descrizione="Solo un promemoria: alla scadenza non succede nulla"
+              testo={(valore) =>
+                valore ? `Fine validità il ${scriviGiorno(valore)}` : "Nessuna fine validità"
+              }
               valore={p.nota.fineValidita}
-              vuoto="Nessuna"
+              vuoto="GG/MM/AAAA"
+              suggerimento="Solo un promemoria: alla scadenza non succede nulla"
               onCambia={(giorno) => p.onDettagli({ fineValidita: giorno })}
             />
-            <p className="info-tenue interfaccia-dettaglio">
-              Ultima modifica: {testoModificata(p.nota.modificata).replace("Modificata ", "")}
-            </p>
-          </div>
-
-          <div className="info-gruppo info-gruppo-stretto">
-            <p className="info-titolo-gruppo interfaccia-titolo-gruppo">Tag</p>
-            {p.nota.tag.length > 0 && (
+            <div className="info-riga info-riga-tag">
+              <span className="info-riga-icona">
+                <Icona di={TagIcona} />
+              </span>
               <div className="info-tag">
                 {p.nota.tag.map((nome) => (
                   <Tag
@@ -261,62 +282,67 @@ export function Info(p: Proprieta): ReactElement {
                     nome={nome}
                     onTogli={() => {
                       p.onTogliTag(nome);
-                      campoTag.current?.focus();
+                      // Il focus non si perde: va nel campo o su «+ Tag».
+                      (aggiungiTag ? campoTag : pulsanteTag).current?.focus();
                     }}
                   />
                 ))}
+                {aggiungiTag ? (
+                  <input
+                    ref={campoTag}
+                    className="info-campo-tag interfaccia-controllo"
+                    aria-label="Aggiungi un tag"
+                    placeholder="Aggiungi un tag"
+                    autoFocus
+                    value={testoTag}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && cercato && !mostraSuggerimenti) {
+                        e.preventDefault();
+                        p.onAggiungiTag(cercato);
+                        setTestoTag("");
+                      }
+                    }}
+                    onChange={(e) => {
+                      setTestoTag(e.target.value);
+                      setRettangoloCampo(e.currentTarget.getBoundingClientRect());
+                      setSuggerimentiChiusi(false);
+                    }}
+                    onBlur={() => {
+                      // Lasciato vuoto, torna «+ Tag» (salvo mentre si sceglie dai suggerimenti).
+                      if (testoTag === "" && !menuTag && !daEliminare) setAggiungiTag(false);
+                    }}
+                  />
+                ) : (
+                  <button
+                    ref={pulsanteTag}
+                    type="button"
+                    className="info-aggiungi-tag interfaccia-controllo"
+                    onClick={() => setAggiungiTag(true)}
+                  >
+                    <Icona di={Plus} />
+                    Tag
+                  </button>
+                )}
               </div>
-            )}
-            <input
-              ref={campoTag}
-              className="info-campo interfaccia-controllo"
-              aria-label="Aggiungi un tag"
-              placeholder="Aggiungi un tag"
-              value={testoTag}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && cercato && !mostraSuggerimenti) {
-                  e.preventDefault();
-                  p.onAggiungiTag(cercato);
-                  setTestoTag("");
-                }
-              }}
-              onChange={(e) => {
-                setTestoTag(e.target.value);
-                setRettangoloCampo(e.currentTarget.getBoundingClientRect());
-                setSuggerimentiChiusi(false);
-              }}
-            />
-          </div>
-
-          <div className="info-gruppo info-gruppo-stretto">
-            <p className="info-titolo-gruppo interfaccia-titolo-gruppo">Cartella</p>
-            <div className="info-cartella">
-              <span className="interfaccia-controllo">
-                {p.nota.cartella === ""
-                  ? "Non organizzata"
-                  : p.nota.cartella.split("/").join(" › ")}
-              </span>
-              <Pulsante
-                tipo="tenue"
-                onClick={(e) => p.onSpostaIn(e.currentTarget.getBoundingClientRect())}
-              >
-                Sposta in…
-              </Pulsante>
             </div>
           </div>
-        </div>
 
-        <div className="menu-separatore" role="separator" />
-        <div className="info-azioni">
-          {comparsa && p.onChiudiNota && (
-            <VoceAzione
-              etichetta="Chiudi nota"
-              icona={X}
-              scorciatoia={`${SU_MAC ? "⌘" : "Ctrl"} + W`}
-              onClick={p.onChiudiNota}
-            />
-          )}
-          <VoceAzione etichetta="Elimina" icona={Trash2} errore onClick={p.onElimina} />
+          <p className="info-riga info-modificata interfaccia-dettaglio">
+            {testoModificata(p.nota.modificata)}
+          </p>
+
+          <div className="menu-separatore" role="separator" />
+          <div className="info-azioni">
+            {comparsa && p.onChiudiNota && (
+              <VoceAzione
+                etichetta="Chiudi nota"
+                icona={X}
+                scorciatoia={`${SU_MAC ? "⌘" : "Ctrl"} + W`}
+                onClick={p.onChiudiNota}
+              />
+            )}
+            <VoceAzione etichetta="Elimina" icona={Trash2} errore onClick={p.onElimina} />
+          </div>
         </div>
       </AreaScorrevole>
     </div>
@@ -333,7 +359,7 @@ export function Info(p: Proprieta): ReactElement {
           // conferma aperti lo usano prima per chiudersi loro.
           onMouseDown={(e) => {
             if (e.target !== e.currentTarget || menuTag || daEliminare) return;
-            if (finestra.current?.querySelector(".info-data-aperta")) return;
+            if (finestra.current?.querySelector(".info-riga-aperta")) return;
             // Il clic non porta il focus sulla pagina: torna dove era prima di Info.
             e.preventDefault();
             p.onChiudi();
@@ -398,25 +424,45 @@ export function Info(p: Proprieta): ReactElement {
   );
 }
 
-/** Una data (CMP-03 con l'icona del calendario): si scrive GG/MM/AAAA o si sceglie. */
+/** Il giorno di sistema di un istante, nel fuso di questo computer: GG/MM/AAAA. */
+function giornoDiSistema(istante: string): string {
+  return testoCreata(istante)
+    .replace("Creata il ", "")
+    .replace(/ alle .*/, "");
+}
+
+/**
+ * Una riga di data (proposta C, DEC-97): un pulsante con l'icona e la frase («Creata il
+ * 12/09/2026»); un clic apre il campo al posto della frase e il calendario sotto la riga. Si
+ * scrive GG/MM/AAAA o si sceglie; una data che non esiste, confermata con Invio, resta nel campo
+ * con il messaggio; uscendo dal campo torna quella di prima (DEC-52). Con `ripristina`, se c'è una
+ * data scelta, a destra «Ripristina» la toglie e torna quella di sistema.
+ */
 function RigaData(p: {
   etichetta: string;
-  descrizione: string;
+  testo: (valore: string | null) => string;
   valore: string | null;
   vuoto: string;
+  suggerimento: string;
+  ripristina?: boolean;
   onCambia: (giorno: string | null) => void;
 }): ReactElement {
   const scritto = p.valore ? scriviGiorno(p.valore) : "";
+  const [aperta, setAperta] = useState(false);
   const [testo, setTesto] = useState(scritto);
-  // Data scritta che non esiste, confermata con Invio: messaggio sotto il campo (CMP-03, DEC-52).
   const [errore, setErrore] = useState(false);
   const idErrore = useId();
   const [calendario, setCalendario] = useState<DOMRect | null>(null);
-  const campo = useRef<HTMLDivElement>(null);
+  // Il focus parte nel campo; con ↓ passa al calendario.
+  const [nelCalendario, setNelCalendario] = useState(false);
+  const riga = useRef<HTMLDivElement>(null);
   const casella = useRef<HTMLInputElement>(null);
+  const pulsante = useRef<HTMLButtonElement>(null);
+  // Chiusa con Invio, Esc o il calendario, il focus torna sulla riga; uscendo con Tab no.
+  const [rimetti, setRimetti] = useState(false);
   // L'ultimo valore inviato: Invio e poi l'uscita dal campo non lo mandano due volte.
   const [inviato, setInviato] = useState(p.valore);
-  // Quando il valore cambia da fuori, il campo lo mostra.
+  // Quando il valore cambia da fuori, la riga lo mostra.
   const [precedente, setPrecedente] = useState(p.valore);
   if (precedente !== p.valore) {
     setPrecedente(p.valore);
@@ -431,89 +477,131 @@ function RigaData(p: {
     p.onCambia(giorno);
   };
 
-  // Una data scritta vale quando si conferma. Una che non esiste: con Invio resta nel campo con
-  // il messaggio; uscendo dal campo torna quella di prima e il messaggio sparisce (DEC-52).
+  const apri = () => {
+    setTesto(scritto);
+    setAperta(true);
+    setCalendario(riga.current?.getBoundingClientRect() ?? null);
+  };
+  const chiudi = (uscita = false) => {
+    setAperta(false);
+    setCalendario(null);
+    setNelCalendario(false);
+    setErrore(false);
+    setRimetti(!uscita);
+  };
+  useEffect(() => {
+    if (aperta) {
+      // Il testo è selezionato: scrivendo si sostituisce.
+      casella.current?.focus();
+      casella.current?.select();
+    } else if (rimetti) pulsante.current?.focus();
+  }, [aperta, rimetti]);
+
   const conferma = (uscita: boolean) => {
     if (testo.trim() === "") {
-      setErrore(false);
       cambia(null);
+      chiudi(uscita);
       return;
     }
     const giorno = leggiGiorno(testo);
     if (giorno) {
-      setErrore(false);
       cambia(giorno);
-    } else if (uscita) {
-      setErrore(false);
-      setTesto(scritto);
-    } else setErrore(true);
+      chiudi(uscita);
+    } else if (uscita) chiudi(true);
+    else setErrore(true);
   };
 
   return (
-    <div className="info-blocco">
-      <span className="interfaccia-controllo">{p.etichetta}</span>
-      <div
-        ref={campo}
-        className={`info-data ${calendario ? "info-data-aperta" : ""} ${errore ? "info-data-errore" : ""}`}
-      >
-        <input
-          ref={casella}
-          className="info-campo-data interfaccia-controllo"
-          aria-label={p.etichetta}
-          aria-invalid={errore}
-          aria-describedby={errore ? idErrore : undefined}
-          placeholder={p.vuoto}
-          value={testo}
-          onChange={(e) => {
-            const nuovo = e.target.value;
-            setTesto(nuovo);
-            // Il messaggio resta finché la data non è corretta.
-            if (errore && (nuovo.trim() === "" || leggiGiorno(nuovo))) setErrore(false);
-          }}
-          onBlur={() => conferma(true)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              conferma(false);
-            }
-          }}
-        />
+    <div
+      ref={riga}
+      className={`info-riga ${aperta ? "info-riga-aperta" : ""} ${errore ? "info-riga-errore" : ""}`}
+      title={aperta ? undefined : p.suggerimento}
+    >
+      {aperta ? (
+        <>
+          <span className="info-riga-icona">
+            <Icona di={Calendar} />
+          </span>
+          <input
+            ref={casella}
+            className="info-riga-campo interfaccia-controllo"
+            aria-label={p.etichetta}
+            aria-invalid={errore}
+            aria-describedby={errore ? idErrore : undefined}
+            data-apre-calendario=""
+            placeholder={p.vuoto}
+            value={testo}
+            onChange={(e) => {
+              const nuovo = e.target.value;
+              setTesto(nuovo);
+              if (errore && (nuovo.trim() === "" || leggiGiorno(nuovo))) setErrore(false);
+            }}
+            onBlur={(e) => {
+              // Il passaggio al calendario non è un'uscita dal campo.
+              if ((e.relatedTarget as Element | null)?.closest?.(".calendario")) return;
+              conferma(true);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                conferma(false);
+              } else if (e.key === "ArrowDown" && calendario) {
+                e.preventDefault();
+                setNelCalendario(true);
+              } else if (e.key === "Escape") {
+                e.preventDefault();
+                e.stopPropagation();
+                chiudi();
+              }
+            }}
+          />
+        </>
+      ) : (
         <button
+          ref={pulsante}
           type="button"
-          className="info-apri-calendario"
-          aria-label={`Scegli ${p.etichetta.toLowerCase()} dal calendario`}
-          aria-expanded={calendario !== null}
+          className="info-riga-pulsante interfaccia-controllo"
+          aria-label={`${p.etichetta}: ${p.testo(p.valore)}`}
           data-apre-calendario=""
-          onClick={() =>
-            setCalendario(calendario ? null : (campo.current?.getBoundingClientRect() ?? null))
-          }
+          onClick={apri}
         >
           <Icona di={Calendar} />
+          <span className={`info-riga-testo ${p.valore || p.ripristina ? "" : "info-tenue"}`}>
+            {p.testo(p.valore)}
+          </span>
         </button>
-      </div>
-      {errore ? (
+      )}
+      {p.ripristina && p.valore && !aperta && (
+        <button
+          type="button"
+          className="info-ripristina interfaccia-controllo-attivo"
+          onClick={() => cambia(null)}
+        >
+          Ripristina
+        </button>
+      )}
+      {errore && (
         <p id={idErrore} className="info-errore-data interfaccia-dettaglio" role="alert">
           <Icona di={CircleAlert} />
           Data non valida: scrivi GG/MM/AAAA
         </p>
-      ) : (
-        <span className="info-tenue interfaccia-dettaglio">{p.descrizione}</span>
       )}
       {calendario && (
         <Calendario
           valore={p.valore}
           ancora={calendario}
           sopraOverlay
+          prendeFocus={nelCalendario}
           onScegli={(giorno) => {
-            setCalendario(null);
-            setErrore(false);
-            setTesto(giorno ? scriviGiorno(giorno) : "");
             cambia(giorno);
-            casella.current?.focus();
+            chiudi();
           }}
-          onChiudi={() => {
-            setCalendario(null);
-            casella.current?.focus();
+          onChiudi={(come) => {
+            // Esc nel calendario torna nel campo; un clic fuori chiude la riga come uscirne.
+            if (come === "esc") {
+              setNelCalendario(false);
+              casella.current?.focus();
+            } else conferma(true);
           }}
         />
       )}

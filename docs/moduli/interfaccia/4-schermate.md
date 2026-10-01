@@ -48,12 +48,14 @@ Le **non organizzate stanno sopra le cartelle**: sono la posta in arrivo della s
 ### Info della nota (livello 20, DEC-96)
 Un clic sul titolo nel percorso (CMP-26) apre Info (CMP-24, tipo Comparsa) sotto il titolo, senza velo: è l'unico punto per tutto ciò che riguarda la nota aperta. Il menu `···` in alto a destra non c'è più.
 
-| Gruppo | Contenuto |
+| Riga | Contenuto |
 |---|---|
 | Titolo | Il campo del titolo: si rinomina qui (RB-15); una nota senza titolo ha il campo vuoto |
-| Date | Data di creazione (con quella di sistema sotto) e fine validità con il calendario; ultima modifica in sola lettura (RF-04) |
-| Tag | I tag con la ✕ e il campo «Aggiungi un tag» con i suggerimenti (RF-06) |
-| Cartella | Il percorso in sola lettura e «Sposta in…», che apre il pannello Sposta in (CMP-11) |
+| Cartella | Il percorso («Lavoro › Clienti»); un clic apre il pannello Sposta in (CMP-11) |
+| Creazione | «Creata il …»: un clic apre il campo e il calendario; la data di sistema nel suggerimento; cambiata, «Ripristina» a destra (RF-04, DEC-97) |
+| Fine validità | «Fine validità il …» o «Nessuna fine validità»: un clic apre il campo e il calendario (RF-04) |
+| Tag | I tag con la ✕ e «+ Tag», che apre il campo «Aggiungi un tag» con i suggerimenti (RF-06) |
+| Modificata | L'ultima modifica, in sola lettura (RF-04) |
 | Azioni | Chiudi nota (Ctrl + W, ⌘ + W su macOS, DEC-70): salva la nota e lascia l'area vuota con «Nessuna nota aperta», senza aprirne un'altra; una nota vuota sparisce (DEC-39). Elimina: nel cestino (RB-26) |
 
 Ogni modifica vale subito. Si chiude con un clic fuori o con Esc. Senza una nota aperta (stato vuoto) il percorso, e quindi Info, non c'è.

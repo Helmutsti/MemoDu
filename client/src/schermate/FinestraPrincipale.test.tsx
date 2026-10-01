@@ -415,7 +415,7 @@ describe("menu ··· e Sposta in (CA-05.4, CA-15.1)", () => {
     );
     render(<FinestraPrincipale />);
     const info = await apriInfo("Riunione di lunedì");
-    await userEvent.click(within(info).getByRole("button", { name: "Sposta in…" }));
+    await userEvent.click(within(info).getByRole("button", { name: /: Sposta in…$/ }));
     const pannello = screen.getByRole("dialog", { name: "Sposta in" });
     expect(within(pannello).getByRole("option", { name: /Non organizzate/ })).toHaveAttribute(
       "aria-current",
@@ -477,7 +477,7 @@ describe("menu ··· e Sposta in (CA-05.4, CA-15.1)", () => {
     const info = await apriInfo("Riunione di lunedì");
     expect(info).not.toHaveAttribute("aria-modal");
     expect(within(info).getByRole("textbox", { name: "Titolo" })).toHaveFocus();
-    expect(within(info).getByRole("button", { name: "Sposta in…" })).toBeInTheDocument();
+    expect(within(info).getByRole("button", { name: /: Sposta in…$/ })).toBeInTheDocument();
     expect(within(info).getByRole("button", { name: /^Chiudi nota/ })).toHaveTextContent(
       "Chiudi notaCtrl + W",
     );

@@ -55,7 +55,7 @@
   width: 480px;
   max-width: calc(100vw - 2 * var(--spazio-flottante));
   max-height: calc(100vh - 96px);
-  padding: var(--spazio-flottante) 0;
+  padding: var(--spazio-flottante);
   border-radius: var(--raggio-contenitore);
   background: var(--sfondo-flottante);
   box-shadow: var(--ombra);
@@ -67,7 +67,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--spazio-flottante);
-  padding: calc(var(--spazio-controllo) - var(--spazio-flottante)) var(--spazio-controllo);
+  padding: var(--spazio-elemento) 0;
 }
 .filtro-ricerca {
   display: inline-flex;
@@ -104,7 +104,7 @@
 }
 .card-ricerca-elenco {
   margin: 0;
-  padding: 0 var(--spazio-flottante);
+  padding: 0;
   list-style: none;
 }
 .risultato-ricerca {
@@ -197,8 +197,4 @@
 /* «Mostra tutti i risultati» in fondo alla card (DEC-96): una voce come nei menu. */
 .card-ricerca-avanzata {
   flex: none;
-  padding: 0 var(--spazio-flottante);
-}
-.card-ricerca-avanzata .voce-menu {
-  padding: 0;
 }

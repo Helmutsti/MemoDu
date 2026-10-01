@@ -2,7 +2,7 @@
 
 <!-- Stato della documentazione (vedi "Lo stato della documentazione" nella guida). Si sovrascrive; le modifiche non vanno nello storico. Chi riprende il lavoro parte da qui. -->
 
-**Ultimo aggiornamento:** 01/10/2026 (DEC-96: Info sotto il titolo e ricerca avanzata, libreria allineata; RF-08 Ricerca: prove a mano nell'app e correzione dei due difetti trovati; prossimo: le prove che vogliono Manuel Cucca, poi Fase 9)
+**Ultimo aggiornamento:** 01/10/2026 (DEC-97: Info più snella e due regole per gli spazi dei contenitori, in libreria e nel codice; prossimo: la pubblicazione della libreria e i mockup; DEC-96: Info sotto il titolo e ricerca avanzata, libreria allineata; RF-08 Ricerca: prove a mano nell'app e correzione dei due difetti trovati; prossimo: le prove che vogliono Manuel Cucca, poi Fase 9)
 
 ## Pacchetti e frammenti
 
