@@ -396,3 +396,4 @@
 | 01/10/2026 | Agente IA | Mockup allineati: elementi del cestino e righe di impostazione aggiornati (SC-04, SC-06); il fondo della colonna è ora il componente CMP-30 in 35 frame di SC-01, SC-03, SC-04 e SC-06, con le righe negli stessi punti; 5 esportazioni rifatte | DEC-100 |
 | 01/10/2026 | Manuel Cucca | Nel campo di ricerca della colonna la scorciatoia «Ctrl + K» a destra, finché è vuoto (CMP-03, proprietà Mostra scorciatoia); nel codice con una prova automatica | DEC-101 |
 | 01/10/2026 | Agente IA | Prove e2e nell'app: TC-51, TC-53, TC-55 superati per DEC-97; TC-09, TC-15, TC-16, TC-17, TC-18, TC-19, TC-31, TC-32 superati (con il database letto da script) | DEC-97, RF-02 |
+| 01/10/2026 | Manuel Cucca | CMP-25 in tutte le aree che scorrono: anche nota rapida, cestino e impostazioni, che avevano la barra del sistema | Barra di scorrimento uguale ovunque (DEC-89) |

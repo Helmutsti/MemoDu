@@ -1,14 +1,17 @@
 /* SC-06 Impostazioni: il titolo e i gruppi di righe (CMP-18), larghi 560, alla stessa altezza
-   del cestino (SC-04). */
+   del cestino (SC-04). Scorre con la barra di CMP-25 (DEC-89). */
 .impostazioni {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
   height: 100%;
-  overflow-y: auto;
+}
+.impostazioni-corpo {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   padding: 80px var(--spazio-gruppo);
 }
-.impostazioni > * {
+.impostazioni-corpo > * {
   width: 100%;
   max-width: 560px;
   margin-right: auto;

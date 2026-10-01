@@ -9,6 +9,7 @@
 import { ArrowBigUp, CornerDownLeft } from "lucide-react";
 import { useEffect, useRef, useState, type ReactElement } from "react";
 import { api } from "../api";
+import { AreaScorrevole } from "../componenti/AreaScorrevole";
 import { FinestraConferma } from "../componenti/FinestraConferma";
 import { PulsanteDiviso } from "../componenti/Pulsante";
 import { cursoreDalClic, Editor } from "../editor/Editor";
@@ -157,16 +158,18 @@ export function NotaRapida(): ReactElement {
         // Un clic nel vuoto porta il cursore nel testo (DEC-66).
         onMouseDown={(e) => cursoreDalClic(e.currentTarget, e)}
       >
-        <Editor
-          contenuto=""
-          focus
-          invito="Scrivi qui…"
-          onModifica={(nuovo) => {
-            testo.current = nuovo;
-            clearTimeout(timer.current);
-            timer.current = setTimeout(() => void salva(), PAUSA_MS);
-          }}
-        />
+        <AreaScorrevole className="nota-rapida-scorrimento">
+          <Editor
+            contenuto=""
+            focus
+            invito="Scrivi qui…"
+            onModifica={(nuovo) => {
+              testo.current = nuovo;
+              clearTimeout(timer.current);
+              timer.current = setTimeout(() => void salva(), PAUSA_MS);
+            }}
+          />
+        </AreaScorrevole>
       </div>
       <div className="nota-rapida-azioni" data-tauri-drag-region inert={bloccata}>
         <PulsanteDiviso

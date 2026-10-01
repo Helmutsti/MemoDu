@@ -9,6 +9,7 @@ import { FinestraConferma } from "../componenti/FinestraConferma";
 import { Icona } from "../componenti/Icona";
 import { Pulsante, PulsanteIcona } from "../componenti/Pulsante";
 import { StatoVuoto } from "../componenti/StatoVuoto";
+import { AreaScorrevole } from "../componenti/AreaScorrevole";
 import "./Cestino.css";
 
 interface Proprieta {
@@ -65,43 +66,47 @@ export function Cestino({ elementi, onRipristina, onElimina, onSvuota }: Proprie
   const n = elementi.length;
   return (
     <section className="cestino" aria-labelledby="cestino-titolo">
-      <header className="cestino-intestazione">
-        <h1 id="cestino-titolo" className="interfaccia-titolo-schermata">
-          Cestino
-        </h1>
-        <Pulsante tipo="secondario" onClick={() => setSvuota(true)}>
-          Svuota cestino
-        </Pulsante>
-      </header>
-      <ul className="cestino-elenco">
-        {elementi.map((e) => (
-          <li key={e.id} className="elemento-cestino">
-            <span className="elemento-cestino-contenuto">
-              <span className="elemento-cestino-icona">
-                <Icona di={e.tipo === "nota" ? FileText : Folder} />
-              </span>
-              <span className="elemento-cestino-testi">
-                <span className="elemento-cestino-nome interfaccia-titolo">
-                  {e.nome || "Nota vuota"}
+      <AreaScorrevole className="cestino-scorrimento">
+        <div className="cestino-corpo">
+          <header className="cestino-intestazione">
+            <h1 id="cestino-titolo" className="interfaccia-titolo-schermata">
+              Cestino
+            </h1>
+            <Pulsante tipo="secondario" onClick={() => setSvuota(true)}>
+              Svuota cestino
+            </Pulsante>
+          </header>
+          <ul className="cestino-elenco">
+            {elementi.map((e) => (
+              <li key={e.id} className="elemento-cestino">
+                <span className="elemento-cestino-contenuto">
+                  <span className="elemento-cestino-icona">
+                    <Icona di={e.tipo === "nota" ? FileText : Folder} />
+                  </span>
+                  <span className="elemento-cestino-testi">
+                    <span className="elemento-cestino-nome interfaccia-titolo">
+                      {e.nome || "Nota vuota"}
+                    </span>
+                    <span className="elemento-cestino-dettagli interfaccia-dettaglio">
+                      {dettagli(e)}
+                    </span>
+                  </span>
                 </span>
-                <span className="elemento-cestino-dettagli interfaccia-dettaglio">
-                  {dettagli(e)}
+                <span className="elemento-cestino-azioni">
+                  <Pulsante tipo="tenue" onClick={() => onRipristina(e)}>
+                    Ripristina
+                  </Pulsante>
+                  <PulsanteIcona
+                    nome="Elimina definitivamente"
+                    icona={<Icona di={Trash2} />}
+                    onClick={() => setDaEliminare(e)}
+                  />
                 </span>
-              </span>
-            </span>
-            <span className="elemento-cestino-azioni">
-              <Pulsante tipo="tenue" onClick={() => onRipristina(e)}>
-                Ripristina
-              </Pulsante>
-              <PulsanteIcona
-                nome="Elimina definitivamente"
-                icona={<Icona di={Trash2} />}
-                onClick={() => setDaEliminare(e)}
-              />
-            </span>
-          </li>
-        ))}
-      </ul>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </AreaScorrevole>
       {daEliminare && (
         <FinestraConferma
           titolo={`Eliminare per sempre «${daEliminare.nome || "Nota vuota"}»?`}

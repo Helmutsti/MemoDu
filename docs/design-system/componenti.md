@@ -971,15 +971,15 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 ---
 
 ## CMP-25 – Barra di scorrimento
-**Tipo:** composto · **Usato in:** SC-03 (il foglio), SC-01 (la colonna) · **Figma:** pagina Componenti composti, [Barra di scorrimento](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=182-5587)
+**Tipo:** composto · **Usato in:** SC-01 (la colonna), SC-02 (la nota rapida), SC-03 (il foglio), SC-04 (il cestino), SC-06 (le impostazioni), Info, Ricerca e Sposta in · **Figma:** pagina Componenti composti, [Barra di scorrimento](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=182-5587)
 
 **Scopo:** mostrare dove si è in un contenuto che scorre e permettere di spostarsi trascinando, senza togliere spazio al testo (DEC-58).
-**Quando usarlo:** nelle aree che scorrono: il foglio della nota (tutta la pagina, DEC-59) e la colonna.
+**Quando usarlo:** in ogni area che scorre: il foglio della nota (tutta la pagina, DEC-59), la colonna, la nota rapida, il cestino, le impostazioni e i pannelli che scorrono. Nessuna area mostra la barra del sistema.
 **Quando non usarlo:** nei menu e nei pannelli corti, che non scorrono.
 
 ### Varianti e dimensioni
 - Barra sovrapposta al contenuto di OverlayScrollbars (DEC-89): cursore largo 6, tondo (`raggio-pillola`), in `icona-tenue`, a 2 px dal bordo destro e dai bordi in alto e in basso dell'area; nessun binario; non occupa spazio. L'altezza segue la parte visibile del contenuto, almeno 24.
-- Sta nell'area che scorre (colonna e foglio): si muove e sparisce con lei.
+- Sta nell'area che scorre: si muove e sparisce con lei.
 
 ### Stati
 | Stato | Descrizione |

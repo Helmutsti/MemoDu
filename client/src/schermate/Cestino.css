@@ -1,8 +1,11 @@
 /* SC-04 Cestino: titolo e Svuota cestino in alto, sotto gli elementi (CMP-17), larghi 560,
-   alla stessa altezza del titolo di una nota. */
+   alla stessa altezza del titolo di una nota. Scorre con la barra di CMP-25 (DEC-89). */
 .cestino {
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  overflow-y: auto;
+}
+.cestino-corpo {
   padding: 80px var(--spazio-gruppo);
 }
 

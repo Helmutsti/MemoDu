@@ -14,6 +14,7 @@ import {
 import { quando } from "../date";
 import { alCambioDelloStatoSinc } from "../finestra";
 import { Icona } from "../componenti/Icona";
+import { AreaScorrevole } from "../componenti/AreaScorrevole";
 import { Pulsante } from "../componenti/Pulsante";
 import { RigaImpostazione, RigaInterruttore, TitoloGruppo } from "../componenti/RigaImpostazione";
 import { SceltaSegmenti } from "../componenti/SceltaSegmenti";
@@ -196,101 +197,107 @@ export function Impostazioni({ esegui }: Proprieta): ReactElement | null {
   const sistema = valori.sistema;
   return (
     <section className="impostazioni" aria-labelledby="impostazioni-titolo">
-      <h1 id="impostazioni-titolo" className="impostazioni-titolo interfaccia-titolo-schermata">
-        Impostazioni
-      </h1>
+      <AreaScorrevole className="impostazioni-scorrimento">
+        <div className="impostazioni-corpo">
+          <h1 id="impostazioni-titolo" className="impostazioni-titolo interfaccia-titolo-schermata">
+            Impostazioni
+          </h1>
 
-      <TitoloGruppo>Generale</TitoloGruppo>
-      <RigaImpostazione
-        id={idScorciatoia}
-        etichetta="Scorciatoia della nota rapida"
-        descrizione={`Su ${sistema === "macos" ? "macOS" : "Windows"}. Clicca il campo e premi la combinazione nuova.`}
-      >
-        <CampoScorciatoia
-          valore={valori.scorciatoia}
-          sistema={sistema}
-          errore={erroreScorciatoia}
-          idEtichetta={idScorciatoia}
-          onCombinazione={(c) => void cambiaScorciatoia(c)}
-          onNonValida={() => setErroreScorciatoia(TESTO_NON_VALIDA)}
-        />
-        <Pulsante
-          tipo="tenue"
-          disabled={valori.scorciatoiaPredefinita}
-          onClick={() => void cambiaScorciatoia(null)}
-        >
-          Ripristina
-        </Pulsante>
-      </RigaImpostazione>
-      <RigaInterruttore
-        etichetta="Avvia Memodu all'accensione"
-        descrizione="Memodu parte in background e la nota rapida è subito pronta. Solo su questo dispositivo."
-        acceso={valori.avvioAutomatico}
-        onCambia={(attivo) =>
-          void cambia(() => api.cambiaAvvio(attivo), { avvioAutomatico: attivo })
-        }
-      />
-      {/* DEC-93: in Generale per ora; la posizione è da rivedere. */}
-      <RigaInterruttore
-        etichetta="Tieni Memodu in primo piano"
-        descrizione="La finestra resta sopra gli altri programmi. Solo su questo dispositivo."
-        acceso={valori.inPrimoPiano}
-        onCambia={(attivo) =>
-          void cambia(() => api.cambiaPrimoPiano(attivo), { inPrimoPiano: attivo })
-        }
-      />
+          <TitoloGruppo>Generale</TitoloGruppo>
+          <RigaImpostazione
+            id={idScorciatoia}
+            etichetta="Scorciatoia della nota rapida"
+            descrizione={`Su ${sistema === "macos" ? "macOS" : "Windows"}. Clicca il campo e premi la combinazione nuova.`}
+          >
+            <CampoScorciatoia
+              valore={valori.scorciatoia}
+              sistema={sistema}
+              errore={erroreScorciatoia}
+              idEtichetta={idScorciatoia}
+              onCombinazione={(c) => void cambiaScorciatoia(c)}
+              onNonValida={() => setErroreScorciatoia(TESTO_NON_VALIDA)}
+            />
+            <Pulsante
+              tipo="tenue"
+              disabled={valori.scorciatoiaPredefinita}
+              onClick={() => void cambiaScorciatoia(null)}
+            >
+              Ripristina
+            </Pulsante>
+          </RigaImpostazione>
+          <RigaInterruttore
+            etichetta="Avvia Memodu all'accensione"
+            descrizione="Memodu parte in background e la nota rapida è subito pronta. Solo su questo dispositivo."
+            acceso={valori.avvioAutomatico}
+            onCambia={(attivo) =>
+              void cambia(() => api.cambiaAvvio(attivo), { avvioAutomatico: attivo })
+            }
+          />
+          {/* DEC-93: in Generale per ora; la posizione è da rivedere. */}
+          <RigaInterruttore
+            etichetta="Tieni Memodu in primo piano"
+            descrizione="La finestra resta sopra gli altri programmi. Solo su questo dispositivo."
+            acceso={valori.inPrimoPiano}
+            onCambia={(attivo) =>
+              void cambia(() => api.cambiaPrimoPiano(attivo), { inPrimoPiano: attivo })
+            }
+          />
 
-      <TitoloGruppo>Tema</TitoloGruppo>
-      <RigaImpostazione
-        etichetta="Tema"
-        descrizione="Chiaro o scuro, oppure come il sistema. Solo su questo dispositivo."
-      >
-        <SceltaSegmenti
-          nome="Tema"
-          opzioni={TEMI}
-          valore={valori.tema}
-          onScegli={(tema) => void cambia(() => api.cambiaTema(tema), { tema })}
-        />
-      </RigaImpostazione>
+          <TitoloGruppo>Tema</TitoloGruppo>
+          <RigaImpostazione
+            etichetta="Tema"
+            descrizione="Chiaro o scuro, oppure come il sistema. Solo su questo dispositivo."
+          >
+            <SceltaSegmenti
+              nome="Tema"
+              opzioni={TEMI}
+              valore={valori.tema}
+              onScegli={(tema) => void cambia(() => api.cambiaTema(tema), { tema })}
+            />
+          </RigaImpostazione>
 
-      <TitoloGruppo>Sincronizzazione</TitoloGruppo>
-      <RigaImpostazione etichetta="Stato" descrizione={testoStato(stato)} />
-      {stato.ultimaRiuscita && (
-        <RigaImpostazione
-          etichetta="Ultima sincronizzazione"
-          descrizione={maiuscola(quando(stato.ultimaRiuscita))}
-        />
-      )}
+          <TitoloGruppo>Sincronizzazione</TitoloGruppo>
+          <RigaImpostazione etichetta="Stato" descrizione={testoStato(stato)} />
+          {stato.ultimaRiuscita && (
+            <RigaImpostazione
+              etichetta="Ultima sincronizzazione"
+              descrizione={maiuscola(quando(stato.ultimaRiuscita))}
+            />
+          )}
 
-      {/* DEC-94: tra Sincronizzazione e Dispositivo. */}
-      <TitoloGruppo>Ricerca</TitoloGruppo>
-      <RigaInterruttore
-        etichetta="Mostra le note del cestino nei risultati"
-        descrizione="Compaiono attenuate, con l’etichetta «nel cestino». Vale su tutti i dispositivi."
-        acceso={valori.cestinoInRicerca}
-        onCambia={(attivo) =>
-          void cambia(() => api.cambiaCestinoInRicerca(attivo), { cestinoInRicerca: attivo })
-        }
-      />
+          {/* DEC-94: tra Sincronizzazione e Dispositivo. */}
+          <TitoloGruppo>Ricerca</TitoloGruppo>
+          <RigaInterruttore
+            etichetta="Mostra le note del cestino nei risultati"
+            descrizione="Compaiono attenuate, con l’etichetta «nel cestino». Vale su tutti i dispositivi."
+            acceso={valori.cestinoInRicerca}
+            onCambia={(attivo) =>
+              void cambia(() => api.cambiaCestinoInRicerca(attivo), { cestinoInRicerca: attivo })
+            }
+          />
 
-      <TitoloGruppo>Dispositivo</TitoloGruppo>
-      <RigaImpostazione
-        id={idNome}
-        etichetta="Nome del dispositivo"
-        descrizione="Così lo riconosci tra i tuoi dispositivi."
-      >
-        <CampoNome
-          key={valori.nomeDispositivo}
-          valore={valori.nomeDispositivo}
-          idEtichetta={idNome}
-          onCambia={(nome) =>
-            void (async () => {
-              const valido = await esegui(() => api.cambiaNomeDispositivo(nome));
-              setValori((v) => (v ? { ...v, nomeDispositivo: valido ?? v.nomeDispositivo } : v));
-            })()
-          }
-        />
-      </RigaImpostazione>
+          <TitoloGruppo>Dispositivo</TitoloGruppo>
+          <RigaImpostazione
+            id={idNome}
+            etichetta="Nome del dispositivo"
+            descrizione="Così lo riconosci tra i tuoi dispositivi."
+          >
+            <CampoNome
+              key={valori.nomeDispositivo}
+              valore={valori.nomeDispositivo}
+              idEtichetta={idNome}
+              onCambia={(nome) =>
+                void (async () => {
+                  const valido = await esegui(() => api.cambiaNomeDispositivo(nome));
+                  setValori((v) =>
+                    v ? { ...v, nomeDispositivo: valido ?? v.nomeDispositivo } : v,
+                  );
+                })()
+              }
+            />
+          </RigaImpostazione>
+        </div>
+      </AreaScorrevole>
     </section>
   );
 }
