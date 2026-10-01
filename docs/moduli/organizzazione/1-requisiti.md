@@ -53,9 +53,9 @@ Come *utente* voglio assegnare tag alle note per raggrupparle in modo trasversal
 Condiviso con RF-04 e RF-05: vedi lo scenario di RF-05.
 
 ### Criteri di accettazione
-Frammento Must C (DEC-41, DEC-44): i tag si modificano nella finestra Dettagli; trovare le note per tag arriva con la ricerca (RF-08). Criteri approvati da Manuel Cucca il 29/09/2026.
+Frammento Must C (DEC-41, DEC-44): i tag si modificano nella finestra Info; trovare le note per tag arriva con la ricerca (RF-08). Criteri approvati da Manuel Cucca il 29/09/2026.
 
-- **CA-06.1** *Dato* la finestra Dettagli, *quando* scrivo nel campo «Aggiungi un tag», *allora* sopra la finestra compaiono i tag esistenti che contengono il testo e «Crea il tag «…»» se non esiste; con Invio o un clic il tag si assegna e compare nella finestra e sotto il titolo (RB-17).
+- **CA-06.1** *Dato* la finestra Info, *quando* scrivo nel campo «Aggiungi un tag», *allora* sopra la finestra compaiono i tag esistenti che contengono il testo e «Crea il tag «…»» se non esiste; con Invio o un clic il tag si assegna e compare nella finestra e sotto il titolo (RB-17).
 - **CA-06.2** *Dato* il tag «lavoro», *quando* scrivo «Lavoro/Clienti», *allora* si usa «lavoro» e sotto nasce «Clienti» (RB-18, RB-22).
 - **CA-06.3** *Dato* un tag della nota, *quando* premo la sua ✕, *allora* il tag esce dalla nota e resta tra i suggerimenti (RB-49).
 - **CA-06.4** *Dato* un tag tra i suggerimenti, *quando* scelgo «Elimina tag…» dal tasto destro, *allora* compare «Eliminare il tag «…»?» con il numero di note; confermando il tag e i suoi sotto-tag spariscono da tutte le note, Annulla non cambia niente (RB-19). Con una sola nota: «Lo usa 1 nota: resterà intatta, solo senza questo tag.»; con nessuna: «Nessuna nota lo usa.»; sempre seguiti da «Vengono eliminati anche i suoi sotto-tag.» (confermato il 29/09/2026).
@@ -140,14 +140,14 @@ Scritti dall'agente da FL-06, DEC-94 e DEC-95; approvati da Manuel Cucca il 30/0
 - **CA-08.4** *Dato* una nota con il tag «lavoro/clienti» e senza la parola nel testo, *quando* cerco «lavoro», *allora* la trovo (RB-69, RF-06).
 - **CA-08.5** *Dato* la card aperta, *quando* nel filtro Tag scelgo «lavoro» e «clienti», *allora* la pillola diventa «Tag: 2» ed escono solo le note che hanno tutti e due i tag, ciascuno anche con i suoi sotto-tag; «Togli il filtro» li toglie (RB-70, CMP-09).
 - **CA-08.6** *Dato* il campo vuoto, *quando* scelgo il filtro Tag «lavoro», *allora* escono le note con «lavoro» o un suo sotto-tag, per ultima modifica, con l'inizio del testo al posto della frase (RB-70, DEC-95).
-- **CA-08.7** *Dato* il filtro Modifica, *quando* scelgo «Ultimi 7 giorni», *allora* escono solo le note modificate negli ultimi 7 giorni secondo l'ora di questo computer e la pillola mostra il periodo; con «Scegli le date…» il periodo si sceglie sul calendario; per la Creazione vale la data scelta nei Dettagli, se c'è; ogni risultato mostra la data del filtro attivo (RF-04, DEC-95).
+- **CA-08.7** *Dato* il filtro Modifica, *quando* scelgo «Ultimi 7 giorni», *allora* escono solo le note modificate negli ultimi 7 giorni secondo l'ora di questo computer e la pillola mostra il periodo; con «Scegli le date…» il periodo si sceglie sul calendario; per la Creazione vale la data scelta in Info, se c'è; ogni risultato mostra la data del filtro attivo (RF-04, DEC-95).
 - **CA-08.8** *Dato* una ricerca senza risultati, *allora* la card resta aperta con i filtri e mostra «Nessuna nota trovata» e «Prova con un'altra parola o togli un filtro.» (RB-35).
 - **CA-08.9** *Dato* una nota nel cestino, o dentro una cartella nel cestino, che contiene la parola cercata, *quando* cerco, *allora* compare attenuata con l'etichetta «nel cestino» e aprendola si vede che è nel cestino e si può ripristinare; spento «Mostra le note del cestino nei risultati» in SC-06 non compare più, anche sull'altro dispositivo dopo la sincronizzazione (RB-29, RB-28, RB-52).
 - **CA-08.10** *Dato* dei risultati, *quando* ne apro uno con un clic o con Invio, *allora* la nota si apre al posto di quella aperta, già salvata, la card si chiude e testo e filtri si svuotano; se la colonna l'aveva aperta Ctrl + K si richiude, se era fissata o aperta a mano resta com'era (RB-06, RB-71, RB-72).
 - **CA-08.11** *Dato* la card aperta, *quando* premo Esc, *allora* la card si chiude senza aprire niente e la ricerca si svuota; se la colonna l'aveva aperta Ctrl + K si richiude e il cursore torna dov'era nel foglio (RB-71, RB-72).
 - **CA-08.12** *Dato* la card aperta, *quando* un risultato viene modificato o eliminato altrove (per esempio dalla sincronizzazione), *allora* i risultati restano quelli della ricerca e aprendolo si vede la versione aggiornata (RB-45, SF-20).
 - **CA-08.13** *Dato* il computer senza rete, *quando* cerco, *allora* la ricerca funziona come sempre (SF-08, DEC-02).
-- **CA-08.14** *Dato* il solo uso della tastiera, *allora* dal campo freccia giù entra nei risultati, su e giù si muovono, Invio apre, Tab raggiunge i filtri; un lettore di schermo annuncia il numero di risultati e legge titolo, cartella, data e «nel cestino» (CMP-13, RNF-04).
+- **CA-08.14** *Dato* il solo uso della tastiera, *allora* dal campo freccia giù entra nei risultati, su e giù si muovono, Invio apre, Tab raggiunge i filtri (CMP-13, RNF-04).
 - **CA-08.15** *Dato* un testo come `"a*" OR b`, *quando* lo cerco, *allora* non c'è nessun errore e si cercano quei caratteri così come sono (RB-08, DEC-95).
 - **CA-08.16** *Dato* una copia di lavoro con 5.000 note, *quando* scrivo nel campo, *allora* i risultati compaiono entro 200 ms dalla fine della pausa (RNF-01).
 

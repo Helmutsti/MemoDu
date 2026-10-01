@@ -376,7 +376,7 @@ Cancella per sempre tutti gli elementi del cestino.
 ---
 
 ## Tag e dettagli (frammento Must C)
-Comandi di DEC-51 per la finestra Dettagli (CMP-24, DEC-44). Valgono le regole generali delle note. L'oggetto Nota ha in più:
+Comandi di DEC-51 per la finestra Info (CMP-24, DEC-44). Valgono le regole generali delle note. L'oggetto Nota ha in più:
 
 ```json
 {

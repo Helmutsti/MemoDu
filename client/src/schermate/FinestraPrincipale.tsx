@@ -997,7 +997,7 @@ export function FinestraPrincipale(): ReactElement {
   const vociRiga = (riga: { id: string; cartella: Percorso; x: number; y: number }): VoceMenu[] => [
     {
       tipo: "voce",
-      etichetta: "Dettagli",
+      etichetta: "Info",
       icona: Info,
       azione: () => void apriDettagli(riga.id),
     },
@@ -1030,7 +1030,7 @@ export function FinestraPrincipale(): ReactElement {
       ? ([
           {
             tipo: "voce",
-            etichetta: "Dettagli",
+            etichetta: "Info",
             icona: Info,
             azione: () => aperta && void apriDettagli(aperta.id),
           },

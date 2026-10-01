@@ -39,7 +39,7 @@ beforeEach(() => {
 describe("CMP-24 Finestra dei dettagli", () => {
   it("mostra date, tag e cartella, con la data di creazione di sistema (CA-04.3, CA-04.5)", () => {
     apri();
-    const finestra = screen.getByRole("dialog", { name: "Dettagli di Budget 2026" });
+    const finestra = screen.getByRole("dialog", { name: "Info di Budget 2026" });
     expect(within(finestra).getByText("Creata il 12/09/2026 alle 10:14")).toBeInTheDocument();
     expect(within(finestra).getByText("Lavoro › Clienti")).toBeInTheDocument();
     expect(within(finestra).getByText("riunioni")).toBeInTheDocument();

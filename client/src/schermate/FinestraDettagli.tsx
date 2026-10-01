@@ -19,7 +19,7 @@ import "./FinestraDettagli.css";
 
 interface Proprieta {
   nota: Nota;
-  /** Titolo da mostrare sotto «Dettagli» (per le note senza titolo, le prime parole). */
+  /** Titolo da mostrare sotto «Info» (per le note senza titolo, le prime parole). */
   titolo: string;
   tutti: VoceTag[];
   onDettagli: (dati: DatiDettagli) => void;
@@ -149,12 +149,12 @@ export function FinestraDettagli(p: Proprieta): ReactElement {
         className="finestra-dettagli"
         role="dialog"
         aria-modal="true"
-        aria-label={`Dettagli di ${p.titolo}`}
+        aria-label={`Info di ${p.titolo}`}
         onKeyDown={suTasto}
       >
         <div className="dettagli-intestazione">
           <div className="dettagli-titoli">
-            <p className="interfaccia-titolo">Dettagli</p>
+            <p className="interfaccia-titolo">Info</p>
             <p className="dettagli-nota interfaccia-messaggio">{p.titolo}</p>
           </div>
           <PulsanteIcona nome="Chiudi" icona={<Icona di={X} />} onClick={p.onChiudi} />

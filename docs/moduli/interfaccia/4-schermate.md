@@ -13,7 +13,7 @@ Impostazione generale della Fase 4: **desktop-first**. Il pubblico della prima f
 ## SC-01 – Finestra principale
 **Flussi:** FL-01 · FL-02 · FL-05 · FL-06 · FL-09 · **Componenti:** vedi "Inventario dei componenti concettuali"
 
-- **Foglio unico (DEC-55):** niente barra del programma. In alto a destra ··· e i pulsanti della finestra _ [] X (su Windows disegnati da Memodu, su macOS i tre pallini del sistema su una barra trasparente); la finestra si trascina dalla fascia in alto di 32 px, trasparente: il testo le scorre sotto. Su Windows i comandi sono in due pillole flottanti separate, 8 px l'una dall'altra, alte 32 con pulsanti tondi da 24, a 8 px dal bordo in alto e da destra (DEC-60, DEC-62, DEC-63); compaiono con il mouse entro 48 px dal bordo in alto ed entro 240 px dal bordo destro, oppure con il menu ··· aperto o con il focus (DEC-61, provvisorio). Su macOS i comandi sono icone senza sfondo né pillola: la testata della colonna e il menu ··· sono allineati in altezza ai pallini nativi, con spazio dedicato a sinistra per non sovrapporsi; «| →» resta visibile mentre il puntatore è sul pulsante. La colonna ha tre stati: **chiusa** (non si vede; con il mouse entro 48 px dal bordo sinistro su Windows, entro 144 px su macOS per raggiungere il pulsante dopo i pallini nativi, o con il focus, compare «| →» in alto a sinistra), **aperta** (sopra il foglio, con `ombra-flottante`; «← |» o un clic sul foglio la richiudono, scegliere una nota non la chiude, DEC-56) e **fissata** (con la puntina: resta aperta e il foglio si sposta a destra; Memodu lo ricorda). Aperta o fissata, si allarga o si stringe trascinando il bordo destro, da 10 px fino a lasciare 48 px al foglio; il margine resta 16 ai due lati e sono le righe a stringersi, con i titoli che finiscono con «…» (DEC-87); doppio clic per tornare a 288 (DEC-62). Disegni: [Proposta · Foglio unico](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=70-1636).
+- **Foglio unico (DEC-55):** niente barra del programma. In alto a destra solo i pulsanti della finestra _ [] X (il ··· non c'è più: le azioni della nota stanno in Info, sotto il titolo del percorso, DEC-96) (su Windows disegnati da Memodu, su macOS i tre pallini del sistema su una barra trasparente); la finestra si trascina dalla fascia in alto di 32 px, trasparente: il testo le scorre sotto. Su Windows i pulsanti sono in una pillola flottante alta 32 con pulsanti tondi da 24, a 8 px dal bordo in alto e da destra (DEC-60, DEC-62, DEC-63; la pillola del ··· è tolta da DEC-96); compaiono con il mouse entro 48 px dal bordo in alto ed entro 240 px dal bordo destro, oppure con il focus (DEC-61, provvisorio). Su macOS i comandi sono icone senza sfondo né pillola: la testata della colonna è allineata in altezza ai pallini nativi, con spazio dedicato a sinistra per non sovrapporsi; «| →» resta visibile mentre il puntatore è sul pulsante. La colonna ha tre stati: **chiusa** (non si vede; con il mouse entro 48 px dal bordo sinistro su Windows, entro 144 px su macOS per raggiungere il pulsante dopo i pallini nativi, o con il focus, compare «| →» in alto a sinistra), **aperta** (sopra il foglio, con `ombra-flottante`; «← |» o un clic sul foglio la richiudono, scegliere una nota non la chiude, DEC-56) e **fissata** (con la puntina: resta aperta e il foglio si sposta a destra; Memodu lo ricorda). Aperta o fissata, si allarga o si stringe trascinando il bordo destro, da 10 px fino a lasciare 48 px al foglio; il margine resta 16 ai due lati e sono le righe a stringersi, con i titoli che finiscono con «…» (DEC-87); doppio clic per tornare a 288 (DEC-62). Disegni: [Proposta · Foglio unico](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=70-1636).
 
 - **Wireframe:** [stato pieno](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=7-2) · [stato vuoto](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=7-56) · [risultati di ricerca](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=14-2) · [finestra di conferma e avviso](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=14-91) · [non organizzate chiuse](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=21-2) · [menu della nota aperto](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=22-3) · [tasto destro su una cartella](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=30-186)
 - **Esportazioni:** `immagini/SC-01.png`, `immagini/SC-01-vuoto.png`, `immagini/SC-01-ricerca.png`, `immagini/SC-01-conferma.png`, `immagini/SC-01-sezione-chiusa.png`, `immagini/SC-01-menu.png`, `immagini/SC-01-tasto-destro-cartella.png`
@@ -44,25 +44,30 @@ Le **non organizzate stanno sopra le cartelle**: sono la posta in arrivo della s
 
 **Il Cestino è una riga fissa in fondo alla colonna sinistra** (DEC-40, che supera la scelta di tenerlo fuori dalla colonna), con l'icona e il numero di elementi: cliccandola il cestino (SC-04) si apre al posto della nota. Durante il trascinamento la riga lascia il posto al cestino di trascinamento.
 
-### Menu `···` in alto a destra (livello 20)
-Il pulsante si chiama «Altre azioni» (nome per i lettori di schermo e suggerimento).
+### Info della nota (livello 20, DEC-96)
+Un clic sul titolo nel percorso (CMP-26) apre Info (CMP-24, tipo Comparsa) sotto il titolo, senza velo: è l'unico punto per tutto ciò che riguarda la nota aperta. Il menu `···` in alto a destra non c'è più.
 
-L'unico menu della finestra. Ha solo le voci di questa nota: le impostazioni si aprono dalla riga in fondo alla colonna (DEC-91).
-
-| Parte | Voci |
+| Gruppo | Contenuto |
 |---|---|
-| Sopra: **questa nota** | Dettagli, Sposta in, Chiudi nota, Elimina (FL-04, RB-25, DEC-44, DEC-68). Chiudi nota (Ctrl + W, ⌘ + W su macOS, DEC-70) salva la nota e lascia l'area vuota con «Nessuna nota aperta», senza aprirne un'altra; una nota vuota sparisce (DEC-39). Le stesse voci, tranne Chiudi nota, nel tasto destro sulla nota nella colonna |
+| Titolo | Il campo del titolo: si rinomina qui (RB-15); una nota senza titolo ha il campo vuoto |
+| Date | Data di creazione (con quella di sistema sotto) e fine validità con il calendario; ultima modifica in sola lettura (RF-04) |
+| Tag | I tag con la ✕ e il campo «Aggiungi un tag» con i suggerimenti (RF-06) |
+| Cartella | Il percorso in sola lettura e «Sposta in…», che apre il pannello Sposta in (CMP-11) |
+| Azioni | Chiudi nota (Ctrl + W, ⌘ + W su macOS, DEC-70): salva la nota e lascia l'area vuota con «Nessuna nota aperta», senza aprirne un'altra; una nota vuota sparisce (DEC-39). Elimina: nel cestino (RB-26) |
 
-Senza una nota aperta (stato vuoto) il pulsante `···` non c'è.
+Ogni modifica vale subito. Si chiude con un clic fuori o con Esc. Senza una nota aperta (stato vuoto) il percorso, e quindi Info, non c'è.
 
 ### Tasto destro su una nota della colonna (livello 20)
-Sposta in… (apre il pannello Sposta in accanto alla nota) · Elimina (nel cestino, RB-26). La nota non si apre; se è quella aperta vale RB-66 o RB-67. Stesse azioni del menu `···`, senza Cestino, che non riguarda la nota. Scelta di Manuel Cucca, 28/09/2026.
+Info · Sposta in… (apre il pannello Sposta in accanto alla nota) · Elimina (nel cestino, RB-26) (DEC-96). La nota non si apre; se è quella aperta vale RB-66 o RB-67. **Info** apre la stessa Info come finestra al centro, livello 30 con il velo (CMP-24, tipo Finestra): in testa «Info» e la ✕, senza Chiudi nota perché la nota non è aperta.
 
 ### Tasto destro su una cartella (livello 20)
 Nuova nota qui (la nota nasce in quella cartella, RB-09), Nuova sottocartella, Rinomina, Elimina (nel cestino con il contenuto, RB-25, RB-26).
 
 ### Risultati di ricerca (livello 20)
-La card si apre sotto la ricerca appena si entra nel campo (RB-33) ed è più larga della colonna: copre l'area della nota senza velo, perché non blocca niente. In cima ci sono i filtri Tag, Creazione e Modifica (FL-06; niente Fine validità per ora, DEC-94); con il campo vuoto e nessun filtro la card mostra solo i filtri. Chiudendola, testo e filtri si svuotano (RB-72). Ogni risultato mostra il titolo, il punto del testo in cui compare la parola cercata, la cartella e la data. Le note nel cestino sono attenuate e hanno l'etichetta "nel cestino" (RB-29).
+La card si apre sotto la ricerca appena si entra nel campo (RB-33) ed è più larga della colonna: copre l'area della nota senza velo, perché non blocca niente. In cima ci sono i filtri Tag, Creazione e Modifica (FL-06; niente Fine validità per ora, DEC-94); con il campo vuoto e nessun filtro la card mostra solo i filtri. Chiudendola, testo e filtri si svuotano (RB-72). Ogni risultato mostra il titolo, il punto del testo in cui compare la parola cercata, la cartella e la data. Le note nel cestino sono attenuate e hanno l'etichetta "nel cestino" (RB-29). In fondo, con dei risultati, «Mostra tutti i risultati (n)» (Ctrl + Maiusc + K) apre la ricerca avanzata (DEC-96).
+
+### Ricerca avanzata (livello 30, DEC-96)
+Una finestra grande al centro con il velo (CMP-29), con lo stesso testo e gli stessi filtri della card: in alto il campo e la ✕, a sinistra i filtri sempre aperti (Tag, Creazione, Modifica, con le voci dei loro menu), a destra i risultati. Si apre da «Mostra tutti i risultati» o con Ctrl + Maiusc + K (⌘ + Maiusc + K), anche con la card chiusa; ogni scelta nei filtri vale subito; Invio o un clic su un risultato aprono la nota e chiudono la finestra; Esc, la ✕ o un clic sul velo chiudono.
 
 ### Finestre di conferma (livello 40)
 Sono al centro della finestra, con un velo sul resto. L'azione principale sta a destra, Annulla a sinistra. L'esempio disegnato è il nome di cartella già presente (RB-31). Un avviso di livello 50 resta visibile sopra il velo.
@@ -125,8 +130,8 @@ Vale per tutto il progetto. Non si usano numeri fuori da questa scala.
 |---|---|
 | 0 | Contenuto base: colonna sinistra, area della nota |
 | 10 | Elementi fissi: ricerca in cima alla colonna sinistra |
-| 20 | Menu a discesa, menu del tasto destro, suggerimenti dei tag, card dei risultati di ricerca, pannello impostazioni dell'immagine, pillola degli strumenti, menu di inserimento |
-| 30 | Overlay e drawer: finestra Dettagli della nota, con il velo (DEC-44); area di trascinamento; colonna sinistra come drawer sul web stretto (rinviato, ID-19) di un'immagine |
+| 20 | Menu a discesa, menu del tasto destro, suggerimenti dei tag, card dei risultati di ricerca, Info sotto il titolo (DEC-96), pannello impostazioni dell'immagine, pillola degli strumenti, menu di inserimento |
+| 30 | Overlay e drawer: Info al centro dal tasto destro e ricerca avanzata, con il velo (DEC-96); area di trascinamento; colonna sinistra come drawer sul web stretto (rinviato, ID-19) di un'immagine |
 | 40 | Finestre di conferma (svuota cestino, elimina tag) |
 | 50 | Avvisi (RB-40) |
 
@@ -134,7 +139,7 @@ Regole di comportamento:
 - **Mai due finestre di conferma sovrapposte.** Finché una è aperta, i comandi che ne aprirebbero un'altra non rispondono.
 - **Un avviso non viene mai coperto:** resta visibile anche sopra una finestra di conferma e non blocca l'interazione. Resta finché non viene visto (SF-31).
 - **Sotto un drawer o una finestra di conferma** il contenuto resta visibile ma non si può usare; `Esc` chiude l'elemento più in alto.
-- **Gli elementi di livello 20 aperti da dentro un overlay** (per esempio calendario e suggerimenti dei tag nella finestra Dettagli) stanno sopra l'overlay e si chiudono con lui. Scelta di Manuel Cucca il 29/09/2026.
+- **Gli elementi di livello 20 aperti da dentro un overlay** (per esempio calendario e suggerimenti dei tag nella finestra Info) stanno sopra l'overlay e si chiudono con lui. Scelta di Manuel Cucca il 29/09/2026.
 - **Gli elementi di livello 20 si chiudono** al clic fuori, con `Esc` o quando il contenuto sotto scorre.
 - **La finestra della nota rapida è una finestra di sistema:** sta fuori da questa scala e resta in primo piano rispetto agli altri programmi.
 
@@ -153,10 +158,10 @@ Elementi che si ripetono, notati disegnando i wireframe. Sono l'ingresso della F
 | Pillola degli strumenti | Una sola barra, sopra la selezione o il punto del clic: formattazione con testo selezionato, inserimento al clic sul vuoto | SC-03 |
 | Menu del tasto destro | Stesse azioni della barra e dell'albero, senza spostarsi (RF-11) | SC-01, SC-03 |
 | Campo di testo | Una riga di testo, con icona facoltativa a destra (es. calendario) | SC-03 |
-| Pannello a comparsa | Contenitore di livello 20 sotto il `···`: date, sposta in | SC-03 |
+| Pannello a comparsa | Contenitore di livello 20 accanto a «Sposta in…»: sposta in | SC-03 |
 | Date picker | Calendario per scegliere una data; si disegna in Fase 5 | SC-03 |
-| Menu `···` | Sopra le azioni sulla nota aperta, sotto quelle del programma (cestino, impostazioni) | SC-01, SC-03 |
-| Campo titolo | Titolo della nota, può restare vuoto (RB-15) | SC-03 |
+| Info | Tutto della nota: titolo, date, tag, cartella, Chiudi nota, Elimina; comparsa sotto il titolo o finestra dal tasto destro (DEC-96) | SC-01, SC-03 |
+| Campo titolo | Titolo della nota, in Info; può restare vuoto (RB-15) | SC-03 |
 | Immagine inline | Immagine nel testo, selezionabile, con il suo pannello impostazioni | SC-03 |
 | Avviso | Comunicazione non bloccante che resta finché non è vista (RB-40) | Tutte |
 | Finestra di conferma | Azioni non reversibili (svuota cestino, elimina tag) | SC-01, SC-04 |
@@ -191,19 +196,20 @@ flowchart LR
     Tr -- rilascio --> Img[SC-03 Immagine inserita e selezionata, o messaggio]
     SC01 -- clic su un'immagine --> Img
 
-    SC01 -- ··· --> Menu[Menu ···]
-    Menu -- Dettagli --> Dett[Finestra Dettagli: date, tag, cartella]
+    SC01 -- clic sul titolo --> Dett[Info: titolo, date, tag, cartella, Chiudi nota, Elimina]
+    Colonna -- tasto destro su una nota, Info --> Dett
     Dett -- scrivo un tag --> Tag[Suggerimenti dei tag]
     Tag -- tasto destro su un suggerimento --> TdTag[Elimina tag…] --> Conf[Conferma con il numero di note]
     Dett -- clic su una data --> Date[Calendario]
-    Menu -- Sposta in… --> Sposta[Pannello Sposta in]
+    Dett -- Sposta in… --> Sposta[Pannello Sposta in]
 
     SC01 -- scrivo nella ricerca --> Ric[Card dei risultati] -- apro un risultato --> SC01
+    Ric -- Mostra tutti i risultati --> Avz[Ricerca avanzata] -- apro un risultato --> SC01
 
     SC01 -- + di Cartelle --> NC[Nuova cartella nell'albero] -- nome già presente --> Dup[Tre scelte - RB-31]
     SC01 -- trascino una nota --> Tr2[Cartella evidenziata, cestino in fondo]
     SC01 -- trascino una cartella dentro sé stessa --> No[Nessun effetto - RB-24]
-    Menu -- Cestino --> SC04[SC-04 Cestino] -- Svuota cestino --> Conf2[Conferma] --> SC04v[Cestino vuoto]
+    Colonna -- riga Cestino --> SC04[SC-04 Cestino] -- Svuota cestino --> Conf2[Conferma] --> SC04v[Cestino vuoto]
     SC04 -- Ripristina --> SC01
     Colonna -- riga Impostazioni --> SC06[SC-06 Impostazioni]
 
