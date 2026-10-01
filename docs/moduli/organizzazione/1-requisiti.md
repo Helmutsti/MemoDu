@@ -24,7 +24,7 @@ Frammento Must B «Smistare» (DEC-36): cartelle come sottocartelle di Documenti
 - **CA-05.1** *Dato* l'albero con cartelle, sottocartelle e note, *quando* apro una cartella, *allora* compaiono prima le sottocartelle e poi le sue note, ognuna in ordine alfabetico senza distinguere maiuscole e minuscole, con il titolo delle note allineato al nome delle sottocartelle (RB-64, RB-65, CMP-14).
 - **CA-05.2** *Dato* l'albero, *allora* accanto a ogni cartella e alle Non organizzate c'è il numero di note contenute, sottocartelle comprese e senza quelle nel cestino, e si aggiorna subito dopo ogni spostamento o eliminazione (RB-56).
 - **CA-05.3** *Dato* una nota non organizzata, *quando* la trascino su una cartella, *allora* durante il trascinamento la cartella si evidenzia, al rilascio la nota esce dalle non organizzate e compare nella cartella, e sul disco il file è nella sottocartella con lo stesso nome (FL-05, DEC-36).
-- **CA-05.4** *Dato* una nota aperta, *quando* scelgo «Sposta in…» dal menu `···` e poi una cartella o «Non organizzate», *allora* la nota si sposta, resta aperta, e nella colonna la cartella di destinazione si apre con la nota selezionata; nel pannello la cartella attuale ha la spunta e scrivendo nel campo l'albero si filtra (RB-66, CMP-11).
+- **CA-05.4** *Dato* una nota aperta, *quando* scelgo «Sposta in…» in Info (o dal tasto destro sulla nota) e poi una cartella o «Non organizzate», *allora* la nota si sposta, resta aperta, e nella colonna la cartella di destinazione si apre con la nota selezionata; nel pannello la cartella attuale ha la spunta e scrivendo nel campo l'albero si filtra (RB-66, CMP-11).
 - **CA-05.5** *Dato* l'albero, *quando* premo il + delle Cartelle o «Nuova sottocartella» dal tasto destro su una cartella, *allora* compare al suo posto in ordine alfabetico il campo con «Nuova cartella» selezionato (con un numero se esiste già); Invio crea la cartella con il nome scritto, Esc la annulla e non nasce niente (RB-48).
 - **CA-05.6** *Dato* una cartella, *quando* scelgo «Rinomina» dal tasto destro o premo F2 e confermo con Invio, *allora* la cartella cambia nome in Memodu e nel database; Esc riporta il nome di prima; i caratteri vietati (`< > : " / \ | ? *`) diventano `-` senza avvisi (RB-48, RB-63).
 - **CA-05.7** *Dato* un nome che nella destinazione esiste già, anche con maiuscole diverse, *quando* creo, rinomino o sposto una cartella, *allora* compare la finestra «Esiste già «‹nome›» in ‹cartella›» con Annulla (nessuna modifica), Unisci (il contenuto si unisce e per ogni sottocartella omonima la finestra ricompare) e Aggiungi un numero («‹nome› (2)») (RB-23, RB-31, SF-19).
@@ -53,14 +53,14 @@ Come *utente* voglio assegnare tag alle note per raggrupparle in modo trasversal
 Condiviso con RF-04 e RF-05: vedi lo scenario di RF-05.
 
 ### Criteri di accettazione
-Frammento Must C (DEC-41, DEC-44): i tag si modificano nella finestra Info; trovare le note per tag arriva con la ricerca (RF-08). Criteri approvati da Manuel Cucca il 29/09/2026.
+Frammento Must C (DEC-41, DEC-44): i tag si modificano in Info (DEC-96); trovare le note per tag arriva con la ricerca (RF-08). Criteri approvati da Manuel Cucca il 29/09/2026.
 
-- **CA-06.1** *Dato* la finestra Info, *quando* scrivo nel campo «Aggiungi un tag», *allora* sopra la finestra compaiono i tag esistenti che contengono il testo e «Crea il tag «…»» se non esiste; con Invio o un clic il tag si assegna e compare nella finestra e sotto il titolo (RB-17).
+- **CA-06.1** *Dato* Info, *quando* scrivo nel campo «Aggiungi un tag», *allora* sopra Info compaiono i tag esistenti che contengono il testo e «Crea il tag «…»» se non esiste; con Invio o un clic il tag si assegna e compare in Info (RB-17).
 - **CA-06.2** *Dato* il tag «lavoro», *quando* scrivo «Lavoro/Clienti», *allora* si usa «lavoro» e sotto nasce «Clienti» (RB-18, RB-22).
 - **CA-06.3** *Dato* un tag della nota, *quando* premo la sua ✕, *allora* il tag esce dalla nota e resta tra i suggerimenti (RB-49).
 - **CA-06.4** *Dato* un tag tra i suggerimenti, *quando* scelgo «Elimina tag…» dal tasto destro, *allora* compare «Eliminare il tag «…»?» con il numero di note; confermando il tag e i suoi sotto-tag spariscono da tutte le note, Annulla non cambia niente (RB-19). Con una sola nota: «Lo usa 1 nota: resterà intatta, solo senza questo tag.»; con nessuna: «Nessuna nota lo usa.»; sempre seguiti da «Vengono eliminati anche i suoi sotto-tag.» (confermato il 29/09/2026).
 - **CA-06.5** *Dato* il campo dei tag, *allora* spazi, accenti ed emoji sono ammessi, i `/` all'inizio, alla fine o doppi si correggono da soli e un nome vuoto non crea niente (RB-22).
-- **CA-06.6** *Dato* il solo uso della tastiera, *allora* Tab raggiunge i tag e Canc o Backspace toglie quello in focus (CMP-05); nel campo le frecce scorrono i suggerimenti, Invio sceglie, Esc chiude prima i suggerimenti e poi la finestra.
+- **CA-06.6** *Dato* il solo uso della tastiera, *allora* Tab raggiunge i tag e Canc o Backspace toglie quello in focus (CMP-05); nel campo le frecce scorrono i suggerimenti, Invio sceglie, Esc chiude prima i suggerimenti e poi Info.
 
 ---
 
@@ -82,7 +82,7 @@ Sistemando l'albero elimino per errore la cartella "Clienti", con dentro note e 
 ### Criteri di accettazione
 Frammento Must B «Smistare» (DEC-36): cestino nella cartella nascosta `.cestino`; dal frammento Must D è nel database (DEC-48). Le note nel cestino nella ricerca (RB-29) arrivano con la ricerca (RF-08).
 
-- **CA-15.1** *Dato* una nota aperta, *quando* scelgo «Elimina» dal menu `···`, *allora* la nota va nel cestino senza conferma, sparisce dalla colonna e l'area della nota mostra «Nessuna nota aperta» (RB-26, RB-67).
+- **CA-15.1** *Dato* una nota aperta, *quando* scelgo «Elimina» in Info (o dal tasto destro sulla nota), *allora* la nota va nel cestino senza conferma, sparisce dalla colonna e l'area della nota mostra «Nessuna nota aperta» (RB-26, RB-67).
 - **CA-15.2** *Dato* una cartella, *quando* scelgo «Elimina» dal tasto destro, *allora* va nel cestino con tutte le note e le sottocartelle, senza conferma; se dentro c'era la nota aperta, l'area della nota mostra lo stato vuoto (RB-25, RB-67).
 - **CA-15.3** *Dato* un trascinamento di una nota o di una cartella, *allora* in fondo alla colonna compare «Trascina qui per eliminare»; sopra diventa rosso con «Rilascia per spostare nel cestino», e al rilascio l'elemento va nel cestino (CMP-14, RB-25, RB-26).
 - **CA-15.4** *Dato* il cestino con elementi, *quando* lo apro dalla riga «Cestino» in fondo alla colonna, che ne mostra il numero di elementi (DEC-40), *allora* vedo gli elementi dal più recente, ognuno con nome, tipo, provenienza e data («Nota · da Lavoro › Clienti · eliminata il 24/09/2026»), Ripristina ed Elimina definitivamente (SC-04, CMP-17).
@@ -150,6 +150,13 @@ Scritti dall'agente da FL-06, DEC-94 e DEC-95; approvati da Manuel Cucca il 30/0
 - **CA-08.14** *Dato* il solo uso della tastiera, *allora* dal campo freccia giù entra nei risultati, su e giù si muovono, Invio apre, Tab raggiunge i filtri (CMP-13, RNF-04).
 - **CA-08.15** *Dato* un testo come `"a*" OR b`, *quando* lo cerco, *allora* non c'è nessun errore e si cercano quei caratteri così come sono (RB-08, DEC-95).
 - **CA-08.16** *Dato* una copia di lavoro con 5.000 note, *quando* scrivo nel campo, *allora* i risultati compaiono entro 200 ms dalla fine della pausa (RNF-01).
+
+Ricerca avanzata (DEC-96, CMP-29): scritti dall'agente e approvati da Manuel Cucca il 01/10/2026.
+- **CA-08.17** *Dato* la card con dei risultati, *allora* in fondo c'è «Mostra tutti i risultati (n)», con n il numero di note trovate; *quando* la scelgo o premo Ctrl + Maiusc + K (⌘ + Maiusc + K su macOS), *allora* la card si chiude e al centro, con il velo, si apre la ricerca avanzata con lo stesso testo e gli stessi filtri. Con la card chiusa Ctrl + Maiusc + K la apre vuota, con il cursore nel campo.
+- **CA-08.18** *Dato* la ricerca avanzata, *allora* a sinistra i filtri Tag, Creazione e Modifica sono sempre aperti, con le voci dei loro menu; *quando* spunto dei tag o scelgo un periodo, *allora* i risultati cambiano subito: con più tag escono le note che li hanno tutti (come CA-08.5), per le date vale un periodo solo e «Scegli le date…» apre il calendario (come CA-08.7).
+- **CA-08.19** *Dato* la ricerca avanzata, *allora* a destra il conteggio (««rilascio» con il tag lavoro · 4 note») e i risultati con lo stesso ordine e le stesse regole della card (CA-08.2, CA-08.9); senza risultati «Nessuna nota trovata» e il suggerimento (CA-08.8).
+- **CA-08.20** *Dato* dei risultati nella ricerca avanzata, *quando* ne apro uno con un clic o con Invio, *allora* la finestra si chiude e la nota si apre come in CA-08.10, con testo e filtri svuotati; *quando* premo Esc, la ✕ o clicco sul velo, *allora* la finestra si chiude senza aprire niente e torna la card con lo stesso testo e gli stessi filtri, con il cursore nel campo.
+- **CA-08.21** *Dato* il solo uso della tastiera, *allora* all'apertura il cursore è nel campo; freccia giù entra nei risultati, su e giù si muovono, Invio apre; Tab passa dal campo ai filtri e ai risultati, e nei filtri Invio o Spazio sceglie una voce (CMP-29, RNF-04).
 
 ---
 
