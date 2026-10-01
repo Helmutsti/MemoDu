@@ -13,6 +13,7 @@ import { Calendar, CircleAlert, Plus, Trash2, X } from "lucide-react";
 import { useEffect, useId, useRef, useState, type ReactElement } from "react";
 import { createPortal } from "react-dom";
 import type { DatiDettagli, Nota, VoceTag } from "@memodu/condiviso";
+import { AreaScorrevole } from "../componenti/AreaScorrevole";
 import { Calendario } from "../componenti/Calendario";
 import { FinestraConferma } from "../componenti/FinestraConferma";
 import { Icona } from "../componenti/Icona";
@@ -200,120 +201,124 @@ export function Info(p: Proprieta): ReactElement {
       style={posizione}
       onKeyDown={suTasto}
     >
-      <div className="info-corpo">
-        {!comparsa && (
-          <div className="info-intestazione">
-            <p className="interfaccia-titolo">Info</p>
-            <PulsanteIcona nome="Chiudi" icona={<Icona di={X} />} onClick={p.onChiudi} />
-          </div>
-        )}
-
-        <label className="info-blocco">
-          <span className="interfaccia-controllo">Titolo</span>
-          <input
-            className="info-campo interfaccia-controllo"
-            placeholder="Senza titolo"
-            value={titolo}
-            onChange={(e) => {
-              setTitolo(e.target.value);
-              p.onTitolo(e.target.value);
-            }}
-            onKeyDown={(e) => {
-              // Invio conferma il titolo e chiude, come Esc: si torna a scrivere.
-              if (e.key === "Enter") {
-                e.preventDefault();
-                p.onChiudi();
-              }
-            }}
-          />
-        </label>
-
-        <div className="info-gruppo">
-          <p className="info-titolo-gruppo interfaccia-titolo-gruppo">Date</p>
-          <RigaData
-            etichetta="Data di creazione"
-            descrizione={testoCreata(p.nota.creata)}
-            valore={p.nota.creataScelta}
-            vuoto={scriviGiorno(p.nota.creata.slice(0, 10))}
-            onCambia={(giorno) => p.onDettagli({ creataScelta: giorno })}
-          />
-          <RigaData
-            etichetta="Fine validità"
-            descrizione="Solo un promemoria: alla scadenza non succede nulla"
-            valore={p.nota.fineValidita}
-            vuoto="Nessuna"
-            onCambia={(giorno) => p.onDettagli({ fineValidita: giorno })}
-          />
-          <p className="info-tenue interfaccia-dettaglio">
-            Ultima modifica: {testoModificata(p.nota.modificata).replace("Modificata ", "")}
-          </p>
-        </div>
-
-        <div className="info-gruppo info-gruppo-stretto">
-          <p className="info-titolo-gruppo interfaccia-titolo-gruppo">Tag</p>
-          {p.nota.tag.length > 0 && (
-            <div className="info-tag">
-              {p.nota.tag.map((nome) => (
-                <Tag
-                  key={nome}
-                  nome={nome}
-                  onTogli={() => {
-                    p.onTogliTag(nome);
-                    campoTag.current?.focus();
-                  }}
-                />
-              ))}
+      <AreaScorrevole className="info-scorrimento">
+        <div className="info-corpo">
+          {!comparsa && (
+            <div className="info-intestazione">
+              <p className="interfaccia-titolo">Info</p>
+              <PulsanteIcona nome="Chiudi" icona={<Icona di={X} />} onClick={p.onChiudi} />
             </div>
           )}
-          <input
-            ref={campoTag}
-            className="info-campo interfaccia-controllo"
-            aria-label="Aggiungi un tag"
-            placeholder="Aggiungi un tag"
-            value={testoTag}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && cercato && !mostraSuggerimenti) {
-                e.preventDefault();
-                p.onAggiungiTag(cercato);
-                setTestoTag("");
-              }
-            }}
-            onChange={(e) => {
-              setTestoTag(e.target.value);
-              setRettangoloCampo(e.currentTarget.getBoundingClientRect());
-              setSuggerimentiChiusi(false);
-            }}
-          />
-        </div>
 
-        <div className="info-gruppo info-gruppo-stretto">
-          <p className="info-titolo-gruppo interfaccia-titolo-gruppo">Cartella</p>
-          <div className="info-cartella">
-            <span className="interfaccia-controllo">
-              {p.nota.cartella === "" ? "Non organizzata" : p.nota.cartella.split("/").join(" › ")}
-            </span>
-            <Pulsante
-              tipo="tenue"
-              onClick={(e) => p.onSpostaIn(e.currentTarget.getBoundingClientRect())}
-            >
-              Sposta in…
-            </Pulsante>
+          <label className="info-blocco">
+            <span className="interfaccia-controllo">Titolo</span>
+            <input
+              className="info-campo interfaccia-controllo"
+              placeholder="Senza titolo"
+              value={titolo}
+              onChange={(e) => {
+                setTitolo(e.target.value);
+                p.onTitolo(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                // Invio conferma il titolo e chiude, come Esc: si torna a scrivere.
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  p.onChiudi();
+                }
+              }}
+            />
+          </label>
+
+          <div className="info-gruppo">
+            <p className="info-titolo-gruppo interfaccia-titolo-gruppo">Date</p>
+            <RigaData
+              etichetta="Data di creazione"
+              descrizione={testoCreata(p.nota.creata)}
+              valore={p.nota.creataScelta}
+              vuoto={scriviGiorno(p.nota.creata.slice(0, 10))}
+              onCambia={(giorno) => p.onDettagli({ creataScelta: giorno })}
+            />
+            <RigaData
+              etichetta="Fine validità"
+              descrizione="Solo un promemoria: alla scadenza non succede nulla"
+              valore={p.nota.fineValidita}
+              vuoto="Nessuna"
+              onCambia={(giorno) => p.onDettagli({ fineValidita: giorno })}
+            />
+            <p className="info-tenue interfaccia-dettaglio">
+              Ultima modifica: {testoModificata(p.nota.modificata).replace("Modificata ", "")}
+            </p>
+          </div>
+
+          <div className="info-gruppo info-gruppo-stretto">
+            <p className="info-titolo-gruppo interfaccia-titolo-gruppo">Tag</p>
+            {p.nota.tag.length > 0 && (
+              <div className="info-tag">
+                {p.nota.tag.map((nome) => (
+                  <Tag
+                    key={nome}
+                    nome={nome}
+                    onTogli={() => {
+                      p.onTogliTag(nome);
+                      campoTag.current?.focus();
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+            <input
+              ref={campoTag}
+              className="info-campo interfaccia-controllo"
+              aria-label="Aggiungi un tag"
+              placeholder="Aggiungi un tag"
+              value={testoTag}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && cercato && !mostraSuggerimenti) {
+                  e.preventDefault();
+                  p.onAggiungiTag(cercato);
+                  setTestoTag("");
+                }
+              }}
+              onChange={(e) => {
+                setTestoTag(e.target.value);
+                setRettangoloCampo(e.currentTarget.getBoundingClientRect());
+                setSuggerimentiChiusi(false);
+              }}
+            />
+          </div>
+
+          <div className="info-gruppo info-gruppo-stretto">
+            <p className="info-titolo-gruppo interfaccia-titolo-gruppo">Cartella</p>
+            <div className="info-cartella">
+              <span className="interfaccia-controllo">
+                {p.nota.cartella === ""
+                  ? "Non organizzata"
+                  : p.nota.cartella.split("/").join(" › ")}
+              </span>
+              <Pulsante
+                tipo="tenue"
+                onClick={(e) => p.onSpostaIn(e.currentTarget.getBoundingClientRect())}
+              >
+                Sposta in…
+              </Pulsante>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="menu-separatore" role="separator" />
-      <div className="info-azioni">
-        {comparsa && p.onChiudiNota && (
-          <VoceAzione
-            etichetta="Chiudi nota"
-            icona={X}
-            scorciatoia={`${SU_MAC ? "⌘" : "Ctrl"} + W`}
-            onClick={p.onChiudiNota}
-          />
-        )}
-        <VoceAzione etichetta="Elimina" icona={Trash2} errore onClick={p.onElimina} />
-      </div>
+        <div className="menu-separatore" role="separator" />
+        <div className="info-azioni">
+          {comparsa && p.onChiudiNota && (
+            <VoceAzione
+              etichetta="Chiudi nota"
+              icona={X}
+              scorciatoia={`${SU_MAC ? "⌘" : "Ctrl"} + W`}
+              onClick={p.onChiudiNota}
+            />
+          )}
+          <VoceAzione etichetta="Elimina" icona={Trash2} errore onClick={p.onElimina} />
+        </div>
+      </AreaScorrevole>
     </div>
   );
 
@@ -329,6 +334,8 @@ export function Info(p: Proprieta): ReactElement {
           onMouseDown={(e) => {
             if (e.target !== e.currentTarget || menuTag || daEliminare) return;
             if (finestra.current?.querySelector(".info-data-aperta")) return;
+            // Il clic non porta il focus sulla pagina: torna dove era prima di Info.
+            e.preventDefault();
             p.onChiudi();
           }}
         >

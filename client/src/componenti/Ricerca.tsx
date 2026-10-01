@@ -35,6 +35,7 @@ import {
   type Periodo,
 } from "../ricerca";
 import { SU_MAC } from "../finestra";
+import { AreaScorrevole } from "./AreaScorrevole";
 import { Calendario } from "./Calendario";
 import { Icona } from "./Icona";
 import { Menu, type VoceMenu } from "./Menu";
@@ -445,41 +446,43 @@ export function Ricerca({
                     </span>
                   </div>
                 ) : (
-                  <ul
-                    id={idElenco}
-                    className="card-ricerca-elenco"
-                    role="listbox"
-                    aria-label="Note trovate"
-                  >
-                    {mostrati.map((r) => {
-                      const [prima, parola, dopo] = divisioneEstratto(r);
-                      return (
-                        <li
-                          key={r.id}
-                          role="option"
-                          aria-selected={false}
-                          tabIndex={-1}
-                          className={`risultato-ricerca ${r.nelCestino ? "risultato-ricerca-cestino" : ""}`}
-                          onClick={() => apri(r)}
-                        >
-                          <span className="risultato-ricerca-titolo interfaccia-titolo">
-                            {r.titolo}
-                          </span>
-                          <span className="risultato-ricerca-estratto interfaccia-controllo">
-                            {prima}
-                            {parola && <span className="risultato-ricerca-parola">{parola}</span>}
-                            {dopo}
-                          </span>
-                          <span className="risultato-ricerca-dettagli interfaccia-dettaglio">
-                            {dettagliRisultato(r)}
-                            {r.nelCestino && (
-                              <span className="risultato-ricerca-etichetta">nel cestino</span>
-                            )}
-                          </span>
-                        </li>
-                      );
-                    })}
-                  </ul>
+                  <AreaScorrevole className="card-ricerca-scorrimento">
+                    <ul
+                      id={idElenco}
+                      className="card-ricerca-elenco"
+                      role="listbox"
+                      aria-label="Note trovate"
+                    >
+                      {mostrati.map((r) => {
+                        const [prima, parola, dopo] = divisioneEstratto(r);
+                        return (
+                          <li
+                            key={r.id}
+                            role="option"
+                            aria-selected={false}
+                            tabIndex={-1}
+                            className={`risultato-ricerca ${r.nelCestino ? "risultato-ricerca-cestino" : ""}`}
+                            onClick={() => apri(r)}
+                          >
+                            <span className="risultato-ricerca-titolo interfaccia-titolo">
+                              {r.titolo}
+                            </span>
+                            <span className="risultato-ricerca-estratto interfaccia-controllo">
+                              {prima}
+                              {parola && <span className="risultato-ricerca-parola">{parola}</span>}
+                              {dopo}
+                            </span>
+                            <span className="risultato-ricerca-dettagli interfaccia-dettaglio">
+                              {dettagliRisultato(r)}
+                              {r.nelCestino && (
+                                <span className="risultato-ricerca-etichetta">nel cestino</span>
+                              )}
+                            </span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </AreaScorrevole>
                 )}
                 {mostrati.length > 0 && (
                   <>

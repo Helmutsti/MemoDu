@@ -21,6 +21,7 @@ import {
   stessoPeriodo,
   type Periodo,
 } from "../ricerca";
+import { AreaScorrevole } from "./AreaScorrevole";
 import { Calendario } from "./Calendario";
 import { Icona } from "./Icona";
 import { PulsanteIcona } from "./Pulsante";
@@ -168,7 +169,10 @@ export function RicercaAvanzata(p: Proprieta): ReactElement {
     <div
       className="velo velo-overlay"
       onMouseDown={(e) => {
-        if (e.target === e.currentTarget && !calendario) p.onChiudi();
+        if (e.target !== e.currentTarget || calendario) return;
+        // Il clic non porta il focus sulla pagina: torna nel campo della card.
+        e.preventDefault();
+        p.onChiudi();
       }}
     >
       <div
@@ -209,79 +213,83 @@ export function RicercaAvanzata(p: Proprieta): ReactElement {
           <PulsanteIcona nome="Chiudi" icona={<Icona di={X} />} onClick={p.onChiudi} />
         </div>
         <div className="ricerca-avanzata-corpo">
-          <div className="filtri-avanzati" role="group" aria-label="Filtri">
-            <div className="filtri-avanzati-gruppo" role="group" aria-label="Tag">
-              <p className="filtri-avanzati-titolo interfaccia-titolo-gruppo">Tag</p>
-              {p.tuttiTag.map((nome) => {
-                const scelto = p.tag.some((t) => t.toLowerCase() === nome.toLowerCase());
-                return voce(
-                  nome,
-                  scelto,
-                  () =>
-                    p.onTag(
-                      scelto
-                        ? p.tag.filter((t) => t.toLowerCase() !== nome.toLowerCase())
-                        : [...p.tag, nome],
-                    ),
-                  "checkbox",
-                );
-              })}
-            </div>
-            {gruppoData("Creazione", "creata")}
-            {gruppoData("Modifica", "modificata")}
-          </div>
-          <div className="risultati-avanzati">
-            <p
-              id="ricerca-avanzata-conteggio"
-              className="risultati-avanzati-conteggio interfaccia-messaggio"
-              aria-live="polite"
-            >
-              {p.risultati === null
-                ? "Scrivi una parola o scegli un filtro."
-                : conteggio(p.testo, p.tag, n)}
-            </p>
-            {p.risultati !== null && n === 0 ? (
-              <div className="card-ricerca-vuota">
-                <span className="interfaccia-titolo">Nessuna nota trovata</span>
-                <span className="interfaccia-controllo">
-                  Prova con un&apos;altra parola o togli un filtro.
-                </span>
+          <AreaScorrevole className="filtri-avanzati">
+            <div className="filtri-avanzati-contenuto" role="group" aria-label="Filtri">
+              <div className="filtri-avanzati-gruppo" role="group" aria-label="Tag">
+                <p className="filtri-avanzati-titolo interfaccia-titolo-gruppo">Tag</p>
+                {p.tuttiTag.map((nome) => {
+                  const scelto = p.tag.some((t) => t.toLowerCase() === nome.toLowerCase());
+                  return voce(
+                    nome,
+                    scelto,
+                    () =>
+                      p.onTag(
+                        scelto
+                          ? p.tag.filter((t) => t.toLowerCase() !== nome.toLowerCase())
+                          : [...p.tag, nome],
+                      ),
+                    "checkbox",
+                  );
+                })}
               </div>
-            ) : (
-              p.risultati !== null && (
-                <ul className="card-ricerca-elenco" role="listbox" aria-label="Note trovate">
-                  {p.risultati.map((r) => {
-                    const [prima, parola, dopo] = divisioneEstratto(r);
-                    return (
-                      <li
-                        key={r.id}
-                        role="option"
-                        aria-selected={false}
-                        tabIndex={-1}
-                        className={`risultato-ricerca risultato-avanzata ${r.nelCestino ? "risultato-ricerca-cestino" : ""}`}
-                        onClick={() => p.onApri(r)}
-                      >
-                        <span className="risultato-ricerca-titolo interfaccia-titolo">
-                          {r.titolo}
-                        </span>
-                        <span className="risultato-ricerca-estratto interfaccia-controllo">
-                          {prima}
-                          {parola && <span className="risultato-ricerca-parola">{parola}</span>}
-                          {dopo}
-                        </span>
-                        <span className="risultato-ricerca-dettagli interfaccia-dettaglio">
-                          {dettagliRisultato(r)}
-                          {r.nelCestino && (
-                            <span className="risultato-ricerca-etichetta">nel cestino</span>
-                          )}
-                        </span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )
-            )}
-          </div>
+              {gruppoData("Creazione", "creata")}
+              {gruppoData("Modifica", "modificata")}
+            </div>
+          </AreaScorrevole>
+          <AreaScorrevole className="risultati-avanzati">
+            <div className="risultati-avanzati-contenuto">
+              <p
+                id="ricerca-avanzata-conteggio"
+                className="risultati-avanzati-conteggio interfaccia-messaggio"
+                aria-live="polite"
+              >
+                {p.risultati === null
+                  ? "Scrivi una parola o scegli un filtro."
+                  : conteggio(p.testo, p.tag, n)}
+              </p>
+              {p.risultati !== null && n === 0 ? (
+                <div className="card-ricerca-vuota">
+                  <span className="interfaccia-titolo">Nessuna nota trovata</span>
+                  <span className="interfaccia-controllo">
+                    Prova con un&apos;altra parola o togli un filtro.
+                  </span>
+                </div>
+              ) : (
+                p.risultati !== null && (
+                  <ul className="card-ricerca-elenco" role="listbox" aria-label="Note trovate">
+                    {p.risultati.map((r) => {
+                      const [prima, parola, dopo] = divisioneEstratto(r);
+                      return (
+                        <li
+                          key={r.id}
+                          role="option"
+                          aria-selected={false}
+                          tabIndex={-1}
+                          className={`risultato-ricerca risultato-avanzata ${r.nelCestino ? "risultato-ricerca-cestino" : ""}`}
+                          onClick={() => p.onApri(r)}
+                        >
+                          <span className="risultato-ricerca-titolo interfaccia-titolo">
+                            {r.titolo}
+                          </span>
+                          <span className="risultato-ricerca-estratto interfaccia-controllo">
+                            {prima}
+                            {parola && <span className="risultato-ricerca-parola">{parola}</span>}
+                            {dopo}
+                          </span>
+                          <span className="risultato-ricerca-dettagli interfaccia-dettaglio">
+                            {dettagliRisultato(r)}
+                            {r.nelCestino && (
+                              <span className="risultato-ricerca-etichetta">nel cestino</span>
+                            )}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )
+              )}
+            </div>
+          </AreaScorrevole>
         </div>
       </div>
       {calendario && (

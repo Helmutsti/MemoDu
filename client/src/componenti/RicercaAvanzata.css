@@ -40,13 +40,15 @@
   min-height: 0;
 }
 
-/* Filtri sempre aperti, larghi 260, con un divisore verticale. */
+/* Filtri sempre aperti, larghi 260, con un divisore verticale; filtri e risultati scorrono
+   con la barra della libreria (DEC-89). */
 .filtri-avanzati {
   flex: none;
   width: 260px;
-  overflow-y: auto;
-  padding: var(--spazio-flottante);
   border-right: 1px solid var(--bordo-divisore);
+}
+.filtri-avanzati-contenuto {
+  padding: var(--spazio-flottante);
 }
 .filtri-avanzati-gruppo + .filtri-avanzati-gruppo {
   margin-top: var(--spazio-blocco);
@@ -63,7 +65,8 @@
 .risultati-avanzati {
   flex: 1;
   min-width: 0;
-  overflow-y: auto;
+}
+.risultati-avanzati-contenuto {
   padding: var(--spazio-controllo) var(--spazio-blocco);
 }
 .risultati-avanzati-conteggio {

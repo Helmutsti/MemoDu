@@ -98,11 +98,13 @@
   outline-offset: var(--focus-distanza);
 }
 
-/* Risultati: tutti, per pertinenza, la card scorre (RB-34). */
+/* Risultati: tutti, per pertinenza, la card scorre (RB-34) con la barra della libreria (DEC-89). */
+.card-ricerca-scorrimento {
+  flex: 1 1 auto;
+}
 .card-ricerca-elenco {
   margin: 0;
   padding: 0 var(--spazio-flottante);
-  overflow-y: auto;
   list-style: none;
 }
 .risultato-ricerca {

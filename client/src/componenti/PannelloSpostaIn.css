@@ -1,8 +1,13 @@
 /* CMP-11 Sposta in: stesso aspetto del menu (CMP-09), contenuti rientrati di 8 dai lati. */
 .pannello-sposta {
+  display: flex;
+  flex-direction: column;
   width: 236px;
   max-height: 60vh;
-  overflow-y: auto;
+}
+/* L'elenco scorre con la barra della libreria (DEC-89). */
+.pannello-sposta-scorrimento {
+  flex: 1 1 auto;
 }
 
 .pannello-sposta-ricerca {

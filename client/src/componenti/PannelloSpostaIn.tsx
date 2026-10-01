@@ -15,6 +15,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import type { Cartella, Percorso } from "@memodu/condiviso";
+import { AreaScorrevole } from "./AreaScorrevole";
 import { Icona } from "./Icona";
 import "./Menu.css";
 import "./PannelloSpostaIn.css";
@@ -186,47 +187,49 @@ export function PannelloSpostaIn({
         />
       </div>
       <div className="menu-separatore" role="separator" />
-      <ul id={idElenco} className="pannello-sposta-elenco" role="listbox" aria-label="Cartelle">
-        {voci.map((voce, i) => (
-          <li
-            key={voce.percorso || "radice"}
-            id={idVoce(i)}
-            role="option"
-            aria-selected={i === indice}
-            aria-current={voce.percorso === attuale ? "true" : undefined}
-            className={`voce-menu ${i === indice ? "voce-menu-evidenziata" : ""}`}
-            onMouseEnter={() => setAttiva(i)}
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={() => onScegli(voce.percorso)}
-          >
-            <span
-              className="voce-menu-riga interfaccia-controllo"
-              style={{ paddingLeft: `calc(var(--spazio-controllo) + ${voce.livello * 16}px)` }}
+      <AreaScorrevole className="pannello-sposta-scorrimento">
+        <ul id={idElenco} className="pannello-sposta-elenco" role="listbox" aria-label="Cartelle">
+          {voci.map((voce, i) => (
+            <li
+              key={voce.percorso || "radice"}
+              id={idVoce(i)}
+              role="option"
+              aria-selected={i === indice}
+              aria-current={voce.percorso === attuale ? "true" : undefined}
+              className={`voce-menu ${i === indice ? "voce-menu-evidenziata" : ""}`}
+              onMouseEnter={() => setAttiva(i)}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => onScegli(voce.percorso)}
             >
               <span
-                className="voce-menu-icona"
-                onClick={(e) => {
-                  if (!voce.haFigli || filtro !== "") return;
-                  e.stopPropagation();
-                  apriChiudi(voce.percorso);
-                }}
+                className="voce-menu-riga interfaccia-controllo"
+                style={{ paddingLeft: `calc(var(--spazio-controllo) + ${voce.livello * 16}px)` }}
               >
-                {voce.haFigli ? (
-                  <Icona di={voce.aperta ? ChevronDown : ChevronRight} />
-                ) : (
-                  <span className="pannello-sposta-vuoto" />
+                <span
+                  className="voce-menu-icona"
+                  onClick={(e) => {
+                    if (!voce.haFigli || filtro !== "") return;
+                    e.stopPropagation();
+                    apriChiudi(voce.percorso);
+                  }}
+                >
+                  {voce.haFigli ? (
+                    <Icona di={voce.aperta ? ChevronDown : ChevronRight} />
+                  ) : (
+                    <span className="pannello-sposta-vuoto" />
+                  )}
+                </span>
+                <span className="voce-menu-etichetta">{voce.nome}</span>
+                {voce.percorso === attuale && (
+                  <span className="voce-menu-icona" aria-label="attuale">
+                    <Icona di={Check} />
+                  </span>
                 )}
               </span>
-              <span className="voce-menu-etichetta">{voce.nome}</span>
-              {voce.percorso === attuale && (
-                <span className="voce-menu-icona" aria-label="attuale">
-                  <Icona di={Check} />
-                </span>
-              )}
-            </span>
-          </li>
-        ))}
-      </ul>
+            </li>
+          ))}
+        </ul>
+      </AreaScorrevole>
     </div>,
     document.body,
   );

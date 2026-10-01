@@ -31,6 +31,7 @@ import type {
   Nota,
   Percorso,
   SeEsiste,
+  VoceElenco,
   VoceTag,
 } from "@memodu/condiviso";
 import { anteprima } from "@memodu/condiviso";
@@ -97,6 +98,18 @@ const catena = (percorso: Percorso) =>
   percorso === "" ? [] : percorso.split("/").map((_, i, parti) => parti.slice(0, i + 1).join("/"));
 
 /** Cerca una cartella nell'albero. */
+/** L'albero con il titolo nuovo di una nota, per mostrarlo subito nella colonna (CA-04.7). */
+function conTitolo(albero: Albero, id: string, titolo: string): Albero {
+  const voci = (note: VoceElenco[]) => note.map((v) => (v.id === id ? { ...v, titolo } : v));
+  const cartelle = (elenco: Cartella[]): Cartella[] =>
+    elenco.map((c) => ({ ...c, note: voci(c.note), cartelle: cartelle(c.cartelle) }));
+  return {
+    ...albero,
+    nonOrganizzate: { ...albero.nonOrganizzate, note: voci(albero.nonOrganizzate.note) },
+    cartelle: cartelle(albero.cartelle),
+  };
+}
+
 function trova(cartelle: Cartella[], percorso: Percorso): Cartella | undefined {
   for (const c of cartelle) {
     if (stesso(c.percorso, percorso)) return c;
@@ -980,6 +993,7 @@ export function FinestraPrincipale(): ReactElement {
       await ricarica().catch(() => setBloccata(true));
   };
   const cambiaTitolo = (id: string, titolo: string) => {
+    setAlbero((a) => a && conTitolo(a, id, titolo));
     if (apertaAttuale.current?.id === id) {
       coda.modifica(id, { titolo });
       setAperta((a) => (a && a.id === id ? { ...a, titolo } : a));
