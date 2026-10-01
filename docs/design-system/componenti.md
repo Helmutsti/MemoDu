@@ -198,7 +198,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 
 ### Varianti e dimensioni
 - **Normale:** solo il testo.
-- **Ricerca:** icona cerca a sinistra; quando è compilata compare ✕ per cancellare.
+- **Ricerca:** icona cerca a sinistra; quando è compilata compare ✕ per cancellare. Proprietà **Mostra scorciatoia**, spenta di base: accesa solo nel campo della colonna, mostra a destra «Ctrl + K» (⌘ + K su macOS) in Interfaccia/Dettaglio e `testo-tenue` finché il campo è vuoto (DEC-101).
 - **Password:** il valore si vede come pallini; l'icona a occhio a destra lo mostra e lo nasconde. Serve al modulo di accesso (CMP-22), progettato ma non attivo (DEC-19).
 - **Con icona:** icona a destra (di default il calendario), che apre la scelta alternativa. Proprietà **Icona** per cambiarla.
 - **Campo della scorciatoia** (SC-06, RB-52): è un campo normale con testi suoi ("Nessuna scorciatoia", al focus "Premi i tasti…"). Non scrive testo ma registra la prima combinazione premuta, che diventa il valore (es. "Ctrl + Alt + N"). Non è una variante: l'aspetto è lo stesso, cambia solo il comportamento.

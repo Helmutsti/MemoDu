@@ -1,5 +1,6 @@
-/* CMP-03 Campo di testo, tipo Ricerca: pillola alta 32 su sfondo-campo, lente a sinistra e ✕
-   a destra quando c'è del testo. In cima alla colonna, largo quanto lei. */
+/* CMP-03 Campo di testo, tipo Ricerca: pillola alta 32 su sfondo-campo, lente a sinistra e, a
+   destra, la scorciatoia Ctrl + K a campo vuoto (DEC-101) o la ✕ quando c'è del testo. In cima
+   alla colonna, largo quanto lei. */
 .ricerca {
   position: relative;
   display: flex;
@@ -31,6 +32,12 @@
 :root[data-tastiera] .ricerca-campo:focus-visible {
   outline: var(--focus-spessore) solid var(--focus-anello);
   outline-offset: var(--focus-distanza);
+}
+.ricerca-scorciatoia {
+  position: absolute;
+  right: var(--spazio-controllo);
+  color: var(--testo-tenue);
+  pointer-events: none;
 }
 .ricerca-cancella {
   position: absolute;

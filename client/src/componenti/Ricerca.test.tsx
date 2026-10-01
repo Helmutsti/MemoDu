@@ -65,6 +65,15 @@ beforeEach(() => {
 });
 
 describe("Ricerca (RF-08, CMP-13)", () => {
+  it("a campo vuoto mostra la scorciatoia Ctrl + K; scrivendo lascia il posto alla ✕ (DEC-101)", async () => {
+    disegna();
+    expect(campo()).toHaveAttribute("aria-keyshortcuts", "Control+K");
+    expect(screen.getByText("Ctrl + K")).toBeInTheDocument();
+    await userEvent.type(campo(), "ril");
+    expect(screen.queryByText("Ctrl + K")).toBeNull();
+    expect(screen.getByRole("button", { name: "Cancella la ricerca" })).toBeInTheDocument();
+  });
+
   it("entrando nel campo la card mostra solo i filtri (CA-08.1)", async () => {
     disegna();
     await userEvent.click(campo());

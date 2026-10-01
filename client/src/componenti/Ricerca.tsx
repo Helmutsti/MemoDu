@@ -383,6 +383,7 @@ export function Ricerca({
         className="ricerca-campo interfaccia-controllo"
         placeholder="Cerca nelle note"
         aria-label="Cerca nelle note"
+        aria-keyshortcuts={SU_MAC ? "Meta+K" : "Control+K"}
         role="combobox"
         aria-expanded={aperta}
         aria-controls={idElenco}
@@ -396,6 +397,13 @@ export function Ricerca({
         }}
         onKeyDown={suTastoCampo}
       />
+      {/* A campo vuoto, a destra la scorciatoia che porta qui (DEC-101); scrivendo lascia il
+          posto alla ✕. */}
+      {testo === "" && (
+        <span className="ricerca-scorciatoia interfaccia-dettaglio" aria-hidden="true">
+          {SU_MAC ? "⌘ + K" : "Ctrl + K"}
+        </span>
+      )}
       {testo !== "" && (
         <button
           type="button"
