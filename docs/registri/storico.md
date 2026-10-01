@@ -385,3 +385,6 @@
 | 01/10/2026 | Manuel Cucca | Tolta dalla libreria la «Finestra delle info (superata)» di DEC-44, sostituita da Info (CMP-24) | DEC-96 |
 | 01/10/2026 | Agente IA | Mockup allineati alla libreria di DEC-98: righe di Info senza spazi ai lati, «Ctrl + K» solo nel campo della colonna; 7 esportazioni rifatte | DEC-98 |
 | 01/10/2026 | Agente IA | Righe di Info senza ritaglio in libreria (l'icona sul bordo arrotondato si tagliava); mockup allineati, 5 esportazioni rifatte | DEC-98 |
+| 01/10/2026 | Manuel Cucca | Nella colonna l'icona della cartella chiusa o aperta al posto della freccia (CMP-06, CMP-14); anche in Sposta in (CMP-11); nuova icona cartella aperta (CMP-02); libreria e `componenti.md` allineati | DEC-99 |
+| 01/10/2026 | Manuel Cucca | Spazi dal ruolo del contenitore: elenco 8, pannello 16, finestra 24; token `spazio-elenco`, `spazio-pannello`, `spazio-rientro` (24); icona e testo a 8 ovunque; ogni riga è una pillola con 12 dentro; distanze dal ruolo; `tokens.md` e regola generale in `componenti.md` | DEC-100 |
+| 01/10/2026 | Agente IA | Mockup allineati alla libreria di DEC-99 e DEC-100: 192 istanze aggiornate in SC-01, SC-03, SC-04 e SC-06 (cartelle con l'icona, righe a 12, rientro 24, Info e ricerca avanzata a 16); calendario e suggerimenti di Info rimessi sotto la loro riga; 50 esportazioni rifatte | DEC-99, DEC-100 |

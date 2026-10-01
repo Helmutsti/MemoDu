@@ -1,6 +1,6 @@
 # DEC-98 – Righe di Info senza spazi ai lati
 
-**Data:** 2026-10-01 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-10-01 · **Stato:** Superata da DEC-100 · **Idea di origine:** —
 
 ## Contesto
 Con DEC-97 le righe di Info (cartella, creazione, fine validità, tag), «Modificata» e l'intestazione della Finestra avevano `spazio-controllo` (12) ai lati, dentro il margine di 8 del contenitore. Manuel Cucca ha notato che in CMP-24 questi pezzi interni, insieme al contenitore, fanno un doppio margine.

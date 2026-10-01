@@ -91,9 +91,10 @@ I primitivi `spazio-4` … `spazio-48` (4, 8, 12, 16, 24, 32, 48) non si usano d
 | `spazio-pulsante` | 16 | Margine interno orizzontale del pulsante |
 | `spazio-blocco` | 16 | Tra blocchi: paragrafi della nota, titolo e metadati, campi di un modulo, gruppi di un pannello, testo e controllo di una riga di impostazione |
 | `spazio-gruppo` | 24 | Tra sezioni e gruppi: sezioni della colonna, intestazione e testo della nota, margine dello stato vuoto |
-| `spazio-flottante` | 8 | Margine di tutti i contenitori flottanti (menu, pannelli, calendario, card, Info, ricerca avanzata), su tutti i lati, e distanza tra i loro blocchi (DEC-97) |
-| `spazio-contenitore` | 16 | Bordo della colonna e degli avvisi |
-| `spazio-finestra` | 24 | Bordo delle finestre di conferma |
+| `spazio-elenco` | 8 | Margine dei contenitori di ruolo **elenco**, su tutti i lati: menu, suggerimenti, Sposta in, card dei risultati, calendario. Le pillole stanno concentriche con gli angoli (20 − 8 = 12). Prima `spazio-flottante` (DEC-100) |
+| `spazio-pannello` | 16 | Margine dei contenitori di ruolo **pannello**, su tutti i lati: Info, colonna, avvisi, ricerca avanzata. Prima `spazio-contenitore` (DEC-100) |
+| `spazio-finestra` | 24 | Margine dei contenitori di ruolo **finestra**: le finestre di conferma, al centro con il velo (DEC-100) |
+| `spazio-rientro` | 24 | Rientro di un livello nell'albero (colonna e Sposta in): icona 16 + `spazio-icona` 8, così l'icona della sottocartella parte sotto il nome della madre (DEC-100) |
 
 **Di componente:** `interruttore-margine-spento` (4) e `interruttore-margine-acceso` (2, con il primitivo `spazio-2`): centrano il pallino da 8 o 12 nel binario alto 16. Sono geometria del componente, non spazi tra elementi.
 

@@ -47,12 +47,47 @@ L'anello `focus-anello` degli stati Focus si vede solo mentre ci si muove con la
 ### Forma dell'evidenziazione
 Tutto ciò che è alto una riga ha la pillola (regola 1). I blocchi su più righe dentro un contenitore (risultati della ricerca, elementi del cestino, righe di impostazione) hanno il rettangolo con `raggio-interno` (12), concentrico al contenitore (20 − 8 di margine): una pillola alta più righe diventerebbe un ovale.
 
-### Spazi dei contenitori (DEC-97)
-Due regole, uguali in tutti i componenti, nella libreria e nel codice:
-1. **Il contenitore flottante** (menu, pannello, calendario, card dei risultati, Info, ricerca avanzata) ha `spazio-flottante` (8) su tutti i lati e tra i blocchi. I pezzi dentro non hanno margini propri e riempiono la larghezza; anche i divisori stanno dentro il margine, rientrati di 8.
-2. **La riga a pillola** (voce di menu, campo, risultato) ha `spazio-controllo` (12) a sinistra e a destra, solo dentro la pillola. Le righe di Info non sono pillole e non hanno spazi ai lati (DEC-98).
+### Spazi dei contenitori (DEC-100)
+Il margine di un contenitore dipende dal suo **ruolo**, non dal componente né dal fatto che galleggi:
 
-Così in ogni contenitore le pillole stanno a 8 dal bordo e il loro testo parte a 20. Un pezzo che sembra stretto o largo si corregge con queste regole, non con un margine suo. Prima di mostrare un componente si misurano da script le distanze dal bordo, sopra, sotto e ai lati. Da guardare con le stesse regole: CMP-06, CMP-15, CMP-17 e la freccia del pulsante diviso (CMP-01).
+| Ruolo | Quando | Margine su tutti i lati | Distanze dentro |
+|---|---|---|---|
+| **Elenco** | Ogni riga si evidenzia ed è il contenuto: menu, suggerimenti, Sposta in, card dei risultati, calendario | `spazio-elenco` (8): le pillole sono concentriche con gli angoli (20 − 8 = 12) | Voci attaccate (0): l'evidenziazione passa da una all'altra |
+| **Pannello** | Contenuto da leggere e modificare: Info, colonna, avvisi, ricerca avanzata | `spazio-pannello` (16) | Righe a `spazio-elemento` (4), così le pillole non si toccano; blocchi a `spazio-blocco` (16) |
+| **Finestra** | Un messaggio che interrompe, al centro con il velo: finestre di conferma | `spazio-finestra` (24) | Come il pannello |
+
+- **Ogni riga è una pillola alta 32 con `spazio-controllo` (12) dentro**, interattiva o no: righe della colonna, cartelle comprese; righe di Info, «Modificata», intestazione; voci, campi. Il 12 non è un margine in più ma l'anatomia della riga: in un pannello tutto parte a 28 dal bordo (16 + 12), in un elenco a 20 (8 + 12).
+- **Un contenitore misto** prende il margine del suo ruolo; un elenco dentro un pannello (le voci in fondo a Info, i filtri della ricerca avanzata) è un blocco a tutta larghezza, senza margine suo.
+- **Albero:** rientro di `spazio-rientro` (24) per livello, uguale a icona 16 + `spazio-icona` 8: l'icona di una sottocartella parte sotto il nome della cartella che la contiene, e i nomi dello stesso livello, note e cartelle, sono allineati.
+- Nessun pezzo prende un margine suo per allargarsi o stringersi; prima di mostrare un componente si misurano da script le distanze dal bordo, sopra, sotto e ai lati.
+
+### Come si decidono padding e gap (DEC-100)
+Il **padding** appartiene a chi ha un **bordo** (fondo, contorno, evidenziazione o raggio); il **gap** appartiene alla **relazione** tra due pezzi vicini. Per ogni pezzo, tre domande in quest'ordine:
+1. **Ha un bordo?** No: niente padding, sta dove lo mette il suo contenitore. Sì: il padding del suo ruolo.
+2. **Che ruolo ha il contenitore?** Elenco, pannello o finestra: ne viene il margine (tabella sopra).
+3. **Che legame c'è tra i pezzi vicini?** Ne viene il gap, dalla scala qui sotto.
+
+| Chi ha il bordo | Padding |
+|---|---|
+| Pillola alta 32 (riga, voce, campo) | `spazio-controllo` 12, ai lati |
+| Pillola alta 24 (tag, filtro, segmento) | `spazio-controllo-piccolo` 8, ai lati |
+| Pulsante | `spazio-pulsante` 16, ai lati |
+| Contenitore elenco · pannello · finestra | `spazio-elenco` 8 · `spazio-pannello` 16 · `spazio-finestra` 24, su tutti i lati |
+
+| Legame tra pezzi vicini | Esempio | Gap |
+|---|---|---|
+| Condividono un'evidenziazione che scorre | voci di un menu | 0 |
+| Stessa cosa, ripetuta | righe della colonna e di Info, tag | `spazio-elemento` 4 |
+| Pezzi diversi che si leggono come uno | icona e testo, titolo e descrizione | `spazio-icona` 8 (`spazio-icona-piccola` 4 nei controlli alti 24) |
+| Blocchi diversi dello stesso contenitore | titolo, righe e voci di Info | `spazio-blocco` 16 |
+| Sezioni con un titolo proprio | «Non organizzate» e «Cartelle» | `spazio-gruppo` 24 |
+
+Controlli:
+- **Fuori non meno che dentro:** in un contenitore il gap tra i blocchi non supera il suo margine (pannello: 16 e 16), così si legge come un'unità. Le pillole fanno eccezione: le separa il loro fondo, non lo spazio.
+- **Al massimo due spazi tra il bordo e il primo testo:** quello del contenitore e quello della pillola (16 + 12 = 28); un terzo è di troppo.
+- **I bordi si allineano ai bordi, i contenuti ai contenuti:** pillole, campi e pulsanti stanno sul margine del contenitore; testi e icone partono dopo il padding della pillola.
+- **Il padding non serve ad allineare:** due pezzi si allineano perché hanno la stessa anatomia.
+- **Si misura:** prima di mostrare un componente si leggono da script le distanze dal bordo e tra i blocchi e si confrontano con queste tabelle.
 
 ### Superfici su cui compare ogni componente
 Ogni componente si verifica su tutte le superfici in cui può comparire, in chiaro e in scuro (regola visiva 11, tabella "Fondi dei controlli sulle superfici" in `tokens.md`). I componenti flottanti hanno la propria superficie, `sfondo-flottante`, e si staccano dal resto con l'ombra.
@@ -134,7 +169,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 - Variante **Dimensione**: 12, 16 (default, `misura-icona`), 20 e 24 px. Il tratto resta 1,5 (`tratto-icona`) a tutte le dimensioni, così le icone piccole non diventano sottili e le grandi non diventano pesanti.
 - Ogni icona è un set di componenti `Icona/<nome>` con la fonte Lucide nella descrizione. Nei componenti si scambia con la proprietà Icona e si sceglie la dimensione con la variante, senza ridimensionare l'istanza.
 - Le icone restano fatte di più tracciati, come in Lucide. Se in un'istanza si cambia icona dopo averla colorata, il colore non passa alla nuova: si ricolorano tutti i tracciati insieme (in Figma, dal pannello "Colori della selezione").
-- Primo nucleo: **più** (`plus`), **altro** (`ellipsis`), **caricamento** (`loader-circle`), **cerca** (`search`), **calendario** (`calendar`), **chiudi** (`x`), **errore** (`circle-alert`), **freccia destra** (`chevron-right`), **freccia giù** (`chevron-down`), **titolo** (`heading-1`), **sottotitolo** (`heading-2`), **elenco puntato** (`list`), **elenco numerato** (`list-ordered`), **checklist** (`list-checks`), **immagine** (`image`), **elimina** (`trash-2`), **tag** (`tag`), **sposta** (`folder-input`), **impostazioni** (`settings`), **grassetto** (`bold`), **corsivo** (`italic`), **sottolineato** (`underline`), **barrato** (`strikethrough`), **spunta** (`check`), **freccia sinistra** (`chevron-left`), **cartella** (`folder`), **nota** (`file-text`), **avviso** (`triangle-alert`), **informazione** (`info`), **mostra** (`eye`), **rinomina** (`pencil`), **taglia** (`scissors`), **copia** (`copy`), **incolla** (`clipboard`), **apri colonna** (`panel-left-open`), **chiudi colonna** (`panel-left-close`) e **puntina** (`pin`) per la colonna del foglio unico (DEC-55), **maiusc** (`arrow-big-up`) e **invio** (`corner-down-left`) per la scorciatoia di Chiudi nella nota rapida (DEC-65). Le altre si aggiungono quando servono ai componenti.
+- Primo nucleo: **più** (`plus`), **altro** (`ellipsis`), **caricamento** (`loader-circle`), **cerca** (`search`), **calendario** (`calendar`), **chiudi** (`x`), **errore** (`circle-alert`), **freccia destra** (`chevron-right`), **freccia giù** (`chevron-down`), **titolo** (`heading-1`), **sottotitolo** (`heading-2`), **elenco puntato** (`list`), **elenco numerato** (`list-ordered`), **checklist** (`list-checks`), **immagine** (`image`), **elimina** (`trash-2`), **tag** (`tag`), **sposta** (`folder-input`), **impostazioni** (`settings`), **grassetto** (`bold`), **corsivo** (`italic`), **sottolineato** (`underline`), **barrato** (`strikethrough`), **spunta** (`check`), **freccia sinistra** (`chevron-left`), **cartella** (`folder`), **cartella aperta** (`folder-open`, per la colonna, DEC-99), **nota** (`file-text`), **avviso** (`triangle-alert`), **informazione** (`info`), **mostra** (`eye`), **rinomina** (`pencil`), **taglia** (`scissors`), **copia** (`copy`), **incolla** (`clipboard`), **apri colonna** (`panel-left-open`), **chiudi colonna** (`panel-left-close`) e **puntina** (`pin`) per la colonna del foglio unico (DEC-55), **maiusc** (`arrow-big-up`) e **invio** (`corner-down-left`) per la scorciatoia di Chiudi nella nota rapida (DEC-65). Le altre si aggiungono quando servono ai componenti.
 
 ### Stati
 | Stato | Descrizione |
@@ -269,11 +304,11 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 
 ### Varianti e dimensioni
 - **Nota:** solo il titolo, in `testo-primario`, margine 12. Una nota senza titolo mostra "Nota vuota" in `testo-tenue` (RB-15).
-- **Cartella chiusa / aperta:** freccia ▸ o ▾ (16 px), nome e, a destra, il numero di note che contiene, sottocartelle comprese (Interfaccia/Dettaglio in `testo-tenue`; primario in hover, su pieno se selezionata; RB-56, ID-15). Margine 8. Niente icona di cartella: la direzione C tiene la colonna pulita (DEC-12).
+- **Cartella chiusa / aperta:** icona della cartella chiusa (`folder`) o aperta (`folder-open`), 16 px in `icona-tenue`, al posto della freccia (DEC-99), nome e, a destra, il numero di note che contiene, sottocartelle comprese (Interfaccia/Dettaglio in `testo-tenue`; primario in hover, su pieno se selezionata; RB-56, ID-15). Margine 8. Le note restano senza icona: la cartella basta a dividerle (DEC-99).
 - **Sezione aperta / chiusa:** freccia di 12 px, titolo in Interfaccia/Titolo di sezione (maiuscolo Semi Bold, spaziatura 6%) in `testo-tenue`, il numero di note e il + per creare (nuova nota o nuova cartella). Il numero si mostra per Non organizzate; nel titolo Cartelle si nasconde.
-- Alta 32 (`misura-riga`), pillola, distanza 4 tra freccia e testo. Il testo troppo lungo finisce con i puntini.
+- Alta 32 (`misura-riga`), pillola con `spazio-controllo` (12) ai lati (`spazio-controllo-piccolo`, 8, a destra nei titoli di sezione, che finiscono con il +), `spazio-icona` (8) tra icona (o freccia) e testo (DEC-100). Il testo troppo lungo finisce con i puntini.
 - **Tra una riga e l'altra**, e tra il titolo della sezione e la prima riga: `spazio-elemento` (4), così le pillole dell'hover e della selezione non si toccano.
-- **Rientro:** per le sottocartelle si mostra il livello "rientro" e lo si allarga di 16 px per ogni livello.
+- **Rientro:** `spazio-rientro` (24) per ogni livello (DEC-100).
 - **Cestino** (DEC-40): icona `trash-2` (16) al posto della freccia, «Cestino» e il numero di elementi nel cestino; fissa in fondo alla colonna. Hover e Selezionata come le altre righe (selezionata quando il cestino è aperto).
 - **Impostazioni** (DEC-91): come il cestino, sotto di lui, con l'icona `settings` e «Impostazioni», senza numero; selezionata quando la pagina delle impostazioni è aperta.
 
@@ -293,10 +328,10 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 ### Accessibilità
 - **Tastiera:** frecce su e giù per passare da una riga all'altra; freccia destra apre una cartella chiusa, freccia sinistra la chiude; Invio apre la nota o chiude e riapre la sezione. Il + è un pulsante raggiungibile con Tab.
 - **Lettori di schermo:** la colonna è un albero: le cartelle hanno lo stato aperta o chiusa e il livello; la nota aperta è "selezionata". Il + ha un nome ("Nuova nota", "Nuova cartella").
-- **Contrasti:** testo primario ≥ 12,49:1 su colonna e hover; etichetta della sezione in `testo-tenue` su `sfondo-colonna` 4,99:1 in chiaro e 6,53:1 in scuro; frecce e contorno del trascinamento ≥ 3:1.
+- **Contrasti:** testo primario ≥ 12,49:1 su colonna e hover; etichetta della sezione in `testo-tenue` su `sfondo-colonna` 4,99:1 in chiaro e 6,53:1 in scuro; frecce, icone e contorno del trascinamento ≥ 3:1.
 
 ### Esempi
-- ✅ Corretto: "Lavoro" con la freccia ▾ e, sotto, "Clienti" con 16 px di rientro.
+- ✅ Corretto: "Lavoro" con la cartella aperta e, sotto, "Clienti" con la cartella chiusa e 24 px di rientro: l'icona di "Clienti" sotto il nome "Lavoro".
 - ❌ Scorretto: usare il grigio tenue per il titolo di una nota in hover.
 
 ---
@@ -378,8 +413,8 @@ Compare e sparisce con `movimento-durata-breve` (120 ms). Compare dopo 500 ms di
 **Quando non usarlo:** per una sola azione (pulsante, CMP-01) o per scegliere una data o una cartella (pannello a comparsa, CMP-11). Eccezione: il menu della freccia del pulsante diviso può avere una sola voce (Apri nel programma in SC-02, DEC-34).
 
 ### Varianti e dimensioni
-- Contenitore `sfondo-flottante`, `raggio-contenitore` (20), margine `spazio-flottante` (8) su tutti i lati (DEC-97), `ombra-flottante`, livello 20 (`z-comparsa`). Largo 236 negli esempi; si allarga fino alla voce più lunga.
-- La pillola dell'evidenziazione sta a 8 px dai lati (margine del menu); i divisori stanno dentro lo stesso margine e sono leggeri (`bordo-divisore-tenue`) (DEC-97, prima da lato a lato). Scelta tra sei alternative (divisori rientrati o da lato a lato, pieni o leggeri; margine 8 o 12; pillola, rettangolo con raggio 12 o fascia a tutta larghezza): la pillola resta per coerenza con colonna, pulsanti e tag.
+- Contenitore `sfondo-flottante`, `raggio-contenitore` (20), margine `spazio-elenco` (8) su tutti i lati (ruolo elenco, DEC-100), `ombra-flottante`, livello 20 (`z-comparsa`). Largo 236 negli esempi; si allarga fino alla voce più lunga.
+- La pillola dell'evidenziazione sta a 8 px dai lati (margine del menu); i divisori stanno dentro lo stesso margine e sono leggeri (`bordo-divisore-tenue`) (DEC-100, prima da lato a lato). Scelta tra sei alternative (divisori rientrati o da lato a lato, pieni o leggeri; margine 8 o 12; pillola, rettangolo con raggio 12 o fascia a tutta larghezza): la pillola resta per coerenza con colonna, pulsanti e tag.
 - **Icone:** tutte le voci dei menu di azioni (nota, cartella, testo, inserimento) hanno la loro icona, così i testi restano allineati ed Elimina si riconosce anche dal cestino, non solo dal rosso. Le liste di valori (suggerimenti dei tag, filtri) restano senza: sono nomi o periodi, non azioni; fa eccezione Crea il tag con il +. Scelta tra cinque alternative (nessuna icona, icone su tutte, solo Elimina a sinistra, a destra o con spazio riservato); il confronto resta nella pagina Prove.
 - **Nota** (tasto destro su una nota della colonna, anche non aperta): Info (informazione, apre CMP-24 come finestra al centro), Sposta in… (sposta) · Elimina (elimina) (DEC-96). Il menu `···` della nota aperta non c'è più: le sue voci stanno in Info, sotto il titolo del percorso (DEC-96). Il Cestino non è nel menu: si apre dalla riga in fondo alla colonna (DEC-40).
 - **Cartella** (tasto destro): Nuova nota qui (nota), Nuova sottocartella (cartella), Rinomina (rinomina) · Elimina (elimina).
@@ -459,9 +494,9 @@ Compare con `movimento-durata-breve` (120 ms) e `movimento-spostamento` (4 px). 
 **Quando non usarlo:** per una scelta tra poche azioni (menu, CMP-09) o per chiedere conferma (finestra di conferma, CMP-16).
 
 ### Varianti e dimensioni
-- **Stesso aspetto del menu** (CMP-09), pur restando un componente separato: `sfondo-flottante`, `raggio-contenitore` (20), `ombra-flottante`, livello 20, largo 236, margine `spazio-flottante` (8) su tutti i lati (DEC-97). Si apre sotto il pulsante «Sposta in…» di Info o accanto alla nota del tasto destro (DEC-96).
+- **Stesso aspetto del menu** (CMP-09), pur restando un componente separato: `sfondo-flottante`, `raggio-contenitore` (20), `ombra-flottante`, livello 20, largo 236, margine `spazio-elenco` (8) su tutti i lati (DEC-97). Si apre sotto il pulsante «Sposta in…» di Info o accanto alla nota del tasto destro (DEC-96).
 - **Date** (FL-04): "Data di creazione" e "Fine validità" con etichetta Interfaccia/Etichetta in `testo-tenue` e campo con il calendario (CMP-03, con icona). Etichette e note partono a 12 px, allineate al testo dei campi, come il testo delle voci di menu. Sotto la data di creazione, in Interfaccia/Dettaglio, quella di sistema, che non cambia (RB-21). Nessun avviso sulle combinazioni di date (RB-20).
-- **Sposta in**: campo di ricerca ("Cerca una cartella"), divisore da lato a lato, poi le cartelle come **voci di menu** (CMP-07): la freccia ▸/▾ al posto dell'icona e 16 px di rientro per livello. "Non organizzate" (la radice) lascia vuoto lo spazio della freccia, così i nomi restano allineati. La **cartella attuale** ha la spunta a destra (`check`), non la pillola scura: nel menu la pillola indica l'hover. Eccezione nota ai token: il rientro delle sottocartelle si ottiene allargando il margine della voce (12 + 16 = 28 px per il primo livello), un valore senza token proprio.
+- **Sposta in**: campo di ricerca ("Cerca una cartella"), divisore da lato a lato, poi le cartelle come **voci di menu** (CMP-07): come icona la cartella chiusa (`folder`) o aperta (`folder-open`), come nella colonna (DEC-99), e `spazio-rientro` (24) per livello, come nella colonna (DEC-100). Un clic sull'icona di una cartella con sottocartelle la apre o la chiude; un clic sul resto della voce la sceglie. "Non organizzate" (la radice) lascia vuoto lo spazio dell'icona, così i nomi restano allineati. La **cartella attuale** ha la spunta a destra (`check`), non la pillola scura: nel menu la pillola indica l'hover. Eccezione nota ai token: il rientro delle sottocartelle si ottiene allargando il margine della voce (12 + 16 = 28 px per il primo livello), un valore senza token proprio.
 
 ### Stati
 | Stato | Descrizione |
@@ -493,7 +528,7 @@ Si chiude con Esc, con un clic fuori o (Sposta in) scegliendo una cartella. Comp
 **Quando non usarlo:** da solo, senza campo: la data si può sempre anche scrivere.
 
 ### Varianti e dimensioni
-- Stesso guscio di menu e pannello: `sfondo-flottante`, `raggio-contenitore` (20), `ombra-flottante`, livello 20, margine `spazio-flottante` (8) su tutti i lati (DEC-97). Largo **240** invece di 236: 7 giorni da 32 px richiedono 224 px di contenuto.
+- Stesso guscio di menu e pannello: `sfondo-flottante`, `raggio-contenitore` (20), `ombra-flottante`, livello 20, margine `spazio-elenco` (8) su tutti i lati (ruolo elenco, DEC-100). Largo **240** invece di 236: 7 giorni da 32 px richiedono 224 px di contenuto.
 - **Intestazione:** mese e anno (Interfaccia/Titolo) e due pulsanti solo icona ‹ › (CMP-01) per il mese precedente e successivo.
 - **Giorni della settimana:** L M M G V S D, dal lunedì, in Interfaccia/Etichetta `testo-tenue`.
 - **Giorni:** sempre 6 righe, così l'altezza non cambia da un mese all'altro. Ogni giorno è un cerchio di 32 × 32 (parte interna "Giorno del calendario").
@@ -533,7 +568,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 **Quando non usarlo:** per scegliere una cartella (Sposta in, CMP-11) o per suggerire tag (menu dei tag, CMP-09).
 
 ### Varianti e dimensioni
-- Stesso guscio del menu: `sfondo-flottante`, raggio 20, ombra, livello 20, margine `spazio-flottante` (8) su tutti i lati (DEC-97). Larga **480**, più della colonna: copre la nota senza velo, perché non blocca niente.
+- Stesso guscio del menu: `sfondo-flottante`, raggio 20, ombra, livello 20, margine `spazio-elenco` (8) su tutti i lati (ruolo elenco, DEC-100). Larga **480**, più della colonna: copre la nota senza velo, perché non blocca niente.
 - **Filtri** in cima: Tag, Creazione, Modifica (FL-06; Fine validità per ora non c'è, DEC-94). Con il campo vuoto e nessun filtro la card mostra solo la fila dei filtri (RB-33). Ognuno è una pillola alta 24 come il tag, con una freccia giù, 8 px tra l'una e l'altra, 12 px sopra e sotto la fila. Apre un menu (CMP-09, filtro tag o filtro data) 8 px sotto la pillola. Attivo: pieno scuro con il valore ("Tag: lavoro"; con più tag, "Tag: 2").
 - Divisore da lato a lato, poi i **risultati** per pertinenza (RB-34), tutti, scorrendo la card: titolo (Interfaccia/Titolo), la frase in cui compare la parola con la parola in `testo-primario` Medium, cartella e data (Interfaccia/Dettaglio).
 - **Nel cestino:** titolo e frase attenuati, etichetta "nel cestino" (RB-29); non compaiono se la preferenza li esclude.
@@ -571,8 +606,8 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 **Quando non usarlo:** per scegliere una cartella in un pannello (Sposta in, CMP-11, che usa le voci di menu).
 
 ### Varianti e dimensioni
-- Righe CMP-06 su `sfondo-colonna`, larghe 256, dentro la colonna larga `misura-colonna` (288) con `spazio-contenitore` (16) ai lati e in cima, `spazio-blocco` (16) tra la ricerca e l'albero; `spazio-elemento` (4) tra le righe, `spazio-gruppo` (24) tra le sezioni. Titoli di sezione in maiuscolo grassetto: scelta 6 tra sette alternative (spazio, maiuscolo, grassetto, linea), confronto nella pagina Prove. Sezione **Non organizzate** con le note e il loro numero (la nota aperta è selezionata), sezione **Cartelle** con l'albero e il numero di note accanto a ogni cartella (RB-56); 16 px di rientro per livello. Una cartella aperta mostra prima le sottocartelle, poi le sue note come righe Nota, tutte in ordine alfabetico (RB-64, RB-65). Il titolo di una nota si allinea al nome delle sottocartelle sorelle: margine 8 + 16 per livello + 20 (freccia e distanza), cioè 44 al primo livello; stessa eccezione ai token del rientro. Confermato da Manuel Cucca il 28/09/2026.
-- **Nuova cartella:** il campo nome compare sul posto, su `sfondo-campo` con l'anello di focus e il nome "Nuova cartella" già selezionato (RB-48). Invio conferma, Esc annulla.
+- Righe CMP-06 su `sfondo-colonna`, larghe 256, dentro la colonna larga `misura-colonna` (288) con `spazio-pannello` (16) ai lati e in cima (ruolo pannello, DEC-100), `spazio-blocco` (16) tra la ricerca e l'albero; `spazio-elemento` (4) tra le righe, `spazio-gruppo` (24) tra le sezioni. Titoli di sezione in maiuscolo grassetto: scelta 6 tra sette alternative (spazio, maiuscolo, grassetto, linea), confronto nella pagina Prove. Sezione **Non organizzate** con le note e il loro numero (la nota aperta è selezionata), sezione **Cartelle** con l'albero e il numero di note accanto a ogni cartella (RB-56); `spazio-rientro` (24) per livello. Una cartella aperta mostra prima le sottocartelle, poi le sue note come righe Nota, tutte in ordine alfabetico (RB-64, RB-65). Il titolo di una nota si allinea al nome delle sottocartelle sorelle: 12 + 24 per livello + 24 (icona e distanza), cioè 60 al primo livello dal bordo della riga (DEC-100).
+- **Nuova cartella:** il campo nome compare sul posto, con l'icona della cartella chiusa (DEC-99), su `sfondo-campo` con l'anello di focus e il nome "Nuova cartella" già selezionato (RB-48). Invio conferma, Esc annulla.
 - **Trascinamento:** la cartella che riceverebbe è evidenziata (CMP-06, trascinamento sopra) e in fondo alla colonna compare il **cestino di trascinamento** (`sfondo-campo`, icona elimina, "Trascina qui per eliminare").
 - **Trascinamento sul cestino:** il cestino diventa `sfondo-errore` con testo e icona in `testo-errore` e `icona-errore` ("Rilascia per spostare nel cestino").
 
@@ -904,7 +939,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 ### Varianti e dimensioni
 - **Comparsa:** sotto il titolo del percorso, centrata su di lui, 8 sotto; livello 20, senza velo, come i menu. In fondo, dopo un divisore, «Chiudi nota» (Ctrl + W) ed «Elimina» (voce distruttiva).
 - **Finestra:** al centro, livello 30 con il velo, come le finestre di conferma. In testa «Info» (Interfaccia/Titolo) e la ✕ (CMP-01 solo icona). In fondo solo «Elimina»: la nota non è aperta, non c'è niente da chiudere.
-- Larga 360; `sfondo-flottante`, `raggio-contenitore`, `ombra-flottante`. Margine `spazio-flottante` (8) su tutti i lati e tra i blocchi (titolo, righe, «Modificata», divisore, voci), l'unico ai lati (DEC-97, DEC-98): le righe, alte 32, «Modificata» e l'intestazione non hanno spazi propri e partono a 8. Il campo del titolo e le voci tengono `spazio-controllo` dentro la loro pillola, da componenti.
+- Larga 360; `sfondo-flottante`, `raggio-contenitore`, `ombra-flottante`. Ruolo **pannello** (DEC-100): margine `spazio-pannello` (16) su tutti i lati; `spazio-blocco` (16) tra i blocchi (titolo, righe, «Modificata», divisore, voci); `spazio-elemento` (4) tra le righe. Righe, «Modificata», intestazione, campo del titolo e voci sono pillole con `spazio-controllo` (12) dentro: pillole a 16 dal bordo, icone e testi a 28. La ✕ dell'intestazione sta sul bordo della pillola, a 16.
 - **Titolo:** il campo (CMP-03) largo quanto Info, senza etichetta; una nota senza titolo ha il campo vuoto con «Senza titolo» come segnaposto.
 - **Righe** (proposta C, DEC-97), ognuna con l'icona Lucide 16 in `icona-tenue` e la frase intera in Interfaccia/Controllo; passandoci sopra la riga prende `sfondo-hover`, a tutta larghezza:
   - **Cartella** (`folder`): «Lavoro › Clienti» o «Non organizzata»; un clic apre il pannello Sposta in (CMP-11) accanto alla riga.
@@ -1073,7 +1108,7 @@ Compare e sparisce con `movimento-durata-breve` (120 ms).
 
 ### Varianti e dimensioni
 - Finestra al centro, livello 30 con il velo; larga 1040, alta 820; `sfondo-flottante`, `raggio-contenitore`, `ombra-flottante`.
-- **Barra:** il campo di ricerca (CMP-03, tipo Ricerca) largo quanto la finestra e la ✕; margine `spazio-flottante` (8) su tutti i lati, come le colonne dei filtri e dei risultati (DEC-97); sotto un divisore `bordo-divisore`.
+- **Barra:** il campo di ricerca (CMP-03, tipo Ricerca) largo quanto la finestra e la ✕; margine `spazio-pannello` (16) su tutti i lati, come le colonne dei filtri e dei risultati (ruolo pannello, DEC-100); tra il campo e la ✕ `spazio-icona` (8); sotto un divisore `bordo-divisore`.
 - **Filtri sempre aperti**, a sinistra, larghi 260, con un divisore verticale: titoli di gruppo Tag, Creazione e Modifica; sotto le stesse voci dei menu dei filtri (CMP-09), come voci di menu (CMP-07) con la spunta a destra: i tag con più scelte, i periodi con una sola («Qualsiasi data», «Oggi», «Ultimi 7 giorni», «Ultimi 30 giorni», «Quest'anno», «Scegli le date…», che apre il calendario).
 - **Risultati**, a destra: il conteggio in Interfaccia/Messaggio e `testo-tenue` (es. «"rilascio" con il tag lavoro · 4 note»), poi i risultati come nella card, con lo stesso ordine (RB-34) e le note del cestino attenuate (RB-29).
 - Testo e filtri arrivano dalla card e tornano alla card quando la finestra si chiude.

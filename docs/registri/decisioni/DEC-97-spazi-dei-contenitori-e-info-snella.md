@@ -1,6 +1,6 @@
 # DEC-97 – Spazi dei contenitori e Info più snella
 
-**Data:** 2026-10-01 · **Stato:** Accettata, per le righe di Info superata da DEC-98 · **Idea di origine:** —
+**Data:** 2026-10-01 · **Stato:** Accettata; le regole degli spazi superate da DEC-100 (restano Info proposta C e «Ripristina») · **Idea di origine:** —
 
 ## Contesto
 Manuel Cucca ha chiesto di ridisegnare Info (CMP-24, DEC-96) più chiara da leggere, più snella e meno lunga, e ha notato che i margini sopra e sotto non tornavano. Nelle proposte l'agente aveva messo margini su più livelli (8 sul pannello, 12 nel corpo, 0 sopra) e li usava per allargare i pezzi dove serviva: lo stesso succedeva nella libreria e nel codice, dove menu, pannelli e card avevano margini sui pezzi interni e valori diversi tra un componente e l'altro. Proposte nella pagina [Proposta · Info più snella](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=157-3644) del file dei mockup.
