@@ -1,14 +1,15 @@
 // SC-01 Finestra principale, versione del frammento Must B «Smistare» (DEC-36): colonna con
-// Non organizzate e Cartelle (CMP-14), area della nota con il menu ··· (Sposta in, Elimina,
-// Cestino) o il cestino (SC-04). In cima alla colonna la ricerca, anche con Ctrl + K (RF-08,
-// DEC-94). Se l'API non risponde compare
+// Non organizzate e Cartelle (CMP-14), area della nota o il cestino (SC-04). Un clic sul titolo
+// del percorso apre Info (CMP-24, DEC-96), che ha anche Sposta in, Chiudi nota ed Elimina; il
+// tasto destro su una nota della colonna apre la stessa Info al centro. In cima alla colonna la
+// ricerca, anche con Ctrl + K (RF-08, DEC-94), e la ricerca avanzata con Ctrl + Maiusc + K
+// (DEC-96). Se l'API non risponde compare
 // SC-07 al posto del contenuto, che resta in memoria (RB-61); chiudendo con testo non salvato
 // si chiede conferma (RB-62). Un'operazione su cartelle o cestino che non riesce mostra un
 // avviso e ricarica la colonna (DEC-37); un nome già usato apre la finestra con tre scelte
 // (RB-31). La riga Impostazioni sotto il Cestino apre SC-06 al posto della nota (DEC-91).
 
 import {
-  Ellipsis,
   FileText,
   Folder,
   FolderInput,
@@ -18,7 +19,6 @@ import {
   Pencil,
   Pin,
   Trash2,
-  X,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type ReactElement } from "react";
 import type {
@@ -61,7 +61,7 @@ import {
 import { CodaSalvataggio } from "../salvataggio";
 import { Blocco } from "./Blocco";
 import { Cestino } from "./Cestino";
-import { FinestraDettagli } from "./FinestraDettagli";
+import { Info as FinestraInfo, type TipoInfo } from "./Info";
 import { Impostazioni } from "./Impostazioni";
 import { Colonna, type Campo, type Destinazione, type Trascinato } from "./Colonna";
 import { NotaAperta } from "./NotaAperta";
@@ -193,22 +193,19 @@ export function FinestraPrincipale(): ReactElement {
     x: number;
     y: number;
   } | null>(null);
-  const [menuNota, setMenuNota] = useState<{ x: number; y: number; tastiera?: boolean } | null>(
-    null,
-  );
   const [menuRiga, setMenuRiga] = useState<{
     id: string;
     cartella: Percorso;
     x: number;
     y: number;
   } | null>(null);
-  /** Pannello Sposta in per una nota: quella aperta (dal ···) o una della colonna (tasto destro). */
+  /** Pannello Sposta in per una nota: da Info o dal tasto destro su una riga della colonna. */
   const [spostaIn, setSpostaIn] = useState<{
     id: string;
     cartella: Percorso;
     destra: number;
     y: number;
-    /** Aperto dal ··· della nota o dal tasto destro su una riga: il focus ci torna. */
+    /** Aperto per una riga della colonna (tasto destro o Info al centro): il focus ci torna. */
     daRiga?: boolean;
   } | null>(null);
   const [conflitto, setConflitto] = useState<Conflitto | null>(null);
@@ -230,8 +227,8 @@ export function FinestraPrincipale(): ReactElement {
   const [colonnaFissata, setColonnaFissata] = useState(leggiColonnaFissata);
   const [colonnaAperta, setColonnaAperta] = useState(false);
   const [vicinoAlBordo, setVicinoAlBordo] = useState(false);
-  // Per ora il gruppo di ··· e dei pulsanti della finestra compare solo con il mouse vicino al
-  // bordo in alto (DEC-61, provvisorio).
+  // Per ora i pulsanti della finestra compaiono solo con il mouse vicino al bordo in alto
+  // (DEC-61, provvisorio).
   const [vicinoInAlto, setVicinoInAlto] = useState(false);
   const statoColonna = colonnaFissata ? "fissata" : colonnaAperta ? "aperta" : "chiusa";
   const pulsanteApriColonna = useRef<HTMLButtonElement>(null);
@@ -257,8 +254,15 @@ export function FinestraPrincipale(): ReactElement {
     setLarghezzaColonna(nuova);
     salvaLarghezzaColonna(nuova);
   };
-  /** Finestra Dettagli aperta (CMP-24, DEC-44): la nota e tutti i tag per i suggerimenti. */
-  const [dettagli, setDettagli] = useState<Nota | null>(null);
+  /**
+   * Info aperta (CMP-24, DEC-96): la nota, il tipo (Comparsa sotto il titolo della nota aperta o
+   * Finestra al centro dal tasto destro) e dove sta il titolo; tutti i tag per i suggerimenti.
+   */
+  const [info, setInfo] = useState<{
+    nota: Nota;
+    tipo: TipoInfo;
+    ancora?: { x: number; y: number };
+  } | null>(null);
   const [tuttiTag, setTuttiTag] = useState<VoceTag[]>([]);
   /**
    * Nota sparita mentre era aperta: nel cestino (`elemento` da ripristinare) o eliminata per
@@ -270,7 +274,6 @@ export function FinestraPrincipale(): ReactElement {
     elemento?: string;
   } | null>(null);
   const apertaAttuale = useRef<Nota | null>(null);
-  const pulsanteMenu = useRef<HTMLButtonElement>(null);
   const suErroreSalvataggio = useRef<(errore: unknown) => void>(() => setBloccata(true));
 
   // Dopo ogni salvataggio la colonna si aggiorna: titolo e ordine (RB-60, RB-65).
@@ -592,8 +595,9 @@ export function FinestraPrincipale(): ReactElement {
 
   // Scorciatoie della finestra (⌘ al posto di Ctrl su Mac): Ctrl + N crea una nuova nota come
   // il + delle non organizzate (FL-09, DEC-69); Ctrl + W chiude la nota aperta come «Chiudi
-  // nota» (DEC-70); Ctrl + K porta nella ricerca (RB-71). Con una finestra di dialogo o SC-07
-  // davanti non fanno niente.
+  // nota» (DEC-70); Ctrl + K porta nella ricerca (RB-71), Ctrl + Maiusc + K nella ricerca
+  // avanzata (DEC-96). Con una finestra di dialogo o SC-07 davanti non fanno niente; Info sotto il
+  // titolo e la card della ricerca non bloccano.
   const scorciatoie = useRef<Record<string, (() => Promise<void>) | undefined>>({});
   useEffect(() => {
     scorciatoie.current = bloccata
@@ -602,15 +606,20 @@ export function FinestraPrincipale(): ReactElement {
           n: nuovaNota,
           w: vista === "nota" && aperta !== null ? chiudiNota : undefined,
           k: async () => vaiAllaRicerca(),
+          K: async () => setAvanzataRicerca((n) => n + 1),
         };
   });
   useEffect(() => {
     const suTasto = (e: KeyboardEvent) => {
       const comando = SU_MAC ? e.metaKey && !e.ctrlKey : e.ctrlKey && !e.metaKey;
-      const tasto = e.key.toLowerCase();
-      if (!comando || e.altKey || e.shiftKey || !["n", "w", "k"].includes(tasto)) return;
+      const minuscolo = e.key.toLowerCase();
+      const tasto = e.shiftKey ? (minuscolo === "k" ? "K" : "") : minuscolo;
+      if (!comando || e.altKey || !["n", "w", "k", "K"].includes(tasto)) return;
       e.preventDefault();
-      if (e.repeat || document.querySelector('[role="dialog"], [role="alertdialog"]')) return;
+      const davanti = document.querySelector(
+        '[role="dialog"]:not(.info-comparsa):not(.card-ricerca), [role="alertdialog"]',
+      );
+      if (e.repeat || davanti) return;
       void scorciatoie.current[tasto]?.();
     };
     window.addEventListener("keydown", suTasto, true);
@@ -620,6 +629,8 @@ export function FinestraPrincipale(): ReactElement {
   // ——— Ricerca (RF-08, DEC-94) ———
 
   const [focusRicerca, setFocusRicerca] = useState(0);
+  /** Cresce a ogni Ctrl + Maiusc + K: si apre la ricerca avanzata (DEC-96, CA-08.17). */
+  const [avanzataRicerca, setAvanzataRicerca] = useState(0);
   /** La colonna l'ha aperta Ctrl + K: si richiude con la ricerca (RB-71). */
   const colonnaDallaRicerca = useRef(false);
   /** Dove era il cursore prima di Ctrl + K: ci torna con Esc (RB-71). */
@@ -777,7 +788,7 @@ export function FinestraPrincipale(): ReactElement {
     const riga = daRiga
       ? document.querySelector<HTMLElement>(`[data-nota="${CSS.escape(id)}"]`)
       : null;
-    (riga ?? pulsanteMenu.current)?.focus();
+    (riga ?? document.querySelector<HTMLElement>(".percorso-titolo"))?.focus();
   };
 
   /** Sposta una nota; se è quella aperta resta aperta e la sua cartella si apre (RB-66). */
@@ -840,6 +851,7 @@ export function FinestraPrincipale(): ReactElement {
     const { id, dati } = coda.abbandona();
     if (id === null) return;
     if (apertaAttuale.current?.id === id) setAperta(null);
+    setInfo((i) => (i?.nota.id === id ? null : i));
     setSparita({ id, dati, elemento: errore.cestino });
     void ricarica().catch(() => setBloccata(true));
   };
@@ -932,21 +944,63 @@ export function FinestraPrincipale(): ReactElement {
     },
   ];
 
-  // ——— Dettagli e tag (DEC-44, DEC-51) ———
+  // ——— Info e tag (DEC-96, DEC-51) ———
 
-  /** Apre la finestra Dettagli di una nota, aperta o no, dopo aver salvato il testo in sospeso. */
-  const apriDettagli = async (id: string) => {
+  /**
+   * Apre Info di una nota dopo aver salvato il testo in sospeso: sotto il titolo per la nota
+   * aperta (Comparsa), al centro dal tasto destro (Finestra).
+   */
+  const apriInfo = async (id: string, tipo: TipoInfo, ancora?: { x: number; y: number }) => {
     await coda.scarica();
     if (coda.haModifiche) return;
     const letti = await esegui(() => Promise.all([api.leggi(id), api.elencaTag()]));
     if (!letti) return;
     setTuttiTag(letti[1]);
-    setDettagli(letti[0]);
+    setInfo({ nota: letti[0], tipo, ancora });
   };
 
-  /** Dopo una modifica nei Dettagli: la finestra, la nota aperta e l'elenco si aggiornano. */
+  /** Chiude Info; dalla Comparsa il cursore torna nel testo della nota (CA-04.2). */
+  const chiudiInfo = () => {
+    const daComparsa = info?.tipo === "comparsa";
+    setInfo(null);
+    if (daComparsa)
+      requestAnimationFrame(() =>
+        document.querySelector<HTMLElement>(".nota-aperta [contenteditable=true]")?.focus(),
+      );
+  };
+
+  /** Titolo cambiato in Info (CA-04.7): la nota aperta passa dalla coda, un'altra si salva. */
+  const titoloInSospeso = useRef<{ id: string; titolo: string; timer: number } | null>(null);
+  const salvaTitoloInSospeso = async () => {
+    const sospeso = titoloInSospeso.current;
+    if (!sospeso) return;
+    window.clearTimeout(sospeso.timer);
+    titoloInSospeso.current = null;
+    if (await esegui(() => api.salva(sospeso.id, { titolo: sospeso.titolo })))
+      await ricarica().catch(() => setBloccata(true));
+  };
+  const cambiaTitolo = (id: string, titolo: string) => {
+    if (apertaAttuale.current?.id === id) {
+      coda.modifica(id, { titolo });
+      setAperta((a) => (a && a.id === id ? { ...a, titolo } : a));
+      return;
+    }
+    if (titoloInSospeso.current) window.clearTimeout(titoloInSospeso.current.timer);
+    titoloInSospeso.current = {
+      id,
+      titolo,
+      timer: window.setTimeout(() => void salvaTitoloInSospeso(), 400),
+    };
+  };
+  useEffect(() => {
+    // Chiusa Info, il titolo di una nota non aperta si salva subito.
+    if (!info) void salvaTitoloInSospeso();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [info]);
+
+  /** Dopo una modifica in Info: Info, la nota aperta e l'elenco si aggiornano. */
   const aggiornaDettagli = async (nota: Nota) => {
-    setDettagli(nota);
+    setInfo((i) => (i && i.nota.id === nota.id ? { ...i, nota } : i));
     setAperta((a) =>
       a && a.id === nota.id
         ? {
@@ -968,7 +1022,7 @@ export function FinestraPrincipale(): ReactElement {
     if (nota) await aggiornaDettagli(nota);
   };
 
-  /** Elimina un tag da tutte le note (RB-19): si rileggono la nota dei Dettagli e quella aperta. */
+  /** Elimina un tag da tutte le note (RB-19): si rileggono la nota di Info e quella aperta. */
   const eliminaTag = async (id: string, nome: string) => {
     await esegui(() => api.eliminaTag(nome));
     const nota = await esegui(() => api.leggi(id));
@@ -990,16 +1044,17 @@ export function FinestraPrincipale(): ReactElement {
     const cancellata = await lasciaVuota();
     setNuovaId(null);
     setAperta(null);
+    setInfo((i) => (i?.tipo === "comparsa" ? null : i));
     if (cancellata) await ricarica().catch(() => setBloccata(true));
   };
 
-  /** Tasto destro su una nota della colonna: lo stesso menu della nota, senza aprirla. */
+  /** Tasto destro su una nota della colonna, senza aprirla: Info, Sposta in, Elimina (DEC-96). */
   const vociRiga = (riga: { id: string; cartella: Percorso; x: number; y: number }): VoceMenu[] => [
     {
       tipo: "voce",
       etichetta: "Info",
       icona: Info,
-      azione: () => void apriDettagli(riga.id),
+      azione: () => void apriInfo(riga.id, "finestra"),
     },
     {
       tipo: "voce",
@@ -1022,50 +1077,6 @@ export function FinestraPrincipale(): ReactElement {
       errore: true,
       azione: () => void cestinaNota(riga.id),
     },
-  ];
-
-  const mostraNota = vista === "nota" && aperta !== null;
-  const vociNota: VoceMenu[] = [
-    ...(mostraNota
-      ? ([
-          {
-            tipo: "voce",
-            etichetta: "Info",
-            icona: Info,
-            azione: () => aperta && void apriDettagli(aperta.id),
-          },
-          {
-            tipo: "voce",
-            etichetta: "Sposta in…",
-            icona: FolderInput,
-            azione: () => {
-              const r = pulsanteMenu.current?.getBoundingClientRect();
-              if (r && aperta)
-                setSpostaIn({
-                  id: aperta.id,
-                  cartella: aperta.cartella,
-                  destra: r.right,
-                  y: r.bottom + 4,
-                });
-            },
-          },
-          {
-            tipo: "voce",
-            etichetta: "Chiudi nota",
-            icona: X,
-            scorciatoia: `${SU_MAC ? "⌘" : "Ctrl"} + W`,
-            azione: () => void chiudiNota(),
-          },
-          { tipo: "separatore" },
-          {
-            tipo: "voce",
-            etichetta: "Elimina",
-            icona: Trash2,
-            errore: true,
-            azione: () => aperta && void cestinaNota(aperta.id),
-          },
-        ] satisfies VoceMenu[])
-      : []),
   ];
 
   // «Nessuna nota, per ora.» solo al primo utilizzo: nessuna nota e nessuna cartella (SC-01).
@@ -1116,6 +1127,8 @@ export function FinestraPrincipale(): ReactElement {
             ricerca={
               <Ricerca
                 focus={focusRicerca}
+                avanzata={avanzataRicerca}
+                onTornaAllaCard={vaiAllaRicerca}
                 onApri={(r) => void apriRisultato(r)}
                 onChiusa={chiusaRicerca}
                 onErrore={erroreRicerca}
@@ -1204,28 +1217,7 @@ export function FinestraPrincipale(): ReactElement {
                   onClick={apriColonna}
                 />
               )}
-              <div
-                className={`barra-destra ${vicinoInAlto || menuNota ? "barra-destra-visibile" : ""}`}
-              >
-                {mostraNota && (
-                  <div className="barra-pillola">
-                    <PulsanteIcona
-                      ref={pulsanteMenu}
-                      nome="Altre azioni"
-                      icona={<Icona di={Ellipsis} />}
-                      aria-haspopup="menu"
-                      aria-expanded={menuNota !== null}
-                      onClick={(e) => {
-                        const r = e.currentTarget.getBoundingClientRect();
-                        // Aperto da tastiera (Invio o Spazio): la prima voce è già evidenziata.
-                        const tastiera = e.detail === 0;
-                        setMenuNota(
-                          menuNota ? null : { x: r.right - 236, y: r.bottom + 4, tastiera },
-                        );
-                      }}
-                    />
-                  </div>
-                )}
+              <div className={`barra-destra ${vicinoInAlto ? "barra-destra-visibile" : ""}`}>
                 {PULSANTI_FINESTRA && <PulsantiFinestra />}
               </div>
             </div>
@@ -1295,7 +1287,11 @@ export function FinestraPrincipale(): ReactElement {
                 key={`${aperta.id}:${riletta}`}
                 nota={aperta}
                 nuova={aperta.id === nuovaId}
+                infoAperta={info?.tipo === "comparsa" && info.nota.id === aperta.id}
                 onModifica={(dati) => coda.modifica(aperta.id, dati)}
+                onApriInfo={(ancora) =>
+                  info ? chiudiInfo() : void apriInfo(aperta.id, "comparsa", ancora)
+                }
                 onApriCartella={(percorso) => {
                   // La cartella del percorso si apre nella colonna, che compare se è chiusa.
                   apriCartelle(catena(percorso));
@@ -1333,16 +1329,6 @@ export function FinestraPrincipale(): ReactElement {
           onChiudi={() => setMenuCartella(null)}
         />
       )}
-      {menuNota && (
-        <Menu
-          voci={vociNota}
-          etichetta="Altre azioni"
-          x={menuNota.x}
-          y={menuNota.y}
-          attivaIniziale={menuNota.tastiera ? 0 : -1}
-          onChiudi={() => setMenuNota(null)}
-        />
-      )}
       {menuRiga && (
         <Menu
           voci={vociRiga(menuRiga)}
@@ -1369,18 +1355,39 @@ export function FinestraPrincipale(): ReactElement {
           }}
         />
       )}
-      {dettagli && (
-        <FinestraDettagli
-          nota={dettagli}
-          titolo={dettagli.titolo || anteprima(dettagli.contenuto) || "Nota vuota"}
+      {info && (
+        <FinestraInfo
+          key={`${info.nota.id}:${info.tipo}`}
+          tipo={info.tipo}
+          nota={info.nota}
+          titolo={info.nota.titolo || anteprima(info.nota.contenuto) || "Nota vuota"}
           tutti={tuttiTag}
+          ancora={info.ancora}
+          onTitolo={(titolo) => cambiaTitolo(info.nota.id, titolo)}
           onDettagli={(dati: DatiDettagli) =>
-            void cambiaDettagli(() => api.salvaDettagli(dettagli.id, dati))
+            void cambiaDettagli(() => api.salvaDettagli(info.nota.id, dati))
           }
-          onAggiungiTag={(nome) => void cambiaDettagli(() => api.aggiungiTag(dettagli.id, nome))}
-          onTogliTag={(nome) => void cambiaDettagli(() => api.togliTag(dettagli.id, nome))}
-          onEliminaTag={(nome) => void eliminaTag(dettagli.id, nome)}
-          onChiudi={() => setDettagli(null)}
+          onAggiungiTag={(nome) => void cambiaDettagli(() => api.aggiungiTag(info.nota.id, nome))}
+          onTogliTag={(nome) => void cambiaDettagli(() => api.togliTag(info.nota.id, nome))}
+          onEliminaTag={(nome) => void eliminaTag(info.nota.id, nome)}
+          onSpostaIn={(pulsante) => {
+            const { nota, tipo } = info;
+            setInfo(null);
+            setSpostaIn({
+              id: nota.id,
+              cartella: nota.cartella,
+              destra: pulsante.right,
+              y: pulsante.bottom + 4,
+              daRiga: tipo === "finestra",
+            });
+          }}
+          onChiudiNota={info.tipo === "comparsa" ? () => void chiudiNota() : undefined}
+          onElimina={() => {
+            const id = info.nota.id;
+            setInfo(null);
+            void cestinaNota(id);
+          }}
+          onChiudi={chiudiInfo}
         />
       )}
       {conflitto && (

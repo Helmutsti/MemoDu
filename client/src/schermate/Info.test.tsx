@@ -2,7 +2,7 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Nota, VoceTag } from "@memodu/condiviso";
-import { FinestraDettagli } from "./FinestraDettagli";
+import { Info, type TipoInfo } from "./Info";
 
 const nota: Nota = {
   id: "n1",
@@ -22,6 +22,10 @@ const tutti: VoceTag[] = [
 ];
 
 const funzioni = () => ({
+  onTitolo: vi.fn(),
+  onSpostaIn: vi.fn(),
+  onChiudiNota: vi.fn(),
+  onElimina: vi.fn(),
   onDettagli: vi.fn(),
   onAggiungiTag: vi.fn(),
   onTogliTag: vi.fn(),
@@ -29,14 +33,24 @@ const funzioni = () => ({
   onChiudi: vi.fn(),
 });
 let f: ReturnType<typeof funzioni>;
-const apri = (n: Nota = nota) =>
-  render(<FinestraDettagli nota={n} titolo={n.titolo} tutti={tutti} {...f} />);
+const apri = (n: Nota = nota, tipo: TipoInfo = "finestra") =>
+  render(
+    <Info
+      tipo={tipo}
+      nota={n}
+      titolo={n.titolo}
+      tutti={tutti}
+      ancora={tipo === "comparsa" ? { x: 500, y: 36 } : undefined}
+      {...f}
+      onChiudiNota={tipo === "comparsa" ? f.onChiudiNota : undefined}
+    />,
+  );
 
 beforeEach(() => {
   f = funzioni();
 });
 
-describe("CMP-24 Finestra dei dettagli", () => {
+describe("CMP-24 Info (DEC-96)", () => {
   it("mostra date, tag e cartella, con la data di creazione di sistema (CA-04.3, CA-04.5)", () => {
     apri();
     const finestra = screen.getByRole("dialog", { name: "Info di Budget 2026" });
@@ -208,5 +222,51 @@ describe("CMP-24 Finestra dei dettagli", () => {
     await userEvent.keyboard("{Escape}");
     expect(screen.getByRole("textbox", { name: "Fine validità" })).toHaveFocus();
     expect(f.onChiudi).not.toHaveBeenCalled();
+  });
+
+  it("il cursore parte nel titolo; cambiandolo si avvisa subito, Invio chiude (CA-04.2, CA-04.7)", async () => {
+    apri(nota, "comparsa");
+    const campo = screen.getByRole("textbox", { name: "Titolo" });
+    expect(campo).toHaveFocus();
+    expect(campo).toHaveValue("Budget 2026");
+    await userEvent.type(campo, "!");
+    expect(f.onTitolo).toHaveBeenLastCalledWith("Budget 2026!");
+    await userEvent.keyboard("{Enter}");
+    expect(f.onChiudi).toHaveBeenCalledTimes(1);
+  });
+
+  it("senza titolo il campo è vuoto con «Senza titolo» (RB-15)", () => {
+    apri({ ...nota, titolo: "" }, "comparsa");
+    const campo = screen.getByRole("textbox", { name: "Titolo" });
+    expect(campo).toHaveValue("");
+    expect(campo).toHaveAttribute("placeholder", "Senza titolo");
+  });
+
+  it("la Comparsa non ha velo né ✕ e ha Chiudi nota ed Elimina; un clic fuori la chiude (CA-04.8)", async () => {
+    apri(nota, "comparsa");
+    const info = screen.getByRole("dialog", { name: "Info di Budget 2026" });
+    expect(info).not.toHaveAttribute("aria-modal");
+    expect(within(info).queryByRole("button", { name: "Chiudi" })).toBeNull();
+    await userEvent.click(within(info).getByRole("button", { name: /^Chiudi nota/ }));
+    expect(f.onChiudiNota).toHaveBeenCalledTimes(1);
+    await userEvent.click(within(info).getByRole("button", { name: "Elimina" }));
+    expect(f.onElimina).toHaveBeenCalledTimes(1);
+    fireEvent.mouseDown(document.body);
+    expect(f.onChiudi).toHaveBeenCalledTimes(1);
+  });
+
+  it("la Finestra ha «Info» e la ✕, Elimina ma non Chiudi nota (CA-04.2, CA-04.8)", () => {
+    apri();
+    const info = screen.getByRole("dialog", { name: "Info di Budget 2026" });
+    expect(info).toHaveAttribute("aria-modal", "true");
+    expect(within(info).getByText("Info")).toBeInTheDocument();
+    expect(within(info).queryByRole("button", { name: /^Chiudi nota/ })).toBeNull();
+    expect(within(info).getByRole("button", { name: "Elimina" })).toBeInTheDocument();
+  });
+
+  it("«Sposta in…» passa il pulsante per aprire il pannello accanto (CA-04.5)", async () => {
+    apri();
+    await userEvent.click(screen.getByRole("button", { name: "Sposta in…" }));
+    expect(f.onSpostaIn).toHaveBeenCalledTimes(1);
   });
 });

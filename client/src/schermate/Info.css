@@ -1,0 +1,160 @@
+/* CMP-24 Info (DEC-96): larga 360, sfondo-flottante, raggio 20, margini spazio-flottante ai lati
+   e sotto. Comparsa: livello 20 sotto il titolo del percorso; Finestra: al centro, livello 30
+   con il velo. Il contenuto è rientrato di 20 (8 + 12), allineato alle icone delle voci. */
+.velo-overlay {
+  z-index: var(--z-overlay);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  width: 360px;
+  max-width: calc(100% - 2 * var(--spazio-gruppo));
+  max-height: calc(100% - 2 * var(--spazio-gruppo));
+  overflow-y: auto;
+  padding: 0 var(--spazio-flottante) var(--spazio-flottante);
+  border-radius: var(--raggio-contenitore);
+  background: var(--sfondo-flottante);
+  box-shadow: var(--ombra);
+  color: var(--testo-primario);
+}
+.info p {
+  margin: 0;
+}
+.info-comparsa {
+  position: fixed;
+  z-index: var(--z-comparsa);
+  max-height: calc(100vh - 64px);
+  animation: menu-compare var(--movimento-durata-breve) ease-out;
+}
+.info-finestra {
+  animation: conferma-compare var(--movimento-durata-breve) ease-out;
+}
+
+.info-corpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spazio-gruppo);
+  padding: var(--spazio-finestra) calc(var(--spazio-controllo) + var(--spazio-icona))
+    var(--spazio-controllo);
+}
+
+.info-intestazione {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: calc(0px - var(--spazio-icona)) 0;
+}
+
+.info-gruppo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spazio-controllo);
+}
+.info-gruppo-stretto {
+  gap: var(--spazio-controllo-piccolo);
+}
+.info-titolo-gruppo,
+.info-tenue {
+  color: var(--testo-tenue);
+}
+
+/* Etichetta, campo e la riga sotto. */
+.info-blocco {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spazio-elemento);
+}
+
+/* Campo (CMP-03): pillola alta 32 su sfondo-campo, larga quanto Info. */
+.info-campo {
+  width: 100%;
+  height: var(--misura-riga);
+  padding: 0 var(--spazio-controllo);
+  border: none;
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-campo);
+  color: var(--testo-primario);
+  outline: none;
+}
+.info-campo::placeholder {
+  color: var(--testo-tenue);
+}
+:root[data-tastiera] .info-campo:focus-visible {
+  outline: var(--focus-spessore) solid var(--focus-anello);
+  outline-offset: var(--focus-distanza);
+}
+
+/* Campo con l'icona del calendario (CMP-03 con icona). */
+.info-data {
+  display: flex;
+  align-items: center;
+  height: var(--misura-riga);
+  padding: 0 var(--spazio-icona) 0 var(--spazio-controllo);
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-campo);
+}
+:root[data-tastiera] .info-data:focus-within,
+:root[data-tastiera] .info-data-aperta {
+  outline: var(--focus-spessore) solid var(--focus-anello);
+  outline-offset: var(--focus-distanza);
+}
+/* Errore (CMP-03, DEC-52): anello in icona-errore e il messaggio al posto della riga sotto. */
+.info-data.info-data-errore {
+  outline: var(--focus-spessore) solid var(--icona-errore);
+  outline-offset: var(--focus-distanza);
+}
+.info-errore-data {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spazio-icona-piccola);
+  margin-top: calc(var(--focus-spessore) + var(--focus-distanza));
+  color: var(--testo-errore);
+}
+.info-errore-data svg {
+  flex-shrink: 0;
+  color: var(--icona-errore);
+}
+.info-campo-data {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: none;
+  color: var(--testo-primario);
+  outline: none;
+}
+.info-campo-data::placeholder {
+  color: var(--testo-tenue);
+}
+.info-apri-calendario {
+  display: inline-flex;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--icona-tenue);
+  cursor: pointer;
+}
+
+/* Tag che vanno a capo. */
+.info-tag {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spazio-controllo-piccolo);
+}
+
+/* Il percorso della cartella e «Sposta in…» a destra. */
+.info-cartella {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spazio-icona);
+}
+
+.info-azioni {
+  display: flex;
+  flex-direction: column;
+}
+.info-azioni .voce-menu {
+  padding: 0;
+}

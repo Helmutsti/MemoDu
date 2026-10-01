@@ -56,34 +56,24 @@
   color: var(--testo-primario);
 }
 
-/* Il campo del titolo si allarga con il testo: una copia invisibile del valore gli dà la
-   misura, nella stessa cella della griglia. */
+/* Il titolo è un pulsante (DEC-96): apre Info; resta in hover finché Info è aperta. */
 .percorso-titolo {
-  display: inline-grid;
-  min-width: 0;
-}
-.percorso-titolo::after,
-.percorso-campo {
-  grid-area: 1 / 1;
-}
-.percorso-titolo::after {
-  content: attr(data-valore);
-  visibility: hidden;
-  height: 0;
-  padding: 0 var(--spazio-controllo-piccolo);
-  white-space: pre;
-}
-.percorso-campo {
-  width: 100%;
-  font: inherit;
+  overflow: hidden;
   min-width: 0;
   color: var(--testo-primario);
   text-overflow: ellipsis;
+  cursor: default;
 }
-.percorso-campo::placeholder {
+.percorso-senza-titolo {
   color: var(--testo-tenue);
-  opacity: 1;
 }
-.percorso-campo:focus {
-  background: var(--sfondo-campo);
+.percorso-titolo-aperto {
+  background: var(--sfondo-hover);
+}
+:root[data-tastiera] .percorso-segmento:focus-visible {
+  outline: var(--focus-spessore) solid var(--focus-anello);
+  outline-offset: var(--focus-distanza);
+}
+.percorso-segmento:focus {
+  outline: none;
 }

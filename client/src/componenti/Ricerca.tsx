@@ -8,6 +8,8 @@
 // - Chiudendo la card (Esc, clic fuori, risultato aperto) testo e filtri si svuotano (RB-72).
 // - Tastiera: freccia giù entra nei risultati, su e giù si muovono, Invio apre, Esc chiude; Tab
 //   passa tra il campo e i filtri (CMP-13).
+// - In fondo alla card «Mostra tutti i risultati (n)», e Ctrl + Maiusc + K: la ricerca avanzata
+//   (CMP-29, DEC-96) con lo stesso testo e gli stessi filtri; chiudendola si torna alla card.
 
 import { ChevronDown, Search, X } from "lucide-react";
 import {
@@ -32,14 +34,21 @@ import {
   stessoPeriodo,
   type Periodo,
 } from "../ricerca";
+import { SU_MAC } from "../finestra";
 import { Calendario } from "./Calendario";
 import { Icona } from "./Icona";
 import { Menu, type VoceMenu } from "./Menu";
+import { RicercaAvanzata } from "./RicercaAvanzata";
+import { VoceAzione } from "./VoceAzione";
 import "./Ricerca.css";
 
 interface Proprieta {
   /** Cresce a ogni Ctrl + K (⌘ + K): il cursore va nel campo (RB-71). */
   focus: number;
+  /** Cresce a ogni Ctrl + Maiusc + K (⌘ + Maiusc + K): si apre la ricerca avanzata (CA-08.17). */
+  avanzata: number;
+  /** Chiusa la ricerca avanzata: si torna alla card, con il cursore nel campo (CA-08.20). */
+  onTornaAllaCard: () => void;
   onApri: (risultato: RisultatoRicerca) => void;
   /** La card si è chiusa senza aprire niente; con Esc il cursore torna dov'era (RB-71). */
   onChiusa: (conEsc: boolean) => void;
@@ -56,7 +65,14 @@ const DISTANZA_CARD = 8;
 /** Quanto la card segue il campo dopo l'apertura: la colonna scorre in 200 ms (DEC-55). */
 const DURATA_INSEGUIMENTO_MS = 400;
 
-export function Ricerca({ focus, onApri, onChiusa, onErrore }: Proprieta): ReactElement {
+export function Ricerca({
+  focus,
+  avanzata,
+  onTornaAllaCard,
+  onApri,
+  onChiusa,
+  onErrore,
+}: Proprieta): ReactElement {
   const campo = useRef<HTMLInputElement>(null);
   const card = useRef<HTMLDivElement>(null);
   const idElenco = useId();
@@ -71,6 +87,8 @@ export function Ricerca({ focus, onApri, onChiusa, onErrore }: Proprieta): React
   const [calendario, setCalendario] = useState<{ filtro: Filtro; ancora: DOMRect } | null>(null);
   const [tuttiTag, setTuttiTag] = useState<string[]>([]);
   const [cercaTag, setCercaTag] = useState("");
+  /** La ricerca avanzata è aperta al posto della card (DEC-96). */
+  const [inAvanzata, setInAvanzata] = useState(false);
   const suErrore = useRef(onErrore);
   useEffect(() => {
     suErrore.current = onErrore;
@@ -82,6 +100,31 @@ export function Ricerca({ focus, onApri, onChiusa, onErrore }: Proprieta): React
     if (document.activeElement === campo.current) campo.current.blur();
     campo.current.focus();
   }, [focus]);
+
+  const apriAvanzata = () => {
+    setMenu(null);
+    setCalendario(null);
+    setAperta(true);
+    setInAvanzata(true);
+  };
+  // Un nuovo Ctrl + Maiusc + K apre la ricerca avanzata.
+  const [avanzataVista, setAvanzataVista] = useState(avanzata);
+  if (avanzata !== avanzataVista) {
+    setAvanzataVista(avanzata);
+    if (avanzata) apriAvanzata();
+  }
+  // Aperta la ricerca avanzata, i tag dei filtri sempre aperti.
+  useEffect(() => {
+    if (!inAvanzata) return;
+    let valida = true;
+    void api.elencaTag().then(
+      (t) => valida && setTuttiTag(t.map((v) => v.nome)),
+      () => valida && setTuttiTag([]),
+    );
+    return () => {
+      valida = false;
+    };
+  }, [inAvanzata]);
 
   const filtri = { tag, creata, modificata };
   const cercabile = testo.trim() !== "" || tag.length > 0 || creata !== null || modificata !== null;
@@ -116,9 +159,10 @@ export function Ricerca({ focus, onApri, onChiusa, onErrore }: Proprieta): React
   }, [aperta, firma]);
 
   // La card segue il campo mentre la colonna si apre scorrendo (DEC-55) e quando la finestra
-  // cambia misura; poi resta ferma.
+  // cambia misura; poi resta ferma. Anche tornando dalla ricerca avanzata, con la colonna che
+  // magari si sta aprendo.
   useLayoutEffect(() => {
-    if (!aperta) return;
+    if (!aperta || inAvanzata) return;
     let giro = 0;
     const fine = performance.now() + DURATA_INSEGUIMENTO_MS;
     const segui = () => {
@@ -139,7 +183,7 @@ export function Ricerca({ focus, onApri, onChiusa, onErrore }: Proprieta): React
       cancelAnimationFrame(giro);
       window.removeEventListener("resize", suMisura);
     };
-  }, [aperta]);
+  }, [aperta, inAvanzata]);
 
   /** Entrando nel campo la card si apre subito sotto di lui (RB-33). */
   const entra = () => {
@@ -151,6 +195,7 @@ export function Ricerca({ focus, onApri, onChiusa, onErrore }: Proprieta): React
   /** Card chiusa, testo e filtri svuotati (RB-72). */
   const svuota = () => {
     setAperta(false);
+    setInAvanzata(false);
     setTesto("");
     setTag([]);
     setCreata(null);
@@ -167,7 +212,7 @@ export function Ricerca({ focus, onApri, onChiusa, onErrore }: Proprieta): React
 
   // Clic fuori da campo, card, menu e calendario: la card si chiude (RB-72).
   useEffect(() => {
-    if (!aperta) return;
+    if (!aperta || inAvanzata) return;
     const suClic = (e: MouseEvent) => {
       const dove = e.target as Element;
       if (dove.closest?.(".ricerca, .card-ricerca, .menu, .calendario")) return;
@@ -366,6 +411,7 @@ export function Ricerca({ focus, onApri, onChiusa, onErrore }: Proprieta): React
         {annuncio}
       </span>
       {aperta &&
+        !inAvanzata &&
         createPortal(
           <div
             ref={card}
@@ -435,11 +481,43 @@ export function Ricerca({ focus, onApri, onChiusa, onErrore }: Proprieta): React
                     })}
                   </ul>
                 )}
+                {mostrati.length > 0 && (
+                  <>
+                    <div className="menu-separatore" role="separator" />
+                    <div className="card-ricerca-avanzata">
+                      <VoceAzione
+                        etichetta={`Mostra tutti i risultati (${mostrati.length})`}
+                        icona={Search}
+                        scorciatoia={`${SU_MAC ? "⌘" : "Ctrl"} + Maiusc + K`}
+                        onClick={apriAvanzata}
+                      />
+                    </div>
+                  </>
+                )}
               </>
             )}
           </div>,
           document.body,
         )}
+      {inAvanzata && (
+        <RicercaAvanzata
+          testo={testo}
+          onTesto={setTesto}
+          tag={tag}
+          onTag={setTag}
+          creata={creata}
+          onCreata={setCreata}
+          modificata={modificata}
+          onModificata={setModificata}
+          tuttiTag={tuttiTag}
+          risultati={mostrati}
+          onApri={apri}
+          onChiudi={() => {
+            setInAvanzata(false);
+            onTornaAllaCard();
+          }}
+        />
+      )}
       {menu && !calendario && (
         <Menu
           etichetta={

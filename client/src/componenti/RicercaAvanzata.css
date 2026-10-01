@@ -1,0 +1,72 @@
+/* CMP-29 Ricerca avanzata (DEC-96): al centro, livello 30 con il velo, larga 1040 e alta 820,
+   sfondo-flottante, raggio 20, ombra; i risultati come nella card (CMP-13). */
+.ricerca-avanzata {
+  display: flex;
+  flex-direction: column;
+  width: 1040px;
+  height: 820px;
+  max-width: calc(100% - 2 * var(--spazio-gruppo));
+  max-height: calc(100% - 2 * var(--spazio-gruppo));
+  overflow: hidden;
+  border-radius: var(--raggio-contenitore);
+  background: var(--sfondo-flottante);
+  box-shadow: var(--ombra);
+  color: var(--testo-primario);
+  animation: conferma-compare var(--movimento-durata-breve) ease-out;
+}
+.ricerca-avanzata p {
+  margin: 0;
+}
+
+/* Barra: il campo largo quanto la finestra e la ✕; sotto un divisore. */
+.ricerca-avanzata-barra {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--spazio-controllo);
+  padding: var(--spazio-blocco) var(--spazio-blocco) var(--spazio-blocco) var(--spazio-finestra);
+  border-bottom: 1px solid var(--bordo-divisore);
+}
+.ricerca-avanzata-campo {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+}
+
+.ricerca-avanzata-corpo {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Filtri sempre aperti, larghi 260, con un divisore verticale. */
+.filtri-avanzati {
+  flex: none;
+  width: 260px;
+  overflow-y: auto;
+  padding: var(--spazio-flottante);
+  border-right: 1px solid var(--bordo-divisore);
+}
+.filtri-avanzati-gruppo + .filtri-avanzati-gruppo {
+  margin-top: var(--spazio-blocco);
+}
+.filtri-avanzati-titolo {
+  padding: var(--spazio-elemento) var(--spazio-controllo);
+  color: var(--testo-tenue);
+}
+.filtro-avanzato.voce-menu {
+  padding: 0;
+}
+
+/* Risultati: il conteggio, poi i risultati come nella card. */
+.risultati-avanzati {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: var(--spazio-controllo) var(--spazio-blocco);
+}
+.risultati-avanzati-conteggio {
+  padding: var(--spazio-elemento) var(--spazio-controllo) var(--spazio-controllo-piccolo);
+  color: var(--testo-tenue);
+}

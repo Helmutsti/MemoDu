@@ -1,38 +1,32 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { Percorso } from "./Percorso";
 
 const base = {
-  modificata: "2026-09-30T09:42:00.000Z",
-  tag: ["riunioni", "lavoro/clienti"],
-  onTitolo: vi.fn(),
-  onTornaAlTesto: vi.fn(),
+  infoAperta: false,
+  onApriInfo: vi.fn(),
   onApriCartella: vi.fn(),
 };
 
 afterEach(() => {
-  vi.useRealTimers();
   vi.clearAllMocks();
 });
 
-describe("CMP-26 Percorso (DEC-71)", () => {
+describe("CMP-26 Percorso (DEC-71, DEC-96)", () => {
   it("mostra le cartelle e il titolo; una cartella si apre nella colonna", async () => {
     render(<Percorso {...base} cartella="Lavoro/Clienti" titolo="Rossi" />);
     const nav = screen.getByRole("navigation", { name: "Percorso della nota" });
-    expect(nav).toHaveTextContent("LavoroClienti");
-    expect(screen.getByRole("textbox", { name: "Titolo della nota" })).toHaveValue("Rossi");
+    expect(nav).toHaveTextContent("LavoroClientiRossi");
+    expect(screen.getByRole("button", { name: "Rossi", current: "page" })).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Clienti" }));
     expect(base.onApriCartella).toHaveBeenCalledWith("Lavoro/Clienti");
   });
 
   it("una nota non organizzata mostra solo il titolo; senza titolo si legge «Senza titolo»", () => {
     render(<Percorso {...base} cartella="" titolo="" />);
-    expect(screen.queryAllByRole("button")).toHaveLength(0);
-    expect(screen.getByRole("textbox", { name: "Titolo della nota" })).toHaveAttribute(
-      "placeholder",
-      "Senza titolo",
-    );
+    expect(screen.getAllByRole("button")).toHaveLength(1);
+    expect(screen.getByRole("button", { current: "page" })).toHaveTextContent("Senza titolo");
   });
 
   it("con più di due cartelle quelle di mezzo diventano «…», che le elenca", async () => {
@@ -43,26 +37,19 @@ describe("CMP-26 Percorso (DEC-71)", () => {
     expect(base.onApriCartella).toHaveBeenCalledWith("Lavoro/Clienti");
   });
 
-  it("il titolo si scrive nel percorso; Invio torna al testo", async () => {
-    render(<Percorso {...base} cartella="" titolo="Budget" />);
-    const campo = screen.getByRole("textbox", { name: "Titolo della nota" });
-    await userEvent.type(campo, " 2026{Enter}");
-    expect(base.onTitolo).toHaveBeenLastCalledWith("Budget 2026");
-    expect(base.onTornaAlTesto).toHaveBeenCalledTimes(1);
+  it("un clic sul titolo apre Info sotto di lui (CA-04.2)", async () => {
+    const { rerender } = render(<Percorso {...base} cartella="" titolo="Budget" />);
+    const titolo = screen.getByRole("button", { name: "Budget", current: "page" });
+    expect(titolo).toHaveAttribute("aria-haspopup", "dialog");
+    await userEvent.click(titolo);
+    expect(base.onApriInfo).toHaveBeenCalledWith({ x: expect.any(Number), y: expect.any(Number) });
+    rerender(<Percorso {...base} infoAperta cartella="" titolo="Budget" />);
+    expect(titolo).toHaveAttribute("aria-expanded", "true");
   });
 
-  it("passando sul titolo, dopo 500 ms, compaiono ultima modifica e tag (CMP-27)", () => {
-    vi.useFakeTimers();
+  it("passando sul titolo non compare niente (DEC-96, CMP-27 superata)", async () => {
     render(<Percorso {...base} cartella="Lavoro" titolo="Budget 2026" />);
-    const campo = screen.getByRole("textbox", { name: "Titolo della nota" });
-    fireEvent.mouseEnter(campo.closest("li")!);
-    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
-    act(() => vi.advanceTimersByTime(500));
-    const comparsa = screen.getByRole("tooltip");
-    expect(comparsa).toHaveTextContent(/^Modificata/);
-    expect(comparsa).toHaveTextContent("riunioni");
-    expect(comparsa).toHaveTextContent("lavoro/clienti");
-    fireEvent.mouseLeave(campo.closest("li")!);
+    await userEvent.hover(screen.getByRole("button", { name: "Budget 2026", current: "page" }));
     expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
   });
 });

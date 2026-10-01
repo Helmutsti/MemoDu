@@ -40,7 +40,14 @@ const disegna = (focus = 0) => {
   const onChiusa = vi.fn();
   const onErrore = vi.fn();
   const utils = render(
-    <Ricerca focus={focus} onApri={onApri} onChiusa={onChiusa} onErrore={onErrore} />,
+    <Ricerca
+      focus={focus}
+      avanzata={0}
+      onTornaAllaCard={vi.fn()}
+      onApri={onApri}
+      onChiusa={onChiusa}
+      onErrore={onErrore}
+    />,
   );
   return { onApri, onChiusa, onErrore, ...utils };
 };
@@ -73,13 +80,31 @@ describe("Ricerca (RF-08, CMP-13)", () => {
 
   it("Ctrl + K porta il cursore nel campo e apre la card, anche se il cursore era già lì (RB-71)", async () => {
     const { rerender, onApri, onChiusa, onErrore } = disegna(0);
-    rerender(<Ricerca focus={1} onApri={onApri} onChiusa={onChiusa} onErrore={onErrore} />);
+    rerender(
+      <Ricerca
+        focus={1}
+        avanzata={0}
+        onTornaAllaCard={vi.fn()}
+        onApri={onApri}
+        onChiusa={onChiusa}
+        onErrore={onErrore}
+      />,
+    );
     expect(campo()).toHaveFocus();
     expect(card()).toBeInTheDocument();
     await userEvent.keyboard("{Escape}");
     expect(screen.queryByRole("dialog")).toBeNull();
     campo().focus();
-    rerender(<Ricerca focus={2} onApri={onApri} onChiusa={onChiusa} onErrore={onErrore} />);
+    rerender(
+      <Ricerca
+        focus={2}
+        avanzata={0}
+        onTornaAllaCard={vi.fn()}
+        onApri={onApri}
+        onChiusa={onChiusa}
+        onErrore={onErrore}
+      />,
+    );
     expect(card()).toBeInTheDocument();
   });
 
@@ -257,5 +282,94 @@ describe("Ricerca (RF-08, CMP-13)", () => {
     await userEvent.type(campo(), "rilascio");
     await waitFor(() => expect(onErrore).toHaveBeenCalledWith(errore));
     expect(within(card()).queryByText("Nessuna nota trovata")).toBeNull();
+  });
+
+  // ——— Ricerca avanzata (CMP-29, DEC-96) ———
+
+  const avanzata = () => screen.getByRole("dialog", { name: "Ricerca avanzata" });
+  const disegnaAvanzata = () => {
+    const onApri = vi.fn();
+    const onTornaAllaCard = vi.fn();
+    const props = { focus: 0, onApri, onChiusa: vi.fn(), onErrore: vi.fn(), onTornaAllaCard };
+    const utils = render(<Ricerca {...props} avanzata={0} />);
+    const apriConScorciatoia = () => utils.rerender(<Ricerca {...props} avanzata={1} />);
+    return { onApri, onTornaAllaCard, apriConScorciatoia };
+  };
+
+  it("in fondo alla card «Mostra tutti i risultati» apre la ricerca avanzata con lo stesso testo (CA-08.17)", async () => {
+    disegnaAvanzata();
+    await userEvent.type(campo(), "rilascio");
+    await within(card()).findByRole("listbox");
+    await userEvent.click(
+      within(card()).getByRole("button", { name: /^Mostra tutti i risultati \(2\)/ }),
+    );
+    expect(screen.queryByRole("dialog", { name: "Risultati della ricerca" })).toBeNull();
+    const finestra = avanzata();
+    expect(finestra).toHaveAttribute("aria-modal", "true");
+    const campoGrande = within(finestra).getByRole("textbox", { name: "Cerca nelle note" });
+    expect(campoGrande).toHaveValue("rilascio");
+    expect(campoGrande).toHaveFocus();
+    expect(within(finestra).getAllByRole("option")).toHaveLength(2);
+    expect(within(finestra).getByText("«rilascio» · 2 note")).toBeInTheDocument();
+  });
+
+  it("Ctrl + Maiusc + K con la card chiusa apre la ricerca avanzata vuota (CA-08.17)", async () => {
+    const { apriConScorciatoia } = disegnaAvanzata();
+    apriConScorciatoia();
+    const finestra = await screen.findByRole("dialog", { name: "Ricerca avanzata" });
+    expect(within(finestra).getByRole("textbox", { name: "Cerca nelle note" })).toHaveValue("");
+    expect(within(finestra).getByText("Scrivi una parola o scegli un filtro.")).toBeInTheDocument();
+  });
+
+  it("i filtri sempre aperti valgono subito: più tag e un solo periodo (CA-08.18)", async () => {
+    const { apriConScorciatoia } = disegnaAvanzata();
+    apriConScorciatoia();
+    const finestra = await screen.findByRole("dialog", { name: "Ricerca avanzata" });
+    const lavoro = await within(finestra).findByRole("menuitemcheckbox", { name: "lavoro" });
+    await userEvent.click(lavoro);
+    await userEvent.click(within(finestra).getByRole("menuitemcheckbox", { name: "clienti" }));
+    expect(lavoro).toHaveAttribute("aria-checked", "true");
+    await waitFor(() =>
+      expect(vi.mocked(api.cerca).mock.lastCall![0].tag).toEqual(["lavoro", "clienti"]),
+    );
+    const modifica = within(finestra).getByRole("group", { name: "Modifica" });
+    await userEvent.click(within(modifica).getByRole("menuitemradio", { name: "Ultimi 7 giorni" }));
+    expect(
+      within(modifica).getByRole("menuitemradio", { name: "Ultimi 7 giorni" }),
+    ).toHaveAttribute("aria-checked", "true");
+    expect(within(modifica).getByRole("menuitemradio", { name: "Qualsiasi data" })).toHaveAttribute(
+      "aria-checked",
+      "false",
+    );
+    await waitFor(() => expect(vi.mocked(api.cerca).mock.lastCall![0].modificata).not.toBeNull());
+  });
+
+  it("Esc torna alla card con lo stesso testo; aprire un risultato svuota la ricerca (CA-08.20)", async () => {
+    const { onApri, onTornaAllaCard } = disegnaAvanzata();
+    await userEvent.type(campo(), "rilascio");
+    await within(card()).findByRole("listbox");
+    await userEvent.click(
+      within(card()).getByRole("button", { name: /^Mostra tutti i risultati/ }),
+    );
+    await userEvent.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog", { name: "Ricerca avanzata" })).toBeNull();
+    expect(onTornaAllaCard).toHaveBeenCalledTimes(1);
+    expect(campo()).toHaveValue("rilascio");
+    // Riaperta, un clic su un risultato lo apre e svuota tutto.
+    campo().focus();
+    await userEvent.click(await within(card()).findByRole("button", { name: /^Mostra tutti/ }));
+    await userEvent.click(within(avanzata()).getAllByRole("option")[1]!);
+    expect(onApri).toHaveBeenCalledWith(TROVATI[1]);
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(campo()).toHaveValue("");
+  });
+
+  it("con la tastiera: freccia giù entra nei risultati, Invio apre (CA-08.21)", async () => {
+    const { onApri } = disegnaAvanzata();
+    await userEvent.type(campo(), "rilascio");
+    await within(card()).findByRole("listbox");
+    await userEvent.click(within(card()).getByRole("button", { name: /^Mostra tutti/ }));
+    await userEvent.keyboard("{ArrowDown}{ArrowDown}{ArrowUp}{Enter}");
+    expect(onApri).toHaveBeenCalledWith(TROVATI[0]);
   });
 });

@@ -77,10 +77,23 @@ const alberoDiProva = () =>
   );
 
 const riga = (nome: string | RegExp) => screen.findByRole("treeitem", { name: nome });
+/** Il titolo della nota aperta nel percorso (CMP-26): un pulsante che apre Info (DEC-96). */
+const titoloNota = (nome: string) => screen.findByRole("button", { name: nome, current: "page" });
+/** Apre Info dal titolo e la restituisce (CMP-24, tipo Comparsa). */
+const apriInfo = async (titolo: string) => {
+  await userEvent.click(await titoloNota(titolo));
+  return screen.findByRole("dialog", { name: new RegExp(`^Info di`) });
+};
+/** Rinomina la nota aperta dal campo del titolo di Info (CA-04.7). */
+const scriviTitolo = async (titolo: string, aggiunta: string) => {
+  const info = await apriInfo(titolo);
+  await userEvent.type(within(info).getByRole("textbox", { name: "Titolo" }), aggiunta);
+};
 
 beforeEach(() => {
   vi.resetAllMocks();
   vi.mocked(api.cestino).mockResolvedValue([]);
+  vi.mocked(api.elencaTag).mockResolvedValue([]);
   // Di norma la nota lasciata non è vuota: l'API risponde 409 e non la cancella (DEC-39).
   vi.mocked(api.eliminaSeVuota).mockRejectedValue(new ErroreApi(409, "non vuota"));
 });
@@ -143,7 +156,7 @@ describe("SC-01, non organizzate", () => {
       id === "a" ? nota("a", "Lista della spesa") : nota("b", "", "prime parole"),
     );
     render(<FinestraPrincipale />);
-    expect(await screen.findByDisplayValue("Lista della spesa")).toBeInTheDocument();
+    expect(await titoloNota("Lista della spesa")).toBeInTheDocument();
     await userEvent.click(await riga("prime parole"));
     await waitFor(async () =>
       expect(await riga("prime parole")).toHaveAttribute("aria-current", "true"),
@@ -167,7 +180,7 @@ describe("SC-01, non organizzate", () => {
     await waitFor(() =>
       expect(screen.queryByRole("treeitem", { name: "Nota vuota" })).not.toBeInTheDocument(),
     );
-    expect(await screen.findByDisplayValue("Lista")).toBeInTheDocument();
+    expect(await titoloNota("Lista")).toBeInTheDocument();
   });
 
   it("il + ha il suggerimento «Nuova nota» e la sezione si chiude dal titolo", async () => {
@@ -401,9 +414,8 @@ describe("menu ··· e Sposta in (CA-05.4, CA-15.1)", () => {
       nota("r", "Riunione di lunedì", "", "Lavoro/Clienti"),
     );
     render(<FinestraPrincipale />);
-    await screen.findByDisplayValue("Riunione di lunedì");
-    await userEvent.click(screen.getByRole("button", { name: "Altre azioni" }));
-    await userEvent.click(screen.getByRole("menuitem", { name: "Sposta in…" }));
+    const info = await apriInfo("Riunione di lunedì");
+    await userEvent.click(within(info).getByRole("button", { name: "Sposta in…" }));
     const pannello = screen.getByRole("dialog", { name: "Sposta in" });
     expect(within(pannello).getByRole("option", { name: /Non organizzate/ })).toHaveAttribute(
       "aria-current",
@@ -425,7 +437,9 @@ describe("menu ··· e Sposta in (CA-05.4, CA-15.1)", () => {
     );
     await userEvent.click(within(pannello).getByRole("option", { name: "Clienti" }));
     await waitFor(() => expect(api.spostaNota).toHaveBeenCalledWith("r", "Lavoro/Clienti"));
-    expect(screen.getByDisplayValue("Riunione di lunedì")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Riunione di lunedì", current: "page" }),
+    ).toBeInTheDocument();
     expect(await riga(/Lavoro/)).toHaveAttribute("aria-expanded", "true");
     expect(await riga(/Clienti/)).toHaveAttribute("aria-expanded", "true");
   });
@@ -433,7 +447,7 @@ describe("menu ··· e Sposta in (CA-05.4, CA-15.1)", () => {
   it("il tasto destro su una nota della colonna dà Info, Sposta in ed Elimina, senza aprirla", async () => {
     vi.mocked(api.spostaNota).mockResolvedValue(nota("b", "Budget 2026", "", "Personale"));
     render(<FinestraPrincipale />);
-    await screen.findByDisplayValue("Riunione di lunedì");
+    await titoloNota("Riunione di lunedì");
     await userEvent.click(await riga(/Lavoro/));
     fireEvent.contextMenu(await riga("Budget 2026"));
     expect(screen.getAllByRole("menuitem").map((v) => v.textContent)).toEqual([
@@ -449,26 +463,75 @@ describe("menu ··· e Sposta in (CA-05.4, CA-15.1)", () => {
     );
     await userEvent.click(within(pannello).getByRole("option", { name: "Personale" }));
     await waitFor(() => expect(api.spostaNota).toHaveBeenCalledWith("b", "Personale"));
-    expect(screen.getByDisplayValue("Riunione di lunedì")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Riunione di lunedì", current: "page" }),
+    ).toBeInTheDocument();
   });
 
-  it("il menu ··· ha Info, Sposta in, Chiudi nota ed Elimina; il cestino si apre dalla riga in fondo (DEC-40, DEC-44, DEC-68)", async () => {
+  it("il clic sul titolo apre Info con Sposta in, Chiudi nota ed Elimina; niente ···; il cestino si apre dalla riga in fondo (DEC-40, DEC-96)", async () => {
     vi.mocked(api.albero).mockResolvedValue({ ...alberoDiProva(), cestino: 2 });
     render(<FinestraPrincipale />);
-    await screen.findByDisplayValue("Riunione di lunedì");
+    await titoloNota("Riunione di lunedì");
     expect(screen.getByRole("button", { name: /^Cestino/ })).toHaveTextContent("2");
-    await userEvent.click(screen.getByRole("button", { name: "Altre azioni" }));
-    expect(screen.getAllByRole("menuitem").map((v) => v.textContent)).toEqual([
-      "Info",
-      "Sposta in…",
+    expect(screen.queryByRole("button", { name: "Altre azioni" })).not.toBeInTheDocument();
+    const info = await apriInfo("Riunione di lunedì");
+    expect(info).not.toHaveAttribute("aria-modal");
+    expect(within(info).getByRole("textbox", { name: "Titolo" })).toHaveFocus();
+    expect(within(info).getByRole("button", { name: "Sposta in…" })).toBeInTheDocument();
+    expect(within(info).getByRole("button", { name: /^Chiudi nota/ })).toHaveTextContent(
       "Chiudi notaCtrl + W",
-      "Elimina",
-    ]);
+    );
+    expect(within(info).getByRole("button", { name: "Elimina" })).toBeInTheDocument();
+    // Un altro clic sul titolo la chiude (CA-04.2).
+    await userEvent.click(await titoloNota("Riunione di lunedì"));
+    expect(screen.queryByRole("dialog", { name: /^Info di/ })).not.toBeInTheDocument();
+  });
+
+  it("dal tasto destro Info si apre al centro con il velo, senza Chiudi nota (CA-04.2, CA-04.8)", async () => {
+    vi.mocked(api.leggi).mockImplementation(async (id) =>
+      id === "b" ? nota("b", "Budget 2026", "", "Lavoro") : nota("r", "Riunione di lunedì"),
+    );
+    render(<FinestraPrincipale />);
+    await titoloNota("Riunione di lunedì");
+    await userEvent.click(await riga(/Lavoro/));
+    fireEvent.contextMenu(await riga("Budget 2026"));
+    await userEvent.click(screen.getByRole("menuitem", { name: "Info" }));
+    const info = await screen.findByRole("dialog", { name: "Info di Budget 2026" });
+    expect(info).toHaveAttribute("aria-modal", "true");
+    expect(within(info).queryByRole("button", { name: /^Chiudi nota/ })).toBeNull();
+    expect(within(info).getByRole("button", { name: "Elimina" })).toBeInTheDocument();
+    await userEvent.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog", { name: "Info di Budget 2026" })).toBeNull();
+    // La nota aperta resta quella di prima.
+    expect(await titoloNota("Riunione di lunedì")).toBeInTheDocument();
+  });
+
+  it("il titolo cambiato in Info cambia subito nel percorso (CA-04.7)", async () => {
+    vi.mocked(api.salva).mockResolvedValue(nota("r", "Riunione di martedì"));
+    render(<FinestraPrincipale />);
+    const info = await apriInfo("Riunione di lunedì");
+    const campo = within(info).getByRole("textbox", { name: "Titolo" });
+    await userEvent.clear(campo);
+    expect(await titoloNota("Senza titolo")).toBeInTheDocument();
+    await userEvent.type(campo, "Riunione di martedì");
+    expect(await titoloNota("Riunione di martedì")).toBeInTheDocument();
+    fireEvent.blur(window);
+    await waitFor(() =>
+      expect(api.salva).toHaveBeenLastCalledWith("r", { titolo: "Riunione di martedì" }),
+    );
+  });
+
+  it("Ctrl + W con Info aperta chiude la nota e Info (CA-04.8)", async () => {
+    render(<FinestraPrincipale />);
+    await apriInfo("Riunione di lunedì");
+    await userEvent.keyboard("{Control>}w{/Control}");
+    expect(await screen.findByText("Nessuna nota aperta")).toBeInTheDocument();
+    expect(screen.queryByRole("dialog", { name: /^Info di/ })).toBeNull();
   });
 
   it("Ctrl + W chiude la nota aperta come «Chiudi nota» (DEC-70)", async () => {
     render(<FinestraPrincipale />);
-    await screen.findByDisplayValue("Riunione di lunedì");
+    await titoloNota("Riunione di lunedì");
     await userEvent.keyboard("{Control>}w{/Control}");
     expect(await screen.findByText("Nessuna nota aperta")).toBeInTheDocument();
     expect(screen.getByText("Riunione di lunedì")).toBeInTheDocument();
@@ -476,11 +539,12 @@ describe("menu ··· e Sposta in (CA-05.4, CA-15.1)", () => {
 
   it("Chiudi nota lascia l'area vuota e la nota resta nella colonna (DEC-68)", async () => {
     render(<FinestraPrincipale />);
-    await screen.findByDisplayValue("Riunione di lunedì");
-    await userEvent.click(screen.getByRole("button", { name: "Altre azioni" }));
-    await userEvent.click(screen.getByRole("menuitem", { name: /^Chiudi nota/ }));
+    const info = await apriInfo("Riunione di lunedì");
+    await userEvent.click(within(info).getByRole("button", { name: /^Chiudi nota/ }));
     expect(await screen.findByText("Nessuna nota aperta")).toBeInTheDocument();
-    expect(screen.queryByDisplayValue("Riunione di lunedì")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Riunione di lunedì", current: "page" }),
+    ).not.toBeInTheDocument();
     expect(api.cestinaNota).not.toHaveBeenCalled();
     expect(screen.getByText("Riunione di lunedì")).toBeInTheDocument();
   });
@@ -494,12 +558,11 @@ describe("menu ··· e Sposta in (CA-05.4, CA-15.1)", () => {
       eliminato: "2026-09-28T10:00:00Z",
     });
     render(<FinestraPrincipale />);
-    await screen.findByDisplayValue("Riunione di lunedì");
-    await userEvent.click(screen.getByRole("button", { name: "Altre azioni" }));
-    await userEvent.click(screen.getByRole("menuitem", { name: "Elimina" }));
+    const info = await apriInfo("Riunione di lunedì");
+    await userEvent.click(within(info).getByRole("button", { name: "Elimina" }));
     expect(api.cestinaNota).toHaveBeenCalledWith("r");
     expect(await screen.findByText("Nessuna nota aperta")).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Altre azioni" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { current: "page" })).not.toBeInTheDocument();
   });
 });
 
@@ -530,7 +593,7 @@ describe("SC-04 Cestino (RF-15)", () => {
 
   const apriCestino = async () => {
     render(<FinestraPrincipale />);
-    await screen.findByDisplayValue("Riunione di lunedì");
+    await titoloNota("Riunione di lunedì");
     await userEvent.click(screen.getByRole("button", { name: /^Cestino/ }));
     await screen.findByRole("heading", { name: "Cestino" });
   };
@@ -548,7 +611,7 @@ describe("SC-04 Cestino (RF-15)", () => {
   it("con il cestino aperto, il clic sulla nota già aperta torna alla nota", async () => {
     await apriCestino();
     await userEvent.click(await riga("Riunione di lunedì"));
-    expect(await screen.findByDisplayValue("Riunione di lunedì")).toBeInTheDocument();
+    expect(await titoloNota("Riunione di lunedì")).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Cestino" })).not.toBeInTheDocument();
   });
 
@@ -611,7 +674,7 @@ describe("SC-07 quando l'API non risponde (RB-61, CA-01.7, CA-02.13)", () => {
       screen.getByText("Il server delle note non risponde. Avvialo e premi Riprova."),
     ).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Riprova" }));
-    expect(await screen.findByDisplayValue("Lista della spesa")).toBeInTheDocument();
+    expect(await titoloNota("Lista della spesa")).toBeInTheDocument();
     expect(screen.queryByText("Memodu non riesce a collegarsi")).not.toBeInTheDocument();
   });
 
@@ -629,15 +692,16 @@ describe("SC-07 quando l'API non risponde (RB-61, CA-01.7, CA-02.13)", () => {
       .mockRejectedValueOnce(new Error("spento"))
       .mockResolvedValue(nota("a", "Lista della spesa"));
     render(<FinestraPrincipale />);
-    const titolo = await screen.findByDisplayValue("Lista");
-    await userEvent.type(titolo, " della spesa");
+    await scriviTitolo("Lista", " della spesa");
     fireEvent.blur(window);
     expect(await screen.findByText("Memodu non riesce a collegarsi")).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Riprova" }));
     await waitFor(() =>
       expect(api.salva).toHaveBeenLastCalledWith("a", { titolo: "Lista della spesa" }),
     );
-    expect(screen.getByDisplayValue("Lista della spesa")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Lista della spesa", current: "page" }),
+    ).toBeInTheDocument();
   });
 });
 
@@ -662,10 +726,12 @@ describe("nota eliminata da fuori mentre è aperta", () => {
     vi.mocked(api.cestino).mockResolvedValue([nelCestino]);
     vi.mocked(api.ripristina).mockResolvedValue(nota("a", "Lista"));
     render(<FinestraPrincipale />);
-    await userEvent.type(await screen.findByDisplayValue("Lista"), " della spesa");
+    await scriviTitolo("Lista", " della spesa");
     fireEvent.blur(window);
     expect(await screen.findByText("La nota è nel cestino.")).toBeInTheDocument();
-    expect(screen.queryByDisplayValue("Lista della spesa")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Lista della spesa", current: "page" }),
+    ).not.toBeInTheDocument();
     expect(screen.queryByText("Memodu non riesce a collegarsi")).not.toBeInTheDocument();
 
     vi.mocked(api.leggi).mockResolvedValue(nota("a", "Lista della spesa"));
@@ -674,14 +740,14 @@ describe("nota eliminata da fuori mentre è aperta", () => {
     await waitFor(() =>
       expect(api.salva).toHaveBeenLastCalledWith("a", { titolo: "Lista della spesa" }),
     );
-    expect(await screen.findByDisplayValue("Lista della spesa")).toBeInTheDocument();
+    expect(await titoloNota("Lista della spesa")).toBeInTheDocument();
     expect(screen.queryByText("La nota è nel cestino.")).not.toBeInTheDocument();
   });
 
   it("eliminata per sempre: avviso senza Ripristina", async () => {
     vi.mocked(api.salva).mockRejectedValue(new ErroreApi(404, "non c'è"));
     render(<FinestraPrincipale />);
-    await userEvent.type(await screen.findByDisplayValue("Lista"), "!");
+    await scriviTitolo("Lista", "!");
     fireEvent.blur(window);
     expect(await screen.findByText("La nota è stata eliminata.")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Ripristina" })).not.toBeInTheDocument();
@@ -828,6 +894,22 @@ describe("ricerca nella colonna (RF-08, DEC-94)", () => {
     await userEvent.click(await screen.findByRole("option", { name: /Budget 2026/ }));
     await waitFor(() => expect(api.leggi).toHaveBeenCalledWith("b"));
     expect(colonna()).toHaveClass("colonna-chiusa");
+  });
+
+  it("Ctrl + Maiusc + K apre la ricerca avanzata; Esc torna alla card nella colonna (CA-08.17, CA-08.20)", async () => {
+    render(<FinestraPrincipale />);
+    await riga("Riunione di lunedì");
+    await userEvent.keyboard("{Control>}{Shift>}k{/Shift}{/Control}");
+    const finestra = await screen.findByRole("dialog", { name: "Ricerca avanzata" });
+    await userEvent.type(
+      within(finestra).getByRole("textbox", { name: "Cerca nelle note" }),
+      "rilascio",
+    );
+    await userEvent.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog", { name: "Ricerca avanzata" })).toBeNull();
+    await waitFor(() => expect(campo()).toHaveFocus());
+    expect(campo()).toHaveValue("rilascio");
+    expect(colonna()).toHaveClass("colonna-aperta");
   });
 
   it("con Esc la colonna aperta da Ctrl + K si richiude; fissata resta (CA-08.11)", async () => {

@@ -1,6 +1,6 @@
 // SC-03 Schermata di scrittura: in alto, al centro, il percorso con le cartelle e il titolo
-// (CMP-26, DEC-71), che passandoci sopra mostra ultima modifica e tag (CMP-27); nel foglio solo
-// il testo della nota, che scorre tutto insieme (DEC-59).
+// (CMP-26, DEC-71); un clic sul titolo apre Info (CMP-24, DEC-96). Nel foglio solo il testo
+// della nota, che scorre tutto insieme (DEC-59).
 // Le modifiche risalgono con onModifica: il salvataggio lo fa la finestra principale (RB-06).
 
 import { useRef, type ReactElement } from "react";
@@ -14,24 +14,31 @@ interface Proprieta {
   nota: Nota;
   /** Nota appena creata: il cursore va nel corpo (CA-02.1). */
   nuova: boolean;
+  /** Info è aperta sotto il titolo. */
+  infoAperta: boolean;
   onModifica: (dati: DatiNota) => void;
+  /** Clic sul titolo del percorso: Info si apre sotto (DEC-96). */
+  onApriInfo: (ancora: { x: number; y: number }) => void;
   /** Una cartella del percorso: la si apre nella colonna. */
   onApriCartella: (percorso: PercorsoCartella) => void;
 }
 
-export function NotaAperta({ nota, nuova, onModifica, onApriCartella }: Proprieta): ReactElement {
+export function NotaAperta({
+  nota,
+  nuova,
+  infoAperta,
+  onModifica,
+  onApriInfo,
+  onApriCartella,
+}: Proprieta): ReactElement {
   const pagina = useRef<HTMLElement>(null);
   return (
     <>
       <Percorso
         cartella={nota.cartella}
         titolo={nota.titolo}
-        modificata={nota.modificata}
-        tag={nota.tag}
-        onTitolo={(titolo) => onModifica({ titolo })}
-        onTornaAlTesto={() =>
-          pagina.current?.querySelector<HTMLElement>("[contenteditable=true]")?.focus()
-        }
+        infoAperta={infoAperta}
+        onApriInfo={onApriInfo}
         onApriCartella={onApriCartella}
       />
       <article

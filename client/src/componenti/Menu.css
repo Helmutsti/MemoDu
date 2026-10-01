@@ -66,3 +66,24 @@
   border-bottom: 1px solid var(--bordo-divisore-tenue);
   margin-bottom: var(--spazio-elemento);
 }
+
+/* Voce fuori da un menu (VoceAzione, DEC-96): un pulsante con l'aspetto della voce. */
+.voce-azione {
+  display: block;
+  width: 100%;
+  border: none;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: default;
+}
+.voce-azione:hover .voce-menu-riga {
+  background: var(--sfondo-hover);
+}
+.voce-azione:focus {
+  outline: none;
+}
+:root[data-tastiera] .voce-azione:focus-visible .voce-menu-riga {
+  outline: var(--focus-spessore) solid var(--focus-anello);
+  outline-offset: calc(0px - var(--focus-spessore));
+}

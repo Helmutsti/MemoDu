@@ -988,7 +988,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 ---
 
 ## CMP-27 – Comparsa dei metadati
-**SUPERATO (DEC-96):** passando sul titolo non compare più niente; con un clic sul titolo si apre Info (CMP-24), che mostra e modifica anche ultima modifica e tag. La scheda resta finché codice e mockup che la usano non sono aggiornati.
+**SUPERATO (DEC-96):** passando sul titolo non compare più niente; con un clic sul titolo si apre Info (CMP-24), che mostra e modifica anche ultima modifica e tag. Il codice è tolto il 01/10/2026; la scheda resta finché ci sono i mockup superati che la usano.
 
 **Tipo:** composto · **Usato in:** SC-03 · **Figma:** pagina Componenti composti, sezione CMP-27 Comparsa dei metadati
 

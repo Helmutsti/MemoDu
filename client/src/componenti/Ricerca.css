@@ -191,3 +191,12 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* «Mostra tutti i risultati» in fondo alla card (DEC-96): una voce come nei menu. */
+.card-ricerca-avanzata {
+  flex: none;
+  padding: 0 var(--spazio-flottante);
+}
+.card-ricerca-avanzata .voce-menu {
+  padding: 0;
+}
