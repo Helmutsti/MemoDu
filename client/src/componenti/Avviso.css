@@ -1,4 +1,4 @@
-/* CMP-15 Avviso: largo 480, raggio 20, margini 16 a sinistra e 8 a destra, 8 sopra e sotto.
+/* CMP-15 Avviso: largo 480, raggio 20; ruolo pannello, spazio-pannello su tutti i lati (DEC-100).
    Sta 8 sotto la fascia in alto (a 48 dal bordo), così non copre il percorso (DEC-86). */
 .avviso {
   position: absolute;
@@ -10,8 +10,7 @@
   gap: var(--spazio-icona);
   width: 480px;
   max-width: calc(100% - 2 * var(--spazio-gruppo));
-  padding: var(--spazio-controllo-piccolo) var(--spazio-controllo-piccolo)
-    var(--spazio-controllo-piccolo) var(--spazio-blocco);
+  padding: var(--spazio-pannello);
   transform: translateX(-50%);
   border-radius: var(--raggio-contenitore);
   box-shadow: var(--ombra);
