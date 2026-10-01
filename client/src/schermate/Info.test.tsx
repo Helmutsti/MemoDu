@@ -280,6 +280,19 @@ describe("CMP-24 Info (DEC-96)", () => {
     expect(f.onChiudi).toHaveBeenCalledTimes(1);
   });
 
+  it("in una finestra stretta la comparsa si restringe e resta a 8 da entrambi i lati", () => {
+    const prima = window.innerWidth;
+    Object.defineProperty(window, "innerWidth", { configurable: true, value: 300 });
+    try {
+      apri(nota, "comparsa");
+      const info = screen.getByRole("dialog", { name: "Info di Budget 2026" });
+      expect(info.style.width).toBe("284px");
+      expect(info.style.left).toBe("8px");
+    } finally {
+      Object.defineProperty(window, "innerWidth", { configurable: true, value: prima });
+    }
+  });
+
   it("senza titolo il campo è vuoto con «Senza titolo» (RB-15)", () => {
     apri({ ...nota, titolo: "" }, "comparsa");
     const campo = screen.getByRole("textbox", { name: "Titolo" });

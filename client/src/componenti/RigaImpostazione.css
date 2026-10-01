@@ -1,14 +1,19 @@
-/* CMP-18: larga quanto la pagina (560), margini 12, 16 tra testo e controllo. */
+/* CMP-18 (DEC-100): larga quanto la pagina (560), 12 a sinistra, 16 tra testo e controllo; a
+   destra finisce con il controllo e ha spazio-controllo-piccolo, senza controllo 12. */
 .riga-impostazione {
   display: flex;
   align-items: center;
   gap: var(--spazio-blocco);
   width: 100%;
-  padding: var(--spazio-controllo-piccolo) var(--spazio-controllo);
+  padding: var(--spazio-controllo-piccolo) var(--spazio-controllo-piccolo)
+    var(--spazio-controllo-piccolo) var(--spazio-controllo);
   border: none;
   border-radius: var(--raggio-interno);
   background: none;
   text-align: left;
+}
+.riga-impostazione:has(> .riga-impostazione-testi:only-child) {
+  padding-right: var(--spazio-controllo);
 }
 .riga-impostazione-testi {
   display: flex;

@@ -184,13 +184,18 @@ export function Info(p: Proprieta): ReactElement {
 
   const note = (nome: string) => p.tutti.find((t) => stesso(t.nome, nome))?.note ?? 0;
 
-  // La comparsa sta sotto il titolo, centrata su di lui, senza uscire dalla finestra.
+  // La comparsa sta sotto il titolo, centrata su di lui, senza uscire dalla finestra. In una
+  // finestra stretta si restringe: la larghezza vera serve sia alla misura sia alla posizione,
+  // così resta a MARGINE_FINESTRA da entrambi i lati.
+  const larghezza = Math.min(LARGHEZZA, window.innerWidth - 2 * MARGINE_FINESTRA);
   const posizione =
     comparsa && p.ancora
       ? {
+          width: larghezza,
+          maxWidth: "none",
           left: Math.max(
             MARGINE_FINESTRA,
-            Math.min(p.ancora.x - LARGHEZZA / 2, window.innerWidth - LARGHEZZA - MARGINE_FINESTRA),
+            Math.min(p.ancora.x - larghezza / 2, window.innerWidth - larghezza - MARGINE_FINESTRA),
           ),
           top: p.ancora.y + DISTANZA,
         }

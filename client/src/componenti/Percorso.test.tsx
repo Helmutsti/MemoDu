@@ -29,6 +29,13 @@ describe("CMP-26 Percorso (DEC-71, DEC-96)", () => {
     expect(screen.getByRole("button", { current: "page" })).toHaveTextContent("Senza titolo");
   });
 
+  it("passando sul titolo si legge intero, anche quando finisce con i puntini", () => {
+    render(<Percorso {...base} cartella="" titolo="Un titolo molto lungo che non sta" />);
+    expect(
+      screen.getByRole("button", { name: "Un titolo molto lungo che non sta" }),
+    ).toHaveAttribute("title", "Un titolo molto lungo che non sta");
+  });
+
   it("con più di due cartelle quelle di mezzo diventano «…», che le elenca", async () => {
     render(<Percorso {...base} cartella="Lavoro/Clienti/Preventivi" titolo="Budget 2026" />);
     expect(screen.queryByRole("button", { name: "Clienti" })).not.toBeInTheDocument();

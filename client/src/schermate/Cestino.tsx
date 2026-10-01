@@ -76,23 +76,29 @@ export function Cestino({ elementi, onRipristina, onElimina, onSvuota }: Proprie
       <ul className="cestino-elenco">
         {elementi.map((e) => (
           <li key={e.id} className="elemento-cestino">
-            <span className="elemento-cestino-icona">
-              <Icona di={e.tipo === "nota" ? FileText : Folder} />
-            </span>
-            <span className="elemento-cestino-testi">
-              <span className="elemento-cestino-nome interfaccia-titolo">
-                {e.nome || "Nota vuota"}
+            <span className="elemento-cestino-contenuto">
+              <span className="elemento-cestino-icona">
+                <Icona di={e.tipo === "nota" ? FileText : Folder} />
               </span>
-              <span className="elemento-cestino-dettagli interfaccia-dettaglio">{dettagli(e)}</span>
+              <span className="elemento-cestino-testi">
+                <span className="elemento-cestino-nome interfaccia-titolo">
+                  {e.nome || "Nota vuota"}
+                </span>
+                <span className="elemento-cestino-dettagli interfaccia-dettaglio">
+                  {dettagli(e)}
+                </span>
+              </span>
             </span>
-            <Pulsante tipo="tenue" onClick={() => onRipristina(e)}>
-              Ripristina
-            </Pulsante>
-            <PulsanteIcona
-              nome="Elimina definitivamente"
-              icona={<Icona di={Trash2} />}
-              onClick={() => setDaEliminare(e)}
-            />
+            <span className="elemento-cestino-azioni">
+              <Pulsante tipo="tenue" onClick={() => onRipristina(e)}>
+                Ripristina
+              </Pulsante>
+              <PulsanteIcona
+                nome="Elimina definitivamente"
+                icona={<Icona di={Trash2} />}
+                onClick={() => setDaEliminare(e)}
+              />
+            </span>
           </li>
         ))}
       </ul>

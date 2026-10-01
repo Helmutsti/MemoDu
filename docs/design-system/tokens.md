@@ -147,7 +147,7 @@ Un solo carattere: **Inter**.
 Gli stili sono il livello semantico: si sceglie lo stile dal ruolo del testo, mai dalla taglia, e un testo senza stile non è ammesso (DEC-22). Sotto gli stili ci sono i primitivi nascosti `tipo-famiglia` (Inter), `tipo-dimensione-11` … `-30` e `tipo-peso-regular` … `-bold`, collegati a famiglia, dimensione e peso di ogni stile; interlinea e spaziatura restano nello stile, perché sono in percentuale. Ruoli diversi con gli stessi valori (controllo e messaggio, controllo attivo e titolo) restano stili separati: se un ruolo cambia, non trascina l'altro.
 
 ## Ombre ed elevazione
-Un'ombra sola, solo su ciò che fluttua (regola 5): `ombra-flottante` = 0 8 24, colore `ombra-flottante`. La usano i livelli 20–50 della scala z-index; i livelli 0 e 10 sono piatti.
+Un'ombra sola, solo su ciò che fluttua (regola 5): `ombra-flottante` = 0 8 24, colore `ombra-flottante`. La usano i livelli 20–50 della scala z-index; i livelli 0 e 10 sono piatti. Eccezione: `ombra-sopra` = 0 −4 12, stesso colore, per il fondo della colonna (CMP-30) quando il contenuto gli scorre sotto (stile Ombra/Sopra nella libreria).
 
 ## Scala z-index
 | Token | Valore | Uso |

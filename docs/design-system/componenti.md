@@ -35,6 +35,7 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-27 | Comparsa dei metadati (DEC-71) | composto | Superato da CMP-24 (DEC-96) |
 | CMP-28 | Scelta a segmenti (tema, DEC-91) | base | Disegnato |
 | CMP-29 | Ricerca avanzata (DEC-96) | composto | Disegnato |
+| CMP-30 | Fondo della colonna (Cestino e Impostazioni, ombra quando il contenuto scorre sotto) | composto | Disegnato |
 
 L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'icona di sistema e non è un componente.
 
@@ -700,7 +701,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 
 ### Varianti e dimensioni
 - **Nota** e **Cartella**: icona Lucide 16 (`file-text` o `folder`) in `icona-tenue`, nome Interfaccia/Titolo, sotto tipo, provenienza e data di eliminazione (Interfaccia/Dettaglio, `testo-tenue`; per le cartelle anche il numero di note). A destra Ripristina (pulsante tenue) ed **Elimina definitivamente** (pulsante solo icona con il cestino e il suggerimento "Elimina definitivamente", DEC-17): chiede conferma (CMP-16, RB-55).
-- Largo 560, margini 12 a sinistra, 8 a destra, 8 sopra e sotto, su `sfondo-nota`. Blocco su due righe: hover con `raggio-interno`.
+- Largo 560, su `sfondo-nota`. Blocco su due righe: hover con `raggio-interno`. Spazi (DEC-100): `spazio-controllo` (12) a sinistra, `spazio-controllo-piccolo` (8) a destra, perché finisce con i pulsanti, e sopra e sotto, come ogni riga su più linee; `spazio-icona` (8) tra icona e testi, `spazio-blocco` (16) tra i testi e i pulsanti, `spazio-icona` (8) tra Ripristina ed Elimina definitivamente.
 
 ### Stati
 | Stato | Descrizione |
@@ -737,7 +738,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 - **Scelta:** etichetta e descrizione a sinistra, scelta a segmenti (CMP-28) a destra, es. il tema Sistema · Chiaro · Scuro (DEC-91). Si attiva solo la scelta.
 - **Scorciatoia:** come Campo, con il campo della combinazione e a destra il pulsante tenue «Ripristina», che torna al valore di default. Si clicca il campo e si preme la combinazione nuova; se un altro programma la usa già, l'errore è nel campo e resta la vecchia (DEC-91).
 - **Informazione:** etichetta e valore in `testo-tenue`, senza controllo e senza hover, es. «Stato · Sincronizzata alle 14:32» (DEC-91).
-- Largo 560, margini 12, 16 tra testo e controllo, su `sfondo-nota`.
+- Largo 560, su `sfondo-nota`. Spazi (DEC-100): `spazio-controllo` (12) a sinistra; a destra `spazio-controllo-piccolo` (8) quando la riga finisce con un controllo (interruttore, campo, scelta, pulsante), `spazio-controllo` (12) senza controllo (Informazione); `spazio-controllo-piccolo` (8) sopra e sotto; `spazio-blocco` (16) tra testo e controllo.
 
 ### Stati
 | Stato | Descrizione |
@@ -1129,3 +1130,33 @@ Compare e sparisce con `movimento-durata-breve` (120 ms).
 ### Esempi
 - ✅ Corretto: dalla card con «rilascio» scritto, «Mostra tutti i risultati», poi spuntare il tag lavoro senza aprire menu.
 - ❌ Scorretto: aprire la ricerca avanzata vuota, perdendo quello che si era scritto nella card.
+
+---
+
+## CMP-30 – Fondo della colonna
+**Tipo:** composto (usa CMP-06 Cestino e Impostazioni) · **Usato in:** SC-01, SC-03, SC-04, SC-06 (in fondo alla colonna) · **Figma:** pagina Componenti composti, sezione CMP-30 Fondo della colonna
+
+**Scopo:** tenere Cestino e Impostazioni sempre raggiungibili in fondo alla colonna, anche mentre note e cartelle scorrono (DEC-40, DEC-91).
+**Quando usarlo:** solo in fondo alla colonna.
+**Quando non usarlo:** per altre azioni della colonna, che stanno nelle sezioni (CMP-06).
+
+### Varianti e dimensioni
+- Largo quanto la colonna, su `sfondo-colonna`, fermo sul fondo mentre la colonna scorre. Ruolo pannello (DEC-100): `spazio-pannello` (16) su tutti i lati, così sopra Cestino c'è lo stesso spazio che sotto Impostazioni; `spazio-elemento` (4) tra le due righe.
+- **Contenuto sotto = No:** nessuna ombra, quando tutto il contenuto sta sopra di lui.
+- **Contenuto sotto = Sì:** quando note e cartelle gli scorrono sotto, l'ombra verso l'alto `ombra-sopra` (0 −4 12, colore `ombra-flottante`) lo stacca dal contenuto.
+- Durante il trascinamento la riga Cestino diventa il cestino di trascinamento (CMP-14).
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Default | Come nelle varianti; l'ombra dipende da cosa c'è sotto |
+| Hover · Focus · Attivo | Li gestiscono le righe (CMP-06) |
+| Errore · Disabilitato · Caricamento | Non previsti |
+
+### Accessibilità
+- **Tastiera e lettori di schermo:** come le righe Cestino e Impostazioni (CMP-06); l'ombra è solo visiva.
+- **Contrasti:** come CMP-06 su `sfondo-colonna`.
+
+### Esempi
+- ✅ Corretto: colonna lunga, scorsa in cima: il fondo ha l'ombra e le note gli passano sotto; scorsa fino in fondo: l'ombra sparisce.
+- ❌ Scorretto: l'ombra sempre accesa, anche quando sotto non c'è niente.

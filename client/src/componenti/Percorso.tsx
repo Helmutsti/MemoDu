@@ -95,6 +95,8 @@ export function Percorso({
             aria-current="page"
             aria-haspopup="dialog"
             aria-expanded={infoAperta}
+            // Il titolo lungo finisce con i puntini: passandoci sopra si legge intero.
+            title={titolo || "Senza titolo"}
             onClick={(e) => {
               const r = e.currentTarget.getBoundingClientRect();
               onApriInfo({ x: r.left + r.width / 2, y: r.bottom });

@@ -6,6 +6,8 @@
 // sotto la riga Impostazioni (DEC-91). In cima, sotto la riga della puntina, la ricerca (DEC-94).
 
 import {
+  useEffect,
+  useRef,
   useState,
   type CSSProperties,
   type DragEvent,
@@ -92,6 +94,35 @@ export function accetta(t: Trascinato, d: Destinazione): boolean {
 export function Colonna(p: Proprieta): ReactElement {
   const [sezioni, setSezioni] = useState({ nonOrganizzate: true, cartelle: true });
   const [sopra, setSopra] = useState<string | null>(null);
+
+  // CMP-30: l'ombra del fondo compare solo quando l'ultima sezione finisce sotto di lui, cioè
+  // quando note e cartelle gli scorrono sotto. Si ricontrolla scorrendo, cambiando misura e
+  // quando il contenuto cambia.
+  const colonna = useRef<HTMLElement>(null);
+  const contenuto = useRef<HTMLDivElement>(null);
+  const fondo = useRef<HTMLDivElement>(null);
+  const [contenutoSotto, setContenutoSotto] = useState(false);
+  useEffect(() => {
+    const controlla = () => {
+      const ultima = contenuto.current?.lastElementChild;
+      if (!ultima || !fondo.current) return;
+      setContenutoSotto(
+        ultima.getBoundingClientRect().bottom > fondo.current.getBoundingClientRect().top + 0.5,
+      );
+    };
+    controlla();
+    const nav = colonna.current;
+    nav?.addEventListener("scroll", controlla, true);
+    window.addEventListener("resize", controlla);
+    const osserva = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(controlla);
+    if (osserva && contenuto.current) osserva.observe(contenuto.current);
+    if (osserva && nav) osserva.observe(nav);
+    return () => {
+      nav?.removeEventListener("scroll", controlla, true);
+      window.removeEventListener("resize", controlla);
+      osserva?.disconnect();
+    };
+  }, []);
 
   /** Gestori del trascinamento per una destinazione. */
   const destinazione = (d: Destinazione) => ({
@@ -229,6 +260,7 @@ export function Colonna(p: Proprieta): ReactElement {
 
   return (
     <nav
+      ref={colonna}
       className={`colonna colonna-${p.stato}`}
       aria-label="Note e cartelle"
       style={{ width: p.larghezza, "--larghezza-colonna": `${p.larghezza}px` } as CSSProperties}
@@ -240,6 +272,7 @@ export function Colonna(p: Proprieta): ReactElement {
           </div>
           {p.ricerca}
           <div
+            ref={contenuto}
             className="colonna-contenuto"
             role="tree"
             aria-label="Note e cartelle"
@@ -290,7 +323,10 @@ export function Colonna(p: Proprieta): ReactElement {
                 ))}
             </div>
           </div>
-          <div className="colonna-fondo">
+          <div
+            ref={fondo}
+            className={`colonna-fondo ${contenutoSotto ? "colonna-fondo-sopra-contenuto" : ""}`}
+          >
             {p.trascinato ? (
               <CestinoTrascinamento
                 sopra={sopra === "cestino"}

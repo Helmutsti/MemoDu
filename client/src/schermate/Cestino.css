@@ -32,17 +32,31 @@
   list-style: none;
 }
 
-/* CMP-17: blocco su due righe, margini 12 a sinistra e 8 a destra, 8 sopra e sotto. */
+/* CMP-17 (DEC-100): blocco su due righe, 12 a sinistra, 8 sopra e sotto. Icona e testi si leggono insieme (spazio-icona), testi e pulsanti sono
+   blocchi diversi (spazio-blocco), i due pulsanti stanno affiancati (spazio-icona). La riga
+   finisce con un controllo: a destra spazio-controllo-piccolo. */
 .elemento-cestino {
   display: flex;
   align-items: center;
-  gap: var(--spazio-icona);
+  gap: var(--spazio-blocco);
   padding: var(--spazio-controllo-piccolo) var(--spazio-controllo-piccolo)
     var(--spazio-controllo-piccolo) var(--spazio-controllo);
   border-radius: var(--raggio-interno);
 }
 .elemento-cestino:hover {
   background: var(--sfondo-hover);
+}
+.elemento-cestino-contenuto {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--spazio-icona);
+  min-width: 0;
+}
+.elemento-cestino-azioni {
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-icona);
 }
 .elemento-cestino-icona {
   display: inline-flex;
