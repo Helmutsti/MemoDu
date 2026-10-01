@@ -50,9 +50,9 @@ Tutto ciò che è alto una riga ha la pillola (regola 1). I blocchi su più righ
 ### Spazi dei contenitori (DEC-97)
 Due regole, uguali in tutti i componenti, nella libreria e nel codice:
 1. **Il contenitore flottante** (menu, pannello, calendario, card dei risultati, Info, ricerca avanzata) ha `spazio-flottante` (8) su tutti i lati e tra i blocchi. I pezzi dentro non hanno margini propri e riempiono la larghezza; anche i divisori stanno dentro il margine, rientrati di 8.
-2. **La riga a pillola** (voce di menu, campo, riga di Info, risultato) ha `spazio-controllo` (12) a sinistra e a destra, solo dentro la pillola.
+2. **La riga a pillola** (voce di menu, campo, risultato) ha `spazio-controllo` (12) a sinistra e a destra, solo dentro la pillola. Le righe di Info non sono pillole e non hanno spazi ai lati (DEC-98).
 
-Così in ogni contenitore le pillole stanno a 8 dal bordo e testi e icone partono a 20. Un pezzo che sembra stretto o largo si corregge con queste regole, non con un margine suo. Prima di mostrare un componente si misurano da script le distanze dal bordo, sopra, sotto e ai lati. Da guardare con le stesse regole: CMP-06, CMP-15, CMP-17 e la freccia del pulsante diviso (CMP-01).
+Così in ogni contenitore le pillole stanno a 8 dal bordo e il loro testo parte a 20. Un pezzo che sembra stretto o largo si corregge con queste regole, non con un margine suo. Prima di mostrare un componente si misurano da script le distanze dal bordo, sopra, sotto e ai lati. Da guardare con le stesse regole: CMP-06, CMP-15, CMP-17 e la freccia del pulsante diviso (CMP-01).
 
 ### Superfici su cui compare ogni componente
 Ogni componente si verifica su tutte le superfici in cui può comparire, in chiaro e in scuro (regola visiva 11, tabella "Fondi dei controlli sulle superfici" in `tokens.md`). I componenti flottanti hanno la propria superficie, `sfondo-flottante`, e si staccano dal resto con l'ombra.
@@ -904,15 +904,15 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 ### Varianti e dimensioni
 - **Comparsa:** sotto il titolo del percorso, centrata su di lui, 8 sotto; livello 20, senza velo, come i menu. In fondo, dopo un divisore, «Chiudi nota» (Ctrl + W) ed «Elimina» (voce distruttiva).
 - **Finestra:** al centro, livello 30 con il velo, come le finestre di conferma. In testa «Info» (Interfaccia/Titolo) e la ✕ (CMP-01 solo icona). In fondo solo «Elimina»: la nota non è aperta, non c'è niente da chiudere.
-- Larga 360; `sfondo-flottante`, `raggio-contenitore`, `ombra-flottante`. Le due regole degli spazi (DEC-97): margine `spazio-flottante` (8) su tutti i lati e tra i blocchi (titolo, righe, «Modificata», divisore, voci); ogni riga è una pillola alta 32 con `spazio-controllo` (12) ai lati. Icone e testi partono a 20, come nelle voci in fondo.
+- Larga 360; `sfondo-flottante`, `raggio-contenitore`, `ombra-flottante`. Margine `spazio-flottante` (8) su tutti i lati e tra i blocchi (titolo, righe, «Modificata», divisore, voci), l'unico ai lati (DEC-97, DEC-98): le righe, alte 32, «Modificata» e l'intestazione non hanno spazi propri e partono a 8. Il campo del titolo e le voci tengono `spazio-controllo` dentro la loro pillola, da componenti.
 - **Titolo:** il campo (CMP-03) largo quanto Info, senza etichetta; una nota senza titolo ha il campo vuoto con «Senza titolo» come segnaposto.
-- **Righe** (proposta C, DEC-97), ognuna con l'icona Lucide 16 in `icona-tenue` e la frase intera in Interfaccia/Controllo; passandoci sopra la pillola prende `sfondo-hover`:
+- **Righe** (proposta C, DEC-97), ognuna con l'icona Lucide 16 in `icona-tenue` e la frase intera in Interfaccia/Controllo; passandoci sopra la riga prende `sfondo-hover`, a tutta larghezza:
   - **Cartella** (`folder`): «Lavoro › Clienti» o «Non organizzata»; un clic apre il pannello Sposta in (CMP-11) accanto alla riga.
   - **Creazione** (`calendar`): «Creata il 12/09/2026»; il suggerimento della riga dà la data di sistema, «Data di sistema: 12/09/2026 alle 10:14» (RB-21). Se la data è stata cambiata, a destra «Ripristina» in `testo-tenue` (in `testo-primario` passandoci sopra) torna a quella di sistema.
   - **Fine validità** (`calendar`): «Fine validità il …» o, in `testo-tenue`, «Nessuna fine validità»; il suggerimento è «Solo un promemoria: alla scadenza non succede nulla» (RF-04).
   - **Tag** (`tag`): i tag (CMP-05 rimovibili, vanno a capo) e «+ Tag», pillola alta 24 con il bordo tratteggiato; un clic la sostituisce con il campo «Aggiungi un tag» (largo 132), che lasciato vuoto torna «+ Tag».
 - **Riga di data aperta:** con un clic, al posto della frase c'è il campo con la data selezionata (GG/MM/AAAA, senza fondo suo: la pillola resta evidenziata) e sotto la riga il calendario (CMP-12).
-- **«Modificata oggi alle 11:42»** in Interfaccia/Dettaglio e `testo-tenue`, con gli stessi lati delle righe, in sola lettura. Poi il divisore e le voci (CMP-07).
+- **«Modificata oggi alle 11:42»** in Interfaccia/Dettaglio e `testo-tenue`, a 8 come le righe, in sola lettura. Poi il divisore e le voci (CMP-07).
 
 ### Stati
 | Stato | Descrizione |
