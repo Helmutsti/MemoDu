@@ -63,10 +63,12 @@ const server = configuraServer(
   new ArchivioSincronizzazione(db, improntaGettone),
   schemaPronto,
 );
-// Su Vercel come nella sua guida per Fastify: basta la porta.
-await server.listen(
-  process.env.VERCEL
-    ? { port: Number(process.env.PORT ?? 3000) }
-    : { host: HOST_API, port: Number(process.env.PORT ?? PORTA_API) },
-);
-console.log(`In ascolto dopo ${Date.now() - avvio} ms`);
+// Su Vercel come nella sua guida per Fastify: basta la porta, e `listen` non si aspetta. Vercel
+// lo intercetta: aspettandolo al primo livello il modulo non finirebbe mai di caricarsi.
+void server
+  .listen(
+    process.env.VERCEL
+      ? { port: Number(process.env.PORT ?? 3000) }
+      : { host: HOST_API, port: Number(process.env.PORT ?? PORTA_API) },
+  )
+  .then(() => console.log(`In ascolto dopo ${Date.now() - avvio} ms`));
