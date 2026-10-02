@@ -1,4 +1,5 @@
-# Compila Memodu per Windows e macOS e allega gli installatori a una release su GitHub:
+# Compila Memodu per Windows e macOS (solo Apple Silicon, per ora niente Intel) e allega gli
+# installatori a una release su GitHub:
 # - spingendo un tag v* (per esempio v0.1.0): crea e pubblica la release «Memodu v0.1.0»;
 # - pubblicando una release dal sito: gli installatori vanno in quella;
 # - a mano dalla scheda Actions: una release in bozza con la versione di tauri.conf.json.
@@ -34,10 +35,6 @@ jobs:
             sistema: macos-latest
             argomenti: --target aarch64-apple-darwin
             bersaglio: aarch64-apple-darwin
-          - nome: macOS (Intel)
-            sistema: macos-latest
-            argomenti: --target x86_64-apple-darwin
-            bersaglio: x86_64-apple-darwin
     runs-on: ${{ matrix.sistema }}
 
     steps:
