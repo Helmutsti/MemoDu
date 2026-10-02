@@ -30,7 +30,7 @@ Scritti dall'agente dai flussi e dalle decisioni (FL-07, DEC-75 … DEC-83), da 
 - **CA-10.8** *Dato* un elemento modificato su un solo dispositivo, *quando* si sincronizzano, *allora* su tutti c'è la versione più aggiornata e nessuna copia in conflitto.
 - **CA-10.9** *Dato* il server irraggiungibile, *quando* passano meno di 24 ore dall'ultima sincronizzazione riuscita, *allora* non compare niente; oltre le 24 ore compare l'avviso «server irraggiungibile», che sparisce da solo quando la sincronizzazione riesce (RB-40, DEC-82).
 - **CA-10.10** *Dato* una sincronizzazione che fallisce a metà o una versione del protocollo che il server non riconosce, *quando* succede, *allora* compare l'avviso «errore di sincronizzazione», la copia di lavoro resta intatta e si riprova alla sincronizzazione successiva (RB-40, SF-32, DEC-83).
-- **CA-10.11** *Dato* il server, *quando* guardo i suoi file, *allora* per ogni elemento trovo la versione attuale e le precedenti degli ultimi 30 giorni, a scalare (DEC-77).
+- **CA-10.11** *Dato* il server, *quando* guardo il suo archivio, *allora* per ogni elemento trovo la versione attuale e le precedenti degli ultimi 30 giorni, a scalare (DEC-77).
 
 ---
 
@@ -52,7 +52,7 @@ Installo Memodu sul mio server e ottengo le credenziali dell'installazione. Inst
 
 ### Criteri di accettazione
 Scritti dall'agente dai flussi e dalle decisioni (FL-08, DEC-13, DEC-20, DEC-79), da confermare.
-- **CA-14.1** *Dato* il server avviato la prima volta, *quando* si avvia, *allora* genera le credenziali dell'installazione e le mostra una volta come una riga da copiare nel file `credenziali` dell'app; sul server resta solo l'impronta del gettone (DEC-79).
+- **CA-14.1** *Dato* una installazione nuova, *quando* genero le credenziali con `npm run credenziali`, *allora* il file `credenziali` da copiare su ogni dispositivo nasce una volta, non si sovrascrive, e il server conosce solo l'impronta del gettone (DEC-79, DEC-104).
 - **CA-14.2** *Dato* il file `credenziali` con credenziali valide, *quando* apro Memodu, *allora* la finestra si apre subito sulla copia di lavoro e la sincronizzazione parte in background, senza schermate di accesso (RNF-01, RB-54).
 - **CA-14.3** *Dato* credenziali rifiutate dal server, *quando* apro Memodu o il rifiuto arriva con l'app aperta, *allora* al posto della finestra, e della nota rapida, compare la schermata di blocco con Riprova; quello che era già scritto resta sulla copia di lavoro (RB-57, DEC-20).
 - **CA-14.4** *Dato* la schermata di blocco, *quando* correggo il file `credenziali` e premo Riprova, *allora* il file si rilegge, il blocco sparisce e la sincronizzazione riparte (DEC-20).
