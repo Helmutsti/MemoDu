@@ -25,6 +25,9 @@ export function daPostgres(indirizzo: string): Database {
     connectionString: indirizzo,
     max: 3,
     connectionTimeoutMillis: 10_000,
+    // Una richiesta che resta appesa si ferma: meglio un errore che una funzione che non risponde.
+    statement_timeout: 10_000,
+    query_timeout: 15_000,
   });
   const su = (c: pg.Pool | pg.PoolClient): Sql => ({
     righe: async <T>(testo: string, valori?: unknown[]) =>

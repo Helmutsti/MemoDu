@@ -43,13 +43,32 @@ if (inRete) {
   );
   console.log(`Archivio e credenziali in ${cartella}`);
 }
-await aggiornaSchema(db);
+// Il server si mette subito in ascolto; lo schema si prepara intanto e le richieste lo aspettano.
+// Se il database non risponde, la richiesta riceve un errore e la successiva riprova.
+const avvio = Date.now();
+let schema: Promise<void> | undefined;
+const schemaPronto = () =>
+  (schema ??= aggiornaSchema(db).then(
+    () => console.log(`Schema pronto in ${Date.now() - avvio} ms`),
+    (errore: unknown) => {
+      schema = undefined;
+      console.error("Schema non pronto:", errore);
+      throw errore;
+    },
+  ));
+schemaPronto().catch(() => undefined);
 
 const server = configuraServer(
   Fastify(opzioniServer({ registro: inRete })),
   new ArchivioSincronizzazione(db, improntaGettone),
 );
-await server.listen({
-  host: process.env.VERCEL ? "0.0.0.0" : HOST_API,
-  port: Number(process.env.PORT ?? PORTA_API),
+server.addHook("onRequest", async () => {
+  await schemaPronto();
 });
+// Su Vercel come nella sua guida per Fastify: basta la porta.
+await server.listen(
+  process.env.VERCEL
+    ? { port: Number(process.env.PORT ?? 3000) }
+    : { host: HOST_API, port: Number(process.env.PORT ?? PORTA_API) },
+);
+console.log(`In ascolto dopo ${Date.now() - avvio} ms`);
