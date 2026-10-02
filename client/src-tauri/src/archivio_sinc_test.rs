@@ -421,3 +421,31 @@ fn le_impostazioni_senza_il_campo_del_cestino_non_lo_azzerano() {
         Some("Control+Shift+KeyM")
     );
 }
+
+#[test]
+fn con_un_server_nuovo_si_riparte_da_zero_senza_copie() {
+    // DEC-105: l'archivio del server è cambiato, i dispositivi rimandano tutto.
+    let (mut a, mut b, mut vecchio) = due();
+    let id = nota(&mut a, "Riunione", "ordine del giorno", None);
+    a.sincronizza(&mut vecchio);
+    b.sincronizza(&mut vecchio);
+    b.passa(10);
+    scrivi(&mut b, &id, "ordine del giorno, rivisto");
+    b.sincronizza(&mut vecchio);
+    a.sincronizza(&mut vecchio);
+
+    let mut nuovo = Server::default();
+    for d in [&mut a, &mut b] {
+        d.a.azzera_sinc().unwrap();
+        d.visto = 0;
+    }
+    a.sincronizza(&mut nuovo);
+    b.sincronizza(&mut nuovo);
+    a.sincronizza(&mut nuovo);
+    assert!(nuovo.attuali.contains_key(&id));
+    for d in [&mut a, &mut b] {
+        assert_eq!(d.titoli(), vec!["Riunione"]);
+        assert_eq!(d.a.leggi(&id).unwrap().contenuto, "ordine del giorno, rivisto");
+        assert!(d.a.da_inviare().unwrap().is_empty());
+    }
+}

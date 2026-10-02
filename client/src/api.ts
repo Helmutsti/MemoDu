@@ -33,12 +33,12 @@ export class ErroreApi extends Error {
 }
 
 /**
- * Un comando del nucleo. Oltre 10 MB si rifiuta con 413 prima di chiamarlo (EN-01, SF-17); gli
+ * Un comando del nucleo. Oltre 4 MB si rifiuta con 413 prima di chiamarlo (EN-01, SF-17, DEC-106); gli
  * errori del nucleo arrivano come { stato, messaggio, conflitto?, cestino? }.
  */
 async function comando<T>(nome: string, argomenti: InvokeArgs = {}): Promise<T> {
   const byte = new TextEncoder().encode(JSON.stringify(argomenti)).length;
-  if (byte > LIMITE_CORPO_BYTE) throw new ErroreApi(413, "Il testo supera il limite di 10 MB");
+  if (byte > LIMITE_CORPO_BYTE) throw new ErroreApi(413, "Il testo supera il limite di 4 MB");
   try {
     return await invoke<T>(nome, argomenti);
   } catch (errore) {

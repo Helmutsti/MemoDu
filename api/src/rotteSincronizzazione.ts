@@ -62,7 +62,7 @@ export function rotteSincronizzazione(
       },
       async (richiesta, risposta) => {
         try {
-          return sinc.scrivi(richiesta.params.id, richiesta.body.base, richiesta.body.dati);
+          return await sinc.scrivi(richiesta.params.id, richiesta.body.base, richiesta.body.dati);
         } catch (errore) {
           if (!(errore instanceof VersioneSuperata)) throw errore;
           return risposta.code(409).send({ attuale: errore.attuale });

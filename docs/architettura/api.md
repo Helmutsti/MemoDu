@@ -12,7 +12,7 @@ Le note stanno nella copia di lavoro del client (DEC-67, DEC-85), in SQLite (DEC
 **Valgono per tutti gli endpoint delle note:**
 - **Autorizzazione:** nessuna: i comandi girano dentro l'app e non passano dalla rete (DEC-85). Le credenziali dell'installazione (DEC-13, DEC-79) servono solo alla sincronizzazione.
 - **Identificativo:** UUID generato dal nucleo alla creazione, sul dispositivo (DEC-67), chiave della riga nel database (DEC-48); non cambia se cambia il titolo (EN-01). Confermato da Manuel Cucca il 28/09/2026.
-- **Lunghezza:** dati del comando fino a 10 MB: oltre, l'interfaccia risponde 413 senza chiamare il comando (`client/src/api.ts`). Circa 5.000 pagine di testo (EN-01, SF-17). Le immagini hanno il loro limite (RB-12). Scelta di Manuel Cucca, 28/09/2026.
+- **Lunghezza:** dati del comando fino a 4 MB (DEC-106): oltre, l'interfaccia risponde 413 senza chiamare il comando (`client/src/api.ts`). Circa 5.000 pagine di testo (EN-01, SF-17). Le immagini hanno il loro limite (RB-12). Scelta di Manuel Cucca, 28/09/2026.
 - **Controllo dei dati:** nessuna conversione silenziosa. Un campo che non è testo o un campo in più danno 400.
 - **Implementazione:** comandi del nucleo in `client/src-tauri/src/comandi.rs` sull'archivio `archivio.rs`, prove in `archivio_test.rs` (DEC-85).
 - **Copia di lavoro che non risponde** (non si apre o non si scrive): lo gestisce l'app, con SC-07 e il testo tenuto in memoria (RB-61, RB-62, DEC-67).
@@ -455,21 +455,25 @@ Come le altre impostazioni di SC-06 (`client/src-tauri/src/impostazioni.rs`): `l
 
 ## Sincronizzazione (RF-10, DEC-75 … DEC-84)
 **Valgono per tutte le richieste della sincronizzazione:**
-- **Indirizzo:** l'API ascolta solo sulla macchina stessa (`127.0.0.1:4317`), perché per ora gira sulla macchina di sviluppo (ambiente Locale) e la sincronizzazione è in chiaro (DEC-78). Confermato da Manuel Cucca il 27/09/2026.
-- **Lunghezza:** corpo della richiesta fino a 10 MB (`bodyLimit` di Fastify; il valore di default è 1 MB), come i comandi delle note (EN-01).
+- **Indirizzo:** in rete l'indirizzo HTTPS di Vercel, scritto nel file `credenziali` (DEC-104, DEC-105); in locale `127.0.0.1:4317`, solo sulla macchina stessa.
+- **Lunghezza:** corpo della richiesta fino a 4,4 MB (`LIMITE_RICHIESTA_BYTE`, `bodyLimit` di Fastify): Vercel non ne accetta più di 4,5 (DEC-106); oltre, `413`.
 - **Chi le fa:** il nucleo Rust del client, in background (`client/src-tauri/src/sincronizzazione.rs`), non l'interfaccia.
 - **Autorizzazione:** intestazione `Authorization: Bearer <gettone>` con il gettone delle credenziali dell'installazione (DEC-79); senza o sbagliato `401`, e il client mostra la schermata di blocco (RB-57).
 - **Protocollo:** intestazione `Memodu-Protocollo: 1`; con una versione diversa `426`, e il client mostra l'avviso di errore e continua sulla copia di lavoro (DEC-83).
 - **Blocchi:** testo opaco per il server. Oggi JSON in chiaro, `{ "formato": "chiaro", "tipo": "nota" | "cartella" | "tag" | "impostazioni", "modificato_il": "<UTC>", "eliminato": false, "campi": { … } }` (DEC-78).
 - **Impostazioni:** la scorciatoia della nota rapida e le note del cestino nella ricerca (`cestino_in_ricerca`, DEC-95) viaggiano in un solo elemento di tipo `impostazioni`, con l'id fisso `00000000-0000-4000-8000-000000000001`, lo stesso su tutti i dispositivi (DEC-91, RB-52).
-- **Implementazione:** `api/src/sincronizzazione.ts` (deposito: file dei blocchi e indice `sincronizzazione/indice.db`) e `api/src/rotteSincronizzazione.ts`, prove in `api/src/sincronizzazione.test.ts`.
-- **Credenziali:** al primo avvio l'API genera identificativo, gettone e chiave, conserva solo l'impronta del gettone e scrive `{ "indirizzo", "installazione", "gettone", "chiave" }` nel file `credenziali` della cartella dei dati, se non c'è (sulla stessa macchina è quello dell'app); le mostra una volta nel terminale.
+- **Implementazione:** `api/src/sincronizzazione.ts` (deposito in PostgreSQL: Neon in rete, PGlite in locale, DEC-105), `api/src/schema.ts` (schema e migrazioni), `api/src/rotteSincronizzazione.ts` e `api/src/servizio.ts`, prove in `api/src/sincronizzazione.test.ts`.
+- **Credenziali:** `{ "indirizzo", "installazione", "gettone", "chiave" }` nel file `credenziali` della cartella dei dati di ogni dispositivo. In rete si generano con `npm run credenziali -w @memodu/api -- <indirizzo>` e il server conosce solo l'impronta del gettone (`MEMODU_IMPRONTA`, DEC-104); in locale l'API scrive il file al primo avvio, se non c'è. Il gettone non va mai nel registro.
+- **Errori del server:** `500` con `{ "statusCode": 500, "message": "Errore del server" }`, senza dettagli; il dettaglio va nel registro.
 
 ## GET /sincronizzazione/modifiche?dopo=N
-**Output:** `{ "modifiche": [{ "id", "versione", "ordine", "ora", "dati" }], "ultimo": M, "altre": false }`: le versioni attuali degli elementi cambiati dopo il numero d'ordine N, in ordine, al massimo 500; con `altre` si richiede da `ultimo`.
+**Output:** `{ "modifiche": [{ "id", "versione", "ordine", "ora", "dati" }], "ultimo": M, "altre": false, "archivio": "<uuid>" }`: le versioni attuali degli elementi cambiati dopo il numero d'ordine N, in ordine, al massimo 500 e fino a 4 MB di blocchi (almeno uno, DEC-106); con `altre` si richiede da `ultimo`. `archivio` è l'identificativo dell'archivio: se cambia, il client riparte da zero (DEC-105).
 **Errori:** 400 (`dopo` non è un numero), 401, 426.
 
 ## PUT /sincronizzazione/elementi/:id
 **Input:** `{ "base": 7, "dati": "<blocco>" }`: il blocco nuovo e la versione da cui parte (0 per un elemento nuovo). `id` è un UUID.
 **Output:** `{ "versione": 8, "ordine": 1521 }`. Il server tiene le versioni precedenti a scalare per 30 giorni (DEC-77).
 **Errori:** 409 `{ "attuale": { "id", "versione", "ordine", "ora", "dati" } }` se l'elemento è già a un'altra versione: il client fonde e riprova (DEC-76); 400, 401, 413, 426.
+
+## GET /salute
+Controllo di salute, senza gettone né protocollo. **Output:** `200 { "stato": "ok" }` se l'archivio risponde, altrimenti `503` (DEC-105).

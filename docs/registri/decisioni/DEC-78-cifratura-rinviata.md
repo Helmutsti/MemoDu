@@ -1,6 +1,6 @@
 # DEC-78 – Sincronizzazione prima in chiaro, cifratura rinviata
 
-**Data:** 2026-09-30 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-30 · **Stato:** Accettata; condizione 2 superata da DEC-104 · **Idea di origine:** —
 
 ## Contesto
 DEC-08 e RNF-02 chiedono che tutti i dati siano cifrati end-to-end. Scegliendo l'algoritmo per i blocchi di DEC-75, Manuel Cucca ha chiesto se per ora si può sincronizzare in chiaro. Il server gira solo sulla macchina di sviluppo (ambiente Locale, `127.0.0.1`) e tratta i blocchi come byte che non legge.

@@ -12,10 +12,10 @@
 | Icone e carattere | `lucide-react` per le icone Lucide; Inter incorporato nell'app con `@fontsource-variable/inter`, così non dipende dai caratteri installati | DEC-15, tokens.md |
 | Token nel codice | Variabili CSS in `client/src/stili/token.css`, stili di testo come classi in `client/src/stili/base.css`; il modo chiaro o scuro segue il sistema | DEC-21, DEC-22 |
 | Server (API) | Node con TypeScript e Fastify | DEC-24, DEC-32 |
-| Archivio del server | File system: i blocchi della sincronizzazione come file, per ora in chiaro (DEC-78) | DEC-25 |
+| Archivio del server | PostgreSQL: Neon in rete, PGlite (Postgres nel processo) in locale e nelle prove; blocchi per ora in chiaro (DEC-78) | DEC-105 |
 | Copia di lavoro nel client | Note, tag, cartelle e cestino in un database SQLite nel nucleo Rust del client (rusqlite), file `copia-di-lavoro.db` nella cartella dei dati delle applicazioni; l'interfaccia lo legge e scrive con comandi Tauri, uno per endpoint descritto in `api.md`, con gli stessi dati e codici di errore. Il client funziona senza API. Alla prima apertura parte da una copia di `memodu.db` dell'API, se c'è nella stessa cartella | DEC-67 (proposta) |
-| Server (deposito della sincronizzazione) | L'API non gestisce più le note: conserva solo i blocchi della sincronizzazione come file, con un indice SQLite, e genera le credenziali (DEC-75, DEC-79, DEC-85) | DEC-85 |
-| Hosting | Per ora la macchina di sviluppo (ambiente Locale). L'hosting definitivo è rinviato; deve avere un disco persistente (DEC-25) | — |
+| Server (deposito della sincronizzazione) | L'API non gestisce più le note: conserva solo i blocchi della sincronizzazione e le loro versioni (DEC-75, DEC-85); conosce solo l'impronta del gettone (DEC-79, DEC-104) | DEC-85 |
+| Hosting | Vercel, funzione con Fastify senza configurazione, solo HTTPS; regione Francoforte | DEC-104, DEC-105 |
 
 ## Struttura del repository
 Un solo repository con workspace npm (DEC-33); client e API si avviano separatamente (DEC-67):
@@ -62,8 +62,9 @@ Le regole stanno solo nella copia di lavoro del client (`client/src-tauri/src/ar
 - **Unità:** un blocco per elemento (nota, cartella, tag, impostazioni; gli avvisi restano sul dispositivo, DEC-90, DEC-91), con dentro i suoi collegamenti; il server conosce solo identificativo, versione, dimensione e ora, e tiene anche le versioni precedenti di ogni blocco. Confronti e conflitti li risolve il client (DEC-75).
 - **Modifiche e conflitti:** versione per blocco e numero d'ordine globale sul server; il dispositivo tiene la base di ogni elemento e confronta campo per campo; nei conflitti di RB-36 … RB-38 vince l'istante UTC più tardo della modifica sul dispositivo; le eliminazioni definitive diventano blocchi «eliminato» (DEC-76).
 - **Versioni precedenti:** a scalare per 30 giorni (tutte nell'ultima ora, una all'ora nell'ultimo giorno, una al giorno fino a 30); la versione attuale resta sempre (DEC-77).
-- **Cifratura:** per ora i blocchi viaggiano in chiaro, con l'intestazione del formato pronta; il server resta solo in locale finché non si accende; al passaggio si rimanda tutto cifrato e si cancellano le versioni in chiaro (DEC-78).
-- **Credenziali:** nel file `credenziali` della cartella dei dati, letto a ogni avvio; il server genera identificativo, gettone e chiave e conserva solo l'impronta del gettone; gettone sbagliato: 401 e schermata di blocco (DEC-79).
+- **Cifratura:** per ora i blocchi viaggiano in chiaro, con l'intestazione del formato pronta; il server è in rete dietro HTTPS e gettone, con le note in chiaro sul server come rischio accettato (DEC-104); al passaggio si rimanda tutto cifrato e si cancellano le versioni in chiaro (DEC-78).
+- **Credenziali:** nel file `credenziali` della cartella dei dati, letto a ogni avvio; si generano con `npm run credenziali -w @memodu/api` (in locale le genera l'API al primo avvio) e il server conosce solo l'impronta del gettone; gettone sbagliato: 401 e schermata di blocco (DEC-79, DEC-104).
+- **Server cambiato:** l'archivio del server ha un identificativo; se cambia, il client azzera versioni e numero d'ordine e rimanda tutto (`azzera_sinc`, DEC-105).
 - **Quando:** all'avvio, qualche secondo dopo ogni salvataggio, ogni 30 s e al ritorno della rete; senza rete i tentativi si diradano da 5 s fino a 5 minuti (DEC-80).
 - **Avviso:** «server irraggiungibile» dopo 24 ore senza sincronizzazioni riuscite (RB-40, DEC-82).
 - **Versioni di app e server:** ogni richiesta porta la versione del protocollo; se incompatibile, avviso «errore di sincronizzazione» e si continua sulla copia di lavoro (DEC-83).

@@ -1,6 +1,6 @@
 # DEC-25 – Archivio del server su file system
 
-**Data:** 2026-09-25 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-25 · **Stato:** Superata da DEC-105 · **Idea di origine:** —
 
 ## Contesto
 Con la cifratura end-to-end (DEC-08) il server non cerca e non ordina: conserva documenti opachi (identificativo, versione, data, dimensione, blocco cifrato) e le immagini cifrate. Serve un posto dove tenerli.

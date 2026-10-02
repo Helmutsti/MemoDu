@@ -116,6 +116,16 @@ impl Archivio {
         })
     }
 
+    /// L'archivio del server è cambiato (un server nuovo o ricreato, DEC-105): si riparte da
+    /// zero. Ogni elemento torna da inviare dalla versione 0 e le modifiche si ricevono tutte.
+    pub fn azzera_sinc(&mut self) -> Esito<()> {
+        self.con_riconnessione(|a| {
+            a.db.execute("UPDATE sinc_elementi SET versione = 0, base = NULL, modificato = 1", [])?;
+            a.db.execute("DELETE FROM sinc_stato WHERE chiave = 'ultimo_ordine'", [])?;
+            Ok(())
+        })
+    }
+
     // ——— Ricezione ———
 
     /// Applica le versioni ricevute, fondendole con le modifiche fatte qui.

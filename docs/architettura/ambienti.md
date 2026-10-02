@@ -8,7 +8,7 @@
 | Locale | Il singolo sviluppatore lavora. Nella prima fase è l'unico ambiente: client e API girano sulla macchina di sviluppo e si avviano separatamente. Il client (`npm run client`) tiene le note nella sua copia di lavoro e non ha bisogno dell'API (DEC-67). L'API ascolta su `127.0.0.1:4317` e si avvia a mano con `npm run api`; serve al client solo per sincronizzare (DEC-85): al primo avvio scrive il file `credenziali` nella cartella dei dati, che il client sulla stessa macchina usa da solo (DEC-79, DEC-84) | Manuel Cucca | Il suo ramo in corso | Minimi, generati | Nessuno |
 | Integrazione | Verificare che i pezzi funzionino insieme | | Ultima versione di ogni componente | Di prova, ricreabili | Sandbox |
 | Collaudo | Verificare prima del rilascio | | Versione candidata | Realistici, anonimizzati | Sandbox |
-| Produzione | Gli utenti veri | | Versione rilasciata | Reali | Reali |
+| Produzione | Le note vere di Manuel Cucca, da più dispositivi (DEC-104) | Manuel Cucca (account Vercel e Neon) | API su Vercel, ingresso `api/src/index.ts` (DEC-105) | Reali, in Neon (PostgreSQL), in chiaro per ora (DEC-78) | Vercel, Neon |
 | Effimeri | Provare una singola modifica | | Un ramo specifico | Di prova | Simulati o sandbox |
 
 ## Manifesto di ogni ambiente

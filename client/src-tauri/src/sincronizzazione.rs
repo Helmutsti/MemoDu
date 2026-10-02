@@ -170,6 +170,25 @@ fn sincronizza(app: &AppHandle) -> Result<(), Problema> {
             .and_then(|v| v.parse().ok())
             .unwrap_or(0);
         let risposta = richiesta(&credenziali, "GET", &format!("/sincronizzazione/modifiche?dopo={dopo}"), None)?;
+        // L'archivio del server è un altro (server nuovo o ricreato, DEC-105): le versioni e
+        // il numero d'ordine di prima non valgono più, si riparte da zero.
+        if let Some(archivio) = risposta["archivio"].as_str() {
+            let azzerata = con_archivio(app, |a| {
+                let visto = a.stato_sinc("archivio")?;
+                if visto.as_deref() == Some(archivio) {
+                    return Ok(false);
+                }
+                let sincronizzata = visto.is_some() || a.stato_sinc("ultimo_ordine")?.is_some();
+                if sincronizzata {
+                    a.azzera_sinc()?;
+                }
+                a.imposta_stato_sinc("archivio", archivio)?;
+                Ok(sincronizzata)
+            })?;
+            if azzerata {
+                continue;
+            }
+        }
         let ricevute: Vec<Ricevuta> = risposta["modifiche"]
             .as_array()
             .map(|m| m.iter().filter_map(ricevuta).collect())

@@ -11,7 +11,7 @@ beforeEach(() => {
 });
 
 describe("comandi del nucleo (DEC-85)", () => {
-  it("oltre 10 MB non chiama il nucleo e dà un errore 413 (EN-01, SF-17)", async () => {
+  it("oltre 4 MB non chiama il nucleo e dà un errore 413 (EN-01, SF-17)", async () => {
     const contenuto = "x".repeat(LIMITE_CORPO_BYTE);
     await expect(api.salva("n1", { contenuto })).rejects.toMatchObject({ stato: 413 });
     await expect(api.salva("n1", { contenuto })).rejects.toBeInstanceOf(ErroreApi);
