@@ -40,7 +40,9 @@ export function credenzialiNelFile(file: string, indirizzo: string): Credenziali
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
   const [indirizzo, destinazione = "credenziali"] = process.argv.slice(2);
   if (!indirizzo?.startsWith("https://")) {
-    console.error("Indica l'indirizzo del server in https://, per esempio https://memodu.vercel.app");
+    console.error(
+      "Indica l'indirizzo del server in https://, per esempio https://memodu.vercel.app",
+    );
     process.exit(1);
   }
   const file = resolve(destinazione);
@@ -49,6 +51,10 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
     process.exit(1);
   }
   const credenziali = credenzialiNelFile(file, indirizzo);
-  console.log(`Credenziali scritte in ${file}: copialo nella cartella dei dati di ogni dispositivo.`);
-  console.log(`Nel server, la variabile d'ambiente:\nMEMODU_IMPRONTA=${impronta(credenziali.gettone)}`);
+  console.log(
+    `Credenziali scritte in ${file}: copialo nella cartella dei dati di ogni dispositivo.`,
+  );
+  console.log(
+    `Nel server, la variabile d'ambiente:\nMEMODU_IMPRONTA=${impronta(credenziali.gettone)}`,
+  );
 }

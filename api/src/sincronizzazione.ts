@@ -112,7 +112,11 @@ export class ArchivioSincronizzazione {
    * nuovo). Se nel frattempo è cambiato altrove, lancia VersioneSuperata con la versione
    * attuale (DEC-76). Versione, numero d'ordine e sfoltimento stanno in una transazione.
    */
-  async scrivi(id: string, base: number, dati: string): Promise<{ versione: number; ordine: number }> {
+  async scrivi(
+    id: string,
+    base: number,
+    dati: string,
+  ): Promise<{ versione: number; ordine: number }> {
     return this.db.transazione(async (sql) => {
       await sql.righe("SELECT pg_advisory_xact_lock($1)", [BLOCCO_SCRITTURE]);
       const [attuale] = await sql.righe<Modifica>(
@@ -140,10 +144,9 @@ export class ArchivioSincronizzazione {
 
   /** Le versioni conservate di un elemento, dalla più recente. */
   versioni(id: string, sql: Sql = this.db): Promise<{ versione: number; ora: string }[]> {
-    return sql.righe(
-      "SELECT versione, ora FROM versioni WHERE id = $1 ORDER BY versione DESC",
-      [id],
-    );
+    return sql.righe("SELECT versione, ora FROM versioni WHERE id = $1 ORDER BY versione DESC", [
+      id,
+    ]);
   }
 
   /**

@@ -131,7 +131,10 @@ describe("elementi e versioni (DEC-75, DEC-76)", () => {
   it("due scritture insieme sullo stesso elemento: una passa, l'altra trova la versione superata", async () => {
     const [uno, due] = await Promise.all([scrivi(A, 0, "qui"), scrivi(A, 0, "là")]);
     expect([uno.statusCode, due.statusCode].sort()).toEqual([200, 409]);
-    const [x, y] = await Promise.all([scrivi(B, 0, "b"), scrivi("1b4e28ba-2fa1-41d2-883f-0016d3cca427", 0, "c")]);
+    const [x, y] = await Promise.all([
+      scrivi(B, 0, "b"),
+      scrivi("1b4e28ba-2fa1-41d2-883f-0016d3cca427", 0, "c"),
+    ]);
     expect([x.json().ordine, y.json().ordine].sort()).toEqual([2, 3]);
   });
 

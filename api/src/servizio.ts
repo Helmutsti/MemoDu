@@ -1,4 +1,4 @@
-import Fastify, { type FastifyInstance } from "fastify";
+import Fastify, { type FastifyInstance, type FastifyServerOptions } from "fastify";
 import { LIMITE_RICHIESTA_BYTE } from "@memodu/condiviso";
 import { rotteSincronizzazione } from "./rotteSincronizzazione.ts";
 import type { ArchivioSincronizzazione } from "./sincronizzazione.ts";
@@ -8,17 +8,23 @@ import type { ArchivioSincronizzazione } from "./sincronizzazione.ts";
 // schema ricevono 400, i corpi oltre il limite di Vercel 413 (DEC-106), gli errori 500 senza
 // dettagli interni (il dettaglio va nel registro).
 
-export function creaServer(
-  sincronizzazione: ArchivioSincronizzazione,
-  { registro = false }: { registro?: boolean } = {},
-): FastifyInstance {
-  const server = Fastify({
+export function opzioniServer({
+  registro = false,
+}: { registro?: boolean } = {}): FastifyServerOptions {
+  return {
     bodyLimit: LIMITE_RICHIESTA_BYTE,
     // Il registro non contiene le intestazioni, quindi nemmeno il gettone.
     logger: registro ? { level: process.env.LOG_LEVEL ?? "info" } : false,
     // Nessuna conversione silenziosa: un campo del tipo sbagliato o in più è un 400.
     ajv: { customOptions: { coerceTypes: false, removeAdditional: false } },
-  });
+  };
+}
+
+/** Aggiunge al server la gestione degli errori, il controllo di salute e le rotte. */
+export function configuraServer(
+  server: FastifyInstance,
+  sincronizzazione: ArchivioSincronizzazione,
+): FastifyInstance {
   server.setErrorHandler<{ statusCode?: number }>((errore, richiesta, risposta) => {
     const codice = errore.statusCode ?? 500;
     if (codice < 500) return risposta.send(errore);
@@ -28,8 +34,15 @@ export function creaServer(
   // Controllo di salute, senza gettone: risponde se il server e l'archivio sono su.
   server.get("/salute", async (_richiesta, risposta) => {
     const pronto = await sincronizzazione.pronto().catch(() => false);
-    return risposta.code(pronto ? 200 : 503).send({ stato: pronto ? "ok" : "archivio non raggiungibile" });
+    return risposta
+      .code(pronto ? 200 : 503)
+      .send({ stato: pronto ? "ok" : "archivio non raggiungibile" });
   });
   rotteSincronizzazione(server, sincronizzazione);
   return server;
+}
+
+/** Per le prove: un server senza registro. */
+export function creaServer(sincronizzazione: ArchivioSincronizzazione): FastifyInstance {
+  return configuraServer(Fastify(opzioniServer()), sincronizzazione);
 }

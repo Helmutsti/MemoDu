@@ -5,15 +5,19 @@
 //   nascono al primo avvio nel file `credenziali` della stessa cartella, quello che legge l'app.
 
 import { mkdirSync } from "node:fs";
+import Fastify from "fastify";
 import { join } from "node:path";
 import { HOST_API, INDIRIZZO_API, PORTA_API } from "@memodu/condiviso";
 import { cartellaPredefinita } from "./cartella.ts";
 import { credenzialiNelFile } from "./credenziali.ts";
 import { daPglite, daPostgres, type Database } from "./database.ts";
 import { aggiornaSchema } from "./schema.ts";
-import { creaServer } from "./servizio.ts";
+import { configuraServer, opzioniServer } from "./servizio.ts";
 import { ArchivioSincronizzazione, impronta } from "./sincronizzazione.ts";
 
+if (process.env.VERCEL && !process.env.DATABASE_URL) {
+  throw new Error("Manca DATABASE_URL: collega il database Neon al progetto su Vercel");
+}
 const inRete = Boolean(process.env.DATABASE_URL);
 let db: Database;
 let improntaGettone: string;
@@ -27,12 +31,17 @@ if (inRete) {
   const cartella = cartellaPredefinita();
   mkdirSync(cartella, { recursive: true });
   db = await daPglite(join(cartella, "archivio"));
-  improntaGettone = impronta(credenzialiNelFile(join(cartella, "credenziali"), INDIRIZZO_API).gettone);
+  improntaGettone = impronta(
+    credenzialiNelFile(join(cartella, "credenziali"), INDIRIZZO_API).gettone,
+  );
   console.log(`Archivio e credenziali in ${cartella}`);
 }
 await aggiornaSchema(db);
 
-const server = creaServer(new ArchivioSincronizzazione(db, improntaGettone), { registro: inRete });
+const server = configuraServer(
+  Fastify(opzioniServer({ registro: inRete })),
+  new ArchivioSincronizzazione(db, improntaGettone),
+);
 await server.listen({
   host: process.env.VERCEL ? "0.0.0.0" : HOST_API,
   port: Number(process.env.PORT ?? PORTA_API),
