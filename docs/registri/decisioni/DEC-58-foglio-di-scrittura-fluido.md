@@ -1,6 +1,6 @@
 # DEC-58 – Foglio di scrittura più fluido: markdown nascosto, spazi discreti, finestra libera
 
-**Data:** 2026-09-29 · **Stato:** Accettata (la barra di scorrimento si realizza con DEC-89) · **Idea di origine:** —
+**Data:** 2026-09-29 · **Stato:** Accettata (la barra di scorrimento si realizza con DEC-89; la misura di lettura di 640 px è superata da DEC-107) · **Idea di origine:** —
 
 ## Contesto
 Con il foglio unico (DEC-55) Manuel Cucca vuole dedicarsi al foglio di scrittura: «l'esperienza deve essere il più fluida e naturale possibile, l'utente non deve avere paura di rompere qualcosa». Finora i simboli markdown si vedevano sulla riga del cursore (CA-02.2), il testo era centrato con 80 px sopra, la finestra aveva un minimo di 640 × 480 (DEC-57) e la barra di scorrimento del sistema occupava spazio.

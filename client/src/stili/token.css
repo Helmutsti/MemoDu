@@ -81,7 +81,6 @@
   --movimento-durata-breve: 120ms;
   --movimento-durata-media: 200ms;
   --movimento-spostamento: 4px;
-  --misura-lettura: 640px;
 
   /* Ombra (regola 5) */
   --ombra: 0 8px 24px var(--ombra-flottante);

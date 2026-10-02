@@ -108,7 +108,6 @@ I primitivi `spazio-4` … `spazio-48` (4, 8, 12, 16, 24, 32, 48) non si usano d
 | `misura-colonna` | 288 | Colonna sinistra al breakpoint largo: 16 px di margine ai lati e righe da 256 |
 | `misura-controllo-piccolo` | 24 | Controlli che stanno dentro una riga, come i tag |
 | `misura-icona` | 16 | Icone (regola 8) |
-| `misura-lettura` | 640 | Larghezza massima del testo della nota (CMP-20, DEC-58) |
 | `tratto-icona` | 1,5 | Spessore delle icone di linea |
 | `focus-spessore` | 2 | Spessore dell'anello di focus |
 | `focus-distanza` | 2 | Spazio tra il controllo e l'anello di focus |

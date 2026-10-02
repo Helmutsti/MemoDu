@@ -6,10 +6,9 @@
   height: 100%;
 }
 
-/* Testo sempre allineato a sinistra, a misura di lettura (DEC-58). */
+/* Testo su tutta la larghezza del foglio, con spazio-gruppo ai lati (DEC-107). */
 .nota-aperta-misura {
   width: 100%;
-  max-width: calc(var(--misura-lettura) + 2 * var(--spazio-gruppo));
   padding: 0 var(--spazio-gruppo);
 }
 

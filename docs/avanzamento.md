@@ -75,7 +75,7 @@ Dubbi rimasti dall'allineamento generale della documentazione, da decidere con M
 - `Ricerca.css`: il risultato della card ha come margine verticale `spazio-elenco`, il token del margine dei contenitori; quale ruolo ha?
 - EN-06 Dispositivo resta com'è, pensata per RF-16 (scelta di Manuel Cucca il 01/10/2026): da riprendere con RF-16.
 
-Da fare in Figma, dopo le scelte del 01/10/2026: filtro attivo della ricerca su `sfondo-hover` e filtri a 4 tra loro (CMP-13), poi i mockup della ricerca in SC-01.
+Da fare in Figma, dopo le scelte del 01/10/2026: filtro attivo della ricerca su `sfondo-hover` e filtri a 4 tra loro (CMP-13), poi i mockup della ricerca in SC-01; il testo della nota su tutta la larghezza nei mockup di SC-01 e SC-03 (DEC-107).
 
 ## Rischi accettati
 | Rischio | Decisione | Da rivedere |
