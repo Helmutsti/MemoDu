@@ -1,6 +1,6 @@
 [package]
 name = "memodu"
-version = "0.1.1"
+version = "0.1.2"
 description = "Memodu"
 authors = ["Manuel Cucca"]
 edition = "2021"

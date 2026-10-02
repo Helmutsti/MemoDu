@@ -5,6 +5,22 @@ Il formato segue [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/).
 
 Queste note sono scritte per gli utenti. Lo storico interno della documentazione si trova in `docs/registri/storico.md`.
 
+## [0.1.2] – 2026-10-02
+
+### Aggiunto
+- Sincronizzazione su internet: con il file `credenziali` Memodu si allinea con il server pubblicato, da qualsiasi computer; se il server cambia, Memodu rimanda tutto da solo (RF-10)
+- Info: un clic sul titolo della nota apre, sotto di lui, titolo, cartella, date e tag, con «Chiudi nota» ed «Elimina»; dal tasto destro su una nota della colonna si apre al centro. Prende il posto del menu ··· (RF-04)
+- Ricerca avanzata: «Mostra tutti i risultati» in fondo ai risultati, o Ctrl + Maiusc + K (⌘ + Maiusc + K su Mac), apre una finestra grande con i filtri sempre aperti (RF-08)
+- Ctrl + \ (⌘ + \ su Mac) fissa e sblocca la colonna, come la puntina
+- Nel campo di ricerca della colonna si vede la scorciatoia Ctrl + K
+
+### Cambiato
+- Una nota arriva fino a 4 MB di testo (circa 2.000 pagine), non più 10 MB
+- L'icona di Memodu nella barra delle applicazioni e nell'area di notifica è chiara con la barra scura e scura con la barra chiara
+- «Sposta in…» dalla riga Cartella di Info si apre sopra Info, che resta aperta e mostra subito la cartella nuova
+- La barra di scorrimento sottile c'è anche nella nota rapida, nel cestino e nelle impostazioni
+- Spazi più regolari nella colonna, in Info, negli avvisi e nei menu; la cartella ha la sua icona; il filtro scelto nella ricerca ha un fondo leggero
+
 ## [0.1.1] – 2026-09-30
 
 ### Cambiato
