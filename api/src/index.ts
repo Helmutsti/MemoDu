@@ -7,13 +7,13 @@
 import { mkdirSync } from "node:fs";
 import Fastify from "fastify";
 import { join } from "node:path";
-import { HOST_API, INDIRIZZO_API, PORTA_API } from "@memodu/condiviso";
-import { cartellaPredefinita } from "./cartella.ts";
-import { credenzialiNelFile } from "./credenziali.ts";
-import { daPglite, daPostgres, type Database } from "./database.ts";
-import { aggiornaSchema } from "./schema.ts";
-import { configuraServer, opzioniServer } from "./servizio.ts";
-import { ArchivioSincronizzazione, impronta } from "./sincronizzazione.ts";
+import { cartellaPredefinita } from "./cartella.js";
+import { HOST_API, INDIRIZZO_API, PORTA_API } from "./costanti.js";
+import { credenzialiNelFile } from "./credenziali.js";
+import { daPglite, daPostgres, type Database } from "./database.js";
+import { aggiornaSchema } from "./schema.js";
+import { configuraServer, opzioniServer } from "./servizio.js";
+import { ArchivioSincronizzazione, impronta } from "./sincronizzazione.js";
 
 if (process.env.VERCEL && !process.env.DATABASE_URL) {
   throw new Error("Manca DATABASE_URL: collega il database Neon al progetto su Vercel");

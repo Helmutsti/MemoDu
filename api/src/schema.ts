@@ -2,7 +2,7 @@
 // all'elenco, mai una modifica di quelle già applicate. All'avvio si applicano quelle che
 // mancano, in una transazione e una istanza alla volta.
 
-import type { Database } from "./database.ts";
+import type { Database } from "./database.js";
 
 const MIGRAZIONI = [
   // 1 – Versioni degli elementi con il blocco (DEC-75, DEC-105) e lo stato dell'archivio. Il

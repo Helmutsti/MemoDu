@@ -4,8 +4,8 @@
 // giorni (DEC-77). Il server conosce solo l'impronta del gettone (DEC-79).
 
 import { createHash, timingSafeEqual } from "node:crypto";
-import { LIMITE_PAGINA_BYTE } from "@memodu/condiviso";
-import type { Database, Sql } from "./database.ts";
+import { LIMITE_PAGINA_BYTE } from "./costanti.js";
+import type { Database, Sql } from "./database.js";
 
 /** Versione del protocollo di sincronizzazione (DEC-83). */
 export const PROTOCOLLO = 1;

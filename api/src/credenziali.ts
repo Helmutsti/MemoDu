@@ -11,7 +11,7 @@ import { randomBytes, randomUUID } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { impronta } from "./sincronizzazione.ts";
+import { impronta } from "./sincronizzazione.js";
 
 export interface Credenziali {
   indirizzo: string;

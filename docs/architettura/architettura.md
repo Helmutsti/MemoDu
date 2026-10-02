@@ -24,7 +24,7 @@ Un solo repository con workspace npm (DEC-33); client e API si avviano separatam
 |---|---|
 | `client` | App desktop: interfaccia React in `src`, nucleo Rust di Tauri in `src-tauri` con la copia di lavoro (DEC-67). Si avvia con `npm run client` |
 | `api` | API in Fastify. Si avvia da sola con `npm run api` |
-| `condiviso` | Tipi dei dati dei comandi del nucleo (per esempio la Nota), indirizzo dell'API e limite delle richieste |
+| `condiviso` | Tipi dei dati dei comandi del nucleo (per esempio la Nota) e limite delle note, per l'interfaccia. Il server non lo usa mentre gira: su Vercel non può importare sorgenti TypeScript di un altro pacchetto, quindi indirizzo e limiti del server stanno in `api/src/costanti.ts` (DEC-105) |
 
 Prove con Vitest, controllo del codice con ESLint e Prettier.
 

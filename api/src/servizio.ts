@@ -1,7 +1,7 @@
 import Fastify, { type FastifyInstance, type FastifyServerOptions } from "fastify";
-import { LIMITE_RICHIESTA_BYTE } from "@memodu/condiviso";
-import { rotteSincronizzazione } from "./rotteSincronizzazione.ts";
-import type { ArchivioSincronizzazione } from "./sincronizzazione.ts";
+import { LIMITE_RICHIESTA_BYTE } from "./costanti.js";
+import { rotteSincronizzazione } from "./rotteSincronizzazione.js";
+import type { ArchivioSincronizzazione } from "./sincronizzazione.js";
 
 // Il server è solo il deposito della sincronizzazione (DEC-85): note, cartelle, cestino e tag
 // sono comandi del client. Fastify controlla input e output con gli schemi: le richieste fuori

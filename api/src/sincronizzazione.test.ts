@@ -3,12 +3,13 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import type { FastifyInstance } from "fastify";
-import { LIMITE_RICHIESTA_BYTE } from "@memodu/condiviso";
-import { credenzialiNelFile, nuoveCredenziali } from "./credenziali.ts";
-import { daPglite, type Database } from "./database.ts";
-import { aggiornaSchema, VERSIONE_SCHEMA } from "./schema.ts";
-import { creaServer } from "./servizio.ts";
-import { ArchivioSincronizzazione, impronta } from "./sincronizzazione.ts";
+import { LIMITE_CORPO_BYTE } from "@memodu/condiviso";
+import { LIMITE_PAGINA_BYTE, LIMITE_RICHIESTA_BYTE } from "./costanti.js";
+import { credenzialiNelFile, nuoveCredenziali } from "./credenziali.js";
+import { daPglite, type Database } from "./database.js";
+import { aggiornaSchema, VERSIONE_SCHEMA } from "./schema.js";
+import { creaServer } from "./servizio.js";
+import { ArchivioSincronizzazione, impronta } from "./sincronizzazione.js";
 
 const A = "7d1c4a52-6b8f-4c1e-9a3d-2f5e8b7c6a10";
 const B = "0b9e8d7c-6f5a-4b3c-8d2e-1a0f9e8d7c6b";
@@ -146,6 +147,13 @@ describe("elementi e versioni (DEC-75, DEC-76)", () => {
       payload: { base: 0, dati: "x" },
     });
     expect(r.statusCode).toBe(400);
+  });
+
+  it("una nota al limite del client sta in una richiesta e in una pagina (DEC-106)", () => {
+    // La nota di 4 MB più il blocco intorno, sotto i 4,5 MB di Vercel.
+    expect(LIMITE_CORPO_BYTE).toBeLessThan(LIMITE_PAGINA_BYTE + 200_000);
+    expect(LIMITE_CORPO_BYTE + 100_000).toBeLessThan(LIMITE_RICHIESTA_BYTE);
+    expect(LIMITE_RICHIESTA_BYTE).toBeLessThan(4.5 * 1000 * 1000);
   });
 
   it("un corpo oltre il limite di Vercel è 413 (DEC-106)", async () => {

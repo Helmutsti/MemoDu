@@ -4,7 +4,7 @@
 // diverso 426 (avviso di errore, DEC-83).
 
 import type { FastifyInstance } from "fastify";
-import { ArchivioSincronizzazione, PROTOCOLLO, VersioneSuperata } from "./sincronizzazione.ts";
+import { ArchivioSincronizzazione, PROTOCOLLO, VersioneSuperata } from "./sincronizzazione.js";
 
 const schemaId = {
   type: "object",
