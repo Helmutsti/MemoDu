@@ -15,7 +15,7 @@ Il diagramma di tutto il sistema è in `moduli/note/3-entita.md`.
 | Data di creazione | Data e ora | Sì | | All'installazione del server |
 
 - **Chi lo crea:** il sistema, all'installazione del server (FL-08).
-- **Chi lo modifica:** nessuno dall'app; il cambio delle credenziali si decide in Fase 7.
+- **Chi lo modifica:** nessuno dall'app; il cambio delle credenziali si rivaluta quando si accende la cifratura (DEC-79).
 - **Cancellazione:** non prevista nella prima fase.
 - **Dati sensibili:** le credenziali. Chi legge il file di configurazione di un dispositivo legge tutte le note (rischio accettato, DEC-13). Il recupero delle credenziali perse è rimandato (domanda aperta su RF-10).
 
@@ -25,7 +25,7 @@ Il diagramma di tutto il sistema è in `moduli/note/3-entita.md`.
 | Attributo | Tipo | Obbligatorio | Vincoli | Note |
 |---|---|---|---|---|
 | Identificativo | Codice | Sì | Unico e stabile | Tecnico, non visibile |
-| Nome | Testo | Sì | | Preso dal sistema (es. nome del PC), modificabile (RB-51). Compare nel titolo delle note in conflitto (DEC-06) |
+| Nome | Testo | Sì | | Preso dal sistema (es. nome del PC), modificabile (RB-51). Vale solo su questo dispositivo (RB-52) |
 | Tipo | Windows \| macOS | Sì | Piattaforme della prima fase (DEC-13) | |
 | Ultima sincronizzazione | Data e ora | No | | Serve all'avviso di RB-40 |
 | Modifiche in attesa | Numero | Sì | | Modifiche non ancora arrivate al server |
@@ -36,7 +36,7 @@ Il diagramma di tutto il sistema è in `moduli/note/3-entita.md`.
 - **Dati sensibili:** il nome del dispositivo è cifrato end-to-end (DEC-08).
 
 ## EN-08 – Avviso
-**Descrizione:** un avviso mostrato all'utente dalla sincronizzazione (RB-39, RB-40). Resta sul dispositivo in cui nasce e non si sincronizza (DEC-90).
+**Descrizione:** un avviso mostrato all'utente dalla sincronizzazione (RB-39, RB-40). Vive nella finestra del dispositivo in cui nasce: non si sincronizza e non si conserva, chiusa la finestra sparisce (DEC-90).
 
 | Attributo | Tipo | Obbligatorio | Vincoli | Note |
 |---|---|---|---|---|
@@ -45,13 +45,12 @@ Il diagramma di tutto il sistema è in `moduli/note/3-entita.md`.
 | Nota collegata | EN-01 | No | Solo per il tipo "nota in conflitto" | Il collegamento dell'avviso (RB-39) |
 | Dispositivo | EN-06 | Sì | | Il dispositivo su cui è nato il problema |
 | Data | Data e ora | Sì | | |
-| Visto | Sì \| No | Sì | | Di default No |
 
 Il testo dell'avviso non è un attributo: dipende dal tipo e si scrive in Fase 6.
 
 - **Chi lo crea:** il sistema (FL-07).
-- **Chi lo modifica:** l'utente, vedendolo (Visto diventa Sì).
-- **Cancellazione:** un avviso chiuso non si mostra più; esiste solo sul dispositivo (DEC-90).
+- **Chi lo modifica:** nessuno; l'utente lo chiude.
+- **Cancellazione:** sparisce quando l'utente lo chiude o quando si chiude la finestra (DEC-90).
 - **Dati sensibili:** non lascia il dispositivo (DEC-90).
 
 ## Diagrammi a stati

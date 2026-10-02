@@ -15,5 +15,5 @@
 | Cifratura end-to-end | Le note sono cifrate sul dispositivo e solo l'utente può leggerle, anche sul cloud (RF-10) | Blocco (lock) |
 | Copia di lavoro | Copia delle note sul dispositivo che permette di scrivere anche senza connessione; si sincronizza col cloud appena possibile (DEC-02) | Modalità offline o solo locale (ID-06) |
 | Nota non organizzata | Nota nella radice, fuori da ogni cartella. Compare nella barra laterale finché non viene spostata in una cartella (RF-05) | Nota senza tag |
-| Nota in conflitto | Nota indipendente creata quando la stessa nota è stata modificata su due dispositivi. Sta nella stessa cartella dell'originale, con il titolo seguito da dispositivo e ora (RF-10, DEC-06) | Nota originale |
+| Nota in conflitto | Nota indipendente creata quando la stessa nota è stata modificata su due dispositivi. Sta nella stessa cartella dell'originale, con il titolo seguito da «(copia in conflitto)» (RF-10, DEC-06, RB-39) | Nota originale |
 | Cestino | Luogo in cui finiscono note e cartelle eliminate; restano finché l'utente non lo svuota e si ripristinano nella radice (RF-15) | Archivio |

@@ -2,12 +2,12 @@
 
 <!-- Fase 5 della guida. Copia il blocco per ogni componente. -->
 
-I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE), che diventa la libreria: pagina **Componenti base** (CMP-01 … CMP-08 e CMP-28) e pagina **Componenti composti** (CMP-09 … CMP-27 e CMP-29). Ogni componente usa solo token semantici, anche per gli spazi (regola 12, vedi `tokens.md`) e ha un'anteprima in modo scuro.
+I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE), che diventa la libreria: pagina **Componenti base** (CMP-01 … CMP-08 e CMP-28) e pagina **Componenti composti** (CMP-09 … CMP-27, CMP-29 e CMP-30). Ogni componente usa solo token semantici, anche per gli spazi (regola 12, vedi `tokens.md`) e ha un'anteprima in modo scuro.
 
 | Codice | Componente | Tipo | Stato |
 |---|---|---|---|
 | CMP-01 | Pulsante (con la variante Diviso, DEC-34) | base | Disegnato |
-| CMP-02 | Icona | base | 39 icone, 4 dimensioni |
+| CMP-02 | Icona | base | 40 icone, 4 dimensioni |
 | CMP-03 | Campo di testo | base | Disegnato |
 | CMP-04 | Interruttore | base | Disegnato |
 | CMP-05 | Tag | base | Disegnato |
@@ -71,7 +71,8 @@ Il **padding** appartiene a chi ha un **bordo** (fondo, contorno, evidenziazione
 | Chi ha il bordo | Padding |
 |---|---|
 | Pillola alta 32 (riga, voce, campo) | `spazio-controllo` 12, ai lati |
-| Pillola alta 24 (tag, filtro, segmento) | `spazio-controllo-piccolo` 8, ai lati |
+| Pillola alta 24 (tag, filtro) | `spazio-controllo-piccolo` 8, ai lati |
+| Segmento della Scelta a segmenti (CMP-28), alto 24 | `spazio-controllo` 12, ai lati, come nella libreria e nel codice (eccezione alla riga sopra) |
 | Pulsante | `spazio-pulsante` 16, ai lati |
 | Contenitore elenco · pannello · finestra | `spazio-elenco` 8 · `spazio-pannello` 16 · `spazio-finestra` 24, su tutti i lati |
 
@@ -97,9 +98,9 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 |---|---|---|---|---|
 | CMP-01 Pulsante | ✓ (cestino, impostazioni, stati vuoti) | ✓ (+) | ✓ (finestre di conferma, pannelli) | campo, hover, premuto, pieno |
 | CMP-02 Icona | ✓ | ✓ | ✓ | — |
-| CMP-03 Campo di testo | ✓ (tag, impostazioni) | ✓ (ricerca) | ✓ (pannelli, menu) | campo |
+| CMP-03 Campo di testo | ✓ (impostazioni) | ✓ (ricerca) | ✓ (pannelli, menu, Info) | campo |
 | CMP-04 Interruttore | ✓ (impostazioni) | | | hover, pieno |
-| CMP-05 Tag | ✓ (riga dei tag) | | ✓ (filtri della ricerca) | campo, hover, pieno |
+| CMP-05 Tag | | | ✓ (Info, filtri della ricerca) | campo, hover, pieno |
 | CMP-06 Riga della colonna | | ✓ | | hover, pieno; numero di note in testo tenue (RB-56) |
 | CMP-07 Voce di menu | | | ✓ | hover, errore |
 | CMP-08 Suggerimento | ✓ | ✓ | ✓ | pieno (flottante lui stesso) |
@@ -109,8 +110,8 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 | CMP-19 Stato vuoto | ✓ | ✓ (riga) | ✓ (card dei risultati) | pieno (pulsante) |
 | CMP-20 Testo della nota | ✓ | | | pieno (casella spuntata), evidenziazione |
 | CMP-21 Immagine nel testo | ✓ | | | campo (segnaposto), pieno (selezione) |
-| CMP-25 Barra di scorrimento | ✓ | ✓ | | nessuno: `icona-tenue` al 50 % o all'80 % |
-| CMP-26 Percorso | ✓ (fascia in alto) | | | hover, campo (titolo in modifica) |
+| CMP-25 Barra di scorrimento | ✓ | ✓ | ✓ (Info, card dei risultati, ricerca avanzata, Sposta in) | nessuno: `icona-tenue` al 50 % o all'80 % |
+| CMP-26 Percorso | ✓ (fascia in alto) | | | hover |
 | CMP-27 Comparsa dei metadati (superata) | sopra la nota | | è la superficie | flottante, con ombra; dentro: tag |
 | CMP-28 Scelta a segmenti | ✓ (impostazioni) | | | campo, hover, pieno |
 | CMP-09 Menu · CMP-10 Pillola · CMP-11 Pannello · CMP-12 Date picker · CMP-13 Card dei risultati · CMP-15 Avviso · CMP-16 Finestra di conferma · CMP-24 Info · CMP-29 Ricerca avanzata | sopra la nota | sopra la colonna | sono la superficie | flottante, con ombra; dentro: hover, pieno, campo |
@@ -120,7 +121,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 ---
 
 ## CMP-01 – Pulsante
-**Tipo:** base · **Usato in:** SC-01, SC-03, SC-04, SC-06 · **Figma:** [Pulsante](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=20-170)
+**Tipo:** base · **Usato in:** SC-01, SC-02, SC-03, SC-04, SC-06, SC-07 · **Figma:** [Pulsante](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=20-170)
 
 **Scopo:** far partire un'azione con un clic o con Invio.
 **Quando usarlo:** per un'azione esplicita (Ripristina, Svuota cestino, Annulla, +).
@@ -131,7 +132,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 - **Secondario:** sfondo `sfondo-campo`, testo `testo-primario`. Azioni di supporto accanto al primario (Annulla).
 - **Tenue:** senza sfondo, testo `testo-tenue`. Azioni minori in liste e pannelli (Ripristina nel cestino).
 - **Solo icona:** 32 × 32, icona `icona-tenue`. Azioni ripetute con un'icona chiara (+ delle non organizzate, ✕ delle finestre). Il ··· della fascia in alto di SC-01 non c'è più: le azioni della nota stanno in Info (CMP-24, DEC-96).
-- **Solo icona piccolo:** 24 × 24 (`misura-controllo-piccolo`), tondo (`raggio-pillola`), margini 4 (`spazio-elemento`), icona 16 in `icona-tenue`; stessi stati del solo icona da 32 (in Figma `Tipo=Solo icona piccolo`). Solo dentro la pillola flottante in alto a destra di SC-01: i pulsanti della finestra _ [] X (DEC-62, DEC-63; il ··· non c'è più, DEC-96). L'anello di focus è largo 32.
+- **Solo icona piccolo:** 24 × 24 (`misura-controllo-piccolo`), tondo (`raggio-pillola`), margini 4 (`spazio-elemento`), icona 16 in `icona-tenue`; stessi stati del solo icona da 32 (in Figma `Tipo=Solo icona piccolo`). Solo dentro la pillola flottante in alto a destra di SC-01: i pulsanti della finestra _ [] X (DEC-62, DEC-63; il ··· non c'è più, DEC-96). L'anello di focus è largo 32. Chiudi, sotto il mouse e premuto, è rosso (`rosso-500`) con la croce bianca (`grigio-0`), in chiaro e in scuro, come su Windows: usa i primitivi, perché nessun token semantico ha questo ruolo.
 - **Diviso** (DEC-34): solo primario. Può mostrare la scorciatoia dell'azione accanto all'etichetta con le icone dei tasti, 12 px, `icona-su-pieno` al 70 %, 8 px dopo il testo e 4 tra le icone (DEC-65, in SC-02: ⇧ ↵). A sinistra l'azione (Chiudi nella nota rapida, margini 16 e 12), a destra la freccia ▾ (`chevron-down`, `icona-su-pieno`, margini 8 e 12) che apre un menu (CMP-09) con le azioni collegate; tra le due un divisore di 1 × 16 in `sfondo-pieno-hover`. Hover separato sulle due metà (`sfondo-pieno-hover`); con il menu aperto la freccia è `sfondo-pieno-premuto`; l'anello di focus segue la pillola intera. La freccia ha il nome accessibile e il suggerimento «Altre azioni» (CMP-08). In Figma è il componente [Pulsante diviso](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=136-703), con le proprietà Etichetta, **Mostra scorciatoia** (spenta di default, e allora il pulsante non cambia) e **Tasto 1** e **Tasto 2** per scambiare le icone dei tasti (di default Maiusc e Invio). Usato in SC-02.
 - Una sola dimensione, a parte il solo icona piccolo: alto 32 (`misura-riga`), pillola (`raggio-pillola`), margini laterali 16 (8 per il solo icona), distanza tra icona e testo 8, testo Interfaccia/Controllo attivo.
 - Proprietà: **Etichetta** (testo), **Mostra icona** (icona a sinistra del testo, spenta di default), **Icona** (una qualsiasi icona di CMP-02).
@@ -190,7 +191,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 ---
 
 ## CMP-03 – Campo di testo
-**Tipo:** base · **Usato in:** SC-01 (ricerca, nome di cartella), SC-03 (date, tag), SC-06 (scorciatoia, nome del dispositivo) · **Figma:** [Campo di testo](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=25-270)
+**Tipo:** base · **Usato in:** SC-01 (ricerca della colonna e ricerca avanzata, «Cerca un tag», «Cerca una cartella»), SC-01 e SC-03 (titolo e tag in Info, CMP-24), SC-06 (scorciatoia, nome del dispositivo) · **Figma:** [Campo di testo](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=25-270)
 
 **Scopo:** scrivere una riga di testo: un nome, una data, una ricerca; nel caso della scorciatoia, registrare una combinazione di tasti.
 **Quando usarlo:** quando il valore si scrive; con l'icona a destra quando c'è anche un modo alternativo di sceglierlo (il calendario per le date).
@@ -228,7 +229,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 ---
 
 ## CMP-04 – Interruttore
-**Tipo:** base · **Usato in:** SC-06 (avvio all'accensione, note del cestino nei risultati) · **Figma:** [Interruttore](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=30-296)
+**Tipo:** base · **Usato in:** SC-06 (avvio all'accensione, «Tieni Memodu in primo piano», note del cestino nei risultati) · **Figma:** [Interruttore](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=30-296)
 
 **Scopo:** accendere o spegnere un'impostazione, con effetto immediato.
 **Quando usarlo:** per un'impostazione con due valori che si applica subito, senza pulsante Salva.
@@ -263,7 +264,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 ---
 
 ## CMP-05 – Tag
-**Tipo:** base · **Usato in:** SC-03 (riga dei tag della nota), SC-01 (filtri nella card dei risultati) · **Figma:** [Tag](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=31-319)
+**Tipo:** base · **Usato in:** SC-01 e SC-03 (tag della nota in Info, CMP-24), SC-01 (filtri nella card dei risultati) · **Figma:** [Tag](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=31-319)
 
 **Scopo:** mostrare un tag di una nota e permettere di toglierlo, o di usarlo come filtro nella ricerca.
 **Quando usarlo:** per i tag della nota aperta e per i filtri per tag della ricerca (FL-04, FL-06).
@@ -305,7 +306,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 
 ### Varianti e dimensioni
 - **Nota:** solo il titolo, in `testo-primario`, margine 12. Una nota senza titolo mostra "Nota vuota" in `testo-tenue` (RB-15).
-- **Cartella chiusa / aperta:** icona della cartella chiusa (`folder`) o aperta (`folder-open`), 16 px in `icona-tenue`, al posto della freccia (DEC-99), nome e, a destra, il numero di note che contiene, sottocartelle comprese (Interfaccia/Dettaglio in `testo-tenue`; primario in hover, su pieno se selezionata; RB-56, ID-15). Margine 8. Le note restano senza icona: la cartella basta a dividerle (DEC-99).
+- **Cartella chiusa / aperta:** icona della cartella chiusa (`folder`) o aperta (`folder-open`), 16 px in `icona-tenue`, al posto della freccia (DEC-99), nome e, a destra, il numero di note che contiene, sottocartelle comprese (Interfaccia/Dettaglio in `testo-tenue`; primario in hover; RB-56, ID-15). Le note restano senza icona: la cartella basta a dividerle (DEC-99).
 - **Sezione aperta / chiusa:** freccia di 12 px, titolo in Interfaccia/Titolo di sezione (maiuscolo Semi Bold, spaziatura 6%) in `testo-tenue`, il numero di note e il + per creare (nuova nota o nuova cartella). Il numero si mostra per Non organizzate; nel titolo Cartelle si nasconde.
 - Alta 32 (`misura-riga`), pillola con `spazio-controllo` (12) ai lati (`spazio-controllo-piccolo`, 8, a destra nei titoli di sezione, che finiscono con il +), `spazio-icona` (8) tra icona (o freccia) e testo (DEC-100). Il testo troppo lungo finisce con i puntini.
 - **Tra una riga e l'altra**, e tra il titolo della sezione e la prima riga: `spazio-elemento` (4), così le pillole dell'hover e della selezione non si toccano.
@@ -319,7 +320,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 | Default | Senza sfondo, sulla colonna |
 | Hover | `sfondo-hover`; tutto il testo passa a `testo-primario`, anche l'etichetta della sezione e il numero (regola 7) |
 | Focus | Anello `focus-anello` di 2 px staccato 2 px |
-| Attivo | Selezionata: la nota aperta nella colonna, o la cartella attuale (in Sposta in, CMP-11); `sfondo-hover` come l'hover, con testo Interfaccia/Controllo attivo in `testo-primario`: la distingue dall'hover il peso del testo (DEC-35) |
+| Attivo | Selezionata: la nota aperta nella colonna; `sfondo-hover` come l'hover, con testo Interfaccia/Controllo attivo in `testo-primario`: la distingue dall'hover il peso del testo (DEC-35) |
 | Trascinamento sopra | Solo cartella: mentre si trascina una nota o una cartella, quella che la riceverebbe ha `sfondo-hover` e un contorno di 1,5 in `icona-tenue` |
 | Trascinata | Sotto il puntatore segue una copia della riga come pillola: `sfondo-hover`, `raggio-pillola`, opacità 80 %, sopra tutto (`z-avviso`), senza ricevere eventi. La disegna l'app al posto dell'immagine del sistema, che su Windows rende neri gli angoli arrotondati. Proposta dell'agente |
 | Disabilitato | Non previsto |
@@ -338,7 +339,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 ---
 
 ## CMP-07 – Voce di menu
-**Tipo:** base · **Usato in:** menu del tasto destro, Info (CMP-24), ricerca avanzata (CMP-29), menu di inserimento con `/`, suggerimenti dei tag (tutti in CMP-09) · **Figma:** [Voce di menu](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=39-502)
+**Tipo:** base · **Usato in:** menu del tasto destro, Info (CMP-24), Sposta in (CMP-11), «Mostra tutti i risultati» della card (CMP-13), ricerca avanzata (CMP-29), menu di inserimento con `/`, suggerimenti dei tag (tutti in CMP-09) · **Figma:** [Voce di menu](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=39-502)
 
 **Scopo:** una scelta dentro un menu.
 **Quando usarlo:** solo dentro un menu (CMP-09).
@@ -348,7 +349,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 - **Normale:** etichetta Interfaccia/Controllo in `testo-primario`, su `sfondo-flottante`.
 - **Distruttiva:** per le azioni che eliminano (Elimina, Svuota cestino), in `testo-errore` e `icona-errore`. È l'unico uso del colore di uno stato per un'azione: avvisa che non si torna indietro (DEC-14). L'azione chiede comunque conferma (CMP-16).
 - **Separatore:** linea di 1 px in `bordo-divisore-tenue`, alta 9 in tutto, tra gruppi di voci, larga quanto le voci (regola 4: le linee solo dove servono).
-- La voce non ha margini propri: è la pillola alta 32 (`misura-riga`), larga quanto il contenuto del menu, con il testo a 12 px dal bordo (`spazio-controllo`), come le note nella colonna; gli 8 px dal bordo del menu sono del menu (DEC-97). Distanza 8 tra icona, testo e scorciatoia.
+- La voce non ha margini propri: è la pillola alta 32 (`misura-riga`), larga quanto il contenuto del menu, con il testo a 12 px dal bordo (`spazio-controllo`), come le note nella colonna; gli 8 px dal bordo del menu sono del menu (DEC-100). Distanza 8 tra icona, testo e scorciatoia.
 - **Icona:** nei menu di azioni tutte le voci la mostrano, Elimina compresa (in `icona-errore`); nelle liste di valori nessuna (vedi CMP-09).
 - Proprietà: **Etichetta**, **Mostra icona** + **Icona** (Lucide 16), **Mostra scorciatoia** + **Scorciatoia** (Interfaccia/Dettaglio in `testo-tenue`, es. "Ctrl + B"), **Sottomenu** (freccia a destra).
 
@@ -378,11 +379,11 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 **Tipo:** base · **Usato in:** tutte le schermate, sui pulsanti solo icona e sulle icone senza etichetta · **Figma:** [Suggerimento](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=40-542)
 
 **Scopo:** dire cosa fa un controllo che mostra solo un'icona.
-**Quando usarlo:** sempre sui pulsanti solo icona (+, ✕), con lo stesso testo del nome accessibile; se l'azione ha una scorciatoia, la si aggiunge al testo ("Nuova nota · Ctrl + Alt + N").
+**Quando usarlo:** sempre sui pulsanti solo icona (+, ✕), con lo stesso testo del nome accessibile. Il testo non mostra la scorciatoia, nemmeno quando l'azione ne ha una («Nuova nota», «Fissa la colonna»): le scorciatoie stanno nei menu e in `aria-keyshortcuts` (scelta di Manuel Cucca il 01/10/2026, DEC-102).
 **Quando non usarlo:** per spiegazioni lunghe o informazioni necessarie (vanno nel testo della schermata) e sui controlli che hanno già un'etichetta.
 
 ### Varianti e dimensioni
-- Una sola: pillola alta 24 (`misura-controllo-piccolo`), margini 8, testo Interfaccia/Dettaglio in `testo-su-pieno` su `sfondo-pieno`, `ombra-flottante`, livello 20 (`z-comparsa`).
+- Una sola: pillola alta 24 (`misura-controllo-piccolo`), margini 8, testo Interfaccia/Dettaglio in `testo-su-pieno` su `sfondo-pieno`, `ombra`, livello 20 (`z-comparsa`).
 - Compare 8 px sopra il controllo, centrata; se non c'è spazio sopra, sotto.
 - Proprietà: **Testo**.
 
@@ -407,14 +408,14 @@ Compare e sparisce con `movimento-durata-breve` (120 ms). Compare dopo 500 ms di
 ---
 
 ## CMP-09 – Menu
-**Tipo:** composto (usa CMP-07) · **Usato in:** SC-01 (tasto destro su una nota e su una cartella), SC-03 (tasto destro sul testo, inserimento con `/`, suggerimenti dei tag) · **Figma:** pagina Componenti composti, [Menu](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=42-982)
+**Tipo:** composto (usa CMP-07) · **Usato in:** SC-01 (tasto destro su una nota e su una cartella, filtri della ricerca), SC-02 (freccia di Chiudi), SC-03 (tasto destro sul testo, inserimento con `/`, cartelle nascoste del percorso), SC-01 e SC-03 (suggerimenti dei tag in Info) · **Figma:** pagina Componenti composti, [Menu](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=42-982)
 
 **Scopo:** offrire le azioni possibili in quel punto, senza spostarsi (RF-11).
 **Quando usarlo:** per più di due azioni legate a un oggetto (la nota, una cartella, il testo selezionato) o per scegliere cosa inserire.
 **Quando non usarlo:** per una sola azione (pulsante, CMP-01) o per scegliere una data o una cartella (pannello a comparsa, CMP-11). Eccezione: il menu della freccia del pulsante diviso può avere una sola voce (Apri nel programma in SC-02, DEC-34).
 
 ### Varianti e dimensioni
-- Contenitore `sfondo-flottante`, `raggio-contenitore` (20), margine `spazio-elenco` (8) su tutti i lati (ruolo elenco, DEC-100), `ombra-flottante`, livello 20 (`z-comparsa`). Largo 236 negli esempi; si allarga fino alla voce più lunga.
+- Contenitore `sfondo-flottante`, `raggio-contenitore` (20), margine `spazio-elenco` (8) su tutti i lati (ruolo elenco, DEC-100), `ombra`, livello 20 (`z-comparsa`). Largo 236 negli esempi; si allarga fino alla voce più lunga.
 - La pillola dell'evidenziazione sta a 8 px dai lati (margine del menu); i divisori stanno dentro lo stesso margine e sono leggeri (`bordo-divisore-tenue`) (DEC-100, prima da lato a lato). Scelta tra sei alternative (divisori rientrati o da lato a lato, pieni o leggeri; margine 8 o 12; pillola, rettangolo con raggio 12 o fascia a tutta larghezza): la pillola resta per coerenza con colonna, pulsanti e tag.
 - **Icone:** tutte le voci dei menu di azioni (nota, cartella, testo, inserimento) hanno la loro icona, così i testi restano allineati ed Elimina si riconosce anche dal cestino, non solo dal rosso. Le liste di valori (suggerimenti dei tag, filtri) restano senza: sono nomi o periodi, non azioni; fa eccezione Crea il tag con il +. Scelta tra cinque alternative (nessuna icona, icone su tutte, solo Elimina a sinistra, a destra o con spazio riservato); il confronto resta nella pagina Prove.
 - **Nota** (tasto destro su una nota della colonna, anche non aperta): Info (informazione, apre CMP-24 come finestra al centro), Sposta in… (sposta) · Elimina (elimina) (DEC-96). Il menu `···` della nota aperta non c'è più: le sue voci stanno in Info, sotto il titolo del percorso (DEC-96). Il Cestino non è nel menu: si apre dalla riga in fondo alla colonna (DEC-40).
@@ -458,8 +459,8 @@ Compare con `movimento-durata-breve` (120 ms) e `movimento-spostamento` (4 px). 
 ### Varianti e dimensioni
 - **Formattazione:** grassetto, corsivo, sottolineato, barrato · titolo, sottotitolo.
 - **Inserimento:** titolo, sottotitolo · elenco puntato, elenco numerato, checklist · immagine.
-- Pillola su `sfondo-flottante` (bianca in chiaro, scura in scuro), `ombra-flottante`, margini 4, alta 40, livello 20.
-- 4 px (`spazio-4`) tra uno strumento e l'altro: passando con il mouse, il cerchio dell'hover non tocca mai quello dello strumento attivo.
+- Pillola su `sfondo-flottante` (bianca in chiaro, scura in scuro), `ombra`, margini 4, alta 40, livello 20.
+- 4 px (`spazio-elemento`) tra uno strumento e l'altro: passando con il mouse, il cerchio dell'hover non tocca mai quello dello strumento attivo.
 - Tra i gruppi, il **divisore della pillola**: linea di 1 px in `bordo-divisore-tenue` a tutta altezza (da bordo a bordo della pillola), con 4 px ai lati. È lo stesso segno leggero dei divisori dei menu. Scelta tra solo spazio, linea corta leggera, linea corta visibile, linea a tutta altezza e puntino.
 - **Strumento della pillola:** pulsante tondo 32 × 32 con icona Lucide 16 in `icona-tenue`; proprietà **Icona**.
 - Compare 8 px sopra la selezione o il punto del clic, centrata; se non c'è spazio sopra, sotto. Sparisce quando si riprende a scrivere, con Esc o con un clic altrove.
@@ -488,22 +489,22 @@ Compare con `movimento-durata-breve` (120 ms) e `movimento-spostamento` (4 px). 
 ---
 
 ## CMP-11 – Pannello a comparsa
-**Tipo:** composto (usa CMP-03 e CMP-07) · **Usato in:** SC-03 (Sposta in… di Info e del tasto destro sulla nota; il tipo Date non si usa più: le date stanno nella finestra Info, CMP-24, DEC-44) · **Figma:** pagina Componenti composti, [Pannello a comparsa](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=60-1780)
+**Tipo:** composto (usa CMP-03 e CMP-07) · **Usato in:** SC-01 e SC-03 (Sposta in… dalla riga Cartella di Info e dal tasto destro su una nota della colonna; il tipo Date non si usa più: le date stanno nella finestra Info, CMP-24, DEC-44) · **Figma:** pagina Componenti composti, [Pannello a comparsa](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=60-1780)
 
 **Scopo:** modificare un'informazione della nota che ha bisogno di più di una voce di menu: una data, una cartella.
 **Quando usarlo:** quando la scelta richiede un campo, una ricerca o un albero, aperto dalla voce con "…" del menu.
 **Quando non usarlo:** per una scelta tra poche azioni (menu, CMP-09) o per chiedere conferma (finestra di conferma, CMP-16).
 
 ### Varianti e dimensioni
-- **Stesso aspetto del menu** (CMP-09), pur restando un componente separato: `sfondo-flottante`, `raggio-contenitore` (20), `ombra-flottante`, livello 20, largo 236, margine `spazio-elenco` (8) su tutti i lati (DEC-97). Si apre sotto il pulsante «Sposta in…» di Info o accanto alla nota del tasto destro (DEC-96).
+- **Stesso aspetto del menu** (CMP-09), pur restando un componente separato: `sfondo-flottante`, `raggio-contenitore` (20), `ombra`, livello 20, largo 236, margine `spazio-elenco` (8) su tutti i lati (DEC-100). Si apre sotto la riga Cartella di Info (DEC-97) o accanto alla nota del tasto destro (DEC-96).
 - **Date** (FL-04): "Data di creazione" e "Fine validità" con etichetta Interfaccia/Etichetta in `testo-tenue` e campo con il calendario (CMP-03, con icona). Etichette e note partono a 12 px, allineate al testo dei campi, come il testo delle voci di menu. Sotto la data di creazione, in Interfaccia/Dettaglio, quella di sistema, che non cambia (RB-21). Nessun avviso sulle combinazioni di date (RB-20).
-- **Sposta in**: campo di ricerca ("Cerca una cartella"), divisore da lato a lato, poi le cartelle come **voci di menu** (CMP-07): come icona la cartella chiusa (`folder`) o aperta (`folder-open`), come nella colonna (DEC-99), e `spazio-rientro` (24) per livello, come nella colonna (DEC-100). Un clic sull'icona di una cartella con sottocartelle la apre o la chiude; un clic sul resto della voce la sceglie. "Non organizzate" (la radice) lascia vuoto lo spazio dell'icona, così i nomi restano allineati. La **cartella attuale** ha la spunta a destra (`check`), non la pillola scura: nel menu la pillola indica l'hover. Eccezione nota ai token: il rientro delle sottocartelle si ottiene allargando il margine della voce (12 + 16 = 28 px per il primo livello), un valore senza token proprio.
+- **Sposta in**: campo di ricerca ("Cerca una cartella"), divisore, poi le cartelle come **voci di menu** (CMP-07): come icona la cartella chiusa (`folder`) o aperta (`folder-open`), come nella colonna (DEC-99), e `spazio-rientro` (24) per livello, come nella colonna (DEC-100). Un clic sull'icona di una cartella con sottocartelle la apre o la chiude; un clic sul resto della voce la sceglie. "Non organizzate" (la radice) lascia vuoto lo spazio dell'icona, così i nomi restano allineati. La **cartella attuale** ha la spunta a destra (`check`), non la pillola scura: nel menu la pillola indica l'hover.
 
 ### Stati
 | Stato | Descrizione |
 |---|---|
 | Default | Aperto, con i valori attuali |
-| Hover · Focus · Errore | Li gestiscono i campi (CMP-03) e le righe (CMP-06) |
+| Hover · Focus · Errore | Li gestiscono i campi (CMP-03) e le voci (CMP-07) |
 | Attivo | Date: la modifica si salva subito (RB-06). Sposta in: il clic su una cartella sposta la nota e chiude il pannello |
 | Disabilitato | Non previsto |
 | Caricamento | Non previsto: tutto è sulla copia di lavoro |
@@ -511,7 +512,7 @@ Compare con `movimento-durata-breve` (120 ms) e `movimento-spostamento` (4 px). 
 Si chiude con Esc, con un clic fuori o (Sposta in) scegliendo una cartella. Compare con `movimento-durata-breve` e `movimento-spostamento`.
 
 ### Accessibilità
-- **Tastiera:** all'apertura il focus va sul primo campo (Date) o sulla ricerca (Sposta in); Tab tra i campi; in Sposta in, scrivendo si filtra l'albero, le frecce scelgono la cartella e Invio sposta. Esc chiude e riporta il focus su «Sposta in…».
+- **Tastiera:** all'apertura il focus va sul primo campo (Date) o sulla ricerca (Sposta in); Tab tra i campi; in Sposta in, scrivendo si filtra l'albero, le frecce scelgono la cartella e Invio sposta. Esc chiude e riporta il focus dove il pannello era stato aperto: il titolo del percorso (da Info sotto il titolo) o la riga della nota nella colonna.
 - **Lettori di schermo:** finestra non modale con titolo ("Date", "Sposta in"); la cartella attuale è annunciata come "attuale".
 - **Contrasti:** etichette in `testo-tenue` su `sfondo-flottante` 5,49:1 in chiaro e 5,61:1 in scuro; campi e voci come in CMP-03 e CMP-07.
 
@@ -522,18 +523,18 @@ Si chiude con Esc, con un clic fuori o (Sposta in) scegliendo una cartella. Comp
 ---
 
 ## CMP-12 – Date picker
-**Tipo:** composto (con la parte interna "Giorno del calendario"; usa CMP-01 e il separatore di CMP-07) · **Usato in:** SC-03 (pannello Date, CMP-11) · **Figma:** pagina Componenti composti, [Date picker](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=65-763)
+**Tipo:** composto (con la parte interna "Giorno del calendario"; usa CMP-01 e il separatore di CMP-07) · **Usato in:** SC-01 e SC-03 (righe di data di Info, CMP-24), SC-01 («Scegli le date…» dei filtri della ricerca, CMP-13 e CMP-29) · **Figma:** pagina Componenti composti, [Date picker](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=65-763)
 
 **Scopo:** scegliere una data con il mouse, in alternativa a scriverla nel campo.
 **Quando usarlo:** si apre dall'icona calendario di un campo data (CMP-03, con icona).
 **Quando non usarlo:** da solo, senza campo: la data si può sempre anche scrivere.
 
 ### Varianti e dimensioni
-- Stesso guscio di menu e pannello: `sfondo-flottante`, `raggio-contenitore` (20), `ombra-flottante`, livello 20, margine `spazio-elenco` (8) su tutti i lati (ruolo elenco, DEC-100). Largo **240** invece di 236: 7 giorni da 32 px richiedono 224 px di contenuto.
+- Stesso guscio di menu e pannello: `sfondo-flottante`, `raggio-contenitore` (20), `ombra`, livello 20, margine `spazio-elenco` (8) su tutti i lati (ruolo elenco, DEC-100). Largo **240** invece di 236: 7 giorni da 32 px richiedono 224 px di contenuto.
 - **Intestazione:** mese e anno (Interfaccia/Titolo) e due pulsanti solo icona ‹ › (CMP-01) per il mese precedente e successivo.
 - **Giorni della settimana:** L M M G V S D, dal lunedì, in Interfaccia/Etichetta `testo-tenue`.
 - **Giorni:** sempre 6 righe, così l'altezza non cambia da un mese all'altro. Ogni giorno è un cerchio di 32 × 32 (parte interna "Giorno del calendario").
-- **Piede:** separatore da lato a lato, poi i pulsanti tenui "Oggi" e "Nessuna data" (svuota il campo, utile per la fine validità).
+- **Piede:** separatore, dentro il margine (DEC-100), poi i pulsanti tenui "Oggi" e "Nessuna data" (svuota il campo, utile per la fine validità).
 - Si apre 8 px sotto il campo, sopra il pannello; se non c'è spazio sotto, sopra.
 
 ### Stati (del giorno)
@@ -570,8 +571,8 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 
 ### Varianti e dimensioni
 - Stesso guscio del menu: `sfondo-flottante`, raggio 20, ombra, livello 20, margine `spazio-elenco` (8) su tutti i lati (ruolo elenco, DEC-100). Larga **480**, più della colonna: copre la nota senza velo, perché non blocca niente.
-- **Filtri** in cima: Tag, Creazione, Modifica (FL-06; Fine validità per ora non c'è, DEC-94). Con il campo vuoto e nessun filtro la card mostra solo la fila dei filtri (RB-33). Ognuno è una pillola alta 24 come il tag, con una freccia giù, 8 px tra l'una e l'altra, 12 px sopra e sotto la fila. Apre un menu (CMP-09, filtro tag o filtro data) 8 px sotto la pillola. Attivo: pieno scuro con il valore ("Tag: lavoro"; con più tag, "Tag: 2").
-- Divisore da lato a lato, poi i **risultati** per pertinenza (RB-34), tutti, scorrendo la card: titolo (Interfaccia/Titolo), la frase in cui compare la parola con la parola in `testo-primario` Medium, cartella e data (Interfaccia/Dettaglio).
+- **Filtri** in cima: Tag, Creazione, Modifica (FL-06; Fine validità per ora non c'è, DEC-94). Con il campo vuoto e nessun filtro la card mostra solo la fila dei filtri (RB-33). Ognuno è una pillola alta 24 come il tag, con una freccia giù, `spazio-elemento` (4) tra l'una e l'altra come i tag, 12 px sopra e sotto la fila. Apre un menu (CMP-09, filtro tag o filtro data) 8 px sotto la pillola. Attivo: `sfondo-hover` con `testo-primario` (DEC-35), con il valore ("Tag: lavoro"; con più tag, "Tag: 2").
+- Divisore, dentro il margine (DEC-100), poi i **risultati** per pertinenza (RB-34), tutti, scorrendo la card: titolo (Interfaccia/Titolo), la frase in cui compare la parola con la parola in `testo-primario` Medium, cartella e data (Interfaccia/Dettaglio).
 - **Nel cestino:** titolo e frase attenuati, etichetta "nel cestino" (RB-29); non compaiono se la preferenza li esclude.
 - **Nessun risultato:** filtri, divisore, "Nessuna nota trovata" e un suggerimento; la card resta aperta (RB-35).
 - **Mostra tutti i risultati** (DEC-96): con dei risultati, in fondo, dopo un divisore, una voce di menu (CMP-07) con l'icona Cerca, «Mostra tutti i risultati (n)» e la scorciatoia Ctrl + Maiusc + K. Apre la ricerca avanzata (CMP-29) con lo stesso testo e gli stessi filtri.
@@ -639,7 +640,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 
 ### Varianti e dimensioni
 - **Errore**, **Avviso**, **Informazione**, **Successo** (DEC-14): fondo `sfondo-<stato>`, icona Lucide 16 in `icona-<stato>` (`circle-alert`, `triangle-alert`, `info`, `check`), testo Interfaccia/Messaggio in `testo-primario`, a destra «Ho capito» (pulsante tenue) e, con la proprietà **Mostra azione**, un'azione tenue prima di lui (es. «Ripristina», «Apri l'altra»).
-- Largo 480, raggio 20, ruolo pannello: `spazio-pannello` (16) su tutti i lati, con «Ho capito» e l'azione sul margine come ogni pulsante (DEC-100), `ombra-flottante`, livello 50, uno alla volta, al centro dell'area della nota, 8 sotto la fascia in alto (a 48 dal bordo): non copre il percorso (CMP-26, DEC-86). Il testo va a capo.
+- Largo 480, raggio 20, ruolo pannello: `spazio-pannello` (16) su tutti i lati, con «Ho capito» e l'azione sul margine come ogni pulsante (DEC-100), `ombra`, livello 50, uno alla volta, al centro dell'area della nota, 8 sotto la fascia in alto (a 48 dal bordo): non copre il percorso (CMP-26, DEC-86). Il testo va a capo.
 - I testi sono esempi nel tono di voce; quelli definitivi si scrivono in Fase 6.
 
 ### Stati
@@ -671,7 +672,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 ### Varianti e dimensioni
 - **Conferma:** titolo, testo, Annulla (secondario) e l'azione (primario), es. «Svuotare il cestino?» · «3 elementi verranno eliminati per sempre.» · Annulla · Svuota.
 - **Tre scelte:** Annulla, Unisci (secondario) e Aggiungi un numero (primario, la scelta che non tocca niente), per RB-31.
-- Guscio dei flottanti: `sfondo-flottante`, raggio 20, `ombra-flottante`, largo 400, margini 24. Titolo Interfaccia/Titolo in `testo-primario`, testo Interfaccia/Messaggio in `testo-tenue`. Pulsanti a destra, 8 px tra loro.
+- Guscio dei flottanti: `sfondo-flottante`, raggio 20, `ombra`, largo 400, margine `spazio-finestra` (24) su tutti i lati (ruolo finestra, DEC-100). Titolo Interfaccia/Titolo in `testo-primario`, testo Interfaccia/Messaggio in `testo-tenue`. Pulsanti a destra, 8 px tra loro.
 - Al centro della finestra, livello 40, con il `velo` sul resto; un avviso (livello 50) resta visibile sopra.
 
 ### Stati
@@ -727,7 +728,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 **Tipo:** composto (usa CMP-01, CMP-03 e CMP-04) · **Usato in:** SC-06 · **Figma:** pagina Componenti composti, [Riga di impostazione](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=74-2255)
 
 **Scopo:** una preferenza, con il suo controllo.
-**Quando usarlo:** in SC-06, una riga per impostazione, raggruppate sotto un titolo (Generale, Tema, Sincronizzazione, Dispositivo; Ricerca con RF-08, DEC-91).
+**Quando usarlo:** in SC-06, una riga per impostazione, raggruppate sotto un titolo (Generale, Tema, Sincronizzazione, Ricerca, Dispositivo; DEC-91, DEC-94).
 **Quando non usarlo:** per azioni (pulsante); le informazioni non modificabili usano la variante Informazione.
 
 ### Varianti e dimensioni
@@ -798,7 +799,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 **Quando non usarlo:** per il testo dell'interfaccia (stili Interfaccia/…).
 
 ### Varianti e dimensioni
-- **Riga dei metadati** (parte interna), sotto il titolo, su due righe larghe quanto la nota (DEC-44): in alto la data di ultima modifica in Interfaccia/Dettaglio e `testo-tenue` (es. «Modificata oggi alle 11:42»); sotto i tag in sola lettura (CMP-05 senza ✕, `spazio-elemento` tra l'uno e l'altro), che vanno a capo. Date e tag si modificano nella finestra Info (CMP-24). Sta `spazio-icona` (8) sotto il titolo e `spazio-blocco` (16) sopra il testo; tra le due righe `spazio-icona` (8) (DEC-58, anche nel componente in Figma). Proprietà **Data** e **Mostra tag**; nella nota nuova niente tag e "Creata ora". Il componente ha la proprietà **Mostra metadati** per nasconderla dove non c'è il titolo (nota rapida, SC-02) e **Mostra titolo**: nella nota aperta sono spenti tutti e due, perché titolo e metadati stanno nel percorso (CMP-26) e nella sua comparsa (CMP-27, DEC-71).
+- **Riga dei metadati** (parte interna), sotto il titolo, su due righe larghe quanto la nota (DEC-44): in alto la data di ultima modifica in Interfaccia/Dettaglio e `testo-tenue` (es. «Modificata oggi alle 11:42»); sotto i tag in sola lettura (CMP-05 senza ✕, `spazio-elemento` tra l'uno e l'altro), che vanno a capo. Date e tag si modificano nella finestra Info (CMP-24). Sta `spazio-icona` (8) sotto il titolo e `spazio-blocco` (16) sopra il testo; tra le due righe `spazio-icona` (8) (DEC-58, anche nel componente in Figma). Proprietà **Data** e **Mostra tag**; nella nota nuova niente tag e "Creata ora". Il componente ha la proprietà **Mostra metadati** per nasconderla dove non c'è il titolo (nota rapida, SC-02) e **Mostra titolo**: nella nota aperta sono spenti tutti e due, perché il titolo sta nel percorso (CMP-26, DEC-71) e ultima modifica e tag in Info (CMP-24, DEC-96).
 - **Testo puro** (DEC-64, la variante in uso finché non torna il markdown): titolo, riga dei metadati e un solo paragrafo in Nota/Corpo, dove `#`, `-`, `**` e le tabulazioni si vedono come caratteri, senza formattazione. In Figma è la variante `Tipo=Testo puro`.
 - **Con testo:** titolo (Nota/Titolo), riga dei metadati, corpo (Nota/Corpo), sottotitolo (Nota/Sottotitolo), checklist, elenco puntato, elenco numerato; `spazio-blocco` (16) tra i blocchi, `spazio-elemento` (4) tra le voci, `spazio-gruppo` (24) tra intestazione e testo. Larghezza di lettura 640, confermata come misura massima il 28/09/2026.
 - **Simboli markdown:** non si vedono mai, nemmeno sulla riga del cursore (DEC-58).
@@ -822,8 +823,8 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 - **Contrasti:** testo primario ≥ 16,48:1 su `sfondo-nota`; simboli e segni in `testo-tenue` 5,49:1 e 7,30:1; voce spuntata 5,49:1.
 
 ### Esempi
-- ✅ Corretto: il `##` visibile solo sulla riga dove si sta scrivendo.
-- ❌ Scorretto: mostrare tutti i simboli markdown della nota.
+- ✅ Corretto: il `##` che sparisce appena il markdown lo riconosce, anche sulla riga dove si sta scrivendo (DEC-58).
+- ❌ Scorretto: mostrare i simboli markdown della nota.
 
 ---
 
@@ -907,7 +908,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 
 ### Varianti e dimensioni
 - **Vuota:** «Scrivi qui…» in `testo-tenue`. **Con testo:** il testo della nota in Nota/Corpo, `testo-primario`.
-- Finestra senza cornice 480 × 320 (ridimensionabile), `sfondo-nota`, `raggio-contenitore`, `ombra-flottante`; `spazio-finestra` (24) ai bordi, `spazio-blocco` (16) tra testo e azioni. Nessun titolo (RB-15), nessuna barra, nessun divisore.
+- Finestra senza cornice 480 × 320 (ridimensionabile), `sfondo-nota`, `raggio-contenitore`, `ombra`; `spazio-finestra` (24) ai bordi, `spazio-blocco` (16) tra testo e azioni. Nessun titolo (RB-15), nessuna barra, nessun divisore.
 - In basso a destra **Chiudi** (CMP-01 diviso), con la scorciatoia ⇧ ↵ accanto (Maiusc + Invio, DEC-65): salva e chiude; nel menu della freccia **Apri nel programma** (DEC-34, DEC-50). Nessuna ✕ e nessun altro pulsante.
 - Il margine in alto non si vede e serve a trascinare la finestra. Nell'app gli angoli sono squadrati (scostamento accettato, vedi SC-02).
 
@@ -916,7 +917,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 |---|---|
 | Default | Vuota o con testo |
 | Hover · Focus · Attivo | Li gestiscono i pulsanti |
-| Errore | Se l'API non risponde compare SC-07 sopra la finestra; chiudendo, la finestra di conferma (CMP-16, RB-61, RB-62) |
+| Errore | Se la copia di lavoro non si apre o non si scrive compare SC-07 sopra la finestra (DEC-67, DEC-85); chiudendo, la finestra di conferma (CMP-16, RB-61, RB-62) |
 | Disabilitato · Caricamento | Non previsti: la finestra compare già pronta (RNF-01) |
 
 ### Accessibilità
@@ -939,8 +940,8 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 
 ### Varianti e dimensioni
 - **Comparsa:** sotto il titolo del percorso, centrata su di lui, 8 sotto; livello 20, senza velo, come i menu. In fondo, dopo un divisore, «Chiudi nota» (Ctrl + W) ed «Elimina» (voce distruttiva).
-- **Finestra:** al centro, livello 30 con il velo, come le finestre di conferma. In testa «Info» (Interfaccia/Titolo) e la ✕ (CMP-01 solo icona). In fondo solo «Elimina»: la nota non è aperta, non c'è niente da chiudere.
-- Larga 360; `sfondo-flottante`, `raggio-contenitore`, `ombra-flottante`. Ruolo **pannello** (DEC-100): margine `spazio-pannello` (16) su tutti i lati; `spazio-blocco` (16) tra i blocchi (titolo, righe, «Modificata», divisore, voci); `spazio-elemento` (4) tra le righe. Righe, «Modificata», intestazione, campo del titolo e voci sono pillole con `spazio-controllo` (12) dentro: pillole a 16 dal bordo, icone e testi a 28. La ✕ dell'intestazione sta sul bordo della pillola, a 16.
+- **Finestra:** al centro, livello 30 (`z-overlay`) con il velo; le finestre di conferma stanno sopra, a 40. In testa «Info» (Interfaccia/Titolo) e la ✕ (CMP-01 solo icona). In fondo solo «Elimina»: la nota non è aperta, non c'è niente da chiudere.
+- Larga 360; `sfondo-flottante`, `raggio-contenitore`, `ombra`. Ruolo **pannello** (DEC-100): margine `spazio-pannello` (16) su tutti i lati; `spazio-blocco` (16) tra i blocchi (titolo, righe, «Modificata», divisore, voci); `spazio-elemento` (4) tra le righe. Righe, «Modificata», intestazione, campo del titolo e voci sono pillole con `spazio-controllo` (12) dentro: pillole a 16 dal bordo, icone e testi a 28. La ✕ dell'intestazione sta sul bordo della pillola, a 16.
 - **Titolo:** il campo (CMP-03) largo quanto Info, senza etichetta; una nota senza titolo ha il campo vuoto con «Senza titolo» come segnaposto.
 - **Righe** (proposta C, DEC-97), ognuna con l'icona Lucide 16 in `icona-tenue` e la frase intera in Interfaccia/Controllo; passandoci sopra la riga prende `sfondo-hover`, a tutta larghezza:
   - **Cartella** (`folder`): «Lavoro › Clienti» o «Non organizzata»; un clic apre il pannello Sposta in (CMP-11) accanto alla riga.
@@ -948,7 +949,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
   - **Fine validità** (`calendar`): «Fine validità il …» o, in `testo-tenue`, «Nessuna fine validità»; il suggerimento è «Solo un promemoria: alla scadenza non succede nulla» (RF-04).
   - **Tag** (`tag`): i tag (CMP-05 rimovibili, vanno a capo) e «+ Tag», pillola alta 24 con il bordo tratteggiato; un clic la sostituisce con il campo «Aggiungi un tag» (largo 132), che lasciato vuoto torna «+ Tag».
 - **Riga di data aperta:** con un clic, al posto della frase c'è il campo con la data selezionata (GG/MM/AAAA, senza fondo suo: la pillola resta evidenziata) e sotto la riga il calendario (CMP-12).
-- **«Modificata oggi alle 11:42»** in Interfaccia/Dettaglio e `testo-tenue`, a 8 come le righe, in sola lettura. Poi il divisore e le voci (CMP-07).
+- **«Modificata oggi alle 11:42»** in Interfaccia/Dettaglio e `testo-tenue`, allineata alle righe (pillola con `spazio-controllo` dentro, DEC-100), in sola lettura. Poi il divisore e le voci (CMP-07).
 
 ### Stati
 | Stato | Descrizione |
@@ -971,7 +972,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 ---
 
 ## CMP-25 – Barra di scorrimento
-**Tipo:** composto · **Usato in:** SC-01 (la colonna), SC-02 (la nota rapida), SC-03 (il foglio), SC-04 (il cestino), SC-06 (le impostazioni), Info, Ricerca e Sposta in · **Figma:** pagina Componenti composti, [Barra di scorrimento](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=182-5587)
+**Tipo:** composto · **Usato in:** SC-01 (la colonna), SC-02 (la nota rapida), SC-03 (il foglio), SC-04 (il cestino), SC-06 (le impostazioni), Info (CMP-24), card dei risultati (CMP-13), ricerca avanzata (CMP-29) e Sposta in (CMP-11) · **Figma:** pagina Componenti composti, [Barra di scorrimento](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=182-5587)
 
 **Scopo:** mostrare dove si è in un contenuto che scorre e permettere di spostarsi trascinando, senza togliere spazio al testo (DEC-58).
 **Quando usarlo:** in ogni area che scorre: il foglio della nota (tutta la pagina, DEC-59), la colonna, la nota rapida, il cestino, le impostazioni e i pannelli che scorrono. Nessuna area mostra la barra del sistema.
@@ -1045,7 +1046,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 
 ### Varianti e dimensioni
 - **Tag:** Con tag, Senza tag (solo la data).
-- `sfondo-flottante`, `raggio-interno` (12), margini `spazio/12`, `ombra-flottante`, livello 20 (`z-comparsa`); 8 sotto il percorso, centrata sul titolo.
+- `sfondo-flottante`, `raggio-interno` (12), margini `spazio/12`, `ombra`, livello 20 (`z-comparsa`); 8 sotto il percorso, centrata sul titolo.
 - Dentro la Riga dei metadati (CMP-20) larga 296: la data di ultima modifica in Interfaccia/Dettaglio e `testo-tenue`, sotto i tag in sola lettura (CMP-05 senza ✕) che vanno a capo.
 
 ### Stati
@@ -1108,7 +1109,7 @@ Compare e sparisce con `movimento-durata-breve` (120 ms).
 **Quando non usarlo:** per le ricerche veloci, che restano nella card sotto il campo della colonna.
 
 ### Varianti e dimensioni
-- Finestra al centro, livello 30 con il velo; larga 1040, alta 820; `sfondo-flottante`, `raggio-contenitore`, `ombra-flottante`.
+- Finestra al centro, livello 30 con il velo; larga 1040, alta 820; `sfondo-flottante`, `raggio-contenitore`, `ombra`.
 - **Barra:** il campo di ricerca (CMP-03, tipo Ricerca) largo quanto la finestra e la ✕; margine `spazio-pannello` (16) su tutti i lati, come le colonne dei filtri e dei risultati (ruolo pannello, DEC-100); tra il campo e la ✕ `spazio-icona` (8); sotto un divisore `bordo-divisore`.
 - **Filtri sempre aperti**, a sinistra, larghi 260, con un divisore verticale: titoli di gruppo Tag, Creazione e Modifica; sotto le stesse voci dei menu dei filtri (CMP-09), come voci di menu (CMP-07) con la spunta a destra: i tag con più scelte, i periodi con una sola («Qualsiasi data», «Oggi», «Ultimi 7 giorni», «Ultimi 30 giorni», «Quest'anno», «Scegli le date…», che apre il calendario).
 - **Risultati**, a destra: il conteggio in Interfaccia/Messaggio e `testo-tenue` (es. «"rilascio" con il tag lavoro · 4 note»), poi i risultati come nella card, con lo stesso ordine (RB-34) e le note del cestino attenuate (RB-29).

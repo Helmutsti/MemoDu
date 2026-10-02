@@ -42,7 +42,7 @@ Stessi tasti fisici sui due sistemi, libere nelle configurazioni di default di e
 |---|---|---|
 | Vuoto | Finestra appena aperta, nessun testo | "Scrivi qui…" nell'area vuota; in basso "Chiudi" |
 | Caricamento | Non previsto: la finestra compare già pronta (RNF-01) | — |
-| Errore | L'API delle note non risponde o non salva: SC-07 al posto del contenuto, il testo resta in memoria e chiudendo compare la conferma (RB-61, RB-62) | Vedi SC-07 |
+| Errore | L'API delle note non risponde o non salva: SC-07 al posto del contenuto, il testo resta in memoria e chiudendo compare la conferma (RB-61, RB-62) (superato da DEC-85; da riscrivere con i testi definitivi di SC-07) | Vedi SC-07 |
 | Successo | Non previsto: la chiusura è la conferma. Chiusa vuota, non crea nulla e non lo dice (RB-03) | — |
 | Contenuto lungo | Il testo scorre dentro la finestra, che non cresce da sola | — |
 
@@ -54,23 +54,22 @@ Stessi tasti fisici sui due sistemi, libere nelle configurazioni di default di e
 ---
 
 ## SC-03 – Schermata di scrittura
-**Flussi:** FL-02 · FL-03 · FL-04 · FL-09 · **Componenti:** campo titolo, editor markdown, pillola degli strumenti, menu di inserimento, menu della nota, menu del tasto destro, immagine inline, stato vuoto
+**Flussi:** FL-02 · FL-03 · FL-04 · FL-09 · **Componenti:** percorso (CMP-26), editor markdown, pillola degli strumenti, menu di inserimento, Info (CMP-24), menu del tasto destro, immagine inline, stato vuoto
 
 - **Wireframe:** [immagine selezionata](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=2-36) · [nota nuova vuota](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=2-66) · [testo selezionato e riga vuota](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=15-96) · [clic sul vuoto](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=15-180)
 - **Esportazioni:** `immagini/SC-03.png`, `immagini/SC-03-vuoto.png`, `immagini/SC-03-selezione.png`, `immagini/SC-03-pillola.png`
 - **Mockup (frammento Must A, approvati da Manuel Cucca il 27/09/2026):** [nota nuova vuota](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=18-311) · [simboli markdown sulla riga del cursore](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=18-322) · [testo selezionato con la pillola di formattazione](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=18-333) · [clic sul vuoto con la pillola di inserimento](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=18-344) · [menu `/`](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=18-355) · [tasto destro sul testo](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=18-366)
 - **Esportazioni mockup:** `immagini/SC-03-vuoto-mockup.png`, `immagini/SC-03-markdown-mockup.png`, `immagini/SC-03-selezione-mockup.png`, `immagini/SC-03-pillola-mockup.png`, `immagini/SC-03-inserimento-mockup.png`, `immagini/SC-03-tasto-destro-mockup.png`
-- **Perimetro del frammento Must A:** si disegnano solo le parti di RF-01 e RF-02: scrittura, titolo, simboli markdown, pillola di formattazione e di inserimento (senza la voce Immagine), menu `/`, tasto destro, stati vuoti. Menu `···`, immagini, metadati e nota in conflitto si disegnano con il frammento Must
+- **Perimetro del frammento Must A:** si disegnano solo le parti di RF-01 e RF-02: scrittura, titolo, simboli markdown, pillola di formattazione e di inserimento (senza la voce Immagine), menu `/`, tasto destro, stati vuoti. Immagini, metadati e nota in conflitto si disegnano con il frammento Must
 
 È l'area della nota dentro `SC-01`. Nessun pulsante Salva: ogni modifica si salva da sola dopo una pausa di scrittura (RB-06), e non c'è nessun indicatore permanente di salvataggio — sarebbe rumore su un'azione che non fallisce sul dispositivo.
 
 ### Zone e gerarchia
 | Ordine di lettura | Zona | Contenuto |
 |---|---|---|
-| 1 | Corpo della nota | Testo formattato mentre si scrive; i simboli markdown non si vedono mai, nemmeno sulla riga del cursore (RF-02, DEC-58). Testo allineato a sinistra con spazi discreti; barra di scorrimento sottile e a scomparsa, che non occupa spazio (DEC-58). Un clic in un punto vuoto del foglio porta il cursore nel testo più vicino (DEC-66) |
-| 2 | Percorso con il titolo (DEC-71) | Al centro della fascia in alto: le cartelle che contengono la nota e il titolo (CMP-26). Il titolo si modifica cliccandolo; può restare vuoto e allora si legge «Senza titolo» (RB-15). Passando sul titolo compaiono ultima modifica e tag (CMP-27). Nel foglio non c'è più il campo titolo |
-| 3 | Strumenti di formattazione | Nessuna barra fissa: compaiono solo quando servono (livello 20), vedi sotto |
-| 4 | Menu `···` | In alto a destra: sopra tag, date, sposta, elimina (FL-04); sotto le voci del programma. Dettaglio in `interfaccia/4-schermate.md` |
+| 1 | Corpo della nota | Testo formattato mentre si scrive; i simboli markdown non si vedono mai, nemmeno sulla riga del cursore (RF-02, DEC-58); per ora testo puro (DEC-64). Testo allineato a sinistra con spazi discreti; barra di scorrimento sottile e a scomparsa, che non occupa spazio (DEC-58). Un clic in un punto vuoto del foglio porta il cursore nel testo più vicino (DEC-66) |
+| 2 | Percorso con il titolo (DEC-71) | Al centro della fascia in alto: le cartelle che contengono la nota e il titolo (CMP-26). Un clic sul titolo apre Info (CMP-24) sotto di lui, dove il titolo si modifica; può restare vuoto e allora si legge «Senza titolo» (RB-15). Passando sul titolo non compare niente (DEC-96). Nel foglio non c'è più il campo titolo |
+| 3 | Strumenti di formattazione | Nessuna barra fissa: compaiono solo quando servono (livello 20), vedi sotto; per ora sospesi (DEC-64) |
 
 ### Scrittura, tasto destro e immagini (FL-02, FL-03)
 - **Wireframe:** [tasto destro sul testo](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=30-67) · [simboli markdown sulla riga del cursore](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=30-144) · [trascinamento di un'immagine](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=30-244)
@@ -78,8 +77,8 @@ Stessi tasti fisici sui due sistemi, libere nelle configurazioni di default di e
 
 | Cosa | Come |
 |---|---|
-| Tasto destro sul testo | Taglia, Copia, Incolla; poi grassetto, corsivo, sottolineato, barrato con le scorciatoie accanto; poi Titolo ▸ ed Elenco ▸ (RF-11) |
-| Simboli markdown | Non si vedono mai: si scrivono (es. `## ` davanti a un titolo) e spariscono appena riconosciuti; le frecce li saltano e Canc li toglie in un colpo solo (RF-02, DEC-58) |
+| Tasto destro sul testo | Taglia, Copia, Incolla; poi grassetto, corsivo, sottolineato, barrato con le scorciatoie accanto; poi Titolo ▸ ed Elenco ▸ (RF-11). Sospeso con DEC-64: per ora il tasto destro apre il menu del sistema |
+| Simboli markdown | Non si vedono mai: si scrivono (es. `## ` davanti a un titolo) e spariscono appena riconosciuti; le frecce li saltano e Canc li toglie in un colpo solo (RF-02, DEC-58). Sospeso con DEC-64: per ora sono caratteri normali |
 | Trascinamento di un'immagine | Tutta l'area della nota si copre di un bordo tratteggiato con "Rilascia qui l'immagine" e i limiti (solo immagini, fino a 25 MB). File non validi: messaggio in linea (RB-11, RB-12) |
 
 ### Metadati (FL-04)
@@ -93,16 +92,18 @@ Stessi tasti fisici sui due sistemi, libere nelle configurazioni di default di e
 
 | Cosa | Dove | Come |
 |---|---|---|
-| Passando sul titolo del percorso (DEC-71) | Comparsa dei metadati (CMP-27) | Riquadro flottante sotto il titolo: la data di ultima modifica in `testo-tenue`, sotto i tag in sola lettura. Compare dopo 500 ms di sosta o con il focus sul titolo, sparisce lasciandolo o con Esc. Prima stava sotto il titolo nel foglio (DEC-44) |
-| Info (DEC-44, ID-27) | Voce «Info» nel menu `···` e nel tasto destro sulla nota nella colonna | Finestra modale al centro della pagina, con il velo sul resto (scelta di Manuel Cucca il 29/09/2026). Date, tag e gli altri aspetti della nota, modificabili. Sostituisce «Tag…» e «Date…». Contiene: data di creazione di sistema e di ultima modifica (solo lettura), data di creazione scelta e fine validità (modificabili, con il calendario), tag (modificabili), cartella mostrata come testo (si sposta con «Sposta in…»). Scelta di Manuel Cucca il 29/09/2026; il conteggio delle parole è l'idea ID-28. Ogni modifica vale subito, come nel resto dell'app (RB-06): nessun Salva, si chiude con la ✕, con Esc o con un clic fuori, sul velo (DEC-81); l'eliminazione di un tag da tutte le note resta con la sua conferma (RB-19). Scelta di Manuel Cucca il 29/09/2026. Le righe Tag e Date qui sotto descrivono il disegno precedente, superato |
-| Tag (superata da DEC-44) | Riga sotto il titolo | I tag diventano modificabili: × per toglierli, un campo per aggiungerne con i suggerimenti sotto (livello 20) e "Crea il tag «…»" per uno nuovo (RB-17, RB-18, RB-22). "Tag…" nel menu `···` porta il cursore nel campo |
+| Clic sul titolo del percorso (DEC-96) | Info (CMP-24), tipo Comparsa, sotto il titolo, senza velo | Passando sul titolo non compare niente: la comparsa dei metadati (CMP-27, DEC-71) è superata. Righe e azioni di Info in `interfaccia/4-schermate.md` («Info della nota»): titolo, cartella, date, tag, ultima modifica, poi Chiudi nota ed Elimina |
+| Info dal tasto destro (DEC-96) | Tasto destro sulla nota nella colonna, voce «Info» | Info, tipo Finestra, al centro con il velo: in testa «Info» e la ✕, senza Chiudi nota |
+| Info in generale (DEC-44, DEC-96, DEC-97, ID-27) | — | Ogni modifica vale subito, come nel resto dell'app (RB-06): nessun Salva. La Comparsa si chiude con un clic fuori o con Esc, la Finestra con la ✕, con Esc o con un clic sul velo (DEC-81); l'eliminazione di un tag da tutte le note resta con la sua conferma (RB-19). Il conteggio delle parole è l'idea ID-28 |
 | Eliminare un tag del tutto | Tasto destro su un suggerimento | "Elimina tag…", poi finestra di conferma con il numero di note coinvolte (RB-19) |
-| Date | Pannello sotto il `···` (livello 20) | Data di creazione scelta e fine validità, con calendario. Sotto la data di creazione compare quella di sistema, che non cambia (RB-21). Nessun avviso sulle combinazioni (RB-20) |
-| Sposta in | Pannello sotto il `···` (livello 20) | Campo per cercare una cartella, poi la radice e l'albero; la cartella attuale è evidenziata. Clic su una cartella: la nota si sposta e il pannello si chiude |
+| Date | Righe «Creata il …» e «Fine validità» di Info | Data di creazione scelta e fine validità, con il calendario. La data di sistema, che non cambia, è nel suggerimento della riga della creazione (RB-21, DEC-97). Nessun avviso sulle combinazioni (RB-20) |
+| Sposta in | Pannello Sposta in (CMP-11), dalla riga della cartella di Info o da «Sposta in…» nel tasto destro sulla nota | Campo per cercare una cartella, poi la radice e l'albero; la cartella attuale è evidenziata. Clic su una cartella: la nota si sposta e il pannello si chiude |
 
-Il calendario è un componente (date picker) che si disegna in Fase 5.
+Il calendario è il componente CMP-12 (Date picker).
 
 ### Strumenti di formattazione
+Sospesi con DEC-64: per ora testo puro, senza pillola né menu `/`.
+
 Nessuna barra fissa sopra il testo. Una sola **pillola degli strumenti** compare solo quando serve, **sopra il punto dell'evento** (la selezione o il punto del clic), e cambia contenuto in base al contesto:
 
 | Situazione | Contenuto della pillola |
@@ -119,13 +120,14 @@ Il testo ha una larghezza massima di lettura anche su schermi larghi: oltre una 
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |
 |---|---|---|
-| Vuoto (nessuna nota aperta) | Primo utilizzo o nota appena eliminata: invito a scrivere più pulsante per creare la prima nota | Titolo "Nessuna nota, per ora." · spiegazione "Inizia a scrivere." · pulsante "Nuova nota" (stato vuoto, CMP-19) |
-| Vuoto (nota nuova) | Nota creata e ancora senza testo: titolo e corpo vuoti con il loro invito. La nota esiste già; lasciata vuota, sparisce (RB-10, DEC-39) | Titolo: "Titolo" · corpo: "Scrivi qui…" (per ora testo puro, DEC-64) |
+| Vuoto (primo utilizzo) | Nessuna nota e nessuna cartella: invito a scrivere più pulsante per creare la prima nota | Titolo "Nessuna nota, per ora." · spiegazione "Inizia a scrivere." · pulsante "Nuova nota" (stato vuoto, CMP-19) |
+| Vuoto (nessuna nota aperta) | Dopo «Chiudi nota» o con la nota aperta finita nel cestino (DEC-68, RB-67) | Titolo "Nessuna nota aperta" · spiegazione e pulsante "Nuova nota" (stato vuoto, CMP-19) |
+| Vuoto (nota nuova) | Nota creata e ancora senza testo: il percorso mostra «Senza titolo» e il corpo vuoto il suo invito (DEC-71). La nota esiste già; lasciata vuota, sparisce (RB-10, DEC-39) | Percorso: "Senza titolo" · corpo: "Scrivi qui…" (per ora testo puro, DEC-64) |
 | Caricamento | Non previsto: la nota arriva dalla copia di lavoro sul dispositivo | — |
 | Errore | Immagine rifiutata: messaggio accanto al punto di inserimento, non bloccante (RB-11, RB-12) | Testo definitivo in Fase 6 |
 | Successo | Non previsto: il salvataggio è silenzioso (RB-06) | — |
 | Contenuto parziale | Immagine in arrivo da un altro dispositivo non ancora sincronizzata: segnaposto tratteggiato al suo posto ([wireframe](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=32-103), `immagini/SC-03-immagine-in-arrivo.png`) | Testo definitivo in Fase 6 |
-| Contenuto lungo | Nota molto lunga: scorre tutta la pagina, titolo e metadati compresi, sotto la fascia in alto (DEC-59) | — |
+| Contenuto lungo | Nota molto lunga: scorre tutta la pagina sotto la fascia in alto e il percorso (DEC-59, DEC-60, DEC-71) | — |
 | Immagine selezionata | Maniglie sull'immagine e pannello impostazioni (dimensione, allineamento, ritaglio, rotazione, testo alternativo) al livello 20 | — |
 | Nota in conflitto | Nota nata da un conflitto (DEC-06): stesso titolo seguito da "(copia in conflitto)", nella stessa cartella; all'arrivo compare un avviso con il collegamento (RB-39) ([wireframe](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=32-147), `immagini/SC-03-conflitto.png`) | Testo definitivo in Fase 6 |
 

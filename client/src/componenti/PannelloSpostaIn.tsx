@@ -37,6 +37,8 @@ interface Proprieta {
   /** Bordo destro e basso del ··· da cui si apre, in coordinate della finestra. */
   destra: number;
   y: number;
+  /** Aperto da Info al centro: sta sopra il suo velo (livello 30). */
+  sopraOverlay?: boolean;
   onScegli: (percorso: Percorso) => void;
   onChiudi: () => void;
 }
@@ -57,6 +59,7 @@ export function PannelloSpostaIn({
   attuale,
   destra,
   y,
+  sopraOverlay = false,
   onScegli,
   onChiudi,
 }: Proprieta): ReactElement {
@@ -148,7 +151,11 @@ export function PannelloSpostaIn({
     };
     const azione = azioni[e.key];
     if (!azione || voci.length === 0) {
-      if (e.key === "Escape") onChiudi();
+      if (e.key === "Escape") {
+        // Esc chiude solo il pannello, non Info sotto di lui.
+        e.preventDefault();
+        onChiudi();
+      }
       return;
     }
     if ((e.key === "ArrowRight" || e.key === "ArrowLeft") && filtro !== "") return;
@@ -163,7 +170,11 @@ export function PannelloSpostaIn({
       className="menu pannello-sposta"
       role="dialog"
       aria-label="Sposta in"
-      style={{ left: posizione.x, top: posizione.y }}
+      style={{
+        left: posizione.x,
+        top: posizione.y,
+        ...(sopraOverlay ? { zIndex: "var(--z-overlay)" } : {}),
+      }}
       onKeyDown={suTasto}
     >
       <div className="pannello-sposta-ricerca">

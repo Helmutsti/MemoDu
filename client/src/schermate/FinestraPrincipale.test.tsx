@@ -471,6 +471,30 @@ describe("menu ··· e Sposta in (CA-05.4, CA-15.1)", () => {
     expect(await riga(/Clienti/)).toHaveAttribute("aria-expanded", "true");
   });
 
+  it("aperto da Info, Info resta sotto: Esc chiude solo il pannello, la cartella scelta compare in Info (CMP-24)", async () => {
+    vi.mocked(api.spostaNota).mockResolvedValue(
+      nota("r", "Riunione di lunedì", "", "Lavoro/Clienti"),
+    );
+    render(<FinestraPrincipale />);
+    const info = await apriInfo("Riunione di lunedì");
+    await userEvent.click(within(info).getByRole("button", { name: /: Sposta in…$/ }));
+    expect(screen.getByRole("dialog", { name: "Sposta in" })).toBeInTheDocument();
+    expect(info).toBeInTheDocument();
+    await userEvent.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog", { name: "Sposta in" })).not.toBeInTheDocument();
+    expect(info).toBeInTheDocument();
+    const cartella = within(info).getByRole("button", { name: /: Sposta in…$/ });
+    await waitFor(() => expect(cartella).toHaveFocus());
+    await userEvent.click(cartella);
+    const pannello = screen.getByRole("dialog", { name: "Sposta in" });
+    await userEvent.click(within(pannello).getByRole("option", { name: "Lavoro" }));
+    await waitFor(() =>
+      expect(
+        within(info).getByRole("button", { name: "Cartella Lavoro › Clienti: Sposta in…" }),
+      ).toBeInTheDocument(),
+    );
+  });
+
   it("in Sposta in ogni cartella ha l'icona, «Non organizzate» no; un clic sull'icona apre e chiude (DEC-99)", async () => {
     render(<FinestraPrincipale />);
     const info = await apriInfo("Riunione di lunedì");
@@ -855,6 +879,22 @@ describe("colonna del foglio unico (DEC-55)", () => {
     const sblocca = screen.getByRole("button", { name: "Sblocca la colonna" });
     expect(sblocca).toHaveAttribute("aria-pressed", "true");
     await userEvent.click(sblocca);
+    expect(colonna()).toHaveClass("colonna-chiusa");
+  });
+
+  it("Ctrl + \\ fissa e sblocca la colonna; Ctrl + B no (DEC-102)", async () => {
+    render(<FinestraPrincipale />);
+    await riga("Riunione di lunedì");
+    expect(screen.getByRole("button", { name: "Fissa la colonna" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Control+\\",
+    );
+    await userEvent.keyboard("{Control>}b{/Control}");
+    expect(colonna()).toHaveClass("colonna-chiusa");
+    await userEvent.keyboard("{Control>}\\{/Control}");
+    expect(colonna()).toHaveClass("colonna-fissata");
+    expect(localStorage.getItem("memodu.colonna-fissata")).toBe("1");
+    await userEvent.keyboard("{Control>}\\{/Control}");
     expect(colonna()).toHaveClass("colonna-chiusa");
   });
 });

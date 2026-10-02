@@ -15,7 +15,7 @@ flowchart TD
     D --> E{Come chiudo?}
     E -- Chiudi ▾, Apri nel programma --> F[La nota aperta nel programma viene salvata e chiusa - RB-05]
     F --> G[La nota rapida si apre nel programma completo]
-    E -- Chiudi o tasto Esc --> H{La nota è vuota?}
+    E -- Chiudi, Maiusc + Invio o tasto Esc --> H{La nota è vuota?}
     H -- Sì --> I[Non si crea nessuna nota - RB-03]
     H -- No --> J[Nota salvata sulla copia di lavoro, nella radice - RB-01, RB-02]
     I --> K[Torno a ciò che facevo]
@@ -23,7 +23,7 @@ flowchart TD
 ```
 
 ### Percorsi alternativi
-- **Chiusura** (pulsante Chiudi, tasto Esc): salva e chiude. Esc vuol dire «ho finito», non annulla; per cancellare la nota si entra nel programma. Un clic altrove salva ma non chiude: la nota resta aperta finché non la si chiude (RB-02, SC-02, DEC-34, DEC-50, DEC-53).
+- **Chiusura** (pulsante Chiudi, Maiusc + Invio, tasto Esc): salva e chiude (DEC-65). Esc vuol dire «ho finito», non annulla; per cancellare la nota si entra nel programma. Un clic altrove salva ma non chiude: la nota resta aperta finché non la si chiude (RB-02, SC-02, DEC-34, DEC-50, DEC-53).
 - **Scorciatoia premuta con una nota rapida già aperta:** la nota aperta viene salvata e resta aperta, e se ne apre una nuova in un'altra finestra (RB-04). Ogni nota rapida si chiude poi per conto suo, seguendo lo stesso flusso.
 - **Apertura nel programma completo:** vedi RB-05.
 
@@ -35,7 +35,7 @@ flowchart TD
 | SF-02 Abbandono a metà | Finestra chiusa senza scegliere | Nessun messaggio | Salvataggio automatico (RB-02) |
 | SF-08 Connessione che cade a metà | Assenza di rete | Nessun messaggio: la nota rapida non dipende dalla rete | Salvataggio sulla copia di lavoro, sincronizzazione più tardi (DEC-02) |
 | SF-16 Vuoto | Nota rapida chiusa senza testo | Nessun messaggio | Non si crea nessuna nota (RB-03) |
-| SF-30 Servizio esterno fuori uso (solo Must A, DEC-30) | L'API delle note non risponde quando si salva, si apre o si crea una nota | SC-07 al posto del contenuto della finestra: «Memodu non riesce a collegarsi», con la spiegazione «Il server delle note non risponde. Avvialo e premi Riprova.» e Riprova | Il server si avvia a mano; il testo non ancora salvato resta in memoria e si salva dopo Riprova (RB-61); chiudendo prima, conferma (RB-62) |
+| SF-30 Servizio esterno fuori uso (solo Must A, DEC-30) (superato da DEC-85; da riscrivere con i testi definitivi di SC-07) | L'API delle note non risponde quando si salva, si apre o si crea una nota | SC-07 al posto del contenuto della finestra: «Memodu non riesce a collegarsi», con la spiegazione «Il server delle note non risponde. Avvialo e premi Riprova.» e Riprova | Il server si avvia a mano; il testo non ancora salvato resta in memoria e si salva dopo Riprova (RB-61); chiudendo prima, conferma (RB-62) |
 
 ### Sfighe considerate e scartate
 - SF-03 Tasto indietro e refresh: la nota rapida è una finestra desktop, senza navigazione.
@@ -54,12 +54,10 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A{Come creo la nota?} -- + accanto a Non organizzate --> B
+    A{Come creo la nota?} -- + accanto a Non organizzate --> E
     A -- Ctrl + N, ⌘ + N su macOS - DEC-69 --> E
-    A -- Tasto destro su una cartella --> C[La cartella su cui ho cliccato diventa quella selezionata]
-    C --> B{C'è una cartella selezionata?}
-    B -- Sì --> D[La nota nasce nella cartella selezionata - RB-09]
-    B -- No --> E[La nota nasce nella radice - RB-09]
+    A -- Tasto destro su una cartella, Nuova nota qui --> D[La nota nasce in quella cartella - RB-09]
+    E[La nota nasce nella radice - RB-09]
     D --> F[La nota si apre al posto di quella aperta, già salvata - RB-06]
     E --> F
     F --> G[Scrivo: FL-02]
@@ -87,7 +85,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A[Apro una nota] --> B[La nota compare formattata; i simboli markdown si vedono solo dove c'è il cursore]
+    A[Apro una nota] --> B[La nota compare formattata; i simboli markdown non si vedono - DEC-58]
     B --> C[Scrivo]
     C --> D{Voglio formattare?}
     D -- Sì --> E[Scrivo i simboli, uso una scorciatoia, la pillola degli strumenti o il tasto destro]
@@ -103,7 +101,7 @@ flowchart TD
 ```
 
 ### Percorsi alternativi
-- **Formattazione:** si applica in quattro modi equivalenti: scrivendo i simboli markdown, con le scorciatoie da tastiera, con la pillola degli strumenti che compare sopra il testo selezionato (SC-03) o con il menu del tasto destro.
+- **Formattazione:** si applica in quattro modi equivalenti: scrivendo i simboli markdown, con le scorciatoie da tastiera, con la pillola degli strumenti che compare sopra il testo selezionato (SC-03) o con il menu del tasto destro. Per ora sospesa: il testo è puro (DEC-64).
 - **Cambio di nota:** il programma mostra una nota alla volta (RF-01): aprendone un'altra, quella corrente è già salvata (RB-06).
 
 ### Sfighe gestite
@@ -114,7 +112,7 @@ flowchart TD
 | SF-08 Connessione che cade a metà | Assenza di rete | Nessun messaggio: la scrittura non dipende dalla rete | Salvataggio sulla copia di lavoro, sincronizzazione più tardi (DEC-02) |
 | SF-10 App in background o schermo bloccato | Sospensione del dispositivo durante la scrittura | Nessun messaggio | Si perde al massimo l'ultima pausa di scrittura (RB-06) |
 | SF-32 Errore a metà operazione | Crash del programma durante la scrittura | Alla riapertura la nota mostra l'ultimo salvataggio | Si perde al massimo l'ultima pausa di scrittura (RB-06) |
-| SF-30 Servizio esterno fuori uso (solo Must A, DEC-30) | L'API delle note non risponde quando si salva, si apre o si crea una nota | SC-07 al posto del contenuto della finestra: «Memodu non riesce a collegarsi», con la spiegazione «Il server delle note non risponde. Avvialo e premi Riprova.» e Riprova | Il server si avvia a mano; il testo non ancora salvato resta in memoria e si salva dopo Riprova (RB-61); chiudendo prima, conferma (RB-62) |
+| SF-30 Servizio esterno fuori uso (solo Must A, DEC-30) (superato da DEC-85; da riscrivere con i testi definitivi di SC-07) | L'API delle note non risponde quando si salva, si apre o si crea una nota | SC-07 al posto del contenuto della finestra: «Memodu non riesce a collegarsi», con la spiegazione «Il server delle note non risponde. Avvialo e premi Riprova.» e Riprova | Il server si avvia a mano; il testo non ancora salvato resta in memoria e si salva dopo Riprova (RB-61); chiudendo prima, conferma (RB-62) |
 | SF-36 Input malevolo | Script o HTML attivo nel testo, incollato o scritto | Il codice si vede come testo oppure viene rimosso | Il contenuto delle note non esegue mai codice (RB-08) |
 
 ### Sfighe considerate e scartate
@@ -173,20 +171,18 @@ flowchart TD
 ---
 
 ## FL-04 – Modificare i metadati
-**Requisiti:** RF-04, RF-06 · **Attori:** Utente · **Interazioni rapide:** menu della nota (RF-11)
+**Requisiti:** RF-04, RF-06 · **Attori:** Utente · **Interazioni rapide:** clic sul titolo nel percorso, tasto destro sulla nota (RF-11)
 
 ```mermaid
 flowchart TD
-    A[Apro una nota] --> B{Cosa modifico?}
-    B -- Titolo --> C[Lo scrivo direttamente nella schermata di scrittura - RB-15, RB-16]
-    B -- Altro --> D[Apro il menu in alto a destra della nota]
-    D --> E{Scelgo}
+    A[Apro Info: clic sul titolo nel percorso o tasto destro sulla nota nella colonna - DEC-96] --> E{Cosa modifico?}
+    E -- Titolo --> C[Lo scrivo nel campo del titolo di Info - RB-15, RB-16]
     E -- Aggiungi tag --> F[Scrivo il tag; compaiono i suggerimenti - RB-17, RB-18]
     F --> G{Il tag esiste?}
     G -- Sì --> H[Il tag viene assegnato]
     G -- No, confermo --> I[Il tag nasce e viene assegnato - RB-17]
-    E -- Sposta in cartella --> J[Scelgo la cartella: FL-05]
-    E -- Modifica date --> K[Imposto data di creazione scelta o fine validità - RB-20, RB-21]
+    E -- Cartella --> J[Clic sulla riga della cartella, Sposta in: FL-05]
+    E -- Date --> K[Imposto data di creazione scelta o fine validità - RB-20, RB-21]
     C --> Z[Salvataggio automatico - RB-06]
     H --> Z
     I --> Z
@@ -195,7 +191,7 @@ flowchart TD
 ```
 
 ### Percorsi alternativi
-- **Togliere un tag da una nota:** dal menu della nota; la nota resta intatta.
+- **Togliere un tag da una nota:** in Info, con la ✕ del tag; la nota resta intatta.
 - **Eliminare un tag del tutto:** tasto destro sul tag tra i suggerimenti, poi Elimina tag… e conferma con il numero di note coinvolte (RB-19).
 - **Data di creazione scelta:** si salva accanto a quella di sistema, che non cambia mai (RB-21). Nelle liste si mostra la data scelta, se c'è (RF-04).
 
@@ -212,7 +208,7 @@ flowchart TD
 ### Sfighe considerate e scartate
 - SF-01 Doppio invio, SF-02 Abbandono, SF-10, SF-32: ogni modifica è salvata subito (RB-06).
 - SF-06 Input strani nei tag: gestiti da RB-22.
-- SF-14 Fusi orari e ora legale: come si memorizzano le date si decide in Fase 7.
+- SF-14 Fusi orari e ora legale: gli istanti si memorizzano in ora universale e le date scelte come giorno del calendario (DEC-28, DEC-45).
 - SF-22 Modifica simultanea da due dispositivi: gestita in FL-07.
 - Le altre sfighe non riguardano i metadati: nessun file, permesso o sistema esterno coinvolto.
 
@@ -232,7 +228,7 @@ La posizione di una nota (radice, cartella, cestino) è descritta nel diagramma 
 | RB-03 | Una nota rapida chiusa senza testo non crea nessuna nota | FL-01 |
 | RB-04 | Premere la scorciatoia con una nota rapida già aperta salva quella aperta, che resta aperta, e ne apre una nuova in un'altra finestra | FL-01 |
 | RB-05 | Aprendo la nota rapida nel programma completo, la nota aperta nel programma viene salvata e chiusa, e al suo posto compare la nota rapida | FL-01 |
-| RB-06 | Ogni modifica a una nota si salva da sola sulla copia di lavoro dopo 2 s di pausa di scrittura, e subito quando si chiude la finestra, si cambia nota o la finestra perde il focus. Il file si scrive in modo sicuro (prima un file temporaneo, poi lo si mette al posto dell'originale), così una chiusura a metà non lo rompe. Non esiste un pulsante Salva | FL-01, FL-02 |
+| RB-06 | Ogni modifica a una nota si salva da sola sulla copia di lavoro dopo 2 s di pausa di scrittura, e subito quando si chiude la finestra, si cambia nota o la finestra perde il focus. Ogni salvataggio è una transazione della copia di lavoro (DEC-45, DEC-67), così una chiusura a metà non la rompe. Non esiste un pulsante Salva | FL-01, FL-02 |
 | RB-07 | Il testo incollato da fuori (Word, web, email) si incolla sempre come testo semplice | FL-02 |
 | RB-08 | Il contenuto delle note non esegue mai codice: script e HTML attivo si mostrano come testo o vengono rimossi, su desktop e web | FL-02 |
 | RB-09 | Una nuova nota creata con il + delle Non organizzate nasce sempre nella radice, tra le non organizzate, qualunque sia la nota aperta. Con «Nuova nota qui» dal tasto destro su una cartella nasce in quella cartella | FL-09 |
@@ -253,6 +249,6 @@ La posizione di una nota (radice, cartella, cestino) è descritta nel diagramma 
 | RB-47 | Copiando un'immagine da una nota a un'altra nasce un'immagine indipendente, con le sue impostazioni: un'immagine appartiene sempre a una sola nota | FL-03 |
 | RB-58 | Le immagini seguono la loro nota: eliminandola vanno nel cestino con lei, ripristinandola tornano, eliminandola definitivamente si cancellano | FL-03, FL-05 |
 | RB-59 | Annulla (Ctrl+Z / Cmd+Z) vale per tutte le modifiche della nota aperta: testo, formattazione, immagini e caselle. Non annulla le azioni fuori dalla nota (spostamenti, eliminazioni: per quelle c'è il cestino) | FL-02, FL-03 |
-| RB-61 | Solo nel frammento Must A (DEC-30): se l'API delle note non risponde o non riesce a salvare (nota non trovata, contenuto oltre 10 MB, file non scritto), la finestra (programma o nota rapida) mostra SC-07 al posto del contenuto; il testo non ancora salvato resta in memoria e si salva appena Riprova riesce. Memodu non avvia il server da solo: si avvia a mano | FL-01, FL-02, FL-09 |
+| RB-61 | Solo nel frammento Must A (DEC-30): se l'API delle note non risponde o non riesce a salvare (nota non trovata, contenuto oltre 10 MB, file non scritto), la finestra (programma o nota rapida) mostra SC-07 al posto del contenuto; il testo non ancora salvato resta in memoria e si salva appena Riprova riesce. Memodu non avvia il server da solo: si avvia a mano. (superato da DEC-85: il server delle note non c'è più e SC-07 compare se la copia di lavoro non si apre o non si scrive; da riscrivere con i testi definitivi di SC-07) | FL-01, FL-02, FL-09 |
 | RB-62 | Solo nel frammento Must A: se si chiude una finestra (Chiudi, Esc o chiusura di Memodu) mentre c'è testo non salvato per RB-61, compare una finestra di conferma (CMP-16): titolo «La nota non è salvata», testo «Chiudendo, il testo va perso.», pulsanti «Annulla» e «Chiudi comunque». Annulla lascia la finestra aperta con il testo. Con SC-07 davanti alla nota rapida, il tasto Esc apre questa conferma, così la finestra si può sempre chiudere (confermato da Manuel Cucca il 29/09/2026). Con «Esci da Memodu» dall'icona ogni finestra prova a salvare; ognuna che non ci riesce mostra la sua conferma (la finestra principale torna in primo piano) e Memodu esce solo dopo «Chiudi comunque» in tutte; Annulla in una qualsiasi ferma l'uscita (scelta di Manuel Cucca il 29/09/2026). Alt + F4 su una nota rapida vale come Chiudi | FL-01, FL-02 |
 | RB-68 | Se la nota aperta non c'è più quando si salva (eliminata altrove), si chiude e l'avviso (CMP-15, tipo Avviso) dice «La nota è nel cestino.» con Ripristina, che la riporta, la riapre e salva il testo rimasto in sospeso; se è stata eliminata per sempre dice «La nota è stata eliminata.» e le modifiche non salvate si perdono. Scelta di Manuel Cucca il 29/09/2026 | FL-02 |

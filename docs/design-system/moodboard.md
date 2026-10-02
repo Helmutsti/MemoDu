@@ -37,14 +37,14 @@ Regole decise da Manuel Cucca dopo la scelta della direzione. Diventano token (r
 
 | # | Regola | Si applica a |
 |---|---|---|
-| 1 | **Controlli a pillola:** tutto ciò che è alto una riga ha le estremità completamente tonde | Ricerca, campi di testo, pulsanti, tag, filtri, riga selezionata, pillola degli strumenti e i suoi strumenti, avvisi |
-| 2 | **Contenitori molto tondi:** raggio ampio (20 px), stessa famiglia delle pillole | Menu, pannelli, finestre di conferma, finestra della nota rapida, immagini nella nota |
+| 1 | **Controlli a pillola:** tutto ciò che è alto una riga ha le estremità completamente tonde | Ricerca, campi di testo, pulsanti, tag, filtri, riga selezionata, pillola degli strumenti e i suoi strumenti |
+| 2 | **Contenitori molto tondi:** raggio ampio (20 px), stessa famiglia delle pillole | Menu, pannelli, avvisi, finestre di conferma, finestra della nota rapida, immagini nella nota |
 | 3 | **Grigi neutri:** tutti i grigi hanno rosso, verde e blu uguali, senza tinta calda né fredda | Fondi, testo, bordi, pieni |
-| 4 | **Niente linee di separazione:** le zone si distinguono per il fondo (colonna grigia, nota bianca). Linee sottili solo dove servono davvero | Divisori nei menu, elenco del cestino |
+| 4 | **Niente linee di separazione:** le zone si distinguono per il fondo (colonna grigia, nota bianca). Linee sottili solo dove servono davvero | Divisori nei menu, bordo destro della colonna, ricerca avanzata |
 | 5 | **Ombre solo su ciò che fluttua:** un'ombra sola, morbida; tutto il resto è piatto | Pillola degli strumenti, menu, pannelli, avvisi, finestre di conferma, nota rapida (livelli 20–50) |
 | 6 | **Densità compatta:** righe da 32 px nella colonna e nelle liste | Colonna, menu, elenchi |
 | 7 | **Passaggio del mouse:** pillola grigio chiaro dietro la riga o il pulsante e tutto il testo della riga in testo primario; la selezione ha la stessa pillola chiara dell'hover, e si distingue per il testo in peso medio (DEC-35, che supera la pillola scura) | Righe, voci di menu, pulsanti |
-| 8 | **Icone di linea:** 16 px, tratto 1,5 px con estremità arrotondate, grigio tenue; chiare sulla riga selezionata | Colonna, menu, pulsanti |
+| 8 | **Icone di linea:** 16 px, tratto 1,5 px con estremità arrotondate, grigio tenue; in testo primario sulla riga selezionata (DEC-35) | Colonna, menu, pulsanti |
 | 9 | **Modo scuro:** stessi grigi neutri e stessi ruoli, segue l'impostazione del sistema | Tutta l'interfaccia |
 | 10 | **Animazioni brevi:** dissolvenza di circa 120 ms con uno spostamento di 4 px; nessun movimento se il sistema chiede di ridurlo | Pillola, menu, pannelli, avvisi |
 | 11 | **Controlli distinguibili da ogni superficie:** un fondo di controllo non è mai uguale a una superficie su cui può comparire (nota, colonna, flottante), in chiaro e in scuro | Campi, ricerca, tag, pulsanti, hover, righe selezionate (tabella in `tokens.md`) |

@@ -218,8 +218,10 @@ export function FinestraPrincipale(): ReactElement {
     cartella: Percorso;
     destra: number;
     y: number;
-    /** Aperto per una riga della colonna (tasto destro o Info al centro): il focus ci torna. */
+    /** Aperto per una riga della colonna (tasto destro): il focus ci torna. */
     daRiga?: boolean;
+    /** Aperto dalla riga Cartella di Info, che resta aperta sotto: il focus torna lì. */
+    daInfo?: boolean;
   } | null>(null);
   const [conflitto, setConflitto] = useState<Conflitto | null>(null);
   const [avviso, setAvviso] = useState(false);
@@ -620,6 +622,8 @@ export function FinestraPrincipale(): ReactElement {
           w: vista === "nota" && aperta !== null ? chiudiNota : undefined,
           k: async () => vaiAllaRicerca(),
           K: async () => setAvanzataRicerca((n) => n + 1),
+          // Ctrl + B resta il grassetto (DEC-102).
+          "\\": async () => fissaColonna(),
         };
   });
   useEffect(() => {
@@ -627,7 +631,7 @@ export function FinestraPrincipale(): ReactElement {
       const comando = SU_MAC ? e.metaKey && !e.ctrlKey : e.ctrlKey && !e.metaKey;
       const minuscolo = e.key.toLowerCase();
       const tasto = e.shiftKey ? (minuscolo === "k" ? "K" : "") : minuscolo;
-      if (!comando || e.altKey || !["n", "w", "k", "K"].includes(tasto)) return;
+      if (!comando || e.altKey || !["n", "w", "k", "K", "\\"].includes(tasto)) return;
       e.preventDefault();
       const davanti = document.querySelector(
         '[role="dialog"]:not(.info-comparsa):not(.card-ricerca), [role="alertdialog"]',
@@ -796,12 +800,15 @@ export function FinestraPrincipale(): ReactElement {
     await ricarica().catch(() => setBloccata(true));
   };
 
-  /** Chiuso Sposta in, il focus torna dove era stato aperto: il ··· o la riga della nota. */
-  const ridaiFocus = (id: string, daRiga?: boolean) => {
-    const riga = daRiga
-      ? document.querySelector<HTMLElement>(`[data-nota="${CSS.escape(id)}"]`)
-      : null;
-    (riga ?? document.querySelector<HTMLElement>(".percorso-titolo"))?.focus();
+  /** Chiuso Sposta in, il focus torna dove era stato aperto: la riga Cartella di Info, la riga
+   * della nota o il titolo del percorso. */
+  const ridaiFocus = (id: string, daRiga?: boolean, daInfo?: boolean) => {
+    const dove = daInfo
+      ? document.querySelector<HTMLElement>(".info .info-riga-pulsante")
+      : daRiga
+        ? document.querySelector<HTMLElement>(`[data-nota="${CSS.escape(id)}"]`)
+        : null;
+    (dove ?? document.querySelector<HTMLElement>(".percorso-titolo"))?.focus();
   };
 
   /** Sposta una nota; se è quella aperta resta aperta e la sua cartella si apre (RB-66). */
@@ -813,6 +820,8 @@ export function FinestraPrincipale(): ReactElement {
       setAperta((a) => (a ? { ...a, cartella: nota.cartella } : a));
       apriCartelle(catena(nota.cartella));
     }
+    // Info aperta sulla nota mostra subito la cartella nuova.
+    if (nota) setInfo((i) => (i && i.nota.id === nota.id ? { ...i, nota } : i));
     await ricarica().catch(() => setBloccata(true));
   };
 
@@ -1133,6 +1142,7 @@ export function FinestraPrincipale(): ReactElement {
                 <PulsanteIcona
                   nome={colonnaFissata ? "Sblocca la colonna" : "Fissa la colonna"}
                   aria-pressed={colonnaFissata}
+                  aria-keyshortcuts={SU_MAC ? "Meta+\\" : "Control+\\"}
                   icona={<Icona di={Pin} piena={colonnaFissata} />}
                   onClick={fissaColonna}
                 />
@@ -1358,14 +1368,15 @@ export function FinestraPrincipale(): ReactElement {
           attuale={spostaIn.cartella}
           destra={spostaIn.destra}
           y={spostaIn.y}
+          sopraOverlay={spostaIn.daInfo}
           onScegli={(percorso) => {
-            const { id, daRiga } = spostaIn;
+            const { id, daRiga, daInfo } = spostaIn;
             setSpostaIn(null);
-            void spostaNota(id, percorso).then(() => ridaiFocus(id, daRiga));
+            void spostaNota(id, percorso).then(() => ridaiFocus(id, daRiga, daInfo));
           }}
           onChiudi={() => {
             setSpostaIn(null);
-            ridaiFocus(spostaIn.id, spostaIn.daRiga);
+            ridaiFocus(spostaIn.id, spostaIn.daRiga, spostaIn.daInfo);
           }}
         />
       )}
@@ -1384,17 +1395,17 @@ export function FinestraPrincipale(): ReactElement {
           onAggiungiTag={(nome) => void cambiaDettagli(() => api.aggiungiTag(info.nota.id, nome))}
           onTogliTag={(nome) => void cambiaDettagli(() => api.togliTag(info.nota.id, nome))}
           onEliminaTag={(nome) => void eliminaTag(info.nota.id, nome)}
-          onSpostaIn={(pulsante) => {
-            const { nota, tipo } = info;
-            setInfo(null);
+          onSpostaIn={(pulsante) =>
+            // Info resta aperta sotto il pannello (CMP-24).
             setSpostaIn({
-              id: nota.id,
-              cartella: nota.cartella,
+              id: info.nota.id,
+              cartella: info.nota.cartella,
               destra: pulsante.right,
               y: pulsante.bottom + 4,
-              daRiga: tipo === "finestra",
-            });
-          }}
+              daInfo: true,
+            })
+          }
+          spostaInAperto={spostaIn?.daInfo}
           onChiudiNota={info.tipo === "comparsa" ? () => void chiudiNota() : undefined}
           onElimina={() => {
             const id = info.nota.id;

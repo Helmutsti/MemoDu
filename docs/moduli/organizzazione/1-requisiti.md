@@ -19,11 +19,11 @@ Come *utente* voglio organizzare le note in un albero di cartelle per dare loro 
 Condiviso con RF-04 e RF-06: Scrivo la nota. Le note non ancora organizzate compaiono in una barra laterale e da lì le trascino nell'albero delle cartelle. Quando apro una nota, dal menu in alto a destra posso aggiungere tag, spostarla in un'altra cartella o modificarne i metadati. Il titolo è l'unico metadato che modifico direttamente nella schermata di scrittura.
 
 ### Criteri di accettazione
-Frammento Must B «Smistare» (DEC-36): cartelle come sottocartelle di Documenti/Memodu; dal frammento Must D stanno nel database (DEC-48). I tag e il menu `···` completo arrivano con i loro requisiti.
+Frammento Must B «Smistare» (DEC-36): cartelle come sottocartelle di Documenti/Memodu; dal frammento Must D stanno nel database (DEC-48). I tag arrivano con il loro requisito (RF-06); il menu `···` non c'è più (DEC-96).
 
 - **CA-05.1** *Dato* l'albero con cartelle, sottocartelle e note, *quando* apro una cartella, *allora* compaiono prima le sottocartelle e poi le sue note, ognuna in ordine alfabetico senza distinguere maiuscole e minuscole, con il titolo delle note allineato al nome delle sottocartelle (RB-64, RB-65, CMP-14).
 - **CA-05.2** *Dato* l'albero, *allora* accanto a ogni cartella e alle Non organizzate c'è il numero di note contenute, sottocartelle comprese e senza quelle nel cestino, e si aggiorna subito dopo ogni spostamento o eliminazione (RB-56).
-- **CA-05.3** *Dato* una nota non organizzata, *quando* la trascino su una cartella, *allora* durante il trascinamento la cartella si evidenzia, al rilascio la nota esce dalle non organizzate e compare nella cartella, e sul disco il file è nella sottocartella con lo stesso nome (FL-05, DEC-36).
+- **CA-05.3** *Dato* una nota non organizzata, *quando* la trascino su una cartella, *allora* durante il trascinamento la cartella si evidenzia, al rilascio la nota esce dalle non organizzate e compare nella cartella, e nel database la nota è nella cartella (FL-05, DEC-36, DEC-48).
 - **CA-05.4** *Dato* una nota aperta, *quando* scelgo «Sposta in…» in Info (o dal tasto destro sulla nota) e poi una cartella o «Non organizzate», *allora* la nota si sposta, resta aperta, e nella colonna la cartella di destinazione si apre con la nota selezionata; nel pannello la cartella attuale ha la spunta e scrivendo nel campo l'albero si filtra (RB-66, CMP-11).
 - **CA-05.5** *Dato* l'albero, *quando* premo il + delle Cartelle o «Nuova sottocartella» dal tasto destro su una cartella, *allora* compare al suo posto in ordine alfabetico il campo con «Nuova cartella» selezionato (con un numero se esiste già); Invio crea la cartella con il nome scritto, Esc la annulla e non nasce niente (RB-48).
 - **CA-05.6** *Dato* una cartella, *quando* scelgo «Rinomina» dal tasto destro o premo F2 e confermo con Invio, *allora* la cartella cambia nome in Memodu e nel database; Esc riporta il nome di prima; i caratteri vietati (`< > : " / \ | ? *`) diventano `-` senza avvisi (RB-48, RB-63).
@@ -111,7 +111,7 @@ Nella prima fase la separazione tra ambiti si ottiene con le cartelle principali
 ---
 
 ## RF-08 – Ricerca e filtro
-**Priorità:** Must · **Origine:** — · **Fase:** 8 (completa, prossimo lo sviluppo) · **Stato:** Pronto
+**Priorità:** Must · **Origine:** — · **Fase:** 8 (completa; sviluppo fatto, restano le prove con il secondo dispositivo) · **Stato:** Pronto
 
 Come *utente* voglio cercare e filtrare le note per trovare subito quella che mi serve.
 

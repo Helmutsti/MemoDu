@@ -10,7 +10,7 @@ use tauri::{AppHandle, Emitter, Manager, State};
 use crate::sincronizzazione::{Evento, Segnale};
 use crate::archivio::ricerca::{Richiesta, Risultato};
 use crate::archivio::{
-    cartella_predefinita, Albero, Archivio, DatiDettagli, DatiNota, DatiNuovaNota,
+    cartella_predefinita, id_valido, Albero, Archivio, DatiDettagli, DatiNota, DatiNuovaNota,
     ElementoCestino, Errore, Esito, EsitoCartella, Nota, Ripristinato, SeEsiste, VoceElenco,
     VoceTag,
 };
@@ -63,6 +63,7 @@ pub async fn elenca_note(dati: Stato<'_>) -> Esito<Vec<VoceElenco>> {
 
 #[tauri::command]
 pub async fn leggi_nota(dati: Stato<'_>, id: String) -> Esito<Nota> {
+    id_valido(&id)?;
     dati.con(|a| a.leggi(&id))
 }
 
@@ -75,6 +76,7 @@ pub async fn crea_nota(app: AppHandle,
 #[tauri::command]
 pub async fn salva_nota(app: AppHandle,
     dati: Stato<'_>, id: String, nota: DatiNota) -> Esito<Nota> {
+    id_valido(&id)?;
     dati.modifica(&app, |a| a.salva(&id, &nota))
 }
 
@@ -82,18 +84,21 @@ pub async fn salva_nota(app: AppHandle,
 #[tauri::command]
 pub async fn elimina_se_vuota(app: AppHandle,
     dati: Stato<'_>, id: String) -> Esito<()> {
+    id_valido(&id)?;
     dati.modifica(&app, |a| a.elimina_se_vuota(&id))
 }
 
 #[tauri::command]
 pub async fn sposta_nota(app: AppHandle,
     dati: Stato<'_>, id: String, cartella: String) -> Esito<Nota> {
+    id_valido(&id)?;
     dati.modifica(&app, |a| a.sposta_nota(&id, &cartella))
 }
 
 #[tauri::command]
 pub async fn salva_dettagli(app: AppHandle,
     dati: Stato<'_>, id: String, dettagli: DatiDettagli) -> Esito<Nota> {
+    id_valido(&id)?;
     dati.modifica(&app, |a| a.salva_dettagli(&id, &dettagli))
 }
 
@@ -105,12 +110,14 @@ pub async fn elenca_tag(dati: Stato<'_>) -> Esito<Vec<VoceTag>> {
 #[tauri::command]
 pub async fn aggiungi_tag(app: AppHandle,
     dati: Stato<'_>, id: String, nome: String) -> Esito<Nota> {
+    id_valido(&id)?;
     dati.modifica(&app, |a| a.aggiungi_tag(&id, &nome))
 }
 
 #[tauri::command]
 pub async fn togli_tag(app: AppHandle,
     dati: Stato<'_>, id: String, nome: String) -> Esito<Nota> {
+    id_valido(&id)?;
     dati.modifica(&app, |a| a.togli_tag(&id, &nome))
 }
 
@@ -175,6 +182,7 @@ pub async fn sposta_cartella(
 #[tauri::command]
 pub async fn cestina_nota(app: AppHandle,
     dati: Stato<'_>, id: String) -> Esito<ElementoCestino> {
+    id_valido(&id)?;
     dati.modifica(&app, |a| a.cestina_nota(&id))
 }
 
@@ -196,12 +204,14 @@ pub async fn ripristina(
     id: String,
     se_esiste: Option<SeEsiste>,
 ) -> Esito<Ripristinato> {
+    id_valido(&id)?;
     dati.modifica(&app, |a| a.ripristina(&id, se_esiste.unwrap_or_default()))
 }
 
 #[tauri::command]
 pub async fn elimina_definitivamente(app: AppHandle,
     dati: Stato<'_>, id: String) -> Esito<()> {
+    id_valido(&id)?;
     dati.modifica(&app, |a| a.elimina_definitivamente(&id))
 }
 

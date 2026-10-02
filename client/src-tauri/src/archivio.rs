@@ -226,6 +226,8 @@ pub enum Errore {
     SpostamentoImpossibile,
     TagNonTrovato(String),
     DataNonValida(String),
+    /// Id di una nota o di un elemento del cestino che non è un UUID (SF-34).
+    IdNonValido(String),
     /// La nota non è vuota e non si cancella da sola (DEC-39).
     NotaNonVuota,
     /// La copia di lavoro non si apre: l'interfaccia mostra SC-07 come quando l'API non
@@ -254,6 +256,7 @@ impl Errore {
             | Errore::TagNonTrovato(_) => Some(404),
             Errore::PercorsoNonValido(_)
             | Errore::DataNonValida(_)
+            | Errore::IdNonValido(_)
             | Errore::ScorciatoiaNonValida(_) => Some(400),
             Errore::NomeEsistente(_) | Errore::NotaNonVuota | Errore::ScorciatoiaOccupata => Some(409),
             Errore::SpostamentoImpossibile => Some(422),
@@ -271,6 +274,7 @@ impl Errore {
             Errore::NomeEsistente(nome) => format!("Esiste già «{nome}»"),
             Errore::SpostamentoImpossibile => "Una cartella non si sposta dentro sé stessa".into(),
             Errore::TagNonTrovato(nome) => format!("Nessun tag «{nome}»"),
+            Errore::IdNonValido(id) => format!("«{id}» non è un id valido"),
             Errore::NotaNonVuota => "La nota non è vuota".into(),
             Errore::NonDisponibile(testo) | Errore::ScorciatoiaNonValida(testo) => testo.clone(),
             Errore::ScorciatoiaOccupata => "Combinazione già usata da un altro programma".into(),
@@ -304,6 +308,14 @@ impl Serialize for Errore {
 }
 
 pub type Esito<T> = Result<T, Errore>;
+
+/// Gli id di note ed elementi del cestino sono UUID come li scrive il nucleo (SF-34).
+pub fn id_valido(id: &str) -> Esito<()> {
+    match uuid::Uuid::try_parse(id) {
+        Ok(_) if id.len() == 36 => Ok(()),
+        _ => Err(Errore::IdNonValido(id.to_string())),
+    }
+}
 
 // ——— Forme scambiate con l'interfaccia (condiviso/src) ———
 
@@ -390,13 +402,16 @@ pub enum Ripristinato {
     Cartella(EsitoCartella),
 }
 
+// I dati dall'interfaccia non hanno campi in più: un campo sconosciuto è un errore (api.md).
 #[derive(Debug, Default, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct DatiNota {
     pub titolo: Option<String>,
     pub contenuto: Option<String>,
 }
 
 #[derive(Debug, Default, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct DatiNuovaNota {
     pub titolo: Option<String>,
     pub contenuto: Option<String>,
@@ -405,7 +420,7 @@ pub struct DatiNuovaNota {
 
 /// Un campo assente resta com'è, null lo svuota (DEC-51).
 #[derive(Debug, Default, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct DatiDettagli {
     #[serde(default, deserialize_with = "presente")]
     pub creata_scelta: Option<Option<String>>,

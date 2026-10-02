@@ -7,7 +7,7 @@
 
 ```mermaid
 flowchart TD
-    A{Cosa faccio?} -- Sposto una nota --> B[Trascino la nota dalla barra laterale o dall'albero su una cartella, oppure uso Sposta dal menu della nota]
+    A{Cosa faccio?} -- Sposto una nota --> B[Trascino la nota dalla barra laterale o dall'albero su una cartella, oppure uso Sposta in… in Info o dal tasto destro sulla nota - DEC-96]
     B --> Z[La nota è nella nuova cartella; se era non organizzata esce dalla barra laterale]
     A -- Creo una cartella --> C[Tasto destro nell'albero o pulsante + in cima all'albero]
     C --> N{Il nome esiste già lì?}
@@ -41,14 +41,14 @@ flowchart TD
 | SF-05 Cambio idea | Nota o cartella eliminata per errore | Nessun messaggio: l'elemento è nel cestino | Si ripristina dal cestino, nella radice (RB-28) |
 | SF-18 Valori limite | Cartella trascinata dentro sé stessa o una sua sottocartella | Lo spostamento non avviene | Nessuna modifica (RB-24) |
 | SF-19 Duplicati | Nome di cartella già presente nella destinazione | Avviso con le scelte: aggiungi un numero, unisci, annulla | L'utente sceglie (RB-31) |
-| SF-32 Errore del server a metà operazione | Il server risponde che la nota o la cartella non esiste più (tolta da fuori Memodu) o che il disco non ha scritto | Avviso (CMP-15), testo definitivo in Fase 6 | L'app ricarica la colonna: si vede lo stato vero e si riprova (DEC-37) |
+| SF-32 Errore del server a metà operazione | La copia di lavoro risponde che la nota o la cartella non esiste più (per esempio tolta da un'altra finestra di Memodu) o che non ha scritto (DEC-85) | Avviso (CMP-15), testo definitivo in Fase 6 | L'app ricarica la colonna: si vede lo stato vero e si riprova (DEC-37) |
 | SF-20 Riferimenti spariti | Nota creata o spostata, su un altro dispositivo, in una cartella finita nel cestino | Nessun messaggio | La cartella torna dal cestino con la nota (RB-30) |
 | SF-17 Troppo | Cestino con moltissimi elementi | Nessun messaggio | Resta finché l'utente non lo svuota (RB-27) |
+| SF-16 Vuoto | Nessuna cartella | Sotto il titolo Cartelle: «Nessuna cartella. Creane una con +» (CA-05.12) | Il + accanto al titolo crea la prima cartella |
 
 ### Sfighe considerate e scartate
 - SF-01 Doppio invio, SF-02 Abbandono: ogni operazione è immediata e salvata (RB-06).
 - SF-08 Connessione che cade a metà: le operazioni avvengono sulla copia di lavoro (DEC-02).
-- SF-16 Vuoto: un albero senza cartelle mostra solo la radice; lo stato vuoto della schermata si disegna in Fase 4.
 - SF-22 Modifica simultanea (per esempio la stessa cartella rinominata su due dispositivi): gestita in FL-07.
 - Le altre sfighe non riguardano cartelle e cestino: nessuna data, file, permesso o sistema esterno coinvolto.
 
@@ -72,6 +72,8 @@ flowchart TD
     F -- No --> G[La card mostra: Nessuna nota trovata - RB-35]
     F -- Sì --> H[La card a discesa mostra tutti i risultati per pertinenza, scorrendo - RB-34]
     H --> I{Le note nel cestino sono incluse nelle impostazioni?}
+    H -- Mostra tutti i risultati o Ctrl + Maiusc + K --> R[Ricerca avanzata al centro: stesso testo e filtri, sempre aperti - DEC-96]
+    R --> L
     I -- Sì --> J[Compaiono segnalate come nel cestino - RB-29]
     I -- No --> K[Non compaiono]
     J --> L[Clic su un risultato]
@@ -85,6 +87,7 @@ flowchart TD
 - **Filtri:** tag e date dei metadati (creazione, ultima modifica); il filtro sulla fine validità per ora non c'è (DEC-94). Con il campo vuoto e almeno un filtro i risultati sono in ordine di ultima modifica (RB-70).
 - **Esc:** chiude la card senza aprire niente; la colonna aperta da Ctrl + K si richiude e il cursore torna dov'era nel foglio (RB-71).
 - **Risultato nel cestino:** aprendolo si vede che è nel cestino; si può ripristinare (RB-28).
+- **Ricerca avanzata:** «Mostra tutti i risultati» in fondo alla card, o Ctrl + Maiusc + K, apre la ricerca avanzata al centro con il velo, con lo stesso testo e i filtri sempre aperti (DEC-96, CA-08.17 … CA-08.21).
 
 ### Sfighe gestite
 | Sfiga | Rilevamento | Comunicazione | Via d'uscita |
@@ -109,8 +112,8 @@ flowchart TD
 ### Nota e cartella – Posizione
 ```mermaid
 stateDiagram-v2
-    [*] --> Radice: nota rapida o nuova nota senza cartella selezionata
-    [*] --> InCartella: nuova nota con cartella selezionata
+    [*] --> Radice: nota rapida, Ctrl + N o il + - DEC-69
+    [*] --> InCartella: Nuova nota qui, dal tasto destro su una cartella - DEC-69
     Radice --> InCartella: sposto
     InCartella --> InCartella: sposto
     InCartella --> Radice: sposto nella radice
@@ -146,11 +149,11 @@ stateDiagram-v2
 | RB-55 | Nel cestino un singolo elemento si può eliminare per sempre con "Elimina definitivamente"; prima si chiede conferma, indicando il nome e, per una cartella, quante note contiene (DEC-17) | FL-05 |
 | RB-56 | Accanto a ogni cartella e alla sezione Non organizzate si mostra il numero di note che contiene, sottocartelle comprese; le note nel cestino non contano. Il numero si aggiorna subito (ID-15) | FL-05 |
 | RB-60 | Nella sezione Non organizzate le note si ordinano per ultima modifica: la più recente in cima | FL-05, FL-09 |
-| RB-63 | Solo con le cartelle sul file system (DEC-36): il nome di una cartella in Memodu è il nome della sottocartella sul disco. Creando o rinominando, i caratteri vietati si sostituiscono con `-` senza avvisi, con le stesse regole dei nomi dei file delle note (DEC-29, `architettura.md`) | FL-05 |
+| RB-63 | Nata con le cartelle sul file system (DEC-36) e rimasta con il database (DEC-48). Creando o rinominando una cartella, i caratteri vietati si sostituiscono con `-` senza avvisi, con le stesse regole dei nomi dei file delle note (DEC-29, `architettura.md`) | FL-05 |
 | RB-64 | Nell'albero le cartelle di ogni livello si ordinano alfabeticamente, dalla A alla Z, senza distinguere maiuscole e minuscole | FL-05 |
 | RB-65 | Le note di una cartella si vedono nell'albero: aprendo la cartella compaiono prima le sottocartelle (RB-64), poi le note, in ordine alfabetico per titolo, dalla A alla Z, senza distinguere maiuscole e minuscole | FL-05 |
 | RB-66 | Spostare la nota aperta (Sposta in o trascinamento) non la chiude: si continua a scrivere, e nella colonna la cartella di destinazione si apre per mostrare la nota selezionata | FL-05 |
-| RB-67 | Se la nota aperta finisce nel cestino (eliminata dal menu `···`, trascinata sul cestino o dentro una cartella eliminata), l'area della nota mostra lo stato vuoto «Nessuna nota aperta» (CMP-19); nessun'altra nota si apre da sola | FL-05 |
+| RB-67 | Se la nota aperta finisce nel cestino (eliminata da Info o dal tasto destro, trascinata sul cestino o dentro una cartella eliminata), l'area della nota mostra lo stato vuoto «Nessuna nota aperta» (CMP-19); nessun'altra nota si apre da sola | FL-05 |
 | RB-33 | La ricerca parte mentre si scrive, dopo una brevissima pausa, senza premere Invio. La card si apre appena si entra nel campo, con i soli filtri, anche prima di scrivere (DEC-94) | FL-06 |
 | RB-69 | Il testo cercato si trova in titolo, testo e nomi dei tag, anche dentro le altre parole («lascio» trova «rilascio»); maiuscole e accenti non contano; con più parole la nota deve contenerle tutte. Le date non si cercano con il testo, solo con i filtri (DEC-94) | FL-06 |
 | RB-70 | I filtri si sommano: con più tag nel filtro Tag escono le note che li hanno tutti, ciascuno con i suoi sotto-tag; con i filtri di data, le note nel periodo scelto. Con il campo vuoto e almeno un filtro i risultati sono in ordine di ultima modifica, la più recente in cima (DEC-94) | FL-06 |

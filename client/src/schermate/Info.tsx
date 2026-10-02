@@ -42,8 +42,10 @@ interface Proprieta {
   onAggiungiTag: (nome: string) => void;
   onTogliTag: (nome: string) => void;
   onEliminaTag: (nome: string) => void;
-  /** «Sposta in…»: il pannello si apre accanto al pulsante. */
+  /** «Sposta in…»: il pannello si apre accanto al pulsante, sopra Info che resta aperta. */
   onSpostaIn: (pulsante: DOMRect) => void;
+  /** Il pannello Sposta in è aperto sopra Info. */
+  spostaInAperto?: boolean;
   /** Solo nella Comparsa: la nota è aperta. */
   onChiudiNota?: () => void;
   onElimina: () => void;
@@ -74,6 +76,9 @@ function testoConferma(note: number): string {
 
 export function Info(p: Proprieta): ReactElement {
   const finestra = useRef<HTMLDivElement>(null);
+  /** Sposta in era aperto quando è cominciato il clic: il pannello si chiude prima che il velo
+   * riceva il clic, che allora chiude solo lui. */
+  const spostaInAlClic = useRef(false);
   const campoTag = useRef<HTMLInputElement>(null);
   const pulsanteTag = useRef<HTMLButtonElement>(null);
   const [titolo, setTitolo] = useState(p.nota.titolo);
@@ -362,8 +367,16 @@ export function Info(p: Proprieta): ReactElement {
           className="velo velo-overlay"
           // Un clic sul velo, fuori da Info, la chiude come la ✕ (DEC-81); menu, calendario e
           // conferma aperti lo usano prima per chiudersi loro.
+          onPointerDown={() => {
+            spostaInAlClic.current = p.spostaInAperto ?? false;
+          }}
           onMouseDown={(e) => {
             if (e.target !== e.currentTarget || menuTag || daEliminare) return;
+            if (spostaInAlClic.current) {
+              // Si chiude solo il pannello: il focus resta sulla riga Cartella, non va alla pagina.
+              e.preventDefault();
+              return;
+            }
             if (finestra.current?.querySelector(".info-riga-aperta")) return;
             // Il clic non porta il focus sulla pagina: torna dove era prima di Info.
             e.preventDefault();

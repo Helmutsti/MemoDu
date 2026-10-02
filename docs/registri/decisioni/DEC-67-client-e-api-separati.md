@@ -1,6 +1,6 @@
 # DEC-67 – Client e API separati, copia di lavoro nel nucleo Rust
 
-**Data:** 2026-09-30 · **Stato:** Proposta · **Idea di origine:** —
+**Data:** 2026-09-30 · **Stato:** Accettata (Manuel Cucca, 01/10/2026) · **Idea di origine:** —
 
 ## Contesto
 Le note passano dall'API Node (DEC-30), che tiene il database SQLite (DEC-46): senza l'API avviata il client mostra SC-07 e non si scrive. DEC-02 chiede invece una copia di lavoro sul dispositivo, così si scrive sempre. Inoltre, quando l'API andrà nel cloud, non potrà tenere lo schema di oggi: con DEC-08 il server vede solo blocchi cifrati, mentre oggi conosce titoli, cartelle e tag in chiaro. Manuel Cucca ha chiesto di separare client e API in due cartelle avviabili ciascuna da sola, con il client che funziona anche senza API.

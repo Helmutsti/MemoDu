@@ -60,8 +60,8 @@ Scale semantiche: a parità di gradino hanno la stessa luminosità dei grigi.
 | `testo-su-pieno` | `grigio-0` | `grigio-950` | Testo su sfondo pieno |
 | `icona-tenue` | `grigio-500` | `grigio-400` | Icone di linea |
 | `icona-su-pieno` | `grigio-0` | `grigio-950` | Icone su sfondo pieno |
-| `bordo-divisore` | `grigio-200` | `grigio-700` | Divisori dove servono (cestino) |
-| `bordo-divisore-tenue` | `nero-6` | `bianco-5` | Divisori dei menu, da lato a lato. Trasparente: su `sfondo-flottante` dà circa #F0 in chiaro e #36 in scuro. Decorativo, senza soglia di contrasto |
+| `bordo-divisore` | `grigio-200` | `grigio-700` | Divisori dove servono (bordo destro della colonna, ricerca avanzata) |
+| `bordo-divisore-tenue` | `nero-6` | `bianco-5` | Divisori dei menu e degli altri contenitori di ruolo elenco, dentro il loro margine (DEC-100). Trasparente: su `sfondo-flottante` dà circa #F0 in chiaro e #36 in scuro. Decorativo, senza soglia di contrasto |
 | `evidenziazione-selezione` | `grigio-200` | `grigio-700` | Evidenziazione del testo selezionato |
 | `velo` | `nero-30` | `nero-50` | Velo sotto le finestre di conferma (livello 40) |
 | `ombra-flottante` | `nero-12` | `nero-40` | Colore dell'ombra degli elementi flottanti |
@@ -84,7 +84,7 @@ I primitivi `spazio-4` … `spazio-48` (4, 8, 12, 16, 24, 32, 48) non si usano d
 | Token | Valore | Ruolo |
 |---|---|---|
 | `spazio-elemento` | 4 | Tra elementi dello stesso gruppo: voci di un elenco e della checklist, righe di un risultato, tag vicini, margine della pillola degli strumenti |
-| `spazio-icona-piccola` | 4 | Tra icona e testo nei controlli alti 24 (tag, filtri, campo nome nell'albero) |
+| `spazio-icona-piccola` | 4 | Tra icona e testo nei controlli alti 24 (tag, filtri) |
 | `spazio-icona` | 8 | Tra icona e testo, e tra elementi affiancati o impilati che si leggono insieme (titolo e testo, filtri, pulsanti di una finestra, tag e data) |
 | `spazio-controllo-piccolo` | 8 | Margine interno dei controlli alti 24; margine verticale delle righe su più linee; lato di una riga che finisce con un controllo |
 | `spazio-controllo` | 12 | Margine interno di campi, righe della colonna e voci di menu |
@@ -108,6 +108,7 @@ I primitivi `spazio-4` … `spazio-48` (4, 8, 12, 16, 24, 32, 48) non si usano d
 | `misura-colonna` | 288 | Colonna sinistra al breakpoint largo: 16 px di margine ai lati e righe da 256 |
 | `misura-controllo-piccolo` | 24 | Controlli che stanno dentro una riga, come i tag |
 | `misura-icona` | 16 | Icone (regola 8) |
+| `misura-lettura` | 640 | Larghezza massima del testo della nota (CMP-20, DEC-58) |
 | `tratto-icona` | 1,5 | Spessore delle icone di linea |
 | `focus-spessore` | 2 | Spessore dell'anello di focus |
 | `focus-distanza` | 2 | Spazio tra il controllo e l'anello di focus |
@@ -147,15 +148,15 @@ Un solo carattere: **Inter**.
 Gli stili sono il livello semantico: si sceglie lo stile dal ruolo del testo, mai dalla taglia, e un testo senza stile non è ammesso (DEC-22). Sotto gli stili ci sono i primitivi nascosti `tipo-famiglia` (Inter), `tipo-dimensione-11` … `-30` e `tipo-peso-regular` … `-bold`, collegati a famiglia, dimensione e peso di ogni stile; interlinea e spaziatura restano nello stile, perché sono in percentuale. Ruoli diversi con gli stessi valori (controllo e messaggio, controllo attivo e titolo) restano stili separati: se un ruolo cambia, non trascina l'altro.
 
 ## Ombre ed elevazione
-Un'ombra sola, solo su ciò che fluttua (regola 5): `ombra-flottante` = 0 8 24, colore `ombra-flottante`. La usano i livelli 20–50 della scala z-index; i livelli 0 e 10 sono piatti. Eccezione: `ombra-sopra` = 0 −4 12, stesso colore, per il fondo della colonna (CMP-30) quando il contenuto gli scorre sotto (stile Ombra/Sopra nella libreria).
+Un'ombra sola, solo su ciò che fluttua (regola 5): `ombra` = 0 8 24, colore `ombra-flottante`. La usano i livelli 20–50 della scala z-index; i livelli 0 e 10 sono piatti. Eccezione: `ombra-sopra` = 0 −4 12, stesso colore, per il fondo della colonna (CMP-30) quando il contenuto gli scorre sotto (stile Ombra/Sopra nella libreria).
 
 ## Scala z-index
 | Token | Valore | Uso |
 |---|---|---|
 | `z-base` | 0 | Contenuto base: colonna, area della nota |
-| `z-fisso` | 10 | Ricerca in cima alla colonna |
-| `z-comparsa` | 20 | Pillola degli strumenti, menu, pannelli, suggerimenti, card dei risultati |
-| `z-overlay` | 30 | Area di trascinamento; drawer sul web stretto (rinviato, ID-19) |
+| `z-fisso` | 10 | Fascia in alto della finestra e percorso (CMP-26): il testo scorre sotto |
+| `z-comparsa` | 20 | Pillola degli strumenti, menu, pannelli, suggerimenti, card dei risultati, Info sotto il titolo (CMP-24) |
+| `z-overlay` | 30 | Area di trascinamento; Info al centro (CMP-24) e ricerca avanzata (CMP-29), con il velo; drawer sul web stretto (rinviato, ID-19) |
 | `z-conferma` | 40 | Finestre di conferma, con velo |
 | `z-avviso` | 50 | Avvisi |
 

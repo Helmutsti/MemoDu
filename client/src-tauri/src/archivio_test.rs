@@ -1038,3 +1038,29 @@ fn aggiunge_e_toglie_tag_elenca_elimina_e_salva_i_dettagli() {
     assert_eq!(p.a().salva_dettagli(&nota.id, &sbagliata).unwrap_err().stato(), Some(400));
     assert_eq!(p.a().aggiungi_tag(&nota.id, " / ").unwrap_err().stato(), Some(400));
 }
+
+// ——— Dati dall'interfaccia (api.md, SF-34) ———
+
+#[test]
+fn un_id_che_non_e_un_uuid_vale_400() {
+    assert!(id_valido(&uuid::Uuid::new_v4().to_string()).is_ok());
+    for id in ["n1", "../credenziali", "", "a1a2a3a4b1b2c1c2d1d2d3d4e1e2e3e4"] {
+        let errore = id_valido(id).unwrap_err();
+        assert!(matches!(errore, Errore::IdNonValido(_)), "{id}");
+        assert_eq!(errore.stato(), Some(400));
+    }
+}
+
+#[test]
+fn un_campo_in_piu_o_del_tipo_sbagliato_non_si_legge() {
+    assert!(serde_json::from_str::<DatiNota>(r#"{"contenuto":"x"}"#).is_ok());
+    assert!(serde_json::from_str::<DatiNota>(r#"{"contenuto":"x","colore":"rosso"}"#).is_err());
+    assert!(serde_json::from_str::<DatiNota>(r#"{"contenuto":3}"#).is_err());
+    assert!(serde_json::from_str::<DatiNuovaNota>(r#"{"cartella":"","tag":[]}"#).is_err());
+    assert!(serde_json::from_str::<DatiDettagli>(r#"{"fineValidita":null,"creata":"x"}"#).is_err());
+    assert!(serde_json::from_str::<ricerca::Richiesta>(r#"{"testo":"x","fine":null}"#).is_err());
+    assert!(
+        serde_json::from_str::<ricerca::Richiesta>(r#"{"testo":"x","creata":{"da":null,"a":null,"b":1}}"#)
+            .is_err()
+    );
+}

@@ -25,7 +25,7 @@ Piattaforme:
 Premo la scorciatoia e compare la finestra della nota rapida. A quel punto posso decidere di aprire il programma completo senza perdere la nota, oppure salvare e chiudere la finestra. Se nel programma è già aperta un'altra nota, viene semplicemente salvata e messa da parte.
 
 ### Criteri di accettazione
-Frammento Must A: la scorciatoia è fissa (Ctrl + Alt + N su Windows, Control + Option + N su macOS); cambiarla dalle impostazioni (RF-11, SC-06) arriva con il frammento Must.
+Frammento Must A: la scorciatoia è fissa (Ctrl + Alt + N su Windows, Control + Option + N su macOS); cambiarla dalle impostazioni (RF-11, SC-06) arriva con le Impostazioni (DEC-91).
 
 - **CA-01.1** *Dato* Memodu in background, *quando* premo la scorciatoia da un altro programma, *allora* entro 0,2 s compare SC-02 con il cursore nell'area di scrittura (RNF-01).
 - **CA-01.2** *Dato* una nota rapida con del testo, *quando* la chiudo con Chiudi, con Maiusc + Invio o con il tasto Esc, *allora* la finestra si chiude e la nota compare in cima all'elenco del programma, nella radice (RB-01, RB-02, RB-60).
@@ -33,8 +33,8 @@ Frammento Must A: la scorciatoia è fissa (Ctrl + Alt + N su Windows, Control + 
 - **CA-01.4** *Dato* una nota rapida aperta, *quando* premo di nuovo la scorciatoia, *allora* la prima viene salvata e resta aperta, e ne compare un'altra spostata di 32 px a destra e in basso (RB-04, SF-01, SF-04).
 - **CA-01.5** *Dato* una nota rapida con del testo e un'altra nota aperta nel programma, *quando* dalla freccia di Chiudi scelgo Apri nel programma, *allora* la nota del programma viene salvata e chiusa e al suo posto si apre la nota rapida (RB-05).
 - **CA-01.6** *Dato* Memodu in background, *quando* uso l'icona nell'area di notifica (Windows) o nella barra dei menu (macOS), *allora* posso aprire la nota rapida o il programma. Su Windows il clic sinistro apre il programma e il destro il menu (DEC-72); l'icona è nera con la barra chiara e bianca con quella scura (DEC-73).
-- **CA-01.7** *Dato* il server spento, *quando* la nota rapida prova a salvare, *allora* compare SC-07 con «Il server delle note non risponde. Avvialo e premi Riprova.»; avviato il server, Riprova salva la nota con tutto il testo (RB-61, SF-30).
-- **CA-01.8** *Dato* del testo non salvato perché il server non risponde, *quando* chiudo la finestra, *allora* compare la conferma «La nota non è salvata»; Annulla lascia la finestra aperta con il testo, Chiudi comunque la chiude (RB-62).
+- **CA-01.7** *Dato* il server spento, *quando* la nota rapida prova a salvare, *allora* compare SC-07 con «Il server delle note non risponde. Avvialo e premi Riprova.»; avviato il server, Riprova salva la nota con tutto il testo (RB-61, SF-30). (superato da DEC-85: il server delle note non c'è più e SC-07 compare se la copia di lavoro non si apre o non si scrive; da riscrivere con i testi definitivi di SC-07)
+- **CA-01.8** *Dato* del testo non salvato perché il server non risponde, *quando* chiudo la finestra, *allora* compare la conferma «La nota non è salvata»; Annulla lascia la finestra aperta con il testo, Chiudi comunque la chiude (RB-62). (superato da DEC-85; da riscrivere con i testi definitivi di SC-07)
 
 ---
 
@@ -51,7 +51,7 @@ Formattazioni previste:
 - titoli e sottotitoli;
 - elenchi puntati, numerati e checklist.
 
-La nota si vede formattata mentre si scrive: i simboli markdown compaiono solo dove c'è il cursore, e il testo resta markdown. La formattazione si applica scrivendo i simboli, con le scorciatoie da tastiera, con la barra degli strumenti o con il menu del tasto destro.
+La nota si vede formattata mentre si scrive: i simboli markdown non si vedono, nemmeno dove c'è il cursore (DEC-58), e il testo resta markdown. La formattazione si applica scrivendo i simboli, con le scorciatoie da tastiera, con la pillola degli strumenti o con il menu del tasto destro. Per ora il testo è puro e la formattazione è sospesa (DEC-64).
 
 Ogni modifica si salva da sola, senza pulsante Salva (RB-06). Il testo incollato da fuori entra come testo semplice (RB-07).
 
@@ -61,9 +61,9 @@ Ogni modifica si salva da sola, senza pulsante Salva (RB-06). Il testo incollato
 Scrivo la nota e inserisco un'immagine trascinandola nel testo, oppure premendo il pulsante degli allegati. Sull'immagine inserita posso poi aprire delle impostazioni, in stile Word.
 
 ### Criteri di accettazione
-Frammento Must A: senza immagini (RF-03), senza menu `···` e senza riga dei metadati (RF-04).
+Frammento Must A: senza immagini (RF-03) e senza metadati (RF-04).
 
-- **CA-02.1** *Dato* il programma aperto, *quando* premo il + della sezione Note o Nuova nota, *allora* nasce una nota vuota in cima all'elenco, aperta con il cursore nel corpo; se la lascio vuota, sparisce (FL-09, RB-10, RB-60, DEC-39).
+- **CA-02.1** *Dato* il programma aperto, *quando* premo il + della sezione Non organizzate o Nuova nota, *allora* nasce una nota vuota in cima all'elenco, aperta con il cursore nel corpo; se la lascio vuota, sparisce (FL-09, RB-10, RB-60, DEC-39).
 - **CA-02.2** *(Sospeso con DEC-64: per ora testo puro.)* *Dato* una nota aperta, *quando* scrivo la sintassi markdown (`#`, `##`, `**`, `*`, `~~`, `-`, `1.`, `- [ ]`), *allora* il testo si formatta subito e i simboli spariscono appena riconosciuti, anche sulla riga in cui scrivo; le frecce e Canc li trattano come un blocco unico (RF-02, DEC-58).
 - **CA-02.3** *(Sospeso con DEC-64: per ora testo puro.)* *Dato* del testo selezionato, *quando* premo Ctrl + B, I, U o Ctrl + Maiusc + X (⌘ su macOS), *allora* diventa grassetto, corsivo, sottolineato o barrato; il sottolineato si salva come `<u>…</u>` (DEC-28).
 - **CA-02.4** *(Sospeso con DEC-64: per ora testo puro.)* *Dato* del testo selezionato, *allora* 8 px sopra compare la pillola di formattazione; *dato* un clic sul vuoto, compare quella di inserimento; *dato* `/` su una riga vuota, si apre il menu di inserimento. In nessuno c'è la voce Immagine; la pillola sparisce riprendendo a scrivere, con Esc o con un clic altrove (CMP-10, CMP-09).
@@ -75,7 +75,7 @@ Frammento Must A: senza immagini (RF-03), senza menu `···` e senza riga dei m
 - **CA-02.10** *Dato* una nota senza titolo, *allora* nell'elenco compaiono le prime parole del testo; senza titolo né testo compare «Nota vuota» in grigio chiaro (RB-15).
 - **CA-02.11** *Dato* una nota aperta, *quando* premo Ctrl + Z (⌘ + Z), *allora* si annulla l'ultima modifica, qualunque sia (RB-59).
 - **CA-02.12** *Dato* un'interruzione improvvisa (crash o spegnimento), *quando* riapro la nota, *allora* trovo l'ultimo salvataggio e i dati non sono rovinati (RB-06, SF-10, SF-32).
-- **CA-02.13** *Dato* il server spento o un errore di salvataggio, *allora* valgono SC-07, il testo in memoria e la conferma alla chiusura, come in CA-01.7 e CA-01.8 (RB-61, RB-62).
+- **CA-02.13** *Dato* il server spento o un errore di salvataggio, *allora* valgono SC-07, il testo in memoria e la conferma alla chiusura, come in CA-01.7 e CA-01.8 (RB-61, RB-62). (superato da DEC-85; da riscrivere con i testi definitivi di SC-07)
 
 ---
 
@@ -110,8 +110,8 @@ Come *utente* voglio associare dei metadati a ogni nota per descriverla con tito
 
 | Metadato | Chi lo imposta | Note |
 |---|---|---|
-| Titolo | Utente | Si modifica direttamente nella schermata di scrittura. Può mancare: nelle liste si mostrano allora le prime parole del testo (RB-15). Può ripetersi (RB-16) |
-| Data di creazione di sistema | Sistema | Non modificabile. Sempre visibile nei dettagli della nota |
+| Titolo | Utente | Si modifica nel campo del titolo di Info (DEC-96). Può mancare: nelle liste si mostrano allora le prime parole del testo (RB-15). Può ripetersi (RB-16) |
+| Data di creazione di sistema | Sistema | Non modificabile. Si vede in Info, nel suggerimento della riga della creazione (DEC-97) |
 | Data di creazione scelta dall'utente | Utente | È la data di creazione mostrata; se l'utente non la imposta, si mostra quella di sistema |
 | Data di ultima modifica | Sistema | |
 | Tag | Utente | Gli stessi tag di `RF-06` |

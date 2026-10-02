@@ -15,9 +15,9 @@ L'impostazione generale (breakpoint, scala z-index, inventario dei componenti) �
 | Nuova cartella | + accanto a Cartelle (primo livello) o tasto destro → Nuova sottocartella. La riga nasce come campo con "Nuova cartella" già selezionato (RB-48); Invio o clic fuori confermano |
 | Rinomina | Tasto destro → Rinomina: stesso campo sul nome esistente |
 | Nome già presente | Finestra con tre scelte: aggiungi un numero, unisci, annulla (RB-31) |
-| Spostare | Si trascina una nota o una cartella nell'albero: la cartella sotto il puntatore si evidenzia. Oppure Sposta in… dal menu `···` (FL-04) |
+| Spostare | Si trascina una nota o una cartella nell'albero: la cartella sotto il puntatore si evidenzia. Oppure Sposta in… in Info o dal tasto destro sulla nota (DEC-96) |
 | Spostamento non permesso | Una cartella dentro sé stessa o una sua sottocartella: nessuna evidenziazione, segno ✕, rilasciando non succede niente (RB-24) |
-| Eliminare | Tasto destro → Elimina, Elimina dal menu `···`, oppure trascinando sul cestino che compare in fondo alla colonna **solo durante il trascinamento** (livello 20). Nessun messaggio: l'elemento è nel cestino (SF-05) |
+| Eliminare | Tasto destro → Elimina, Elimina in Info (DEC-96), oppure trascinando sul cestino che compare in fondo alla colonna **solo durante il trascinamento** (livello 20). Nessun messaggio: l'elemento è nel cestino (SF-05) |
 
 ---
 

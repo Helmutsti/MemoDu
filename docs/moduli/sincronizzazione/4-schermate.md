@@ -2,7 +2,7 @@
 
 <!-- Fasi 4 e 6 della guida. Wireframe e mockup restano nello strumento di design: qui si mettono i link. -->
 
-L'impostazione generale è in `moduli/interfaccia/4-schermate.md`. La sincronizzazione è invisibile finché va tutto bene (RB-40). Ha una sola schermata propria, SC-07, quando le credenziali mancano o vengono rifiutate.
+L'impostazione generale è in `moduli/interfaccia/4-schermate.md`. La sincronizzazione è invisibile finché va tutto bene (RB-40). Ha una sola schermata propria, SC-07, quando le credenziali vengono rifiutate; senza credenziali si lavora in locale (DEC-84).
 
 ## Avvisi di sincronizzazione (FL-07)
 **Flussi:** FL-07 · **Componenti:** avviso
@@ -10,11 +10,11 @@ L'impostazione generale è in `moduli/interfaccia/4-schermate.md`. La sincronizz
 - **Wireframe:** [i due avvisi](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-130) · [nota in conflitto](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=32-147)
 - **Esportazioni:** `immagini/SC-01-avvisi.png`
 
-In cima all'area della nota di SC-01, livello 50, uno alla volta:
+Al centro dell'area della nota di SC-01, 8 sotto la fascia in alto (DEC-86), livello 50, uno alla volta:
 
 | Avviso | Quando | Azione |
 |---|---|---|
-| Server irraggiungibile | Oltre la soglia (indicativa 24 ore, RB-40) | Ho capito |
+| Server irraggiungibile | Oltre 24 ore dall'ultima sincronizzazione riuscita (RB-40, DEC-82) | Ho capito |
 | Errore di sincronizzazione | Subito (SF-32) | Ho capito |
 | Nota in conflitto | Subito (RB-39) | Apri l'altra |
 
@@ -29,7 +29,7 @@ L'avviso resta sul dispositivo in cui nasce (DEC-90). Le credenziali rifiutate n
 - **Esportazioni:** `immagini/SC-07.png`
 - **Mockup:** [Fase 6]
 
-Al posto della finestra principale e della nota rapida quando le credenziali mancano nel file di configurazione o il server le rifiuta (RB-57, DEC-20). Finestra vuota con, al centro, icona di errore, «Memodu non riesce a collegarsi», una riga che spiega cosa correggere e il pulsante Riprova. Senza rete non compare (DEC-02). Nel frammento Must A compare anche quando l'API delle note non risponde (RB-61), con la spiegazione «Il server delle note non risponde. Avvialo e premi Riprova.»
+Al posto della finestra principale e della nota rapida quando il server rifiuta le credenziali (RB-57, DEC-20). Finestra vuota con, al centro, icona di errore, «Memodu non riesce a collegarsi», una riga che spiega cosa correggere e il pulsante Riprova. Senza rete non compare (DEC-02), né senza il file delle credenziali (DEC-84). Compare anche quando la copia di lavoro non si apre o non si scrive (DEC-67) e nell'interfaccia aperta nel browser, che non ha il nucleo (DEC-85), con la spiegazione «Il server delle note non risponde. Avvialo e premi Riprova.», da rivedere (domanda aperta su SC-07).
 
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |

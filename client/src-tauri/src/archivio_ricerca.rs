@@ -23,12 +23,14 @@ const LETTERE_INDICE: usize = 3;
 
 /// Un periodo, con gli estremi compresi; None è aperto.
 #[derive(Debug, Default, Clone, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Intervallo {
     pub da: Option<String>,
     pub a: Option<String>,
 }
 
 #[derive(Debug, Default, Clone, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Richiesta {
     #[serde(default)]
     pub testo: String,

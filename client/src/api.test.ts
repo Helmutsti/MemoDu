@@ -37,6 +37,13 @@ describe("comandi del nucleo (DEC-85)", () => {
     expect([cestino.stato, cestino.cestino]).toEqual([404, "n1"]);
   });
 
+  it("dati che il nucleo non sa leggere danno 400, non «non risponde»", async () => {
+    invoke.mockImplementation(async () => {
+      throw "invalid args `nota` for command `salva_nota`: unknown field `colore`";
+    });
+    expect((await errore(api.salva("n1", { contenuto: "x" }))).stato).toBe(400);
+  });
+
   it("senza il nucleo (nel browser) l'archivio non risponde: stato null", async () => {
     invoke.mockImplementation(async () => {
       throw new Error("window.__TAURI_INTERNALS__ is undefined");

@@ -8,14 +8,17 @@
 ```mermaid
 flowchart TD
     A[Lavoro sulla copia di lavoro: tutte le operazioni sono locali - DEC-02] --> B[Periodicamente parte la sincronizzazione in background]
-    B --> C{Il server è raggiungibile?}
+    B --> X{Ci sono le credenziali?}
+    X -- No --> Y[Non si sincronizza: si lavora in locale - DEC-84]
+    Y --> A
+    X -- Sì --> C{Il server è raggiungibile?}
     C -- No --> D{Da quanto non si sincronizza?}
     D -- Poco --> A
-    D -- Oltre la soglia --> W[Avviso: modifiche non sincronizzate - RB-40]
+    D -- Oltre 24 ore --> W[Avviso: server irraggiungibile - RB-40, DEC-82]
     W --> A
     C -- Sì --> E{L'accesso è valido?}
-    E -- No --> V[Avviso: accesso scaduto o revocato - RB-40]
-    E -- Sì --> F[Invio le modifiche cifrate e ricevo quelle degli altri dispositivi]
+    E -- No --> V[Schermata di blocco - RB-57, FL-08]
+    E -- Sì --> F[Invio le modifiche cifrate e ricevo quelle degli altri dispositivi - per ora in chiaro, DEC-78]
     F --> G{Errore di sincronizzazione?}
     G -- Sì --> U[Avviso: errore di sincronizzazione - RB-40]
     G -- No --> H{Lo stesso elemento è cambiato su due dispositivi?}
@@ -45,15 +48,15 @@ flowchart TD
 | SF-20 Riferimenti spariti | Nota creata o spostata in una cartella eliminata altrove | Nessun messaggio | La cartella torna dal cestino (RB-30) |
 | SF-22 Modifica simultanea | Lo stesso elemento cambiato su due dispositivi | Avviso solo per le note in conflitto (RB-39) | DEC-06, RB-36, RB-37, RB-38 |
 | SF-25 Accesso revocato | Il server rifiuta le credenziali | Schermata di blocco (RB-57) | Si corregge la configurazione dell'app (FL-08) |
-| SF-30 Servizio esterno fuori uso | Server irraggiungibile oltre la soglia | Avviso (RB-40) | Le modifiche restano sulla copia di lavoro finché il server non torna |
-| SF-31 Notifiche perse | Un conflitto avviene mentre l'utente non guarda | L'avviso resta finché non viene visto | La nota in conflitto resta nella cartella, riconoscibile dal titolo (DEC-06) |
+| SF-30 Servizio esterno fuori uso | Server irraggiungibile da più di 24 ore (DEC-82) | Avviso (RB-40) | Le modifiche restano sulla copia di lavoro finché il server non torna |
+| SF-31 Notifiche perse | Un conflitto avviene mentre l'utente non guarda | L'avviso resta finché non lo si chiude o non si chiude la finestra (DEC-90) | La nota in conflitto resta nella cartella, riconoscibile dal titolo (DEC-06) |
 | SF-33 Versioni diverse di app e server | Il server non riconosce la versione del protocollo | Avviso: errore di sincronizzazione (RB-40) | Si continua sulla copia di lavoro; si riparte da soli quando le versioni tornano compatibili (DEC-83) |
 | SF-32 Errore a metà operazione | Errore durante l'invio o la ricezione | Avviso (RB-40) | Riprova alla sincronizzazione successiva; la copia di lavoro resta intatta |
 
 ### Sfighe considerate e scartate
 - SF-01 … SF-07: la sincronizzazione non richiede azioni dell'utente.
 - SF-12 Sessione scaduta: non c'è sessione, il dispositivo usa le credenziali preimpostate (RF-14); credenziali rifiutate sono SF-25.
-- SF-34 … SF-36: il contenuto viaggia cifrato end-to-end (RNF-02); il collegamento è trattato in FL-08.
+- SF-34 … SF-36: il contenuto viaggia cifrato end-to-end (RNF-02; per ora in chiaro, con il server solo in locale, DEC-78); il collegamento è trattato in FL-08.
 
 ---
 
@@ -78,16 +81,17 @@ flowchart TD
 ```
 
 ### Percorsi alternativi
-- **Credenziali mancanti o rifiutate:** la finestra non si apre; al suo posto c'è la schermata di blocco con Riprova (RB-57, DEC-20). Se il rifiuto arriva con l'app aperta, anche la nota rapida passa alla schermata di blocco: quello che era scritto resta sulla copia di lavoro. La configurazione si corregge fuori dall'app.
+- **Credenziali mancanti:** si lavora in locale sulla copia di lavoro, senza sincronizzare e senza blocco (DEC-84).
+- **Credenziali rifiutate:** la finestra non si apre; al suo posto c'è la schermata di blocco con Riprova (RB-57, DEC-20). Se il rifiuto arriva con l'app aperta, anche la nota rapida passa alla schermata di blocco: quello che era scritto resta sulla copia di lavoro. La configurazione si corregge fuori dall'app.
 - **Server irraggiungibile:** non blocca; si lavora sulla copia di lavoro (DEC-02, RB-40).
 - **Credenziali perse:** il recupero è rimandato (domanda aperta su RF-10).
-- **Cambio delle credenziali:** come si fa si decide in Fase 7.
+- **Cambio delle credenziali:** si rivaluta quando si accende la cifratura (DEC-79).
 
 ### Sfighe gestite
 | Sfiga | Rilevamento | Comunicazione | Via d'uscita |
 |---|---|---|---|
 | SF-07 Dimenticanze | Credenziali perse | Da definire | Rimandato: blocca la Definition of Ready di RF-14 |
-| SF-25 Accesso revocato | Credenziali mancanti o rifiutate dal server | Schermata di blocco (SC-07, RB-57) | Si corregge la configurazione dell'app e si preme Riprova |
+| SF-25 Accesso revocato | Credenziali rifiutate dal server (senza credenziali si lavora in locale, DEC-84) | Schermata di blocco (SC-07, RB-57) | Si corregge la configurazione dell'app e si preme Riprova |
 
 ### Sfighe considerate e scartate
 - SF-01 Doppio invio: collegarsi due volte non crea nulla di diverso.

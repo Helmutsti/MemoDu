@@ -42,6 +42,11 @@ async function comando<T>(nome: string, argomenti: InvokeArgs = {}): Promise<T> 
   try {
     return await invoke<T>(nome, argomenti);
   } catch (errore) {
+    // Dati che il nucleo non sa leggere (campo in più o del tipo sbagliato): Tauri risponde con
+    // un testo, che vale 400 come nel contratto, non «non risponde».
+    if (typeof errore === "string" && errore.startsWith("invalid args")) {
+      throw new ErroreApi(400, errore);
+    }
     const e = errore as {
       stato?: number | null;
       messaggio?: string;

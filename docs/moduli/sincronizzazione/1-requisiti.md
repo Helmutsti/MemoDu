@@ -3,17 +3,17 @@
 <!-- Fase 1 della guida, con i criteri di accettazione della Fase 8. Copia il blocco per ogni requisito. -->
 
 ## RF-10 – Sincronizzazione cloud cifrata end-to-end
-**Priorità:** Must · **Origine:** DEC-01, DEC-02, DEC-06, DEC-13 · **Fase:** 6 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** DEC-01, DEC-02, DEC-06, DEC-13 · **Fase:** 8 · **Stato:** In progettazione
 
 Come *utente* voglio che tutte le mie note siano sincronizzate nel cloud con cifratura end-to-end per avere l'intera struttura a disposizione su ogni dispositivo, senza che altri possano leggerla.
 
 Il cloud è la fonte di verità. Sul dispositivo resta una copia di lavoro su cui avvengono tutte le operazioni: la sincronizzazione parte periodicamente in background. Senza connessione si continua a scrivere, e le modifiche si sincronizzano in automatico quando la rete torna (DEC-02).
 
-Se una nota è stata modificata su un solo dispositivo, si salva la versione più aggiornata. Se la stessa nota è stata modificata su due dispositivi c'è un conflitto: il programma salva entrambe le versioni e nessun dato va perso (DEC-06): una resta la nota originale, l'altra diventa una nota indipendente nella stessa cartella, con il titolo seguito da dispositivo e ora (es. "Riunione (conflitto, portatile, 24/09 10:32)").
+Se una nota è stata modificata su un solo dispositivo, si salva la versione più aggiornata. Se la stessa nota è stata modificata su due dispositivi c'è un conflitto: il programma salva entrambe le versioni e nessun dato va perso (DEC-06): una resta la nota originale, l'altra diventa una nota indipendente nella stessa cartella, con lo stesso titolo seguito da "(copia in conflitto)" (RB-39).
 
 Per sincronizzare il dispositivo usa le credenziali preimpostate dell'installazione, senza login (RF-14, DEC-13).
 
-**Collegamenti:** FL-07 · EN-06 · EN-08 · SC-00 · RNF-02
+**Collegamenti:** FL-07 · EN-06 · EN-08 · SC-01 · RNF-02
 
 ### Scenario d'uso
 Lavoro su due dispositivi e ognuno accumula modifiche e nuove note. Se entrambi hanno modificato la stessa nota c'è un conflitto: il programma salva entrambe le versioni. È una soluzione rudimentale, ma la perdita di dati è inconcepibile.
@@ -35,7 +35,7 @@ Scritti dall'agente dai flussi e dalle decisioni (FL-07, DEC-75 … DEC-83), da 
 ---
 
 ## RF-14 – Collegamento all'installazione
-**Priorità:** Must · **Origine:** DEC-05, DEC-13 · **Fase:** 6 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** DEC-05, DEC-13 · **Fase:** 8 · **Stato:** In progettazione
 
 Come *utente* voglio che Memodu si colleghi da solo alla mia installazione per sincronizzare le note senza dover mai accedere.
 
@@ -56,8 +56,8 @@ Scritti dall'agente dai flussi e dalle decisioni (FL-08, DEC-13, DEC-20, DEC-79)
 - **CA-14.2** *Dato* il file `credenziali` con credenziali valide, *quando* apro Memodu, *allora* la finestra si apre subito sulla copia di lavoro e la sincronizzazione parte in background, senza schermate di accesso (RNF-01, RB-54).
 - **CA-14.3** *Dato* credenziali rifiutate dal server, *quando* apro Memodu o il rifiuto arriva con l'app aperta, *allora* al posto della finestra, e della nota rapida, compare la schermata di blocco con Riprova; quello che era già scritto resta sulla copia di lavoro (RB-57, DEC-20).
 - **CA-14.4** *Dato* la schermata di blocco, *quando* correggo il file `credenziali` e premo Riprova, *allora* il file si rilegge, il blocco sparisce e la sincronizzazione riparte (DEC-20).
-- **CA-14.6** *Dato* il file `credenziali` mancante, *quando* apro Memodu, *allora* si lavora sulla copia di lavoro senza sincronizzare e senza blocco; appena il file c'è, la sincronizzazione parte (DEC-84).
 - **CA-14.5** *Dato* credenziali valide e il server spento, *quando* apro Memodu, *allora* si lavora come sempre sulla copia di lavoro, senza blocco (DEC-20, DEC-02).
+- **CA-14.6** *Dato* il file `credenziali` mancante, *quando* apro Memodu, *allora* si lavora sulla copia di lavoro senza sincronizzare e senza blocco; appena il file c'è, la sincronizzazione parte (DEC-84).
 
 ---
 
