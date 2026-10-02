@@ -184,6 +184,23 @@ describe("server", () => {
     expect([r.statusCode, r.json()]).toEqual([200, { stato: "ok" }]);
   });
 
+  it("con il database rotto /vivo risponde e /salute dice il motivo, senza appendersi", async () => {
+    const rotto = creaServer(
+      new ArchivioSincronizzazione(
+        {
+          ...db,
+          righe: () => Promise.reject(Object.assign(new Error("no"), { code: "ENOTFOUND" })),
+        },
+        impronta(credenziali.gettone),
+      ),
+    );
+    const vivo = await rotto.inject({ method: "GET", url: "/vivo" });
+    const salute = await rotto.inject({ method: "GET", url: "/salute" });
+    expect([vivo.statusCode, salute.statusCode]).toEqual([200, 503]);
+    expect(salute.json()).toMatchObject({ motivo: "ENOTFOUND" });
+    await rotto.close();
+  });
+
   it("lo schema ha il suo numero di versione e riapplicarlo non cambia niente", async () => {
     await aggiornaSchema(db);
     const [riga] = await db.righe<{ versione: number }>("SELECT versione FROM schema");

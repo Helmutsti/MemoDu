@@ -61,10 +61,8 @@ schemaPronto().catch(() => undefined);
 const server = configuraServer(
   Fastify(opzioniServer({ registro: inRete })),
   new ArchivioSincronizzazione(db, improntaGettone),
+  schemaPronto,
 );
-server.addHook("onRequest", async () => {
-  await schemaPronto();
-});
 // Su Vercel come nella sua guida per Fastify: basta la porta.
 await server.listen(
   process.env.VERCEL

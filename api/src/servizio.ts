@@ -20,10 +20,27 @@ export function opzioniServer({
   };
 }
 
-/** Aggiunge al server la gestione degli errori, il controllo di salute e le rotte. */
+/** Il motivo di un errore del database, senza dati: il codice o l'inizio del messaggio. */
+const motivo = (errore: unknown): string => {
+  const e = errore as { code?: string; message?: string };
+  return e.code ?? e.message?.slice(0, 120) ?? String(errore);
+};
+
+/** Al massimo `ms` millisecondi, poi un errore «timeout». */
+const entro = <T>(lavoro: Promise<T>, ms: number): Promise<T> =>
+  Promise.race([
+    lavoro,
+    new Promise<never>((_, rifiuta) => setTimeout(() => rifiuta(new Error("timeout")), ms)),
+  ]);
+
+/**
+ * Aggiunge al server la gestione degli errori, i controlli e le rotte. `preparazione` è lo
+ * schema dell'archivio: le richieste della sincronizzazione lo aspettano, `/vivo` no.
+ */
 export function configuraServer(
   server: FastifyInstance,
   sincronizzazione: ArchivioSincronizzazione,
+  preparazione: () => Promise<void> = () => Promise.resolve(),
 ): FastifyInstance {
   server.setErrorHandler<{ statusCode?: number }>((errore, richiesta, risposta) => {
     const codice = errore.statusCode ?? 500;
@@ -31,12 +48,26 @@ export function configuraServer(
     richiesta.log.error(errore);
     return risposta.code(codice).send({ statusCode: codice, message: "Errore del server" });
   });
-  // Controllo di salute, senza gettone: risponde se il server e l'archivio sono su.
-  server.get("/salute", async (_richiesta, risposta) => {
-    const pronto = await sincronizzazione.pronto().catch(() => false);
-    return risposta
-      .code(pronto ? 200 : 503)
-      .send({ stato: pronto ? "ok" : "archivio non raggiungibile" });
+  server.addHook("onRequest", async (richiesta) => {
+    if (richiesta.url === "/vivo" || richiesta.url === "/salute") return;
+    await preparazione();
+  });
+  // La funzione risponde, senza toccare il database.
+  server.get("/vivo", async () => ({ stato: "ok" }));
+  // Controllo di salute, senza gettone: schema e archivio pronti entro 8 secondi, o il motivo.
+  server.get("/salute", async (richiesta, risposta) => {
+    try {
+      await entro(
+        preparazione().then(() => sincronizzazione.pronto()),
+        8_000,
+      );
+      return { stato: "ok" };
+    } catch (errore) {
+      richiesta.log.error(errore);
+      return risposta
+        .code(503)
+        .send({ stato: "archivio non raggiungibile", motivo: motivo(errore) });
+    }
   });
   rotteSincronizzazione(server, sincronizzazione);
   return server;
