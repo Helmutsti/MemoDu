@@ -5,6 +5,11 @@ Il formato segue [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/).
 
 Queste note sono scritte per gli utenti. Lo storico interno della documentazione si trova in `docs/registri/storico.md`.
 
+## [0.1.3] – 2026-10-02
+
+### Cambiato
+- Il testo della nota occupa tutta la larghezza del foglio, invece di fermarsi a una colonna stretta a sinistra
+
 ## [0.1.2] – 2026-10-02
 
 ### Aggiunto
