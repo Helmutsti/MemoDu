@@ -47,6 +47,30 @@ fn icona_area_di_notifica() -> Image<'static> {
     Image::from_bytes(byte).expect("icona dell'area di notifica non valida")
 }
 
+/// Icona delle finestre (barra delle applicazioni, Alt + Tab): come quella dell'area di
+/// notifica, nera sulle barre chiare e chiara sulle scure (DEC-103). Le icone fisse del file
+/// (programma chiuso, menu Start) non seguono il tema: sono quelle chiare.
+const FINESTRA_TEMA_CHIARO: &[u8] = include_bytes!("../icons/finestra/tema-chiaro.png");
+const FINESTRA_TEMA_SCURO: &[u8] = include_bytes!("../icons/finestra/tema-scuro.png");
+
+fn icona_finestra() -> Image<'static> {
+    let byte = if barra_chiara() { FINESTRA_TEMA_CHIARO } else { FINESTRA_TEMA_SCURO };
+    Image::from_bytes(byte).expect("icona della finestra non valida")
+}
+
+/// Le icone nel colore della barra: area di notifica e finestre aperte. Su macOS le finestre
+/// non hanno un'icona propria.
+fn aggiorna_icone(app: &AppHandle) {
+    if let Some(icona) = app.tray_by_id("memodu") {
+        let _ = icona.set_icon(Some(icona_area_di_notifica()));
+    }
+    if cfg!(windows) {
+        for finestra in app.webview_windows().values() {
+            let _ = finestra.set_icon(icona_finestra());
+        }
+    }
+}
+
 /// Su Windows il colore della barra segue «Scegli la modalità di Windows», che è diverso da
 /// quello delle app; senza l'impostazione vale quello predefinito di Windows 11, scuro.
 #[cfg(windows)]
@@ -146,6 +170,9 @@ fn apri_nota_rapida(app: &AppHandle) {
         finestra = finestra.position(x, y);
     }
     if let Ok(creata) = finestra.build() {
+        if cfg!(windows) {
+            let _ = creata.set_icon(icona_finestra());
+        }
         let _ = creata.set_focus();
     }
 }
@@ -252,12 +279,9 @@ pub fn run() {
         .on_window_event(|finestra, evento| {
             match evento {
                 WindowEvent::Destroyed => finestra_pronta(finestra.app_handle(), finestra.label()),
-                // Cambiato il tema di Windows: l'icona prende il colore della barra (DEC-73).
-                WindowEvent::ThemeChanged(_) => {
-                    if let Some(icona) = finestra.app_handle().tray_by_id("memodu") {
-                        let _ = icona.set_icon(Some(icona_area_di_notifica()));
-                    }
-                }
+                // Cambiato il tema di Windows: le icone prendono il colore della barra (DEC-73,
+                // DEC-103).
+                WindowEvent::ThemeChanged(_) => aggiorna_icone(finestra.app_handle()),
                 _ => {}
             }
         })
@@ -323,6 +347,7 @@ pub fn run() {
                     _ => {}
                 })
                 .build(app)?;
+            aggiorna_icone(app.handle());
             Ok(())
         })
         .build(tauri::generate_context!())

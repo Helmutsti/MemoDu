@@ -415,3 +415,4 @@
 | 01/10/2026 | Manuel Cucca | FL-06: il ramo della ricerca avanzata nel diagramma e nei percorsi alternativi | DEC-96 |
 | 01/10/2026 | Manuel Cucca | EN-07: impostazioni per installazione, create alla prima apertura, non più per account | DEC-13, DEC-91 |
 | 01/10/2026 | Manuel Cucca | Diagramma a stati della nota: nella radice con la nota rapida, Ctrl + N o il +; in una cartella con «Nuova nota qui» | DEC-69 |
+| 02/10/2026 | Manuel Cucca | Icona del programma nel colore del tema mentre Memodu è aperto; icone fisse di Windows nella versione chiara; area di notifica con i due loghi forniti. Prove a mano: TC-01, TC-05 superati, TC-06 superato con la barra scura; TC-20 superato dall'agente | DEC-103 |
