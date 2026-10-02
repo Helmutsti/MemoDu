@@ -20,7 +20,12 @@ export interface Database extends Sql {
 /** Neon (o un altro PostgreSQL) dall'indirizzo di connessione. */
 export function daPostgres(indirizzo: string): Database {
   // Poche connessioni: una funzione di Vercel serve poche richieste alla volta.
-  const pool = new pg.Pool({ connectionString: indirizzo, max: 3 });
+  // Con un indirizzo sbagliato o il database spento si sbaglia in fretta, non dopo un minuto.
+  const pool = new pg.Pool({
+    connectionString: indirizzo,
+    max: 3,
+    connectionTimeoutMillis: 10_000,
+  });
   const su = (c: pg.Pool | pg.PoolClient): Sql => ({
     righe: async <T>(testo: string, valori?: unknown[]) =>
       (await c.query(testo, valori)).rows as T[],

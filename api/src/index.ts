@@ -15,17 +15,24 @@ import { aggiornaSchema } from "./schema.js";
 import { configuraServer, opzioniServer } from "./servizio.js";
 import { ArchivioSincronizzazione, impronta } from "./sincronizzazione.js";
 
-if (process.env.VERCEL && !process.env.DATABASE_URL) {
-  throw new Error("Manca DATABASE_URL: collega il database Neon al progetto su Vercel");
+// Neon su Vercel la chiama DATABASE_URL, a volte POSTGRES_URL: vale la prima che è davvero un
+// indirizzo di PostgreSQL.
+const indirizzoDatabase = [process.env.DATABASE_URL, process.env.POSTGRES_URL].find((v) =>
+  /^postgres(ql)?:\/\//.test(v ?? ""),
+);
+if (process.env.VERCEL && !indirizzoDatabase) {
+  throw new Error(
+    "DATABASE_URL manca o non comincia con postgresql://: collega il database Neon al progetto su Vercel",
+  );
 }
-const inRete = Boolean(process.env.DATABASE_URL);
+const inRete = Boolean(indirizzoDatabase);
 let db: Database;
 let improntaGettone: string;
 if (inRete) {
   if (!process.env.MEMODU_IMPRONTA) {
     throw new Error("Manca MEMODU_IMPRONTA: generala con `npm run credenziali -w @memodu/api`");
   }
-  db = daPostgres(process.env.DATABASE_URL!);
+  db = daPostgres(indirizzoDatabase!);
   improntaGettone = process.env.MEMODU_IMPRONTA;
 } else {
   const cartella = cartellaPredefinita();
