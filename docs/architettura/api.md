@@ -459,7 +459,7 @@ Comandi del nucleo (`client/src-tauri/src/locale.rs`) su file e cartelle del dis
 | `cartelle_locali` | — | `[{ "percorso", "nome", "stato": "presente" \| "non trovata" \| "non accessibile" }]` in ordine alfabetico (RB-73) | — |
 | `aggiungi_cartella_locale` | — (il nucleo apre la finestra di scelta del sistema) | la cartella aggiunta, `null` se si annulla | 409 già nell'elenco o dentro una cartella dell'elenco, con il percorso di quella (RB-74) |
 | `togli_cartella_locale` | `{ "percorso" }` | — | — (sul disco non cambia niente, RB-76) |
-| `elenca_locale` | `{ "percorso" }` di una cartella | `[{ "nome", "percorso", "tipo": "cartella" \| "file", "sospeso": false }]`: cartelle e poi file, in ordine alfabetico; niente cartelle nascoste, solo .md e .txt (RB-75) | — |
+| `elenca_locale` | `{ "percorso" }` di una cartella | `[{ "nome", "percorso", "tipo": "cartella" \| "file", "sospeso": false }]`: file e poi cartelle, in ordine alfabetico (DEC-119); niente cartelle nascoste, solo .md e .txt (RB-75) | — |
 | `apri_file_locale` | `{ "percorso" }` | `{ "testo", "sospeso", "codifica": "utf-8" \| "windows-1252", "solaLettura", "cambiatoFuori" }`; con modifiche in sospeso `testo` è quello in sospeso (RB-78) e `cambiatoFuori` dice se il disco è cambiato da quando si era letto (RB-85) | 413 oltre 10 MB |
 | `nuovo_file_locale` | `{ "cartella" }` | `{ "percorso" }` provvisorio, dentro la cartella, finché il file non ha un nome (RB-81) | — |
 | `sospendi_file_locale` | `{ "percorso", "testo" }` | — | 413 |

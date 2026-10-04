@@ -10,8 +10,8 @@ L'organizzazione è un effetto secondario della scrittura: l'utente ha piena lib
 Come *utente* voglio organizzare le note in un albero di cartelle per dare loro una collocazione fisica.
 
 - Ogni nota sta in una sola cartella; per appartenere a più gruppi si usano i tag (RF-06).
-- Una nota può anche stare fuori da qualsiasi cartella, nella radice. Le note nella radice sono le "note non organizzate": compaiono nella barra laterale e ne escono appena vengono spostate in una cartella, anche se non hanno tag.
-- Accanto a ogni cartella e alla sezione Non organizzate si vede quante note contiene (RB-56, ID-15).
+- Una nota può anche stare fuori da qualsiasi cartella, nella radice. Le note nella radice sono le "note non organizzate": compaiono nella radice della sezione CLOUD, prima delle cartelle, e ne escono appena vengono spostate in una cartella, anche se non hanno tag (DEC-119).
+- Accanto a ogni cartella si vede quante note contiene (RB-56, ID-15).
 
 **Collegamenti:** FL-05 · FL-09 · EN-01 · EN-03 · SC-00
 

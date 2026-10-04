@@ -166,7 +166,7 @@ stateDiagram-v2
 |---|---|---|
 | RB-73 | Le cartelle aggiunte compaiono sotto Locale in ordine alfabetico; l'elenco vale solo per questo computer e non va sul server | FL-10 |
 | RB-74 | Una cartella già nell'elenco, o che sta dentro una cartella dell'elenco, non si aggiunge due volte | FL-10 |
-| RB-75 | Si vedono tutte le sottocartelle tranne quelle nascoste (il nome comincia con il punto) e solo i file .md e .txt | FL-10 |
+| RB-75 | Si vedono tutte le sottocartelle tranne quelle nascoste (il nome comincia con il punto) e solo i file .md e .txt; prima i file, poi le cartelle, in ordine alfabetico (DEC-119) | FL-10 |
 | RB-76 | Togliere una cartella da Locale non cambia niente sul disco | FL-10 |
 | RB-77 | Un file con modifiche non salvate ha un segno nel percorso e nella colonna; si salva solo con Ctrl + S (⌘ + S su Mac) | FL-11 |
 | RB-78 | Le modifiche non salvate restano in sospeso passando ad altro e chiudendo Memodu: Memodu le conserva su questo computer, non nel file, e le ritrova riaprendo il file | FL-11 |

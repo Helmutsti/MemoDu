@@ -447,3 +447,5 @@
 | 04/10/2026 | Agente IA | RF-17 Fase 8: criteri CA-17.1 … CA-17.18, piano di test TC-104 … TC-121 e set di dati «Prove locale»; da approvare | — |
 | 04/10/2026 | Manuel Cucca | RF-17: criteri e piano di test approvati, Pronto; si passa al codice | — |
 | 04/10/2026 | Agente IA | RF-17: codice di Locale (nucleo, comandi, osservazione del disco, interfaccia), provato in automatico e nell'app; esiti in `moduli/locale/8-test.md`; api.md allineato al codice | DEC-118 |
+| 04/10/2026 | Manuel Cucca | Sezione CLOUD al posto di Non organizzate e Cartelle: le note non organizzate nella radice, prima le note poi le cartelle a ogni livello (anche in Locale), + con Nuova nota e Nuova cartella | DEC-119 |
+| 04/10/2026 | Agente IA | Libreria: CMP-14 con la sola sezione CLOUD e le note prima delle cartelle; CMP-09 con il menu Aggiungi | DEC-119 |

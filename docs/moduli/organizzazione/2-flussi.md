@@ -145,11 +145,11 @@ stateDiagram-v2
 | RB-31 | Se creando, rinominando o spostando una cartella il nome esiste già nella destinazione, compare un avviso con tre scelte: aggiungere un numero (es. "Idee (2)"), unire le due cartelle o annullare. Unendo due cartelle, per ogni sottocartella con lo stesso nome ricompare lo stesso avviso | FL-05 |
 | RB-32 | Svuotare il cestino chiede una conferma prima dell'eliminazione definitiva | FL-05 |
 | RB-55 | Nel cestino un singolo elemento si può eliminare per sempre con "Elimina definitivamente"; prima si chiede conferma, indicando il nome e, per una cartella, quante note contiene (DEC-17) | FL-05 |
-| RB-56 | Accanto a ogni cartella e alla sezione Non organizzate si mostra il numero di note che contiene, sottocartelle comprese; le note nel cestino non contano. Il numero si aggiorna subito (ID-15) | FL-05 |
-| RB-60 | Nella sezione Non organizzate le note si ordinano per ultima modifica: la più recente in cima | FL-05, FL-09 |
+| RB-56 | Accanto a ogni cartella si mostra il numero di note che contiene (dal 04/10/2026 non più accanto alle non organizzate, DEC-119), sottocartelle comprese; le note nel cestino non contano. Il numero si aggiorna subito (ID-15) | FL-05 |
+| RB-60 | Nella radice della sezione CLOUD le note non organizzate si ordinano per ultima modifica: la più recente in cima, prima delle cartelle (DEC-119) | FL-05, FL-09 |
 | RB-63 | Nata con le cartelle sul file system (DEC-36) e rimasta con il database (DEC-48). Creando o rinominando una cartella, i caratteri vietati si sostituiscono con `-` senza avvisi, con le stesse regole dei nomi dei file delle note (DEC-29, `architettura.md`) | FL-05 |
 | RB-64 | Nell'albero le cartelle di ogni livello si ordinano alfabeticamente, dalla A alla Z, senza distinguere maiuscole e minuscole | FL-05 |
-| RB-65 | Le note di una cartella si vedono nell'albero: aprendo la cartella compaiono prima le sottocartelle (RB-64), poi le note, in ordine alfabetico per titolo, dalla A alla Z, senza distinguere maiuscole e minuscole | FL-05 |
+| RB-65 | Le note di una cartella si vedono nell'albero: aprendo la cartella compaiono prima le note, poi le sottocartelle (RB-64; DEC-119, prima erano dopo), le note in ordine alfabetico per titolo, dalla A alla Z, senza distinguere maiuscole e minuscole | FL-05 |
 | RB-66 | Spostare la nota aperta (Sposta in o trascinamento) non la chiude: si continua a scrivere, e nella colonna la cartella di destinazione si apre per mostrare la nota selezionata | FL-05 |
 | RB-67 | Se la nota aperta finisce nel cestino (eliminata da Info o dal tasto destro, trascinata sul cestino o dentro una cartella eliminata), l'area della nota mostra lo stato vuoto «Nessuna nota aperta» (CMP-19); nessun'altra nota si apre da sola | FL-05 |
 | RB-33 | La ricerca parte mentre si scrive, dopo una brevissima pausa, senza premere Invio. La card si apre appena si entra nel campo, con i soli filtri, anche prima di scrivere (DEC-94) | FL-06 |
