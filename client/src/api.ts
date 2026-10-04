@@ -27,18 +27,27 @@ export class ErroreApi extends Error {
     readonly conflitto?: string,
     /** Con 404 su una nota nel cestino: l'elemento da ripristinare. */
     readonly cestino?: string,
+    /** Con 409 di Locale: «cambiato» (RB-85), «cestino» (RB-83) o «elenco» (RB-74). */
+    readonly motivo?: string,
   ) {
     super(messaggio);
   }
 }
 
 /**
- * Un comando del nucleo. Oltre 4 MB si rifiuta con 413 prima di chiamarlo (EN-01, SF-17, DEC-106); gli
- * errori del nucleo arrivano come { stato, messaggio, conflitto?, cestino? }.
+ * Un comando del nucleo. Oltre `limite` (4 MB per le note) si rifiuta con 413 prima di chiamarlo
+ * (EN-01, SF-17, DEC-106); gli errori del nucleo arrivano come
+ * { stato, messaggio, conflitto?, cestino?, motivo? }.
  */
-async function comando<T>(nome: string, argomenti: InvokeArgs = {}): Promise<T> {
+export async function comando<T>(
+  nome: string,
+  argomenti: InvokeArgs = {},
+  limite: number = LIMITE_CORPO_BYTE,
+): Promise<T> {
   const byte = new TextEncoder().encode(JSON.stringify(argomenti)).length;
-  if (byte > LIMITE_CORPO_BYTE) throw new ErroreApi(413, "Il testo supera il limite di 4 MB");
+  if (byte > limite) {
+    throw new ErroreApi(413, `Il testo supera il limite di ${Math.round(limite / 1024 / 1024)} MB`);
+  }
   try {
     return await invoke<T>(nome, argomenti);
   } catch (errore) {
@@ -52,8 +61,15 @@ async function comando<T>(nome: string, argomenti: InvokeArgs = {}): Promise<T> 
       messaggio?: string;
       conflitto?: string;
       cestino?: string;
+      motivo?: string;
     };
-    throw new ErroreApi(e.stato ?? null, e.messaggio ?? String(errore), e.conflitto, e.cestino);
+    throw new ErroreApi(
+      e.stato ?? null,
+      e.messaggio ?? String(errore),
+      e.conflitto,
+      e.cestino,
+      e.motivo,
+    );
   }
 }
 

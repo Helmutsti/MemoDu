@@ -8,6 +8,7 @@
 // si chiede conferma (RB-62). Un'operazione su cartelle o cestino che non riesce mostra un
 // avviso e ricarica la colonna (DEC-37); un nome già usato apre la finestra con tre scelte
 // (RB-31). La riga Impostazioni sotto il Cestino apre SC-06 al posto della nota (DEC-91).
+// Sotto Cartelle la sezione Locale (RF-17): un file del disco si apre al posto della nota.
 
 import {
   FileText,
@@ -66,6 +67,9 @@ import { Info as FinestraInfo, type TipoInfo } from "./Info";
 import { Impostazioni } from "./Impostazioni";
 import { Colonna, type Campo, type Destinazione, type Trascinato } from "./Colonna";
 import { NotaAperta } from "./NotaAperta";
+import { FileAperto } from "../locale/FileAperto";
+import { SezioneLocale } from "../locale/SezioneLocale";
+import { useLocale } from "../locale/useLocale";
 import "./FinestraPrincipale.css";
 
 const TESTO_ERRORE =
@@ -225,7 +229,12 @@ export function FinestraPrincipale(): ReactElement {
   } | null>(null);
   const [conflitto, setConflitto] = useState<Conflitto | null>(null);
   const [avviso, setAvviso] = useState(false);
-  const [vista, setVista] = useState<"nota" | "cestino" | "impostazioni">("nota");
+  const [vista, setVista] = useState<"nota" | "cestino" | "impostazioni" | "file">("nota");
+  /** Il file di Locale aperto al posto della nota (RF-17). */
+  const [fileAperto, setFileAperto] = useState<string | null>(null);
+  /** Un'operazione di Locale sul disco non è riuscita: il motivo (SF-37). */
+  const [avvisoLocale, setAvvisoLocale] = useState<string | null>(null);
+  const locale = useLocale();
   const [cestino, setCestino] = useState<ElementoCestino[]>([]);
   const [bloccata, setBloccata] = useState(false);
   const [riprovando, setRiprovando] = useState(false);
@@ -921,6 +930,19 @@ export function FinestraPrincipale(): ReactElement {
     setVista("impostazioni");
   };
 
+  /** Un file di Locale al posto della nota (RF-17, FL-11). */
+  const apriFile = async (percorso: string) => {
+    await coda.scarica();
+    if (coda.haModifiche) return;
+    if (await lasciaVuota()) {
+      setAperta(null);
+      await ricarica().catch(() => setBloccata(true));
+    }
+    setInfo(null);
+    setFileAperto(percorso);
+    setVista("file");
+  };
+
   const rilascia = async (destinazione: Destinazione) => {
     const t = trascinato;
     setTrascinato(null);
@@ -1078,6 +1100,7 @@ export function FinestraPrincipale(): ReactElement {
   const chiudiVista = async () => {
     setNuovaId(null);
     setAperta(null);
+    setFileAperto(null);
     setVista("nota");
   };
 
@@ -1198,6 +1221,18 @@ export function FinestraPrincipale(): ReactElement {
             impostazioniAperte={vista === "impostazioni"}
             onApriImpostazioni={() => void apriImpostazioni()}
             onChiudiVista={() => void chiudiVista()}
+            locale={
+              <SezioneLocale
+                locale={locale}
+                fileAperto={vista === "file" ? fileAperto : null}
+                onApriFile={(percorso) => void apriFile(percorso)}
+                onFileSpostato={(_, a) => {
+                  if (a) setFileAperto(a);
+                  else void chiudiVista();
+                }}
+                onErrore={setAvvisoLocale}
+              />
+            }
           />
           {statoColonna !== "chiusa" && (
             <div
@@ -1269,6 +1304,9 @@ export function FinestraPrincipale(): ReactElement {
               />
             ) : (
               (avviso && <Avviso testo={TESTO_ERRORE} onChiudi={() => setAvviso(false)} />) ||
+              (avvisoLocale && (
+                <Avviso testo={avvisoLocale} onChiudi={() => setAvvisoLocale(null)} />
+              )) ||
               (avvisoSinc && (
                 <Avviso
                   tipo={avvisoSinc.tipo === "conflitto" ? "avviso" : "errore"}
@@ -1296,7 +1334,15 @@ export function FinestraPrincipale(): ReactElement {
                 />
               ))
             )}
-            {vista === "impostazioni" ? (
+            {vista === "file" && fileAperto ? (
+              <FileAperto
+                key={fileAperto}
+                percorso={fileAperto}
+                locale={locale}
+                onPercorso={setFileAperto}
+                onChiudi={() => void chiudiVista()}
+              />
+            ) : vista === "impostazioni" ? (
               <Impostazioni esegui={esegui} />
             ) : vista === "cestino" ? (
               <Cestino

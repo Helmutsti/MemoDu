@@ -4,6 +4,7 @@
 // (FL-05, RB-24); tasto destro su una cartella o su una nota; tastiera come CMP-06 (RNF-04).
 // In fondo la riga Cestino, che durante il trascinamento diventa la zona di rilascio (DEC-40), e
 // sotto la riga Impostazioni (DEC-91). In cima, sotto la riga della puntina, la ricerca (DEC-94).
+// Dopo Cartelle la sezione Locale, con i file del disco (RF-17).
 
 import {
   useEffect,
@@ -74,6 +75,8 @@ interface Proprieta {
   ricerca?: ReactNode;
   /** Larghezza scelta trascinando la maniglia (DEC-62). */
   larghezza: number;
+  /** Sotto Cartelle: la sezione Locale (RF-17). */
+  locale?: ReactNode;
 }
 
 const stesso = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
@@ -324,6 +327,7 @@ export function Colonna(p: Proprieta): ReactElement {
                   </ul>
                 ))}
             </div>
+            {p.locale}
           </div>
           <div
             ref={fondo}

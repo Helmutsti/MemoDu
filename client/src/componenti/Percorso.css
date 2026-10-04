@@ -77,3 +77,24 @@
 .percorso-segmento:focus {
   outline: none;
 }
+
+/* File di Locale (RF-17): pallino da 6 in icona-tenue, 8 dopo il nome, finché il file ha
+   modifiche non salvate (CMP-26 Non salvato, RB-77). Il nome si rinomina sul posto. */
+.percorso-non-salvato {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  margin: 0 var(--spazio-controllo-piccolo);
+  border-radius: 50%;
+  background: var(--icona-tenue);
+}
+.percorso-campo {
+  height: var(--misura-controllo-piccolo);
+  padding: 0 var(--spazio-controllo-piccolo);
+  border: none;
+  border-radius: var(--raggio-pillola);
+  outline: 2px solid var(--focus-anello);
+  background: var(--sfondo-campo);
+  color: var(--testo-primario);
+  font-family: inherit;
+}

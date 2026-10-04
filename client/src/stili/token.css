@@ -24,6 +24,10 @@
   --ambra-400: #de8f0f;
   --ambra-500: #915c02;
   --ambra-800: #3e2501;
+  --blu-50: #eef5fe;
+  --blu-400: #5ea5ff;
+  --blu-500: #1468c2;
+  --blu-800: #012a58;
 
   /* Colore · chiaro */
   --sfondo-nota: var(--grigio-0);
@@ -51,6 +55,8 @@
   --icona-errore: var(--rosso-500);
   --sfondo-avviso: var(--ambra-50);
   --icona-avviso: var(--ambra-500);
+  --sfondo-informazione: var(--blu-50);
+  --icona-informazione: var(--blu-500);
 
   /* Spazi (regola 12) */
   --spazio-elemento: 4px;
@@ -126,5 +132,7 @@
     --icona-errore: var(--rosso-400);
     --sfondo-avviso: var(--ambra-800);
     --icona-avviso: var(--ambra-400);
+    --sfondo-informazione: var(--blu-800);
+    --icona-informazione: var(--blu-400);
   }
 }

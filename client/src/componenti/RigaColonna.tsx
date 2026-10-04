@@ -99,10 +99,67 @@ export function RigaNota({
   );
 }
 
+interface ProprietaFile extends Trascinamento {
+  nome: string;
+  percorso: string;
+  selezionata: boolean;
+  /** Modifiche non salvate: il pallino a destra (RB-77). */
+  sospeso: boolean;
+  /** File nuovo non ancora sul disco: «Senza titolo» in testo tenue (RB-81). */
+  nuovo: boolean;
+  /** Livello della cartella che lo contiene (0 = cartella dell'elenco). */
+  livelloCartella: number;
+  onApri: () => void;
+  onMenu: (e: MouseEvent) => void;
+}
+
+/** Riga di un file di Locale (CMP-06 File, RF-17): come una nota, il nome con l'estensione. */
+export function RigaFile({
+  nome,
+  percorso,
+  selezionata,
+  sospeso,
+  nuovo,
+  livelloCartella,
+  onApri,
+  onMenu,
+  ...trascinamento
+}: ProprietaFile): ReactElement {
+  return (
+    <li role="none">
+      <button
+        type="button"
+        role="treeitem"
+        data-riga=""
+        data-file={percorso}
+        aria-level={livelloCartella + 2}
+        aria-selected={selezionata}
+        aria-current={selezionata ? "true" : undefined}
+        className={`riga riga-nota ${selezionata ? "riga-selezionata interfaccia-controllo-attivo" : "interfaccia-controllo"} ${nuovo ? "riga-vuota" : ""}`}
+        style={{
+          paddingLeft: `calc(var(--spazio-controllo) + ${livelloCartella + 2} * var(--spazio-rientro))`,
+        }}
+        onClick={onApri}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          onMenu(e);
+        }}
+        {...trascinamento}
+      >
+        <span className="riga-nome">{nome}</span>
+        {sospeso && <span className="riga-non-salvato" role="img" aria-label="non salvato" />}
+      </button>
+    </li>
+  );
+}
+
 interface ProprietaCartella extends Trascinamento {
   nome: string;
   percorso: string;
-  conteggio: number;
+  /** Numero di note; assente per le cartelle di Locale. */
+  conteggio?: number;
+  /** Al posto del numero, per una cartella di Locale che non c'è («non trovata»). */
+  stato?: string;
   aperta: boolean;
   livello: number;
   /** Mentre si trascina sopra una nota o una cartella che la cartella può ricevere. */
@@ -115,6 +172,7 @@ export function RigaCartella({
   nome,
   percorso,
   conteggio,
+  stato,
   aperta,
   livello,
   sopra,
@@ -129,8 +187,8 @@ export function RigaCartella({
       data-riga=""
       data-cartella={percorso}
       aria-level={livello + 1}
-      aria-expanded={aperta}
-      className={`riga riga-cartella interfaccia-controllo ${sopra ? "riga-sopra" : ""}`}
+      aria-expanded={stato ? undefined : aperta}
+      className={`riga riga-cartella interfaccia-controllo ${sopra ? "riga-sopra" : ""} ${stato ? "riga-cartella-assente" : ""}`}
       style={rientroCartella(livello)}
       onClick={onApriChiudi}
       onContextMenu={(e) => {
@@ -143,7 +201,9 @@ export function RigaCartella({
         <Icona di={aperta ? FolderOpen : Folder} />
       </span>
       <span className="riga-nome">{nome}</span>
-      <span className="riga-conteggio interfaccia-dettaglio">{conteggio}</span>
+      {(conteggio !== undefined || stato) && (
+        <span className="riga-conteggio interfaccia-dettaglio">{stato ?? conteggio}</span>
+      )}
     </button>
   );
 }
@@ -151,6 +211,8 @@ export function RigaCartella({
 interface ProprietaCampo {
   valore: string;
   livello: number;
+  /** Il campo rinomina un file di Locale: senza icona della cartella, allineato ai file. */
+  file?: boolean;
   /** `daTastiera` è falso quando conferma il clic altrove. */
   onConferma: (valore: string, daTastiera: boolean) => void;
   onAnnulla: () => void;
@@ -160,6 +222,7 @@ interface ProprietaCampo {
 export function CampoNomeCartella({
   valore,
   livello,
+  file = false,
   onConferma,
   onAnnulla,
 }: ProprietaCampo): ReactElement {
@@ -179,14 +242,16 @@ export function CampoNomeCartella({
   };
 
   return (
-    <div className="riga riga-campo" style={rientroCartella(livello)}>
-      <span className="riga-icona">
-        <Icona di={Folder} />
-      </span>
+    <div className="riga riga-campo" style={rientroCartella(file ? livello + 1 : livello)}>
+      {!file && (
+        <span className="riga-icona">
+          <Icona di={Folder} />
+        </span>
+      )}
       <input
         ref={campo}
         className="riga-campo-nome interfaccia-controllo"
-        aria-label="Nome della cartella"
+        aria-label={file ? "Nome del file" : "Nome della cartella"}
         defaultValue={valore}
         onKeyDown={(e) => {
           if (e.key === "Enter") {

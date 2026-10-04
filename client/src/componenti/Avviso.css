@@ -34,3 +34,10 @@
   flex: 1;
   margin: 0;
 }
+.avviso-informazione {
+  background: var(--sfondo-informazione);
+}
+.avviso-informazione .avviso-icona {
+  display: inline-flex;
+  color: var(--icona-informazione);
+}

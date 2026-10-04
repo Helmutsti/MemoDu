@@ -147,3 +147,18 @@
 .riga-cestino {
   flex: none;
 }
+
+/* Locale (RF-17): pallino da 6 in icona-tenue per le modifiche non salvate, al posto del numero
+   (RB-77); cartella dell'elenco che non c'è più, in testo tenue con «non trovata». */
+.riga-non-salvato {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  margin-right: var(--spazio-elemento);
+  border-radius: 50%;
+  background: var(--icona-tenue);
+}
+.riga-cartella-assente,
+.riga-cartella-assente .riga-conteggio {
+  color: var(--testo-tenue);
+}

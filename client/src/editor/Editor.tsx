@@ -19,6 +19,10 @@ interface Proprieta {
   focus?: boolean;
   /** Invito nell'area vuota. */
   invito?: string;
+  /** Si legge ma non si scrive (file locale in sola lettura, CA-17.15). */
+  solaLettura?: boolean;
+  /** Nome per i lettori di schermo. */
+  etichetta?: string;
 }
 
 export function Editor({
@@ -26,6 +30,8 @@ export function Editor({
   onModifica,
   focus = false,
   invito = "Scrivi qui…",
+  solaLettura = false,
+  etichetta = "Testo della nota",
 }: Proprieta): ReactElement {
   const contenitore = useRef<HTMLDivElement>(null);
   const suModifica = useRef(onModifica);
@@ -48,7 +54,9 @@ export function Editor({
           ]),
           EditorView.lineWrapping,
           placeholder(invito),
-          EditorView.contentAttributes.of({ "aria-label": "Testo della nota", spellcheck: "true" }),
+          EditorView.contentAttributes.of({ "aria-label": etichetta, spellcheck: "true" }),
+          EditorState.readOnly.of(solaLettura),
+          EditorView.editable.of(!solaLettura),
           EditorView.updateListener.of((u) => {
             if (u.docChanged) suModifica.current(u.state.doc.toString());
           }),
