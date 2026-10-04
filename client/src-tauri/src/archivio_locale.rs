@@ -36,8 +36,8 @@ const RISERVATI: [&str; 22] = [
 /// Schema 6 (DEC-118): l'elenco delle cartelle e le modifiche in sospeso, solo su questo
 /// computer.
 pub const SCHEMA_LOCALE: &str = "
-  CREATE TABLE locale_cartelle (percorso TEXT PRIMARY KEY, aggiunta_il TEXT NOT NULL);
-  CREATE TABLE locale_sospesi (
+  CREATE TABLE IF NOT EXISTS locale_cartelle (percorso TEXT PRIMARY KEY, aggiunta_il TEXT NOT NULL);
+  CREATE TABLE IF NOT EXISTS locale_sospesi (
     percorso TEXT PRIMARY KEY,
     testo TEXT NOT NULL,
     impronta TEXT,
