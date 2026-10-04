@@ -431,3 +431,4 @@
 | 04/10/2026 | Manuel Cucca | Confermati i criteri CA-14.1 … CA-14.6 di RF-14 | — |
 | 04/10/2026 | Manuel Cucca | Credenziali perse o finite in mani sbagliate: se ne generano di nuove; procedura nel runbook; il recupero della chiave va con la cifratura | DEC-114 |
 | 04/10/2026 | Manuel Cucca | Approvato il piano di test della sincronizzazione TC-86 … TC-103; RF-10 (senza cifratura) e RF-14 a Fase 9 · Pronto | — |
+| 04/10/2026 | Agente IA | TC-86 superato con la 0.1.4 su due computer; prove a mano della sincronizzazione TC-87 e seguenti messe da parte su richiesta di Manuel Cucca | — |
