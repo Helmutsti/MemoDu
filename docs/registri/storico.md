@@ -442,3 +442,4 @@
 | 04/10/2026 | Manuel Cucca, Agente IA | RF-17: deduzioni dei flussi confermate, Fase 2 chiusa; Fase 3 con EN-09 Cartella locale, EN-10 File locale, EN-11 Modifica in sospeso (da confermare) | — |
 | 04/10/2026 | Manuel Cucca, Agente IA | RF-17: Fase 3 confermata; Fase 4 con nove wireframe di Locale (sezione della colonna, file aperto, avvisi, conferma) e 4-schermate.md, da approvare | — |
 | 04/10/2026 | Manuel Cucca, Agente IA | RF-17: wireframe approvati; Fase 5 con i tipi File, File non salvato, File nuovo, Cartella non trovata in CMP-06, la proprietà Non salvato in CMP-26, le due scelte nell'avviso CMP-15 e la sezione Locale in CMP-14; file senza icona e pallino da 6 (scelte di Manuel Cucca) | — |
+| 04/10/2026 | Agente IA | RF-17 Fase 6: nove mockup di Locale nella pagina «SC-01 Locale (RF-17)» del file Mockup, con le esportazioni; da approvare | — |
