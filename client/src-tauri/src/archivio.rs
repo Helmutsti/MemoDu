@@ -22,7 +22,7 @@ pub const FILE_DATABASE: &str = "copia-di-lavoro.db";
 /// File dell'API quando girava sulla stessa macchina (DEC-46): da lì si copiano le note alla
 /// prima apertura, così non si perde niente.
 pub const FILE_API: &str = "memodu.db";
-const VERSIONE_SCHEMA: i64 = 5;
+const VERSIONE_SCHEMA: i64 = 6;
 const SENZA_TITOLO: &str = "Senza titolo";
 const NUOVA_CARTELLA: &str = "Nuova cartella";
 const LUNGHEZZA_MASSIMA_NOME: usize = 100;
@@ -237,6 +237,18 @@ pub enum Errore {
     ScorciatoiaNonValida(String),
     /// Combinazione già usata da un altro programma: resta quella di prima (DEC-91).
     ScorciatoiaOccupata,
+    /// Locale (RF-17): il file o la cartella sul disco non c'è (più).
+    FileNonTrovato(String),
+    /// Il disco rifiuta l'operazione: permessi, file bloccato, disco pieno (SF-37).
+    DiscoRifiuta(String),
+    /// File oltre il limite che si apre (SF-17), in byte.
+    TroppoGrande(u64),
+    /// Il file sul disco è cambiato da quando si è letto (RB-85).
+    CambiatoFuori,
+    /// Il disco non ha un Cestino: si chiede se eliminare per sempre (RB-83).
+    CestinoNonDisponibile,
+    /// La cartella è già in Locale, o dentro una cartella di Locale (RB-74).
+    GiaInLocale(String),
     Database(rusqlite::Error),
 }
 
@@ -253,12 +265,20 @@ impl Errore {
             Errore::NotaNonTrovata { .. }
             | Errore::CartellaNonTrovata(_)
             | Errore::ElementoNonTrovato(_)
-            | Errore::TagNonTrovato(_) => Some(404),
+            | Errore::TagNonTrovato(_)
+            | Errore::FileNonTrovato(_) => Some(404),
             Errore::PercorsoNonValido(_)
             | Errore::DataNonValida(_)
             | Errore::IdNonValido(_)
             | Errore::ScorciatoiaNonValida(_) => Some(400),
-            Errore::NomeEsistente(_) | Errore::NotaNonVuota | Errore::ScorciatoiaOccupata => Some(409),
+            Errore::NomeEsistente(_)
+            | Errore::NotaNonVuota
+            | Errore::ScorciatoiaOccupata
+            | Errore::CambiatoFuori
+            | Errore::CestinoNonDisponibile
+            | Errore::GiaInLocale(_) => Some(409),
+            Errore::DiscoRifiuta(_) => Some(403),
+            Errore::TroppoGrande(_) => Some(413),
             Errore::SpostamentoImpossibile => Some(422),
             Errore::NonDisponibile(_) => None,
             Errore::Database(_) => Some(500),
@@ -278,6 +298,12 @@ impl Errore {
             Errore::NotaNonVuota => "La nota non è vuota".into(),
             Errore::NonDisponibile(testo) | Errore::ScorciatoiaNonValida(testo) => testo.clone(),
             Errore::ScorciatoiaOccupata => "Combinazione già usata da un altro programma".into(),
+            Errore::FileNonTrovato(percorso) => format!("«{percorso}» non c'è sul disco"),
+            Errore::DiscoRifiuta(motivo) => motivo.clone(),
+            Errore::TroppoGrande(byte) => format!("Il file pesa {} MB", byte.div_ceil(1024 * 1024)),
+            Errore::CambiatoFuori => "Il file è cambiato sul disco".into(),
+            Errore::CestinoNonDisponibile => "Questo disco non ha un Cestino".into(),
+            Errore::GiaInLocale(percorso) => format!("«{percorso}» è già in Locale"),
             Errore::Database(errore) => errore.to_string(),
         }
     }
@@ -293,16 +319,25 @@ impl Serialize for Errore {
             conflitto: Option<&'a str>,
             #[serde(skip_serializing_if = "Option::is_none")]
             cestino: Option<&'a str>,
+            /// Quale 409 di Locale (RB-74, RB-83, RB-85).
+            #[serde(skip_serializing_if = "Option::is_none")]
+            motivo: Option<&'static str>,
         }
         let conflitto = match self {
-            Errore::NomeEsistente(nome) => Some(nome.as_str()),
+            Errore::NomeEsistente(nome) | Errore::GiaInLocale(nome) => Some(nome.as_str()),
+            _ => None,
+        };
+        let motivo = match self {
+            Errore::CambiatoFuori => Some("cambiato"),
+            Errore::CestinoNonDisponibile => Some("cestino"),
+            Errore::GiaInLocale(_) => Some("elenco"),
             _ => None,
         };
         let cestino = match self {
             Errore::NotaNonTrovata { cestino, .. } => cestino.as_deref(),
             _ => None,
         };
-        Forma { stato: self.stato(), messaggio: self.messaggio(), conflitto, cestino }
+        Forma { stato: self.stato(), messaggio: self.messaggio(), conflitto, cestino, motivo }
             .serialize(serializer)
     }
 }
@@ -605,6 +640,9 @@ impl Archivio {
             if versione < 5 {
                 tx.execute_batch(TOGLI_RICERCA_4)?;
                 tx.execute_batch(SCHEMA_RICERCA)?;
+            }
+            if versione < 6 {
+                tx.execute_batch(locale::SCHEMA_LOCALE)?;
             }
             tx.pragma_update(None, "user_version", VERSIONE_SCHEMA)?;
             tx.commit()?;
@@ -1763,6 +1801,9 @@ pub mod impostazioni;
 
 #[path = "archivio_ricerca.rs"]
 pub mod ricerca;
+
+#[path = "archivio_locale.rs"]
+pub mod locale;
 
 #[cfg(test)]
 #[path = "archivio_test.rs"]

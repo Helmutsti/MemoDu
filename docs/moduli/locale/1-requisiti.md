@@ -5,7 +5,7 @@
 Memodu come editor di file del disco, accanto alle note: niente passa dal server (DEC-115).
 
 ## RF-17 – File locali
-**Priorità:** Must · **Origine:** ID-03, DEC-115 · **Fase:** 8 · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** ID-03, DEC-115 · **Fase:** 9 · **Stato:** Pronto
 
 Come *utente* voglio aprire e modificare in Memodu i file di testo delle mie cartelle sul disco per usarlo come editor anche per quello che non sta nelle note, senza che niente vada sul server.
 
@@ -25,7 +25,7 @@ Scelte di Manuel Cucca del 04/10/2026:
 Ho sul disco una cartella di appunti in .md che uso anche con altri programmi (un progetto, la documentazione di un repository). In Memodu, sotto Locale, aggiungo la cartella; apro un file, lo correggo e salvo con Ctrl + S. Creo un file nuovo accanto e ne rinomino un altro. Se intanto lo stesso file cambia in un altro programma, Memodu me lo dice e scelgo quale versione tenere. Niente di tutto questo va sul server.
 
 ### Criteri di accettazione
-Scritti dall'agente da flussi, regole e decisioni (FL-10 … FL-13, RB-73 … RB-85, DEC-118), da confermare.
+Scritti dall'agente da flussi, regole e decisioni (FL-10 … FL-13, RB-73 … RB-85, DEC-118), approvati da Manuel Cucca il 04/10/2026.
 - **CA-17.1** *Dato* Locale nella colonna, *quando* premo + e scelgo una cartella del disco, *allora* compare sotto Locale, in ordine alfabetico, con le sue sottocartelle non nascoste e i soli file .md e .txt; su un altro computer non compare (RB-73, RB-75).
 - **CA-17.2** *Dato* una cartella già nell'elenco, *quando* aggiungo lei o una sua sottocartella, *allora* non si aggiunge di nuovo e si apre quella che c'è (RB-74).
 - **CA-17.3** *Dato* una cartella dell'elenco, *quando* scelgo Togli da Locale, *allora* sparisce dall'elenco e sul disco non cambia niente (RB-76).

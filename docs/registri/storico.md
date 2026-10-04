@@ -445,3 +445,4 @@
 | 04/10/2026 | Agente IA | RF-17 Fase 6: nove mockup di Locale nella pagina «SC-01 Locale (RF-17)» del file Mockup, con le esportazioni; da approvare | — |
 | 04/10/2026 | Manuel Cucca | RF-17: mockup approvati; Fase 7 con l'architettura di Locale (nucleo Rust, notify, sha2, encoding_rs, trash, tauri-plugin-dialog), comandi ed evento in api.md | DEC-118 |
 | 04/10/2026 | Agente IA | RF-17 Fase 8: criteri CA-17.1 … CA-17.18, piano di test TC-104 … TC-121 e set di dati «Prove locale»; da approvare | — |
+| 04/10/2026 | Manuel Cucca | RF-17: criteri e piano di test approvati, Pronto; si passa al codice | — |

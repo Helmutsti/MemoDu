@@ -3,7 +3,7 @@
 <!-- Fase 8 della guida. -->
 
 ## Piano di test
-Scritto dall'agente il 04/10/2026, da approvare. Il set di dati «Prove locale» è in `architettura/ambienti.md`. Le prove del nucleo (percorsi, codifiche, a capo, nome dei file nuovi, cartelle nascoste) sono anche automatiche, in `client/src-tauri/src/locale_test.rs`.
+Scritto dall'agente e approvato da Manuel Cucca il 04/10/2026. Il set di dati «Prove locale» è in `architettura/ambienti.md`. Le prove del nucleo (percorsi, codifiche, a capo, nome dei file nuovi, cartelle nascoste) sono anche automatiche, in `client/src-tauri/src/locale_test.rs`.
 
 | Codice | Riferimento | Caso di prova | Ambiente | Set di dati | Esito |
 |---|---|---|---|---|---|

@@ -158,9 +158,9 @@ fn segna_la_versione_dello_schema() {
     p.chiudi();
     let db = Connection::open(p.file()).unwrap();
     let versione: i64 = db.pragma_query_value(None, "user_version", |r| r.get(0)).unwrap();
-    // Schema 5: sincronizzazione (DEC-75, DEC-76), impostazioni (DEC-91), note del cestino nella
-    // ricerca e indice di ricerca (DEC-95).
-    assert_eq!(versione, 5);
+    // Schema 6: sincronizzazione (DEC-75, DEC-76), impostazioni (DEC-91), note del cestino nella
+    // ricerca e indice di ricerca (DEC-95), Locale (DEC-118).
+    assert_eq!(versione, 6);
 }
 
 #[test]

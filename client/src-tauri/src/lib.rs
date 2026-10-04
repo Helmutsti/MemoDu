@@ -16,6 +16,7 @@
 mod archivio;
 mod comandi;
 mod impostazioni;
+mod locale;
 mod sincronizzazione;
 
 #[cfg(target_os = "macos")]
@@ -256,6 +257,7 @@ pub fn run() {
         .manage(sincronizzazione::Segnale(Mutex::new(segnale)))
         .manage(impostazioni::ScorciatoiaAttiva::default())
         .manage(impostazioni::ProblemaSinc::default())
+        .manage(locale::Osservatore::default())
         .invoke_handler(tauri::generate_handler![
             pronta_a_uscire,
             uscita_annullata,
@@ -290,6 +292,19 @@ pub fn run() {
             impostazioni::cambia_cestino_in_ricerca,
             impostazioni::cambia_nome_dispositivo,
             impostazioni::stato_sincronizzazione,
+            locale::cartelle_locali,
+            locale::aggiungi_cartella_locale,
+            locale::togli_cartella_locale,
+            locale::elenca_locale,
+            locale::apri_file_locale,
+            locale::nuovo_file_locale,
+            locale::sospendi_file_locale,
+            locale::salva_file_locale,
+            locale::scarta_file_locale,
+            locale::crea_cartella_locale,
+            locale::rinomina_locale,
+            locale::sposta_locale,
+            locale::elimina_locale,
         ])
         .on_window_event(|finestra, evento| {
             match evento {
@@ -311,6 +326,8 @@ pub fn run() {
                 })
                 .build(),
         )
+        // Finestra di scelta della cartella di Locale (DEC-118), chiamata solo dal nucleo.
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_autostart::init(
             MacosLauncher::LaunchAgent,
             Some(vec![impostazioni::IN_BACKGROUND]),
@@ -319,6 +336,8 @@ pub fn run() {
             impostazioni::applica_scorciatoia(app.handle());
             impostazioni::applica_tema(app.handle());
             impostazioni::applica_primo_piano(app.handle());
+            // Le cartelle di Locale si osservano da subito (RB-84).
+            app.state::<locale::Osservatore>().aggiorna(app.handle());
             // La finestra principale parte nascosta: si mostra, tranne quando il sistema avvia
             // Memodu all'accensione (DEC-91).
             if !std::env::args().any(|a| a == impostazioni::IN_BACKGROUND) {
