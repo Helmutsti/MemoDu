@@ -42,7 +42,7 @@ flowchart TD
 | SF-18 Valori limite | Cartella trascinata dentro sé stessa o una sua sottocartella | Lo spostamento non avviene | Nessuna modifica (RB-24) |
 | SF-19 Duplicati | Nome di cartella già presente nella destinazione | Avviso con le scelte: aggiungi un numero, unisci, annulla | L'utente sceglie (RB-31) |
 | SF-32 Errore del server a metà operazione | La copia di lavoro risponde che la nota o la cartella non esiste più (per esempio tolta da un'altra finestra di Memodu) o che non ha scritto (DEC-85) | Avviso (CMP-15), testo definitivo in Fase 6 | L'app ricarica la colonna: si vede lo stato vero e si riprova (DEC-37) |
-| SF-20 Riferimenti spariti | Nota creata o spostata, su un altro dispositivo, in una cartella finita nel cestino | Nessun messaggio | La cartella torna dal cestino con la nota (RB-30) |
+| SF-20 Riferimenti spariti | Nota creata o spostata, su un altro dispositivo, in una cartella finita nel cestino | Nessun messaggio | La nota va tra le non organizzate, la cartella resta nel cestino (RB-30) |
 | SF-17 Troppo | Cestino con moltissimi elementi | Nessun messaggio | Resta finché l'utente non lo svuota (RB-27) |
 | SF-16 Vuoto | Nessuna cartella | Sotto il titolo Cartelle: «Nessuna cartella. Creane una con +» (CA-05.12) | Il + accanto al titolo crea la prima cartella |
 
@@ -120,7 +120,6 @@ stateDiagram-v2
     Radice --> Cestino: elimino
     InCartella --> Cestino: elimino
     Cestino --> Radice: ripristino
-    Cestino --> InCartella: la sincronizzazione riporta la cartella (RB-30)
     Cestino --> [*]: svuoto il cestino
 ```
 
@@ -128,7 +127,6 @@ stateDiagram-v2
 |---|---|---|
 | Elimino | Utente | RB-25, RB-26 |
 | Ripristino | Utente | RB-28 |
-| Ritorno automatico dalla sincronizzazione | Sistema | RB-30 |
 | Svuoto il cestino | Solo l'utente | RB-27 |
 
 ---
@@ -143,7 +141,7 @@ stateDiagram-v2
 | RB-27 | Gli elementi restano nel cestino finché l'utente non lo svuota o non li elimina uno per uno per sempre (RB-55); Memodu non cancella mai dati da solo | FL-05 |
 | RB-28 | Un elemento ripristinato dal cestino torna sempre nella radice: la nota diventa non organizzata, la cartella torna al primo livello dell'albero | FL-05 |
 | RB-29 | Le note nel cestino compaiono nella ricerca, segnalate come "nel cestino"; una preferenza nelle impostazioni permette di escluderle | FL-05, FL-06 |
-| RB-30 | Se durante la sincronizzazione una nota risulta creata o spostata in una cartella che un altro dispositivo ha mandato nel cestino, la cartella esce dal cestino e torna com'era, con la nota dentro. È diverso dal ripristino manuale, che riporta tutto nella radice (RB-28) | FL-05, FL-07, FL-09 |
+| RB-30 | Se durante la sincronizzazione una nota risulta creata o spostata in una cartella che un altro dispositivo ha mandato nel cestino (o dentro una sua sottocartella), la nota va tra le non organizzate e la cartella resta nel cestino (DEC-111) | FL-05, FL-07, FL-09 |
 | RB-31 | Se creando, rinominando o spostando una cartella il nome esiste già nella destinazione, compare un avviso con tre scelte: aggiungere un numero (es. "Idee (2)"), unire le due cartelle o annullare. Unendo due cartelle, per ogni sottocartella con lo stesso nome ricompare lo stesso avviso | FL-05 |
 | RB-32 | Svuotare il cestino chiede una conferma prima dell'eliminazione definitiva | FL-05 |
 | RB-55 | Nel cestino un singolo elemento si può eliminare per sempre con "Elimina definitivamente"; prima si chiede conferma, indicando il nome e, per una cartella, quante note contiene (DEC-17) | FL-05 |

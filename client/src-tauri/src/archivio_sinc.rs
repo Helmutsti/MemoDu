@@ -3,8 +3,9 @@
 // in chiaro, con il formato dichiarato per la cifratura futura (DEC-78). Ricevendo, un elemento
 // non modificato qui si prende com'è; uno modificato anche qui si fonde campo per campo con la
 // base: il testo cambiato da tutte e due le parti fa nascere la copia in conflitto (DEC-06),
-// il resto va all'istante della modifica più tardo (RB-36, RB-37, RB-38); una nota finita in
-// una cartella mandata nel cestino altrove la riporta fuori (RB-30).
+// il resto va alla modifica di qui, che arriverà al server per ultima (RB-36, RB-37, RB-38,
+// DEC-109); una nota finita in una cartella mandata nel cestino altrove va tra le non
+// organizzate e la cartella resta nel cestino (RB-30, DEC-111).
 
 use std::collections::BTreeSet;
 
@@ -193,8 +194,8 @@ impl Archivio {
             }
         }
         self.sistema_riferimenti()?;
-        // RB-30: una nota creata o spostata in una cartella che altrove è finita nel cestino la
-        // riporta fuori, con le cartelle madri.
+        // RB-30: una nota creata o spostata in una cartella che altrove è finita nel cestino va
+        // tra le non organizzate (DEC-111).
         let da_controllare: Vec<String> = self
             .db
             .prepare("SELECT id FROM sinc_elementi WHERE tipo = 'nota' AND modificato = 1")?
@@ -204,7 +205,7 @@ impl Archivio {
             .chain(spostate)
             .collect();
         for id in da_controllare {
-            if self.riporta_fuori_le_cartelle(&id)? {
+            if self.togli_dalla_cartella_nel_cestino(&id)? {
                 esito.altro = true;
             }
         }
@@ -231,23 +232,19 @@ impl Archivio {
     }
 
     /// Fonde un elemento modificato qui e sul server, campo per campo con la base (DEC-76).
+    /// Dove serve un vincitore vince la modifica di qui: arriverà al server dopo quella che c'è
+    /// già, e conta l'arrivo, non l'ora dei dispositivi (DEC-109).
     fn fondi(&self, id: &str, voce: &Voce, locale: &Value, remoto: &Value) -> Esito<Value> {
         let base: Value = voce
             .base
             .as_deref()
             .and_then(|b| serde_json::from_str(b).ok())
             .unwrap_or(Value::Null);
-        let quando_locale = voce.modificato_il.clone().unwrap_or_default();
-        let quando_remoto = remoto["modificato_il"].as_str().unwrap_or("").to_string();
-        let vince_remoto = quando_remoto > quando_locale;
         let eliminato_locale = locale["eliminato"] == json!(true);
         let eliminato_remoto = remoto["eliminato"] == json!(true);
-        // Eliminato per sempre da una parte e cambiato dall'altra: vince il più tardo.
+        // Eliminato per sempre da una parte e cambiato dall'altra: vince quello di qui.
         if eliminato_locale || eliminato_remoto {
-            if eliminato_locale && eliminato_remoto {
-                return Ok(remoto.clone());
-            }
-            return Ok(if vince_remoto { remoto.clone() } else { locale.clone() });
+            return Ok(if eliminato_remoto && eliminato_locale { remoto.clone() } else { locale.clone() });
         }
         let (b, l, r) = (campi(&base), campi(locale), campi(remoto));
         let mut fusi = Map::new();
@@ -270,8 +267,6 @@ impl Archivio {
             } else if k == "tag" {
                 fusi.insert(k.clone(), unisci_insiemi(vb, vl, vr));
                 continue;
-            } else if vince_remoto {
-                vr
             } else {
                 vl
             };
@@ -279,28 +274,15 @@ impl Archivio {
                 fusi.insert(k.clone(), v.clone());
             }
         }
-        // RB-36: tra cestino e modifica vince l'azione più tarda, anche se hanno toccato campi
-        // diversi della nota: una modifica più tarda la fa uscire dal cestino.
+        // RB-36: tra cestino e modifica vince l'azione di qui, anche se hanno toccato campi
+        // diversi della nota: una modifica arrivata per ultima la fa uscire dal cestino.
         if voce.tipo == "nota" {
             let k = "eliminata_il";
             let (cl, cr) = (l.get(k) != b.get(k), r.get(k) != b.get(k));
             let altro = |m: &Map<String, Value>| m.iter().any(|(c, v)| c != k && c != "provenienza" && c != "modificata" && b.get(c) != Some(v));
             if cl != cr && ((cl && altro(&r)) || (cr && altro(&l))) {
-                let tardo = if vince_remoto { &r } else { &l };
                 for c in [k, "provenienza"] {
-                    fusi.insert(c.to_string(), tardo.get(c).cloned().unwrap_or(Value::Null));
-                }
-            }
-        }
-        // RB-38: una cartella rinominata in due modi prende il nome più tardo e accanto nasce
-        // una cartella vuota con l'altro.
-        if voce.tipo == "cartella" {
-            let (nl, nr, nb) = (l.get("nome"), r.get("nome"), b.get("nome"));
-            if nl != nr && nl != nb && nr != nb {
-                let perdente = if vince_remoto { nl } else { nr };
-                if let Some(nome) = perdente.and_then(Value::as_str) {
-                    let madre = fusi.get("madre").and_then(Value::as_str).map(str::to_string);
-                    self.nasce_cartella_vuota(nome, madre.as_deref())?;
+                    fusi.insert(c.to_string(), l.get(c).cloned().unwrap_or(Value::Null));
                 }
             }
         }
@@ -317,7 +299,7 @@ impl Archivio {
         Ok(json!({
             "formato": FORMATO,
             "tipo": voce.tipo,
-            "modificato_il": if vince_remoto { quando_remoto } else { quando_locale },
+            "modificato_il": voce.modificato_il.clone().unwrap_or_default(),
             "eliminato": false,
             "campi": fusi,
         }))
@@ -553,9 +535,10 @@ impl Archivio {
         Ok(())
     }
 
-    /// RB-30: la nota, visibile, sta in una cartella nel cestino? Allora le cartelle tornano
-    /// com'erano, e la modifica va al server.
-    fn riporta_fuori_le_cartelle(&self, nota: &str) -> Esito<bool> {
+    /// RB-30: la nota, visibile, sta in una cartella nel cestino (o dentro una che c'è)? Allora
+    /// va tra le non organizzate, le cartelle restano nel cestino e lo spostamento va al server
+    /// (DEC-111).
+    fn togli_dalla_cartella_nel_cestino(&self, nota: &str) -> Esito<bool> {
         let riga: Option<(Option<String>, Option<String>)> = self
             .db
             .query_row("SELECT cartella, eliminata_il FROM note WHERE id = ?", [nota], |r| {
@@ -563,26 +546,15 @@ impl Archivio {
             })
             .optional()?;
         let Some((mut attuale, None)) = riga else { return Ok(false) };
-        let mut cambiato = false;
         while let Some(id) = attuale {
             let riga = self.cartella(&id)?;
             if riga.eliminata_il.is_some() {
-                self.db.execute(
-                    "UPDATE cartelle SET eliminata_il = NULL, provenienza = NULL WHERE id = ?",
-                    [&id],
-                )?;
-                cambiato = true;
+                self.db.execute("UPDATE note SET cartella = NULL WHERE id = ?", [nota])?;
+                return Ok(true);
             }
             attuale = riga.madre;
         }
-        Ok(cambiato)
-    }
-
-    /// RB-38: la cartella vuota con il nome che ha perso, accanto a quella rinominata.
-    fn nasce_cartella_vuota(&self, nome: &str, madre: Option<&str>) -> Esito<()> {
-        let scelta = self.risolvi(madre, nome, SeEsiste::Numero, None)?;
-        self.inserisci_cartella(&scelta.nome, madre)?;
-        Ok(())
+        Ok(false)
     }
 
     /// La copia in conflitto: stessa cartella e stessi tag dell'originale, il titolo seguito da

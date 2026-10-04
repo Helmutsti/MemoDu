@@ -225,12 +225,12 @@ describe("server", () => {
   });
 });
 
-describe("versioni precedenti a scalare (DEC-77, CA-10.11)", () => {
-  it("tutte nell'ultima ora, una all'ora nel giorno, una al giorno per 30 giorni", async () => {
+describe("versioni precedenti a scalare (DEC-77, DEC-113, CA-10.11)", () => {
+  it("tutte nell'ultima ora, una all'ora nel giorno, una al giorno per 7 giorni", async () => {
     const inizio = Date.parse("2026-08-01T00:00:00Z");
     let versione = 0;
-    // Una versione ogni 20 minuti per 40 giorni.
-    for (let t = inizio; t < inizio + 40 * 86400000; t += 20 * 60000) {
+    // Una versione ogni 20 minuti per 10 giorni.
+    for (let t = inizio; t < inizio + 10 * 86400000; t += 20 * 60000) {
       orologio = new Date(t);
       await sinc.scrivi(A, versione, `v${versione + 1}`);
       versione++;
@@ -240,9 +240,10 @@ describe("versioni precedenti a scalare (DEC-77, CA-10.11)", () => {
     expect(tenute[0]).toBe(0);
     // Nell'ultima ora ci sono tutte: la attuale e le due di 20 e 40 minuti prima.
     expect(tenute.filter((e) => e <= 3600000)).toHaveLength(4);
-    // Nessuna oltre i 30 giorni, e al massimo una per giorno oltre le 24 ore.
-    expect(Math.max(...tenute)).toBeLessThanOrEqual(30 * 86400000);
-    expect(tenute.filter((e) => e > 86400000).length).toBeLessThanOrEqual(30);
-    expect(tenute.length).toBeLessThan(100);
+    // Nessuna oltre i 7 giorni, e al massimo una per giorno oltre le 24 ore.
+    expect(Math.max(...tenute)).toBeLessThanOrEqual(7 * 86400000);
+    expect(Math.max(...tenute)).toBeGreaterThan(6 * 86400000);
+    expect(tenute.filter((e) => e > 86400000).length).toBeLessThanOrEqual(7);
+    expect(tenute.length).toBeLessThan(40);
   }, 120000);
 });

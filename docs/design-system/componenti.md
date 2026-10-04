@@ -657,7 +657,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 - **Contrasti:** testo primario su `sfondo-<stato>` ≥ 15:1 in chiaro e ≥ 12,6:1 in scuro; icone ≥ 4,72:1 in chiaro e ≥ 5,44:1 in scuro; pulsante tenue ≥ 4,5:1. In scuro il fondo è il gradino 800 (DEC-16).
 
 ### Esempi
-- ✅ Corretto: «Non riesco a sincronizzare da 24 ore. Le modifiche restano qui.»
+- ✅ Corretto: «Non riesco a sincronizzare da più di un'ora. Le modifiche restano qui.»
 - ❌ Scorretto: «Ops! Qualcosa è andato storto».
 
 ---

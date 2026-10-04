@@ -14,7 +14,7 @@ Al centro dell'area della nota di SC-01, 8 sotto la fascia in alto (DEC-86), liv
 
 | Avviso | Quando | Azione |
 |---|---|---|
-| Server irraggiungibile | Oltre 24 ore dall'ultima sincronizzazione riuscita (RB-40, DEC-82) | Ho capito |
+| Server irraggiungibile | Oltre un'ora dall'ultima sincronizzazione riuscita (RB-40, DEC-112) | Ho capito |
 | Errore di sincronizzazione | Subito (SF-32) | Ho capito |
 | Nota in conflitto | Subito (RB-39) | Apri l'altra |
 

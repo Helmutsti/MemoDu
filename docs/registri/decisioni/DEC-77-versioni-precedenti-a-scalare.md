@@ -1,6 +1,6 @@
 # DEC-77 – Versioni precedenti a scalare per 30 giorni
 
-**Data:** 2026-09-30 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-30 · **Stato:** Accettata (i 30 giorni sono superati da DEC-113: 7 giorni) · **Idea di origine:** —
 
 ## Contesto
 Con DEC-75 il server tiene le versioni precedenti di ogni blocco. Con il salvataggio dopo 2 s di pausa (RB-06) ogni sincronizzazione riuscita crea una versione: una nota scritta a lungo ne produce molte.

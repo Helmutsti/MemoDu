@@ -71,7 +71,7 @@ flowchart TD
 |---|---|---|---|
 | SF-01 Doppio invio | Comando Nuova nota ripetuto | Si apre una nuova nota ogni volta | Quella lasciata vuota sparisce: ne resta una sola (RB-10, DEC-39) |
 | SF-16 Vuoto | Nuova nota lasciata senza testo | Nessun messaggio | La nota vuota sparisce quando la si lascia (RB-10, DEC-39) |
-| SF-20 Riferimenti spariti | Alla sincronizzazione, la cartella di destinazione risulta nel cestino perché eliminata da un altro dispositivo | Nessun messaggio | La cartella esce dal cestino e torna com'era, con la nota dentro (RB-30) |
+| SF-20 Riferimenti spariti | Alla sincronizzazione, la cartella di destinazione risulta nel cestino perché eliminata da un altro dispositivo | Nessun messaggio | La nota va tra le non organizzate, la cartella resta nel cestino (RB-30) |
 
 ### Sfighe considerate e scartate
 - SF-02 Abbandono a metà, SF-10, SF-32: la nota è salvata di continuo (RB-06), vedi FL-02.

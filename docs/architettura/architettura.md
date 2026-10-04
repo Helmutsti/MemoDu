@@ -60,13 +60,13 @@ Le regole stanno solo nella copia di lavoro del client (`client/src-tauri/src/ar
 ## Sincronizzazione (RF-10, Fase 7 completa, codice del 30/09/2026)
 - **Codice:** server in `api/src/sincronizzazione.ts`; client in `client/src-tauri/src/sincronizzazione.rs` (il filo in background) e `archivio_sinc.rs` (blocchi, fusione e conflitti); schema 2 della copia di lavoro con i trigger che segnano gli elementi modificati. Se una modifica ricevuta cambia la nota aperta mentre la finestra ha ancora il testo vecchio, il testo della finestra va in una copia in conflitto e non la sovrascrive (DEC-06).
 - **Unità:** un blocco per elemento (nota, cartella, tag, impostazioni; gli avvisi restano sul dispositivo, DEC-90, DEC-91), con dentro i suoi collegamenti; il server conosce solo identificativo, versione, dimensione e ora, e tiene anche le versioni precedenti di ogni blocco. Confronti e conflitti li risolve il client (DEC-75).
-- **Modifiche e conflitti:** versione per blocco e numero d'ordine globale sul server; il dispositivo tiene la base di ogni elemento e confronta campo per campo; nei conflitti di RB-36 … RB-38 vince l'istante UTC più tardo della modifica sul dispositivo; le eliminazioni definitive diventano blocchi «eliminato» (DEC-76).
-- **Versioni precedenti:** a scalare per 30 giorni (tutte nell'ultima ora, una all'ora nell'ultimo giorno, una al giorno fino a 30); la versione attuale resta sempre (DEC-77).
+- **Modifiche e conflitti:** versione per blocco e numero d'ordine globale sul server; il dispositivo tiene la base di ogni elemento e confronta campo per campo; nei conflitti di RB-36 … RB-38 vince la modifica arrivata per ultima al server, cioè quella del dispositivo che fonde (DEC-109); le eliminazioni definitive diventano blocchi «eliminato» (DEC-76).
+- **Versioni precedenti:** a scalare per 7 giorni (tutte nell'ultima ora, una all'ora nell'ultimo giorno, una al giorno fino a 7); la versione attuale resta sempre (DEC-77, DEC-113).
 - **Cifratura:** per ora i blocchi viaggiano in chiaro, con l'intestazione del formato pronta; il server è in rete dietro HTTPS e gettone, con le note in chiaro sul server come rischio accettato (DEC-104); al passaggio si rimanda tutto cifrato e si cancellano le versioni in chiaro (DEC-78).
 - **Credenziali:** nel file `credenziali` della cartella dei dati, letto a ogni avvio; si generano con `npm run credenziali -w @memodu/api` (in locale le genera l'API al primo avvio) e il server conosce solo l'impronta del gettone; gettone sbagliato: 401 e schermata di blocco (DEC-79, DEC-104).
 - **Server cambiato:** l'archivio del server ha un identificativo; se cambia, il client azzera versioni e numero d'ordine e rimanda tutto (`azzera_sinc`, DEC-105).
 - **Quando:** all'avvio, qualche secondo dopo ogni salvataggio, ogni 30 s e al ritorno della rete; senza rete i tentativi si diradano da 5 s fino a 5 minuti (DEC-80).
-- **Avviso:** «server irraggiungibile» dopo 24 ore senza sincronizzazioni riuscite (RB-40, DEC-82).
+- **Avviso:** «server irraggiungibile» dopo un'ora senza sincronizzazioni riuscite (RB-40, DEC-112).
 - **Versioni di app e server:** ogni richiesta porta la versione del protocollo; se incompatibile, avviso «errore di sincronizzazione» e si continua sulla copia di lavoro (DEC-83).
 
 ## Schema generale

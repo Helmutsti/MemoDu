@@ -1,7 +1,7 @@
 // Deposito della sincronizzazione (RF-10, DEC-75 … DEC-83). Il server non legge i blocchi:
 // conserva per ogni elemento la versione attuale e le precedenti in PostgreSQL (DEC-105), con
-// numero d'ordine, ora e dimensione. Le versioni precedenti si sfoltiscono a scalare per 30
-// giorni (DEC-77). Il server conosce solo l'impronta del gettone (DEC-79).
+// numero d'ordine, ora e dimensione. Le versioni precedenti si sfoltiscono a scalare per 7
+// giorni (DEC-77, DEC-113). Il server conosce solo l'impronta del gettone (DEC-79).
 
 import { createHash, timingSafeEqual } from "node:crypto";
 import { LIMITE_PAGINA_BYTE } from "./costanti.js";
@@ -12,6 +12,8 @@ export const PROTOCOLLO = 1;
 
 const ORA_MS = 60 * 60 * 1000;
 const GIORNO_MS = 24 * ORA_MS;
+/** Fin dove arrivano le versioni precedenti (DEC-113). */
+const GIORNI_STORIA = 7;
 /** Blocco consultivo delle scritture: una alla volta, così i numeri d'ordine si vedono in
  * ordine anche con più istanze del server (DEC-105). */
 const BLOCCO_SCRITTURE = 4317;
@@ -150,8 +152,8 @@ export class ArchivioSincronizzazione {
   }
 
   /**
-   * Versioni precedenti a scalare (DEC-77): tutte nell'ultima ora, l'ultima di ogni ora
-   * nell'ultimo giorno, l'ultima di ogni giorno fino a 30 giorni; la versione attuale resta
+   * Versioni precedenti a scalare (DEC-77, DEC-113): tutte nell'ultima ora, l'ultima di ogni
+   * ora nell'ultimo giorno, l'ultima di ogni giorno fino a 7 giorni; la versione attuale resta
    * sempre. Guarda solo versione e ora.
    */
   private async sfoltisci(sql: Sql, id: string): Promise<void> {
@@ -165,7 +167,7 @@ export class ArchivioSincronizzazione {
       let gruppo: string | null;
       if (eta <= ORA_MS) gruppo = `v${v.versione}`;
       else if (eta <= GIORNO_MS) gruppo = `h${Math.floor(Date.parse(v.ora) / ORA_MS)}`;
-      else if (eta <= 30 * GIORNO_MS) gruppo = `g${Math.floor(Date.parse(v.ora) / GIORNO_MS)}`;
+      else if (eta <= GIORNI_STORIA * GIORNO_MS) gruppo = `g${Math.floor(Date.parse(v.ora) / GIORNO_MS)}`;
       else gruppo = null;
       // Le versioni vanno dalla più recente: la prima di ogni gruppo è l'ultima di quell'ora
       // o di quel giorno, e resta.

@@ -1,6 +1,6 @@
 # DEC-76 – Come si riconoscono modifiche e conflitti
 
-**Data:** 2026-09-30 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-30 · **Stato:** Accettata (la regola «più recente» è superata da DEC-109: vince l'arrivo al server) · **Idea di origine:** —
 
 ## Contesto
 Con DEC-75 ogni elemento viaggia come un blocco cifrato con una versione, e il server tiene le versioni precedenti. Restano da stabilire come si riconosce che un elemento è cambiato altrove e cosa vuol dire «più recente» nei conflitti di RB-36 (eliminata e modificata), RB-37 (spostata in due posti) e RB-38 (rinominata in due modi). Gli orologi dei dispositivi possono essere sbagliati (SF-14).

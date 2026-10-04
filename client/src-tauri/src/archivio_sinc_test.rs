@@ -180,8 +180,8 @@ fn il_testo_cambiato_su_due_dispositivi_tiene_tutte_e_due_le_versioni() {
 }
 
 #[test]
-fn una_nota_spostata_in_due_posti_resta_nello_spostamento_piu_tardo() {
-    // CA-10.4, RB-37
+fn una_nota_spostata_in_due_posti_resta_nello_spostamento_arrivato_per_ultimo() {
+    // CA-10.4, RB-37, DEC-109: conta l'arrivo al server, non l'ora dei dispositivi.
     let (mut a, mut b, mut s) = due();
     for nome in ["Uno", "Due"] {
         a.a.crea_cartella("", Some(nome), SeEsiste::Chiedi).unwrap();
@@ -189,9 +189,8 @@ fn una_nota_spostata_in_due_posti_resta_nello_spostamento_piu_tardo() {
     let id = nota(&mut a, "N", "", None);
     a.sincronizza(&mut s);
     b.sincronizza(&mut s);
-    b.passa(60);
     b.a.sposta_nota(&id, "Due").unwrap();
-    a.passa(10);
+    a.passa(60);
     a.a.sposta_nota(&id, "Uno").unwrap();
     a.sincronizza(&mut s);
     b.sincronizza(&mut s);
@@ -201,33 +200,34 @@ fn una_nota_spostata_in_due_posti_resta_nello_spostamento_piu_tardo() {
 }
 
 #[test]
-fn nel_cestino_e_modificata_vince_l_azione_piu_tarda() {
-    // CA-10.5, RB-36
+fn nel_cestino_e_modificata_vince_l_azione_arrivata_per_ultima() {
+    // CA-10.5, RB-36, DEC-109
     let (mut a, mut b, mut s) = due();
     let id = nota(&mut a, "N", "prima", None);
     a.sincronizza(&mut s);
     b.sincronizza(&mut s);
+    a.passa(30);
     a.a.cestina_nota(&id).unwrap();
-    b.passa(30);
     scrivi(&mut b, &id, "modificata dopo");
     a.sincronizza(&mut s);
     b.sincronizza(&mut s);
     a.sincronizza(&mut s);
     for d in [&mut a, &mut b] {
-        let n = d.a.leggi(&id).expect("la modifica più tarda la fa uscire dal cestino");
+        let n = d.a.leggi(&id).expect("la modifica arrivata per ultima la fa uscire dal cestino");
         assert_eq!(n.contenuto, "modificata dopo");
     }
 }
 
 #[test]
-fn una_cartella_rinominata_in_due_modi_prende_il_nome_piu_tardo_e_lascia_l_altro() {
-    // CA-10.6, RB-38
+fn una_cartella_rinominata_in_due_modi_prende_il_nome_arrivato_per_ultimo() {
+    // CA-10.6, RB-38, DEC-109, DEC-110
     let (mut a, mut b, mut s) = due();
     a.a.crea_cartella("", Some("Idee"), SeEsiste::Chiedi).unwrap();
+    let id = nota(&mut a, "Dentro", "", Some("Idee"));
     a.sincronizza(&mut s);
     b.sincronizza(&mut s);
+    a.passa(20);
     a.a.rinomina_cartella("Idee", "Progetti", SeEsiste::Chiedi).unwrap();
-    b.passa(20);
     b.a.rinomina_cartella("Idee", "Lavori", SeEsiste::Chiedi).unwrap();
     a.sincronizza(&mut s);
     b.sincronizza(&mut s);
@@ -235,13 +235,14 @@ fn una_cartella_rinominata_in_due_modi_prende_il_nome_piu_tardo_e_lascia_l_altro
     for d in [&mut a, &mut b] {
         let mut nomi: Vec<String> = d.a.albero().unwrap().cartelle.into_iter().map(|c| c.nome).collect();
         nomi.sort();
-        assert_eq!(nomi, vec!["Lavori", "Progetti"]);
+        assert_eq!(nomi, vec!["Lavori"], "niente cartella vuota con il nome che ha perso");
+        assert_eq!(d.a.leggi(&id).unwrap().cartella, "Lavori");
     }
 }
 
 #[test]
-fn una_nota_spostata_in_una_cartella_cestinata_altrove_la_riporta_fuori() {
-    // CA-10.7, RB-30
+fn una_nota_spostata_in_una_cartella_cestinata_altrove_va_tra_le_non_organizzate() {
+    // CA-10.7, RB-30, DEC-111
     let (mut a, mut b, mut s) = due();
     a.a.crea_cartella("", Some("Archivio"), SeEsiste::Chiedi).unwrap();
     let id = nota(&mut a, "N", "", None);
@@ -253,8 +254,9 @@ fn una_nota_spostata_in_una_cartella_cestinata_altrove_la_riporta_fuori() {
     b.sincronizza(&mut s);
     a.sincronizza(&mut s);
     for d in [&mut a, &mut b] {
-        assert_eq!(d.a.leggi(&id).unwrap().cartella, "Archivio");
-        assert!(d.a.elenca_cestino().unwrap().is_empty());
+        assert_eq!(d.a.leggi(&id).unwrap().cartella, "", "la nota è tra le non organizzate");
+        assert_eq!(d.a.elenca_cestino().unwrap().len(), 1, "la cartella resta nel cestino");
+        assert!(d.a.da_inviare().unwrap().is_empty());
     }
 }
 

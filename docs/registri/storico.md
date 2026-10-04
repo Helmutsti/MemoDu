@@ -421,6 +421,13 @@
 | 02/10/2026 | Manuel Cucca | Rilascio: gli installatori si compilano per Windows e macOS Apple Silicon; tolto macOS Intel. Versione 0.1.2 | Tempi di compilazione |
 | 02/10/2026 | Agente IA | Piano di test della sincronizzazione TC-86 … TC-103, con gli esiti della prova con due computer; CA-10.11 e CA-14.1 adattati all'archivio in Neon e alle credenziali generate da comando (da confermare) | DEC-104, DEC-105 |
 | 02/10/2026 | Manuel Cucca | Il testo della nota occupa tutta la larghezza del foglio, con 24 ai lati; tolta la misura di lettura di 640 (CMP-20, nel codice; mockup da aggiornare) | DEC-107 |
-
 | 04/10/2026 | Codex, su richiesta di Manuel Cucca | Schermate e piano di test RF-01: M adattata al tema sia nella barra dei menu sia nel Dock su macOS; implementazione tecnica proposta, verifica visiva pendente | DEC-108 |
 | 04/10/2026 | Codex, su richiesta di Manuel Cucca | Pulizia della vecchia cartella generata app e riesame delle modifiche locali; avanzamento indica i percorsi attuali del markdown conservato, senza modificare DEC-64; idea MCP/Siri recuperata con numero libero ID-35 | DEC-64, ID-35 |
+| 04/10/2026 | Manuel Cucca | Nei conflitti di spostamento, cestino contro modifica e rinomina vince la modifica arrivata per ultima al server, non l'ora dei dispositivi; confermati CA-10.1 … CA-10.4 | DEC-109 |
+| 04/10/2026 | Manuel Cucca | Una cartella rinominata in due modi prende il nome arrivato per ultimo, senza la cartella vuota con l'altro; confermati CA-10.5 e CA-10.6 | DEC-110 |
+| 04/10/2026 | Manuel Cucca | Una nota finita in una cartella mandata nel cestino da un altro dispositivo va tra le non organizzate; la cartella resta nel cestino (RB-30); confermato CA-10.7 | DEC-111 |
+| 04/10/2026 | Manuel Cucca | L'avviso «server irraggiungibile» compare dopo un'ora senza sincronizzare, non più dopo 24 ore; confermati CA-10.8 e CA-10.9 | DEC-112 |
+| 04/10/2026 | Manuel Cucca | Il server tiene le versioni precedenti per 7 giorni, non più 30; confermati CA-10.10 e CA-10.11, quindi tutti i criteri di RF-10 | DEC-113 |
+| 04/10/2026 | Manuel Cucca | Confermati i criteri CA-14.1 … CA-14.6 di RF-14 | — |
+| 04/10/2026 | Manuel Cucca | Credenziali perse o finite in mani sbagliate: se ne generano di nuove; procedura nel runbook; il recupero della chiave va con la cifratura | DEC-114 |
+| 04/10/2026 | Manuel Cucca | Approvato il piano di test della sincronizzazione TC-86 … TC-103; RF-10 (senza cifratura) e RF-14 a Fase 9 · Pronto | — |

@@ -3,7 +3,7 @@
 // senza rete, a tentativi sempre più radi fino a 5 minuti (DEC-80). Senza il file `credenziali`
 // non fa niente e si lavora in locale (DEC-84). L'interfaccia riceve l'evento
 // «sincronizzazione»: note cambiate, conflitti (RB-39), credenziali rifiutate (RB-57), avvisi
-// di errore o di server irraggiungibile da più di 24 ore (RB-40, DEC-82, DEC-83).
+// di errore o di server irraggiungibile da più di un'ora (RB-40, DEC-112, DEC-83).
 // I blocchi viaggiano in chiaro finché la cifratura è spenta (DEC-78).
 
 use std::sync::mpsc::{Receiver, RecvTimeoutError, Sender};
@@ -26,7 +26,7 @@ const INTERVALLO: Duration = Duration::from_secs(30);
 const DOPO_UNA_MODIFICA: Duration = Duration::from_secs(3);
 const PRIMO_RITENTATIVO: Duration = Duration::from_secs(5);
 const ULTIMO_RITENTATIVO: Duration = Duration::from_secs(5 * 60);
-const SOGLIA_IRRAGGIUNGIBILE_ORE: i64 = 24;
+const SOGLIA_IRRAGGIUNGIBILE_ORE: i64 = 1;
 const ATTESA_RICHIESTA: Duration = Duration::from_secs(15);
 
 /// Il segnale che fa partire una sincronizzazione presto: dopo una modifica o con Riprova.
@@ -257,8 +257,8 @@ fn ricevuta(v: &Value) -> Option<Ricevuta> {
     })
 }
 
-/// Server irraggiungibile da più di 24 ore dall'ultima sincronizzazione riuscita o, se non ce
-/// n'è mai stata una, dal primo tentativo (RB-40, DEC-82).
+/// Server irraggiungibile da più di un'ora dall'ultima sincronizzazione riuscita o, se non ce
+/// n'è mai stata una, dal primo tentativo (RB-40, DEC-112).
 fn irraggiungibile_da_troppo(app: &AppHandle) -> bool {
     let ultima = con_archivio(app, |a| {
         Ok(a.stato_sinc("ultima_riuscita")?.or(a.stato_sinc("primo_tentativo")?))

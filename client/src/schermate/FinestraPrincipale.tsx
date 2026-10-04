@@ -77,7 +77,7 @@ const NUOVA_CARTELLA = "Nuova cartella";
 const TESTO_CONFLITTO =
   "Una nota è stata modificata su due dispositivi: ci sono tutte e due le versioni.";
 const TESTO_IRRAGGIUNGIBILE =
-  "Il server non risponde da più di un giorno: le modifiche restano su questo computer.";
+  "Il server non risponde da più di un'ora: le modifiche restano su questo computer.";
 const TESTO_ERRORE_SINC = "La sincronizzazione non è riuscita: riprovo da sola.";
 const TESTO_PROTOCOLLO = "Memodu e il server hanno versioni diverse: aggiornali per sincronizzare.";
 const TESTO_CREDENZIALI =

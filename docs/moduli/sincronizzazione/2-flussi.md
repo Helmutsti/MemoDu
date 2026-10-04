@@ -14,7 +14,7 @@ flowchart TD
     X -- Sì --> C{Il server è raggiungibile?}
     C -- No --> D{Da quanto non si sincronizza?}
     D -- Poco --> A
-    D -- Oltre 24 ore --> W[Avviso: server irraggiungibile - RB-40, DEC-82]
+    D -- Oltre un'ora --> W[Avviso: server irraggiungibile - RB-40, DEC-112]
     W --> A
     C -- Sì --> E{L'accesso è valido?}
     E -- No --> V[Schermata di blocco - RB-57, FL-08]
@@ -25,10 +25,10 @@ flowchart TD
     H -- No --> I[Si tiene la versione più aggiornata]
     H -- Sì --> J{Che tipo di conflitto?}
     J -- Testo della nota --> K[Nasce una nota in conflitto nella stessa cartella + avviso - DEC-06, RB-39]
-    J -- Eliminata e modificata --> L[Vince l'azione più recente - RB-36]
-    J -- Nota spostata --> M[Vince la posizione più recente - RB-37]
-    J -- Cartella rinominata --> N[Nome più recente + cartella vuota con l'altro nome - RB-38]
-    J -- Nota finita in una cartella eliminata --> O[La cartella torna dal cestino - RB-30]
+    J -- Eliminata e modificata --> L[Vince l'azione arrivata per ultima - RB-36]
+    J -- Nota spostata --> M[Vince lo spostamento arrivato per ultimo - RB-37]
+    J -- Cartella rinominata --> N[Nome arrivato per ultimo - RB-38]
+    J -- Nota finita in una cartella eliminata --> O[La nota va tra le non organizzate - RB-30]
     I --> A
     K --> A
     L --> A
@@ -45,10 +45,10 @@ flowchart TD
 | Sfiga | Rilevamento | Comunicazione | Via d'uscita |
 |---|---|---|---|
 | SF-08 Connessione che cade a metà | La sincronizzazione non si completa | Nessun messaggio, se dura poco | Riprova alla sincronizzazione successiva (DEC-02) |
-| SF-20 Riferimenti spariti | Nota creata o spostata in una cartella eliminata altrove | Nessun messaggio | La cartella torna dal cestino (RB-30) |
+| SF-20 Riferimenti spariti | Nota creata o spostata in una cartella eliminata altrove | Nessun messaggio | La nota va tra le non organizzate, la cartella resta nel cestino (RB-30) |
 | SF-22 Modifica simultanea | Lo stesso elemento cambiato su due dispositivi | Avviso solo per le note in conflitto (RB-39) | DEC-06, RB-36, RB-37, RB-38 |
 | SF-25 Accesso revocato | Il server rifiuta le credenziali | Schermata di blocco (RB-57) | Si corregge la configurazione dell'app (FL-08) |
-| SF-30 Servizio esterno fuori uso | Server irraggiungibile da più di 24 ore (DEC-82) | Avviso (RB-40) | Le modifiche restano sulla copia di lavoro finché il server non torna |
+| SF-30 Servizio esterno fuori uso | Server irraggiungibile da più di un'ora (DEC-112) | Avviso (RB-40) | Le modifiche restano sulla copia di lavoro finché il server non torna |
 | SF-31 Notifiche perse | Un conflitto avviene mentre l'utente non guarda | L'avviso resta finché non lo si chiude o non si chiude la finestra (DEC-90) | La nota in conflitto resta nella cartella, riconoscibile dal titolo (DEC-06) |
 | SF-33 Versioni diverse di app e server | Il server non riconosce la versione del protocollo | Avviso: errore di sincronizzazione (RB-40) | Si continua sulla copia di lavoro; si riparte da soli quando le versioni tornano compatibili (DEC-83) |
 | SF-32 Errore a metà operazione | Errore durante l'invio o la ricezione | Avviso (RB-40) | Riprova alla sincronizzazione successiva; la copia di lavoro resta intatta |
@@ -107,11 +107,11 @@ flowchart TD
 ## Regole di business
 | Codice | Regola | Usata in |
 |---|---|---|
-| RB-36 | Se una nota è stata eliminata su un dispositivo e modificata su un altro, vince l'azione più recente: se è la modifica, la nota esce dal cestino con le modifiche; se è l'eliminazione, la nota resta nel cestino con le modifiche comprese | FL-07 |
-| RB-37 | Se una nota è stata spostata in cartelle diverse su due dispositivi, resta nella posizione più recente | FL-07 |
-| RB-38 | Se una cartella è stata rinominata in modo diverso su due dispositivi, prende il nome più recente; accanto nasce una cartella vuota con l'altro nome, come segnale del conflitto | FL-07 |
+| RB-36 | Se una nota è stata eliminata su un dispositivo e modificata su un altro, vince l'azione arrivata per ultima al server (DEC-109): se è la modifica, la nota esce dal cestino con le modifiche; se è l'eliminazione, la nota resta nel cestino con le modifiche comprese | FL-07 |
+| RB-37 | Se una nota è stata spostata in cartelle diverse su due dispositivi, resta nella cartella dello spostamento arrivato per ultimo al server (DEC-109) | FL-07 |
+| RB-38 | Se una cartella è stata rinominata in modo diverso su due dispositivi, prende il nome arrivato per ultimo al server (DEC-109), senza cartella vuota con l'altro (DEC-110) | FL-07 |
 | RB-39 | Quando nasce una nota in conflitto (DEC-06) compare un avviso con il collegamento alla nota. La nota in conflitto ha lo stesso titolo seguito da "(copia in conflitto)" | FL-07 |
-| RB-40 | La sincronizzazione è invisibile finché va tutto bene. Compare un avviso solo per: errore di sincronizzazione (subito), server irraggiungibile per più di 24 ore dall'ultima sincronizzazione riuscita (DEC-82) | FL-07 |
+| RB-40 | La sincronizzazione è invisibile finché va tutto bene. Compare un avviso solo per: errore di sincronizzazione (subito), server irraggiungibile per più di un'ora dall'ultima sincronizzazione riuscita (DEC-112) | FL-07 |
 | RB-41 | ~~Uscendo (logout), le modifiche in attesa vengono sincronizzate e poi la copia di lavoro su quel dispositivo viene cancellata~~ Superata da DEC-13 | — |
 | RB-42 | ~~Non c'è limite ai tentativi di accesso con password sbagliata (rischio accettato, DEC-07)~~ Superata da DEC-13 | — |
 | RB-43 | ~~La password non ha requisiti di lunghezza o complessità (rischio accettato, DEC-07)~~ Superata da DEC-13 | — |
