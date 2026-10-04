@@ -7,6 +7,8 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+## [0.1.7] – 2026-10-04
+
 ### Aggiunto
 - Trascina dentro Memodu cartelle e file .md o .txt da Esplora file o dal Finder: entrano subito in Locale
 
