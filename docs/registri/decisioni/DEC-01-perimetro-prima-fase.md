@@ -1,6 +1,6 @@
 # DEC-01 – Perimetro della prima fase
 
-**Data:** 2026-09-24 · **Stato:** Accettata · **Idea di origine:** ID-05, ID-06
+**Data:** 2026-09-24 · **Stato:** Accettata (modificata da DEC-115: anche i file locali, non sincronizzati) · **Idea di origine:** ID-05, ID-06
 
 ## Contesto
 La visione prevede un'app cross-platform, sincronizzata, con più utenti e più modalità di lavoro. Affrontare tutto insieme allungherebbe i tempi prima di avere un prodotto usabile.

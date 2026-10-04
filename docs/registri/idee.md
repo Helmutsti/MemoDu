@@ -8,7 +8,7 @@
 |---|---|---|---|---|---|---|
 | ID-01 | Note in testo semplice, oltre che in markdown | Manuel Cucca | 24/09/2026 | Parcheggiata | — | Una nota markdown senza formattazione è già testo semplice. Da rivalutare dopo la prima fase, in base all'uso reale |
 | ID-02 | Vault: cassaforte protetta da una password aggiuntiva in cui spostare le note riservate | Manuel Cucca | 24/09/2026 | Rifiutata | — | Coperta dal blocco con password di workspace e note (RF-09) |
-| ID-03 | Modifica di file locali (solo desktop): inserire file dal disco e scriverli su disco, senza sincronizzarli nel cloud | Manuel Cucca | 24/09/2026 | Parcheggiata | — | In contrasto con "solo cloud" (DEC-01). Da rivalutare insieme a ID-06 dopo la prima fase |
+| ID-03 | Modifica di file locali (solo desktop): inserire file dal disco e scriverli su disco, senza sincronizzarli nel cloud | Manuel Cucca | 24/09/2026 | Accettata | RF-17 | Parcheggiata per DEC-01; riaperta il 04/10/2026 come voce «Locale» nella colonna, nella prima fase (DEC-115) |
 | ID-04 | Link interni tra note dentro il markdown | Manuel Cucca | 24/09/2026 | Parcheggiata | — | Non nella prima fase. Da rivalutare dopo; se accettata richiede un identificativo stabile per ogni nota |
 | ID-05 | Più utenti ospitati sulla piattaforma | Manuel Cucca | 24/09/2026 | Parcheggiata | — | La prima fase è mono-utente e il database non deve prevedere più utenti (DEC-01). Da rivalutare a fine prima fase |
 | ID-06 | Modalità offline o solo locale | Manuel Cucca | 24/09/2026 | Parcheggiata | — | La prima fase è solo cloud (DEC-01). Da rivalutare a fine prima fase |
