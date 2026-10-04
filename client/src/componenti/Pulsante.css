@@ -81,6 +81,9 @@
   background: var(--sfondo-pieno);
   color: var(--testo-su-pieno);
 }
+.pulsante-diviso > .suggerimento-ancora {
+  height: 100%;
+}
 :root[data-tastiera] .pulsante-diviso:has(:focus-visible) {
   overflow: visible;
   outline: var(--focus-spessore) solid var(--focus-anello);

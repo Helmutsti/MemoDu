@@ -8,6 +8,8 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 ## [Non rilasciato]
 
 ### Corretto
+- Nella nota rapida l’hover della freccia di «Chiudi» copre tutta la sua metà del pulsante
+- Il bordo ridimensionabile della sidebar non copre più il menu aperto con il tasto destro su una nota
 - Sul Mac la M nella barra dei menu conserva il colore adattato dal sistema, e la M nel Dock segue l’aspetto chiaro o scuro mentre Memodu è aperto (RF-01)
 
 ## [0.1.3] – 2026-10-02
