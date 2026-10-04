@@ -1,5 +1,5 @@
 // SC-01 Finestra principale, versione del frammento Must B «Smistare» (DEC-36): colonna con
-// Non organizzate e Cartelle (CMP-14), area della nota o il cestino (SC-04). Un clic sul titolo
+// la sezione CLOUD (CMP-14, DEC-119), area della nota o il cestino (SC-04). Un clic sul titolo
 // del percorso apre Info (CMP-24, DEC-96), che ha anche Sposta in, Chiudi nota ed Elimina; il
 // tasto destro su una nota della colonna apre la stessa Info al centro. In cima alla colonna la
 // ricerca, anche con Ctrl + K (RF-08, DEC-94), e la ricerca avanzata con Ctrl + Maiusc + K
@@ -791,7 +791,7 @@ export function FinestraPrincipale(): ReactElement {
     if (percorso === null || campo) return;
     const riga =
       percorso === ""
-        ? document.querySelector<HTMLElement>('button[aria-label="Nuova cartella"]')
+        ? document.querySelector<HTMLElement>('button[aria-label="Aggiungi"]')
         : document.querySelector<HTMLElement>(`[data-cartella="${CSS.escape(percorso)}"]`);
     if (!riga) return;
     rigaDelFocus.current = null;

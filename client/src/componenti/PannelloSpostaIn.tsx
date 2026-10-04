@@ -1,4 +1,4 @@
-// CMP-11 Pannello a comparsa, variante Sposta in: campo di ricerca, poi «Non organizzate» e
+// CMP-11 Pannello a comparsa, variante Sposta in: campo di ricerca, poi «CLOUD» (la radice, DEC-119) e
 // l'albero delle cartelle come voci di menu, con spazio-rientro (24) per livello, la cartella
 // chiusa o aperta al posto della freccia (DEC-99) e la spunta sulla cartella attuale.
 // Scrivendo si filtra l'albero, le frecce scelgono, Invio sposta, Esc o un clic fuori chiudono
@@ -25,7 +25,7 @@ interface Voce {
   percorso: Percorso;
   nome: string;
   livello: number;
-  /** undefined per «Non organizzate», che non ha l'icona della cartella. */
+  /** undefined per «CLOUD», la radice, che non ha l'icona della cartella. */
   aperta?: boolean;
   haFigli: boolean;
 }
@@ -84,9 +84,7 @@ export function PannelloSpostaIn({
   useEffect(() => campo.current?.focus(), []);
 
   const voci = useMemo(() => {
-    const risultato: Voce[] = [
-      { percorso: "", nome: "Non organizzate", livello: 0, haFigli: false },
-    ];
+    const risultato: Voce[] = [{ percorso: "", nome: "CLOUD", livello: 0, haFigli: false }];
     const visita = (elenco: Cartella[], livello: number): boolean => {
       let trovata = false;
       for (const c of elenco) {
@@ -110,7 +108,7 @@ export function PannelloSpostaIn({
       return trovata;
     };
     visita(cartelle, 0);
-    if (filtro !== "" && !contiene("Non organizzate", filtro)) risultato.shift();
+    if (filtro !== "" && !contiene("CLOUD", filtro)) risultato.shift();
     return risultato;
   }, [cartelle, aperte, filtro]);
 

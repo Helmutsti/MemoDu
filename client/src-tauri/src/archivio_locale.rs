@@ -470,8 +470,8 @@ impl Archivio {
         })
     }
 
-    /// Il contenuto di una cartella: prima le sottocartelle, poi i file .md e .txt, in ordine
-    /// alfabetico; niente elementi nascosti (RB-75). I file nuovi non ancora salvati ci sono
+    /// Il contenuto di una cartella: prima i file .md e .txt, poi le sottocartelle, in ordine
+    /// alfabetico (RB-75, DEC-119); niente elementi nascosti. I file nuovi non ancora salvati ci sono
     /// come «Senza titolo» (RB-81).
     pub fn elenca_locale(&mut self, percorso: &str) -> Esito<Vec<VoceLocale>> {
         self.con_riconnessione(|a| {
@@ -515,8 +515,8 @@ impl Archivio {
                     nuovo: true,
                 })
                 .collect();
-            voci.extend(cartelle);
             voci.extend(file);
+            voci.extend(cartelle);
             Ok(voci)
         })
     }

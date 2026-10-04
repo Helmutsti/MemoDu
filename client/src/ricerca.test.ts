@@ -58,7 +58,7 @@ describe("testi dei risultati", () => {
   it("cartella e data", () => {
     expect(dettagliRisultato(risultato())).toMatch(/^Lavoro › Clienti · \d\d\/09\/2026$/);
     expect(dettagliRisultato(risultato({ cartella: "", data: "2026-09-12" }))).toBe(
-      "Non organizzate · 12/09/2026",
+      "CLOUD · 12/09/2026",
     );
   });
 

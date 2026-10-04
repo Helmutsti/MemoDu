@@ -1,6 +1,7 @@
-// Colonna di SC-01, frammento Must B (CMP-14): sezione Non organizzate (RB-60) e sezione
-// Cartelle con l'albero: sottocartelle poi note, in ordine alfabetico (RB-64, RB-65), con il
-// numero di note (RB-56). Trascinamento su cartelle, titoli di sezione e cestino in fondo
+// Colonna di SC-01 (CMP-14): una sola sezione CLOUD (DEC-119) con nella radice le note non
+// organizzate, per ultima modifica (RB-60), e poi l'albero delle cartelle; a ogni livello prima le
+// note, poi le sottocartelle, in ordine alfabetico (RB-64, RB-65), con il numero di note (RB-56).
+// Il + del titolo apre il menu Aggiungi: Nuova nota e Nuova cartella. Trascinamento su cartelle, titoli di sezione e cestino in fondo
 // (FL-05, RB-24); tasto destro su una cartella o su una nota; tastiera come CMP-06 (RNF-04).
 // In fondo la riga Cestino, che durante il trascinamento diventa la zona di rilascio (DEC-40), e
 // sotto la riga Impostazioni (DEC-91). In cima, sotto la riga della puntina, la ricerca (DEC-94).
@@ -26,6 +27,8 @@ import {
   RigaSezione,
 } from "../componenti/RigaColonna";
 import { StatoVuotoColonna } from "../componenti/StatoVuoto";
+import { Menu } from "../componenti/Menu";
+import { FileText, Folder } from "lucide-react";
 import { avviaFantasma } from "../componenti/fantasma";
 import { AreaScorrevole } from "../componenti/AreaScorrevole";
 
@@ -97,7 +100,9 @@ export function accetta(t: Trascinato, d: Destinazione): boolean {
 }
 
 export function Colonna(p: Proprieta): ReactElement {
-  const [sezioni, setSezioni] = useState({ nonOrganizzate: true, cartelle: true });
+  const [cloudAperta, setCloudAperta] = useState(true);
+  /** Menu Aggiungi del + di CLOUD (DEC-119). */
+  const [aggiungi, setAggiungi] = useState<{ x: number; y: number } | null>(null);
   const [sopra, setSopra] = useState<string | null>(null);
 
   // CMP-30: l'ombra del fondo compare solo quando l'ultima sezione finisce sotto di lui, cioè
@@ -230,8 +235,8 @@ export function Colonna(p: Proprieta): ReactElement {
         )}
         {aperta && conContenuto && (
           <ul role="group" className="colonna-elenco">
-            {sottocartelle(c.cartelle, c.percorso, livello + 1)}
             {c.note.map((v) => rigaNota(v, c.percorso, livello))}
+            {sottocartelle(c.cartelle, c.percorso, livello + 1)}
           </ul>
         )}
       </li>
@@ -261,7 +266,8 @@ export function Colonna(p: Proprieta): ReactElement {
 
   const { nonOrganizzate, cartelle } = p.albero;
   const radice: Destinazione = { tipo: "radice" };
-  const alberoVuoto = cartelle.length === 0 && p.campo?.tipo !== "nuova";
+  const vuota =
+    nonOrganizzate.note.length === 0 && cartelle.length === 0 && p.campo?.tipo !== "nuova";
 
   return (
     <nav
@@ -285,47 +291,51 @@ export function Colonna(p: Proprieta): ReactElement {
           >
             <div className="colonna-sezione">
               <RigaSezione
-                titolo="Non organizzate"
-                conteggio={nonOrganizzate.conteggio}
-                aperta={sezioni.nonOrganizzate}
-                onApriChiudi={() =>
-                  setSezioni((s) => ({ ...s, nonOrganizzate: !s.nonOrganizzate }))
-                }
-                nomeAggiungi="Nuova nota"
-                onAggiungi={p.onNuovaNota}
-                sopra={p.trascinato?.tipo === "nota" && sopra === chiave(radice)}
-                {...(p.trascinato?.tipo === "nota" ? destinazione(radice) : {})}
+                titolo="Cloud"
+                aperta={cloudAperta}
+                onApriChiudi={() => setCloudAperta((a) => !a)}
+                nomeAggiungi="Aggiungi"
+                onAggiungi={(e) => {
+                  const r = e.currentTarget.getBoundingClientRect();
+                  setAggiungi(aggiungi ? null : { x: r.left, y: r.bottom + 4 });
+                }}
+                sopra={p.trascinato !== null && sopra === chiave(radice)}
+                {...(p.trascinato ? destinazione(radice) : {})}
               />
-              {sezioni.nonOrganizzate &&
-                (nonOrganizzate.note.length === 0 ? (
-                  <StatoVuotoColonna testo="Le note che scrivi compaiono qui." />
+              {cloudAperta &&
+                (vuota ? (
+                  <StatoVuotoColonna testo="Nessuna nota. Crea con +" />
                 ) : (
                   <ul role="group" className="colonna-elenco">
                     {nonOrganizzate.note.map((v) => rigaNota(v, ""))}
-                  </ul>
-                ))}
-            </div>
-            <div className="colonna-sezione">
-              <RigaSezione
-                titolo="Cartelle"
-                aperta={sezioni.cartelle}
-                onApriChiudi={() => setSezioni((s) => ({ ...s, cartelle: !s.cartelle }))}
-                nomeAggiungi="Nuova cartella"
-                onAggiungi={() => {
-                  setSezioni((s) => ({ ...s, cartelle: true }));
-                  p.onNuovaCartella("");
-                }}
-                sopra={p.trascinato?.tipo === "cartella" && sopra === chiave(radice)}
-                {...(p.trascinato?.tipo === "cartella" ? destinazione(radice) : {})}
-              />
-              {sezioni.cartelle &&
-                (alberoVuoto ? (
-                  <StatoVuotoColonna testo="Nessuna cartella. Creane una con +" />
-                ) : (
-                  <ul role="group" className="colonna-elenco">
                     {sottocartelle(cartelle, "", 0)}
                   </ul>
                 ))}
+              {aggiungi && (
+                <Menu
+                  etichetta="Aggiungi"
+                  x={aggiungi.x}
+                  y={aggiungi.y}
+                  voci={[
+                    {
+                      tipo: "voce",
+                      etichetta: "Nuova nota",
+                      icona: FileText,
+                      azione: p.onNuovaNota,
+                    },
+                    {
+                      tipo: "voce",
+                      etichetta: "Nuova cartella",
+                      icona: Folder,
+                      azione: () => {
+                        setCloudAperta(true);
+                        p.onNuovaCartella("");
+                      },
+                    },
+                  ]}
+                  onChiudi={() => setAggiungi(null)}
+                />
+              )}
             </div>
             {p.locale}
           </div>

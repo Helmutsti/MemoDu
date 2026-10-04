@@ -7,6 +7,11 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+### Cambiato
+- Nella colonna le sezioni Non organizzate e Cartelle diventano una sola, CLOUD: le note senza cartella stanno in cima, poi le cartelle; il + apre Nuova nota e Nuova cartella
+- In ogni cartella, e in Locale, prima le note o i file, poi le sottocartelle
+- In «Sposta in…» e nei risultati della ricerca la radice si chiama CLOUD
+
 ## [0.1.6] – 2026-10-04
 
 ### Aggiunto

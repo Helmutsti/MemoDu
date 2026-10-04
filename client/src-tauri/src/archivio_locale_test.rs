@@ -67,7 +67,7 @@ fn una_cartella_aggiunta_mostra_sottocartelle_non_nascoste_e_solo_md_e_txt() {
     assert_eq!(cartelle[0].nome, "prove-locale");
     assert_eq!(cartelle[0].stato, "presente");
     let r = p.radice();
-    assert_eq!(p.nomi(&r), vec!["appunti", "progetto-x", "idee.md", "riunione.txt"]);
+    assert_eq!(p.nomi(&r), vec!["idee.md", "riunione.txt", "appunti", "progetto-x"]);
 }
 
 #[test]

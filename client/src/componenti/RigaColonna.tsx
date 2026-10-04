@@ -276,7 +276,8 @@ interface ProprietaSezione extends Pick<Trascinamento, "onDragOver" | "onDragLea
   aperta: boolean;
   onApriChiudi: () => void;
   nomeAggiungi: string;
-  onAggiungi: () => void;
+  /** Il + del titolo; con il pulsante, per aprire un menu sotto di lui (DEC-119). */
+  onAggiungi: (e: React.MouseEvent<HTMLButtonElement>) => void;
   sopra?: boolean;
 }
 

@@ -92,6 +92,12 @@ const scriviTitolo = async (titolo: string, aggiunta: string) => {
   await userEvent.type(within(info).getByRole("textbox", { name: "Titolo" }), aggiunta);
 };
 
+/** Il + di CLOUD, poi «Nuova cartella» nel menu Aggiungi (DEC-119). */
+async function nuovaCartellaDalPiu() {
+  await userEvent.click(await screen.findByRole("button", { name: "Aggiungi" }));
+  await userEvent.click(screen.getByRole("menuitem", { name: "Nuova cartella" }));
+}
+
 beforeEach(() => {
   vi.resetAllMocks();
   vi.mocked(api.cestino).mockResolvedValue([]);
@@ -101,13 +107,12 @@ beforeEach(() => {
 });
 
 describe("SC-01, primo utilizzo (SF-16)", () => {
-  it("mostra lo stato vuoto nell'area, nelle non organizzate e nelle cartelle", async () => {
+  it("mostra lo stato vuoto nell'area e nella sezione CLOUD, senza numero (DEC-119)", async () => {
     vi.mocked(api.albero).mockResolvedValue(albero());
     render(<FinestraPrincipale />);
     expect(await screen.findByText("Nessuna nota, per ora.")).toBeInTheDocument();
-    expect(screen.getByText("Le note che scrivi compaiono qui.")).toBeInTheDocument();
-    expect(screen.getByText("Nessuna cartella. Creane una con +")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Non organizzate/ })).toHaveTextContent("0");
+    expect(screen.getByText("Nessuna nota. Crea con +")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^Cloud/ })).toHaveTextContent(/^Cloud$/);
   });
 
   it("con delle cartelle ma nessuna nota non è il primo utilizzo: «Nessuna nota aperta» (RB-67)", async () => {
@@ -185,16 +190,22 @@ describe("SC-01, non organizzate", () => {
     expect(await titoloNota("Lista")).toBeInTheDocument();
   });
 
-  it("il + ha il suggerimento «Nuova nota» e la sezione si chiude dal titolo", async () => {
+  it("il + di CLOUD apre Nuova nota e Nuova cartella; la sezione si chiude dal titolo (DEC-119)", async () => {
     vi.mocked(api.albero).mockResolvedValue(albero(elenco));
     vi.mocked(api.leggi).mockResolvedValue(nota("a", "Lista della spesa"));
     render(<FinestraPrincipale />);
     await riga("Lista della spesa");
-    await userEvent.hover(screen.getByRole("button", { name: "Nuova nota" }));
-    expect(await screen.findByRole("tooltip", {}, { timeout: 1000 })).toHaveTextContent(
-      "Nuova nota",
-    );
-    await userEvent.click(screen.getByRole("button", { name: /Non organizzate/ }));
+    await userEvent.hover(screen.getByRole("button", { name: "Aggiungi" }));
+    expect(await screen.findByRole("tooltip", {}, { timeout: 1000 })).toHaveTextContent("Aggiungi");
+    await userEvent.click(screen.getByRole("button", { name: "Aggiungi" }));
+    const menu = screen.getByRole("menu", { name: "Aggiungi" });
+    expect(
+      within(menu)
+        .getAllByRole("menuitem")
+        .map((v) => v.textContent),
+    ).toEqual(["Nuova nota", "Nuova cartella"]);
+    await userEvent.keyboard("{Escape}");
+    await userEvent.click(screen.getByRole("button", { name: /^Cloud/ }));
     expect(screen.queryByRole("treeitem", { name: "Lista della spesa" })).not.toBeInTheDocument();
   });
 
@@ -216,7 +227,7 @@ describe("SC-01, cartelle (RF-05)", () => {
     );
   });
 
-  it("aprendo una cartella mostra sottocartelle, poi note, con i numeri (CA-05.1, CA-05.2)", async () => {
+  it("aprendo una cartella mostra prima le note, poi le sottocartelle, con i numeri (CA-05.1, CA-05.2, DEC-119)", async () => {
     render(<FinestraPrincipale />);
     const lavoro = await riga(/Lavoro/);
     expect(lavoro).toHaveTextContent("3");
@@ -227,10 +238,10 @@ describe("SC-01, cartelle (RF-05)", () => {
       .map((r) => r.textContent);
     expect(nomi).toEqual([
       "Lavoro3",
-      "Clienti1",
-      "Progetti0",
       "Budget 2026",
       "Riunione con i fornitori",
+      "Clienti1",
+      "Progetti0",
     ]);
     // Il titolo delle note si allinea al nome delle sottocartelle: 12 + 24 + 24 (DEC-100).
     expect((await riga("Budget 2026")).style.paddingLeft).toContain("2 * var(--spazio-rientro)");
@@ -250,7 +261,7 @@ describe("SC-01, cartelle (RF-05)", () => {
     expect((await riga(/Personale/)).querySelector("svg.lucide-folder")).toBeInTheDocument();
     expect((await riga("Budget 2026")).querySelector("svg")).not.toBeInTheDocument();
     // I titoli di sezione tengono la freccia.
-    const cartelle = screen.getByRole("button", { name: /^Cartelle/, expanded: true });
+    const cartelle = screen.getByRole("button", { name: /^Cloud/, expanded: true });
     expect(cartelle.querySelector("svg.lucide-chevron-down")).toBeInTheDocument();
     expect(cartelle.querySelector("svg.lucide-folder")).not.toBeInTheDocument();
   });
@@ -258,16 +269,16 @@ describe("SC-01, cartelle (RF-05)", () => {
   it("il campo «Nuova cartella» ha l'icona della cartella chiusa (DEC-99)", async () => {
     vi.mocked(api.albero).mockResolvedValue(alberoDiProva());
     render(<FinestraPrincipale />);
-    await userEvent.click(await screen.findByRole("button", { name: "Nuova cartella" }));
+    await nuovaCartellaDalPiu();
     const campo = screen.getByRole("textbox", { name: "Nome della cartella" });
     expect(campo.parentElement!.querySelector("svg.lucide-folder")).toBeInTheDocument();
   });
 
-  it("+ delle Cartelle apre il campo con «Nuova cartella»; Invio crea, Esc annulla (CA-05.5, RB-48)", async () => {
+  it("Nuova cartella dal + di CLOUD apre il campo con «Nuova cartella»; Invio crea, Esc annulla (CA-05.5, RB-48)", async () => {
     vi.mocked(api.creaCartella).mockResolvedValue({ cartella: cartella("Idee"), daRisolvere: [] });
     render(<FinestraPrincipale />);
     await riga(/Lavoro/);
-    await userEvent.click(screen.getByRole("button", { name: "Nuova cartella" }));
+    await nuovaCartellaDalPiu();
     expect(screen.getByRole("textbox", { name: "Nome della cartella" })).toHaveValue(
       "Nuova cartella",
     );
@@ -275,7 +286,7 @@ describe("SC-01, cartelle (RF-05)", () => {
     expect(screen.queryByRole("textbox", { name: "Nome della cartella" })).not.toBeInTheDocument();
     expect(api.creaCartella).not.toHaveBeenCalled();
 
-    await userEvent.click(screen.getByRole("button", { name: "Nuova cartella" }));
+    await nuovaCartellaDalPiu();
     await userEvent.keyboard("Idee{Enter}");
     expect(api.creaCartella).toHaveBeenCalledWith("", "Idee", "chiedi");
   });
@@ -286,7 +297,7 @@ describe("SC-01, cartelle (RF-05)", () => {
       .mockResolvedValue({ cartella: cartella("personale (2)"), daRisolvere: [] });
     render(<FinestraPrincipale />);
     await riga(/Lavoro/);
-    await userEvent.click(screen.getByRole("button", { name: "Nuova cartella" }));
+    await nuovaCartellaDalPiu();
     await userEvent.keyboard("personale{Enter}");
     const finestra = await screen.findByRole("alertdialog", {
       name: "Esiste già «Personale» tra le cartelle",
@@ -354,8 +365,9 @@ describe("SC-01, cartelle (RF-05)", () => {
     (await riga(/Lavoro/)).focus();
     await userEvent.keyboard("{ArrowRight}");
     expect(await riga(/Lavoro/)).toHaveAttribute("aria-expanded", "true");
+    // Dentro la cartella prima le note (DEC-119).
     await userEvent.keyboard("{ArrowDown}");
-    expect(await riga(/Clienti/)).toHaveFocus();
+    expect(await riga("Budget 2026")).toHaveFocus();
     (await riga(/Lavoro/)).focus();
     await userEvent.keyboard("{ArrowLeft}");
     expect(await riga(/Lavoro/)).toHaveAttribute("aria-expanded", "false");
@@ -446,7 +458,7 @@ describe("menu ··· e Sposta in (CA-05.4, CA-15.1)", () => {
     const info = await apriInfo("Riunione di lunedì");
     await userEvent.click(within(info).getByRole("button", { name: /: Sposta in…$/ }));
     const pannello = screen.getByRole("dialog", { name: "Sposta in" });
-    expect(within(pannello).getByRole("option", { name: /Non organizzate/ })).toHaveAttribute(
+    expect(within(pannello).getByRole("option", { name: /CLOUD/ })).toHaveAttribute(
       "aria-current",
       "true",
     );
@@ -497,15 +509,13 @@ describe("menu ··· e Sposta in (CA-05.4, CA-15.1)", () => {
     );
   });
 
-  it("in Sposta in ogni cartella ha l'icona, «Non organizzate» no; un clic sull'icona apre e chiude (DEC-99)", async () => {
+  it("in Sposta in ogni cartella ha l'icona, «CLOUD» no; un clic sull'icona apre e chiude (DEC-99)", async () => {
     render(<FinestraPrincipale />);
     const info = await apriInfo("Riunione di lunedì");
     await userEvent.click(within(info).getByRole("button", { name: /: Sposta in…$/ }));
     const pannello = screen.getByRole("dialog", { name: "Sposta in" });
     const voce = (nome: string | RegExp) => within(pannello).getByRole("option", { name: nome });
-    expect(
-      voce(/Non organizzate/).querySelector("svg.lucide-folder, svg.lucide-folder-open"),
-    ).toBeNull();
+    expect(voce(/CLOUD/).querySelector("svg.lucide-folder, svg.lucide-folder-open")).toBeNull();
     const lavoro = voce("Lavoro");
     expect(lavoro.querySelector("svg.lucide-folder")).toBeInTheDocument();
     // Anche la cartella senza sottocartelle ha la cartella chiusa.

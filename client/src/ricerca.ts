@@ -54,9 +54,9 @@ export function nomePeriodo(periodo: Periodo): string {
 export const nomeFiltroTag = (tag: string[]) =>
   tag.length === 0 ? "Tag" : tag.length === 1 ? `Tag: ${tag[0]}` : `Tag: ${tag.length}`;
 
-/** «Lavoro › Clienti · 25/09/2026»; senza cartella «Non organizzate». */
+/** «Lavoro › Clienti · 25/09/2026»; senza cartella «CLOUD», la radice (DEC-119). */
 export function dettagliRisultato(r: RisultatoRicerca): string {
-  const cartella = r.cartella === "" ? "Non organizzate" : r.cartella.split("/").join(" › ");
+  const cartella = r.cartella === "" ? "CLOUD" : r.cartella.split("/").join(" › ");
   return `${cartella} · ${dataRisultato(r.data)}`;
 }
 
