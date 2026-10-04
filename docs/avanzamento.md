@@ -87,3 +87,7 @@ Da fare in Figma, dopo le scelte del 01/10/2026: filtro attivo della ricerca su 
 
 ## Strumenti
 - **Disegni (Fasi 4–6):** Figma (DEC-10), secondo la sezione "Disegni" della guida. Account `manuc.1297@gmail.com`, piano **Il mio team solitario** (posto Full, l'unico con permessi di scrittura). File di lavoro: [Memodu – Wireframe (Fase 4)](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK). La vecchia libreria da wireframe "Memodu – Wireframe UI" è stata eliminata: la libreria del progetto è il file Design system. Fase 5 (moodboard, direzioni, token e componenti, è la libreria): [Memodu – Design system](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE), pagine Componenti base e Componenti composti. È pubblicato come libreria del team (primitivi nascosti: gli altri file vedono solo token semantici, stili e componenti); dopo ogni componente nuovo va ripubblicato. Icone: Lucide (DEC-15). Fase 6 (mockup e prototipo): [Memodu – Mockup (Fase 6)](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ), una pagina per schermata (SC-01 … SC-07) più Prototipo; usa solo istanze della libreria Design system.
+
+## Verifica icone macOS · 04/10/2026
+
+RF-01, DEC-73, DEC-103: richiesta di Manuel Cucca estesa anche al Dock. Proposta tecnica DEC-108: conservare il flag template nella barra dei menu, usare nel Dock le versioni della M già fornite e aggiornarle al cambio del tema. In verifica; TC-06 macOS non viene segnato come superato.

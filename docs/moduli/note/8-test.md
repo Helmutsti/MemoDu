@@ -69,3 +69,7 @@ Frammenti Must A (TC-01 … TC-32) e Must C (TC-51 … TC-56, TC-79, TC-80). Amb
 | SC-02, CMP-01 | La freccia del pulsante diviso «Salva» si chiama «Altre azioni» (nome per i lettori di schermo e suggerimento)? Deduzione dell'agente | Manuel Cucca | Sì, «Altre azioni» | DEC-34 |
 | RF-01 | Nel frammento Must A la scorciatoia si può cambiare, visto che le impostazioni (SC-06) non ci sono? | Manuel Cucca | No: fissa fino al frammento Must; con un conflitto la nota rapida si apre dall'icona | |
 | RF-04, SC-03 | Dove si vedono i dettagli della singola nota (date di creazione di sistema e scelta, ultima modifica, fine validità, cartella)? RF-04 dice «sempre visibile nei dettagli della nota», ma nessuna schermata ha un posto per i dettagli: il wireframe mette solo i tag sotto il titolo e le date in un pannello del `···`. Segnalato da Manuel Cucca il 29/09/2026 | Manuel Cucca | Nella voce «Dettagli» del menu della nota; sotto il titolo solo tag e ultima modifica | DEC-44 |
+
+## Verifica icone macOS (TC-06, DEC-108)
+
+Controllare la M nella barra dei menu e nel Dock in chiaro e in scuro, all’avvio e cambiando tema con l’app aperta e con la finestra nascosta. La forma resta quella dei loghi forniti. Prova automatica: la scelta dei due PNG conserva sagoma e alpha e usa i colori #1F1F1F e #EDEDED. Prova visiva ancora da eseguire.

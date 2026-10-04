@@ -18,6 +18,9 @@ mod comandi;
 mod impostazioni;
 mod sincronizzazione;
 
+#[cfg(target_os = "macos")]
+mod icone_macos;
+
 use std::collections::HashSet;
 use std::sync::Mutex;
 
@@ -62,11 +65,23 @@ fn icona_finestra() -> Image<'static> {
 /// non hanno un'icona propria.
 fn aggiorna_icone(app: &AppHandle) {
     if let Some(icona) = app.tray_by_id("memodu") {
-        let _ = icona.set_icon(Some(icona_area_di_notifica()));
+        #[cfg(target_os = "macos")]
+        let risultato = icona.set_icon_with_as_template(Some(icona_area_di_notifica()), true);
+        #[cfg(not(target_os = "macos"))]
+        let risultato = icona.set_icon(Some(icona_area_di_notifica()));
+        if let Err(errore) = risultato {
+            eprintln!("Aggiornamento icona dell'area di notifica non riuscito: {errore}");
+        }
     }
     if cfg!(windows) {
         for finestra in app.webview_windows().values() {
             let _ = finestra.set_icon(icona_finestra());
+        }
+    }
+    #[cfg(target_os = "macos")]
+    if let Some(finestra) = app.get_webview_window("main") {
+        if let Ok(tema) = finestra.theme() {
+            icone_macos::aggiorna_dock(tema);
         }
     }
 }
@@ -353,6 +368,10 @@ pub fn run() {
         .build(tauri::generate_context!())
         .expect("Memodu non è riuscito ad avviarsi")
         .run(|_app, evento| match evento {
+            // Tauri assegna l'icona del Dock in Ready durante lo sviluppo: applicare
+            // dopo di lui la variante della M corrispondente al tema (DEC-108).
+            #[cfg(target_os = "macos")]
+            RunEvent::Ready => aggiorna_icone(_app),
             // Memodu resta attivo in background anche senza finestre aperte (RF-01).
             RunEvent::ExitRequested { api, code, .. } if code.is_none() => api.prevent_exit(),
             // macOS: clic sull'icona nel Dock con la finestra nascosta.

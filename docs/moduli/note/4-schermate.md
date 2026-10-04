@@ -136,3 +136,7 @@ Il testo ha una larghezza massima di lettura anche su schermi larghi: oltre una 
 |---|---|
 | SF-21 File non immagine o corrotto | Fase 6 (RB-11) |
 | SF-17 Immagine oltre 25 MB | Fase 6 (RB-12) |
+
+## Icone macOS · precisazione del 04/10/2026
+
+Manuel Cucca richiede la M chiara in scuro e scura in chiaro sia nella barra dei menu sia nel Dock. La barra conserva la modalità template a ogni aggiornamento; il Dock usa i due loghi già forniti, in `icons/finestra`, durante l’esecuzione. Implementazione proposta in DEC-108.

@@ -421,3 +421,5 @@
 | 02/10/2026 | Manuel Cucca | Rilascio: gli installatori si compilano per Windows e macOS Apple Silicon; tolto macOS Intel. Versione 0.1.2 | Tempi di compilazione |
 | 02/10/2026 | Agente IA | Piano di test della sincronizzazione TC-86 … TC-103, con gli esiti della prova con due computer; CA-10.11 e CA-14.1 adattati all'archivio in Neon e alle credenziali generate da comando (da confermare) | DEC-104, DEC-105 |
 | 02/10/2026 | Manuel Cucca | Il testo della nota occupa tutta la larghezza del foglio, con 24 ai lati; tolta la misura di lettura di 640 (CMP-20, nel codice; mockup da aggiornare) | DEC-107 |
+
+| 04/10/2026 | Codex, su richiesta di Manuel Cucca | Schermate e piano di test RF-01: M adattata al tema sia nella barra dei menu sia nel Dock su macOS; implementazione tecnica proposta, verifica visiva pendente | DEC-108 |
