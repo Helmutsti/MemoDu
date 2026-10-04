@@ -71,6 +71,7 @@ Dubbi rimasti dall'allineamento generale della documentazione, da decidere con M
 - `architettura/architettura.md`: dice che le impostazioni «hanno le loro sezioni», che non ci sono. Rimandare ad `api.md` e DEC-91, o scrivere la sezione?
 - FL-03 inserisce l'immagine «dalla pillola degli strumenti o dal menu /», sospesi con DEC-64; RF-03 parla di «pulsante degli allegati». Lasciare alla Fase 6 di RF-03?
 - `Ricerca.css`: il risultato della card ha come margine verticale `spazio-elenco`, il token del margine dei contenitori; quale ruolo ha?
+- DEC-116: dove mettere un pulsante visibile per chiudere impostazioni e cestino (per ora solo Ctrl + W). Proposte: una × accanto al titolo nella barra del percorso, valida anche per la nota; oppure un secondo clic sulla voce già aperta nella colonna. Da decidere da Manuel Cucca.
 - EN-06 Dispositivo resta com'è, pensata per RF-16 (scelta di Manuel Cucca il 01/10/2026): da riprendere con RF-16.
 
 Da fare in Figma, dopo le scelte del 01/10/2026: filtro attivo della ricerca su `sfondo-hover` e filtri a 4 tra loro (CMP-13), poi i mockup della ricerca in SC-01; il testo della nota su tutta la larghezza nei mockup di SC-01 e SC-03 (DEC-107).

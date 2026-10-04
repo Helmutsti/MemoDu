@@ -7,6 +7,9 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+### Aggiunto
+- Ctrl + W (⌘ + W su Mac) chiude anche le impostazioni e il cestino e lascia l'area di destra vuota
+
 ## [0.1.4] – 2026-10-04
 
 ### Cambiato

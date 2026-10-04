@@ -1,6 +1,6 @@
 # DEC-70 – Ctrl + W chiude la nota
 
-**Data:** 2026-09-30 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-30 · **Stato:** Accettata (estesa da DEC-116 a impostazioni e cestino) · **Idea di origine:** —
 
 ## Contesto
 «Chiudi nota» è nel menu `···` della nota aperta (DEC-68). Manuel Cucca: «aggiungi Ctrl + W per chiudere la nota».

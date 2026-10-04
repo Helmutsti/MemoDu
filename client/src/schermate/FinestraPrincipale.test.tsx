@@ -25,6 +25,8 @@ vi.mock("../api", async (originale) => ({
     svuotaCestino: vi.fn(),
     cerca: vi.fn(),
     elencaTag: vi.fn(),
+    impostazioni: vi.fn(),
+    statoSincronizzazione: vi.fn(),
   },
 }));
 
@@ -615,6 +617,32 @@ describe("menu ··· e Sposta in (CA-05.4, CA-15.1)", () => {
     await userEvent.keyboard("{Control>}w{/Control}");
     expect(await screen.findByText("Nessuna nota aperta")).toBeInTheDocument();
     expect(screen.getByText("Riunione di lunedì")).toBeInTheDocument();
+  });
+
+  it("Ctrl + W chiude anche le impostazioni e il cestino, senza riaprire la nota di prima (DEC-116)", async () => {
+    vi.mocked(api.impostazioni).mockResolvedValue({
+      sistema: "windows",
+      scorciatoia: "Control+Alt+KeyN",
+      scorciatoiaPredefinita: true,
+      tema: "sistema",
+      avvioAutomatico: false,
+      inPrimoPiano: false,
+      cestinoInRicerca: true,
+      nomeDispositivo: "Portatile",
+    });
+    vi.mocked(api.statoSincronizzazione).mockResolvedValue({
+      collegata: false,
+      ultimaRiuscita: null,
+      problema: null,
+    });
+    render(<FinestraPrincipale />);
+    await titoloNota("Riunione di lunedì");
+    for (const voce of ["Impostazioni", "Cestino"]) {
+      await userEvent.click(await screen.findByRole("button", { name: new RegExp(`^${voce}`) }));
+      await userEvent.keyboard("{Control>}w{/Control}");
+      expect(await screen.findByText("Nessuna nota aperta")).toBeInTheDocument();
+      expect(screen.queryByRole("button", { current: "page" })).not.toBeInTheDocument();
+    }
   });
 
   it("Chiudi nota lascia l'area vuota e la nota resta nella colonna (DEC-68)", async () => {

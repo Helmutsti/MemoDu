@@ -610,7 +610,7 @@ export function FinestraPrincipale(): ReactElement {
 
   // Scorciatoie della finestra (⌘ al posto di Ctrl su Mac): Ctrl + N crea una nuova nota come
   // il + delle non organizzate (FL-09, DEC-69); Ctrl + W chiude la nota aperta come «Chiudi
-  // nota» (DEC-70); Ctrl + K porta nella ricerca (RB-71), Ctrl + Maiusc + K nella ricerca
+  // nota» (DEC-70) e anche le impostazioni e il cestino (DEC-116); Ctrl + K porta nella ricerca (RB-71), Ctrl + Maiusc + K nella ricerca
   // avanzata (DEC-96). Con una finestra di dialogo o SC-07 davanti non fanno niente; Info sotto il
   // titolo e la card della ricerca non bloccano.
   const scorciatoie = useRef<Record<string, (() => Promise<void>) | undefined>>({});
@@ -619,7 +619,7 @@ export function FinestraPrincipale(): ReactElement {
       ? {}
       : {
           n: nuovaNota,
-          w: vista === "nota" && aperta !== null ? chiudiNota : undefined,
+          w: vista !== "nota" ? chiudiVista : aperta !== null ? chiudiNota : undefined,
           k: async () => vaiAllaRicerca(),
           K: async () => setAvanzataRicerca((n) => n + 1),
           // Ctrl + B resta il grassetto (DEC-102).
@@ -1069,6 +1069,13 @@ export function FinestraPrincipale(): ReactElement {
     setAperta(null);
     setInfo((i) => (i?.tipo === "comparsa" ? null : i));
     if (cancellata) await ricarica().catch(() => setBloccata(true));
+  };
+
+  /** Ctrl + W su impostazioni o cestino (DEC-116): l'area torna vuota, senza la nota di prima. */
+  const chiudiVista = async () => {
+    setNuovaId(null);
+    setAperta(null);
+    setVista("nota");
   };
 
   /** Tasto destro su una nota della colonna, senza aprirla: Info, Sposta in, Elimina (DEC-96). */
