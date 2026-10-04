@@ -7,6 +7,8 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+## [0.1.8] – 2026-10-04
+
 ### Corretto
 - Trascinare file e cartelle dentro Memodu ora funziona davvero: entrano in Locale e non finiscono più nel testo della nota o del file aperto
 - Mentre trascini da Esplora file o dal Finder tutta la finestra si oscura e dice «Rilascia per aggiungere a Locale»
