@@ -15,6 +15,7 @@
 | Archivio del server | PostgreSQL: Neon in rete, PGlite (Postgres nel processo) in locale e nelle prove; blocchi per ora in chiaro (DEC-78) | DEC-105 |
 | Copia di lavoro nel client | Note, tag, cartelle e cestino in un database SQLite nel nucleo Rust del client (rusqlite), file `copia-di-lavoro.db` nella cartella dei dati delle applicazioni; l'interfaccia lo legge e scrive con comandi Tauri, uno per endpoint descritto in `api.md`, con gli stessi dati e codici di errore. Il client funziona senza API. Alla prima apertura parte da una copia di `memodu.db` dell'API, se c'è nella stessa cartella | DEC-67 (proposta) |
 | Server (deposito della sincronizzazione) | L'API non gestisce più le note: conserva solo i blocchi della sincronizzazione e le loro versioni (DEC-75, DEC-85); conosce solo l'impronta del gettone (DEC-79, DEC-104) | DEC-85 |
+| File locali (RF-17) | Nel nucleo Rust (`locale.rs`): `tauri-plugin-dialog` per scegliere la cartella, `notify` per i cambi sul disco, `sha2` per l'impronta, `encoding_rs` per Windows-1252, `trash` per il Cestino del sistema; niente va sul server | DEC-118 |
 | Hosting | Vercel, funzione con Fastify senza configurazione, solo HTTPS; regione Francoforte | DEC-104, DEC-105 |
 
 ## Struttura del repository
@@ -75,6 +76,7 @@ flowchart LR
     U[Utente] --> F[Interfaccia React]
     F -- comandi Tauri --> N[Nucleo Rust]
     N --> C[(Copia di lavoro SQLite)]
+    N -- Locale: legge, scrive, osserva --> L[(File e cartelle del disco)]
     N -- sincronizzazione --> A[API]
     A --> D[(Deposito: blocchi e indice)]
 ```
@@ -83,6 +85,7 @@ flowchart LR
 - **Autenticazione:** 
 - **Autorizzazione per ruolo:** 
 - **Protezione dei dati sensibili:** 
+- **File locali (DEC-118):** i comandi di Locale accettano solo percorsi dentro le cartelle che l'utente ha aggiunto; il nucleo risolve il percorso vero (anche dietro un collegamento simbolico) e rifiuta quelli che escono. L'elenco e le modifiche in sospeso restano nella copia di lavoro di questo computer.
 
 ## Integrazioni
 | Sistema esterno | Cosa si scambia | Se non risponde | Duplicati |

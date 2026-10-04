@@ -451,6 +451,29 @@ Comando del nucleo, sulla copia di lavoro: la ricerca non passa mai dal server. 
 ## Impostazione delle note del cestino
 Come le altre impostazioni di SC-06 (`client/src-tauri/src/impostazioni.rs`): `leggi_impostazioni` ha in più `"cestinoInRicerca": true`, e `cambia_cestino_in_ricerca` riceve `{ "attivo": false }`. Si sincronizza con l'elemento `impostazioni` (RB-52); senza un valore vale `true` (RB-29). I nomi seguono quelli dei comandi delle impostazioni già esistenti, al posto di `impostazione_ricerca` e `imposta_ricerca` proposti in DEC-95.
 
+## Locale (RF-17, DEC-115, DEC-118)
+Comandi del nucleo (`client/src-tauri/src/locale.rs`) su file e cartelle del disco; niente passa dal server. **Percorsi:** assoluti, sempre dentro una cartella dell'elenco, altrimenti 400. **Errori comuni:** 400 (percorso fuori dall'elenco, nome non valido: RB-82), 403 (il disco rifiuta: permessi, file bloccato, disco pieno; SF-37, con il motivo del sistema), 404 (non c'è più), 500.
+
+| Comando | Input | Output | Errori in più |
+|---|---|---|---|
+| `cartelle_locali` | — | `[{ "percorso", "nome", "stato": "presente" \| "non trovata" \| "non accessibile" }]` in ordine alfabetico (RB-73) | — |
+| `aggiungi_cartella_locale` | — (il nucleo apre la finestra di scelta del sistema) | la cartella aggiunta, `null` se si annulla | 409 già nell'elenco o dentro una cartella dell'elenco, con il percorso di quella (RB-74) |
+| `togli_cartella_locale` | `{ "percorso" }` | — | — (sul disco non cambia niente, RB-76) |
+| `elenca_locale` | `{ "percorso" }` di una cartella | `[{ "nome", "percorso", "tipo": "cartella" \| "file", "sospeso": false }]`: cartelle e poi file, in ordine alfabetico; niente cartelle nascoste, solo .md e .txt (RB-75) | — |
+| `apri_file_locale` | `{ "percorso" }` | `{ "testo", "sospeso", "codifica": "utf-8" \| "windows-1252", "solaLettura", "cambiatoFuori" }`; con modifiche in sospeso `testo` è quello in sospeso (RB-78) e `cambiatoFuori` dice se il disco è cambiato da quando si era letto (RB-85) | 413 oltre 10 MB |
+| `nuovo_file_locale` | `{ "cartella" }` | `{ "percorso" }` provvisorio, dentro la cartella, finché il file non ha un nome (RB-81) | — |
+| `sospendi_file_locale` | `{ "percorso", "testo" }` | — | 413 |
+| `salva_file_locale` | `{ "percorso", "testo" }` | `{ "percorso", "convertitoInUtf8" }`: per un file nuovo il percorso definitivo, con il nome dalla prima riga e un numero se c'è già (RB-81) | 409 se il disco è cambiato da quando si era letto (l'interfaccia mostra l'avviso, RB-85) |
+| `tieni_versione_locale` | `{ "percorso" }` | — | — («Tieni la mia versione»: il disco di adesso diventa quello letto, il testo resta in sospeso) |
+| `scarta_file_locale` | `{ "percorso" }` | — | — (Ricarica e Chiudi: la modifica in sospeso sparisce) |
+| `crea_cartella_locale` | `{ "dentro", "nome" }` | `{ "percorso" }` | 409 nome già usato (RB-82) |
+| `rinomina_locale` | `{ "percorso", "nome" }` | `{ "percorso" }`; la modifica in sospeso segue il file | 409 nome già usato |
+| `sposta_locale` | `{ "percorso", "dentro" }` | `{ "percorso" }`; anche tra dischi diversi | 409 nome già usato nella destinazione |
+| `elimina_locale` | `{ "percorso", "perSempre": false }` | — | 409 «cestino non disponibile»: l'interfaccia chiede conferma e richiama con `perSempre: true` (RB-83) |
+
+**Evento `locale-cambiato`:** `{ "percorsi": ["…"] }`, dal nucleo all'interfaccia quando una cartella dell'elenco cambia sul disco (RB-84): l'interfaccia rilegge le cartelle aperte e, per il file aperto o con modifiche in sospeso, chiede `apri_file_locale` e mostra l'avviso se `cambiatoFuori` (RB-85).
+**Implementazione:** `client/src-tauri/src/locale.rs`, comandi in `comandi.rs`, prove in `locale_test.rs`; nell'interfaccia `client/src/schermate/FileAperto.tsx` e lo stato di Locale in un modulo suo (DEC-118).
+
 ---
 
 ## Sincronizzazione (RF-10, DEC-75 … DEC-84)
