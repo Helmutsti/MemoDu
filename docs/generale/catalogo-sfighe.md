@@ -81,4 +81,4 @@ Le sfighe incontrate davvero, in test o in produzione, si aggiungono qui a parti
 
 | Codice | Sfiga | Domanda da porsi | Scoperta il | Origine |
 |---|---|---|---|---|
-| | | | | |
+| SF-37 | Il disco rifiuta l'operazione | Permessi mancanti, disco pieno, file bloccato da un altro programma, chiavetta tolta: cosa resta fatto e cosa no? | 04/10/2026 | Fase 2 di RF-17 (file locali) |

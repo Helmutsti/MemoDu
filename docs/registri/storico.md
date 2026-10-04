@@ -437,3 +437,5 @@
 | 04/10/2026 | Manuel Cucca | Ctrl + W chiude anche impostazioni e cestino; il pulsante visibile per chiuderli resta da decidere | DEC-116 |
 | 04/10/2026 | Manuel Cucca | Impostazioni e cestino si chiudono dalla loro riga nella colonna, che diventa «Chiudi impostazioni» o «Chiudi cestino» (variante C della proposta in Figma) | DEC-117 |
 | 04/10/2026 | Agente IA | CMP-06 con i tipi Chiudi cestino e Chiudi impostazioni nella libreria; mockup di SC-04 e SC-06 e le loro esportazioni aggiornati | DEC-117 |
+| 04/10/2026 | Manuel Cucca | RF-17: scenario d'uso, elenco delle cartelle per computer; Fase 1 chiusa, si progetta subito | DEC-115 |
+| 04/10/2026 | Manuel Cucca, Agente IA | RF-17 Fase 2: flussi FL-10 … FL-13, regole RB-73 … RB-85, SF-37 nel catalogo; scelte di Manuel Cucca su modifiche in sospeso (anche chiudendo Memodu), file nuovo come una nota, sottocartelle non nascoste, UTF-8, avviso sempre per i cambi esterni; deduzioni dell'agente da confermare | — |
