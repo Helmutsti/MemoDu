@@ -449,3 +449,4 @@
 | 04/10/2026 | Agente IA | RF-17: codice di Locale (nucleo, comandi, osservazione del disco, interfaccia), provato in automatico e nell'app; esiti in `moduli/locale/8-test.md`; api.md allineato al codice | DEC-118 |
 | 04/10/2026 | Manuel Cucca | Sezione CLOUD al posto di Non organizzate e Cartelle: le note non organizzate nella radice, prima le note poi le cartelle a ogni livello (anche in Locale), + con Nuova nota e Nuova cartella | DEC-119 |
 | 04/10/2026 | Agente IA | Libreria: CMP-14 con la sola sezione CLOUD e le note prima delle cartelle; CMP-09 con il menu Aggiungi | DEC-119 |
+| 04/10/2026 | Agente IA | Mockup con la sezione CLOUD: 52 schermate aggiornate e riesportate, nuovo mockup del menu del +; in Sposta in la radice si chiama CLOUD | DEC-119 |
