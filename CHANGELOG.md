@@ -7,6 +7,10 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+### Corretto
+- Un file trascinato dentro Memodu non finisce più nel testo della nota o del file aperto: va solo in Locale
+- Mentre trascini da Esplora file o dal Finder tutta la finestra si oscura e dice «Rilascia per aggiungere a Locale»
+
 ## [0.1.7] – 2026-10-04
 
 ### Aggiunto

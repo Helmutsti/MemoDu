@@ -137,8 +137,29 @@ export function useLocale(alRilascio?: AlRilascio): StatoLocale {
     return () => void promessa.then((togli) => togli());
   }, [ricaricaCartelle]);
 
+  // Il trascinamento dentro la pagina è tutto con il puntatore (trascina.ts): un rilascio HTML5
+  // può venire solo da fuori, e l'editor lo leggerebbe incollando il file nel testo aperto. Lo
+  // ferma qui, prima di lui; il file lo prende Tauri e va in Locale (DEC-120).
+  useEffect(() => {
+    const ferma = (e: DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+    const passa = (e: DragEvent) => {
+      e.preventDefault();
+      if (e.dataTransfer) e.dataTransfer.dropEffect = "copy";
+    };
+    document.addEventListener("dragover", passa, true);
+    document.addEventListener("drop", ferma, true);
+    return () => {
+      document.removeEventListener("dragover", passa, true);
+      document.removeEventListener("drop", ferma, true);
+    };
+  }, []);
+
   // File e cartelle trascinati dentro la finestra da Esplora file o dal Finder: ovunque si
-  // rilascino entrano in Locale (DEC-120). Le cartelle aggiunte si aprono.
+  // rilascino entrano in Locale (DEC-120), con il velo su tutta la finestra mentre si trascina.
+  // Le cartelle aggiunte si aprono.
   useEffect(() => {
     if (!IN_TAURI) return;
     const promessa = getCurrentWebview().onDragDropEvent((evento) => {

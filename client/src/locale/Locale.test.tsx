@@ -6,6 +6,9 @@ import { ErroreApi } from "../api";
 import { apiLocale, type FileLocale } from "./api";
 import { FileAperto } from "./FileAperto";
 import { SezioneLocale } from "./SezioneLocale";
+import { useLocale } from "./useLocale";
+import { VeloRilascio } from "./VeloRilascio";
+import { Editor } from "../editor/Editor";
 import type { StatoLocale } from "./useLocale";
 
 vi.mock("./api", async (originale) => ({
@@ -128,17 +131,30 @@ describe("sezione Locale della colonna (RF-17)", () => {
     expect(within(lettera).getByRole("img", { name: "non salvato" })).toBeInTheDocument();
   });
 
-  it("mentre si trascina da Esplora file la sezione si evidenzia (DEC-120)", () => {
-    const { container } = render(
-      <SezioneLocale
-        locale={stato({ esterno: true })}
-        fileAperto={null}
-        onApriFile={() => {}}
-        onFileSpostato={() => {}}
-        onErrore={() => {}}
-      />,
-    );
-    expect(container.querySelector(".colonna-sezione-rilascio")).not.toBeNull();
+  it("mentre si trascina da Esplora file il velo copre la finestra con il messaggio (DEC-120)", () => {
+    render(<VeloRilascio />);
+    expect(screen.getByRole("status")).toHaveTextContent("Rilascia per aggiungere a Locale");
+  });
+
+  it("un file rilasciato sul testo non entra nell'editor (DEC-120)", () => {
+    vi.mocked(apiLocale.cartelle).mockResolvedValue([]);
+    const onModifica = vi.fn();
+    function Prova() {
+      useLocale();
+      return <Editor contenuto="testo" onModifica={onModifica} />;
+    }
+    const { container } = render(<Prova />);
+    const evento = new Event("drop", { bubbles: true, cancelable: true });
+    Object.defineProperty(evento, "dataTransfer", {
+      value: {
+        files: [new File(["incollato"], "lettera.txt")],
+        types: ["Files"],
+        getData: () => "",
+      },
+    });
+    container.querySelector(".cm-content")!.dispatchEvent(evento);
+    expect(evento.defaultPrevented).toBe(true);
+    expect(onModifica).not.toHaveBeenCalled();
   });
 
   it("senza cartelle invita ad aggiungerne una (SF-16)", () => {

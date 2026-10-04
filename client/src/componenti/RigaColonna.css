@@ -162,11 +162,3 @@
 .riga-cartella-assente .riga-conteggio {
   color: var(--testo-tenue);
 }
-
-/* Mentre si trascina dentro la finestra qualcosa da Esplora file o dal Finder, la sezione LOCALE
-   mostra dove andrà, come una cartella che riceve (DEC-120). */
-.colonna-sezione-rilascio {
-  border-radius: var(--raggio-pillola);
-  background: var(--sfondo-hover);
-  box-shadow: inset 0 0 0 1.5px var(--icona-tenue);
-}

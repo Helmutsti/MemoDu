@@ -395,10 +395,7 @@ export function SezioneLocale({
   };
 
   return (
-    <div
-      className={`colonna-sezione ${locale.esterno ? "colonna-sezione-rilascio" : ""}`}
-      onKeyDown={suTasto}
-    >
+    <div className="colonna-sezione" onKeyDown={suTasto}>
       <RigaSezione
         titolo="Locale"
         aperta={aperta}

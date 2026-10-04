@@ -452,3 +452,4 @@
 | 04/10/2026 | Agente IA | Mockup con la sezione CLOUD: 52 schermate aggiornate e riesportate, nuovo mockup del menu del +; in Sposta in la radice si chiama CLOUD | DEC-119 |
 | 04/10/2026 | Agente IA | Codice della sezione CLOUD: colonna con una sola sezione e il menu del +, note prima delle cartelle, radice «CLOUD» in Sposta in e nella ricerca, file prima delle cartelle in Locale | DEC-119 |
 | 04/10/2026 | Manuel Cucca | File e cartelle trascinati dentro Memodu, ovunque, vanno in Locale (i file da soli); rilascio di Tauri acceso e trascinamento interno con il puntatore; CA-17.19 e TC-122 … TC-124 | DEC-120 |
+| 04/10/2026 | Manuel Cucca | Correzione di DEC-120 dopo la prova della 0.1.7: velo su tutta la finestra mentre si trascina da fuori, al posto dell'evidenza di LOCALE e dell'apertura della colonna; il file rilasciato non entra nel testo aperto; CA-17.19 e TC-122 aggiornati | DEC-120 |

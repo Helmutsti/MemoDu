@@ -69,6 +69,7 @@ import { Colonna, type Campo, type Destinazione, type Trascinato } from "./Colon
 import { NotaAperta } from "./NotaAperta";
 import { FileAperto } from "../locale/FileAperto";
 import { SezioneLocale } from "../locale/SezioneLocale";
+import { VeloRilascio } from "../locale/VeloRilascio";
 import { useLocale } from "../locale/useLocale";
 import "./FinestraPrincipale.css";
 
@@ -268,12 +269,7 @@ export function FinestraPrincipale(): ReactElement {
   // Per ora i pulsanti della finestra compaiono solo con il mouse vicino al bordo in alto
   // (DEC-61, provvisorio).
   const [vicinoInAlto, setVicinoInAlto] = useState(false);
-  // Trascinando da fuori con la colonna chiusa, la colonna si apre per mostrare LOCALE (DEC-120).
-  const statoColonna = colonnaFissata
-    ? "fissata"
-    : colonnaAperta || locale.esterno
-      ? "aperta"
-      : "chiusa";
+  const statoColonna = colonnaFissata ? "fissata" : colonnaAperta ? "aperta" : "chiusa";
   const pulsanteApriColonna = useRef<HTMLButtonElement>(null);
   const pulsanteChiudiColonna = useRef<HTMLButtonElement>(null);
   const apriColonna = () => {
@@ -1509,6 +1505,7 @@ export function FinestraPrincipale(): ReactElement {
           onConferma={() => conflitto.risolvi("numero")}
         />
       )}
+      {locale.esterno && <VeloRilascio />}
       {bloccata && (
         <Blocco
           inCorso={riprovando}

@@ -1,0 +1,26 @@
+/* Velo su tutta la finestra (livello delle conferme) e al centro il messaggio su sfondo-pieno,
+   leggibile in chiaro e in scuro (DEC-120). Non intercetta il puntatore: il rilascio lo prende
+   Tauri. */
+.velo-rilascio {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-conferma);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--velo);
+  pointer-events: none;
+}
+.velo-rilascio-messaggio {
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-icona);
+  padding: var(--spazio-pannello) var(--spazio-gruppo);
+  border-radius: var(--raggio-contenitore);
+  background: var(--sfondo-pieno);
+  color: var(--testo-su-pieno);
+  box-shadow: var(--ombra);
+}
+.velo-rilascio-messaggio p {
+  margin: 0;
+}

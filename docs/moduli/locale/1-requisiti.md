@@ -44,7 +44,7 @@ Scritti dall'agente da flussi, regole e decisioni (FL-10 … FL-13, RB-73 … RB
 - **CA-17.16** *Dato* il disco che rifiuta il salvataggio (permessi, file bloccato, disco pieno), *quando* premo Ctrl + S, *allora* compare l'avviso con il motivo, il file sul disco è intatto e le modifiche restano in sospeso (SF-37).
 - **CA-17.17** *Dato* un percorso fuori dalle cartelle dell'elenco, anche dietro un collegamento simbolico, *quando* l'interfaccia chiede di leggerlo o scriverlo, *allora* il nucleo rifiuta (DEC-118).
 - **CA-17.18** *Dato* l'uso di Locale, *quando* Memodu sincronizza, *allora* al server non arriva niente di Locale: né file, né elenco, né modifiche in sospeso (DEC-115).
-- **CA-17.19** *Dato* Esplora file o il Finder, *quando* trascino dentro Memodu, in qualsiasi punto, una cartella e un file .md, *allora* mentre trascino la sezione LOCALE si evidenzia e, rilasciando, la cartella compare in Locale come cartella e il file da solo, prima delle cartelle; un file di altro tipo resta fuori con un avviso (DEC-120, da confermare).
+- **CA-17.19** *Dato* Esplora file o il Finder, *quando* trascino dentro Memodu, in qualsiasi punto, una cartella e un file .md, *allora* mentre trascino tutta la finestra si oscura con «Rilascia per aggiungere a Locale» e, rilasciando, niente entra nel testo aperto, la cartella compare in Locale come cartella e il file da solo, prima delle cartelle; un file di altro tipo resta fuori con un avviso (DEC-120, da confermare).
 
 ---
 

@@ -17,13 +17,14 @@ Scelte di Manuel Cucca del 04/10/2026:
 - **Rilascio di Tauri acceso** (`dragDropEnabled`) e trascinamento interno riscritto con gli eventi del puntatore (A), in `client/src/componenti/trascina.ts`.
 
 Deduzioni dell'agente, da confermare:
-- Mentre si trascina da fuori, la sezione LOCALE si evidenzia come una cartella che riceve e la colonna, se è chiusa, si apre.
+- Mentre si trascina da fuori, **tutta la finestra si oscura** con il velo e al centro il messaggio «Rilascia per aggiungere a Locale»; la colonna resta com'è (correzione di Manuel Cucca del 04/10/2026: la prima versione evidenziava LOCALE e apriva la colonna).
+- Quello che si rilascia **non entra mai nel testo aperto**: la pagina ferma ogni rilascio HTML5 prima dell'editor, che altrimenti leggeva il file e lo incollava nella nota o nel file aperto (difetto della 0.1.7 trovato da Manuel Cucca).
 - Quello che non è una cartella né un file .md o .txt resta fuori, con un avviso; quello che è già in Locale (o dentro una sua cartella) non si aggiunge di nuovo.
 - Un solo file trascinato si apre subito; le cartelle trascinate si aprono nella colonna.
 - Un file da solo in Locale ha nel tasto destro solo «Togli da Locale»; nel percorso si legge «Locale › nome».
 
 ## Conseguenze
 - Nucleo: l'elenco di Locale accetta file .md e .txt (`aggiungi_cartella_locale`), riporta tipo e modifiche in sospeso di ogni elemento (`cartelle_locali`), nuovo comando `aggiungi_percorsi_locali`.
-- Interfaccia: `useLocale.ts` (rilascio e evidenza), `SezioneLocale.tsx`, `FileAperto.tsx`, `FinestraPrincipale.tsx`; colonna e Locale con `trascina.ts` al posto del trascinamento HTML5 (via `fantasma.ts`).
+- Interfaccia: `useLocale.ts` (rilascio, velo, blocco dei rilasci HTML5), `VeloRilascio.tsx`, `SezioneLocale.tsx`, `FileAperto.tsx`, `FinestraPrincipale.tsx`; colonna e Locale con `trascina.ts` al posto del trascinamento HTML5 (via `fantasma.ts`).
 - RF-17, FL-10, RB-73, `architettura/api.md`; piano di test TC-122 … TC-124.
 - Il trascinamento interno va riprovato a mano anche sul Mac.
