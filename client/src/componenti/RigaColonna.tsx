@@ -13,6 +13,7 @@ import {
   Plus,
   Settings,
   Trash2,
+  X,
 } from "lucide-react";
 import {
   useEffect,
@@ -252,51 +253,61 @@ export function RigaSezione({
   );
 }
 
-/** Riga Cestino, fissa in fondo alla colonna, con il numero di elementi (CMP-06, DEC-40). */
+/**
+ * Riga Cestino, fissa in fondo alla colonna, con il numero di elementi (CMP-06, DEC-40). Con il
+ * cestino aperto diventa «Chiudi cestino» con la ×, senza numero, e lo chiude (DEC-117).
+ */
 export function RigaCestino({
   conteggio,
   selezionata,
   onApri,
+  onChiudi,
 }: {
   conteggio: number;
   selezionata: boolean;
   onApri: () => void;
+  onChiudi: () => void;
 }): ReactElement {
   return (
     <button
       type="button"
       className={`riga riga-cartella riga-cestino ${selezionata ? "riga-selezionata interfaccia-controllo-attivo" : "interfaccia-controllo"}`}
       aria-current={selezionata ? "page" : undefined}
-      onClick={onApri}
+      onClick={selezionata ? onChiudi : onApri}
     >
       <span className="riga-icona">
-        <Icona di={Trash2} />
+        <Icona di={selezionata ? X : Trash2} />
       </span>
-      <span className="riga-nome">Cestino</span>
-      <span className="riga-conteggio interfaccia-dettaglio">{conteggio}</span>
+      <span className="riga-nome">{selezionata ? "Chiudi cestino" : "Cestino"}</span>
+      {!selezionata && <span className="riga-conteggio interfaccia-dettaglio">{conteggio}</span>}
     </button>
   );
 }
 
-/** Riga Impostazioni, sotto il Cestino e senza numero (CMP-06, DEC-91). */
+/**
+ * Riga Impostazioni, sotto il Cestino e senza numero (CMP-06, DEC-91). Con le impostazioni
+ * aperte diventa «Chiudi impostazioni» con la × e le chiude (DEC-117).
+ */
 export function RigaImpostazioni({
   selezionata,
   onApri,
+  onChiudi,
 }: {
   selezionata: boolean;
   onApri: () => void;
+  onChiudi: () => void;
 }): ReactElement {
   return (
     <button
       type="button"
       className={`riga riga-cartella riga-cestino ${selezionata ? "riga-selezionata interfaccia-controllo-attivo" : "interfaccia-controllo"}`}
       aria-current={selezionata ? "page" : undefined}
-      onClick={onApri}
+      onClick={selezionata ? onChiudi : onApri}
     >
       <span className="riga-icona">
-        <Icona di={Settings} />
+        <Icona di={selezionata ? X : Settings} />
       </span>
-      <span className="riga-nome">Impostazioni</span>
+      <span className="riga-nome">{selezionata ? "Chiudi impostazioni" : "Impostazioni"}</span>
     </button>
   );
 }

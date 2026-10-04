@@ -435,3 +435,4 @@
 | 04/10/2026 | Manuel Cucca | Riaperta ID-03: voce «Locale» nella colonna per leggere e salvare file e cartelle del disco, senza sincronizzazione, nella prima fase; modifica DEC-01 | DEC-115 |
 | 04/10/2026 | Manuel Cucca | Nuovo modulo Locale con RF-17 File locali (Must, dopo i Must aperti): cartelle aggiunte, solo .md e .txt, operazioni sul disco, Ctrl + S, avviso per i cambi esterni, niente sincronizzazione | DEC-115 |
 | 04/10/2026 | Manuel Cucca | Ctrl + W chiude anche impostazioni e cestino; il pulsante visibile per chiuderli resta da decidere | DEC-116 |
+| 04/10/2026 | Manuel Cucca | Impostazioni e cestino si chiudono dalla loro riga nella colonna, che diventa «Chiudi impostazioni» o «Chiudi cestino» (variante C della proposta in Figma) | DEC-117 |

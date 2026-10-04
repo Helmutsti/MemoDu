@@ -11,7 +11,7 @@ B) Solo la tastiera: Ctrl + W chiude tutto.
 C) Un secondo clic sulla voce già aperta nella colonna svuota l'area.
 
 ## Decisione
-B per ora, scelta da Manuel Cucca il 04/10/2026: Ctrl + W (⌘ + W su Mac) chiude anche impostazioni e cestino e l'area mostra «Nessuna nota aperta», senza riaprire la nota di prima. Dove mettere un pulsante visibile per chiudere impostazioni e cestino resta da decidere (domanda aperta in `avanzamento.md`).
+B per ora, scelta da Manuel Cucca il 04/10/2026: Ctrl + W (⌘ + W su Mac) chiude anche impostazioni e cestino e l'area mostra «Nessuna nota aperta», senza riaprire la nota di prima. Il pulsante visibile è deciso con DEC-117: la riga della colonna diventa «Chiudi impostazioni» o «Chiudi cestino».
 
 ## Conseguenze
 - Codice: `chiudiVista` in `client/src/schermate/FinestraPrincipale.tsx`, con una prova.

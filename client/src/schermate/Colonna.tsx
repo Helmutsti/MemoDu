@@ -64,6 +64,8 @@ interface Proprieta {
   /** Le impostazioni sono aperte nell'area della nota (DEC-91). */
   impostazioniAperte: boolean;
   onApriImpostazioni: () => void;
+  /** «Chiudi cestino» e «Chiudi impostazioni»: l'area torna vuota (DEC-117). */
+  onChiudiVista: () => void;
   /** Chiusa (non si vede), aperta sopra il foglio o fissata accanto (DEC-55). */
   stato: "chiusa" | "aperta" | "fissata";
   /** In cima alla colonna: «← |» e la puntina (DEC-55). */
@@ -337,9 +339,14 @@ export function Colonna(p: Proprieta): ReactElement {
                 conteggio={p.albero.cestino}
                 selezionata={p.cestinoAperto}
                 onApri={p.onApriCestino}
+                onChiudi={p.onChiudiVista}
               />
             )}
-            <RigaImpostazioni selezionata={p.impostazioniAperte} onApri={p.onApriImpostazioni} />
+            <RigaImpostazioni
+              selezionata={p.impostazioniAperte}
+              onApri={p.onApriImpostazioni}
+              onChiudi={p.onChiudiVista}
+            />
           </div>
         </div>
       </AreaScorrevole>

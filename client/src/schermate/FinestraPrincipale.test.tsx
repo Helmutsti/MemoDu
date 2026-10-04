@@ -645,6 +645,36 @@ describe("menu ··· e Sposta in (CA-05.4, CA-15.1)", () => {
     }
   });
 
+  it("«Chiudi impostazioni» e «Chiudi cestino» nella colonna chiudono e lasciano l'area vuota (DEC-117)", async () => {
+    vi.mocked(api.impostazioni).mockResolvedValue({
+      sistema: "windows",
+      scorciatoia: "Control+Alt+KeyN",
+      scorciatoiaPredefinita: true,
+      tema: "sistema",
+      avvioAutomatico: false,
+      inPrimoPiano: false,
+      cestinoInRicerca: true,
+      nomeDispositivo: "Portatile",
+    });
+    vi.mocked(api.statoSincronizzazione).mockResolvedValue({
+      collegata: false,
+      ultimaRiuscita: null,
+      problema: null,
+    });
+    render(<FinestraPrincipale />);
+    await titoloNota("Riunione di lunedì");
+    for (const voce of ["Impostazioni", "Cestino"]) {
+      await userEvent.click(await screen.findByRole("button", { name: new RegExp(`^${voce}`) }));
+      const chiudi = await screen.findByRole("button", {
+        name: `Chiudi ${voce.toLowerCase()}`,
+        current: "page",
+      });
+      await userEvent.click(chiudi);
+      expect(await screen.findByText("Nessuna nota aperta")).toBeInTheDocument();
+      expect(screen.queryByRole("button", { current: "page" })).not.toBeInTheDocument();
+    }
+  });
+
   it("Chiudi nota lascia l'area vuota e la nota resta nella colonna (DEC-68)", async () => {
     render(<FinestraPrincipale />);
     const info = await apriInfo("Riunione di lunedì");

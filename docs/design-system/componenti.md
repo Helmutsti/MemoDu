@@ -1146,6 +1146,7 @@ Compare e sparisce con `movimento-durata-breve` (120 ms).
 - **Contenuto sotto = No:** nessuna ombra, quando tutto il contenuto sta sopra di lui.
 - **Contenuto sotto = Sì:** quando note e cartelle gli scorrono sotto, l'ombra verso l'alto `ombra-sopra` (0 −4 12, colore `ombra-flottante`) lo stacca dal contenuto.
 - Durante il trascinamento la riga Cestino diventa il cestino di trascinamento (CMP-14).
+- Con il cestino o le impostazioni aperti la loro riga, selezionata, diventa l'azione per chiuderli: icona Chiudi (×) e testo «Chiudi cestino» o «Chiudi impostazioni», senza numero; un clic lascia l'area vuota (DEC-117).
 
 ### Stati
 | Stato | Descrizione |

@@ -1071,7 +1071,10 @@ export function FinestraPrincipale(): ReactElement {
     if (cancellata) await ricarica().catch(() => setBloccata(true));
   };
 
-  /** Ctrl + W su impostazioni o cestino (DEC-116): l'area torna vuota, senza la nota di prima. */
+  /**
+   * Ctrl + W su impostazioni o cestino (DEC-116), o «Chiudi impostazioni» e «Chiudi cestino» nella
+   * colonna (DEC-117): l'area torna vuota, senza la nota di prima.
+   */
   const chiudiVista = async () => {
     setNuovaId(null);
     setAperta(null);
@@ -1194,6 +1197,7 @@ export function FinestraPrincipale(): ReactElement {
             onApriCestino={() => void apriCestino()}
             impostazioniAperte={vista === "impostazioni"}
             onApriImpostazioni={() => void apriImpostazioni()}
+            onChiudiVista={() => void chiudiVista()}
           />
           {statoColonna !== "chiusa" && (
             <div
