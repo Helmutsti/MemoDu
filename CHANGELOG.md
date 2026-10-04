@@ -7,6 +7,9 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+### Aggiunto
+- Locale: nella colonna, sotto Cartelle, le cartelle del disco che aggiungi con +; i file .md e .txt si aprono e si modificano in Memodu e si salvano con Ctrl + S (⌘ + S su Mac). Le modifiche non salvate restano anche chiudendo Memodu; se un altro programma cambia il file, Memodu te lo dice. Niente va sul server (RF-17)
+
 ## [0.1.5] – 2026-10-04
 
 ### Aggiunto

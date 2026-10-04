@@ -464,7 +464,6 @@ Comandi del nucleo (`client/src-tauri/src/locale.rs`) su file e cartelle del dis
 | `nuovo_file_locale` | `{ "cartella" }` | `{ "percorso" }` provvisorio, dentro la cartella, finché il file non ha un nome (RB-81) | — |
 | `sospendi_file_locale` | `{ "percorso", "testo" }` | — | 413 |
 | `salva_file_locale` | `{ "percorso", "testo" }` | `{ "percorso", "convertitoInUtf8" }`: per un file nuovo il percorso definitivo, con il nome dalla prima riga e un numero se c'è già (RB-81) | 409 se il disco è cambiato da quando si era letto (l'interfaccia mostra l'avviso, RB-85) |
-| `tieni_versione_locale` | `{ "percorso" }` | — | — («Tieni la mia versione»: il disco di adesso diventa quello letto, il testo resta in sospeso) |
 | `scarta_file_locale` | `{ "percorso" }` | — | — (Ricarica e Chiudi: la modifica in sospeso sparisce) |
 | `crea_cartella_locale` | `{ "dentro", "nome" }` | `{ "percorso" }` | 409 nome già usato (RB-82) |
 | `rinomina_locale` | `{ "percorso", "nome" }` | `{ "percorso" }`; la modifica in sospeso segue il file | 409 nome già usato |
@@ -472,7 +471,7 @@ Comandi del nucleo (`client/src-tauri/src/locale.rs`) su file e cartelle del dis
 | `elimina_locale` | `{ "percorso", "perSempre": false }` | — | 409 «cestino non disponibile»: l'interfaccia chiede conferma e richiama con `perSempre: true` (RB-83) |
 
 **Evento `locale-cambiato`:** `{ "percorsi": ["…"] }`, dal nucleo all'interfaccia quando una cartella dell'elenco cambia sul disco (RB-84): l'interfaccia rilegge le cartelle aperte e, per il file aperto o con modifiche in sospeso, chiede `apri_file_locale` e mostra l'avviso se `cambiatoFuori` (RB-85).
-**Implementazione:** `client/src-tauri/src/locale.rs`, comandi in `comandi.rs`, prove in `locale_test.rs`; nell'interfaccia `client/src/schermate/FileAperto.tsx` e lo stato di Locale in un modulo suo (DEC-118).
+**Implementazione:** regole e dati in `client/src-tauri/src/archivio_locale.rs` (prove in `archivio_locale_test.rs`), comandi e osservazione del disco in `locale.rs`; nell'interfaccia la cartella `client/src/locale/` (`SezioneLocale.tsx`, `FileAperto.tsx`, `useLocale.ts`, prove in `Locale.test.tsx`). In più rispetto alla tabella: `apri_file_locale` restituisce anche `nuovo`, `impronta` (del disco adesso) e `sparito`; `sospendi_file_locale` e `salva_file_locale` ricevono `impronta`, quella letta, e `salva_file_locale` restituisce la nuova; «Tieni la mia versione» è `sospendi_file_locale` con l'impronta di adesso, al posto di `tieni_versione_locale`.
 
 ---
 
