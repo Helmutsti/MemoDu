@@ -423,3 +423,4 @@
 | 02/10/2026 | Manuel Cucca | Il testo della nota occupa tutta la larghezza del foglio, con 24 ai lati; tolta la misura di lettura di 640 (CMP-20, nel codice; mockup da aggiornare) | DEC-107 |
 
 | 04/10/2026 | Codex, su richiesta di Manuel Cucca | Schermate e piano di test RF-01: M adattata al tema sia nella barra dei menu sia nel Dock su macOS; implementazione tecnica proposta, verifica visiva pendente | DEC-108 |
+| 04/10/2026 | Codex, su richiesta di Manuel Cucca | Pulizia della vecchia cartella generata app e riesame delle modifiche locali; avanzamento indica i percorsi attuali del markdown conservato, senza modificare DEC-64; idea MCP/Siri recuperata con numero libero ID-35 | DEC-64, ID-35 |

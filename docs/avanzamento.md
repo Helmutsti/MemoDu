@@ -21,7 +21,7 @@ Perimetro: solo cloud, un solo utente, installazione personale con credenziali p
 | Should | RF-07, RF-09, RF-12, RF-13, RF-16 | — | 1 – Requisiti | Mancano gli scenari d'uso |
 
 ### Idee parcheggiate
-Da rivalutare a fine prima fase: ID-01, ID-03, ID-04, ID-05, ID-06, ID-11, ID-12, ID-13, ID-14, ID-20. In stato Proposta: ID-16, ID-18 (dal moodboard, DEC-11), ID-21, ID-22, ID-23, ID-24, ID-25, ID-28, ID-31 (più scorciatoie). ID-26 accettata (Tab nell'editor, CMP-20); ID-29 accettata in RF-10 (DEC-67, DEC-80); ID-32 e ID-33 accettate in DEC-96. ID-15 accettata in RF-05, ID-17 rifiutata. Dettagli in `registri/idee.md`.
+Da rivalutare a fine prima fase: ID-01, ID-03, ID-04, ID-05, ID-06, ID-11, ID-12, ID-13, ID-14, ID-20. In stato Proposta: ID-16, ID-18 (dal moodboard, DEC-11), ID-21, ID-22, ID-23, ID-24, ID-25, ID-28, ID-31 (più scorciatoie), ID-35 (MCP e Siri, lasciata da parte da Manuel Cucca). ID-26 accettata (Tab nell'editor, CMP-20); ID-29 accettata in RF-10 (DEC-67, DEC-80); ID-32 e ID-33 accettate in DEC-96. ID-15 accettata in RF-05, ID-17 rifiutata. Dettagli in `registri/idee.md`.
 
 ## Rinvii
 Tutto ciò che è stato rimandato, con la fase in cui va risolto.
@@ -70,7 +70,6 @@ Dubbi rimasti dall'allineamento generale della documentazione, da decidere con M
 - `generale/visione.md`: «le credenziali sono preimpostate nell'app (DEC-13)»; da DEC-79 stanno nel file `credenziali`, e senza si lavora in locale (DEC-84). Precisare?
 - `architettura/ambienti.md`: lo script `scripts/dati-di-prova.sh` non esiste più. Togliere il riferimento o tenerlo come promemoria?
 - `architettura/architettura.md`: dice che le impostazioni «hanno le loro sezioni», che non ci sono. Rimandare ad `api.md` e DEC-91, o scrivere la sezione?
-- Cartella `app/` nella radice, non seguita da git (resto del vecchio nome di `client`); DEC-64 cita `app/src/editor/…` per il codice del markdown conservato, che oggi è in `client/src/editor/`. Cancellare la cartella e correggere il percorso?
 - FL-03 inserisce l'immagine «dalla pillola degli strumenti o dal menu /», sospesi con DEC-64; RF-03 parla di «pulsante degli allegati». Lasciare alla Fase 6 di RF-03?
 - `Ricerca.css`: il risultato della card ha come margine verticale `spazio-elenco`, il token del margine dei contenitori; quale ruolo ha?
 - EN-06 Dispositivo resta com'è, pensata per RF-16 (scelta di Manuel Cucca il 01/10/2026): da riprendere con RF-16.
@@ -91,3 +90,9 @@ Da fare in Figma, dopo le scelte del 01/10/2026: filtro attivo della ricerca su 
 ## Verifica icone macOS · 04/10/2026
 
 RF-01, DEC-73, DEC-103: richiesta di Manuel Cucca estesa anche al Dock. Proposta tecnica DEC-108: conservare il flag template nella barra dei menu, usare nel Dock le versioni della M già fornite e aggiornarle al cambio del tema. In verifica; TC-06 macOS non viene segnato come superato.
+
+## Pulizia del repository · 04/10/2026
+
+Completata su richiesta di Manuel Cucca: rimossa dalla radice la vecchia cartella non seguita `app/`, contenente solo file generati e dipendenze della vecchia compilazione. Il codice del markdown conservato con DEC-64 è oggi in `client/src/editor/` (`EditorMarkdown.tsx`, `anteprima.ts`, `comandi.ts`, `formati.ts`, con le loro prove): i percorsi `app/src/editor/` nella decisione sono quelli storici e la decisione resta invariata.
+
+Riesaminate le modifiche locali nello stash: la compatibilità del test dell'editor è già coperta dall'accesso tramite `slice(-1)`; il metadato di installazione di `better-sqlite3` riguardava il vecchio lockfile e non viene riportato. L'idea MCP/Siri è recuperata come ID-35, senza sovrascrivere ID-31. Rimossi lo stash riesaminato e il relativo punto sospeso, conservando fuori dal repository una copia dei residui e della patch.
