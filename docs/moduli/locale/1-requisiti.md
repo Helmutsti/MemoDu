@@ -25,7 +25,25 @@ Scelte di Manuel Cucca del 04/10/2026:
 Ho sul disco una cartella di appunti in .md che uso anche con altri programmi (un progetto, la documentazione di un repository). In Memodu, sotto Locale, aggiungo la cartella; apro un file, lo correggo e salvo con Ctrl + S. Creo un file nuovo accanto e ne rinomino un altro. Se intanto lo stesso file cambia in un altro programma, Memodu me lo dice e scelgo quale versione tenere. Niente di tutto questo va sul server.
 
 ### Criteri di accettazione
-Da scrivere in Fase 8.
+Scritti dall'agente da flussi, regole e decisioni (FL-10 … FL-13, RB-73 … RB-85, DEC-118), da confermare.
+- **CA-17.1** *Dato* Locale nella colonna, *quando* premo + e scelgo una cartella del disco, *allora* compare sotto Locale, in ordine alfabetico, con le sue sottocartelle non nascoste e i soli file .md e .txt; su un altro computer non compare (RB-73, RB-75).
+- **CA-17.2** *Dato* una cartella già nell'elenco, *quando* aggiungo lei o una sua sottocartella, *allora* non si aggiunge di nuovo e si apre quella che c'è (RB-74).
+- **CA-17.3** *Dato* una cartella dell'elenco, *quando* scelgo Togli da Locale, *allora* sparisce dall'elenco e sul disco non cambia niente (RB-76).
+- **CA-17.4** *Dato* una cartella dell'elenco che sul disco non c'è più, *quando* guardo la colonna, *allora* la vedo «non trovata», con Togli da Locale; rimessa al suo posto, torna piena.
+- **CA-17.5** *Dato* un file aperto, *quando* scrivo, *allora* compare il pallino nel percorso e nella riga; con Ctrl + S (⌘ + S su Mac) il file sul disco ha il testo nuovo e il pallino sparisce (RB-77, RB-79).
+- **CA-17.6** *Dato* un file con modifiche non salvate, *quando* apro un'altra nota o un altro file, oppure chiudo e riapro Memodu, *allora* riaprendo il file ritrovo le modifiche con il pallino, e il file sul disco è ancora quello di prima (RB-78).
+- **CA-17.7** *Dato* un file con gli a capo di Windows o con il BOM, *quando* lo modifico e salvo, *allora* a capo e BOM restano come erano (RB-79).
+- **CA-17.8** *Dato* un file non UTF-8 con lettere accentate, *quando* lo apro, *allora* gli accenti sono giusti; al primo Ctrl + S il file diventa UTF-8 e compare una volta l'avviso «l'ho salvato in UTF-8» (RB-80).
+- **CA-17.9** *Dato* il + o Nuovo file su una cartella, *quando* scrivo e premo Ctrl + S, *allora* il file nasce sul disco con il nome dalla prima riga e l'estensione .md, con un numero se il nome c'è già; prima del Ctrl + S sul disco non c'è (RB-81).
+- **CA-17.10** *Dato* una cartella o un file in Locale, *quando* creo una cartella, rinomino, sposto (anche trascinando e tra cartelle dell'elenco) o elimino, *allora* sul disco succede lo stesso; un nome non ammesso o già usato è rifiutato con il motivo (RB-82).
+- **CA-17.11** *Dato* un file o una cartella in Locale, *quando* lo elimino, *allora* finisce nel Cestino del sistema senza domande; su un disco senza Cestino Memodu chiede prima se eliminarlo per sempre (RB-83).
+- **CA-17.12** *Dato* una cartella dell'elenco, *quando* un altro programma crea, rinomina o elimina un file, *allora* la colonna si aggiorna entro 2 secondi (RB-84).
+- **CA-17.13** *Dato* un file aperto o con modifiche in sospeso, *quando* un altro programma lo cambia, *allora* compare l'avviso con Ricarica e Tieni la mia versione: Ricarica mostra il testo del disco, Tieni la mia versione lascia il mio e il Ctrl + S successivo lo scrive sopra (RB-85).
+- **CA-17.14** *Dato* un file aperto o con modifiche in sospeso, *quando* un altro programma lo elimina o lo sposta, *allora* compare l'avviso con Ricrealo e Chiudi: Ricrealo lo fa rinascere al suo posto al Ctrl + S, Chiudi lo chiude e scarta le modifiche (RB-85).
+- **CA-17.15** *Dato* un file oltre 10 MB, *quando* lo apro, *allora* al posto del testo vedo che è troppo grande; un file in sola lettura si apre ma non si modifica, con il motivo.
+- **CA-17.16** *Dato* il disco che rifiuta il salvataggio (permessi, file bloccato, disco pieno), *quando* premo Ctrl + S, *allora* compare l'avviso con il motivo, il file sul disco è intatto e le modifiche restano in sospeso (SF-37).
+- **CA-17.17** *Dato* un percorso fuori dalle cartelle dell'elenco, anche dietro un collegamento simbolico, *quando* l'interfaccia chiede di leggerlo o scriverlo, *allora* il nucleo rifiuta (DEC-118).
+- **CA-17.18** *Dato* l'uso di Locale, *quando* Memodu sincronizza, *allora* al server non arriva niente di Locale: né file, né elenco, né modifiche in sospeso (DEC-115).
 
 ---
 

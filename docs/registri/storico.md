@@ -444,3 +444,4 @@
 | 04/10/2026 | Manuel Cucca, Agente IA | RF-17: wireframe approvati; Fase 5 con i tipi File, File non salvato, File nuovo, Cartella non trovata in CMP-06, la proprietà Non salvato in CMP-26, le due scelte nell'avviso CMP-15 e la sezione Locale in CMP-14; file senza icona e pallino da 6 (scelte di Manuel Cucca) | — |
 | 04/10/2026 | Agente IA | RF-17 Fase 6: nove mockup di Locale nella pagina «SC-01 Locale (RF-17)» del file Mockup, con le esportazioni; da approvare | — |
 | 04/10/2026 | Manuel Cucca | RF-17: mockup approvati; Fase 7 con l'architettura di Locale (nucleo Rust, notify, sha2, encoding_rs, trash, tauri-plugin-dialog), comandi ed evento in api.md | DEC-118 |
+| 04/10/2026 | Agente IA | RF-17 Fase 8: criteri CA-17.1 … CA-17.18, piano di test TC-104 … TC-121 e set di dati «Prove locale»; da approvare | — |
