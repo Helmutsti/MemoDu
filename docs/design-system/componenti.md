@@ -313,6 +313,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 - **Rientro:** `spazio-rientro` (24) per ogni livello (DEC-100).
 - **Cestino** (DEC-40): icona `trash-2` (16) al posto della freccia, «Cestino» e il numero di elementi nel cestino; fissa in fondo alla colonna. Hover e Selezionata come le altre righe (selezionata quando il cestino è aperto).
 - **Impostazioni** (DEC-91): come il cestino, sotto di lui, con l'icona `settings` e «Impostazioni», senza numero; selezionata quando la pagina delle impostazioni è aperta.
+- **Chiudi cestino** e **Chiudi impostazioni** (DEC-117): solo Selezionata. Con il cestino o le impostazioni aperti la loro riga diventa l'azione per chiuderli: icona `x` (Icona/Chiudi, 16), «Chiudi cestino» o «Chiudi impostazioni», senza numero.
 
 ### Stati
 | Stato | Descrizione |
