@@ -7,6 +7,8 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+## [0.1.5] – 2026-10-04
+
 ### Aggiunto
 - Ctrl + W (⌘ + W su Mac) chiude anche le impostazioni e il cestino e lascia l'area di destra vuota
 - Con le impostazioni o il cestino aperti, la loro riga nella colonna diventa «Chiudi impostazioni» o «Chiudi cestino»
