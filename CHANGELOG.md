@@ -7,6 +7,14 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+## [0.1.4] – 2026-10-04
+
+### Cambiato
+- Quando la stessa nota o cartella cambia su due computer, vince la modifica che arriva per ultima al server, anche se l'orologio di un computer è sbagliato (RF-10)
+- Una cartella rinominata in due modi prende il nome arrivato per ultimo, senza creare una cartella vuota con l'altro nome
+- Una nota messa in una cartella che sull'altro computer è finita nel cestino va tra le non organizzate; la cartella resta nel cestino
+- L'avviso «Il server non risponde» compare dopo un'ora senza sincronizzare, non più dopo un giorno
+
 ### Corretto
 - Nella nota rapida l’hover della freccia di «Chiudi» copre tutta la sua metà del pulsante
 - Il bordo ridimensionabile della sidebar non copre più il menu aperto con il tasto destro su una nota
