@@ -456,8 +456,9 @@ Comandi del nucleo (`client/src-tauri/src/locale.rs`) su file e cartelle del dis
 
 | Comando | Input | Output | Errori in più |
 |---|---|---|---|
-| `cartelle_locali` | — | `[{ "percorso", "nome", "stato": "presente" \| "non trovata" \| "non accessibile" }]` in ordine alfabetico (RB-73) | — |
+| `cartelle_locali` | — | `[{ "percorso", "nome", "stato": "presente" \| "non trovata" \| "non accessibile", "tipo": "cartella" \| "file", "sospeso" }]`: prima i file trascinati da soli, poi le cartelle, in ordine alfabetico (RB-73, DEC-120) | — |
 | `aggiungi_cartella_locale` | — (il nucleo apre la finestra di scelta del sistema) | la cartella aggiunta, `null` se si annulla | 409 già nell'elenco o dentro una cartella dell'elenco, con il percorso di quella (RB-74) |
+| `aggiungi_percorsi_locali` | `{ "percorsi": ["…"] }`, quello che si è trascinato dentro Memodu (DEC-120) | `{ "aggiunti": [CartellaLocale], "gia": ["…"], "scartati": ["…"] }`: cartelle e file .md o .txt entrano, quelli già in Locale vanno in `gia`, il resto in `scartati` | — |
 | `togli_cartella_locale` | `{ "percorso" }` | — | — (sul disco non cambia niente, RB-76) |
 | `elenca_locale` | `{ "percorso" }` di una cartella | `[{ "nome", "percorso", "tipo": "cartella" \| "file", "sospeso": false }]`: file e poi cartelle, in ordine alfabetico (DEC-119); niente cartelle nascoste, solo .md e .txt (RB-75) | — |
 | `apri_file_locale` | `{ "percorso" }` | `{ "testo", "sospeso", "codifica": "utf-8" \| "windows-1252", "solaLettura", "cambiatoFuori" }`; con modifiche in sospeso `testo` è quello in sospeso (RB-78) e `cambiatoFuori` dice se il disco è cambiato da quando si era letto (RB-85) | 413 oltre 10 MB |

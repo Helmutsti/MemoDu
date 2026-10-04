@@ -34,8 +34,27 @@ const RIUNIONE = `${APPUNTI}\\riunione.txt`;
 function stato(altro: Partial<StatoLocale> = {}): StatoLocale {
   return {
     cartelle: [
-      { percorso: RADICE, nome: "prove-locale", stato: "presente" },
-      { percorso: "D:\\chiavetta-appunti", nome: "chiavetta-appunti", stato: "non trovata" },
+      {
+        percorso: RADICE,
+        nome: "prove-locale",
+        stato: "presente",
+        tipo: "cartella",
+        sospeso: false,
+      },
+      {
+        percorso: "D:\\chiavetta-appunti",
+        nome: "chiavetta-appunti",
+        stato: "non trovata",
+        tipo: "cartella",
+        sospeso: false,
+      },
+      {
+        percorso: "D:\\lettera.txt",
+        nome: "lettera.txt",
+        stato: "presente",
+        tipo: "file",
+        sospeso: true,
+      },
     ],
     contenuti: {
       [RADICE]: [
@@ -58,6 +77,7 @@ function stato(altro: Partial<StatoLocale> = {}): StatoLocale {
     ricaricaCartella: vi.fn(async () => {}),
     ricaricaAttorno: vi.fn(async () => {}),
     alCambio: vi.fn(() => () => {}),
+    esterno: false,
     ...altro,
   };
 }
@@ -103,6 +123,22 @@ describe("sezione Locale della colonna (RF-17)", () => {
     const riunione = screen.getByText("riunione.txt").closest("button")!;
     expect(within(riunione).getByRole("img", { name: "non salvato" })).toBeInTheDocument();
     expect(screen.getByText("non trovata")).toBeInTheDocument();
+    // Un file trascinato da solo sta nella radice, con il suo pallino (DEC-120).
+    const lettera = screen.getByText("lettera.txt").closest("button")!;
+    expect(within(lettera).getByRole("img", { name: "non salvato" })).toBeInTheDocument();
+  });
+
+  it("mentre si trascina da Esplora file la sezione si evidenzia (DEC-120)", () => {
+    const { container } = render(
+      <SezioneLocale
+        locale={stato({ esterno: true })}
+        fileAperto={null}
+        onApriFile={() => {}}
+        onFileSpostato={() => {}}
+        onErrore={() => {}}
+      />,
+    );
+    expect(container.querySelector(".colonna-sezione-rilascio")).not.toBeNull();
   });
 
   it("senza cartelle invita ad aggiungerne una (SF-16)", () => {

@@ -51,12 +51,28 @@ pub const SCHEMA_LOCALE: &str = "
 
 // ——— Forme scambiate con l'interfaccia ———
 
+/// Un elemento dell'elenco di Locale: una cartella o, trascinato da solo, un file .md o .txt
+/// (DEC-120).
 #[derive(Debug, Clone, Serialize, PartialEq)]
 pub struct CartellaLocale {
     pub percorso: String,
     pub nome: String,
     /// "presente", "non trovata" o "non accessibile".
     pub stato: &'static str,
+    /// "cartella" o "file".
+    pub tipo: &'static str,
+    /// Un file con modifiche non salvate (RB-77).
+    pub sospeso: bool,
+}
+
+/// Esito dell'aggiunta di quello che si è trascinato dentro Memodu (DEC-120).
+#[derive(Debug, Clone, Default, Serialize, PartialEq)]
+pub struct Aggiunti {
+    pub aggiunti: Vec<CartellaLocale>,
+    /// Già in Locale, o dentro una cartella di Locale: la cartella o il file che c'è.
+    pub gia: Vec<String>,
+    /// Né cartelle né file .md o .txt.
+    pub scartati: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq)]
@@ -318,9 +334,9 @@ impl Archivio {
             .collect())
     }
 
-    /// Le cartelle dell'elenco che ci sono, per osservarle (RB-84).
+    /// Le cartelle e i file dell'elenco che ci sono, per osservarli (RB-84).
     pub fn radici_locali(&mut self) -> Esito<Vec<PathBuf>> {
-        self.con_riconnessione(|a| Ok(a.radici()?.into_iter().filter(|r| r.is_dir()).collect()))
+        self.con_riconnessione(|a| Ok(a.radici()?.into_iter().filter(|r| r.exists()).collect()))
     }
 
     /// Il percorso sta dentro una cartella dell'elenco, anche dopo aver risolto i collegamenti?
@@ -415,33 +431,65 @@ impl Archivio {
 
     // ——— Elenco (FL-10) ———
 
-    /// Le cartelle dell'elenco in ordine alfabetico, con lo stato letto dal disco (RB-73).
+    /// L'elenco: prima i file, poi le cartelle, in ordine alfabetico (RB-73, DEC-119, DEC-120),
+    /// con lo stato letto dal disco.
     pub fn cartelle_locali(&mut self) -> Esito<Vec<CartellaLocale>> {
         self.con_riconnessione(|a| {
-            let mut cartelle: Vec<CartellaLocale> = a
-                .radici()?
-                .into_iter()
-                .map(|r| {
-                    let stato = match fs::read_dir(&r) {
+            let mut elenco = Vec::new();
+            for r in a.radici()? {
+                let nome = nome_di(&r);
+                // Un elemento che non c'è più è un file se ne ha l'estensione.
+                let file = r.is_file() || (!r.exists() && estensione_ammessa(&nome));
+                let stato = if file {
+                    if r.is_file() { "presente" } else { "non trovata" }
+                } else {
+                    match fs::read_dir(&r) {
                         Ok(_) => "presente",
-                        Err(e) if e.kind() == io::ErrorKind::NotFound => "non trovata",
                         Err(_) if !r.exists() => "non trovata",
                         Err(_) => "non accessibile",
-                    };
-                    CartellaLocale { nome: nome_di(&r), percorso: testo_percorso(&r), stato }
-                })
-                .collect();
-            cartelle.sort_by(|x, y| ordine(&x.nome, &y.nome).then_with(|| x.percorso.cmp(&y.percorso)));
-            Ok(cartelle)
+                    }
+                };
+                let percorso = testo_percorso(&r);
+                let sospeso = file && a.sospeso(&percorso)?.is_some();
+                elenco.push(CartellaLocale { nome, percorso, stato, tipo: if file { "file" } else { "cartella" }, sospeso });
+            }
+            elenco.sort_by(|x, y| {
+                (x.tipo == "cartella")
+                    .cmp(&(y.tipo == "cartella"))
+                    .then_with(|| ordine(&x.nome, &y.nome))
+                    .then_with(|| x.percorso.cmp(&y.percorso))
+            });
+            Ok(elenco)
         })
     }
 
-    /// Aggiunge una cartella scelta dall'utente; già nell'elenco o dentro una cartella
-    /// dell'elenco: 409 con quella che c'è (RB-74).
+    /// Aggiunge a Locale quello che si è trascinato dentro Memodu: cartelle e file .md e .txt
+    /// (DEC-120). Uno alla volta, così un elemento sbagliato non ferma gli altri.
+    pub fn aggiungi_percorsi_locali(&mut self, percorsi: &[PathBuf]) -> Esito<Aggiunti> {
+        let mut esito = Aggiunti::default();
+        for p in percorsi {
+            match self.aggiungi_cartella_locale(p) {
+                Ok(c) => esito.aggiunti.push(c),
+                Err(Errore::GiaInLocale(dove)) => esito.gia.push(dove),
+                Err(Errore::PercorsoNonValido(_)) | Err(Errore::FileNonTrovato(_)) => {
+                    esito.scartati.push(testo_percorso(p))
+                }
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(esito)
+    }
+
+    /// Aggiunge una cartella, o un file .md o .txt trascinato da solo (DEC-120); già nell'elenco
+    /// o dentro un elemento dell'elenco: 409 con quello che c'è (RB-74).
     pub fn aggiungi_cartella_locale(&mut self, percorso: &Path) -> Esito<CartellaLocale> {
         self.con_riconnessione(|a| {
-            if !percorso.is_dir() {
+            if !percorso.exists() {
                 return Err(Errore::FileNonTrovato(testo_percorso(percorso)));
+            }
+            let file = percorso.is_file();
+            if file && !estensione_ammessa(&nome_di(percorso)) {
+                return Err(Errore::PercorsoNonValido("Locale prende cartelle e file .md e .txt".into()));
             }
             let vero = fs::canonicalize(percorso).map_err(|e| errore_disco(e, percorso))?;
             for radice in a.radici()? {
@@ -455,7 +503,13 @@ impl Archivio {
                 "INSERT INTO locale_cartelle (percorso, aggiunta_il) VALUES (?, ?)",
                 params![testo_percorso(percorso), a.ora()],
             )?;
-            Ok(CartellaLocale { nome: nome_di(percorso), percorso: testo_percorso(percorso), stato: "presente" })
+            Ok(CartellaLocale {
+                nome: nome_di(percorso),
+                percorso: testo_percorso(percorso),
+                stato: "presente",
+                tipo: if file { "file" } else { "cartella" },
+                sospeso: false,
+            })
         })
     }
 

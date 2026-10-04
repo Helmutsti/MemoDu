@@ -7,13 +7,13 @@
 import { FilePlus, FolderMinus, FolderPlus, Pencil, Trash2, type LucideIcon } from "lucide-react";
 import {
   useState,
-  type DragEvent,
+  type PointerEvent,
   type KeyboardEvent,
   type ReactElement,
   type ReactNode,
 } from "react";
 import { ErroreApi } from "../api";
-import { avviaFantasma } from "../componenti/fantasma";
+import { avviaTrascinamento } from "../componenti/trascina";
 import { FinestraConferma } from "../componenti/FinestraConferma";
 import { Menu, type VoceMenu } from "../componenti/Menu";
 import { CampoNomeCartella, RigaCartella, RigaFile, RigaSezione } from "../componenti/RigaColonna";
@@ -59,7 +59,6 @@ export function SezioneLocale({
   const [campo, setCampo] = useState<Campo | null>(null);
   const [menu, setMenu] = useState<{ elemento: Elemento; x: number; y: number } | null>(null);
   const [perSempre, setPerSempre] = useState<string | null>(null);
-  const [trascinato, setTrascinato] = useState<string | null>(null);
   const [sopra, setSopra] = useState<string | null>(null);
 
   const messaggio = (e: unknown) =>
@@ -205,37 +204,27 @@ export function SezioneLocale({
     }
   };
 
-  // Trascinamento: file e cartelle (non quelle dell'elenco) su una cartella di Locale.
+  // Trascinamento: file e cartelle (non quelli dell'elenco) su una cartella di Locale, con il
+  // puntatore (DEC-120, `trascina.ts`). Le destinazioni sono «l:» e il percorso.
+  const accetta = (da: string, dentro: string) =>
+    !dentroDi(dentro, da) && cartellaDi(da) !== dentro;
   const sorgente = (percorso: string) => ({
-    draggable: true,
-    onDragStart: (e: DragEvent) => {
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("text/plain", percorso);
-      avviaFantasma(e);
-      setTrascinato(percorso);
-    },
-    onDragEnd: () => {
-      setTrascinato(null);
-      setSopra(null);
-    },
+    onPointerDown: (e: PointerEvent<HTMLElement>) =>
+      avviaTrascinamento(e, {
+        onInizio: () => setSopra(null),
+        onSopra: (k) => {
+          const dentro = k?.startsWith("l:") ? k.slice(2) : null;
+          setSopra(dentro && accetta(percorso, dentro) ? dentro : null);
+        },
+        onRilascio: (k) => {
+          const dentro = k?.startsWith("l:") ? k.slice(2) : null;
+          setSopra(null);
+          if (dentro && accetta(percorso, dentro)) void sposta(percorso, dentro);
+        },
+        onFine: () => setSopra(null),
+      }),
   });
-  const accetta = (dentro: string) =>
-    trascinato !== null && !dentroDi(dentro, trascinato) && cartellaDi(trascinato) !== dentro;
-  const destinazione = (dentro: string) => ({
-    onDragOver: (e: DragEvent) => {
-      if (!accetta(dentro)) return;
-      e.preventDefault();
-      e.dataTransfer.dropEffect = "move";
-      setSopra(dentro);
-    },
-    onDragLeave: () => setSopra((s) => (s === dentro ? null : s)),
-    onDrop: (e: DragEvent) => {
-      if (!accetta(dentro) || !trascinato) return;
-      e.preventDefault();
-      setSopra(null);
-      void sposta(trascinato, dentro);
-    },
-  });
+  const destinazione = (dentro: string) => ({ "data-destinazione": `l:${dentro}` });
 
   const campoNuova = (dentro: string, livello: number): ReactNode =>
     campo?.tipo === "nuova" && campo.dentro === dentro ? (
@@ -334,6 +323,29 @@ export function SezioneLocale({
 
   const radice = (c: CartellaLocale): ReactNode => {
     const presente = c.stato === "presente";
+    // Un file trascinato da solo: una riga file nella radice, come le note di CLOUD (DEC-120).
+    if (c.tipo === "file") {
+      return (
+        <RigaFile
+          key={c.percorso}
+          nome={c.nome}
+          percorso={c.percorso}
+          selezionata={c.percorso === fileAperto}
+          sospeso={c.sospeso}
+          nuovo={false}
+          stato={presente ? undefined : c.stato}
+          livelloCartella={-2}
+          onApri={() => presente && onApriFile(c.percorso)}
+          onMenu={(e) =>
+            setMenu({
+              elemento: { percorso: c.percorso, tipo: "assente" },
+              x: e.clientX,
+              y: e.clientY,
+            })
+          }
+        />
+      );
+    }
     const apertaQui = presente && locale.aperte.has(c.percorso);
     return (
       <li role="none" key={c.percorso}>
@@ -383,7 +395,10 @@ export function SezioneLocale({
   };
 
   return (
-    <div className="colonna-sezione" onKeyDown={suTasto}>
+    <div
+      className={`colonna-sezione ${locale.esterno ? "colonna-sezione-rilascio" : ""}`}
+      onKeyDown={suTasto}
+    >
       <RigaSezione
         titolo="Locale"
         aperta={aperta}

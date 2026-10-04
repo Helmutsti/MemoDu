@@ -14,7 +14,7 @@ use tauri::{AppHandle, Emitter, Manager, State};
 use tauri_plugin_dialog::DialogExt;
 
 use crate::archivio::locale::{
-    CartellaLocale, FileLocale, Percorso, Salvato, VoceLocale, SUFFISSO_TEMPORANEO,
+    Aggiunti, CartellaLocale, FileLocale, Percorso, Salvato, VoceLocale, SUFFISSO_TEMPORANEO,
 };
 use crate::archivio::{Errore, Esito};
 use crate::comandi::Dati;
@@ -98,6 +98,15 @@ pub async fn aggiungi_cartella_locale(app: AppHandle, dati: Stato<'_>) -> Esito<
     let cartella = dati.con(|a| a.aggiungi_cartella_locale(&percorso))?;
     app.state::<Osservatore>().aggiorna(&app);
     Ok(Some(cartella))
+}
+
+/// Quello che si è trascinato dentro Memodu da Esplora file o dal Finder (DEC-120).
+#[tauri::command]
+pub async fn aggiungi_percorsi_locali(app: AppHandle, dati: Stato<'_>, percorsi: Vec<String>) -> Esito<Aggiunti> {
+    let percorsi: Vec<PathBuf> = percorsi.into_iter().map(PathBuf::from).collect();
+    let esito = dati.con(|a| a.aggiungi_percorsi_locali(&percorsi))?;
+    app.state::<Osservatore>().aggiorna(&app);
+    Ok(esito)
 }
 
 #[tauri::command]

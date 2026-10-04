@@ -234,7 +234,21 @@ export function FinestraPrincipale(): ReactElement {
   const [fileAperto, setFileAperto] = useState<string | null>(null);
   /** Un'operazione di Locale sul disco non è riuscita: il motivo (SF-37). */
   const [avvisoLocale, setAvvisoLocale] = useState<string | null>(null);
-  const locale = useLocale();
+  // Rilasciato qualcosa da Esplora file (DEC-120): un solo file si apre; quello che Locale non
+  // prende lo dice l'avviso.
+  const locale = useLocale((esito) => {
+    const file = esito.aggiunti.filter((c) => c.tipo === "file");
+    if (file.length === 1 && esito.aggiunti.length === 1)
+      void apriFileRef.current(file[0].percorso);
+    if (esito.scartati.length > 0) {
+      setAvvisoLocale(
+        esito.scartati.length === 1
+          ? "Locale prende cartelle e file .md e .txt: un elemento è rimasto fuori."
+          : `Locale prende cartelle e file .md e .txt: ${esito.scartati.length} elementi sono rimasti fuori.`,
+      );
+    }
+  });
+  const apriFileRef = useRef<(percorso: string) => Promise<void>>(async () => {});
   const [cestino, setCestino] = useState<ElementoCestino[]>([]);
   const [bloccata, setBloccata] = useState(false);
   const [riprovando, setRiprovando] = useState(false);
@@ -254,7 +268,12 @@ export function FinestraPrincipale(): ReactElement {
   // Per ora i pulsanti della finestra compaiono solo con il mouse vicino al bordo in alto
   // (DEC-61, provvisorio).
   const [vicinoInAlto, setVicinoInAlto] = useState(false);
-  const statoColonna = colonnaFissata ? "fissata" : colonnaAperta ? "aperta" : "chiusa";
+  // Trascinando da fuori con la colonna chiusa, la colonna si apre per mostrare LOCALE (DEC-120).
+  const statoColonna = colonnaFissata
+    ? "fissata"
+    : colonnaAperta || locale.esterno
+      ? "aperta"
+      : "chiusa";
   const pulsanteApriColonna = useRef<HTMLButtonElement>(null);
   const pulsanteChiudiColonna = useRef<HTMLButtonElement>(null);
   const apriColonna = () => {
@@ -929,6 +948,10 @@ export function FinestraPrincipale(): ReactElement {
     }
     setVista("impostazioni");
   };
+
+  useEffect(() => {
+    apriFileRef.current = apriFile;
+  });
 
   /** Un file di Locale al posto della nota (RF-17, FL-11). */
   const apriFile = async (percorso: string) => {

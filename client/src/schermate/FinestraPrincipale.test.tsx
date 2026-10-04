@@ -92,6 +92,27 @@ const scriviTitolo = async (titolo: string, aggiunta: string) => {
   await userEvent.type(within(info).getByRole("textbox", { name: "Titolo" }), aggiunta);
 };
 
+/**
+ * Trascinamento con il puntatore (DEC-120): preme sulla riga e si sposta oltre la soglia; `sopra`
+ * e `rilascia` portano il puntatore su un elemento (jsdom non calcola elementFromPoint).
+ */
+function trascina(sorgente: HTMLElement) {
+  let bersaglio: Element | null = null;
+  document.elementFromPoint = () => bersaglio;
+  fireEvent.pointerDown(sorgente, { button: 0, clientX: 10, clientY: 10 });
+  fireEvent.pointerMove(document, { clientX: 30, clientY: 30 });
+  return {
+    sopra(el: Element) {
+      bersaglio = el;
+      fireEvent.pointerMove(document, { clientX: 40, clientY: 40 });
+    },
+    rilascia(el: Element) {
+      bersaglio = el;
+      fireEvent.pointerUp(document, { clientX: 40, clientY: 40 });
+    },
+  };
+}
+
 /** Il + di CLOUD, poi «Nuova cartella» nel menu Aggiungi (DEC-119). */
 async function nuovaCartellaDalPiu() {
   await userEvent.click(await screen.findByRole("button", { name: "Aggiungi" }));
@@ -384,36 +405,43 @@ describe("SC-01, cartelle (RF-05)", () => {
   it("trascinando una nota su una cartella la sposta; una cartella non entra in sé stessa (CA-05.3, CA-05.8)", async () => {
     vi.mocked(api.spostaNota).mockResolvedValue(nota("r", "Riunione di lunedì", "", "Personale"));
     render(<FinestraPrincipale />);
-    const dati = { setData: vi.fn(), dropEffect: "", effectAllowed: "" };
-    fireEvent.dragStart(await riga("Riunione di lunedì"), { dataTransfer: dati });
+    const nota1 = trascina(await riga("Riunione di lunedì"));
     expect(await screen.findByText("Trascina qui per eliminare")).toBeInTheDocument();
     const personale = await riga(/Personale/);
-    fireEvent.dragOver(personale, { dataTransfer: dati });
-    expect(personale).toHaveClass("riga-sopra");
-    fireEvent.drop(personale, { dataTransfer: dati });
+    nota1.sopra(personale);
+    await waitFor(() => expect(personale).toHaveClass("riga-sopra"));
+    nota1.rilascia(personale);
     await waitFor(() => expect(api.spostaNota).toHaveBeenCalledWith("r", "Personale"));
 
     await userEvent.click(await riga(/Lavoro/));
-    fireEvent.dragStart(await riga(/Lavoro/), { dataTransfer: dati });
+    const lavoro = trascina(await riga(/Lavoro/));
     const clienti = await riga(/Clienti/);
-    fireEvent.dragOver(clienti, { dataTransfer: dati });
+    lavoro.sopra(clienti);
     expect(clienti).not.toHaveClass("riga-sopra");
-    fireEvent.drop(clienti, { dataTransfer: dati });
+    lavoro.rilascia(clienti);
     expect(api.spostaCartella).not.toHaveBeenCalled();
   });
 
-  it("trascinando, la pillola la disegna l'app e sparisce al rilascio (senza angoli neri)", async () => {
+  it("trascinando, la pillola la disegna l'app e sparisce al rilascio (DEC-120)", async () => {
     render(<FinestraPrincipale />);
-    const dati = { setData: vi.fn(), setDragImage: vi.fn(), dropEffect: "", effectAllowed: "" };
-    const sorgente = await riga("Riunione di lunedì");
-    fireEvent.dragStart(sorgente, { dataTransfer: dati, clientX: 10, clientY: 10 });
-    expect(dati.setDragImage).toHaveBeenCalledTimes(1);
+    const t = trascina(await riga("Riunione di lunedì"));
     const fantasma = document.querySelector(".fantasma");
     expect(fantasma).toHaveTextContent("Riunione di lunedì");
     expect(fantasma).toHaveAttribute("aria-hidden", "true");
     expect(fantasma).not.toHaveAttribute("role");
-    fireEvent.dragEnd(sorgente, { dataTransfer: dati });
+    t.rilascia(document.body);
     expect(document.querySelector(".fantasma")).toBeNull();
+  });
+
+  it("un clic senza muovere il puntatore apre la nota e non trascina (DEC-120)", async () => {
+    vi.mocked(api.leggi).mockResolvedValue(nota("r", "Riunione di lunedì"));
+    render(<FinestraPrincipale />);
+    const r = await riga("Riunione di lunedì");
+    fireEvent.pointerDown(r, { button: 0, clientX: 10, clientY: 10 });
+    fireEvent.pointerUp(document, { clientX: 11, clientY: 10 });
+    await userEvent.click(r);
+    expect(document.querySelector(".fantasma")).toBeNull();
+    await waitFor(() => expect(api.leggi).toHaveBeenCalledWith("r"));
   });
 
   it("un errore dell'API mostra l'avviso e ricarica la colonna (CA-05.10)", async () => {

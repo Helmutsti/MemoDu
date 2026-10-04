@@ -3,9 +3,10 @@
 // (evento «locale-cambiato», RB-84), che arrivano anche al file aperto.
 
 import { listen } from "@tauri-apps/api/event";
+import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { IN_TAURI } from "../finestra";
-import { apiLocale, cartellaDi, type CartellaLocale, type VoceLocale } from "./api";
+import { apiLocale, cartellaDi, type Aggiunti, type CartellaLocale, type VoceLocale } from "./api";
 
 /** Memodu ricorda quali cartelle di Locale sono aperte (come la colonna, DEC-55). */
 const CHIAVE_APERTE = "memodu.locale-aperte";
@@ -39,14 +40,24 @@ export interface StatoLocale {
   ricaricaAttorno: (percorso: string) => Promise<void>;
   /** Registra chi vuole sapere dei cambi sul disco (il file aperto); restituisce chi lo toglie. */
   alCambio: (gestore: (percorsi: string[]) => void) => () => void;
+  /** Si sta trascinando dentro la finestra qualcosa da Esplora file o dal Finder (DEC-120). */
+  esterno: boolean;
 }
 
-export function useLocale(): StatoLocale {
+/** Il rilascio da Esplora file è finito: cosa è entrato in Locale (DEC-120). */
+export type AlRilascio = (esito: Aggiunti) => void;
+
+export function useLocale(alRilascio?: AlRilascio): StatoLocale {
   const [cartelle, setCartelle] = useState<CartellaLocale[]>([]);
   const [contenuti, setContenuti] = useState<Record<string, VoceLocale[]>>({});
   const [aperte, setAperte] = useState<Set<string>>(leggiAperte);
   const aperteAttuali = useRef(aperte);
   const gestori = useRef(new Set<(percorsi: string[]) => void>());
+  const [esterno, setEsterno] = useState(false);
+  const suRilascio = useRef(alRilascio);
+  useEffect(() => {
+    suRilascio.current = alRilascio;
+  });
 
   const ricaricaCartella = useCallback(
     (percorso: string) =>
@@ -126,7 +137,31 @@ export function useLocale(): StatoLocale {
     return () => void promessa.then((togli) => togli());
   }, [ricaricaCartelle]);
 
+  // File e cartelle trascinati dentro la finestra da Esplora file o dal Finder: ovunque si
+  // rilascino entrano in Locale (DEC-120). Le cartelle aggiunte si aprono.
+  useEffect(() => {
+    if (!IN_TAURI) return;
+    const promessa = getCurrentWebview().onDragDropEvent((evento) => {
+      const p = evento.payload;
+      if (p.type === "enter" || p.type === "over") setEsterno(true);
+      else if (p.type === "leave") setEsterno(false);
+      else if (p.type === "drop") {
+        setEsterno(false);
+        void apiLocale
+          .aggiungiPercorsi(p.paths)
+          .then(async (esito) => {
+            await ricaricaCartelle();
+            for (const c of esito.aggiunti) if (c.tipo === "cartella") apriChiudi(c.percorso, true);
+            suRilascio.current?.(esito);
+          })
+          .catch(() => undefined);
+      }
+    });
+    return () => void promessa.then((togli) => togli());
+  }, [apriChiudi, ricaricaCartelle]);
+
   return {
+    esterno,
     cartelle,
     contenuti,
     aperte,

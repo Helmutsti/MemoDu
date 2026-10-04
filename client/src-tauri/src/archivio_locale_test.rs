@@ -347,3 +347,42 @@ fn niente_di_locale_va_al_server() {
     p.a.salva_file_locale(&nuovo, "Nuovo", None).unwrap();
     assert!(p.a.da_inviare().unwrap().is_empty());
 }
+
+#[test]
+fn trascinare_aggiunge_cartelle_e_file_md_e_txt_da_soli() {
+    // DEC-120: una cartella entra come cartella, un file .md o .txt da solo, il resto no.
+    let mut p = Prova::nuova();
+    fs::write(p.disco.join("fuori").join("lettera.txt"), b"cara").unwrap();
+    fs::write(p.disco.join("fuori").join("foto.jpg"), b"jpg").unwrap();
+    let r = p.radice();
+    let esito = p
+        .a
+        .aggiungi_percorsi_locali(&[
+            r.clone(),
+            p.disco.join("fuori").join("lettera.txt"),
+            p.disco.join("fuori").join("foto.jpg"),
+            r.join("appunti"),
+        ])
+        .unwrap();
+    assert_eq!(esito.aggiunti.len(), 2);
+    assert_eq!(esito.scartati.len(), 1);
+    assert_eq!(esito.gia, vec![r.display().to_string()], "appunti sta dentro prove-locale");
+    let elenco = p.a.cartelle_locali().unwrap();
+    // Prima i file, poi le cartelle (DEC-119).
+    assert_eq!(
+        elenco.iter().map(|c| (c.nome.as_str(), c.tipo)).collect::<Vec<_>>(),
+        vec![("lettera.txt", "file"), ("prove-locale", "cartella")]
+    );
+    // Il file da solo si apre e si salva; il suo vicino no.
+    let lettera = p.disco.join("fuori").join("lettera.txt").display().to_string();
+    let aperto = p.a.apri_file_locale(&lettera).unwrap();
+    p.a.sospendi_file_locale(&lettera, "cara Anna", aperto.impronta.as_deref()).unwrap();
+    assert!(p.a.cartelle_locali().unwrap()[0].sospeso);
+    p.a.salva_file_locale(&lettera, "cara Anna", aperto.impronta.as_deref()).unwrap();
+    assert_eq!(fs::read_to_string(&lettera).unwrap(), "cara Anna");
+    let vicino = p.disco.join("fuori").join("foto.jpg").display().to_string();
+    assert!(matches!(p.a.elimina_locale(&vicino, true), Err(Errore::PercorsoNonValido(_))));
+    // Sparito il file, resta «non trovata».
+    fs::remove_file(&lettera).unwrap();
+    assert_eq!(p.a.cartelle_locali().unwrap()[0].stato, "non trovata");
+}

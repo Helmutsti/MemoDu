@@ -21,6 +21,7 @@ flowchart TD
 ```
 
 ### Percorsi alternativi
+- Trascinando dentro Memodu, ovunque, cartelle e file .md o .txt da Esplora file o dal Finder: le cartelle entrano come cartelle, i file da soli; il resto rimane fuori con un avviso (DEC-120).
 - Locale senza cartelle: stato vuoto con «Aggiungi cartella».
 - Una cartella dell'elenco che sul disco non c'è più (spostata, rinominata, chiavetta tolta) resta nell'elenco come «non trovata», con Togli da Locale; ricompare piena quando torna.
 
@@ -164,7 +165,7 @@ stateDiagram-v2
 ## Regole di business
 | Codice | Regola | Usata in |
 |---|---|---|
-| RB-73 | Le cartelle aggiunte compaiono sotto Locale in ordine alfabetico; l'elenco vale solo per questo computer e non va sul server | FL-10 |
+| RB-73 | Le cartelle aggiunte, e i file .md o .txt trascinati da soli (DEC-120), compaiono sotto Locale: prima i file, poi le cartelle, in ordine alfabetico; l'elenco vale solo per questo computer e non va sul server | FL-10 |
 | RB-74 | Una cartella già nell'elenco, o che sta dentro una cartella dell'elenco, non si aggiunge due volte | FL-10 |
 | RB-75 | Si vedono tutte le sottocartelle tranne quelle nascoste (il nome comincia con il punto) e solo i file .md e .txt; prima i file, poi le cartelle, in ordine alfabetico (DEC-119) | FL-10 |
 | RB-76 | Togliere una cartella da Locale non cambia niente sul disco | FL-10 |

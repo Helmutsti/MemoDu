@@ -12,7 +12,7 @@ import {
   useRef,
   useState,
   type CSSProperties,
-  type DragEvent,
+  type PointerEvent,
   type ReactElement,
   type ReactNode,
 } from "react";
@@ -29,7 +29,7 @@ import {
 import { StatoVuotoColonna } from "../componenti/StatoVuoto";
 import { Menu } from "../componenti/Menu";
 import { FileText, Folder } from "lucide-react";
-import { avviaFantasma } from "../componenti/fantasma";
+import { avviaTrascinamento } from "../componenti/trascina";
 import { AreaScorrevole } from "../componenti/AreaScorrevole";
 
 /** Cosa si sta trascinando. */
@@ -86,6 +86,13 @@ const stesso = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
 const padre = (percorso: Percorso) => percorso.split("/").slice(0, -1).join("/");
 const ordine = (a: string, b: string) => a.localeCompare(b, "it", { sensitivity: "base" });
 const chiave = (d: Destinazione) => (d.tipo === "cartella" ? `c:${d.percorso}` : d.tipo);
+/** La destinazione della colonna da `data-destinazione`; null per le altre (Locale). */
+const daChiave = (k: string | null): Destinazione | null =>
+  k === "radice" || k === "cestino"
+    ? { tipo: k }
+    : k?.startsWith("c:")
+      ? { tipo: "cartella", percorso: k.slice(2) }
+      : null;
 
 /** Una destinazione può ricevere ciò che si trascina? Mai una cartella dentro sé stessa (RB-24). */
 export function accetta(t: Trascinato, d: Destinazione): boolean {
@@ -134,35 +141,33 @@ export function Colonna(p: Proprieta): ReactElement {
     };
   }, []);
 
-  /** Gestori del trascinamento per una destinazione. */
-  const destinazione = (d: Destinazione) => ({
-    onDragOver: (e: DragEvent) => {
-      if (!p.trascinato || !accetta(p.trascinato, d)) return;
-      e.preventDefault();
-      e.dataTransfer.dropEffect = "move";
-      setSopra(chiave(d));
-    },
-    onDragLeave: () => setSopra((s) => (s === chiave(d) ? null : s)),
-    onDrop: (e: DragEvent) => {
-      if (!p.trascinato || !accetta(p.trascinato, d)) return;
-      e.preventDefault();
-      setSopra(null);
-      p.onRilascia(d);
-    },
+  // Il trascinamento dura più di un disegno: i gestori usano le proprietà più recenti.
+  const ultime = useRef(p);
+  useEffect(() => {
+    ultime.current = p;
   });
 
+  /** Una destinazione: cartella, radice o cestino (DEC-120, `trascina.ts`). */
+  const destinazione = (d: Destinazione) => ({ "data-destinazione": chiave(d) });
+
   const sorgente = (t: Trascinato) => ({
-    draggable: true,
-    onDragStart: (e: DragEvent) => {
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("text/plain", t.tipo === "nota" ? t.id : t.percorso);
-      avviaFantasma(e);
-      p.onTrascina(t);
-    },
-    onDragEnd: () => {
-      setSopra(null);
-      p.onTrascina(null);
-    },
+    onPointerDown: (e: PointerEvent<HTMLElement>) =>
+      avviaTrascinamento(e, {
+        onInizio: () => ultime.current.onTrascina(t),
+        onSopra: (k) => {
+          const d = daChiave(k);
+          setSopra(d && accetta(t, d) ? k : null);
+        },
+        onRilascio: (k) => {
+          const d = daChiave(k);
+          setSopra(null);
+          if (d && accetta(t, d)) ultime.current.onRilascia(d);
+        },
+        onFine: () => {
+          setSopra(null);
+          ultime.current.onTrascina(null);
+        },
+      }),
   });
 
   const rigaNota = (v: VoceElenco, cartella: Percorso, livelloCartella?: number) => (

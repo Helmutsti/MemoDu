@@ -294,6 +294,7 @@ pub fn run() {
             impostazioni::stato_sincronizzazione,
             locale::cartelle_locali,
             locale::aggiungi_cartella_locale,
+            locale::aggiungi_percorsi_locali,
             locale::togli_cartella_locale,
             locale::elenca_locale,
             locale::apri_file_locale,

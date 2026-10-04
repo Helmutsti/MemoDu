@@ -231,12 +231,16 @@ export function FileAperto({ percorso, locale, onPercorso, onChiudi }: Proprieta
 
   // Percorso: «Locale», la cartella dell'elenco e le sottocartelle, il nome del file.
   const radice = locale.cartelle.find((c) => dentroDi(percorso, c.percorso));
-  const cartelle = radice
-    ? [
-        radice.nome,
-        ...cartellaDi(percorso).slice(radice.percorso.length).split(/[\\/]/).filter(Boolean),
-      ]
-    : [nomeDi(cartellaDi(percorso))];
+  // Un file da solo in Locale (DEC-120): «Locale › nome».
+  const cartelle =
+    radice?.tipo === "file"
+      ? []
+      : radice
+        ? [
+            radice.nome,
+            ...cartellaDi(percorso).slice(radice.percorso.length).split(/[\\/]/).filter(Boolean),
+          ]
+        : [nomeDi(cartellaDi(percorso))];
   const nome = nuovo ? "Senza titolo" : nomeDi(percorso);
   const separatore = (
     <span className="percorso-separatore" aria-hidden="true">

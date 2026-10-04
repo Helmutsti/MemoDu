@@ -7,6 +7,9 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+### Aggiunto
+- Trascina dentro Memodu cartelle e file .md o .txt da Esplora file o dal Finder: entrano subito in Locale
+
 ### Cambiato
 - Nella colonna le sezioni Non organizzate e Cartelle diventano una sola, CLOUD: le note senza cartella stanno in cima, poi le cartelle; il + apre Nuova nota e Nuova cartella
 - In ogni cartella, e in Locale, prima le note o i file, poi le sottocartelle

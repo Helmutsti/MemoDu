@@ -10,7 +10,7 @@ Memodu come editor di file del disco, accanto alle note: niente passa dal server
 Come *utente* voglio aprire e modificare in Memodu i file di testo delle mie cartelle sul disco per usarlo come editor anche per quello che non sta nelle note, senza che niente vada sul server.
 
 Scelte di Manuel Cucca del 04/10/2026:
-- Nella colonna c'è la voce **Locale**. Con «Aggiungi cartella» scelgo una o più cartelle del disco; sotto Locale compaiono loro e il loro contenuto.
+- Nella colonna c'è la voce **Locale**. Con «Aggiungi cartella» scelgo una o più cartelle del disco; sotto Locale compaiono loro e il loro contenuto. Posso anche **trascinare** dentro Memodu, ovunque, cartelle e file .md o .txt da Esplora file o dal Finder: le cartelle entrano come cartelle, i file da soli (DEC-120).
 - Si vedono solo i file **.md** e **.txt**; gli altri file non compaiono.
 - Da Locale si creano, rinominano, spostano (anche trascinando) ed eliminano file e cartelle sul disco, come con le note. Eliminare manda nel Cestino del sistema (Windows o Mac), non in quello di Memodu.
 - Si salva con **Ctrl + S** (⌘ + S su Mac): un segno mostra le modifiche non salvate e chiudendo il file Memodu chiede se salvare. È diverso dalle note, che si salvano da sole.
@@ -44,6 +44,7 @@ Scritti dall'agente da flussi, regole e decisioni (FL-10 … FL-13, RB-73 … RB
 - **CA-17.16** *Dato* il disco che rifiuta il salvataggio (permessi, file bloccato, disco pieno), *quando* premo Ctrl + S, *allora* compare l'avviso con il motivo, il file sul disco è intatto e le modifiche restano in sospeso (SF-37).
 - **CA-17.17** *Dato* un percorso fuori dalle cartelle dell'elenco, anche dietro un collegamento simbolico, *quando* l'interfaccia chiede di leggerlo o scriverlo, *allora* il nucleo rifiuta (DEC-118).
 - **CA-17.18** *Dato* l'uso di Locale, *quando* Memodu sincronizza, *allora* al server non arriva niente di Locale: né file, né elenco, né modifiche in sospeso (DEC-115).
+- **CA-17.19** *Dato* Esplora file o il Finder, *quando* trascino dentro Memodu, in qualsiasi punto, una cartella e un file .md, *allora* mentre trascino la sezione LOCALE si evidenzia e, rilasciando, la cartella compare in Locale come cartella e il file da solo, prima delle cartelle; un file di altro tipo resta fuori con un avviso (DEC-120, da confermare).
 
 ---
 

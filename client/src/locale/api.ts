@@ -3,10 +3,23 @@
 
 import { comando } from "../api";
 
+/** Un elemento dell'elenco: una cartella o un file trascinato da solo (DEC-120). */
 export interface CartellaLocale {
   percorso: string;
   nome: string;
   stato: "presente" | "non trovata" | "non accessibile";
+  tipo: "cartella" | "file";
+  /** Un file con modifiche non salvate (RB-77). */
+  sospeso: boolean;
+}
+
+/** Esito del rilascio da Esplora file (DEC-120). */
+export interface Aggiunti {
+  aggiunti: CartellaLocale[];
+  /** Già in Locale: l'elemento che c'è. */
+  gia: string[];
+  /** Né cartelle né file .md o .txt. */
+  scartati: string[];
 }
 
 export interface VoceLocale {
@@ -44,6 +57,8 @@ export const apiLocale = {
   cartelle: () => comando<CartellaLocale[]>("cartelle_locali"),
   /** Apre la finestra di scelta del sistema; null se si annulla. */
   aggiungi: () => comando<CartellaLocale | null>("aggiungi_cartella_locale"),
+  aggiungiPercorsi: (percorsi: string[]) =>
+    comando<Aggiunti>("aggiungi_percorsi_locali", { percorsi }),
   togli: (percorso: string) => comando<void>("togli_cartella_locale", { percorso }),
   elenca: (percorso: string) => comando<VoceLocale[]>("elenca_locale", { percorso }),
   apri: (percorso: string) => comando<FileLocale>("apri_file_locale", { percorso }),

@@ -18,7 +18,7 @@ import {
 import {
   useEffect,
   useRef,
-  type DragEvent,
+  type PointerEvent,
   type MouseEvent,
   type ReactElement,
   type CSSProperties,
@@ -27,14 +27,13 @@ import { Icona } from "./Icona";
 import { Suggerimento } from "./Suggerimento";
 import "./RigaColonna.css";
 
-/** Gestori del trascinamento: sorgente (start, end) e destinazione (over, leave, drop). */
+/**
+ * Trascinamento con il puntatore (DEC-120, `trascina.ts`): la riga che si prende ha
+ * onPointerDown, quella che riceve l'attributo `data-destinazione`.
+ */
 export interface Trascinamento {
-  draggable?: boolean;
-  onDragStart?: (e: DragEvent) => void;
-  onDragEnd?: (e: DragEvent) => void;
-  onDragOver?: (e: DragEvent) => void;
-  onDragLeave?: (e: DragEvent) => void;
-  onDrop?: (e: DragEvent) => void;
+  onPointerDown?: (e: PointerEvent<HTMLElement>) => void;
+  "data-destinazione"?: string;
 }
 
 /** Margine sinistro di una cartella al livello `livello` (0 = primo livello). */
@@ -107,8 +106,10 @@ interface ProprietaFile extends Trascinamento {
   sospeso: boolean;
   /** File nuovo non ancora sul disco: «Senza titolo» in testo tenue (RB-81). */
   nuovo: boolean;
-  /** Livello della cartella che lo contiene (0 = cartella dell'elenco). */
+  /** Livello della cartella che lo contiene (0 = cartella dell'elenco; -2 = file da solo). */
   livelloCartella: number;
+  /** Un file da solo di Locale che non c'è più: «non trovata» a destra (DEC-120). */
+  stato?: string;
   onApri: () => void;
   onMenu: (e: MouseEvent) => void;
 }
@@ -121,6 +122,7 @@ export function RigaFile({
   sospeso,
   nuovo,
   livelloCartella,
+  stato,
   onApri,
   onMenu,
   ...trascinamento
@@ -135,7 +137,7 @@ export function RigaFile({
         aria-level={livelloCartella + 2}
         aria-selected={selezionata}
         aria-current={selezionata ? "true" : undefined}
-        className={`riga riga-nota ${selezionata ? "riga-selezionata interfaccia-controllo-attivo" : "interfaccia-controllo"} ${nuovo ? "riga-vuota" : ""}`}
+        className={`riga riga-nota ${selezionata ? "riga-selezionata interfaccia-controllo-attivo" : "interfaccia-controllo"} ${nuovo || stato ? "riga-vuota" : ""}`}
         style={{
           paddingLeft: `calc(var(--spazio-controllo) + ${livelloCartella + 2} * var(--spazio-rientro))`,
         }}
@@ -148,6 +150,7 @@ export function RigaFile({
       >
         <span className="riga-nome">{nome}</span>
         {sospeso && <span className="riga-non-salvato" role="img" aria-label="non salvato" />}
+        {stato && <span className="riga-conteggio interfaccia-dettaglio">{stato}</span>}
       </button>
     </li>
   );
@@ -269,7 +272,7 @@ export function CampoNomeCartella({
   );
 }
 
-interface ProprietaSezione extends Pick<Trascinamento, "onDragOver" | "onDragLeave" | "onDrop"> {
+interface ProprietaSezione extends Pick<Trascinamento, "data-destinazione"> {
   titolo: string;
   /** Assente per la sezione Cartelle, dove il numero non si mostra (CMP-06). */
   conteggio?: number;
@@ -382,10 +385,7 @@ export function RigaImpostazioni({
 export function CestinoTrascinamento({
   sopra,
   ...destinazione
-}: { sopra: boolean } & Pick<
-  Trascinamento,
-  "onDragOver" | "onDragLeave" | "onDrop"
->): ReactElement {
+}: { sopra: boolean } & Pick<Trascinamento, "data-destinazione">): ReactElement {
   return (
     <div
       className={`cestino-trascinamento interfaccia-controllo ${sopra ? "cestino-trascinamento-sopra" : ""}`}
