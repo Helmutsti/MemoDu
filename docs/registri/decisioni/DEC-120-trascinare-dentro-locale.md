@@ -27,4 +27,5 @@ Deduzioni dell'agente, da confermare:
 - Nucleo: l'elenco di Locale accetta file .md e .txt (`aggiungi_cartella_locale`), riporta tipo e modifiche in sospeso di ogni elemento (`cartelle_locali`), nuovo comando `aggiungi_percorsi_locali`.
 - Interfaccia: `useLocale.ts` (rilascio, velo, blocco dei rilasci HTML5), `VeloRilascio.tsx`, `SezioneLocale.tsx`, `FileAperto.tsx`, `FinestraPrincipale.tsx`; colonna e Locale con `trascina.ts` al posto del trascinamento HTML5 (via `fantasma.ts`).
 - RF-17, FL-10, RB-73, `architettura/api.md`; piano di test TC-122 … TC-124.
+- Il rilascio di Tauri si accende anche in `tauri.windows.conf.json` e `tauri.macos.conf.json`, che sostituiscono la finestra di `tauri.conf.json`: nella 0.1.7 era rimasto spento lì, e il file finiva nell'editor invece che in Locale.
 - Il trascinamento interno va riprovato a mano anche sul Mac.
