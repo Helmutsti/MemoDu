@@ -235,6 +235,40 @@ fn eliminare_per_sempre_toglie_anche_le_modifiche_in_sospeso() {
 }
 
 #[test]
+fn solo_i_dischi_fissi_hanno_il_cestino() {
+    // RB-83, TC-114
+    assert!(super::cestino_per_tipo(3));
+    for tipo in [0, 1, 2, 4, 5, 6] {
+        assert!(!super::cestino_per_tipo(tipo), "tipo {tipo}");
+    }
+    let p = Prova::nuova();
+    assert!(super::ha_cestino(&p.radice()));
+}
+
+#[cfg(windows)]
+#[test]
+fn su_un_disco_di_rete_eliminare_chiede_prima_di_cancellare_per_sempre() {
+    // RB-83, TC-114: la cartella temporanea vista dalla condivisione amministrativa del disco.
+    let mut p = Prova::nuova();
+    let locale = p.radice().display().to_string();
+    let Some((lettera, resto)) = locale.split_once(":\\") else { return };
+    let rete = PathBuf::from(format!(r"\\localhost\{lettera}$\{resto}"));
+    if fs::metadata(&rete).is_err() {
+        eprintln!("condivisione amministrativa non raggiungibile: prova saltata");
+        return;
+    }
+    assert!(!super::ha_cestino(&rete));
+    p.a.aggiungi_cartella_locale(&rete).unwrap();
+    let f = rete.join("appunti").join("spesa.md");
+    fs::write(&f, b"spesa").unwrap();
+    let f = f.display().to_string();
+    assert!(matches!(p.a.elimina_locale(&f, false), Err(Errore::CestinoNonDisponibile)));
+    assert!(Path::new(&f).exists());
+    p.a.elimina_locale(&f, true).unwrap();
+    assert!(!Path::new(&f).exists());
+}
+
+#[test]
 fn un_cambio_fatto_fuori_si_scopre_e_non_si_scrive_sopra_senza_scegliere() {
     // CA-17.13, RB-85
     let mut p = Prova::nuova();

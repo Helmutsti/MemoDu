@@ -311,6 +311,38 @@ fn testo_percorso(p: &Path) -> String {
     p.display().to_string()
 }
 
+/// Se il disco del percorso ha un Cestino (RB-83). Su Windows i dischi di rete e le chiavette
+/// non lo hanno, e il Cestino del sistema li eliminerebbe per sempre senza chiedere (TC-114):
+/// lo dice il tipo del volume, e solo i dischi fissi ce l'hanno. Su macOS e Linux è il Cestino
+/// stesso a dare errore.
+#[cfg(windows)]
+fn ha_cestino(percorso: &Path) -> bool {
+    use std::os::windows::ffi::OsStrExt;
+    #[link(name = "kernel32")]
+    extern "system" {
+        fn GetVolumePathNameW(file: *const u16, volume: *mut u16, lunghezza: u32) -> i32;
+        fn GetDriveTypeW(radice: *const u16) -> u32;
+    }
+    let largo: Vec<u16> = percorso.as_os_str().encode_wide().chain(Some(0)).collect();
+    // La radice del volume è un pezzo iniziale del percorso, con la barra in fondo.
+    let mut volume = vec![0u16; largo.len().max(260) + 2];
+    // SAFETY: i due buffer finiscono con lo zero e `volume` è lungo quanto dichiarato.
+    let trovato = unsafe { GetVolumePathNameW(largo.as_ptr(), volume.as_mut_ptr(), volume.len() as u32) };
+    trovato != 0 && cestino_per_tipo(unsafe { GetDriveTypeW(volume.as_ptr()) })
+}
+
+#[cfg(not(windows))]
+fn ha_cestino(_percorso: &Path) -> bool {
+    true
+}
+
+/// 3: DRIVE_FIXED. Rete (4), rimovibili (2), CD (5), disco in memoria (6) e i tipi che Windows
+/// non riconosce (0, 1) sono senza Cestino.
+#[cfg_attr(not(windows), allow(dead_code))]
+fn cestino_per_tipo(tipo: u32) -> bool {
+    tipo == 3
+}
+
 // ——— Archivio ———
 
 struct Sospeso {
@@ -818,7 +850,7 @@ impl Archivio {
             if per_sempre {
                 let tolto = if p.is_dir() { fs::remove_dir_all(p) } else { fs::remove_file(p) };
                 tolto.map_err(|e| errore_disco(e, p))?;
-            } else if trash::delete(p).is_err() {
+            } else if !ha_cestino(p) || trash::delete(p).is_err() {
                 return Err(Errore::CestinoNonDisponibile);
             }
             a.togli_sospesi(p)?;
