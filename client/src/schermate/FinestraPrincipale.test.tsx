@@ -1088,6 +1088,25 @@ describe("ricerca nella colonna (RF-08, DEC-94)", () => {
     expect(colonna()).toHaveClass("colonna-chiusa");
   });
 
+  it("aprendo un risultato, con il clic o con Invio, il cursore va nel testo della nota", async () => {
+    const testo = () => document.querySelector(".nota-aperta [contenteditable=true]");
+    render(<FinestraPrincipale />);
+    await riga("Riunione di lunedì");
+    await userEvent.keyboard("{Control>}k{/Control}");
+    await waitFor(() => expect(campo()).toHaveFocus());
+    await userEvent.keyboard("rilascio");
+    await userEvent.click(await screen.findByRole("option", { name: /Budget 2026/ }));
+    await titoloNota("Budget 2026");
+    await waitFor(() => expect(testo()).toHaveFocus());
+    await userEvent.keyboard("{Control>}k{/Control}");
+    await waitFor(() => expect(campo()).toHaveFocus());
+    await userEvent.keyboard("rilascio");
+    await screen.findByRole("option", { name: /Budget 2026/ });
+    await userEvent.keyboard("{ArrowDown}{Enter}");
+    // La nota era già aperta: il cursore torna nel suo testo.
+    await waitFor(() => expect(testo()).toHaveFocus());
+  });
+
   it("Ctrl + Maiusc + K apre la ricerca avanzata; Esc torna alla card nella colonna (CA-08.17, CA-08.20)", async () => {
     render(<FinestraPrincipale />);
     await riga("Riunione di lunedì");

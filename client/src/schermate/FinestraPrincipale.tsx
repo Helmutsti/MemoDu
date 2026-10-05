@@ -450,21 +450,23 @@ export function FinestraPrincipale(): ReactElement {
     }
   }, []);
 
+  /** Apre la nota; true se è aperta (anche se lo era già). */
   const apri = useCallback(
-    async (id: string) => {
+    async (id: string): Promise<boolean> => {
       await coda.scarica();
-      if (coda.haModifiche) return;
+      if (coda.haModifiche) return false;
       // La nota è già aperta: se l'area mostra il cestino, si torna alla nota.
       if (id === apertaAttuale.current?.id) {
         setVista("nota");
-        return;
+        return true;
       }
       if (await lasciaVuota()) await ricarica().catch(() => setBloccata(true));
       const nota = await esegui(() => api.leggi(id));
-      if (!nota) return;
+      if (!nota) return false;
       setNuovaId(null);
       setAperta(nota);
       setVista("nota");
+      return true;
     },
     [coda, esegui, lasciaVuota, ricarica],
   );
@@ -744,8 +746,15 @@ export function FinestraPrincipale(): ReactElement {
       }
       return;
     }
-    await apri(r.id);
+    if (await apri(r.id)) setCursoreNelTesto((n) => n + 1);
   };
+
+  /** Cresce a ogni risultato aperto: il cursore va all'inizio del testo della nota. */
+  const [cursoreNelTesto, setCursoreNelTesto] = useState(0);
+  useEffect(() => {
+    if (cursoreNelTesto === 0) return;
+    document.querySelector<HTMLElement>(".nota-aperta [contenteditable=true]")?.focus();
+  }, [cursoreNelTesto]);
 
   // ——— Cartelle ———
 

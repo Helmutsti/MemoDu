@@ -9,6 +9,7 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ### Corretto
 - In Locale, eliminare un file o una cartella su un disco di rete o su una chiavetta ora chiede prima «Eliminare per sempre»: prima li cancellava subito, senza passare dal Cestino
+- Aprendo una nota dalla ricerca il cursore va subito nel testo, pronto per scrivere
 
 ## [0.1.8] – 2026-10-04
 
