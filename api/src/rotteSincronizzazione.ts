@@ -1,7 +1,9 @@
 // Richieste della sincronizzazione (architettura/api.md, DEC-75 … DEC-83). Ogni richiesta
 // porta il gettone nell'intestazione Authorization e la versione del protocollo in
-// Memodu-Protocollo: senza gettone valido 401 (schermata di blocco, RB-57), con un protocollo
-// diverso 426 (avviso di errore, DEC-83).
+// Memodu-Protocollo: senza gettone valido 401 (il client tiene le modifiche e mostra l'avviso
+// dell'accesso scaduto, RB-87), con un protocollo diverso 426 (avviso di errore, DEC-83).
+// Valgono il JWT dell'accesso (DEC-121) e, finché c'è MEMODU_IMPRONTA, il gettone statico
+// delle app che non hanno ancora l'accesso (scelta di Manuel Cucca del 06/10/2026).
 
 import type { FastifyInstance } from "fastify";
 import { ArchivioSincronizzazione, PROTOCOLLO, VersioneSuperata } from "./sincronizzazione.js";
@@ -15,13 +17,14 @@ const schemaId = {
 export function rotteSincronizzazione(
   server: FastifyInstance,
   sinc: ArchivioSincronizzazione,
+  autorizza: (gettone: string | undefined) => boolean = (g) => sinc.autorizzato(g),
 ): void {
   server.register(async (rami) => {
     rami.addHook("onRequest", async (richiesta, risposta) => {
       if (richiesta.method === "OPTIONS") return;
       const intestazione = richiesta.headers.authorization;
       const gettone = intestazione?.startsWith("Bearer ") ? intestazione.slice(7) : undefined;
-      if (!sinc.autorizzato(gettone)) {
+      if (!autorizza(gettone)) {
         return risposta.code(401).send({ statusCode: 401, message: "Credenziali non valide" });
       }
       if (richiesta.headers["memodu-protocollo"] !== String(PROTOCOLLO)) {

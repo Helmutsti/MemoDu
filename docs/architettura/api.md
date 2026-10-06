@@ -481,12 +481,12 @@ Comandi del nucleo (`client/src-tauri/src/locale.rs`) su file e cartelle del dis
 - **Indirizzo:** in rete `https://memodu-api.vercel.app` (DEC-104, DEC-105), scritto nel programma; la variabile d'ambiente `MEMODU_SERVER` lo sostituisce per le prove (scelta di Manuel Cucca il 06/10/2026, DEC-121); in locale `127.0.0.1:4317`, solo sulla macchina stessa.
 - **Lunghezza:** corpo della richiesta fino a 4,4 MB (`LIMITE_RICHIESTA_BYTE`, `bodyLimit` di Fastify): Vercel non ne accetta più di 4,5 (DEC-106); oltre, `413`.
 - **Chi le fa:** il nucleo Rust del client, in background (`client/src-tauri/src/sincronizzazione.rs`), non l'interfaccia.
-- **Autorizzazione:** intestazione `Authorization: Bearer <gettone>` con il JWT ricevuto all'accesso (DEC-121); senza, scaduto o sbagliato `401`, e il client tiene le modifiche e mostra l'avviso «Accedi di nuovo per sincronizzare» (RB-87). Oggi il codice accetta ancora il gettone statico (DEC-79, DEC-104).
+- **Autorizzazione:** intestazione `Authorization: Bearer <gettone>` con il JWT ricevuto all'accesso (DEC-121); senza, scaduto o sbagliato `401`, e il client tiene le modifiche e mostra l'avviso «Accedi di nuovo per sincronizzare» (RB-87). Durante il passaggio vale anche il gettone statico (vedi Credenziali).
 - **Protocollo:** intestazione `Memodu-Protocollo: 1`; con una versione diversa `426`, e il client mostra l'avviso di errore e continua sulla copia di lavoro (DEC-83).
 - **Blocchi:** testo opaco per il server. Oggi JSON in chiaro, `{ "formato": "chiaro", "tipo": "nota" | "cartella" | "tag" | "impostazioni", "modificato_il": "<UTC>", "eliminato": false, "campi": { … } }` (DEC-78). Con la cifratura (DEC-121): `{ "formato": "xchacha20poly1305", "nonce": "<base64>", "dati": "<base64>" }`, dove `dati` è quel JSON cifrato tutto, tipo e date compresi (DEC-08).
 - **Impostazioni:** la scorciatoia della nota rapida e le note del cestino nella ricerca (`cestino_in_ricerca`, DEC-95) viaggiano in un solo elemento di tipo `impostazioni`, con l'id fisso `00000000-0000-4000-8000-000000000001`, lo stesso su tutti i dispositivi (DEC-91, RB-52).
 - **Implementazione:** `api/src/sincronizzazione.ts` (deposito in PostgreSQL: Neon in rete, PGlite in locale, DEC-105), `api/src/schema.ts` (schema e migrazioni), `api/src/rotteSincronizzazione.ts` e `api/src/servizio.ts`, prove in `api/src/sincronizzazione.test.ts`.
-- **Credenziali (superate da DEC-121, ancora nel codice):** `{ "indirizzo", "installazione", "gettone", "chiave" }` nel file `credenziali` della cartella dei dati di ogni dispositivo, generate con `npm run credenziali -w @memodu/api -- <indirizzo>`; il server conosce solo l'impronta del gettone (`MEMODU_IMPRONTA`, DEC-104). Il gettone non va mai nel registro.
+- **Credenziali (superate da DEC-121, ancora nel codice per le app 0.1.8):** la sincronizzazione accetta il JWT e, finché c'è `MEMODU_IMPRONTA`, anche il gettone statico (scelta di Manuel Cucca il 06/10/2026); quando il client nuovo è installato ovunque si toglie la variabile e il codice. `{ "indirizzo", "installazione", "gettone", "chiave" }` nel file `credenziali` della cartella dei dati di ogni dispositivo, generate con `npm run credenziali -w @memodu/api -- <indirizzo>`; il server conosce solo l'impronta del gettone (`MEMODU_IMPRONTA`, DEC-104). Il gettone non va mai nel registro.
 - **Errori del server:** `500` con `{ "statusCode": 500, "message": "Errore del server" }`, senza dettagli; il dettaglio va nel registro.
 
 ## GET /sincronizzazione/modifiche?dopo=N
@@ -498,15 +498,24 @@ Comandi del nucleo (`client/src-tauri/src/locale.rs`) su file e cartelle del dis
 **Output:** `{ "versione": 8, "ordine": 1521 }`. Il server tiene le versioni precedenti a scalare per 7 giorni (DEC-77, DEC-113).
 **Errori:** 409 `{ "attuale": { "id", "versione", "ordine", "ora", "dati" } }` se l'elemento è già a un'altra versione: il client fonde e riprova (DEC-76); 400, 401, 413, 426.
 
-## Accesso (RF-14, DEC-121, da implementare)
-**Utente fisso:** un comando dell'API crea l'utente da email e password (controllate con RB-88) e stampa le variabili d'ambiente del server e, una volta sola, la chiave di recupero: `MEMODU_EMAIL`, `MEMODU_SALE`, `MEMODU_ARGON2` (parametri), `MEMODU_IMPRONTA_ACCESSO`, `MEMODU_IMPRONTA_RECUPERO`, `MEMODU_CHIAVE_PASSWORD` e `MEMODU_CHIAVE_RECUPERO` (la chiave dati avvolta nei due modi), `MEMODU_SEGRETO` (firma dei JWT). Nomi proposti dall'agente; si fissano scrivendo il codice. In locale le stesse variabili stanno in `api/.env`, accanto all'API, che fa da database simulato degli utenti ed è escluso da git (scelta di Manuel Cucca il 06/10/2026): ci si copiano a mano le righe stampate dal comando, nel formato di `api/.env.esempio`; `npm run api` lo legge all'avvio. Nessuna richiesta porta mai la password, la chiave di recupero o la chiave dati in chiaro, e nessuna di queste va nel registro.
+## Accesso (RF-14, DEC-121; server fatto il 06/10/2026, client da fare)
+**Utente fisso:** `npm run utente -w @memodu/api` chiede email e password (senza eco, controllate con RB-88) e stampa le variabili d'ambiente del server e, una volta sola, la chiave di recupero: `MEMODU_EMAIL`, `MEMODU_SALE`, `MEMODU_ARGON2` (parametri), `MEMODU_IMPRONTA_ACCESSO`, `MEMODU_IMPRONTA_RECUPERO`, `MEMODU_CHIAVE_PASSWORD` e `MEMODU_CHIAVE_RECUPERO` (la chiave dati avvolta nei due modi), `MEMODU_SEGRETO` (firma dei JWT, 32 byte casuali, nuovo a ogni esecuzione). Con `-- --recupero` chiede la chiave di recupero e una password nuova e riusa la stessa chiave dati (RB-90); con `-- --nuovo-recupero` chiede la password e stampa una chiave di recupero nuova. Le ultime due leggono i dati attuali da `api/.env` o dalle variabili d'ambiente. Con tutte le variabili assenti l'accesso è spento; con alcune sì e altre no il server non parte e dice quali mancano. In locale le stesse variabili stanno in `api/.env`, accanto all'API, che fa da database simulato degli utenti ed è escluso da git (scelta di Manuel Cucca il 06/10/2026): ci si copiano a mano le righe stampate dal comando, nel formato di `api/.env.esempio`; `npm run api` lo legge all'avvio. Nessuna richiesta porta mai la password, la chiave di recupero o la chiave dati in chiaro, e nessuna di queste va nel registro.
+
+**Chiavi (il nucleo del client deve fare gli stessi passi, `api/src/chiavi.ts`):**
+- Argon2id(password in NFC e UTF-8, sale di 16 byte, 64 MiB, 3 passaggi, 1 filo, 32 byte); dal risultato HKDF-SHA256 senza sale, 32 byte, con `info` `memodu/prova/accesso` (la prova) e `memodu/cassaforte/password` (la chiave della cassaforte).
+- Chiave di recupero: 32 byte casuali; HKDF con `memodu/prova/recupero` e `memodu/cassaforte/recupero`. Si stampa in base32 senza 0, O, 1 e I, 52 caratteri in gruppi di 4; si rilegge anche in minuscolo e con spazi.
+- Chiave dati: 32 byte casuali, avvolta con XChaCha20-Poly1305: nonce di 24 byte, chiave cifrata e controllo, in base64url (96 caratteri); come dati aggiunti lo scopo, `memodu/chiave-dati/password` o `memodu/chiave-dati/recupero`.
+- Il server conserva l'impronta SHA-256 delle due prove, in esadecimale; la prova viaggia in base64url (43 caratteri).
+- Node non ha XChaCha20-Poly1305: `api/src/xchacha.ts` lo costruisce con HChaCha20 e il ChaCha20-Poly1305 di Node, provato con i vettori del draft-irtf-cfrg-xchacha.
+
+Le tre richieste portano `Memodu-Protocollo: 1` (altrimenti `426`) e non aspettano l'archivio. L'email si confronta senza maiuscole e senza spazi ai lati.
 
 ### POST /accesso/parametri
-**Input:** `{ "email" }`. **Output:** `{ "sale", "argon2": { "memoria": 65536, "passaggi": 3, "fili": 1 } }`. Con un'email che non esiste risponde un sale finto ma sempre uguale per quell'email (calcolato dal segreto), così non si scopre quale email esiste.
+**Input:** `{ "email" }`. **Output:** `{ "sale", "argon2": { "memoria": 65536, "passaggi": 3, "fili": 1 } }`. Con un'email che non esiste risponde un sale finto ma sempre uguale per quell'email (HMAC del segreto), così non si scopre quale email esiste.
 
 ### POST /accesso
-**Input:** `{ "email", "prova" }`. **Output:** `{ "gettone": "<JWT>", "scade_il": "<UTC>", "chiave": "<chiave dati avvolta con la password>" }`. Il JWT dura 30 giorni (architettura temporanea).
-**Errori:** 401 senza dettagli, con email o prova sbagliate; nessun limite ai tentativi, per ora.
+**Input:** `{ "email", "prova" }`. **Output:** `{ "gettone": "<JWT>", "scade_il": "<UTC>", "chiave": "<chiave dati avvolta con la password>" }`. Il JWT dura 30 giorni (architettura temporanea): HS256, con `sub` (l'email), `iat` ed `exp`.
+**Errori:** 401 `Credenziali non valide`, senza dire se è sbagliata l'email o la prova; 400 se la prova non è di 43 caratteri base64url; nessun limite ai tentativi, per ora.
 
 ### POST /accesso/rinnovo
 Con `Authorization: Bearer <gettone>` ancora valido. **Output:** come `POST /accesso`, senza `chiave`. L'app lo chiama quando mancano meno di 7 giorni alla scadenza (RB-86). **Errori:** 401.

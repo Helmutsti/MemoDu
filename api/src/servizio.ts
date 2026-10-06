@@ -1,5 +1,7 @@
 import Fastify, { type FastifyInstance, type FastifyServerOptions } from "fastify";
+import type { Accesso } from "./accesso.js";
 import { LIMITE_RICHIESTA_BYTE } from "./costanti.js";
+import { rotteAccesso } from "./rotteAccesso.js";
 import { rotteSincronizzazione } from "./rotteSincronizzazione.js";
 import type { ArchivioSincronizzazione } from "./sincronizzazione.js";
 
@@ -35,12 +37,15 @@ const entro = <T>(lavoro: Promise<T>, ms: number): Promise<T> =>
 
 /**
  * Aggiunge al server la gestione degli errori, i controlli e le rotte. `preparazione` è lo
- * schema dell'archivio: le richieste della sincronizzazione lo aspettano, `/vivo` no.
+ * schema dell'archivio: le richieste della sincronizzazione lo aspettano, `/vivo` no. Senza
+ * `accesso` (nessun utente fisso configurato) le richieste /accesso non ci sono e vale solo il
+ * gettone statico.
  */
 export function configuraServer(
   server: FastifyInstance,
   sincronizzazione: ArchivioSincronizzazione,
   preparazione: () => Promise<void> = () => Promise.resolve(),
+  accesso?: Accesso,
 ): FastifyInstance {
   server.setErrorHandler<{ statusCode?: number }>((errore, richiesta, risposta) => {
     const codice = errore.statusCode ?? 500;
@@ -50,6 +55,7 @@ export function configuraServer(
   });
   server.addHook("onRequest", async (richiesta) => {
     if (richiesta.url === "/vivo" || richiesta.url === "/salute") return;
+    if (richiesta.url.startsWith("/accesso")) return;
     await preparazione();
   });
   // La funzione risponde, senza toccare il database.
@@ -69,11 +75,19 @@ export function configuraServer(
         .send({ stato: "archivio non raggiungibile", motivo: motivo(errore) });
     }
   });
-  rotteSincronizzazione(server, sincronizzazione);
+  if (accesso) rotteAccesso(server, accesso);
+  rotteSincronizzazione(
+    server,
+    sincronizzazione,
+    (g) => (accesso?.autorizzato(g) ?? false) || sincronizzazione.autorizzato(g),
+  );
   return server;
 }
 
 /** Per le prove: un server senza registro. */
-export function creaServer(sincronizzazione: ArchivioSincronizzazione): FastifyInstance {
-  return configuraServer(Fastify(opzioniServer()), sincronizzazione);
+export function creaServer(
+  sincronizzazione: ArchivioSincronizzazione,
+  accesso?: Accesso,
+): FastifyInstance {
+  return configuraServer(Fastify(opzioniServer()), sincronizzazione, undefined, accesso);
 }
