@@ -478,7 +478,7 @@ Comandi del nucleo (`client/src-tauri/src/locale.rs`) su file e cartelle del dis
 
 ## Sincronizzazione (RF-10, DEC-75 … DEC-84)
 **Valgono per tutte le richieste della sincronizzazione:**
-- **Indirizzo:** in rete l'indirizzo HTTPS di Vercel (DEC-104, DEC-105); dove lo trova l'app senza il file `credenziali` è una domanda aperta su RF-14; in locale `127.0.0.1:4317`, solo sulla macchina stessa.
+- **Indirizzo:** in rete `https://memodu-api.vercel.app` (DEC-104, DEC-105), scritto nel programma; la variabile d'ambiente `MEMODU_SERVER` lo sostituisce per le prove (scelta di Manuel Cucca il 06/10/2026, DEC-121); in locale `127.0.0.1:4317`, solo sulla macchina stessa.
 - **Lunghezza:** corpo della richiesta fino a 4,4 MB (`LIMITE_RICHIESTA_BYTE`, `bodyLimit` di Fastify): Vercel non ne accetta più di 4,5 (DEC-106); oltre, `413`.
 - **Chi le fa:** il nucleo Rust del client, in background (`client/src-tauri/src/sincronizzazione.rs`), non l'interfaccia.
 - **Autorizzazione:** intestazione `Authorization: Bearer <gettone>` con il JWT ricevuto all'accesso (DEC-121); senza, scaduto o sbagliato `401`, e il client tiene le modifiche e mostra l'avviso «Accedi di nuovo per sincronizzare» (RB-87). Oggi il codice accetta ancora il gettone statico (DEC-79, DEC-104).
@@ -499,7 +499,7 @@ Comandi del nucleo (`client/src-tauri/src/locale.rs`) su file e cartelle del dis
 **Errori:** 409 `{ "attuale": { "id", "versione", "ordine", "ora", "dati" } }` se l'elemento è già a un'altra versione: il client fonde e riprova (DEC-76); 400, 401, 413, 426.
 
 ## Accesso (RF-14, DEC-121, da implementare)
-**Utente fisso:** un comando dell'API crea l'utente da email e password (controllate con RB-88) e stampa le variabili d'ambiente del server e, una volta sola, la chiave di recupero: `MEMODU_EMAIL`, `MEMODU_SALE`, `MEMODU_ARGON2` (parametri), `MEMODU_IMPRONTA_ACCESSO`, `MEMODU_IMPRONTA_RECUPERO`, `MEMODU_CHIAVE_PASSWORD` e `MEMODU_CHIAVE_RECUPERO` (la chiave dati avvolta nei due modi), `MEMODU_SEGRETO` (firma dei JWT). Nomi proposti dall'agente; si fissano scrivendo il codice. Nessuna richiesta porta mai la password, la chiave di recupero o la chiave dati in chiaro, e nessuna di queste va nel registro.
+**Utente fisso:** un comando dell'API crea l'utente da email e password (controllate con RB-88) e stampa le variabili d'ambiente del server e, una volta sola, la chiave di recupero: `MEMODU_EMAIL`, `MEMODU_SALE`, `MEMODU_ARGON2` (parametri), `MEMODU_IMPRONTA_ACCESSO`, `MEMODU_IMPRONTA_RECUPERO`, `MEMODU_CHIAVE_PASSWORD` e `MEMODU_CHIAVE_RECUPERO` (la chiave dati avvolta nei due modi), `MEMODU_SEGRETO` (firma dei JWT). Nomi proposti dall'agente; si fissano scrivendo il codice. In locale le stesse variabili stanno in `api/.env`, accanto all'API, che fa da database simulato degli utenti ed è escluso da git (scelta di Manuel Cucca il 06/10/2026): ci si copiano a mano le righe stampate dal comando, nel formato di `api/.env.esempio`; `npm run api` lo legge all'avvio. Nessuna richiesta porta mai la password, la chiave di recupero o la chiave dati in chiaro, e nessuna di queste va nel registro.
 
 ### POST /accesso/parametri
 **Input:** `{ "email" }`. **Output:** `{ "sale", "argon2": { "memoria": 65536, "passaggi": 3, "fili": 1 } }`. Con un'email che non esiste risponde un sale finto ma sempre uguale per quell'email (calcolato dal segreto), così non si scopre quale email esiste.

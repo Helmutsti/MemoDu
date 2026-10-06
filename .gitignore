@@ -11,3 +11,6 @@ client/src-tauri/icons/64x64.png
 
 # Prova di compilazione del server in JavaScript
 api/.prova-js/
+
+# Utente fisso del server in locale: segreti, mai nel repository (DEC-121)
+.env
