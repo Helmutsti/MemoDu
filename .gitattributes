@@ -1,0 +1,2 @@
+# Fine riga Unix ovunque, come vuole Prettier, anche su Windows con core.autocrlf
+* text=auto eol=lf

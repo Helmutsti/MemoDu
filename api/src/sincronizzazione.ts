@@ -167,7 +167,8 @@ export class ArchivioSincronizzazione {
       let gruppo: string | null;
       if (eta <= ORA_MS) gruppo = `v${v.versione}`;
       else if (eta <= GIORNO_MS) gruppo = `h${Math.floor(Date.parse(v.ora) / ORA_MS)}`;
-      else if (eta <= GIORNI_STORIA * GIORNO_MS) gruppo = `g${Math.floor(Date.parse(v.ora) / GIORNO_MS)}`;
+      else if (eta <= GIORNI_STORIA * GIORNO_MS)
+        gruppo = `g${Math.floor(Date.parse(v.ora) / GIORNO_MS)}`;
       else gruppo = null;
       // Le versioni vanno dalla più recente: la prima di ogni gruppo è l'ultima di quell'ora
       // o di quel giorno, e resta.
