@@ -9,6 +9,7 @@ L'impostazione generale è in `moduli/interfaccia/4-schermate.md`. La sincronizz
 
 - **Wireframe:** [i due avvisi](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-130) · [nota in conflitto](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=32-147) · [accesso scaduto](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-211)
 - **Esportazioni:** `immagini/SC-01-avvisi.png`, `immagini/SC-01-accesso-scaduto.png`
+- **Mockup dell'accesso scaduto (approvato da Manuel Cucca il 06/10/2026):** [accesso scaduto](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=210-3289); esportazione `immagini/SC-01-accesso-scaduto-mockup.png`
 
 Al centro dell'area della nota di SC-01, 8 sotto la fascia in alto (DEC-86), livello 50, uno alla volta:
 
@@ -17,9 +18,9 @@ Al centro dell'area della nota di SC-01, 8 sotto la fascia in alto (DEC-86), liv
 | Server irraggiungibile | Oltre un'ora dall'ultima sincronizzazione riuscita (RB-40, DEC-112) | Ho capito |
 | Errore di sincronizzazione | Subito (SF-32) | Ho capito |
 | Nota in conflitto | Subito (RB-39) | Apri l'altra |
-| Accesso scaduto | Gettone scaduto o rifiutato (RB-87) | Accedi, che apre SC-05 |
+| Accesso scaduto | Gettone scaduto o rifiutato (RB-87) | Accedi, che apre SC-05; Ho capito |
 
-L'avviso resta sul dispositivo in cui nasce (DEC-90). Il testo «Accedi di nuovo per sincronizzare» è provvisorio: quello definitivo in Fase 6.
+L'avviso resta sul dispositivo in cui nasce (DEC-90). L'avviso dell'accesso scaduto è del tipo Avviso (CMP-15), con il testo definitivo «Accedi di nuovo per sincronizzare. Le modifiche restano su questo computer.» (approvato da Manuel Cucca il 06/10/2026).
 
 ---
 
@@ -47,7 +48,7 @@ Al posto della finestra principale e della nota rapida quando la copia di lavoro
 
 - **Wireframe:** [accesso](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-181) · [email o password errate](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-196) (approvati da Manuel Cucca il 06/10/2026)
 - **Esportazioni:** `immagini/SC-05.png`, `immagini/SC-05-errore.png`
-- **Mockup:** [Fase 6]
+- **Mockup (approvati da Manuel Cucca il 06/10/2026):** [accesso](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=210-2936) · [email o password errate](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=210-3109); esportazioni `immagini/SC-05-mockup.png`, `immagini/SC-05-errore-mockup.png`
 
 **Attiva con DEC-121**, che supera DEC-19. Si apre da «Accedi per sincronizzare» nella sezione Sincronizzazione delle impostazioni (SC-06) o dall'avviso «Accedi di nuovo per sincronizzare» (RB-87); non compare all'avvio, che resta sulla copia di lavoro (RNF-01).
 
@@ -56,7 +57,7 @@ Finestra sopra le note velate (livello 40, scelta di Manuel Cucca il 06/10/2026)
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |
 |---|---|---|
-| Vuoto | Email e password vuote | Testo definitivo in Fase 6 |
+| Vuoto | Email e password vuote | «Accedi a Memodu», «Accedi alla tua installazione.»; pulsanti «Non voglio usare il cloud» e «Accedi» |
 | Caricamento | Dopo Accedi, Accedi in caricamento mentre il dispositivo calcola Argon2id (circa mezzo secondo) e il server risponde | — |
-| Errore | Email o password errate, oppure server irraggiungibile: messaggio in linea sopra il pulsante | Testo definitivo in Fase 6 |
+| Errore | Email o password errate, oppure server irraggiungibile: messaggio in linea sopra i pulsanti | «Email o password non corrette.»; il testo per il server irraggiungibile è da scrivere |
 | Successo | Si torna dove si era e la sincronizzazione parte; si resta collegati (RB-86) | — |
