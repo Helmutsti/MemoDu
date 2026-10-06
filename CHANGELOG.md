@@ -7,6 +7,8 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+## [0.1.9] – 2026-10-06
+
 ### Aggiunto
 - Accesso con email e password: dalle impostazioni, nella sezione Sincronizzazione, «Accedi» apre una finestra sopra le note; dopo l'accesso resti collegato e «Esci» scollega questo computer
 - Le note viaggiano e restano sul server cifrate: il server non può leggerle. Al primo accesso Memodu rimanda tutto cifrato
