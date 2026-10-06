@@ -3,7 +3,7 @@
 <!-- Fase 8 della guida. -->
 
 ## Piano di test
-Produzione è il server su Vercel con l'archivio in Neon (DEC-105). I casi con due computer sono di Manuel Cucca. Criteri e piano approvati da Manuel Cucca il 04/10/2026.
+Produzione è il server su Vercel con l'archivio in Neon (DEC-105). I casi con due computer sono di Manuel Cucca. Criteri e piano approvati da Manuel Cucca il 04/10/2026; TC-125 … TC-140 (cifratura e accesso, DEC-121) il 06/10/2026.
 
 | Codice | Riferimento | Caso di prova | Ambiente | Set di dati | Esito |
 |---|---|---|---|---|---|
@@ -25,6 +25,22 @@ Produzione è il server su Vercel con l'archivio in Neon (DEC-105). I casi con d
 | ~~TC-101~~ | RF-14 CA-14.5 (superato da DEC-121) | Con credenziali valide e il server irraggiungibile (rete staccata), aprire Memodu: si lavora sulla copia di lavoro, senza blocco | Produzione | — |  |
 | ~~TC-102~~ | RF-14 CA-14.6 (superato da DEC-121) | Senza il file `credenziali` aprire Memodu: si lavora senza sincronizzare; mettere il file: la sincronizzazione parte | Produzione | — | Superato il 02/10/2026 (agente, Windows): Memodu ha lavorato senza file; messo il file con l'app chiusa, alla riapertura la sincronizzazione è partita. Da provare: il file messo con l'app aperta |
 | TC-103 | DEC-105 | Collegare un computer già sincronizzato a un archivio nuovo (server ricreato): la sincronizzazione riparte da zero e rimanda tutto, senza copie in conflitto | Locale | Due archivi | Prova automatica superata il 02/10/2026 (`archivio_sinc_test.rs`); a mano da fare |
+| TC-125 | RF-10 CA-10.12 | Dopo una sincronizzazione, leggere i blocchi nell'archivio del server: tutti in formato `xchacha20poly1305`, nessun testo, titolo, nome o data leggibile | Locale | Archivio PGlite, utente di prova | |
+| TC-126 | RF-10 CA-10.13 | Con note già sincronizzate in chiaro, accedere con la versione cifrata: tutto rimandato cifrato, nessuna versione in chiaro rimasta sul server | Locale | Archivio con versioni in chiaro | |
+| TC-127 | RF-10 CA-10.14 | Due computer con lo stesso utente: una nota scritta su uno arriva leggibile sull'altro entro 30 s | Produzione | Due computer | |
+| TC-128 | RF-10 CA-10.15 | Alterare un byte di un blocco sul server: il dispositivo non lo apre, avviso «errore di sincronizzazione», copia di lavoro intatta | Locale | Archivio PGlite | |
+| TC-129 | RF-10 CA-10.16 | Senza accesso cercare la chiave dati nella copia di lavoro e nel portachiavi: non c'è; dopo l'accesso c'è solo nel portachiavi | Locale | — | |
+| TC-130 | RF-14 CA-14.7 | Lanciare il comando con una password di 11 caratteri, poi con «password1234», poi con una buona: le prime due rifiutate con il motivo; la terza stampa le variabili e la chiave di recupero una volta; nel registro nessun segreto | Locale | — | |
+| TC-131 | RF-14 CA-14.8 | Su un computer senza accesso aprire Memodu: finestra subito, nessun avviso; nelle impostazioni «Non hai fatto l'accesso» con Accedi | Locale | Copia di lavoro con note | |
+| TC-132 | RF-14 CA-14.9 | Da Accedi, email e password giuste con Invio: caricamento, finestra chiusa, sincronizzazione partita, riga Account con l'email ed Esci | Locale | `api/.env` con l'utente di prova | |
+| TC-133 | RF-14 CA-14.10 | Sbagliare la password tre volte: ogni volta «Email o password non corrette.», l'email resta; alla quarta, giusta, si entra | Locale | Come TC-132 | |
+| TC-134 | RF-14 CA-14.11 | Con l'API spenta premere Accedi: messaggio del server irraggiungibile; si continua a scrivere | Locale | API spenta | |
+| TC-135 | RF-14 CA-14.12 | Dopo l'accesso chiudere e riaprire Memodu: nessuna richiesta di accesso; con un gettone a 6 giorni dalla scadenza, rinnovato da solo | Locale | Gettone di prova con scadenza vicina | |
+| TC-136 | RF-14 CA-14.13 | Cambiare `MEMODU_SEGRETO` con Memodu aperto e scrivere una nota: nessun blocco, avviso «Accedi di nuovo…»; accedere: la nota arriva sull'altro computer | Produzione | Due computer | |
+| TC-137 | RF-14 CA-14.14 | Con l'API raggiungibile e modifiche in attesa premere Esci: modifiche arrivate, portachiavi vuoto, copia di lavoro intatta, «Non hai fatto l'accesso» | Locale | — | |
+| TC-138 | RF-14 CA-14.15 | Con il gettone scaduto aprire SC-05 dall'avviso: Esc chiude e l'avviso torna riaprendo Memodu; «Non voglio usare il cloud» scollega, le modifiche restano e l'avviso non torna | Locale | Gettone scaduto | |
+| TC-139 | RF-14 CA-14.16 | Rilanciare il comando con la chiave di recupero e una password nuova, aggiornare `api/.env`: si accede con la nuova, tutte le note leggibili senza nuovi invii; la vecchia rifiutata | Locale | Utente di prova con note cifrate | |
+| TC-140 | RF-14 CA-14.17 | Registrare le richieste di accesso e il registro del server durante TC-132: nessuna password, chiave di recupero o chiave dati in chiaro | Locale | — | |
 
 ## Domande aperte
 | Riguarda | Domanda | Chi risponde | Risposta | Decisione |
@@ -40,4 +56,5 @@ Produzione è il server su Vercel con l'archivio in Neon (DEC-105). I casi con d
 | RF-14 | Con il file `credenziali` che sparisce, dove trova l'app l'indirizzo del server? Deduzione dell'agente: l'indirizzo di produzione è scritto nel programma e una variabile d'ambiente lo sostituisce per le prove (come `MEMODU_CARTELLA`) | Manuel Cucca | Sì (06/10/2026): `https://memodu-api.vercel.app` nel programma, `MEMODU_SERVER` per le prove; cambiare server vuol dire una versione nuova dell'app | DEC-121 |
 | RF-14 | In locale, senza Vercel, chi crea l'utente fisso? Deduzione dell'agente: l'API in locale legge le stesse variabili da un file `.env` della cartella dei dati, scritto dal comando che crea l'utente | Manuel Cucca | No (06/10/2026): il file `api/.env`, accanto all'API, fa da database simulato degli utenti; è escluso da git. Lo scrive Manuel Cucca copiando le righe stampate dal comando; il formato è in `api/.env.esempio` | DEC-121 |
 | RF-14 | Il comando che crea l'utente deve ricavare la prova con lo stesso Argon2id del client: in Node 24 c'è `crypto.argon2` (da verificare); altrimenti il comando è un programma del nucleo Rust, che usa lo stesso codice del client. Deduzione dell'agente | Agente | Verificato il 06/10/2026: Node 24.16 ha `crypto.argon2`; il comando resta nell'API, in TypeScript | DEC-121 |
+| SC-05 | Testo del messaggio in linea quando il server non risponde all'accesso (CA-14.11). Proposta dell'agente: «Non riesco a raggiungere il server. Riprova tra poco.» | Manuel Cucca | | |
 | EN-06 | Dopo che un dispositivo è uscito, resta nell'elenco dei dispositivi o sparisce? Serve un elenco dei dispositivi collegati, per esempio per far uscire a distanza un browser dimenticato aperto (SF-26)? | Manuel Cucca | L'elenco con uscita a distanza diventa RF-16 (Should). Nella prima fase non c'è; se il dispositivo uscito resti registrato si decide con RF-16 | |

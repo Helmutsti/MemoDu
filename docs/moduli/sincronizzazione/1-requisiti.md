@@ -3,7 +3,7 @@
 <!-- Fase 1 della guida, con i criteri di accettazione della Fase 8. Copia il blocco per ogni requisito. -->
 
 ## RF-10 – Sincronizzazione cloud cifrata end-to-end
-**Priorità:** Must · **Origine:** DEC-01, DEC-02, DEC-06, DEC-121 · **Fase:** 9 (senza la cifratura, che con DEC-121 è in Fase 8: criteri e piano di test da scrivere) · **Stato:** Pronto, tranne la cifratura
+**Priorità:** Must · **Origine:** DEC-01, DEC-02, DEC-06, DEC-121 · **Fase:** 9 (la cifratura con DEC-121: criteri e piano di test approvati il 06/10/2026, codice da fare) · **Stato:** Pronto
 
 Come *utente* voglio che tutte le mie note siano sincronizzate nel cloud con cifratura end-to-end per avere l'intera struttura a disposizione su ogni dispositivo, senza che altri possano leggerla.
 
@@ -32,10 +32,17 @@ Scritti dall'agente dai flussi e dalle decisioni (FL-07, DEC-75 … DEC-83). Con
 - **CA-10.10** *Dato* una sincronizzazione che fallisce a metà o una versione del protocollo che il server non riconosce, *quando* succede, *allora* compare l'avviso «errore di sincronizzazione», la copia di lavoro resta intatta e si riprova alla sincronizzazione successiva (RB-40, SF-32, DEC-83).
 - **CA-10.11** *Dato* il server, *quando* guardo il suo archivio, *allora* per ogni elemento trovo la versione attuale e le precedenti degli ultimi 7 giorni, a scalare: tutte quelle dell'ultima ora, una all'ora nell'ultimo giorno, una al giorno dopo (DEC-77, DEC-113).
 
+**Criteri della cifratura (DEC-121):** scritti dall'agente, approvati da Manuel Cucca il 06/10/2026.
+- **CA-10.12** *Dato* il server dopo una sincronizzazione, *quando* guardo i blocchi nel suo archivio, *allora* ogni blocco dichiara il formato `xchacha20poly1305` e non vi si legge nessun titolo, testo, nome di cartella o di tag, data o struttura dell'albero (DEC-08, DEC-121).
+- **CA-10.13** *Dato* un dispositivo con note sincronizzate in chiaro, *quando* accedo per la prima volta con la cifratura, *allora* tutti gli elementi vengono rimandati cifrati e sul server non resta nessuna versione in chiaro, nemmeno tra le precedenti (DEC-78, condizione 3).
+- **CA-10.14** *Dato* due dispositivi che hanno fatto l'accesso con lo stesso utente, *quando* scrivo una nota su uno, *allora* sull'altro arriva leggibile entro 30 secondi, come in CA-10.1: la cifratura non cambia i tempi (DEC-80).
+- **CA-10.15** *Dato* un blocco alterato sul server, *quando* il dispositivo lo riceve, *allora* non lo apre, compare l'avviso «errore di sincronizzazione» e la copia di lavoro resta intatta (RB-40, SF-32).
+- **CA-10.16** *Dato* un dispositivo senza accesso, *quando* guardo la copia di lavoro e il portachiavi, *allora* la chiave dati non c'è da nessuna parte; dopo l'accesso sta solo nel portachiavi del sistema, mai in un file (RB-86, RB-89).
+
 ---
 
 ## RF-14 – Accesso all'installazione
-**Priorità:** Must · **Origine:** DEC-05, DEC-121 · **Fase:** 8 (criteri e piano di test da scrivere; Fase 7 fatta con DEC-121 e `architettura/api.md`) · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** DEC-05, DEC-121 · **Fase:** 9 (criteri e piano di test approvati il 06/10/2026; manca il testo di CA-14.11, domanda aperta su SC-05) · **Stato:** Pronto
 
 Come *utente* voglio accedere una volta con email e password per sincronizzare le mie note cifrate, restare collegato senza ripetere l'accesso e poter uscire da un dispositivo.
 
@@ -54,7 +61,20 @@ Come *utente* voglio accedere una volta con email e password per sincronizzare l
 Creo l'utente sul server con il comando, stampo la chiave di recupero e la metto al sicuro. Apro Memodu sul PC Windows: le note della copia di lavoro ci sono subito; dalla sezione Sincronizzazione delle impostazioni accedo con email e password e le note si sincronizzano cifrate. Faccio lo stesso sul Mac. Per un mese non devo più accedere; se un computer resta spento più a lungo, alla riapertura scrivo come sempre e un avviso mi chiede di accedere di nuovo.
 
 ### Criteri di accettazione
-Da riscrivere in Fase 8 con DEC-121. I criteri precedenti, scritti per il collegamento con credenziali preimpostate (DEC-13, DEC-20, DEC-79) e confermati da Manuel Cucca il 04/10/2026, sono superati da DEC-121:
+Scritti dall'agente dai flussi, dalle regole e dai mockup (FL-08, RB-86 … RB-90, DEC-121), approvati da Manuel Cucca il 06/10/2026. Numerati dopo quelli superati.
+- **CA-14.7** *Dato* il comando che crea l'utente, *quando* gli do email e una password di almeno 12 caratteri che non sia tra le più comuni, *allora* stampa le righe delle variabili del server e, una volta sola, la chiave di recupero; con una password più corta o comune la rifiuta e dice perché. Password, prova e chiavi non finiscono mai nel registro (RB-88, RB-90).
+- **CA-14.8** *Dato* un dispositivo senza accesso, *quando* apro Memodu, *allora* la finestra si apre subito sulla copia di lavoro, senza sincronizzare e senza avvisi; nella sezione Sincronizzazione delle impostazioni la riga Account dice «Non hai fatto l'accesso» con Accedi (RB-87, DEC-84).
+- **CA-14.9** *Dato* SC-05 aperta da Accedi, *quando* inserisco email e password giuste e premo Accedi (o Invio), *allora* il pulsante va in caricamento, la finestra si chiude, la sincronizzazione parte e la riga Account mostra l'email con Esci (RB-86).
+- **CA-14.10** *Dato* SC-05, *quando* sbaglio email o password, *allora* compare «Email o password non corrette.» sopra i pulsanti, l'email resta scritta e posso riprovare quante volte voglio (RB-86).
+- **CA-14.11** *Dato* SC-05 e il server irraggiungibile, *quando* premo Accedi, *allora* compare il messaggio in linea del server irraggiungibile (testo da approvare, vedi le domande aperte) e posso continuare a scrivere sulla copia di lavoro (DEC-02).
+- **CA-14.12** *Dato* un dispositivo che ha fatto l'accesso, *quando* chiudo e riapro Memodu, *allora* non mi chiede di accedere; quando al gettone mancano meno di 7 giorni l'app lo rinnova da sola, senza chiedere nulla (RB-86).
+- **CA-14.13** *Dato* il gettone scaduto o rifiutato (per esempio dopo il cambio del segreto sul server), *quando* l'app prova a sincronizzare, *allora* la finestra non si blocca, continuo a scrivere e compare l'avviso «Accedi di nuovo per sincronizzare. Le modifiche restano su questo computer.»; Accedi apre SC-05 e, dopo l'accesso, le modifiche fatte nel frattempo arrivano sugli altri dispositivi (RB-87).
+- **CA-14.14** *Dato* un dispositivo collegato con modifiche in attesa, *quando* premo Esci, *allora* le modifiche partono, gettone e chiave dati spariscono dal portachiavi, la copia di lavoro resta e la riga Account torna a «Non hai fatto l'accesso» (RB-89).
+- **CA-14.15** *Dato* SC-05 aperta dall'avviso dell'accesso scaduto, *quando* premo «Non voglio usare il cloud», *allora* il dispositivo si scollega come con Esci, le modifiche in attesa restano sulla copia di lavoro e l'avviso non torna riaprendo Memodu; con Esc invece la finestra si chiude soltanto e l'avviso torna alla riapertura (RB-89).
+- **CA-14.16** *Dato* la password persa e la chiave di recupero, *quando* rilancio il comando con la chiave di recupero e una password nuova e metto le variabili nuove sul server, *allora* accedo con la password nuova e leggo tutte le note senza che vengano ricifrate; la password vecchia è rifiutata (RB-90).
+- **CA-14.17** *Dato* una richiesta di accesso, *quando* guardo cosa arriva al server e il suo registro, *allora* non ci sono mai la password, la chiave di recupero o la chiave dati in chiaro (DEC-121).
+
+I criteri precedenti, scritti per il collegamento con credenziali preimpostate (DEC-13, DEC-20, DEC-79) e confermati da Manuel Cucca il 04/10/2026, sono superati da DEC-121:
 - ~~**CA-14.1**~~ *(superato)* *Dato* una installazione nuova, *quando* genero le credenziali con `npm run credenziali`, *allora* il file `credenziali` da copiare su ogni dispositivo nasce una volta, non si sovrascrive, e il server conosce solo l'impronta del gettone (DEC-79, DEC-104).
 - ~~**CA-14.2**~~ *(superato)* *Dato* il file `credenziali` con credenziali valide, *quando* apro Memodu, *allora* la finestra si apre subito sulla copia di lavoro e la sincronizzazione parte in background, senza schermate di accesso (RNF-01, RB-54).
 - ~~**CA-14.3**~~ *(superato)* *Dato* credenziali rifiutate dal server, *quando* apro Memodu o il rifiuto arriva con l'app aperta, *allora* al posto della finestra, e della nota rapida, compare la schermata di blocco con Riprova; quello che era già scritto resta sulla copia di lavoro (RB-57, DEC-20).
