@@ -72,6 +72,8 @@ flowchart TD
     M -- No --> L[Si lavora in locale, senza sincronizzare; nella sezione Sincronizzazione delle impostazioni: Accedi per sincronizzare - RB-87]
     L --> S[SC-05: email e password - RB-86]
     S --> P[Dalla password, sul dispositivo: prova di accesso e chiave della cassaforte - DEC-121]
+    S --> N[Non voglio usare il cloud: si scollega come Esci - RB-89]
+    N --> L
     P --> E{Il server accetta la prova?}
     E -- No --> X[Messaggio in linea in SC-05: email o password errate]
     X --> S
@@ -96,6 +98,7 @@ flowchart TD
 - **Password persa:** con la chiave di recupero se ne sceglie una nuova; per ora rilanciando il comando del server (RB-90, runbook).
 - **Dispositivo perso:** per ora si cambia il segreto dei gettoni e tutti i dispositivi rifanno l'accesso (DEC-121, runbook).
 - **Uscire:** «Esci» manda le modifiche in attesa, poi scollega; la copia di lavoro resta (RB-89).
+- **Non voglio usare il cloud:** in SC-05 scollega come «Esci»; con il gettone scaduto le modifiche in attesa restano sulla copia di lavoro e l'avviso non torna (RB-89).
 
 ### Sfighe gestite
 | Sfiga | Rilevamento | Comunicazione | Via d'uscita |
@@ -134,5 +137,5 @@ flowchart TD
 | RB-86 | Si accede in SC-05 con email e password dell'utente fisso (DEC-121). Dalla password, sul dispositivo, si ricavano la prova di accesso per il server e la chiave che apre la chiave dati; il server restituisce un gettone di 30 giorni, che l'app rinnova da sola quando ne mancano meno di 7. Gettone e chiave dati restano nel portachiavi del sistema | FL-08 |
 | RB-87 | Senza un gettone valido la finestra non si blocca mai. Mai fatto l'accesso: si lavora in locale e nella sezione Sincronizzazione delle impostazioni c'è «Accedi per sincronizzare». Gettone scaduto o rifiutato: si continua a scrivere, le modifiche aspettano e l'avviso «Accedi di nuovo per sincronizzare» apre SC-05; dopo l'accesso si sincronizza tutto (DEC-121) | FL-07, FL-08 |
 | RB-88 | La password ha almeno 12 caratteri, nessuna regola di complessità e non può essere tra le più comuni (elenco breve nel programma). La controlla il comando che crea l'utente (DEC-121) | FL-08 |
-| RB-89 | «Esci», nella sezione Sincronizzazione delle impostazioni (SC-06), manda le modifiche in attesa e poi toglie gettone e chiave dati dal portachiavi: il dispositivo lavora in locale senza sincronizzare. La copia di lavoro resta (DEC-121) | FL-08 |
+| RB-89 | «Esci», nella sezione Sincronizzazione delle impostazioni (SC-06), manda le modifiche in attesa e poi toglie gettone e chiave dati dal portachiavi: il dispositivo lavora in locale senza sincronizzare. La copia di lavoro resta (DEC-121). «Non voglio usare il cloud» in SC-05 fa lo stesso (scelta di Manuel Cucca il 06/10/2026): se il gettone non vale più, le modifiche in attesa restano sulla copia di lavoro e partono al prossimo accesso; l'avviso «Accedi di nuovo» non torna | FL-08 |
 | RB-90 | Creando l'utente nasce una chiave di recupero, mostrata una volta per stamparla: con questa si sceglie una password nuova senza perdere le note. Persi la password e la chiave di recupero, le note sul server non si recuperano (DEC-121) | FL-08 |

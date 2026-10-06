@@ -7,8 +7,8 @@ L'impostazione generale è in `moduli/interfaccia/4-schermate.md`. La sincronizz
 ## Avvisi di sincronizzazione (FL-07)
 **Flussi:** FL-07 · **Componenti:** avviso
 
-- **Wireframe:** [i due avvisi](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-130) · [nota in conflitto](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=32-147)
-- **Esportazioni:** `immagini/SC-01-avvisi.png`
+- **Wireframe:** [i due avvisi](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-130) · [nota in conflitto](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=32-147) · [accesso scaduto](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-211)
+- **Esportazioni:** `immagini/SC-01-avvisi.png`, `immagini/SC-01-accesso-scaduto.png`
 
 Al centro dell'area della nota di SC-01, 8 sotto la fascia in alto (DEC-86), livello 50, uno alla volta:
 
@@ -17,7 +17,7 @@ Al centro dell'area della nota di SC-01, 8 sotto la fascia in alto (DEC-86), liv
 | Server irraggiungibile | Oltre un'ora dall'ultima sincronizzazione riuscita (RB-40, DEC-112) | Ho capito |
 | Errore di sincronizzazione | Subito (SF-32) | Ho capito |
 | Nota in conflitto | Subito (RB-39) | Apri l'altra |
-| Accesso scaduto | Gettone scaduto o rifiutato (RB-87) | Accedi, che apre SC-05 (wireframe da fare) |
+| Accesso scaduto | Gettone scaduto o rifiutato (RB-87) | Accedi, che apre SC-05 |
 
 L'avviso resta sul dispositivo in cui nasce (DEC-90). Il testo «Accedi di nuovo per sincronizzare» è provvisorio: quello definitivo in Fase 6.
 
@@ -45,13 +45,13 @@ Al posto della finestra principale e della nota rapida quando la copia di lavoro
 ## SC-05 – Accesso
 **Flussi:** FL-08 · **Componenti:** modulo di accesso (CMP-22), campo di testo con password (CMP-03), pulsante, messaggio in linea
 
-- **Wireframe:** [accesso](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-181) · [credenziali errate](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-196) · [primo avvio](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-211)
-- **Esportazioni:** `immagini/SC-05.png`, `immagini/SC-05-errore.png`, `immagini/SC-05-primo-avvio.png`
+- **Wireframe:** [accesso](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-181) · [email o password errate](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-196) (approvati da Manuel Cucca il 06/10/2026)
+- **Esportazioni:** `immagini/SC-05.png`, `immagini/SC-05-errore.png`
 - **Mockup:** [Fase 6]
 
 **Attiva con DEC-121**, che supera DEC-19. Si apre da «Accedi per sincronizzare» nella sezione Sincronizzazione delle impostazioni (SC-06) o dall'avviso «Accedi di nuovo per sincronizzare» (RB-87); non compare all'avvio, che resta sulla copia di lavoro (RNF-01).
 
-Finestra vuota con il modulo al centro: nome Memodu, email, password, Accedi. **Da aggiornare nei wireframe:** l'app non crea più l'account (lo crea il comando del server, DEC-121), quindi il wireframe del primo avvio cade; serve un modo per tornare alla copia di lavoro senza accedere. Regole: RB-86, RB-88; nessun limite ai tentativi per ora.
+Finestra sopra le note velate (livello 40, scelta di Manuel Cucca il 06/10/2026): titolo «Accedi a Memodu», email, password e i pulsanti «Non voglio usare il cloud» e Accedi. «Non voglio usare il cloud» scollega il dispositivo come «Esci» (RB-89) e si torna alle note; Esc chiude soltanto la finestra, senza scollegare: un tasto premuto per sbaglio non deve far uscire (scelta di Manuel Cucca il 06/10/2026). L'app non crea l'account (lo crea il comando del server, DEC-121): il wireframe del primo avvio è caduto. Regole: RB-86, RB-88; nessun limite ai tentativi per ora.
 
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |
