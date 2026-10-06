@@ -1,6 +1,6 @@
 # DEC-114 – Credenziali perse: se ne generano di nuove
 
-**Data:** 2026-10-04 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-10-04 · **Stato:** Superata da DEC-121 · **Idea di origine:** —
 
 ## Contesto
 Il recupero delle credenziali perse era rinviato a prima della Definition of Ready di RF-10 e RF-14. Il server conosce solo l'impronta del gettone (DEC-79) e, finché manca la cifratura, le note sul server sono in chiaro (DEC-78, DEC-104): perso il file `credenziali` non si perde nessuna nota.

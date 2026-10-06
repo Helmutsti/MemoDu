@@ -27,7 +27,7 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-19 | Stato vuoto | composto | Disegnato |
 | CMP-20 | Testo della nota (campo titolo e stili dell'editor) | composto | Disegnato |
 | CMP-21 | Immagine nel testo e area di trascinamento | composto | Disegnato |
-| CMP-22 | Modulo di accesso (progettato, non attivo: DEC-19) | composto | Disegnato |
+| CMP-22 | Modulo di accesso (attivo con DEC-121) | composto | Disegnato; da rivedere senza il primo avvio |
 | CMP-23 | Nota rapida | composto | Disegnato |
 | CMP-24 | Info (comparsa sotto il titolo e finestra al centro, DEC-96; righe con l'icona, DEC-97) | composto | Disegnato |
 | CMP-25 | Barra di scorrimento | composto | Disegnato |
@@ -200,7 +200,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 ### Varianti e dimensioni
 - **Normale:** solo il testo.
 - **Ricerca:** icona cerca a sinistra; quando è compilata compare ✕ per cancellare. Proprietà **Mostra scorciatoia**, spenta di base: accesa solo nel campo della colonna, mostra a destra «Ctrl + K» (⌘ + K su macOS) in Interfaccia/Dettaglio e `testo-tenue` finché il campo è vuoto (DEC-101).
-- **Password:** il valore si vede come pallini; l'icona a occhio a destra lo mostra e lo nasconde. Serve al modulo di accesso (CMP-22), progettato ma non attivo (DEC-19).
+- **Password:** il valore si vede come pallini; l'icona a occhio a destra lo mostra e lo nasconde. Serve al modulo di accesso (CMP-22), attivo con DEC-121.
 - **Con icona:** icona a destra (di default il calendario), che apre la scelta alternativa. Proprietà **Icona** per cambiarla.
 - **Campo della scorciatoia** (SC-06, RB-52): è un campo normale con testi suoi ("Nessuna scorciatoia", al focus "Premi i tasti…"). Non scrive testo ma registra la prima combinazione premuta, che diventa il valore (es. "Ctrl + Alt + N"). Non è una variante: l'aspetto è lo stesso, cambia solo il comportamento.
 - Una sola dimensione: alto 32 (`misura-riga`), pillola, sfondo `sfondo-campo`, margini 12, distanza 8 tra icone e testo, testo Interfaccia/Controllo. La larghezza la decide chi lo usa (240 negli esempi).
@@ -737,7 +737,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 ### Varianti e dimensioni
 - **Interruttore:** etichetta (Interfaccia/Controllo) e descrizione (Interfaccia/Dettaglio, `testo-tenue`) a sinistra, interruttore (CMP-04) a destra; tutta la riga si clicca.
 - **Campo:** come sopra, con un campo (CMP-03, largo 200) a destra, es. la scorciatoia della nota rapida o il nome del dispositivo.
-- **Azione:** etichetta e valore (in `testo-tenue`) a sinistra, pulsante secondario (CMP-01) a destra, es. Email con Cambia o Esci. Serve alla sezione Account, progettata ma non attiva (DEC-19). Si attiva solo il pulsante, come il campo.
+- **Azione:** etichetta e valore (in `testo-tenue`) a sinistra, pulsante secondario (CMP-01) a destra, es. Email con Cambia o Esci. Serve alla sezione Sincronizzazione di SC-06 per l'email ed «Esci» (DEC-121). Si attiva solo il pulsante, come il campo.
 - **Titolo di gruppo:** Interfaccia/Titolo di gruppo in `testo-tenue`, alto 32.
 - **Scelta:** etichetta e descrizione a sinistra, scelta a segmenti (CMP-28) a destra, es. il tema Sistema · Chiaro · Scuro (DEC-91). Si attiva solo la scelta.
 - **Scorciatoia:** come Campo, con il campo della combinazione e a destra il pulsante tenue «Ripristina», che torna al valore di default. Si clicca il campo e si preme la combinazione nuova; se un altro programma la usa già, l'errore è nel campo e resta la vecchia (DEC-91).
@@ -776,7 +776,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 - **Nota:** icona `file-text` 24, «Nessuna nota aperta», spiegazione e il pulsante primario «Nuova nota».
 - **Cestino:** icona elimina 24, «Il cestino è vuoto», spiegazione, senza azioni (niente Svuota cestino).
 - **Colonna:** una riga Interfaccia/Dettaglio in `testo-tenue`, «Nessuna cartella. Creane una con +».
-- **Blocco:** al posto della finestra quando le credenziali mancano o vengono rifiutate (SC-07, DEC-20). Icona errore 24 in `icona-errore`, «Memodu non riesce a collegarsi», cosa correggere e il pulsante primario «Riprova».
+- **Blocco:** al posto della finestra quando la copia di lavoro non si apre o non si scrive (SC-07, DEC-67); non più per le credenziali (DEC-121). Icona errore 24 in `icona-errore`, «Memodu non riesce a collegarsi», cosa correggere e il pulsante primario «Riprova».
 - Icona in `icona-tenue`, titolo Interfaccia/Titolo, testo Interfaccia/Messaggio in `testo-tenue`, centrati, largo 320, 8 px di distanza.
 - I testi sono esempi nel tono di voce; quelli definitivi si scrivono in Fase 6.
 
@@ -868,10 +868,10 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 ---
 
 ## CMP-22 – Modulo di accesso
-**Tipo:** composto (usa CMP-01 e CMP-03) · **Usato in:** SC-05 (progettata, non attiva) · **Figma:** pagina Componenti composti, [Modulo di accesso](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=86-2910)
+**Tipo:** composto (usa CMP-01 e CMP-03) · **Usato in:** SC-05 · **Figma:** pagina Componenti composti, [Modulo di accesso](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=86-2910)
 
 **Scopo:** entrare in Memodu con email e password, o creare l'account al primo avvio.
-**Quando usarlo:** quando l'accesso verrà attivato (per esempio con il web, ID-19). Nella prima versione non compare: i dispositivi si collegano con le credenziali preimpostate (DEC-13, DEC-19).
+**Quando usarlo:** in SC-05, per accedere con email e password (DEC-121). Il primo avvio con Crea l'account non serve più: l'utente lo crea il comando del server.
 **Quando non usarlo:** per cambiare email o password (sezione Account di SC-06, con righe di impostazione).
 
 ### Varianti e dimensioni

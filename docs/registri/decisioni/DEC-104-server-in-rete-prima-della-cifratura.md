@@ -1,6 +1,6 @@
 # DEC-104 – Server in rete prima della cifratura
 
-**Data:** 2026-10-02 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-10-02 · **Stato:** Superata in parte da DEC-121 · **Idea di origine:** —
 
 ## Contesto
 DEC-78 (condizione 2) tiene il server solo in locale finché la cifratura end-to-end è spenta. Manuel Cucca vuole rendere pronta l'API e pubblicarla, «dietro token statico per il momento», per usarla da più dispositivi prima della cifratura.

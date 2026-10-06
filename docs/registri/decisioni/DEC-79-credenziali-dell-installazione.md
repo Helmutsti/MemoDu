@@ -1,6 +1,6 @@
 # DEC-79 – Credenziali dell'installazione: come nascono e dove stanno
 
-**Data:** 2026-09-30 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-30 · **Stato:** Superata in parte da DEC-121 · **Idea di origine:** —
 
 ## Contesto
 DEC-13 e RB-54 stabiliscono che installando il server si generano le credenziali, che autorizzano i dispositivi e contengono la chiave di cifratura, e che si scrivono nel file di configurazione dell'app. Restavano da decidere come si generano, come le usa il server e dove le tiene il dispositivo (EN-05).

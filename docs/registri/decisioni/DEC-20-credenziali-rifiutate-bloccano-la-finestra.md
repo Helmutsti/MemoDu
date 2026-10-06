@@ -1,6 +1,6 @@
 # DEC-20 – Credenziali mancanti o rifiutate bloccano la finestra
 
-**Data:** 2026-09-25 · **Stato:** Superata in parte da DEC-84 · **Idea di origine:** —
+**Data:** 2026-09-25 · **Stato:** Superata in parte da DEC-84 e da DEC-121 · **Idea di origine:** —
 
 ## Contesto
 FL-08 conteneva una deduzione da confermare: con credenziali mancanti o rifiutate l'app funziona lo stesso sulla copia di lavoro e mostra solo un avviso. Manuel Cucca non l'ha confermata: senza credenziali valide l'app si blocca.

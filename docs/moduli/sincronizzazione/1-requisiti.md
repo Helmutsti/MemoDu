@@ -3,7 +3,7 @@
 <!-- Fase 1 della guida, con i criteri di accettazione della Fase 8. Copia il blocco per ogni requisito. -->
 
 ## RF-10 – Sincronizzazione cloud cifrata end-to-end
-**Priorità:** Must · **Origine:** DEC-01, DEC-02, DEC-06, DEC-13 · **Fase:** 9 (senza la cifratura, che resta in Fase 1–5 nel frammento Must · resto) · **Stato:** Pronto
+**Priorità:** Must · **Origine:** DEC-01, DEC-02, DEC-06, DEC-121 · **Fase:** 9 (senza la cifratura, che con DEC-121 è in Fase 8: criteri e piano di test da scrivere) · **Stato:** Pronto, tranne la cifratura
 
 Come *utente* voglio che tutte le mie note siano sincronizzate nel cloud con cifratura end-to-end per avere l'intera struttura a disposizione su ogni dispositivo, senza che altri possano leggerla.
 
@@ -11,7 +11,7 @@ Il cloud è la fonte di verità. Sul dispositivo resta una copia di lavoro su cu
 
 Se una nota è stata modificata su un solo dispositivo, si salva la versione più aggiornata. Se la stessa nota è stata modificata su due dispositivi c'è un conflitto: il programma salva entrambe le versioni e nessun dato va perso (DEC-06): una resta la nota originale, l'altra diventa una nota indipendente nella stessa cartella, con lo stesso titolo seguito da "(copia in conflitto)" (RB-39).
 
-Per sincronizzare il dispositivo usa le credenziali preimpostate dell'installazione, senza login (RF-14, DEC-13).
+Per sincronizzare il dispositivo deve aver fatto l'accesso (RF-14). La cifratura avviene sul dispositivo: le note si cifrano con la chiave dati, che si apre con la password o con la chiave di recupero; il server vede solo blocchi illeggibili (DEC-08, DEC-121).
 
 **Collegamenti:** FL-07 · EN-06 · EN-08 · SC-01 · RNF-02
 
@@ -34,30 +34,33 @@ Scritti dall'agente dai flussi e dalle decisioni (FL-07, DEC-75 … DEC-83). Con
 
 ---
 
-## RF-14 – Collegamento all'installazione
-**Priorità:** Must · **Origine:** DEC-05, DEC-13 · **Fase:** 9 · **Stato:** Pronto
+## RF-14 – Accesso all'installazione
+**Priorità:** Must · **Origine:** DEC-05, DEC-121 · **Fase:** 4 (SC-05 da aggiornare) · **Stato:** In progettazione
 
-Come *utente* voglio che Memodu si colleghi da solo alla mia installazione per sincronizzare le note senza dover mai accedere.
+Come *utente* voglio accedere una volta con email e password per sincronizzare le mie note cifrate, restare collegato senza ripetere l'accesso e poter uscire da un dispositivo.
 
-- L'installazione è personale: un solo utente e nessuna registrazione pubblica (DEC-05, DEC-13).
-- Installando il server si generano le credenziali dell'installazione; si scrivono nel file di configurazione dell'app quando la si installa (RB-54).
-- Non esistono schermate di accesso, email, password né comandi di uscita. L'avvio resta istantaneo (RNF-01).
-- Con credenziali rifiutate Memodu non si apre: compare una schermata di blocco con Riprova. Senza il file delle credenziali si lavora in locale, senza sincronizzare (DEC-84). Senza rete invece si lavora come sempre (RB-57, DEC-20).
-- Credenziali perse: se ne generano di nuove e si cambia l'impronta sul server (DEC-114, procedura nel runbook); il recupero della chiave di cifratura arriva con la cifratura.
+- L'installazione è personale: un solo utente e nessuna registrazione (DEC-05, DEC-13). Per ora l'utente è fisso: lo crea, con email e password, un comando del server, e l'app non crea account (DEC-121).
+- L'accesso avviene in SC-05 con email e password (RB-86). Dalla password, sul dispositivo, si ricavano la prova per il server e la chiave che apre la chiave dati: il server non vede mai né la password né la chiave (DEC-121).
+- Dopo l'accesso si resta collegati: il gettone dura 30 giorni e l'app lo rinnova da sola (RB-86). Gettone e chiave dati stanno nel portachiavi del sistema.
+- Senza accesso, o con il gettone scaduto o rifiutato, Memodu si apre comunque sulla copia di lavoro e non si blocca mai: le modifiche aspettano e un avviso porta a SC-05 (RB-87). Senza rete si lavora come sempre (DEC-02). L'avvio resta istantaneo (RNF-01).
+- La password ha almeno 12 caratteri, senza regole di complessità, e non può essere una delle più comuni (RB-88).
+- «Esci» nella sezione Sincronizzazione delle impostazioni (SC-06) scollega il dispositivo; la copia di lavoro resta (RB-89).
+- Password persa: con la chiave di recupero stampata alla creazione dell'utente se ne sceglie una nuova senza perdere le note (RB-90, procedura nel runbook).
+- Nessun limite ai tentativi di accesso, per ora (rinvio in `avanzamento.md`).
 
-**Collegamenti:** FL-08 · EN-05 · EN-06 · SC-07 · RF-10 · RNF-02
+**Collegamenti:** FL-08 · EN-05 · EN-06 · SC-05 · SC-06 · RF-10 · RNF-02
 
 ### Scenario d'uso
-Installo Memodu sul mio server e ottengo le credenziali dell'installazione. Installo l'app sul PC Windows con quelle credenziali: la apro e le mie note si sincronizzano, senza accedere. Faccio lo stesso sul Mac.
+Creo l'utente sul server con il comando, stampo la chiave di recupero e la metto al sicuro. Apro Memodu sul PC Windows: le note della copia di lavoro ci sono subito; dalla sezione Sincronizzazione delle impostazioni accedo con email e password e le note si sincronizzano cifrate. Faccio lo stesso sul Mac. Per un mese non devo più accedere; se un computer resta spento più a lungo, alla riapertura scrivo come sempre e un avviso mi chiede di accedere di nuovo.
 
 ### Criteri di accettazione
-Scritti dall'agente dai flussi e dalle decisioni (FL-08, DEC-13, DEC-20, DEC-79), confermati da Manuel Cucca il 04/10/2026.
-- **CA-14.1** *Dato* una installazione nuova, *quando* genero le credenziali con `npm run credenziali`, *allora* il file `credenziali` da copiare su ogni dispositivo nasce una volta, non si sovrascrive, e il server conosce solo l'impronta del gettone (DEC-79, DEC-104).
-- **CA-14.2** *Dato* il file `credenziali` con credenziali valide, *quando* apro Memodu, *allora* la finestra si apre subito sulla copia di lavoro e la sincronizzazione parte in background, senza schermate di accesso (RNF-01, RB-54).
-- **CA-14.3** *Dato* credenziali rifiutate dal server, *quando* apro Memodu o il rifiuto arriva con l'app aperta, *allora* al posto della finestra, e della nota rapida, compare la schermata di blocco con Riprova; quello che era già scritto resta sulla copia di lavoro (RB-57, DEC-20).
-- **CA-14.4** *Dato* la schermata di blocco, *quando* correggo il file `credenziali` e premo Riprova, *allora* il file si rilegge, il blocco sparisce e la sincronizzazione riparte (DEC-20).
-- **CA-14.5** *Dato* credenziali valide e il server spento, *quando* apro Memodu, *allora* si lavora come sempre sulla copia di lavoro, senza blocco (DEC-20, DEC-02).
-- **CA-14.6** *Dato* il file `credenziali` mancante, *quando* apro Memodu, *allora* si lavora sulla copia di lavoro senza sincronizzare e senza blocco; appena il file c'è, la sincronizzazione parte (DEC-84).
+Da riscrivere in Fase 8 con DEC-121. I criteri precedenti, scritti per il collegamento con credenziali preimpostate (DEC-13, DEC-20, DEC-79) e confermati da Manuel Cucca il 04/10/2026, sono superati da DEC-121:
+- ~~**CA-14.1**~~ *(superato)* *Dato* una installazione nuova, *quando* genero le credenziali con `npm run credenziali`, *allora* il file `credenziali` da copiare su ogni dispositivo nasce una volta, non si sovrascrive, e il server conosce solo l'impronta del gettone (DEC-79, DEC-104).
+- ~~**CA-14.2**~~ *(superato)* *Dato* il file `credenziali` con credenziali valide, *quando* apro Memodu, *allora* la finestra si apre subito sulla copia di lavoro e la sincronizzazione parte in background, senza schermate di accesso (RNF-01, RB-54).
+- ~~**CA-14.3**~~ *(superato)* *Dato* credenziali rifiutate dal server, *quando* apro Memodu o il rifiuto arriva con l'app aperta, *allora* al posto della finestra, e della nota rapida, compare la schermata di blocco con Riprova; quello che era già scritto resta sulla copia di lavoro (RB-57, DEC-20).
+- ~~**CA-14.4**~~ *(superato)* *Dato* la schermata di blocco, *quando* correggo il file `credenziali` e premo Riprova, *allora* il file si rilegge, il blocco sparisce e la sincronizzazione riparte (DEC-20).
+- ~~**CA-14.5**~~ *(superato)* *Dato* credenziali valide e il server spento, *quando* apro Memodu, *allora* si lavora come sempre sulla copia di lavoro, senza blocco (DEC-20, DEC-02).
+- ~~**CA-14.6**~~ *(superato)* *Dato* il file `credenziali` mancante, *quando* apro Memodu, *allora* si lavora sulla copia di lavoro senza sincronizzare e senza blocco; appena il file c'è, la sincronizzazione parte (DEC-84).
 
 ---
 
@@ -81,7 +84,7 @@ Anche se si sviluppa dopo la prima fase, il modo in cui si salvano le note deve 
 ## RF-16 – Elenco dei dispositivi e uscita a distanza
 **Priorità:** Should · **Origine:** — · **Fase:** 1 · **Stato:** In progettazione
 
-> Da ripensare (DEC-13): con credenziali uguali per tutti i dispositivi non si può far uscire un solo dispositivo, e senza web cade l'esempio del browser dimenticato aperto.
+> Da ripensare (DEC-13, DEC-121): nell'architettura temporanea di DEC-121 tutti i dispositivi condividono il segreto dei gettoni e non se ne può far uscire uno solo; nell'architettura finale ognuno ha il suo gettone di rinnovo, che si può revocare. Senza web cade l'esempio del browser dimenticato aperto, e uscendo la copia di lavoro resta (RB-89).
 
 Come *utente* voglio vedere l'elenco dei dispositivi da cui ho accesso e farne uscire uno a distanza, per chiudere un accesso dimenticato aperto, per esempio sul browser di un computer non mio (SF-26).
 

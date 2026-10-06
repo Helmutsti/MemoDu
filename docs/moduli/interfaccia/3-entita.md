@@ -18,7 +18,7 @@ Il diagramma di tutto il sistema è in `moduli/note/3-entita.md`.
 | Finestra principale in primo piano | Sì \| No | Sì | Solo app desktop; solo su questo dispositivo | Di default No (DEC-93) |
 | Note del cestino nella ricerca | Sì \| No | Sì | Sincronizzata (RB-52) | Di default Sì (RB-29, DEC-94) |
 
-Il nome del dispositivo non è qui: appartiene al dispositivo (EN-06, RB-51). Le credenziali appartengono all'installazione (EN-05, RB-54).
+Il nome del dispositivo non è qui: appartiene al dispositivo (EN-06, RB-51). I dati dell'accesso appartengono all'utente (EN-05) e al dispositivo (EN-06, RB-86).
 
 - **Chi le crea:** il sistema, con i valori di default, alla prima apertura di Memodu.
 - **Chi le modifica:** l'utente, dalle impostazioni.

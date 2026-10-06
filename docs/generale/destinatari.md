@@ -7,7 +7,7 @@ Memodu non ha un destinatario specifico: l'obiettivo finale è rivolgersi a chiu
 ## Destinatari per fase
 | Fase | Chi usa Memodu | Perché |
 |---|---|---|
-| Prima fase | Il proprietario dell'installazione personale, in grado di installare e gestire un server | Installazione personale con credenziali preimpostate, senza login (DEC-13) |
+| Prima fase | Il proprietario dell'installazione personale, in grado di installare e gestire un server | Installazione personale con un solo utente, creato da un comando del server; accesso con email e password (DEC-13, DEC-121) |
 | Dopo la prima fase | Chiunque, di qualsiasi fascia d'età, senza competenze tecniche | Richiede un servizio gestito (ID-12) |
 
 ## Ruoli
@@ -15,7 +15,7 @@ I ruoli determinano permessi e schermate.
 
 | Ruolo | Descrizione | Cosa può fare |
 |---|---|---|
-| Utente | Unico ruolo della prima fase: il proprietario dell'installazione personale, senza account visibile: i dispositivi si collegano con le credenziali preimpostate (DEC-01, DEC-13, ID-05) | Tutto |
+| Utente | Unico ruolo della prima fase: il proprietario dell'installazione personale, con un solo account, creato da un comando del server, a cui si accede con email e password (DEC-01, DEC-13, DEC-121, ID-05) | Tutto |
 
 ## Personas
 2–3 profili sintetici di persone reali che useranno il prodotto.

@@ -38,7 +38,7 @@ Budget, tempi, tecnologie imposte, integrazioni obbligatorie.
 
 - Prima fase: solo modalità cloud, con un solo utente, limitata a scrittura e archiviazione (DEC-01).
 - Prima fase: Windows e macOS (DEC-13). Il web è rinviato (ID-19).
-- Prima fase: installazione personale con un solo utente, senza registrazione pubblica né login: le credenziali sono preimpostate nell'app (DEC-13).
+- Prima fase: installazione personale con un solo utente, senza registrazione pubblica; si accede con email e password e le note sono cifrate end-to-end (DEC-13, DEC-121).
 
 ## Assunzioni
 Ciò che si dà per vero senza averlo verificato. Ogni assunzione è un rischio.

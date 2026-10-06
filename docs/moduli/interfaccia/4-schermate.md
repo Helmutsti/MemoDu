@@ -108,18 +108,18 @@ Si apre dalla riga **Impostazioni** in fondo alla colonna, sotto il Cestino, al 
 |---|---|
 | Generale | Scorciatoia della nota rapida: clic sul campo e si preme la combinazione nuova; se un altro programma la usa già lo si dice e resta la vecchia; «Ripristina» torna al default (separata per Windows e macOS e sincronizzata, RB-52). Avvia Memodu all'accensione: interruttore, spento di default, solo su questo dispositivo. Tieni Memodu in primo piano: interruttore, spento di default, solo su questo dispositivo; la finestra principale resta sopra gli altri programmi (DEC-93, posizione nella pagina da rivedere) |
 | Tema | Sistema · Chiaro · Scuro, di default Sistema; solo su questo dispositivo |
-| Sincronizzazione | Stato e ultima sincronizzazione riuscita, in sola lettura: «Sincronizzata alle 14:32», «Senza collegamento: le note restano su questo computer» (senza credenziali, DEC-84), «Server non raggiungibile da…» |
+| Sincronizzazione | Stato e ultima sincronizzazione riuscita, in sola lettura: «Sincronizzata alle 14:32», «Senza collegamento: le note restano su questo computer» (senza accesso, DEC-84), «Server non raggiungibile da…». Senza accesso o con il gettone scaduto, «Accedi per sincronizzare», che apre SC-05; dopo l'accesso, l'email dell'utente ed «Esci» (RB-87, RB-89, DEC-121; wireframe da fare, con la variante Azione di CMP-18) |
 | Ricerca | «Mostra le note del cestino nei risultati»: interruttore, acceso di default, sincronizzato come la scorciatoia (RB-29, RB-52, DEC-94) |
 | Dispositivo | Nome di questo dispositivo, di default il nome del computer (RB-51) |
 
-La sezione Ricerca sta tra Sincronizzazione e Dispositivo (DEC-94). La sezione Account non c'è più (DEC-13, DEC-91).
+La sezione Ricerca sta tra Sincronizzazione e Dispositivo (DEC-94). La sezione Account non c'è più (DEC-13, DEC-91): accesso e uscita stanno nella sezione Sincronizzazione (DEC-121).
 
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |
 |---|---|---|
 | Vuoto | Non previsto: ogni impostazione ha un valore di default | — |
 | Caricamento | Non previsto: le impostazioni sono sulla copia di lavoro | — |
-| Errore | Non previsto nella prima versione: senza account non ci sono credenziali da verificare (DEC-13). Credenziali mancanti o rifiutate bloccano la finestra (SC-07) | — |
+| Errore | Non previsto: l'accesso e i suoi errori stanno in SC-05; senza accesso la finestra non si blocca (RB-87) | — |
 | Successo | Nessun messaggio: il valore cambiato resta visibile | — |
 
 ---

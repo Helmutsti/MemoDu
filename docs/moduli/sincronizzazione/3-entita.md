@@ -6,18 +6,24 @@
 Il diagramma di tutto il sistema è in `moduli/note/3-entita.md`.
 
 ## EN-05 – Account
-**Descrizione:** l'unica installazione personale e le sue credenziali (RF-14, DEC-13). Non ha email né password e l'utente non la vede.
+**Descrizione:** l'unico utente dell'installazione personale (RF-14, DEC-13, DEC-121). Per ora è fisso: i suoi dati stanno nelle variabili d'ambiente del server, generati da un comando, e non in una tabella.
 
 | Attributo | Tipo | Obbligatorio | Vincoli | Note |
 |---|---|---|---|---|
-| Identificativo | Codice | Sì | Uno solo per installazione (DEC-01, DEC-13) | Tecnico, non visibile |
-| Credenziali | Segreto | Sì | Generate installando il server | Autorizzano i dispositivi e contengono la chiave di cifratura (DEC-08). Si scrivono nel file `credenziali` della cartella dei dati dell'app, letto a ogni avvio (RB-54, DEC-79). Il server conserva solo l'impronta del gettone. Il cambio si rivaluta con la cifratura |
-| Data di creazione | Data e ora | Sì | | All'installazione del server |
+| Email | Testo | Sì | Una sola per installazione (DEC-01, DEC-13) | Serve ad accedere (RB-86) |
+| Sale e parametri di Argon2id | Tecnico | Sì | Sale casuale; 64 MiB, 3 passaggi, 1 filo (DEC-121) | Il server li dà prima dell'accesso; i parametri si possono alzare |
+| Impronta della prova di accesso | Tecnico | Sì | SHA-256 | La prova si ricava dalla password sul dispositivo; il server non vede mai la password |
+| Impronta della prova di recupero | Tecnico | Sì | SHA-256 | La prova si ricava dalla chiave di recupero (RB-90) |
+| Chiave dati avvolta con la password | Segreto | Sì | | La chiave che cifra le note, illeggibile senza la password (DEC-08, DEC-121) |
+| Chiave dati avvolta con la chiave di recupero | Segreto | Sì | | La stessa chiave dati, per scegliere una password nuova (RB-90) |
+| Data di creazione | Data e ora | Sì | | Quando il comando crea l'utente |
 
-- **Chi lo crea:** il sistema, all'installazione del server (FL-08).
-- **Chi lo modifica:** nessuno dall'app; il cambio delle credenziali si rivaluta quando si accende la cifratura (DEC-79).
+La password e la chiave di recupero non sono attributi: non lasciano il dispositivo e il foglio stampato. Il segreto che firma i gettoni appartiene al server, non all'utente.
+
+- **Chi lo crea:** Manuel Cucca, con il comando del server che crea l'utente fisso (DEC-121); l'app non crea account.
+- **Chi lo modifica:** per ora nessuno dall'app: per cambiare password si rilancia il comando con la chiave di recupero, che riusa la stessa chiave dati (RB-90).
 - **Cancellazione:** non prevista nella prima fase.
-- **Dati sensibili:** le credenziali. Chi legge il file di configurazione di un dispositivo legge tutte le note (rischio accettato, DEC-13). Il recupero delle credenziali perse è rimandato (domanda aperta su RF-10).
+- **Dati sensibili:** tutti; con questi dati il server non legge le note (DEC-121). Rischi: chi trova il foglio con la chiave di recupero legge tutte le note; persi password e chiave di recupero, le note sul server non si recuperano.
 
 ## EN-06 – Dispositivo
 **Descrizione:** un computer da cui l'utente usa Memodu (FL-07, FL-08).
@@ -29,10 +35,11 @@ Il diagramma di tutto il sistema è in `moduli/note/3-entita.md`.
 | Tipo | Windows \| macOS | Sì | Piattaforme della prima fase (DEC-13) | |
 | Ultima sincronizzazione | Data e ora | No | | Serve all'avviso di RB-40 |
 | Modifiche in attesa | Numero | Sì | | Modifiche non ancora arrivate al server |
+| Gettone e chiave dati | Segreto | No | Nel portachiavi del sistema, mai nella copia di lavoro | Ci sono dopo l'accesso, spariscono uscendo (RB-86, RB-89) |
 
 - **Chi lo crea:** il sistema, alla prima sincronizzazione da quel dispositivo (FL-08).
 - **Chi lo modifica:** il sistema; l'utente, solo per il nome (RB-51).
-- **Cancellazione:** non c'è uscita (DEC-13): un dispositivo si scollega disinstallando l'app. Se resti registrato si decide con RF-16 (Should).
+- **Cancellazione:** «Esci» scollega il dispositivo e la copia di lavoro resta (RB-89). Se resti registrato si decide con RF-16 (Should).
 - **Dati sensibili:** il nome del dispositivo è cifrato end-to-end (DEC-08).
 
 ## EN-08 – Avviso
@@ -41,7 +48,7 @@ Il diagramma di tutto il sistema è in `moduli/note/3-entita.md`.
 | Attributo | Tipo | Obbligatorio | Vincoli | Note |
 |---|---|---|---|---|
 | Identificativo | Codice | Sì | Unico e stabile | Tecnico, non visibile |
-| Tipo | nota in conflitto \| errore di sincronizzazione \| server irraggiungibile | Sì | | RB-39, RB-40. Le credenziali rifiutate non sono un avviso: bloccano la finestra (RB-57) |
+| Tipo | nota in conflitto \| errore di sincronizzazione \| server irraggiungibile \| accesso scaduto | Sì | | RB-39, RB-40, RB-87 |
 | Nota collegata | EN-01 | No | Solo per il tipo "nota in conflitto" | Il collegamento dell'avviso (RB-39) |
 | Dispositivo | EN-06 | Sì | | Il dispositivo su cui è nato il problema |
 | Data | Data e ora | Sì | | |
@@ -54,4 +61,17 @@ Il testo dell'avviso non è un attributo: dipende dal tipo e si scrive in Fase 6
 - **Dati sensibili:** non lascia il dispositivo (DEC-90).
 
 ## Diagrammi a stati
-Nessuno: senza login e uscita il dispositivo non cambia stato (DEC-13).
+EN-06 Dispositivo, rispetto all'accesso (DEC-121):
+
+```mermaid
+stateDiagram-v2
+    [*] --> Scollegato
+    Scollegato --> Collegato: accesso in SC-05 (RB-86)
+    Collegato --> Collegato: gettone rinnovato (RB-86)
+    Collegato --> Scaduto: gettone scaduto o rifiutato (RB-87)
+    Scaduto --> Collegato: accesso di nuovo
+    Collegato --> Scollegato: Esci (RB-89)
+    Scaduto --> Scollegato: Esci (RB-89)
+```
+
+In tutti gli stati si lavora sulla copia di lavoro; si sincronizza solo da Collegato.

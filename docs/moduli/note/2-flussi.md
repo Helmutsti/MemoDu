@@ -43,7 +43,7 @@ flowchart TD
 - SF-06 Input strani ma legittimi, SF-17 Troppo, SF-36 Input malevolo: riguardano l'editor, gestiti in FL-02.
 - SF-10 App in background o schermo bloccato, SF-32 Errore a metà operazione: dipendono dal salvataggio durante la scrittura, gestito in FL-02.
 - SF-11 Dispositivo limitato: la prima fase è solo desktop (DEC-13).
-- SF-12 Sessione scaduta: non c'è sessione, il dispositivo usa le credenziali preimpostate (RF-14, DEC-13).
+- SF-12 Sessione scaduta: la scrittura è sulla copia di lavoro e non dipende dall'accesso; un gettone scaduto ferma solo la sincronizzazione (RB-87, DEC-121).
 - SF-13, SF-14, SF-15 (tempo): nessuna scadenza o data coinvolta.
 - SF-18 … SF-31, SF-33 … SF-35: nessun valore limite, dato condiviso, permesso, sistema esterno o accesso remoto coinvolto.
 
@@ -119,7 +119,7 @@ flowchart TD
 - SF-01 Doppio invio, SF-03 Tasto indietro e refresh: non esiste un'azione di invio, il salvataggio è continuo (RB-06).
 - SF-04 Più schede aperte: il programma mostra una nota alla volta (RF-01). La stessa nota aperta su due dispositivi è un conflitto, gestito in FL-07.
 - SF-05 Cambio idea: la nota resta sempre modificabile.
-- SF-12 Sessione scaduta: non c'è sessione, il dispositivo usa le credenziali preimpostate (RF-14, DEC-13).
+- SF-12 Sessione scaduta: la scrittura è sulla copia di lavoro e non dipende dall'accesso; un gettone scaduto ferma solo la sincronizzazione (RB-87, DEC-121).
 - SF-16 Vuoto: la nuova nota lasciata vuota sparisce (RB-10), vedi FL-09.
 - SF-17 Troppo: una nota arriva fino a 4 MB di testo (EN-01, DEC-106); oltre, il salvataggio fallisce e compare SC-07 (RB-61). Nessuna soglia sulla digitazione (RNF-01).
 - SF-22 Modifica simultanea: gestita in FL-07.

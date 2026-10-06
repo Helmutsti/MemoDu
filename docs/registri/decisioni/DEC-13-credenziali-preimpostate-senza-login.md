@@ -1,6 +1,6 @@
 # DEC-13 – Credenziali preimpostate, niente login, web rinviato
 
-**Data:** 2026-09-25 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-25 · **Stato:** Superata in parte da DEC-121 · **Idea di origine:** —
 
 ## Contesto
 DEC-05 prevedeva un account con email e password e una schermata di accesso (SC-05); DEC-07 ne fissava le regole di sicurezza. Manuel Cucca vuole che l'app funzioni senza account visibile: il login resta fuori dall'esperienza. La password però faceva due lavori: autorizzare il dispositivo verso il server, raggiungibile da Internet per la versione web (DEC-04), e ricavare la chiave di cifratura end-to-end (DEC-08).

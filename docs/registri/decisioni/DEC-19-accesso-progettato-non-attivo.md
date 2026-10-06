@@ -1,6 +1,6 @@
 # DEC-19 – Accesso progettato ma non attivo
 
-**Data:** 2026-09-25 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-25 · **Stato:** Superata da DEC-121 · **Idea di origine:** —
 
 ## Contesto
 DEC-13 ha tolto il login dalla prima versione: i dispositivi si collegano con credenziali preimpostate. Tra le conseguenze c'erano l'eliminazione di SC-05 Accesso e della sezione Account di SC-06, e un rinvio per togliere quelle schermate dai wireframe. Rivedendo i pacchetti in viaggio, Manuel Cucca ha precisato di non voler togliere l'accesso: vuole portarlo avanti fino al design.

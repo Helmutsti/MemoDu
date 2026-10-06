@@ -8,8 +8,8 @@
 ```mermaid
 flowchart TD
     A[Lavoro sulla copia di lavoro: tutte le operazioni sono locali - DEC-02] --> B[Periodicamente parte la sincronizzazione in background]
-    B --> X{Ci sono le credenziali?}
-    X -- No --> Y[Non si sincronizza: si lavora in locale - DEC-84]
+    B --> X{Il dispositivo ha fatto l'accesso?}
+    X -- No --> Y[Non si sincronizza: si lavora in locale - DEC-84, RB-87]
     Y --> A
     X -- Sì --> C{Il server è raggiungibile?}
     C -- No --> D{Da quanto non si sincronizza?}
@@ -17,8 +17,9 @@ flowchart TD
     D -- Oltre un'ora --> W[Avviso: server irraggiungibile - RB-40, DEC-112]
     W --> A
     C -- Sì --> E{L'accesso è valido?}
-    E -- No --> V[Schermata di blocco - RB-57, FL-08]
-    E -- Sì --> F[Invio le modifiche cifrate e ricevo quelle degli altri dispositivi - per ora in chiaro, DEC-78]
+    E -- No --> V[Le modifiche aspettano + avviso: accedi di nuovo - RB-87, FL-08]
+    V --> A
+    E -- Sì --> F[Invio le modifiche cifrate e ricevo quelle degli altri dispositivi - DEC-08, DEC-121]
     F --> G{Errore di sincronizzazione?}
     G -- Sì --> U[Avviso: errore di sincronizzazione - RB-40]
     G -- No --> H{Lo stesso elemento è cambiato su due dispositivi?}
@@ -47,7 +48,8 @@ flowchart TD
 | SF-08 Connessione che cade a metà | La sincronizzazione non si completa | Nessun messaggio, se dura poco | Riprova alla sincronizzazione successiva (DEC-02) |
 | SF-20 Riferimenti spariti | Nota creata o spostata in una cartella eliminata altrove | Nessun messaggio | La nota va tra le non organizzate, la cartella resta nel cestino (RB-30) |
 | SF-22 Modifica simultanea | Lo stesso elemento cambiato su due dispositivi | Avviso solo per le note in conflitto (RB-39) | DEC-06, RB-36, RB-37, RB-38 |
-| SF-25 Accesso revocato | Il server rifiuta le credenziali | Schermata di blocco (RB-57) | Si corregge la configurazione dell'app (FL-08) |
+| SF-25 Accesso revocato | Il server rifiuta il gettone | Avviso «Accedi di nuovo per sincronizzare» (RB-87) | Si accede di nuovo in SC-05 (FL-08); le modifiche partono dopo l'accesso |
+| SF-12 Sessione scaduta | Il gettone è scaduto | Come SF-25 (RB-87) | Come SF-25: niente va perso, le modifiche restano sulla copia di lavoro |
 | SF-30 Servizio esterno fuori uso | Server irraggiungibile da più di un'ora (DEC-112) | Avviso (RB-40) | Le modifiche restano sulla copia di lavoro finché il server non torna |
 | SF-31 Notifiche perse | Un conflitto avviene mentre l'utente non guarda | L'avviso resta finché non lo si chiude o non si chiude la finestra (DEC-90) | La nota in conflitto resta nella cartella, riconoscibile dal titolo (DEC-06) |
 | SF-33 Versioni diverse di app e server | Il server non riconosce la versione del protocollo | Avviso: errore di sincronizzazione (RB-40) | Si continua sulla copia di lavoro; si riparte da soli quando le versioni tornano compatibili (DEC-83) |
@@ -55,52 +57,60 @@ flowchart TD
 
 ### Sfighe considerate e scartate
 - SF-01 … SF-07: la sincronizzazione non richiede azioni dell'utente.
-- SF-12 Sessione scaduta: non c'è sessione, il dispositivo usa le credenziali preimpostate (RF-14); credenziali rifiutate sono SF-25.
-- SF-34 … SF-36: il contenuto viaggia cifrato end-to-end (RNF-02; per ora in chiaro, con il server solo in locale, DEC-78); il collegamento è trattato in FL-08.
+- SF-34 … SF-36: il contenuto viaggia cifrato end-to-end e il server non lo legge (RNF-02, DEC-121); l'accesso è trattato in FL-08.
 
 ---
 
-## FL-08 – Collegare un dispositivo
-**Requisito:** RF-14 · **Attori:** Sistema
+## FL-08 – Accedere e uscire
+**Requisito:** RF-14 · **Attori:** Utente, Sistema
 
 ```mermaid
 flowchart TD
-    A[Installo il server: si generano le credenziali dell'installazione - DEC-13] --> B[Installo l'app con le credenziali nel file di configurazione - RB-54]
-    B --> C[Apro Memodu]
+    A[Creo l'utente fisso con il comando del server e stampo la chiave di recupero - DEC-121] --> C[Apro Memodu]
     C --> D[Le note sono subito disponibili sulla copia di lavoro - RNF-01]
-    C --> M{Le credenziali ci sono nel file?}
-    M -- No --> L[Si lavora in locale, senza sincronizzare - DEC-84]
-    M -- Sì --> D
-    D --> E{Il server accetta le credenziali?}
-    E -- Sì --> F[La sincronizzazione parte in background - FL-07]
-    E -- Server irraggiungibile --> R[Si continua sulla copia di lavoro - DEC-02]
-    E -- No --> G[Schermata di blocco al posto della finestra - RB-57, SC-07]
-    G --> H[Si corregge la configurazione fuori dall'app]
-    H --> I[Riprova]
-    I --> M
+    D --> M{Nel portachiavi c'è un gettone?}
+    M -- No --> L[Si lavora in locale, senza sincronizzare; nella sezione Sincronizzazione delle impostazioni: Accedi per sincronizzare - RB-87]
+    L --> S[SC-05: email e password - RB-86]
+    S --> P[Dalla password, sul dispositivo: prova di accesso e chiave della cassaforte - DEC-121]
+    P --> E{Il server accetta la prova?}
+    E -- No --> X[Messaggio in linea in SC-05: email o password errate]
+    X --> S
+    E -- Server irraggiungibile --> R[Messaggio in linea in SC-05; si continua sulla copia di lavoro - DEC-02]
+    E -- Sì --> K[Gettone e chiave dati nel portachiavi]
+    K --> F[La sincronizzazione parte in background - FL-07]
+    M -- Sì --> F
+    F --> T{Il gettone è scaduto o rifiutato?}
+    T -- No --> F
+    T -- Sì --> V[Le modifiche aspettano + avviso: Accedi di nuovo per sincronizzare - RB-87]
+    V --> S
+    F --> U[Esci nella sezione Sincronizzazione delle impostazioni - RB-89]
+    U --> W[Si mandano le modifiche in attesa, poi si tolgono gettone e chiave dal portachiavi]
+    W --> L
 ```
 
 ### Percorsi alternativi
-- **Credenziali mancanti:** si lavora in locale sulla copia di lavoro, senza sincronizzare e senza blocco (DEC-84).
-- **Credenziali rifiutate:** la finestra non si apre; al suo posto c'è la schermata di blocco con Riprova (RB-57, DEC-20). Se il rifiuto arriva con l'app aperta, anche la nota rapida passa alla schermata di blocco: quello che era scritto resta sulla copia di lavoro. La configurazione si corregge fuori dall'app.
+- **Mai fatto l'accesso:** si lavora in locale sulla copia di lavoro, senza sincronizzare e senza blocco (DEC-84, RB-87).
+- **Gettone scaduto o rifiutato:** non si blocca niente: si continua a scrivere, le modifiche aspettano e l'avviso porta a SC-05; dopo l'accesso si sincronizza tutto (RB-87). Vale anche per la nota rapida.
+- **Gettone vicino alla scadenza:** quando mancano meno di 7 giorni l'app lo rinnova da sola, senza chiedere nulla (RB-86).
 - **Server irraggiungibile:** non blocca; si lavora sulla copia di lavoro (DEC-02, RB-40).
-- **Credenziali perse:** il recupero è rimandato (domanda aperta su RF-10).
-- **Cambio delle credenziali:** si rivaluta quando si accende la cifratura (DEC-79).
+- **Password persa:** con la chiave di recupero se ne sceglie una nuova; per ora rilanciando il comando del server (RB-90, runbook).
+- **Dispositivo perso:** per ora si cambia il segreto dei gettoni e tutti i dispositivi rifanno l'accesso (DEC-121, runbook).
+- **Uscire:** «Esci» manda le modifiche in attesa, poi scollega; la copia di lavoro resta (RB-89).
 
 ### Sfighe gestite
 | Sfiga | Rilevamento | Comunicazione | Via d'uscita |
 |---|---|---|---|
-| SF-07 Dimenticanze | Credenziali perse | Da definire | Rimandato: blocca la Definition of Ready di RF-14 |
-| SF-25 Accesso revocato | Credenziali rifiutate dal server (senza credenziali si lavora in locale, DEC-84) | Schermata di blocco (SC-07, RB-57) | Si corregge la configurazione dell'app e si preme Riprova |
+| SF-07 Dimenticanze | Password dimenticata | Messaggio in linea in SC-05 per le credenziali errate | Chiave di recupero (RB-90) |
+| SF-12 Sessione scaduta | Gettone scaduto | Avviso «Accedi di nuovo per sincronizzare» (RB-87) | Si accede di nuovo; le modifiche restano sulla copia di lavoro |
+| SF-25 Accesso revocato | Il server rifiuta il gettone (segreto cambiato) | Come SF-12 | Come SF-12 |
+| SF-35 Tentativi ripetuti | Molte prove sbagliate | Nessuna, per ora | Nessun limite ai tentativi, rinviato (rischio in `avanzamento.md`); ogni prova costa un calcolo Argon2id e la password ha almeno 12 caratteri (RB-88) |
 
 ### Sfighe considerate e scartate
-- SF-01 Doppio invio: collegarsi due volte non crea nulla di diverso.
-- SF-12 Sessione scaduta: non c'è sessione (RF-14).
-- SF-19 Duplicati, SF-27 Account non verificato: un solo utente, senza registrazione (DEC-13).
+- SF-01 Doppio invio: accedere due volte non crea nulla di diverso.
+- SF-19 Duplicati, SF-27 Account non verificato: un solo utente, creato dal comando del server, senza registrazione (DEC-13, DEC-121).
 - SF-26 Accesso via link diretto: il web è rinviato (ID-19).
-- SF-35 Tentativi ripetuti: non c'è una password da indovinare; le credenziali sono generate dal server.
-- SF-36 Input malevolo: le credenziali non vengono eseguite né mostrate (RB-08).
-- Le altre sfighe non riguardano il collegamento.
+- SF-36 Input malevolo: email e password non vengono eseguite né mostrate (RB-08).
+- Le altre sfighe non riguardano l'accesso.
 
 ---
 
@@ -119,5 +129,10 @@ flowchart TD
 | RB-50 | ~~Email e password si cambiano dalle impostazioni inserendo la password attuale. Cambiando password le note vengono ricifrate e gli altri dispositivi devono accedere di nuovo~~ Superata da DEC-13 | — |
 | RB-51 | Il nome di un dispositivo viene preso dal sistema (es. nome del PC) e si può cambiare dalle impostazioni | FL-07, FL-08 |
 | RB-53 | ~~Gli avvisi si sincronizzano: compaiono su tutti i dispositivi e, visti su uno, non si mostrano più su nessuno~~ Superata da DEC-90: gli avvisi restano sul dispositivo in cui nascono | — |
-| RB-54 | Un dispositivo si collega all'installazione con le credenziali scritte nel file di configurazione dell'app all'installazione: non ci sono login, email, password né uscita (DEC-13) | FL-08 |
-| RB-57 | Con credenziali rifiutate dal server la finestra principale e la nota rapida non si aprono: al loro posto c'è la schermata di blocco con Riprova, che rilegge la configurazione. Il server irraggiungibile non blocca (DEC-02); senza il file delle credenziali si lavora in locale senza sincronizzare (DEC-84). Quello che era scritto resta sulla copia di lavoro (DEC-20) | FL-08 |
+| RB-54 | ~~Un dispositivo si collega all'installazione con le credenziali scritte nel file di configurazione dell'app all'installazione: non ci sono login, email, password né uscita (DEC-13)~~ Superata da DEC-121 | — |
+| RB-57 | ~~Con credenziali rifiutate dal server la finestra principale e la nota rapida non si aprono: al loro posto c'è la schermata di blocco con Riprova, che rilegge la configurazione. Il server irraggiungibile non blocca (DEC-02); senza il file delle credenziali si lavora in locale senza sincronizzare (DEC-84). Quello che era scritto resta sulla copia di lavoro (DEC-20)~~ Superata da DEC-121: vedi RB-87 | — |
+| RB-86 | Si accede in SC-05 con email e password dell'utente fisso (DEC-121). Dalla password, sul dispositivo, si ricavano la prova di accesso per il server e la chiave che apre la chiave dati; il server restituisce un gettone di 30 giorni, che l'app rinnova da sola quando ne mancano meno di 7. Gettone e chiave dati restano nel portachiavi del sistema | FL-08 |
+| RB-87 | Senza un gettone valido la finestra non si blocca mai. Mai fatto l'accesso: si lavora in locale e nella sezione Sincronizzazione delle impostazioni c'è «Accedi per sincronizzare». Gettone scaduto o rifiutato: si continua a scrivere, le modifiche aspettano e l'avviso «Accedi di nuovo per sincronizzare» apre SC-05; dopo l'accesso si sincronizza tutto (DEC-121) | FL-07, FL-08 |
+| RB-88 | La password ha almeno 12 caratteri, nessuna regola di complessità e non può essere tra le più comuni (elenco breve nel programma). La controlla il comando che crea l'utente (DEC-121) | FL-08 |
+| RB-89 | «Esci», nella sezione Sincronizzazione delle impostazioni (SC-06), manda le modifiche in attesa e poi toglie gettone e chiave dati dal portachiavi: il dispositivo lavora in locale senza sincronizzare. La copia di lavoro resta (DEC-121) | FL-08 |
+| RB-90 | Creando l'utente nasce una chiave di recupero, mostrata una volta per stamparla: con questa si sceglie una password nuova senza perdere le note. Persi la password e la chiave di recupero, le note sul server non si recuperano (DEC-121) | FL-08 |
