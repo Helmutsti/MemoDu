@@ -27,7 +27,7 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-19 | Stato vuoto | composto | Disegnato |
 | CMP-20 | Testo della nota (campo titolo e stili dell'editor) | composto | Disegnato |
 | CMP-21 | Immagine nel testo e area di trascinamento | composto | Disegnato |
-| CMP-22 | Modulo di accesso (attivo con DEC-121) | composto | Disegnato; da rivedere senza il primo avvio |
+| CMP-22 | Modulo di accesso (finestra sopra le note, DEC-121) | composto | Disegnato |
 | CMP-23 | Nota rapida | composto | Disegnato |
 | CMP-24 | Info (comparsa sotto il titolo e finestra al centro, DEC-96; righe con l'icona, DEC-97) | composto | Disegnato |
 | CMP-25 | Barra di scorrimento | composto | Disegnato |
@@ -98,7 +98,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 |---|---|---|---|---|
 | CMP-01 Pulsante | ✓ (cestino, impostazioni, stati vuoti) | ✓ (+) | ✓ (finestre di conferma, pannelli) | campo, hover, premuto, pieno |
 | CMP-02 Icona | ✓ | ✓ | ✓ | — |
-| CMP-03 Campo di testo | ✓ (impostazioni) | ✓ (ricerca) | ✓ (pannelli, menu, Info) | campo |
+| CMP-03 Campo di testo | ✓ (impostazioni) | ✓ (ricerca) | ✓ (pannelli, menu, Info, accesso) | campo |
 | CMP-04 Interruttore | ✓ (impostazioni) | | | hover, pieno |
 | CMP-05 Tag | | | ✓ (Info, filtri della ricerca) | campo, hover, pieno |
 | CMP-06 Riga della colonna | | ✓ | | hover, pieno; numero di note in testo tenue (RB-56) |
@@ -114,7 +114,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 | CMP-26 Percorso | ✓ (fascia in alto) | | | hover |
 | CMP-27 Comparsa dei metadati (superata) | sopra la nota | | è la superficie | flottante, con ombra; dentro: tag |
 | CMP-28 Scelta a segmenti | ✓ (impostazioni) | | | campo, hover, pieno |
-| CMP-09 Menu · CMP-10 Pillola · CMP-11 Pannello · CMP-12 Date picker · CMP-13 Card dei risultati · CMP-15 Avviso · CMP-16 Finestra di conferma · CMP-24 Info · CMP-29 Ricerca avanzata | sopra la nota | sopra la colonna | sono la superficie | flottante, con ombra; dentro: hover, pieno, campo |
+| CMP-09 Menu · CMP-10 Pillola · CMP-11 Pannello · CMP-12 Date picker · CMP-13 Card dei risultati · CMP-15 Avviso · CMP-16 Finestra di conferma · CMP-22 Modulo di accesso · CMP-24 Info · CMP-29 Ricerca avanzata | sopra la nota | sopra la colonna | sono la superficie | flottante, con ombra; dentro: hover, pieno, campo |
 
 **Verifica per ogni componente nuovo:** prima di segnarlo come Disegnato, (1) elencare le superfici su cui compare in questa tabella; (2) controllare nella tabella dei token che ogni suo fondo sia sopra la soglia su quelle superfici, in entrambi i modi; (3) controllarlo a occhio nell'anteprima scura, meglio se dentro un menu o un pannello, dove i grigi sono più vicini.
 
@@ -642,7 +642,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 **Quando non usarlo:** per chiedere conferma (CMP-16) o per confermare un'azione riuscita: il successo di solito non si mostra (RB-40).
 
 ### Varianti e dimensioni
-- **Errore**, **Avviso**, **Informazione**, **Successo** (DEC-14): fondo `sfondo-<stato>`, icona Lucide 16 in `icona-<stato>` (`circle-alert`, `triangle-alert`, `info`, `check`), testo Interfaccia/Messaggio in `testo-primario`, a destra «Ho capito» (pulsante tenue) e, con la proprietà **Mostra azione**, un'azione tenue prima di lui (es. «Ripristina», «Apri l'altra»). Per i file locali (RF-17, RB-85) i due pulsanti diventano le due scelte: «Ricarica» e «Tieni la mia versione», «Ricrealo» e «Chiudi».
+- **Errore**, **Avviso**, **Informazione**, **Successo** (DEC-14): fondo `sfondo-<stato>`, icona Lucide 16 in `icona-<stato>` (`circle-alert`, `triangle-alert`, `info`, `check`), testo Interfaccia/Messaggio in `testo-primario`, a destra «Ho capito» (pulsante tenue) e, con la proprietà **Mostra azione**, un'azione tenue prima di lui (es. «Ripristina», «Apri l'altra»). Per i file locali (RF-17, RB-85) i due pulsanti diventano le due scelte: «Ricarica» e «Tieni la mia versione», «Ricrealo» e «Chiudi». Per l'accesso scaduto (RB-87): tipo Avviso con l'azione «Accedi», che apre SC-05.
 - Largo 480, raggio 20, ruolo pannello: `spazio-pannello` (16) su tutti i lati, con «Ho capito» e l'azione sul margine come ogni pulsante (DEC-100), `ombra`, livello 50, uno alla volta, al centro dell'area della nota, 8 sotto la fascia in alto (a 48 dal bordo): non copre il percorso (CMP-26, DEC-86). Il testo va a capo.
 - I testi sono esempi nel tono di voce; quelli definitivi si scrivono in Fase 6.
 
@@ -737,7 +737,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 ### Varianti e dimensioni
 - **Interruttore:** etichetta (Interfaccia/Controllo) e descrizione (Interfaccia/Dettaglio, `testo-tenue`) a sinistra, interruttore (CMP-04) a destra; tutta la riga si clicca.
 - **Campo:** come sopra, con un campo (CMP-03, largo 200) a destra, es. la scorciatoia della nota rapida o il nome del dispositivo.
-- **Azione:** etichetta e valore (in `testo-tenue`) a sinistra, pulsante secondario (CMP-01) a destra, es. Email con Cambia o Esci. Serve alla sezione Sincronizzazione di SC-06 per l'email ed «Esci» (DEC-121). Si attiva solo il pulsante, come il campo.
+- **Azione:** etichetta e valore (in `testo-tenue`) a sinistra, pulsante secondario (CMP-01) a destra, es. «Account · nome@esempio.it» con Esci, o «Account · Non hai fatto l'accesso» con Accedi: la riga Account della sezione Sincronizzazione di SC-06 (DEC-121, RB-87, RB-89). Si attiva solo il pulsante, come il campo.
 - **Titolo di gruppo:** Interfaccia/Titolo di gruppo in `testo-tenue`, alto 32.
 - **Scelta:** etichetta e descrizione a sinistra, scelta a segmenti (CMP-28) a destra, es. il tema Sistema · Chiaro · Scuro (DEC-91). Si attiva solo la scelta.
 - **Scorciatoia:** come Campo, con il campo della combinazione e a destra il pulsante tenue «Ripristina», che torna al valore di default. Si clicca il campo e si preme la combinazione nuova; se un altro programma la usa già, l'errore è nel campo e resta la vecchia (DEC-91).
@@ -870,29 +870,28 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 ## CMP-22 – Modulo di accesso
 **Tipo:** composto (usa CMP-01 e CMP-03) · **Usato in:** SC-05 · **Figma:** pagina Componenti composti, [Modulo di accesso](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=86-2910)
 
-**Scopo:** entrare in Memodu con email e password, o creare l'account al primo avvio.
-**Quando usarlo:** in SC-05, per accedere con email e password (DEC-121). Il primo avvio con Crea l'account non serve più: l'utente lo crea il comando del server.
-**Quando non usarlo:** per cambiare email o password (sezione Account di SC-06, con righe di impostazione).
+**Scopo:** accedere con email e password per sincronizzare le note (DEC-121).
+**Quando usarlo:** in SC-05, aperta da «Accedi» nella sezione Sincronizzazione di SC-06 o dall'avviso dell'accesso scaduto (RB-87).
+**Quando non usarlo:** per creare l'account (lo crea il comando del server, DEC-121) o per uscire («Esci» nella riga Account di SC-06, CMP-18).
 
 ### Varianti e dimensioni
-- **Accesso:** nome Memodu (Interfaccia/Titolo di schermata), sottotitolo in `testo-tenue`, campi Email (CMP-03 normale) e Password (CMP-03 password) con etichette Interfaccia/Etichetta, pulsante primario «Accedi» a tutta larghezza.
-- **Primo avvio:** stesso modulo, sottotitolo «Crea l'account di questa installazione.» e pulsante «Crea l'account».
-- **Errore:** messaggio in linea sopra il pulsante, icona errore e testo `testo-errore` («Email o password non corrette.»).
-- Largo 320, 16 px tra i blocchi, al centro di una finestra vuota su `sfondo-nota`.
-- I testi sono esempi; le regole dell'accesso (tentativi, requisiti e recupero della password) si decidono quando lo si attiva.
+- **Accesso:** titolo «Accedi a Memodu» (Interfaccia/Titolo), sottotitolo in `testo-tenue`, campi Email (CMP-03 normale) e Password (CMP-03 password) con etichette Interfaccia/Etichetta; a destra «Non voglio usare il cloud» (secondario), che scollega come «Esci» (RB-89), e «Accedi» (primario), 8 px tra loro.
+- **Errore:** messaggio in linea sopra i pulsanti, icona errore e testo `testo-errore` («Email o password non corrette.»).
+- Guscio della finestra di conferma (CMP-16): `sfondo-flottante`, `raggio-contenitore` (20), `ombra`, largo 400, `spazio-finestra` (24) su tutti i lati, `spazio-blocco` (16) tra i blocchi, figli a tutta larghezza. Al centro della finestra, livello 40, con il `velo` sul resto.
+- I testi sono esempi; quelli definitivi in Fase 6. Il primo avvio non c'è più (DEC-121).
 
 ### Stati
 | Stato | Descrizione |
 |---|---|
-| Default | Accesso o primo avvio |
-| Hover · Focus | Li gestiscono campi e pulsante |
-| Attivo | Accedi: SC-01 in caricamento mentre arriva la copia di lavoro |
-| Errore | Credenziali errate: messaggio in linea sopra il pulsante |
+| Default | Aperta, focus sul campo Email |
+| Hover · Focus | Li gestiscono campi e pulsanti |
+| Attivo | Accedi: il pulsante in caricamento mentre il dispositivo calcola Argon2id e il server risponde; poi la finestra si chiude e la sincronizzazione parte |
+| Errore | Email o password errate, o server irraggiungibile: messaggio in linea sopra i pulsanti |
 | Disabilitato | Non previsto |
-| Caricamento | Il pulsante in caricamento (CMP-01) |
+| Caricamento | Il pulsante Accedi in caricamento (CMP-01) |
 
 ### Accessibilità
-- **Tastiera:** focus sul campo Email all'apertura; Invio da qualsiasi campo invia il modulo.
+- **Tastiera:** focus sul campo Email all'apertura; Invio da qualsiasi campo invia il modulo; Esc chiude soltanto la finestra, senza scollegare (scelta di Manuel Cucca il 06/10/2026).
 - **Lettori di schermo:** il messaggio di errore è collegato ai campi e si annuncia quando compare; il pulsante con l'occhio ha il nome "Mostra la password".
 - **Contrasti:** come CMP-01 e CMP-03.
 

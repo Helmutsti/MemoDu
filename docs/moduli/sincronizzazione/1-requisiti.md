@@ -35,7 +35,7 @@ Scritti dall'agente dai flussi e dalle decisioni (FL-07, DEC-75 … DEC-83). Con
 ---
 
 ## RF-14 – Accesso all'installazione
-**Priorità:** Must · **Origine:** DEC-05, DEC-121 · **Fase:** 5 (CMP-22 senza il primo avvio, riga Account con CMP-18) · **Stato:** In progettazione
+**Priorità:** Must · **Origine:** DEC-05, DEC-121 · **Fase:** 6 (mockup di SC-05, della sezione Sincronizzazione di SC-06 e dell'avviso) · **Stato:** In progettazione
 
 Come *utente* voglio accedere una volta con email e password per sincronizzare le mie note cifrate, restare collegato senza ripetere l'accesso e poter uscire da un dispositivo.
 
