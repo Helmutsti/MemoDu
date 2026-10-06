@@ -41,6 +41,13 @@ notify-debouncer-full = "0.7"
 sha2 = "0.10"
 encoding_rs = "0.8"
 trash = "5"
+# Accesso e cifratura end-to-end (DEC-121): Argon2id dalla password, HKDF per le chiavi separate,
+# XChaCha20-Poly1305 per i blocchi e la chiave dati, portachiavi del sistema per gettone e chiave.
+argon2 = "0.5"
+hkdf = "0.12"
+chacha20poly1305 = "0.10"
+base64 = "0.22"
+keyring = { version = "3", features = ["apple-native", "windows-native"] }
 
 
 # Tema della barra delle applicazioni di Windows, per il colore dell'icona nell'area di notifica.

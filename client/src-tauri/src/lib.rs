@@ -13,7 +13,9 @@
 // - «Esci da Memodu»: ogni finestra salva e risponde; con testo non salvato chiede prima
 //   conferma (RB-62). Si esce quando tutte hanno risposto.
 
+mod accesso;
 mod archivio;
+mod cifratura;
 mod comandi;
 mod impostazioni;
 mod locale;
@@ -257,6 +259,7 @@ pub fn run() {
         .manage(sincronizzazione::Segnale(Mutex::new(segnale)))
         .manage(impostazioni::ScorciatoiaAttiva::default())
         .manage(impostazioni::ProblemaSinc::default())
+        .manage(accesso::Accesso::new())
         .manage(locale::Osservatore::default())
         .invoke_handler(tauri::generate_handler![
             pronta_a_uscire,
@@ -284,6 +287,9 @@ pub fn run() {
             comandi::elimina_definitivamente,
             comandi::svuota_cestino,
             comandi::riprova_sincronizzazione,
+            accesso::stato_accesso,
+            accesso::accedi,
+            accesso::esci,
             impostazioni::leggi_impostazioni,
             impostazioni::cambia_scorciatoia,
             impostazioni::cambia_tema,

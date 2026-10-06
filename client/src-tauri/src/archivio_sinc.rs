@@ -117,6 +117,20 @@ impl Archivio {
         })
     }
 
+    /// Il primo giro cifrato (DEC-121): ogni elemento torna da inviare dalla versione che ha,
+    /// così sul server la versione attuale diventa cifrata e quelle in chiaro si cancellano.
+    pub fn segna_tutto_da_inviare(&mut self) -> Esito<()> {
+        let ora = self.ora();
+        self.con_riconnessione(|a| {
+            a.db.execute(
+                "UPDATE sinc_elementi SET modificato = 1,
+                   modificato_il = coalesce(modificato_il, json_extract(base, '$.modificato_il'), ?)",
+                [&ora],
+            )?;
+            Ok(())
+        })
+    }
+
     /// L'archivio del server è cambiato (un server nuovo o ricreato, DEC-105): si riparte da
     /// zero. Ogni elemento torna da inviare dalla versione 0 e le modifiche si ricevono tutte.
     pub fn azzera_sinc(&mut self) -> Esito<()> {

@@ -247,3 +247,23 @@ describe("versioni precedenti a scalare (DEC-77, DEC-113, CA-10.11)", () => {
     expect(tenute.length).toBeLessThan(40);
   }, 120000);
 });
+
+describe("passaggio alla cifratura (DEC-121, CA-10.13)", () => {
+  const chiaro = (n: number) => JSON.stringify({ formato: "chiaro", tipo: "nota", campi: { n } });
+  const cifrato = JSON.stringify({ formato: "xchacha20poly1305", nonce: "AAAA", dati: "BBBB" });
+
+  it("la prima versione cifrata cancella le precedenti in chiaro dello stesso elemento", async () => {
+    await sinc.scrivi(A, 0, chiaro(1));
+    await sinc.scrivi(A, 1, chiaro(2));
+    await sinc.scrivi(B, 0, chiaro(3));
+    await sinc.scrivi(A, 2, cifrato);
+    expect((await sinc.versioni(A)).map((v) => v.versione)).toEqual([3]);
+    expect((await sinc.versioni(B)).map((v) => v.versione)).toEqual([1]);
+  });
+
+  it("le versioni cifrate precedenti restano", async () => {
+    await sinc.scrivi(A, 0, cifrato);
+    await sinc.scrivi(A, 1, cifrato);
+    expect((await sinc.versioni(A)).map((v) => v.versione)).toEqual([2, 1]);
+  });
+});

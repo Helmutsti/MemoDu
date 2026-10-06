@@ -19,7 +19,7 @@ use tauri_plugin_autostart::ManagerExt;
 use tauri_plugin_global_shortcut::{GlobalShortcutExt, Modifiers, Shortcut};
 
 use crate::archivio::impostazioni::Sistema;
-use crate::archivio::{cartella_predefinita, Errore, Esito};
+use crate::archivio::{Errore, Esito};
 use crate::comandi::Dati;
 
 /// Ctrl + Alt + N su Windows, Control + Option + N su macOS (SC-02).
@@ -76,7 +76,7 @@ pub struct Impostazioni {
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct StatoSincronizzazione {
-    /// C'è il file delle credenziali: senza, si lavora solo in locale (DEC-84).
+    /// Il dispositivo ha fatto l'accesso: senza, si lavora solo in locale (RB-87).
     collegata: bool,
     ultima_riuscita: Option<String>,
     /// "rete", "rifiutate", "protocollo" o "errore".
@@ -233,9 +233,10 @@ pub async fn cambia_nome_dispositivo(dati: State<'_, Dati>, nome: String) -> Esi
 pub async fn stato_sincronizzazione(
     dati: State<'_, Dati>,
     problema: State<'_, ProblemaSinc>,
+    accesso: State<'_, crate::accesso::Accesso>,
 ) -> Esito<StatoSincronizzazione> {
     Ok(StatoSincronizzazione {
-        collegata: cartella_predefinita().join("credenziali").exists(),
+        collegata: accesso.con(|s| s.is_some()),
         ultima_riuscita: dati.con(|a| a.stato_sinc("ultima_riuscita"))?,
         problema: *problema.0.lock().unwrap(),
     })

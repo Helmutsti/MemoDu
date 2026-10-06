@@ -451,3 +451,24 @@ fn con_un_server_nuovo_si_riparte_da_zero_senza_copie() {
         assert!(d.a.da_inviare().unwrap().is_empty());
     }
 }
+
+#[test]
+fn il_primo_giro_cifrato_rimanda_tutto_una_volta_sola() {
+    // CA-10.13: al primo accesso cifrato ogni elemento riparte, anche quelli solo ricevuti, e
+    // dopo l'invio non resta niente da mandare (niente giri senza fine).
+    let (mut a, mut b, mut s) = due();
+    a.a.crea_cartella("", Some("Lavoro"), SeEsiste::Chiedi).unwrap();
+    let id = nota(&mut a, "Riunione", "testo", Some("Lavoro"));
+    a.a.aggiungi_tag(&id, "lavoro").unwrap();
+    a.sincronizza(&mut s);
+    b.sincronizza(&mut s);
+    let sul_server = s.attuali.len();
+    b.a.segna_tutto_da_inviare().unwrap();
+    assert_eq!(b.a.da_inviare().unwrap().len(), sul_server);
+    b.sincronizza(&mut s);
+    assert!(b.a.da_inviare().unwrap().is_empty());
+    assert!(s.attuali.values().all(|(v, _, _)| *v == 2));
+    a.sincronizza(&mut s);
+    assert_eq!(a.a.leggi(&id).unwrap().contenuto, "testo");
+    assert!(a.a.da_inviare().unwrap().is_empty());
+}

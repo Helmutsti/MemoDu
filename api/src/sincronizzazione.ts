@@ -33,6 +33,18 @@ export class VersioneSuperata extends Error {
   }
 }
 
+/**
+ * Il blocco dichiara il formato «chiaro» (DEC-78)? Il server non legge i blocchi, ma il formato
+ * della busta è visibile: serve a cancellare le versioni in chiaro (DEC-121).
+ */
+export function inChiaro(dati: string): boolean {
+  try {
+    return (JSON.parse(dati) as { formato?: unknown }).formato === "chiaro";
+  } catch {
+    return false;
+  }
+}
+
 export const impronta = (gettone: string) => createHash("sha256").update(gettone).digest("hex");
 
 export class ArchivioSincronizzazione {
@@ -139,6 +151,21 @@ export class ArchivioSincronizzazione {
          VALUES ($1, $2, $3, $4, $5, $6)`,
         [id, versione, ordine, this.adesso().toISOString(), JSON.stringify(dati).length, dati],
       );
+      // La prima versione cifrata di un elemento: le precedenti in chiaro si cancellano, così sul
+      // server non resta niente di leggibile (DEC-78, condizione 3; CA-10.13).
+      if (!inChiaro(dati)) {
+        const vecchie = await sql.righe<{ versione: number; dati: string }>(
+          "SELECT versione, dati FROM versioni WHERE id = $1 AND versione < $2",
+          [id, versione],
+        );
+        const daTogliere = vecchie.filter((v) => inChiaro(v.dati)).map((v) => v.versione);
+        if (daTogliere.length > 0) {
+          await sql.righe("DELETE FROM versioni WHERE id = $1 AND versione = ANY($2::integer[])", [
+            id,
+            daTogliere,
+          ]);
+        }
+      }
       await this.sfoltisci(sql, id);
       return { versione, ordine };
     });
