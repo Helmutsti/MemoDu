@@ -141,6 +141,11 @@ beforeEach(() => {
   vi.mocked(api.eliminaSeVuota).mockRejectedValue(new ErroreApi(409, "non vuota"));
   vi.mocked(api.statoAccesso).mockResolvedValue({ email: "manuel@esempio.it" });
   vi.mocked(api.esci).mockResolvedValue(undefined);
+  vi.mocked(api.statoSincronizzazione).mockResolvedValue({
+    collegata: false,
+    ultimaRiuscita: null,
+    problema: null,
+  });
 });
 
 describe("SC-01, primo utilizzo (SF-16)", () => {
@@ -1216,6 +1221,18 @@ describe("accesso (RF-14, DEC-121)", () => {
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
     expect(api.accedi).toHaveBeenLastCalledWith("manuel@esempio.it", "sbagliata");
     expect(screen.queryByText(TESTO_SCADUTO)).not.toBeInTheDocument();
+  });
+
+  it("aprendo Memodu con l'accesso già scaduto l'avviso compare lo stesso (CA-14.13)", async () => {
+    vi.mocked(api.albero).mockResolvedValue(alberoDiProva());
+    vi.mocked(api.leggi).mockResolvedValue(nota("r", "Riunione di lunedì", "testo"));
+    vi.mocked(api.statoSincronizzazione).mockResolvedValue({
+      collegata: true,
+      ultimaRiuscita: null,
+      problema: "rifiutate",
+    });
+    render(<FinestraPrincipale />);
+    expect(await screen.findByText(TESTO_SCADUTO)).toBeInTheDocument();
   });
 
   it("server irraggiungibile: il suo messaggio in linea (CA-14.11)", async () => {

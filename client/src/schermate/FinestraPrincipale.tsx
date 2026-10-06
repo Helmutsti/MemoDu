@@ -555,6 +555,16 @@ export function FinestraPrincipale(): ReactElement {
   useEffect(() => {
     gestoriSinc.current = { ricarica, apri };
   });
+  // All'avvio la prima sincronizzazione può finire prima che la finestra ascolti: un accesso già
+  // scaduto si legge dallo stato, e l'avviso compare lo stesso (RB-87).
+  useEffect(() => {
+    api.statoSincronizzazione().then(
+      (s) => {
+        if (s?.problema === "rifiutate") setAvvisoSinc((a) => a ?? { tipo: "accesso" });
+      },
+      () => undefined,
+    );
+  }, []);
   useEffect(
     () =>
       allaSincronizzazione((evento) => {
