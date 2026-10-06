@@ -1,0 +1,51 @@
+/* CMP-22: guscio di CMP-16, spazio-blocco tra i blocchi, figli a tutta larghezza. */
+.modulo-accesso {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spazio-blocco);
+}
+.modulo-accesso .finestra-conferma-pulsanti {
+  margin-top: 0;
+}
+.modulo-accesso-campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spazio-icona);
+  color: var(--testo-tenue);
+}
+.modulo-accesso-campo .campo-impostazione {
+  width: 100%;
+}
+.modulo-accesso-password {
+  position: relative;
+  display: flex;
+}
+.modulo-accesso-password .campo-impostazione {
+  padding-right: calc(var(--spazio-controllo) * 2 + 16px);
+}
+.modulo-accesso-occhio {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 var(--spazio-controllo);
+  border: none;
+  background: none;
+  color: var(--icona-tenue);
+  cursor: pointer;
+}
+.modulo-accesso-occhio:hover {
+  color: var(--testo-primario);
+}
+.modulo-accesso-errore {
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-icona);
+  margin: 0;
+  color: var(--testo-errore);
+}
+.modulo-accesso-errore svg {
+  color: var(--icona-errore);
+}

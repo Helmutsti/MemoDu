@@ -1,6 +1,6 @@
 // SC-06 Impostazioni (DEC-91): dalla riga sotto il Cestino, al posto della nota come il cestino.
-// Generale (scorciatoia della nota rapida, avvio all'accensione), Tema, Sincronizzazione (solo
-// lettura), Ricerca (note del cestino nei risultati, DEC-94) e Dispositivo. Ogni cambio vale subito, senza Salva (RB-06). Testi in 4-schermate.md.
+// Generale (scorciatoia della nota rapida, avvio all'accensione), Tema, Sincronizzazione (stato,
+// ultima sincronizzazione e la riga Account con Accedi o Esci, DEC-121), Ricerca (note del cestino nei risultati, DEC-94) e Dispositivo. Ogni cambio vale subito, senza Salva (RB-06). Testi in 4-schermate.md.
 
 import { CircleAlert } from "lucide-react";
 import { useCallback, useEffect, useId, useState, type ReactElement } from "react";
@@ -8,6 +8,7 @@ import {
   api,
   ErroreApi,
   type Impostazioni as Valori,
+  type StatoAccesso,
   type StatoSincronizzazione,
   type Tema,
 } from "../api";
@@ -34,6 +35,10 @@ const TESTO_NON_VALIDA =
 interface Proprieta {
   /** Esegue un comando: se non riesce, l'avviso o SC-07 come nel resto della finestra. */
   esegui: <T>(chiamata: () => Promise<T>) => Promise<T | undefined>;
+  /** Accedi nella riga Account: apre SC-05, con l'email che c'era. */
+  onAccedi: (email?: string) => void;
+  /** Cambia dopo un accesso o un'uscita: la pagina si rilegge. */
+  versioneAccesso?: number;
 }
 
 const maiuscola = (testo: string) => testo.charAt(0).toUpperCase() + testo.slice(1);
@@ -45,7 +50,7 @@ function testoStato(s: StatoSincronizzazione): string {
     case "rete":
       return "Server non raggiungibile: le modifiche restano su questo computer";
     case "rifiutate":
-      return "Credenziali non valide";
+      return "Accedi di nuovo per sincronizzare";
     case "protocollo":
       return "Memodu e il server hanno versioni diverse";
     case "errore":
@@ -146,25 +151,32 @@ function CampoNome({
   );
 }
 
-export function Impostazioni({ esegui }: Proprieta): ReactElement | null {
+export function Impostazioni({
+  esegui,
+  onAccedi,
+  versioneAccesso = 0,
+}: Proprieta): ReactElement | null {
   const [valori, setValori] = useState<Valori | null>(null);
   const [stato, setStato] = useState<StatoSincronizzazione | null>(null);
+  const [accesso, setAccesso] = useState<StatoAccesso>({ email: null });
+  const [uscendo, setUscendo] = useState(false);
   const [erroreScorciatoia, setErroreScorciatoia] = useState<string | null>(null);
   const idScorciatoia = useId();
   const idNome = useId();
 
   const rileggi = useCallback(async () => {
     const letti = await esegui(() =>
-      Promise.all([api.impostazioni(), api.statoSincronizzazione()]),
+      Promise.all([api.impostazioni(), api.statoSincronizzazione(), api.statoAccesso()]),
     );
     if (!letti) return;
     setValori(letti[0]);
     setStato(letti[1]);
+    setAccesso(letti[2]);
   }, [esegui]);
 
   useEffect(() => {
     void rileggi();
-  }, [rileggi]);
+  }, [rileggi, versioneAccesso]);
   // La sincronizzazione cambia lo stato e può portare una scorciatoia nuova (RB-52).
   useEffect(() => alCambioDelloStatoSinc(() => void rileggi()), [rileggi]);
 
@@ -258,11 +270,36 @@ export function Impostazioni({ esegui }: Proprieta): ReactElement | null {
 
           <TitoloGruppo>Sincronizzazione</TitoloGruppo>
           <RigaImpostazione etichetta="Stato" descrizione={testoStato(stato)} />
-          {stato.ultimaRiuscita && (
+          {stato.collegata && stato.ultimaRiuscita && (
             <RigaImpostazione
               etichetta="Ultima sincronizzazione"
               descrizione={maiuscola(quando(stato.ultimaRiuscita))}
             />
+          )}
+          {/* Riga Account (CMP-18 Azione, RB-87, RB-89): con l'accesso scaduto si torna ad Accedi. */}
+          {stato.collegata && accesso.email && stato.problema !== "rifiutate" ? (
+            <RigaImpostazione etichetta="Account" descrizione={accesso.email}>
+              <Pulsante
+                tipo="secondario"
+                inCorso={uscendo}
+                onClick={() =>
+                  void (async () => {
+                    setUscendo(true);
+                    await esegui(() => api.esci());
+                    setUscendo(false);
+                    await rileggi();
+                  })()
+                }
+              >
+                Esci
+              </Pulsante>
+            </RigaImpostazione>
+          ) : (
+            <RigaImpostazione etichetta="Account" descrizione="Non hai fatto l'accesso">
+              <Pulsante tipo="secondario" onClick={() => onAccedi(accesso.email ?? undefined)}>
+                Accedi
+              </Pulsante>
+            </RigaImpostazione>
           )}
 
           {/* DEC-94: tra Sincronizzazione e Dispositivo. */}

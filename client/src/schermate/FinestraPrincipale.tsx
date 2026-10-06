@@ -9,6 +9,8 @@
 // avviso e ricarica la colonna (DEC-37); un nome già usato apre la finestra con tre scelte
 // (RB-31). La riga Impostazioni sotto il Cestino apre SC-06 al posto della nota (DEC-91).
 // Sotto Cartelle la sezione Locale (RF-17): un file del disco si apre al posto della nota.
+// L'accesso (SC-05, DEC-121) si apre come finestra sopra le note, dalla riga Account delle
+// impostazioni o dall'avviso dell'accesso scaduto, che non blocca niente (RB-87).
 
 import {
   FileText,
@@ -39,6 +41,11 @@ import { anteprima } from "@memodu/condiviso";
 import { api, ErroreApi, type RisultatoRicerca } from "../api";
 import { Avviso } from "../componenti/Avviso";
 import { FinestraConferma } from "../componenti/FinestraConferma";
+import {
+  ModuloAccesso,
+  TESTO_CREDENZIALI_ERRATE,
+  TESTO_SERVER_IRRAGGIUNGIBILE,
+} from "../componenti/ModuloAccesso";
 import { Icona } from "../componenti/Icona";
 import { Menu, type VoceMenu } from "../componenti/Menu";
 import { PannelloSpostaIn } from "../componenti/PannelloSpostaIn";
@@ -57,7 +64,6 @@ import {
   confermaUscita,
   mostraFinestra,
   PULSANTI_FINESTRA,
-  riprovaSincronizzazione,
   SU_MAC,
 } from "../finestra";
 import { CodaSalvataggio } from "../salvataggio";
@@ -85,12 +91,14 @@ const TESTO_IRRAGGIUNGIBILE =
   "Il server non risponde da più di un'ora: le modifiche restano su questo computer.";
 const TESTO_ERRORE_SINC = "La sincronizzazione non è riuscita: riprovo da sola.";
 const TESTO_PROTOCOLLO = "Memodu e il server hanno versioni diverse: aggiornali per sincronizzare.";
-const TESTO_CREDENZIALI =
-  "Le credenziali non sono valide. Correggi il file credenziali e premi Riprova.";
+/** Accesso scaduto o rifiutato (RB-87): testo approvato con i mockup il 06/10/2026. */
+const TESTO_ACCESSO_SCADUTO =
+  "Accedi di nuovo per sincronizzare. Le modifiche restano su questo computer.";
 
 type AvvisoSincronizzazione =
   | { tipo: "conflitto"; copia: string }
   | { tipo: "irraggiungibile" }
+  | { tipo: "accesso" }
   | { tipo: "errore"; protocollo: boolean };
 
 const stesso = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
@@ -253,8 +261,10 @@ export function FinestraPrincipale(): ReactElement {
   const [cestino, setCestino] = useState<ElementoCestino[]>([]);
   const [bloccata, setBloccata] = useState(false);
   const [riprovando, setRiprovando] = useState(false);
-  /** Bloccata perché il server rifiuta le credenziali (RB-57), non per l'archivio locale. */
-  const [credenzialiRifiutate, setCredenzialiRifiutate] = useState(false);
+  /** SC-05 aperta, con l'email da cui partire. */
+  const [accesso, setAccesso] = useState<{ email?: string } | null>(null);
+  /** Cambia dopo un accesso o un'uscita: le impostazioni si rileggono. */
+  const [versioneAccesso, setVersioneAccesso] = useState(0);
   const [avvisoSinc, setAvvisoSinc] = useState<AvvisoSincronizzazione | null>(null);
   /** Cresce quando la nota aperta si rilegge per una modifica ricevuta: l'editor riparte. */
   const [riletta, setRiletta] = useState(0);
@@ -572,16 +582,9 @@ export function FinestraPrincipale(): ReactElement {
             break;
           case "riuscita":
             setAvvisoSinc((a) => (a?.tipo === "conflitto" ? a : null));
-            setCredenzialiRifiutate((rifiutate) => {
-              if (rifiutate) setBloccata(false);
-              return false;
-            });
-            setRiprovando(false);
             break;
-          case "credenziali-rifiutate":
-            setCredenzialiRifiutate(true);
-            setBloccata(true);
-            setRiprovando(false);
+          case "accesso-scaduto":
+            setAvvisoSinc({ tipo: "accesso" });
             break;
           case "irraggiungibile":
             setAvvisoSinc({ tipo: "irraggiungibile" });
@@ -600,14 +603,9 @@ export function FinestraPrincipale(): ReactElement {
     [ricarica],
   );
 
-  // Riprova: prima il testo in attesa, poi di nuovo la colonna. Con le credenziali rifiutate si
-  // rilegge il file e si riprova la sincronizzazione: il blocco sparisce quando riesce (RB-57).
+  // Riprova di SC-07: prima il testo in attesa, poi di nuovo la colonna.
   const riprova = async () => {
     setRiprovando(true);
-    if (credenzialiRifiutate) {
-      await riprovaSincronizzazione();
-      return;
-    }
     try {
       await coda.scarica();
       if (coda.haModifiche) return;
@@ -618,6 +616,36 @@ export function FinestraPrincipale(): ReactElement {
     } finally {
       setRiprovando(false);
     }
+  };
+
+  /** SC-05 dall'avviso: con l'email del dispositivo, se c'era. */
+  const apriAccesso = () => {
+    void api.statoAccesso().then(
+      (s) => setAccesso({ email: s.email ?? undefined }),
+      () => setAccesso({}),
+    );
+  };
+
+  /** Accedi in SC-05 (RB-86): null se è riuscito, altrimenti il messaggio in linea. */
+  const accedi = async (email: string, password: string): Promise<string | null> => {
+    try {
+      await api.accedi(email, password);
+    } catch (errore) {
+      const motivo = errore instanceof ErroreApi ? errore.message : "";
+      return motivo === "credenziali" ? TESTO_CREDENZIALI_ERRATE : TESTO_SERVER_IRRAGGIUNGIBILE;
+    }
+    setAccesso(null);
+    setAvvisoSinc((a) => (a?.tipo === "accesso" ? null : a));
+    setVersioneAccesso((v) => v + 1);
+    return null;
+  };
+
+  /** «Non voglio usare il cloud»: scollega come Esci, e l'avviso non torna (RB-89). */
+  const senzaCloud = async () => {
+    setAccesso(null);
+    setAvvisoSinc((a) => (a?.tipo === "accesso" ? null : a));
+    await api.esci().catch(() => undefined);
+    setVersioneAccesso((v) => v + 1);
   };
 
   /** Crea una nota vuota e la apre (FL-09, RB-10): con il + nella radice, o in una cartella (RB-09). */
@@ -1337,15 +1365,21 @@ export function FinestraPrincipale(): ReactElement {
               )) ||
               (avvisoSinc && (
                 <Avviso
-                  tipo={avvisoSinc.tipo === "conflitto" ? "avviso" : "errore"}
+                  tipo={
+                    avvisoSinc.tipo === "conflitto" || avvisoSinc.tipo === "accesso"
+                      ? "avviso"
+                      : "errore"
+                  }
                   testo={
                     avvisoSinc.tipo === "conflitto"
                       ? TESTO_CONFLITTO
-                      : avvisoSinc.tipo === "irraggiungibile"
-                        ? TESTO_IRRAGGIUNGIBILE
-                        : avvisoSinc.protocollo
-                          ? TESTO_PROTOCOLLO
-                          : TESTO_ERRORE_SINC
+                      : avvisoSinc.tipo === "accesso"
+                        ? TESTO_ACCESSO_SCADUTO
+                        : avvisoSinc.tipo === "irraggiungibile"
+                          ? TESTO_IRRAGGIUNGIBILE
+                          : avvisoSinc.protocollo
+                            ? TESTO_PROTOCOLLO
+                            : TESTO_ERRORE_SINC
                   }
                   azione={
                     avvisoSinc.tipo === "conflitto"
@@ -1356,7 +1390,9 @@ export function FinestraPrincipale(): ReactElement {
                             void apri(avvisoSinc.copia);
                           },
                         }
-                      : undefined
+                      : avvisoSinc.tipo === "accesso"
+                        ? { etichetta: "Accedi", onClick: () => apriAccesso() }
+                        : undefined
                   }
                   onChiudi={() => setAvvisoSinc(null)}
                 />
@@ -1371,7 +1407,11 @@ export function FinestraPrincipale(): ReactElement {
                 onChiudi={() => void chiudiVista()}
               />
             ) : vista === "impostazioni" ? (
-              <Impostazioni esegui={esegui} />
+              <Impostazioni
+                esegui={esegui}
+                onAccedi={(email) => setAccesso({ email })}
+                versioneAccesso={versioneAccesso}
+              />
             ) : vista === "cestino" ? (
               <Cestino
                 elementi={cestino}
@@ -1515,11 +1555,13 @@ export function FinestraPrincipale(): ReactElement {
         />
       )}
       {locale.esterno && <VeloRilascio />}
-      {bloccata && (
-        <Blocco
-          inCorso={riprovando}
-          onRiprova={riprova}
-          testo={credenzialiRifiutate ? TESTO_CREDENZIALI : undefined}
+      {bloccata && <Blocco inCorso={riprovando} onRiprova={riprova} />}
+      {accesso && (
+        <ModuloAccesso
+          emailIniziale={accesso.email}
+          onAccedi={accedi}
+          onSenzaCloud={() => void senzaCloud()}
+          onChiudi={() => setAccesso(null)}
         />
       )}
       {confermaChiusura && (

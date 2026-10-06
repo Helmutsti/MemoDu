@@ -159,7 +159,7 @@ export type EventoSincronizzazione =
   | { tipo: "note-cambiate"; note: string[] }
   | { tipo: "conflitto"; originale: string; copia: string; scrivendo: boolean }
   | { tipo: "riuscita" }
-  | { tipo: "credenziali-rifiutate" }
+  | { tipo: "accesso-scaduto" }
   | { tipo: "irraggiungibile" }
   | { tipo: "errore"; protocollo: boolean };
 
@@ -170,11 +170,6 @@ export function allaSincronizzazione(
   if (!IN_TAURI) return () => {};
   const promessa = listen<EventoSincronizzazione>("sincronizzazione", (e) => gestore(e.payload));
   return () => void promessa.then((togli) => togli());
-}
-
-/** Riprova della schermata di blocco: rilegge le credenziali e sincronizza subito (RB-57). */
-export async function riprovaSincronizzazione(): Promise<void> {
-  if (IN_TAURI) await invoke("riprova_sincronizzazione");
 }
 
 /** Lo stato della sincronizzazione è cambiato: la pagina delle impostazioni lo rilegge (DEC-91). */

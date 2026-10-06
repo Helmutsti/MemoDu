@@ -1,9 +1,20 @@
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Albero, Cartella, ElementoCestino, Nota, VoceElenco } from "@memodu/condiviso";
 import { api, ErroreApi } from "../api";
+import type { EventoSincronizzazione } from "../finestra";
 import { FinestraPrincipale } from "./FinestraPrincipale";
+
+// Il gestore degli eventi della sincronizzazione, per mandarne uno nelle prove.
+const sinc = vi.hoisted(() => ({ gestore: null as null | ((e: EventoSincronizzazione) => void) }));
+vi.mock("../finestra", async (originale) => ({
+  ...(await originale<typeof import("../finestra")>()),
+  allaSincronizzazione: (gestore: (e: EventoSincronizzazione) => void) => {
+    sinc.gestore = gestore;
+    return () => {};
+  },
+}));
 
 vi.mock("../api", async (originale) => ({
   ...(await originale<typeof import("../api")>()),
@@ -27,6 +38,9 @@ vi.mock("../api", async (originale) => ({
     elencaTag: vi.fn(),
     impostazioni: vi.fn(),
     statoSincronizzazione: vi.fn(),
+    statoAccesso: vi.fn(),
+    accedi: vi.fn(),
+    esci: vi.fn(),
   },
 }));
 
@@ -125,6 +139,8 @@ beforeEach(() => {
   vi.mocked(api.elencaTag).mockResolvedValue([]);
   // Di norma la nota lasciata non è vuota: l'API risponde 409 e non la cancella (DEC-39).
   vi.mocked(api.eliminaSeVuota).mockRejectedValue(new ErroreApi(409, "non vuota"));
+  vi.mocked(api.statoAccesso).mockResolvedValue({ email: "manuel@esempio.it" });
+  vi.mocked(api.esci).mockResolvedValue(undefined);
 });
 
 describe("SC-01, primo utilizzo (SF-16)", () => {
@@ -1163,5 +1179,67 @@ describe("ricerca nella colonna (RF-08, DEC-94)", () => {
     await userEvent.click(await riga(/Lavoro/));
     expect(screen.queryByRole("dialog", { name: "Risultati della ricerca" })).toBeNull();
     expect(colonna()).toHaveClass("colonna-aperta");
+  });
+});
+
+describe("accesso (RF-14, DEC-121)", () => {
+  const TESTO_SCADUTO =
+    "Accedi di nuovo per sincronizzare. Le modifiche restano su questo computer.";
+
+  /** La finestra con l'avviso dell'accesso scaduto e SC-05 aperta da lì. */
+  const apriDallAvviso = async () => {
+    vi.mocked(api.albero).mockResolvedValue(alberoDiProva());
+    vi.mocked(api.leggi).mockResolvedValue(nota("r", "Riunione di lunedì", "testo"));
+    render(<FinestraPrincipale />);
+    await titoloNota("Riunione di lunedì");
+    act(() => sinc.gestore?.({ tipo: "accesso-scaduto" }));
+    expect(await screen.findByText(TESTO_SCADUTO)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Accedi" }));
+    return screen.findByRole("dialog", { name: "Accedi a Memodu" });
+  };
+
+  it("l'accesso scaduto non blocca: avviso con Accedi, che apre SC-05 con l'email (CA-14.13)", async () => {
+    const finestra = await apriDallAvviso();
+    expect(within(finestra).getByLabelText("Email")).toHaveValue("manuel@esempio.it");
+    expect(within(finestra).getByLabelText("Email")).toHaveFocus();
+    expect(screen.queryByText("Memodu non riesce a collegarsi")).not.toBeInTheDocument();
+  });
+
+  it("email o password sbagliate: messaggio in linea, l'email resta; poi l'accesso riesce (CA-14.9, CA-14.10)", async () => {
+    const finestra = await apriDallAvviso();
+    vi.mocked(api.accedi).mockRejectedValueOnce(new ErroreApi(null, "credenziali"));
+    await userEvent.type(within(finestra).getByLabelText("Password"), "sbagliata{Enter}");
+    expect(await within(finestra).findByText("Email o password non corrette.")).toBeInTheDocument();
+    expect(within(finestra).getByLabelText("Email")).toHaveValue("manuel@esempio.it");
+    vi.mocked(api.accedi).mockResolvedValueOnce(undefined);
+    await userEvent.click(within(finestra).getByRole("button", { name: "Accedi" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    expect(api.accedi).toHaveBeenLastCalledWith("manuel@esempio.it", "sbagliata");
+    expect(screen.queryByText(TESTO_SCADUTO)).not.toBeInTheDocument();
+  });
+
+  it("server irraggiungibile: il suo messaggio in linea (CA-14.11)", async () => {
+    const finestra = await apriDallAvviso();
+    vi.mocked(api.accedi).mockRejectedValueOnce(new ErroreApi(null, "rete"));
+    await userEvent.type(within(finestra).getByLabelText("Password"), "una frase lunga{Enter}");
+    expect(
+      await within(finestra).findByText("Non riesco a raggiungere il server. Riprova tra poco."),
+    ).toBeInTheDocument();
+  });
+
+  it("Esc chiude soltanto; «Non voglio usare il cloud» scollega e l'avviso sparisce (CA-14.15)", async () => {
+    await apriDallAvviso();
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    expect(api.esci).not.toHaveBeenCalled();
+    expect(screen.getByText(TESTO_SCADUTO)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Accedi" }));
+    const finestra = await screen.findByRole("dialog", { name: "Accedi a Memodu" });
+    await userEvent.click(
+      within(finestra).getByRole("button", { name: "Non voglio usare il cloud" }),
+    );
+    await waitFor(() => expect(api.esci).toHaveBeenCalled());
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.queryByText(TESTO_SCADUTO)).not.toBeInTheDocument();
   });
 });

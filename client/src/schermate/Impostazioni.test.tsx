@@ -15,8 +15,12 @@ vi.mock("../api", async (originale) => ({
     cambiaPrimoPiano: vi.fn(),
     cambiaNomeDispositivo: vi.fn(),
     cambiaCestinoInRicerca: vi.fn(),
+    statoAccesso: vi.fn(),
+    esci: vi.fn(),
   },
 }));
+
+const accedi = vi.fn();
 
 const valori = (altri: Partial<Valori> = {}): Valori => ({
   sistema: "windows",
@@ -52,11 +56,13 @@ beforeEach(() => {
   vi.mocked(api.cambiaScorciatoia).mockResolvedValue(undefined);
   vi.mocked(api.cambiaTema).mockResolvedValue(undefined);
   vi.mocked(api.cambiaAvvio).mockResolvedValue(undefined);
+  vi.mocked(api.statoAccesso).mockResolvedValue({ email: "manuel@esempio.it" });
+  vi.mocked(api.esci).mockResolvedValue(undefined);
 });
 
 describe("SC-06 Impostazioni (DEC-91)", () => {
   it("mostra i cinque gruppi con i valori attuali", async () => {
-    render(<Impostazioni esegui={esegui} />);
+    render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
     await screen.findByRole("heading", { name: "Impostazioni" });
     expect(screen.getAllByRole("heading", { level: 2 }).map((t) => t.textContent)).toEqual([
       "Generale",
@@ -82,7 +88,7 @@ describe("SC-06 Impostazioni (DEC-91)", () => {
   });
 
   it("la scorciatoia si cambia premendo la combinazione nel campo", async () => {
-    render(<Impostazioni esegui={esegui} />);
+    render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
     const campo = await screen.findByRole("textbox", { name: "Scorciatoia della nota rapida" });
     await userEvent.click(campo);
     vi.mocked(api.impostazioni).mockResolvedValue(
@@ -97,7 +103,7 @@ describe("SC-06 Impostazioni (DEC-91)", () => {
 
   it("se un altro programma usa la combinazione lo dice e resta quella di prima", async () => {
     vi.mocked(api.cambiaScorciatoia).mockRejectedValue(new ErroreApi(409, "occupata"));
-    render(<Impostazioni esegui={esegui} />);
+    render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
     const campo = await screen.findByRole("textbox", { name: "Scorciatoia della nota rapida" });
     await userEvent.click(campo);
     await userEvent.keyboard("{Control>}{Alt>}m{/Alt}{/Control}");
@@ -107,7 +113,7 @@ describe("SC-06 Impostazioni (DEC-91)", () => {
   });
 
   it("una combinazione con un solo modificatore non si prova nemmeno", async () => {
-    render(<Impostazioni esegui={esegui} />);
+    render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
     const campo = await screen.findByRole("textbox", { name: "Scorciatoia della nota rapida" });
     await userEvent.click(campo);
     await userEvent.keyboard("{Control>}c{/Control}");
@@ -116,7 +122,7 @@ describe("SC-06 Impostazioni (DEC-91)", () => {
   });
 
   it("tema e avvio all'accensione valgono subito", async () => {
-    render(<Impostazioni esegui={esegui} />);
+    render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
     await userEvent.click(await screen.findByRole("radio", { name: "Scuro" }));
     expect(api.cambiaTema).toHaveBeenCalledWith("scuro");
     expect(screen.getByRole("radio", { name: "Scuro" })).toHaveAttribute("aria-checked", "true");
@@ -130,7 +136,7 @@ describe("SC-06 Impostazioni (DEC-91)", () => {
 
   it("«Mostra le note del cestino nei risultati» parte acceso e si cambia (RB-29, DEC-94)", async () => {
     vi.mocked(api.cambiaCestinoInRicerca).mockResolvedValue(undefined);
-    render(<Impostazioni esegui={esegui} />);
+    render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
     const interruttore = await screen.findByRole("switch", {
       name: "Mostra le note del cestino nei risultati",
     });
@@ -142,7 +148,7 @@ describe("SC-06 Impostazioni (DEC-91)", () => {
 
   it("«Tieni Memodu in primo piano» vale subito (DEC-93)", async () => {
     vi.mocked(api.cambiaPrimoPiano).mockResolvedValue(undefined);
-    render(<Impostazioni esegui={esegui} />);
+    render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
     const interruttore = await screen.findByRole("switch", { name: "Tieni Memodu in primo piano" });
     await userEvent.click(interruttore);
     expect(api.cambiaPrimoPiano).toHaveBeenCalledWith(true);
@@ -151,7 +157,7 @@ describe("SC-06 Impostazioni (DEC-91)", () => {
 
   it("se l'avvio all'accensione non si cambia, l'interruttore torna com'era", async () => {
     vi.mocked(api.cambiaAvvio).mockRejectedValue(new ErroreApi(null, "non disponibile"));
-    render(<Impostazioni esegui={esegui} />);
+    render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
     const interruttore = await screen.findByRole("switch", { name: "Avvia Memodu all'accensione" });
     await userEvent.click(interruttore);
     await waitFor(() => expect(interruttore).toHaveAttribute("aria-checked", "false"));
@@ -159,7 +165,7 @@ describe("SC-06 Impostazioni (DEC-91)", () => {
 
   it("il nome del dispositivo si salva lasciando il campo; vuoto torna quello del computer", async () => {
     vi.mocked(api.cambiaNomeDispositivo).mockResolvedValue("PC-UFFICIO");
-    render(<Impostazioni esegui={esegui} />);
+    render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
     const campo = await screen.findByRole("textbox", { name: "Nome del dispositivo" });
     await userEvent.clear(campo);
     await userEvent.tab();
@@ -175,10 +181,41 @@ describe("SC-06 Impostazioni (DEC-91)", () => {
     vi.mocked(api.statoSincronizzazione).mockResolvedValue(
       stato({ collegata: false, ultimaRiuscita: null }),
     );
-    render(<Impostazioni esegui={esegui} />);
+    render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
     expect(
       await screen.findByText("Senza collegamento: le note restano su questo computer"),
     ).toBeInTheDocument();
     expect(screen.queryByText("Ultima sincronizzazione")).not.toBeInTheDocument();
+  });
+
+  it("senza accesso la riga Account dice «Non hai fatto l'accesso» e Accedi apre SC-05 (CA-14.8)", async () => {
+    vi.mocked(api.statoSincronizzazione).mockResolvedValue(
+      stato({ collegata: false, ultimaRiuscita: null }),
+    );
+    vi.mocked(api.statoAccesso).mockResolvedValue({ email: null });
+    render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
+    expect(await screen.findByText("Non hai fatto l'accesso")).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Accedi" }));
+    expect(accedi).toHaveBeenCalledWith(undefined);
+  });
+
+  it("collegato mostra l'email con Esci, che scollega e rilegge (CA-14.14)", async () => {
+    render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
+    expect(await screen.findByText("manuel@esempio.it")).toBeInTheDocument();
+    vi.mocked(api.statoSincronizzazione).mockResolvedValue(
+      stato({ collegata: false, ultimaRiuscita: null }),
+    );
+    vi.mocked(api.statoAccesso).mockResolvedValue({ email: null });
+    await userEvent.click(screen.getByRole("button", { name: "Esci" }));
+    expect(api.esci).toHaveBeenCalled();
+    expect(await screen.findByText("Non hai fatto l'accesso")).toBeInTheDocument();
+  });
+
+  it("con l'accesso scaduto la riga torna ad Accedi, con l'email di prima (RB-87)", async () => {
+    vi.mocked(api.statoSincronizzazione).mockResolvedValue(stato({ problema: "rifiutate" }));
+    render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
+    expect(await screen.findByText("Accedi di nuovo per sincronizzare")).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Accedi" }));
+    expect(accedi).toHaveBeenCalledWith("manuel@esempio.it");
   });
 });

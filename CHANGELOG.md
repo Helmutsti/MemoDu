@@ -7,6 +7,14 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+### Aggiunto
+- Accesso con email e password: dalle impostazioni, nella sezione Sincronizzazione, «Accedi» apre una finestra sopra le note; dopo l'accesso resti collegato e «Esci» scollega questo computer
+- Le note viaggiano e restano sul server cifrate: il server non può leggerle. Al primo accesso Memodu rimanda tutto cifrato
+- Se l'accesso scade non si blocca niente: continui a scrivere e un avviso ti chiede di accedere di nuovo
+
+### Cambiato
+- Il file `credenziali` non serve più: prima di installare questa versione va creato l'utente sul server (guida nel runbook)
+
 ### Corretto
 - In Locale, eliminare un file o una cartella su un disco di rete o su una chiavetta ora chiede prima «Eliminare per sempre»: prima li cancellava subito, senza passare dal Cestino
 - Aprendo una nota dalla ricerca il cursore va subito nel testo, pronto per scrivere

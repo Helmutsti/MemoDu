@@ -123,6 +123,13 @@ export const api = {
   /** Restituisce il nome che vale: vuoto torna il nome del computer (RB-51). */
   cambiaNomeDispositivo: (nome: string) => comando<string>("cambia_nome_dispositivo", { nome }),
   statoSincronizzazione: () => comando<StatoSincronizzazione>("stato_sincronizzazione"),
+
+  // Accesso (RF-14, DEC-121).
+  statoAccesso: () => comando<StatoAccesso>("stato_accesso"),
+  /** Errori, nel messaggio: «credenziali», «rete» o «errore». */
+  accedi: (email: string, password: string) => comando<void>("accedi", { email, password }),
+  /** «Esci» e «Non voglio usare il cloud» (RB-89). */
+  esci: () => comando<void>("esci"),
   /** Si sincronizza con le altre impostazioni (RB-29, RB-52, DEC-95). */
   cambiaCestinoInRicerca: (attivo: boolean) =>
     comando<void>("cambia_cestino_in_ricerca", { attivo }),
@@ -172,8 +179,13 @@ export interface Impostazioni {
   nomeDispositivo: string;
 }
 
+export interface StatoAccesso {
+  /** L'email dell'utente, se il dispositivo ha fatto l'accesso (RB-86). */
+  email: string | null;
+}
+
 export interface StatoSincronizzazione {
-  /** C'è il file delle credenziali (DEC-84). */
+  /** Il dispositivo ha fatto l'accesso (RB-87). */
   collegata: boolean;
   ultimaRiuscita: string | null;
   problema: "rete" | "rifiutate" | "protocollo" | "errore" | null;
