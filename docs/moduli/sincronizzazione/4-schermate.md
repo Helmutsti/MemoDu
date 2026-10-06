@@ -59,5 +59,5 @@ Finestra sopra le note velate (livello 40, scelta di Manuel Cucca il 06/10/2026)
 |---|---|---|
 | Vuoto | Email e password vuote | «Accedi a Memodu», «Accedi alla tua installazione.»; pulsanti «Non voglio usare il cloud» e «Accedi» |
 | Caricamento | Dopo Accedi, Accedi in caricamento mentre il dispositivo calcola Argon2id (circa mezzo secondo) e il server risponde | — |
-| Errore | Email o password errate, oppure server irraggiungibile: messaggio in linea sopra i pulsanti | «Email o password non corrette.»; il testo per il server irraggiungibile è da scrivere |
+| Errore | Email o password errate, oppure server irraggiungibile: messaggio in linea sopra i pulsanti | «Email o password non corrette.»; server irraggiungibile: «Non riesco a raggiungere il server. Riprova tra poco.» |
 | Successo | Si torna dove si era e la sincronizzazione parte; si resta collegati (RB-86) | — |

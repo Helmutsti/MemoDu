@@ -42,7 +42,7 @@ Scritti dall'agente dai flussi e dalle decisioni (FL-07, DEC-75 … DEC-83). Con
 ---
 
 ## RF-14 – Accesso all'installazione
-**Priorità:** Must · **Origine:** DEC-05, DEC-121 · **Fase:** 9 (criteri e piano di test approvati il 06/10/2026; manca il testo di CA-14.11, domanda aperta su SC-05) · **Stato:** Pronto
+**Priorità:** Must · **Origine:** DEC-05, DEC-121 · **Fase:** 9 (criteri e piano di test approvati il 06/10/2026) · **Stato:** Pronto
 
 Come *utente* voglio accedere una volta con email e password per sincronizzare le mie note cifrate, restare collegato senza ripetere l'accesso e poter uscire da un dispositivo.
 
@@ -66,7 +66,7 @@ Scritti dall'agente dai flussi, dalle regole e dai mockup (FL-08, RB-86 … RB-9
 - **CA-14.8** *Dato* un dispositivo senza accesso, *quando* apro Memodu, *allora* la finestra si apre subito sulla copia di lavoro, senza sincronizzare e senza avvisi; nella sezione Sincronizzazione delle impostazioni la riga Account dice «Non hai fatto l'accesso» con Accedi (RB-87, DEC-84).
 - **CA-14.9** *Dato* SC-05 aperta da Accedi, *quando* inserisco email e password giuste e premo Accedi (o Invio), *allora* il pulsante va in caricamento, la finestra si chiude, la sincronizzazione parte e la riga Account mostra l'email con Esci (RB-86).
 - **CA-14.10** *Dato* SC-05, *quando* sbaglio email o password, *allora* compare «Email o password non corrette.» sopra i pulsanti, l'email resta scritta e posso riprovare quante volte voglio (RB-86).
-- **CA-14.11** *Dato* SC-05 e il server irraggiungibile, *quando* premo Accedi, *allora* compare il messaggio in linea del server irraggiungibile (testo da approvare, vedi le domande aperte) e posso continuare a scrivere sulla copia di lavoro (DEC-02).
+- **CA-14.11** *Dato* SC-05 e il server irraggiungibile, *quando* premo Accedi, *allora* compare sopra i pulsanti «Non riesco a raggiungere il server. Riprova tra poco.» e posso continuare a scrivere sulla copia di lavoro (DEC-02).
 - **CA-14.12** *Dato* un dispositivo che ha fatto l'accesso, *quando* chiudo e riapro Memodu, *allora* non mi chiede di accedere; quando al gettone mancano meno di 7 giorni l'app lo rinnova da sola, senza chiedere nulla (RB-86).
 - **CA-14.13** *Dato* il gettone scaduto o rifiutato (per esempio dopo il cambio del segreto sul server), *quando* l'app prova a sincronizzare, *allora* la finestra non si blocca, continuo a scrivere e compare l'avviso «Accedi di nuovo per sincronizzare. Le modifiche restano su questo computer.»; Accedi apre SC-05 e, dopo l'accesso, le modifiche fatte nel frattempo arrivano sugli altri dispositivi (RB-87).
 - **CA-14.14** *Dato* un dispositivo collegato con modifiche in attesa, *quando* premo Esci, *allora* le modifiche partono, gettone e chiave dati spariscono dal portachiavi, la copia di lavoro resta e la riga Account torna a «Non hai fatto l'accesso» (RB-89).
