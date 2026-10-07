@@ -7,6 +7,11 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+## [0.1.11] – 2026-10-07
+
+### Aggiunto
+- In Locale, un clic sul nome del file aperto apre una piccola finestra come quella delle note: rinomini il file, lo chiudi con «Chiudi file» (Ctrl + W) e, se l'hai aggiunto da solo, lo togli con «Togli da Locale»; sul disco il file resta
+
 ## [0.1.10] – 2026-10-07
 
 ### Cambiato
