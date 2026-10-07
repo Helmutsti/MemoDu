@@ -41,6 +41,8 @@ Frammento Must A: la scorciatoia è fissa (Ctrl + Alt + N su Windows, Control + 
 ## RF-02 – Scrittura in markdown con formattazione minima
 **Priorità:** Must · **Origine:** — · **Fase:** 9 · **Stato:** Pronto
 
+**Nella v1 (DEC-125):** testo puro; la formattazione resta sospesa con DEC-64 e si riprende dopo la v1.
+
 Come *utente* voglio scrivere note in markdown con una formattazione minima per prendere appunti strutturati e produrre documenti formattati.
 
 Formattazioni previste:
@@ -81,6 +83,8 @@ Frammento Must A: senza immagini (RF-03) e senza metadati (RF-04).
 
 ## RF-03 – Immagini nelle note
 **Priorità:** Must · **Origine:** — · **Fase:** 6 · **Stato:** In progettazione
+
+**Fuori dalla v1 (DEC-125):** si riprende dopo la v1, dalla Fase 6.
 
 Come *utente* voglio inserire immagini nelle note per tenere insieme testo e materiali collegati.
 

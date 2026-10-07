@@ -479,3 +479,4 @@
 | 07/10/2026 | Manuel Cucca | Le finestre al centro con il velo (accesso, conferme) si chiudono con un clic fuori come con Esc; la manina su tutto ciò che si clicca; tolto il doppio occhio di Edge nel campo password | DEC-124 |
 | 07/10/2026 | Manuel Cucca | RF-11 Interazioni rapide: criteri CA-11.1 … CA-11.8 e piano di test TC-150 … TC-157 approvati; RF-11 Pronto | — |
 | 07/10/2026 | Agente IA | RF-11 Interazioni rapide: prove TC-150 … TC-157 superate nell'app di sviluppo (scorciatoie, tasto destro, trascinamento con il puntatore) | — |
+| 07/10/2026 | Manuel Cucca | La v1 personale esce con il testo puro e senza immagini: formattazione di RF-02 e RF-03 rinviate a dopo la v1 | DEC-125 |
