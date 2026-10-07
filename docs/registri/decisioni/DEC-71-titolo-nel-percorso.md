@@ -15,7 +15,7 @@ Scelte di Manuel Cucca: **C** e **C4**.
 - Ultima modifica e tag non stanno più nel foglio: compaiono nella **comparsa dei metadati** (CMP-27), un riquadro flottante sotto il titolo, passando con il mouse sul titolo del percorso. Si modificano sempre da Dettagli (CMP-24).
 - Il foglio comincia direttamente con il testo.
 
-Proposte dell'agente, da confermare:
+Proposte dell'agente, confermate da Manuel Cucca il 07/10/2026:
 - Il titolo si modifica cliccandolo nel percorso; Invio o Esc tornano al testo. Una nota nuova parte con il cursore nel testo, come oggi (CA-02.1); senza titolo il percorso mostra «Senza titolo» in testo tenue.
 - Un clic su una cartella del percorso apre quella cartella nella colonna.
 - Con più di due cartelle, quelle di mezzo diventano «…», che apre un menu con quelle nascoste.

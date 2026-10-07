@@ -13,7 +13,7 @@ C) Tutte, per sempre.
 ## Decisione
 Scelta di Manuel Cucca: **A**. Il server sfoltisce da solo guardando solo versione e ora, senza leggere il contenuto. La versione attuale resta sempre.
 
-Proposta dell'agente, da confermare: anche un elemento eliminato per sempre (blocco «eliminato», DEC-76) conserva le sue versioni precedenti per 30 giorni, così si può ancora recuperare.
+Proposta dell'agente, confermata da Manuel Cucca il 07/10/2026 (7 giorni con DEC-113): anche un elemento eliminato per sempre (blocco «eliminato», DEC-76) conserva le sue versioni precedenti per 30 giorni, così si può ancora recuperare.
 
 ## Conseguenze
 - `architettura/architettura.md`, sezione sulla sincronizzazione.

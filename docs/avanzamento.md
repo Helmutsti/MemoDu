@@ -52,20 +52,7 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 ## Deduzioni da confermare
 Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui non valgono come regole.
 
-- Sincronizzazione: testi degli avvisi (conflitto, server irraggiungibile, errore, versioni diverse), provvisori fino alla Fase 6; l'API scrive le credenziali nel file dell'app della cartella dei dati; nella fusione di un conflitto di testo l'originale prende la versione del server e la copia quella del dispositivo.
-- SC-06 (DEC-91): la combinazione della nota rapida vuole almeno due tasti tra Ctrl, Alt, Maiusc e Win più una lettera, una cifra, un tasto funzione o Spazio; Esc lascia il campo senza cambiarla; il nome del dispositivo è lungo al massimo 100 caratteri e vuoto torna il nome del computer; i testi dello stato della sincronizzazione («In attesa della prima sincronizzazione», «Server non raggiungibile: le modifiche restano su questo computer», «Non riuscita: riprovo da sola», «Memodu e il server hanno versioni diverse»); avviato all'accensione, Memodu parte senza mostrare la finestra principale.
-- RF-08 (01/10/2026): aprendo un risultato nel cestino la nota di prima si chiude e restano l'avviso con Ripristina e «Nessuna nota aperta»; nel menu Tag, Tab ed Esc chiudono il menu e il focus torna sul filtro, da un risultato Tab va ai filtri e Maiusc + Tab al campo.
-- DEC-120: velo su tutta la finestra mentre si trascina da fuori (non nei mockup: da disegnare in Figma se serve); avviso per quello che resta fuori; un solo file trascinato si apre; un file da solo ha solo «Togli da Locale»; CA-17.19.
-- DEC-119: il titolo CLOUD senza numero; in «Sposta in…» la radice si chiama «CLOUD»; CLOUD vuota «Nessuna nota. Crea con +»; trascinare sul titolo CLOUD porta nella radice.
-- DEC-96: Info larga 360 con il contenuto allineato alle icone delle voci; nella Finestra (dal tasto destro) niente Chiudi nota; ricerca avanzata larga 1040 e alta 820; testo e filtri tornano alla card quando la ricerca avanzata si chiude.
-- DEC-93: «Tieni Memodu in primo piano» è un interruttore in Generale, spento di default, solo su questo dispositivo, per la sola finestra principale.
-- DEC-121, domande aperte su RF-14 in `moduli/sincronizzazione/8-test.md`: il comando che crea l'utente stampa le righe, che in locale si copiano a mano in `api/.env` (formato in `api/.env.esempio`; scelte di Manuel Cucca del 06/10/2026: indirizzo del server nel programma, utente fisso in locale in `api/.env`; `crypto.argon2` c'è in Node 24.16, il comando resta nell'API). Nomi delle variabili e delle richieste dell'accesso in `architettura/api.md` (i testi dell'accesso sono approvati con i mockup del 06/10/2026).
-- DEC-79 (superata da DEC-121 per il gettone statico): il server genera identificativo, gettone e chiave in una riga da copiare, conserva solo l'impronta del gettone; 401 per un gettone sbagliato.
-- DEC-77: anche gli elementi eliminati per sempre tengono le versioni precedenti, ora per 7 giorni (DEC-113).
-- DEC-76: meccanismo di versioni, numero d'ordine, base sul dispositivo, confronto campo per campo e blocchi «eliminato».
-- DEC-71: modifica del titolo con un clic nel percorso (Invio o Esc tornano al testo), clic su una cartella che la apre nella colonna, «…» con un menu per le cartelle nascoste, comparsa dei metadati dopo 500 ms o con il focus.
-
-Confermate da Manuel Cucca il 30/09/2026: le proposte di DEC-94 e DEC-95 e le quattro deduzioni della ricerca scritte in `architettura/api.md` (data con due filtri di data, note dentro una cartella nel cestino, nessun risultato senza testo e filtri, caratteri speciali come caratteri).
+Nessuna. Il 07/10/2026 Manuel Cucca ha confermato in blocco quelle rimaste (sincronizzazione: nella fusione di un conflitto di testo l'originale prende la versione del server e la copia quella del dispositivo; SC-06; RF-08; DEC-71, DEC-76, DEC-77, DEC-93, DEC-96, DEC-119, DEC-120, DEC-121); tolte perché superate i testi provvisori della sincronizzazione e dello stato in SC-06 (DEC-122), le credenziali nel file dell'app e il gettone statico di DEC-79 (DEC-121).
 
 ## Domande aperte dall'allineamento (01/10/2026)
 Dubbi rimasti dall'allineamento generale della documentazione, da decidere con Manuel Cucca una alla volta. Fino ad allora i documenti restano come sono.

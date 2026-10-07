@@ -11,7 +11,7 @@ Per «più recente»: A) l'ora della modifica sul dispositivo, in UTC; B) l'ordi
 ## Decisione
 Scelta di Manuel Cucca: **A**. Ogni modifica porta, dentro il blocco cifrato, l'istante UTC in ISO 8601 (DEC-28) in cui è stata fatta sul dispositivo; nei conflitti di RB-36, RB-37 e RB-38 vince l'istante più tardo. Il fuso orario non conta (SF-14).
 
-Proposte dell'agente, da confermare:
+Proposte dell'agente, confermate da Manuel Cucca il 07/10/2026:
 - **Server:** ogni blocco ha una versione; ogni scrittura riuscita riceve anche un numero d'ordine globale crescente. «Cosa è cambiato dopo il numero N» è l'elenco delle modifiche da ricevere.
 - **Dispositivo:** per ogni elemento tiene la versione ricevuta l'ultima volta, il suo contenuto (la base) e il segno «modificato qui».
 - **Invio:** l'elemento con la versione da cui parte; il server lo accetta solo se è ancora a quella versione, altrimenti rifiuta e manda la versione attuale.

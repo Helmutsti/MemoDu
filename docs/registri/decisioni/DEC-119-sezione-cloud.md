@@ -17,7 +17,7 @@ Scelte di Manuel Cucca del 04/10/2026:
 - A ogni livello **prima le note, poi le cartelle** (A), anche in Locale: prima i file, poi le cartelle.
 - Nella radice le note restano per **ultima modifica**, la più recente in cima (A); dentro le cartelle in ordine alfabetico.
 
-Deduzioni dell'agente, da confermare:
+Deduzioni dell'agente, confermate da Manuel Cucca il 07/10/2026:
 - Il titolo CLOUD non ha numero (il numero delle non organizzate di RB-56 sparisce; le cartelle tengono il loro).
 - In «Sposta in…» la voce della radice si chiama «CLOUD» invece di «Non organizzate».
 - CLOUD vuota: «Nessuna nota. Crea con +».

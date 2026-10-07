@@ -16,7 +16,7 @@ Scelte di Manuel Cucca del 04/10/2026:
 - Si rilascia **ovunque** nella finestra (A).
 - **Rilascio di Tauri acceso** (`dragDropEnabled`) e trascinamento interno riscritto con gli eventi del puntatore (A), in `client/src/componenti/trascina.ts`.
 
-Deduzioni dell'agente, da confermare:
+Deduzioni dell'agente, confermate da Manuel Cucca il 07/10/2026 (il velo del rilascio non è disegnato in Figma: è il `velo` delle finestre al centro con il messaggio):
 - Mentre si trascina da fuori, **tutta la finestra si oscura** con il velo e al centro il messaggio «Rilascia per aggiungere a Locale»; la colonna resta com'è (correzione di Manuel Cucca del 04/10/2026: la prima versione evidenziava LOCALE e apriva la colonna).
 - Quello che si rilascia **non entra mai nel testo aperto**: la pagina ferma ogni rilascio HTML5 prima dell'editor, che altrimenti leggeva il file e lo incollava nella nota o nel file aperto (difetto della 0.1.7 trovato da Manuel Cucca).
 - Quello che non è una cartella né un file .md o .txt resta fuori, con un avviso; quello che è già in Locale (o dentro una sua cartella) non si aggiunge di nuovo.

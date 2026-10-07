@@ -17,7 +17,7 @@ Scelte di Manuel Cucca, 01/10/2026:
 - **«Info» ovunque** al posto di «Dettagli»: voci di menu, titoli, documenti e libreria.
 - **Ricerca avanzata (B):** una finestra grande al centro con il velo (CMP-29), con i filtri sempre aperti a sinistra e i risultati a destra. Si apre da «Mostra tutti i risultati (n)» in fondo alla card (CMP-13) o con Ctrl + Maiusc + K, con lo stesso testo e gli stessi filtri. La card resta per le ricerche veloci.
 
-Proposte dell'agente, da confermare: Info larga 360 con il contenuto allineato alle icone delle voci; nella Finestra niente Chiudi nota; la ricerca avanzata larga 1040 e alta 820; testo e filtri tornano alla card quando la ricerca avanzata si chiude.
+Proposte dell'agente, confermate da Manuel Cucca il 07/10/2026: Info larga 360 con il contenuto allineato alle icone delle voci; nella Finestra niente Chiudi nota; la ricerca avanzata larga 1040 e alta 820; testo e filtri tornano alla card quando la ricerca avanzata si chiude.
 
 ## Conseguenze
 - Supera la finestra dei dettagli di DEC-44 (modale dal menu `···`), la comparsa dei metadati e il titolo che si rinomina con un clic nel percorso di DEC-71, e il menu `···` della nota aperta (DEC-55, DEC-63, DEC-68 per la posizione di Chiudi nota, che resta con Ctrl + W).

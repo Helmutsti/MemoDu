@@ -14,7 +14,7 @@ Scelte di Manuel Cucca:
 - Nelle impostazioni c'è **«Tieni Memodu in primo piano»**: la finestra principale resta sopra gli altri programmi.
 - La posizione della voce nella pagina è **da rivedere**.
 
-Proposte dell'agente, da confermare:
+Proposte dell'agente, confermate da Manuel Cucca il 07/10/2026:
 - È un interruttore (CMP-04) nel gruppo Generale, sotto «Avvia Memodu all'accensione», spento di default.
 - Vale solo su questo dispositivo, come il tema e l'avvio all'accensione (RB-52), e resta dopo il riavvio.
 - Vale per la finestra principale; le note rapide sono già sempre in primo piano (SC-02).
