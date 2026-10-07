@@ -47,6 +47,9 @@ Nella sezione **Parti interne** della pagina Componenti composti ci sono i pezzi
 ### Stato Focus
 L'anello `focus-anello` degli stati Focus si vede solo mentre ci si muove con la tastiera (Tab e frecce fuori dal testo); un clic lo spegne (DEC-74). L'anello di errore dei campi resta sempre.
 
+### Cursore (DEC-124)
+Su tutto ciò che si clicca il cursore è la manina: pulsanti, voci di menu, righe della colonna e dell'albero, segmenti del percorso, righe delle impostazioni, scelte a segmenti, tag, filtri, risultati della ricerca, interruttori, caselle della checklist. Nei campi e nel testo della nota resta il cursore del testo; sugli elementi disabilitati la freccia.
+
 ### Forma dell'evidenziazione
 Tutto ciò che è alto una riga ha la pillola (regola 1). I blocchi su più righe dentro un contenitore (risultati della ricerca, elementi del cestino, righe di impostazione) hanno il rettangolo con `raggio-interno` (12), concentrico al contenitore (20 − 8 di margine): una pillola alta più righe diventerebbe un ovale.
 
@@ -689,7 +692,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 | Errore · Caricamento | Non previsti |
 
 ### Accessibilità
-- **Tastiera:** il focus parte da Annulla e resta dentro la finestra; Esc equivale ad Annulla; Invio attiva il pulsante in focus.
+- **Tastiera:** il focus parte da Annulla e resta dentro la finestra; Esc equivale ad Annulla; Invio attiva il pulsante in focus. Anche un clic sul velo equivale ad Annulla, se comincia e finisce sul velo (DEC-124).
 - **Lettori di schermo:** finestra modale con titolo; il testo è la descrizione.
 - **Contrasti:** titolo ≥ 12,87:1, testo tenue 5,49:1 e 5,61:1; pulsanti come CMP-01.
 
@@ -894,7 +897,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 | Caricamento | Il pulsante Accedi in caricamento (CMP-01) |
 
 ### Accessibilità
-- **Tastiera:** focus sul campo Email all'apertura; Invio da qualsiasi campo invia il modulo; Esc chiude soltanto la finestra, senza scollegare (scelta di Manuel Cucca il 06/10/2026).
+- **Tastiera:** focus sul campo Email all'apertura; Invio da qualsiasi campo invia il modulo; Esc chiude soltanto la finestra, senza scollegare (scelta di Manuel Cucca il 06/10/2026); un clic sul velo fa lo stesso, tranne mentre l'accesso è in corso (DEC-124).
 - **Lettori di schermo:** il messaggio di errore è collegato ai campi e si annuncia quando compare; il pulsante con l'occhio ha il nome "Mostra la password".
 - **Contrasti:** come CMP-01 e CMP-03.
 

@@ -8,7 +8,7 @@
   background: none;
   color: var(--testo-primario);
   text-align: left;
-  cursor: default;
+  cursor: pointer;
 }
 
 .riga-nome {
@@ -63,7 +63,7 @@
   padding: 0;
   border: none;
   background: none;
-  cursor: default;
+  cursor: pointer;
 }
 .riga-conteggio {
   padding-right: var(--spazio-elemento);
@@ -74,7 +74,7 @@
   border: none;
   border-radius: var(--raggio-pillola);
   background: none;
-  cursor: default;
+  cursor: pointer;
 }
 
 /* Cartella (CMP-06): icona 16 (chiusa o aperta, DEC-99), nome, numero di note in testo tenue

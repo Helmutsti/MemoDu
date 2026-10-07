@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { FinestraConferma } from "./FinestraConferma";
@@ -37,5 +37,18 @@ describe("CMP-16 Finestra di conferma (RB-62, CA-01.8)", () => {
     expect(screen.getByRole("button", { name: "Annulla" })).toHaveFocus();
     await userEvent.click(screen.getByRole("button", { name: "Chiudi comunque" }));
     expect(onConferma).toHaveBeenCalled();
+  });
+
+  it("un clic sul velo equivale ad Annulla; un trascinamento che finisce sul velo no (DEC-124)", () => {
+    const { onAnnulla, onConferma } = apri();
+    const finestra = screen.getByRole("alertdialog");
+    const velo = finestra.parentElement!;
+    fireEvent.mouseDown(finestra);
+    fireEvent.click(velo);
+    expect(onAnnulla).not.toHaveBeenCalled();
+    fireEvent.mouseDown(velo);
+    fireEvent.click(velo);
+    expect(onAnnulla).toHaveBeenCalledTimes(1);
+    expect(onConferma).not.toHaveBeenCalled();
   });
 });

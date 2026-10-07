@@ -43,7 +43,7 @@
   border-radius: var(--raggio-pillola);
   background: none;
   color: var(--icona-tenue);
-  cursor: default;
+  cursor: pointer;
 }
 .strumento:hover {
   background: var(--sfondo-hover);

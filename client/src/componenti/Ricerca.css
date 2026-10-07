@@ -122,7 +122,7 @@
   gap: 2px;
   padding: var(--spazio-elenco) var(--spazio-controllo);
   border-radius: var(--raggio-interno);
-  cursor: default;
+  cursor: pointer;
 }
 .risultato-ricerca:hover {
   background: var(--sfondo-hover);

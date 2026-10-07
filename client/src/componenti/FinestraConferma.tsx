@@ -1,10 +1,12 @@
 // CMP-16 Finestra di conferma: al centro, livello 40, con il velo sul resto. Il focus parte
-// da Annulla e resta dentro la finestra; Esc equivale ad Annulla. Variante Tre scelte: una
+// da Annulla e resta dentro la finestra; Esc e un clic sul velo equivalgono ad Annulla
+// (DEC-124). Variante Tre scelte: una
 // seconda azione secondaria tra Annulla e quella principale (RB-31).
 
 import { useEffect, useRef, type ReactElement } from "react";
 import { createPortal } from "react-dom";
 import { Pulsante } from "./Pulsante";
+import { useClicSulVelo } from "./velo";
 import "./FinestraConferma.css";
 
 interface Proprieta {
@@ -26,6 +28,7 @@ export function FinestraConferma({
   altra,
 }: Proprieta): ReactElement {
   const finestra = useRef<HTMLDivElement>(null);
+  const velo = useClicSulVelo(onAnnulla);
 
   useEffect(() => {
     finestra.current?.querySelector("button")?.focus();
@@ -45,7 +48,7 @@ export function FinestraConferma({
   };
 
   return createPortal(
-    <div className="velo">
+    <div className="velo" {...velo}>
       <div
         ref={finestra}
         className="finestra-conferma"

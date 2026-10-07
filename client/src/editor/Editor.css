@@ -82,7 +82,7 @@
   vertical-align: -3px;
   border: 1.5px solid var(--icona-tenue);
   border-radius: var(--raggio-pillola);
-  cursor: default;
+  cursor: pointer;
 }
 .editor .md-casella:hover {
   background: var(--sfondo-hover);

@@ -21,7 +21,7 @@
 }
 
 .voce-menu {
-  cursor: default;
+  cursor: pointer;
 }
 .voce-menu-riga {
   display: flex;
@@ -78,7 +78,7 @@
   background: none;
   font: inherit;
   text-align: left;
-  cursor: default;
+  cursor: pointer;
 }
 .voce-azione:hover .voce-menu-riga {
   background: var(--sfondo-hover);

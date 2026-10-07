@@ -1,14 +1,16 @@
 // CMP-22 Modulo di accesso (SC-05, DEC-121): una finestra sopra le note, livello 40, con il
 // guscio della finestra di conferma (CMP-16). Email e password, «Non voglio usare il cloud»,
 // che scollega come Esci (RB-89), e Accedi. Il focus parte dall'email e resta dentro; Invio
-// da un campo accede; Esc chiude soltanto, senza scollegare. Un solo messaggio per email o
-// password sbagliate, senza dire quale delle due; l'email non si svuota. Testi in 4-schermate.md.
+// da un campo accede; Esc e un clic sul velo chiudono soltanto, senza scollegare (DEC-124).
+// Un solo messaggio per email o password sbagliate, senza dire quale delle due; l'email non si
+// svuota. Testi in 4-schermate.md.
 
 import { CircleAlert, Eye, EyeOff } from "lucide-react";
 import { useEffect, useId, useRef, useState, type FormEvent, type ReactElement } from "react";
 import { createPortal } from "react-dom";
 import { Icona } from "./Icona";
 import { Pulsante } from "./Pulsante";
+import { useClicSulVelo } from "./velo";
 import "./FinestraConferma.css";
 import "./ModuloAccesso.css";
 
@@ -21,7 +23,7 @@ interface Proprieta {
   onAccedi: (email: string, password: string) => Promise<string | null>;
   /** «Non voglio usare il cloud». */
   onSenzaCloud: () => void;
-  /** Esc: si chiude soltanto. */
+  /** Esc o un clic sul velo: si chiude soltanto. */
   onChiudi: () => void;
 }
 
@@ -39,6 +41,8 @@ export function ModuloAccesso({
   const [inCorso, setInCorso] = useState(false);
   const [errore, setErrore] = useState<string | null>(null);
   const id = useId();
+  // Mentre l'accesso è in corso il clic fuori non conta, come i pulsanti fermi.
+  const velo = useClicSulVelo(onChiudi, !inCorso);
 
   useEffect(() => {
     campoEmail.current?.focus();
@@ -68,7 +72,7 @@ export function ModuloAccesso({
   };
 
   return createPortal(
-    <div className="velo">
+    <div className="velo" {...velo}>
       <form
         ref={finestra}
         className="finestra-conferma modulo-accesso"

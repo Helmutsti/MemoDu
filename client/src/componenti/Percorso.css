@@ -50,7 +50,7 @@
   overflow: hidden;
   color: var(--testo-tenue);
   text-overflow: ellipsis;
-  cursor: default;
+  cursor: pointer;
 }
 .percorso-cartella:hover {
   color: var(--testo-primario);
@@ -62,7 +62,7 @@
   min-width: 0;
   color: var(--testo-primario);
   text-overflow: ellipsis;
-  cursor: default;
+  cursor: pointer;
 }
 .percorso-senza-titolo {
   color: var(--testo-tenue);
