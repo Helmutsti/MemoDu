@@ -69,7 +69,7 @@ flowchart TD
     A[Creo l'utente fisso con il comando del server e stampo la chiave di recupero - DEC-121] --> C[Apro Memodu]
     C --> D[Le note sono subito disponibili sulla copia di lavoro - RNF-01]
     D --> M{Nel portachiavi c'è un gettone?}
-    M -- No --> L[Si lavora in locale, senza sincronizzare; nella sezione Sincronizzazione delle impostazioni: Accedi per sincronizzare - RB-87]
+    M -- No --> L[Si lavora in locale, senza sincronizzare; nel box dell'account delle impostazioni: Accedi - DEC-122 - RB-87]
     L --> S[SC-05: email e password - RB-86]
     S --> P[Dalla password, sul dispositivo: prova di accesso e chiave della cassaforte - DEC-121]
     S --> N[Non voglio usare il cloud: si scollega come Esci - RB-89]
@@ -85,7 +85,7 @@ flowchart TD
     T -- No --> F
     T -- Sì --> V[Le modifiche aspettano + avviso: Accedi di nuovo per sincronizzare - RB-87]
     V --> S
-    F --> U[Esci nella sezione Sincronizzazione delle impostazioni - RB-89]
+    F --> U[Esci nel box dell'account delle impostazioni - RB-89]
     U --> W[Si mandano le modifiche in attesa, poi si tolgono gettone e chiave dal portachiavi]
     W --> L
 ```

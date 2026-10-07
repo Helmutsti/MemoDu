@@ -1,6 +1,6 @@
 # DEC-91 – Impostazioni sotto il cestino, con cinque sezioni
 
-**Data:** 2026-09-30 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-30 · **Stato:** Superata in parte da DEC-122 · **Idea di origine:** —
 
 ## Contesto
 SC-06 prevedeva le impostazioni dalla voce del menu `···`, in una pagina al posto della nota con quattro sezioni: Generale, Ricerca, Dispositivo e Account (progettata ma non attiva, DEC-13, DEC-19). Manuel Cucca vuole una riga Impostazioni sotto il cestino che apra la pagina come il cestino, e decidere insieme il menu.

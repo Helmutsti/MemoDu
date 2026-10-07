@@ -1,6 +1,6 @@
 # DEC-121 – Accesso con password e cifratura end-to-end
 
-**Data:** 2026-10-06 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-10-06 · **Stato:** Accettata; la riga Account di SC-06 superata da DEC-122 · **Idea di origine:** —
 
 ## Contesto
 Oggi il server autorizza i dispositivi con un gettone statico scritto nel file `credenziali` (DEC-79, DEC-104), non c'è login (DEC-13, SC-05 progettata e non attiva per DEC-19) e la sincronizzazione è in chiaro (DEC-78): chi ha accesso a Neon o al progetto su Vercel legge le note. Manuel Cucca vuole aggiungere al server l'accesso con login e la cifratura, per ora con un solo utente fisso e credenziali fisse, senza salvare gli utenti nel database. Ha scelto:

@@ -871,7 +871,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 **Tipo:** composto (usa CMP-01 e CMP-03) · **Usato in:** SC-05 · **Figma:** pagina Componenti composti, [Modulo di accesso](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=86-2910)
 
 **Scopo:** accedere con email e password per sincronizzare le note (DEC-121).
-**Quando usarlo:** in SC-05, aperta da «Accedi» nella sezione Sincronizzazione di SC-06 o dall'avviso dell'accesso scaduto (RB-87).
+**Quando usarlo:** in SC-05, aperta da «Accedi» nel box dell'account di SC-06 (DEC-122) o dall'avviso dell'accesso scaduto (RB-87).
 **Quando non usarlo:** per creare l'account (lo crea il comando del server, DEC-121) o per uscire («Esci» nella riga Account di SC-06, CMP-18).
 
 ### Varianti e dimensioni

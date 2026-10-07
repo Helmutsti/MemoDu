@@ -51,17 +51,17 @@ Come *utente* voglio accedere una volta con email e password per sincronizzare l
 - Dopo l'accesso si resta collegati: il gettone dura 30 giorni e l'app lo rinnova da sola (RB-86). Gettone e chiave dati stanno nel portachiavi del sistema.
 - Senza accesso, o con il gettone scaduto o rifiutato, Memodu si apre comunque sulla copia di lavoro e non si blocca mai: le modifiche aspettano e un avviso porta a SC-05 (RB-87). Senza rete si lavora come sempre (DEC-02). L'avvio resta istantaneo (RNF-01).
 - La password ha almeno 12 caratteri, senza regole di complessità, e non può essere una delle più comuni (RB-88).
-- «Esci» nella sezione Sincronizzazione delle impostazioni (SC-06) scollega il dispositivo; la copia di lavoro resta (RB-89).
+- «Esci» nel box dell'account delle impostazioni (SC-06, DEC-122) scollega il dispositivo; la copia di lavoro resta (RB-89).
 - Password persa: con la chiave di recupero stampata alla creazione dell'utente se ne sceglie una nuova senza perdere le note (RB-90, procedura nel runbook).
 - Nessun limite ai tentativi di accesso, per ora (rinvio in `avanzamento.md`).
 
 **Collegamenti:** FL-08 · EN-05 · EN-06 · SC-05 · SC-06 · RF-10 · RNF-02
 
 ### Scenario d'uso
-Creo l'utente sul server con il comando, stampo la chiave di recupero e la metto al sicuro. Apro Memodu sul PC Windows: le note della copia di lavoro ci sono subito; dalla sezione Sincronizzazione delle impostazioni accedo con email e password e le note si sincronizzano cifrate. Faccio lo stesso sul Mac. Per un mese non devo più accedere; se un computer resta spento più a lungo, alla riapertura scrivo come sempre e un avviso mi chiede di accedere di nuovo.
+Creo l'utente sul server con il comando, stampo la chiave di recupero e la metto al sicuro. Apro Memodu sul PC Windows: le note della copia di lavoro ci sono subito; dal box dell'account in cima alle impostazioni accedo con email e password e le note si sincronizzano cifrate. Faccio lo stesso sul Mac. Per un mese non devo più accedere; se un computer resta spento più a lungo, alla riapertura scrivo come sempre e un avviso mi chiede di accedere di nuovo.
 
 ### Criteri di accettazione
-Scritti dall'agente dai flussi, dalle regole e dai mockup (FL-08, RB-86 … RB-90, DEC-121), approvati da Manuel Cucca il 06/10/2026. Numerati dopo quelli superati.
+Scritti dall'agente dai flussi, dalle regole e dai mockup (FL-08, RB-86 … RB-90, DEC-121), approvati da Manuel Cucca il 06/10/2026. Numerati dopo quelli superati. Con DEC-122 la riga Account e la sezione Sincronizzazione diventano il box dell'account in cima a SC-06: CA-14.8, CA-14.9 e CA-14.14 si riscrivono in Fase 6, dopo i mockup nuovi.
 - **CA-14.7** *Dato* il comando che crea l'utente, *quando* gli do email e una password di almeno 12 caratteri che non sia tra le più comuni, *allora* stampa le righe delle variabili del server e, una volta sola, la chiave di recupero; con una password più corta o comune la rifiuta e dice perché. Password, prova e chiavi non finiscono mai nel registro (RB-88, RB-90).
 - **CA-14.8** *Dato* un dispositivo senza accesso, *quando* apro Memodu, *allora* la finestra si apre subito sulla copia di lavoro, senza sincronizzare e senza avvisi; nella sezione Sincronizzazione delle impostazioni la riga Account dice «Non hai fatto l'accesso» con Accedi (RB-87, DEC-84).
 - **CA-14.9** *Dato* SC-05 aperta da Accedi, *quando* inserisco email e password giuste e premo Accedi (o Invio), *allora* il pulsante va in caricamento, la finestra si chiude, la sincronizzazione parte e la riga Account mostra l'email con Esci (RB-86).

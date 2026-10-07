@@ -96,23 +96,23 @@ Sono al centro della finestra, con un velo sul resto. L'azione principale sta a 
 ---
 
 ## SC-06 – Impostazioni
-**Entità:** EN-07 · **Componenti:** riga di impostazione, campo di testo, pulsante
+**Entità:** EN-07, EN-05 · **Componenti:** riga di impostazione, campo di testo, pulsante; box dell'account e gruppo di righe in riquadro da disegnare (DEC-122)
 
 - **Wireframe:** [impostazioni, senza accesso](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-227) · [collegato](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=75-260) (sezione Sincronizzazione approvata da Manuel Cucca il 06/10/2026; nel wireframe manca la sezione Tema, che è nel mockup)
 - **Esportazioni:** `immagini/SC-06.png`, `immagini/SC-06-collegato.png`
 - **Mockup (DEC-91, approvati da Manuel Cucca il 30/09/2026):** [impostazioni](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=109-6661) · [scorciatoia già usata](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=109-6895); esportazioni `immagini/SC-06-mockup.png`, `immagini/SC-06-scorciatoia-usata-mockup.png`. Sezione Sincronizzazione con l'accesso (DEC-121, approvati da Manuel Cucca il 06/10/2026): [senza accesso](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=210-3778) · [collegato](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=210-3983); esportazioni `immagini/SC-06-senza-accesso-mockup.png`, `immagini/SC-06-collegato-mockup.png`. Testi dei gruppi e delle righe come nei componenti (CMP-18, CMP-28): da confermare in Fase 6. Il 30/09/2026 hanno la riga «Tieni Memodu in primo piano» in Generale, posizione da rivedere (DEC-93), ed esportati di nuovo. Sempre il 30/09/2026 hanno la sezione Ricerca (DEC-94, approvata da Manuel Cucca il 30/09/2026) e il campo di ricerca in cima alla colonna, ed esportati di nuovo.
 
-Si apre dalla riga **Impostazioni** in fondo alla colonna, sotto il Cestino, al posto della nota come il cestino (DEC-91). Una sola schermata con cinque sezioni, in quest'ordine:
+**Con DEC-122 (07/10/2026) la pagina cambia:** wireframe, mockup ed esportazioni qui sopra mostrano ancora le cinque sezioni di DEC-91 e si rifanno dopo i componenti nuovi in libreria.
 
-| Sezione | Contenuto |
+Si apre dalla riga **Impostazioni** in fondo alla colonna, sotto il Cestino, al posto della nota come il cestino (DEC-91). Una sola schermata: in cima il box dell'account, sotto due sezioni con il titolo marcato e le righe dentro un riquadro, separate da una linea sottile (DEC-122):
+
+| Parte | Contenuto |
 |---|---|
-| Generale | Scorciatoia della nota rapida: clic sul campo e si preme la combinazione nuova; se un altro programma la usa già lo si dice e resta la vecchia; «Ripristina» torna al default (separata per Windows e macOS e sincronizzata, RB-52). Avvia Memodu all'accensione: interruttore, spento di default, solo su questo dispositivo. Tieni Memodu in primo piano: interruttore, spento di default, solo su questo dispositivo; la finestra principale resta sopra gli altri programmi (DEC-93, posizione nella pagina da rivedere) |
-| Tema | Sistema · Chiaro · Scuro, di default Sistema; solo su questo dispositivo |
-| Sincronizzazione | Stato e ultima sincronizzazione riuscita, in sola lettura: «Sincronizzata alle 14:32», «Senza collegamento: le note restano su questo computer» (senza accesso, DEC-84), «Server non raggiungibile da…». Riga Account: senza accesso o con il gettone scaduto «Non hai fatto l'accesso» con Accedi, che apre SC-05 (senza accesso la riga dell'ultima sincronizzazione non c'è); dopo l'accesso l'email dell'utente con «Esci» (RB-87, RB-89, DEC-121; righe Stato e Account, con la variante Azione di CMP-18) |
+| Box dell'account | In cima, sotto il titolo, più in evidenza delle sezioni. **Senza accesso:** l'icona di un utente generico, «Non hai fatto l'accesso», sotto «Le note restano su questo computer.» e Accedi, che apre SC-05 (DEC-84, RB-87). **Dopo l'accesso:** un cerchio con l'iniziale dell'email, l'email, Esci (RB-89) e sotto lo stato con un pallino colorato: verde «Sincronizzata · oggi alle 14:32», ambra «Server non raggiungibile da…» (DEC-112), rosso «Accedi di nuovo per sincronizzare» con Accedi al posto di Esci (RB-87); la sincronizzazione in corso non ha un suo stato. Sotto, separato da una linea, il nome di questo dispositivo, di default il nome del computer (RB-51), solo dopo l'accesso (DEC-122) |
+| Generale | Scorciatoia della nota rapida: clic sul campo e si preme la combinazione nuova; se un altro programma la usa già lo si dice e resta la vecchia; «Ripristina» torna al default (separata per Windows e macOS e sincronizzata, RB-52). Avvia Memodu all'accensione: interruttore, spento di default, solo su questo dispositivo. Tieni Memodu in primo piano: interruttore, spento di default, solo su questo dispositivo; la finestra principale resta sopra gli altri programmi (DEC-93, resta qui per DEC-122). Tema: Sistema · Chiaro · Scuro, di default Sistema; solo su questo dispositivo |
 | Ricerca | «Mostra le note del cestino nei risultati»: interruttore, acceso di default, sincronizzato come la scorciatoia (RB-29, RB-52, DEC-94) |
-| Dispositivo | Nome di questo dispositivo, di default il nome del computer (RB-51) |
 
-La sezione Ricerca sta tra Sincronizzazione e Dispositivo (DEC-94). La sezione Account non c'è più (DEC-13, DEC-91): accesso e uscita stanno nella sezione Sincronizzazione (DEC-121).
+Le sezioni Sincronizzazione, Tema e Dispositivo non ci sono più (DEC-122): stato, account e nome del dispositivo stanno nel box dell'account, il tema in Generale.
 
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |
