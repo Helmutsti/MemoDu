@@ -1,4 +1,4 @@
-/* CMP-18 (DEC-100): larga quanto la pagina (560), 12 a sinistra, 16 tra testo e controllo; a
+/* CMP-18 (DEC-100): larga quanto il riquadro (CMP-31, CMP-32), 12 a sinistra, 16 tra testo e controllo; a
    destra finisce con il controllo e ha spazio-controllo-piccolo, senza controllo 12. */
 .riga-impostazione {
   display: flex;
@@ -47,10 +47,7 @@
   display: flex;
   align-items: flex-end;
   height: var(--misura-riga);
-  margin: var(--spazio-blocco) 0 0;
+  margin: 0;
   padding: 0 var(--spazio-controllo) var(--spazio-elemento);
   color: var(--testo-tenue);
-}
-.titolo-gruppo:first-child {
-  margin-top: 0;
 }

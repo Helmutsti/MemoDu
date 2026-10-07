@@ -1,0 +1,66 @@
+/* CMP-32 (DEC-122): il riquadro di CMP-31 con il bordo bordo-divisore, disegnato dentro senza
+   spostare il contenuto, come in Figma. Intestazione come una riga di CMP-18 che finisce con un controllo, ma
+   con spazio-controllo sopra e sotto: cerchio, testi e pulsante a spazio-blocco. */
+.box-account .riquadro-impostazioni {
+  box-shadow: inset 0 0 0 1px var(--bordo-divisore);
+}
+.box-account-intestazione {
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-blocco);
+  padding: var(--spazio-controllo) var(--spazio-controllo-piccolo) var(--spazio-controllo)
+    var(--spazio-controllo);
+}
+.box-account-iniziale {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-pieno);
+  color: var(--testo-su-pieno);
+}
+.box-account-iniziale-vuota {
+  background: var(--sfondo-campo);
+  color: var(--icona-tenue);
+}
+.box-account-testi {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spazio-elemento);
+  min-width: 0;
+}
+.box-account-titolo {
+  overflow: hidden;
+  color: var(--testo-primario);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.box-account-stato {
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-icona);
+  color: var(--testo-tenue);
+}
+/* Il pallino è solo visivo: lo stato si legge nel testo (DEC-14). */
+.box-account-pallino {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--raggio-pillola);
+}
+.box-account-pallino-attesa {
+  background: var(--icona-tenue);
+}
+.box-account-pallino-successo {
+  background: var(--icona-successo);
+}
+.box-account-pallino-avviso {
+  background: var(--icona-avviso);
+}
+.box-account-pallino-errore {
+  background: var(--icona-errore);
+}

@@ -1,5 +1,6 @@
-/* SC-06 Impostazioni: il titolo e i gruppi di righe (CMP-18), larghi 560, alla stessa altezza
-   del cestino (SC-04). Scorre con la barra di CMP-25 (DEC-89). */
+/* SC-06 Impostazioni: il titolo, il box dell'account (CMP-32) e i gruppi in riquadri (CMP-31),
+   larghi 560 e a spazio-gruppo tra loro (DEC-122), alla stessa altezza del cestino (SC-04).
+   Scorre con la barra di CMP-25 (DEC-89). */
 .impostazioni {
   display: flex;
   flex-direction: column;
@@ -9,6 +10,7 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  gap: var(--spazio-gruppo);
   padding: 80px var(--spazio-gruppo);
 }
 .impostazioni-corpo > * {
@@ -19,7 +21,7 @@
 }
 .impostazioni-titolo {
   margin-top: 0;
-  margin-bottom: var(--spazio-blocco);
+  margin-bottom: 0;
   color: var(--testo-primario);
 }
 

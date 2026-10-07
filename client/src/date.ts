@@ -15,6 +15,12 @@ export function quando(istante: string, adesso = new Date()): string {
   return stessoGiorno(d, adesso) ? `oggi alle ${ora(d)}` : `il ${giorno(d)} alle ${ora(d)}`;
 }
 
+/** «14:32» oggi, «05/10/2026 14:32» gli altri giorni: l'ultimo backup nel box dell'account (DEC-122). */
+export function orario(istante: string, adesso = new Date()): string {
+  const d = new Date(istante);
+  return stessoGiorno(d, adesso) ? ora(d) : `${giorno(d)} ${ora(d)}`;
+}
+
 /** Riga sotto il titolo e nei Dettagli: «Modificata oggi alle 11:42» (CA-04.1). */
 export const testoModificata = (istante: string, adesso = new Date()) =>
   `Modificata ${quando(istante, adesso)}`;

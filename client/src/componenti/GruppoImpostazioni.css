@@ -1,0 +1,25 @@
+/* CMP-31 (DEC-122): intestazione con spazio-elenco ai lati come il riquadro, così il titolo parte
+   a 20 come i testi delle righe; riquadro di ruolo elenco su sfondo-colonna. */
+.gruppo-impostazioni {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spazio-icona);
+}
+.gruppo-impostazioni-intestazione {
+  padding: 0 var(--spazio-elenco);
+}
+.riquadro-impostazioni {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spazio-elemento);
+  padding: var(--spazio-elenco);
+  border-radius: var(--raggio-contenitore);
+  background: var(--sfondo-colonna);
+}
+.divisore-impostazioni {
+  flex-shrink: 0;
+  height: 1px;
+  margin: 0;
+  border: none;
+  background: var(--bordo-divisore-tenue);
+}

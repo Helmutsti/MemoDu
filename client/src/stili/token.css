@@ -24,6 +24,8 @@
   --ambra-400: #de8f0f;
   --ambra-500: #915c02;
   --ambra-800: #3e2501;
+  --verde-400: #58bc72;
+  --verde-500: #047f39;
   --blu-50: #eef5fe;
   --blu-400: #5ea5ff;
   --blu-500: #1468c2;
@@ -55,6 +57,7 @@
   --icona-errore: var(--rosso-500);
   --sfondo-avviso: var(--ambra-50);
   --icona-avviso: var(--ambra-500);
+  --icona-successo: var(--verde-500);
   --sfondo-informazione: var(--blu-50);
   --icona-informazione: var(--blu-500);
 
@@ -132,6 +135,7 @@
     --icona-errore: var(--rosso-400);
     --sfondo-avviso: var(--ambra-800);
     --icona-avviso: var(--ambra-400);
+    --icona-successo: var(--verde-400);
     --sfondo-informazione: var(--blu-800);
     --icona-informazione: var(--blu-400);
   }

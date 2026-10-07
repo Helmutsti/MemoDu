@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { leggiGiorno, scriviGiorno, testoCreata, testoModificata } from "./date";
+import { leggiGiorno, orario, scriviGiorno, testoCreata, testoModificata } from "./date";
 
 const locale = (a: number, m: number, g: number, h: number, min: number) =>
   new Date(a, m - 1, g, h, min).toISOString();
@@ -15,6 +15,12 @@ describe("date nei testi (CA-04.1, RB-21)", () => {
 
   it("scrive la data di creazione di sistema", () => {
     expect(testoCreata(locale(2026, 9, 12, 10, 14))).toBe("Creata il 12/09/2026 alle 10:14");
+  });
+
+  it("scrive l'ora dell'ultimo backup, con il giorno se non è oggi (DEC-122)", () => {
+    const adesso = new Date(2026, 9, 7, 18, 0);
+    expect(orario(locale(2026, 10, 7, 9, 5), adesso)).toBe("09:05");
+    expect(orario(locale(2026, 10, 5, 14, 32), adesso)).toBe("05/10/2026 14:32");
   });
 
   it("legge e scrive i giorni del calendario", () => {

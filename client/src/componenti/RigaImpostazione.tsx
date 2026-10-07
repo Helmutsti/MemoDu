@@ -1,6 +1,6 @@
 // CMP-18 Riga di impostazione: etichetta e descrizione a sinistra, il controllo a destra. Il
 // cambio vale subito, senza Salva (RB-06). Con l'interruttore tutta la riga è l'interruttore;
-// con gli altri controlli si attiva solo il controllo. I titoli di gruppo separano le sezioni.
+// con gli altri controlli si attiva solo il controllo. Le righe stanno nei riquadri di CMP-31 e CMP-32.
 
 import { useId, type ReactElement, type ReactNode } from "react";
 import { Interruttore } from "./Interruttore";
@@ -65,6 +65,11 @@ export function RigaInterruttore({
   );
 }
 
-export function TitoloGruppo({ children }: { children: ReactNode }): ReactElement {
-  return <h2 className="titolo-gruppo interfaccia-titolo-gruppo">{children}</h2>;
+/** Marcato come i titoli di sezione della colonna (DEC-122). */
+export function TitoloGruppo({ children, id }: { children: ReactNode; id?: string }): ReactElement {
+  return (
+    <h2 id={id} className="titolo-gruppo interfaccia-titolo-sezione">
+      {children}
+    </h2>
+  );
 }

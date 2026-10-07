@@ -29,7 +29,7 @@ Deduzioni dell'agente, confermate da Manuel Cucca il 07/10/2026 con l'accettazio
 - In Generale l'ordine è: scorciatoia, avvio all'accensione, primo piano, tema. La posizione di «Tieni Memodu in primo piano» era da rivedere (DEC-93): resta in Generale.
 - Misure, colori del riquadro e del box, dimensione del cerchio e del pallino si decidono nella libreria (Fase 5), con i token che ci sono (`successo`, `avviso`, `errore`).
 
-Scelta di Manuel Cucca del 07/10/2026, dopo i mockup, per gli stati che i mockup non mostravano: pallino grigio (`icona-tenue`) «In attesa della prima sincronizzazione»; ambra anche «Non riuscita: riprovo da sola»; rosso anche «Memodu e il server hanno versioni diverse»; il server irraggiungibile dice da quanto tempo, «Server non raggiungibile da 2 ore», come nel mockup.
+Scelta di Manuel Cucca del 07/10/2026, dopo i mockup, per gli stati che i mockup non mostravano: pallino grigio (`icona-tenue`) «In attesa della prima sincronizzazione»; ambra anche «Non riuscita: riprovo da sola»; rosso anche «Memodu e il server hanno versioni diverse»; il server irraggiungibile dice l'ora dell'ultima sincronizzazione riuscita: «Server non raggiungibile: ultimo backup 14:32» (scelta di Manuel Cucca del 07/10/2026 durante il codice, al posto di «da 2 ore» del mockup; con la data davanti se non è di oggi).
 
 ## Conseguenze
 - Cambia SC-06 (interfaccia, `4-schermate.md`) e la sezione Sincronizzazione di SC-06 nel modulo sincronizzazione; cambiano i criteri di RF-14 sulla riga Account (CA-14.7 e seguenti) e il testo dello stato della sincronizzazione.

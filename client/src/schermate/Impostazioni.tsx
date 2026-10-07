@@ -1,6 +1,8 @@
 // SC-06 Impostazioni (DEC-91): dalla riga sotto il Cestino, al posto della nota come il cestino.
-// Generale (scorciatoia della nota rapida, avvio all'accensione), Tema, Sincronizzazione (stato,
-// ultima sincronizzazione e la riga Account con Accedi o Esci, DEC-121), Ricerca (note del cestino nei risultati, DEC-94) e Dispositivo. Ogni cambio vale subito, senza Salva (RB-06). Testi in 4-schermate.md.
+// In cima il box dell'account (CMP-32: accesso, stato della sincronizzazione, nome del
+// dispositivo), poi i gruppi in riquadri (CMP-31): Generale (scorciatoia della nota rapida, avvio
+// all'accensione, primo piano, tema) e Ricerca (note del cestino nei risultati, DEC-94) (DEC-122).
+// Ogni cambio vale subito, senza Salva (RB-06). Testi in 4-schermate.md.
 
 import { CircleAlert } from "lucide-react";
 import { useCallback, useEffect, useId, useState, type ReactElement } from "react";
@@ -12,12 +14,13 @@ import {
   type StatoSincronizzazione,
   type Tema,
 } from "../api";
-import { quando } from "../date";
 import { alCambioDelloStatoSinc } from "../finestra";
 import { Icona } from "../componenti/Icona";
 import { AreaScorrevole } from "../componenti/AreaScorrevole";
+import { BoxAccount } from "../componenti/BoxAccount";
+import { GruppoImpostazioni } from "../componenti/GruppoImpostazioni";
 import { Pulsante } from "../componenti/Pulsante";
-import { RigaImpostazione, RigaInterruttore, TitoloGruppo } from "../componenti/RigaImpostazione";
+import { RigaImpostazione, RigaInterruttore } from "../componenti/RigaImpostazione";
 import { SceltaSegmenti } from "../componenti/SceltaSegmenti";
 import { daTasto, scriviScorciatoia, type Sistema } from "../scorciatoia";
 import "./Impostazioni.css";
@@ -35,29 +38,10 @@ const TESTO_NON_VALIDA =
 interface Proprieta {
   /** Esegue un comando: se non riesce, l'avviso o SC-07 come nel resto della finestra. */
   esegui: <T>(chiamata: () => Promise<T>) => Promise<T | undefined>;
-  /** Accedi nella riga Account: apre SC-05, con l'email che c'era. */
+  /** Accedi nel box dell'account: apre SC-05, con l'email che c'era. */
   onAccedi: (email?: string) => void;
   /** Cambia dopo un accesso o un'uscita: la pagina si rilegge. */
   versioneAccesso?: number;
-}
-
-const maiuscola = (testo: string) => testo.charAt(0).toUpperCase() + testo.slice(1);
-
-/** Riga Stato della sincronizzazione (SC-06). */
-function testoStato(s: StatoSincronizzazione): string {
-  if (!s.collegata) return "Senza collegamento: le note restano su questo computer";
-  switch (s.problema) {
-    case "rete":
-      return "Server non raggiungibile: le modifiche restano su questo computer";
-    case "rifiutate":
-      return "Accedi di nuovo per sincronizzare";
-    case "protocollo":
-      return "Memodu e il server hanno versioni diverse";
-    case "errore":
-      return "Non riuscita: riprovo da sola";
-    default:
-      return s.ultimaRiuscita ? "Sincronizzata" : "In attesa della prima sincronizzazione";
-  }
 }
 
 /** Il campo della scorciatoia: cliccato, aspetta la combinazione nuova; Esc lo lascia. */
@@ -215,124 +199,102 @@ export function Impostazioni({
             Impostazioni
           </h1>
 
-          <TitoloGruppo>Generale</TitoloGruppo>
-          <RigaImpostazione
-            id={idScorciatoia}
-            etichetta="Scorciatoia della nota rapida"
-            descrizione={`Su ${sistema === "macos" ? "macOS" : "Windows"}. Clicca il campo e premi la combinazione nuova.`}
-          >
-            <CampoScorciatoia
-              valore={valori.scorciatoia}
-              sistema={sistema}
-              errore={erroreScorciatoia}
-              idEtichetta={idScorciatoia}
-              onCombinazione={(c) => void cambiaScorciatoia(c)}
-              onNonValida={() => setErroreScorciatoia(TESTO_NON_VALIDA)}
-            />
-            <Pulsante
-              tipo="tenue"
-              disabled={valori.scorciatoiaPredefinita}
-              onClick={() => void cambiaScorciatoia(null)}
-            >
-              Ripristina
-            </Pulsante>
-          </RigaImpostazione>
-          <RigaInterruttore
-            etichetta="Avvia Memodu all'accensione"
-            descrizione="Memodu parte in background e la nota rapida è subito pronta. Solo su questo dispositivo."
-            acceso={valori.avvioAutomatico}
-            onCambia={(attivo) =>
-              void cambia(() => api.cambiaAvvio(attivo), { avvioAutomatico: attivo })
+          <BoxAccount
+            email={stato.collegata ? accesso.email : null}
+            stato={stato}
+            uscendo={uscendo}
+            onAccedi={() => onAccedi(accesso.email ?? undefined)}
+            onEsci={() =>
+              void (async () => {
+                setUscendo(true);
+                await esegui(() => api.esci());
+                setUscendo(false);
+                await rileggi();
+              })()
             }
-          />
-          {/* DEC-93: in Generale per ora; la posizione è da rivedere. */}
-          <RigaInterruttore
-            etichetta="Tieni Memodu in primo piano"
-            descrizione="La finestra resta sopra gli altri programmi. Solo su questo dispositivo."
-            acceso={valori.inPrimoPiano}
-            onCambia={(attivo) =>
-              void cambia(() => api.cambiaPrimoPiano(attivo), { inPrimoPiano: attivo })
-            }
-          />
-
-          <TitoloGruppo>Tema</TitoloGruppo>
-          <RigaImpostazione
-            etichetta="Tema"
-            descrizione="Chiaro o scuro, oppure come il sistema. Solo su questo dispositivo."
           >
-            <SceltaSegmenti
-              nome="Tema"
-              opzioni={TEMI}
-              valore={valori.tema}
-              onScegli={(tema) => void cambia(() => api.cambiaTema(tema), { tema })}
-            />
-          </RigaImpostazione>
-
-          <TitoloGruppo>Sincronizzazione</TitoloGruppo>
-          <RigaImpostazione etichetta="Stato" descrizione={testoStato(stato)} />
-          {stato.collegata && stato.ultimaRiuscita && (
             <RigaImpostazione
-              etichetta="Ultima sincronizzazione"
-              descrizione={maiuscola(quando(stato.ultimaRiuscita))}
-            />
-          )}
-          {/* Riga Account (CMP-18 Azione, RB-87, RB-89): con l'accesso scaduto si torna ad Accedi. */}
-          {stato.collegata && accesso.email && stato.problema !== "rifiutate" ? (
-            <RigaImpostazione etichetta="Account" descrizione={accesso.email}>
-              <Pulsante
-                tipo="secondario"
-                inCorso={uscendo}
-                onClick={() =>
+              id={idNome}
+              etichetta="Nome del dispositivo"
+              descrizione="Così lo riconosci tra i tuoi dispositivi."
+            >
+              <CampoNome
+                key={valori.nomeDispositivo}
+                valore={valori.nomeDispositivo}
+                idEtichetta={idNome}
+                onCambia={(nome) =>
                   void (async () => {
-                    setUscendo(true);
-                    await esegui(() => api.esci());
-                    setUscendo(false);
-                    await rileggi();
+                    const valido = await esegui(() => api.cambiaNomeDispositivo(nome));
+                    setValori((v) =>
+                      v ? { ...v, nomeDispositivo: valido ?? v.nomeDispositivo } : v,
+                    );
                   })()
                 }
+              />
+            </RigaImpostazione>
+          </BoxAccount>
+
+          <GruppoImpostazioni titolo="Generale">
+            <RigaImpostazione
+              id={idScorciatoia}
+              etichetta="Scorciatoia della nota rapida"
+              descrizione={`Su ${sistema === "macos" ? "macOS" : "Windows"}. Clicca il campo e premi la combinazione nuova.`}
+            >
+              <CampoScorciatoia
+                valore={valori.scorciatoia}
+                sistema={sistema}
+                errore={erroreScorciatoia}
+                idEtichetta={idScorciatoia}
+                onCombinazione={(c) => void cambiaScorciatoia(c)}
+                onNonValida={() => setErroreScorciatoia(TESTO_NON_VALIDA)}
+              />
+              <Pulsante
+                tipo="tenue"
+                disabled={valori.scorciatoiaPredefinita}
+                onClick={() => void cambiaScorciatoia(null)}
               >
-                Esci
+                Ripristina
               </Pulsante>
             </RigaImpostazione>
-          ) : (
-            <RigaImpostazione etichetta="Account" descrizione="Non hai fatto l'accesso">
-              <Pulsante tipo="secondario" onClick={() => onAccedi(accesso.email ?? undefined)}>
-                Accedi
-              </Pulsante>
-            </RigaImpostazione>
-          )}
-
-          {/* DEC-94: tra Sincronizzazione e Dispositivo. */}
-          <TitoloGruppo>Ricerca</TitoloGruppo>
-          <RigaInterruttore
-            etichetta="Mostra le note del cestino nei risultati"
-            descrizione="Compaiono attenuate, con l’etichetta «nel cestino». Vale su tutti i dispositivi."
-            acceso={valori.cestinoInRicerca}
-            onCambia={(attivo) =>
-              void cambia(() => api.cambiaCestinoInRicerca(attivo), { cestinoInRicerca: attivo })
-            }
-          />
-
-          <TitoloGruppo>Dispositivo</TitoloGruppo>
-          <RigaImpostazione
-            id={idNome}
-            etichetta="Nome del dispositivo"
-            descrizione="Così lo riconosci tra i tuoi dispositivi."
-          >
-            <CampoNome
-              key={valori.nomeDispositivo}
-              valore={valori.nomeDispositivo}
-              idEtichetta={idNome}
-              onCambia={(nome) =>
-                void (async () => {
-                  const valido = await esegui(() => api.cambiaNomeDispositivo(nome));
-                  setValori((v) =>
-                    v ? { ...v, nomeDispositivo: valido ?? v.nomeDispositivo } : v,
-                  );
-                })()
+            <RigaInterruttore
+              etichetta="Avvia Memodu all'accensione"
+              descrizione="Memodu parte in background e la nota rapida è subito pronta. Solo su questo dispositivo."
+              acceso={valori.avvioAutomatico}
+              onCambia={(attivo) =>
+                void cambia(() => api.cambiaAvvio(attivo), { avvioAutomatico: attivo })
               }
             />
-          </RigaImpostazione>
+            <RigaInterruttore
+              etichetta="Tieni Memodu in primo piano"
+              descrizione="La finestra resta sopra gli altri programmi. Solo su questo dispositivo."
+              acceso={valori.inPrimoPiano}
+              onCambia={(attivo) =>
+                void cambia(() => api.cambiaPrimoPiano(attivo), { inPrimoPiano: attivo })
+              }
+            />
+            <RigaImpostazione
+              etichetta="Tema"
+              descrizione="Chiaro o scuro, oppure come il sistema. Solo su questo dispositivo."
+            >
+              <SceltaSegmenti
+                nome="Tema"
+                opzioni={TEMI}
+                valore={valori.tema}
+                onScegli={(tema) => void cambia(() => api.cambiaTema(tema), { tema })}
+              />
+            </RigaImpostazione>
+          </GruppoImpostazioni>
+
+          <GruppoImpostazioni titolo="Ricerca">
+            <RigaInterruttore
+              etichetta="Mostra le note del cestino nei risultati"
+              descrizione="Compaiono attenuate, con l’etichetta «nel cestino». Vale su tutti i dispositivi."
+              acceso={valori.cestinoInRicerca}
+              onCambia={(attivo) =>
+                void cambia(() => api.cambiaCestinoInRicerca(attivo), { cestinoInRicerca: attivo })
+              }
+            />
+          </GruppoImpostazioni>
         </div>
       </AreaScorrevole>
     </section>

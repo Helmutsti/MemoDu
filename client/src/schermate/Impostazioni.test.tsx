@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { api, ErroreApi, type Impostazioni as Valori, type StatoSincronizzazione } from "../api";
@@ -60,17 +60,18 @@ beforeEach(() => {
   vi.mocked(api.esci).mockResolvedValue(undefined);
 });
 
-describe("SC-06 Impostazioni (DEC-91)", () => {
-  it("mostra i cinque gruppi con i valori attuali", async () => {
+describe("SC-06 Impostazioni (DEC-91, DEC-122)", () => {
+  it("mostra il box dell'account e i gruppi Generale e Ricerca con i valori attuali", async () => {
     render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
     await screen.findByRole("heading", { name: "Impostazioni" });
+    expect(screen.getByRole("region", { name: "Account" })).toBeInTheDocument();
     expect(screen.getAllByRole("heading", { level: 2 }).map((t) => t.textContent)).toEqual([
       "Generale",
-      "Tema",
-      "Sincronizzazione",
       "Ricerca",
-      "Dispositivo",
     ]);
+    expect(screen.getByRole("region", { name: "Generale" })).toContainElement(
+      screen.getByRole("radio", { name: "Sistema" }),
+    );
     expect(screen.getByRole("textbox", { name: "Scorciatoia della nota rapida" })).toHaveValue(
       "Ctrl + Alt + N",
     );
@@ -80,8 +81,7 @@ describe("SC-06 Impostazioni (DEC-91)", () => {
       "false",
     );
     expect(screen.getByRole("radio", { name: "Sistema" })).toHaveAttribute("aria-checked", "true");
-    expect(screen.getByText("Sincronizzata")).toBeInTheDocument();
-    expect(screen.getByText(/^Oggi alle/)).toBeInTheDocument();
+    expect(screen.getByText(/^Sincronizzata · oggi alle \d\d:\d\d$/)).toBeInTheDocument();
     expect(screen.getByRole("textbox", { name: "Nome del dispositivo" })).toHaveValue(
       "Portatile di lavoro",
     );
@@ -177,45 +177,78 @@ describe("SC-06 Impostazioni (DEC-91)", () => {
     );
   });
 
-  it("senza credenziali dice che si lavora in locale", async () => {
-    vi.mocked(api.statoSincronizzazione).mockResolvedValue(
-      stato({ collegata: false, ultimaRiuscita: null }),
-    );
-    render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
-    expect(
-      await screen.findByText("Senza collegamento: le note restano su questo computer"),
-    ).toBeInTheDocument();
-    expect(screen.queryByText("Ultima sincronizzazione")).not.toBeInTheDocument();
-  });
-
-  it("senza accesso la riga Account dice «Non hai fatto l'accesso» e Accedi apre SC-05 (CA-14.8)", async () => {
+  it("senza accesso il box invita ad accedere, senza il nome del dispositivo; Accedi apre SC-05 (CA-14.18)", async () => {
     vi.mocked(api.statoSincronizzazione).mockResolvedValue(
       stato({ collegata: false, ultimaRiuscita: null }),
     );
     vi.mocked(api.statoAccesso).mockResolvedValue({ email: null });
     render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
-    expect(await screen.findByText("Non hai fatto l'accesso")).toBeInTheDocument();
-    await userEvent.click(screen.getByRole("button", { name: "Accedi" }));
+    const box = await screen.findByRole("region", { name: "Account" });
+    expect(within(box).getByText("Non hai fatto l'accesso")).toBeInTheDocument();
+    expect(within(box).getByText("Le note restano su questo computer.")).toBeInTheDocument();
+    expect(screen.queryByRole("textbox", { name: "Nome del dispositivo" })).not.toBeInTheDocument();
+    await userEvent.click(within(box).getByRole("button", { name: "Accedi" }));
     expect(accedi).toHaveBeenCalledWith(undefined);
   });
 
-  it("collegato mostra l'email con Esci, che scollega e rilegge (CA-14.14)", async () => {
+  it("collegato mostra iniziale, email, stato e nome del dispositivo; Esci scollega e rilegge (CA-14.19, CA-14.20)", async () => {
     render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
-    expect(await screen.findByText("manuel@esempio.it")).toBeInTheDocument();
+    const box = await screen.findByRole("region", { name: "Account" });
+    expect(within(box).getByText("M")).toBeInTheDocument();
+    expect(within(box).getByText("manuel@esempio.it")).toBeInTheDocument();
+    expect(within(box).getByRole("textbox", { name: "Nome del dispositivo" })).toBeInTheDocument();
     vi.mocked(api.statoSincronizzazione).mockResolvedValue(
       stato({ collegata: false, ultimaRiuscita: null }),
     );
     vi.mocked(api.statoAccesso).mockResolvedValue({ email: null });
-    await userEvent.click(screen.getByRole("button", { name: "Esci" }));
+    await userEvent.click(within(box).getByRole("button", { name: "Esci" }));
     expect(api.esci).toHaveBeenCalled();
     expect(await screen.findByText("Non hai fatto l'accesso")).toBeInTheDocument();
+    expect(screen.queryByRole("textbox", { name: "Nome del dispositivo" })).not.toBeInTheDocument();
   });
 
-  it("con l'accesso scaduto la riga torna ad Accedi, con l'email di prima (RB-87)", async () => {
+  it("subito dopo l'accesso il pallino grigio aspetta la prima sincronizzazione (CA-14.19)", async () => {
+    vi.mocked(api.statoSincronizzazione).mockResolvedValue(stato({ ultimaRiuscita: null }));
+    render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
+    const testo = await screen.findByText("In attesa della prima sincronizzazione");
+    expect(testo.querySelector(".box-account-pallino-attesa")).not.toBeNull();
+  });
+
+  it("con il server irraggiungibile il pallino ambra dice l'ora dell'ultimo backup ed Esci resta (CA-14.21)", async () => {
+    const ultima = new Date();
+    ultima.setHours(9, 5, 0, 0);
+    vi.mocked(api.statoSincronizzazione).mockResolvedValue(
+      stato({ problema: "rete", ultimaRiuscita: ultima.toISOString() }),
+    );
+    render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
+    const testo = await screen.findByText("Server non raggiungibile: ultimo backup 09:05");
+    expect(testo.querySelector(".box-account-pallino-avviso")).not.toBeNull();
+    expect(screen.getByRole("button", { name: "Esci" })).toBeInTheDocument();
+  });
+
+  it("con un errore del server il pallino ambra dice che riprova da sola (CA-14.21)", async () => {
+    vi.mocked(api.statoSincronizzazione).mockResolvedValue(stato({ problema: "errore" }));
+    render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
+    const testo = await screen.findByText("Non riuscita: riprovo da sola");
+    expect(testo.querySelector(".box-account-pallino-avviso")).not.toBeNull();
+  });
+
+  it("con l'accesso scaduto il pallino rosso e Accedi al posto di Esci, con l'email di prima (CA-14.22)", async () => {
     vi.mocked(api.statoSincronizzazione).mockResolvedValue(stato({ problema: "rifiutate" }));
     render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
-    expect(await screen.findByText("Accedi di nuovo per sincronizzare")).toBeInTheDocument();
+    const testo = await screen.findByText("Accedi di nuovo per sincronizzare");
+    expect(testo.querySelector(".box-account-pallino-errore")).not.toBeNull();
+    expect(screen.getByText("manuel@esempio.it")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Esci" })).not.toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Accedi" }));
     expect(accedi).toHaveBeenCalledWith("manuel@esempio.it");
+  });
+
+  it("con versioni diverse il pallino rosso ed Esci resta (CA-14.22)", async () => {
+    vi.mocked(api.statoSincronizzazione).mockResolvedValue(stato({ problema: "protocollo" }));
+    render(<Impostazioni esegui={esegui} onAccedi={accedi} />);
+    const testo = await screen.findByText("Memodu e il server hanno versioni diverse");
+    expect(testo.querySelector(".box-account-pallino-errore")).not.toBeNull();
+    expect(screen.getByRole("button", { name: "Esci" })).toBeInTheDocument();
   });
 });
