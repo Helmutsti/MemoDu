@@ -26,6 +26,13 @@ button {
   color: inherit;
 }
 
+/* WebView2 (Edge) aggiunge ai campi l'occhio per la password e la ✕ per svuotare: i campi
+   hanno già i loro controlli della libreria (CMP-03), così non ne compaiono due. */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
 :focus {
   outline: none;
 }
