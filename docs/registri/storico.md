@@ -469,3 +469,4 @@
 | 07/10/2026 | Agente IA | Codice di SC-06 per DEC-122: CMP-31 (`GruppoImpostazioni`) e CMP-32 (`BoxAccount`), titolo di gruppo marcato, token `icona-successo`, icona a 20; testo del server irraggiungibile cambiato da Manuel Cucca in «Server non raggiungibile: ultimo backup 14:32»; TC-141 e TC-142 superati nell'app di sviluppo | DEC-122 |
 | 07/10/2026 | Manuel Cucca | Clic sul nome di un file di Locale: una comparsa come Info con il nome, Chiudi file e, per un file aggiunto da solo, Togli da Locale | DEC-123 |
 | 07/10/2026 | Manuel Cucca | Libreria approvata per DEC-123: Info del file in CMP-24 (campo del nome, Chiudi file e, per un file aggiunto da solo, Togli da Locale; variante Solo Chiudi) e icona togli da locale (`folder-minus`) in CMP-02 | DEC-123 |
+| 07/10/2026 | Manuel Cucca | Mockup della comparsa del file approvati per DEC-123: file in una cartella (solo Chiudi file) e file aggiunto da solo (con Togli da Locale), esportati | DEC-123 |
