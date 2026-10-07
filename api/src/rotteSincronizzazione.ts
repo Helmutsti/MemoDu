@@ -2,8 +2,7 @@
 // porta il gettone nell'intestazione Authorization e la versione del protocollo in
 // Memodu-Protocollo: senza gettone valido 401 (il client tiene le modifiche e mostra l'avviso
 // dell'accesso scaduto, RB-87), con un protocollo diverso 426 (avviso di errore, DEC-83).
-// Valgono il JWT dell'accesso (DEC-121) e, finché c'è MEMODU_IMPRONTA, il gettone statico
-// delle app che non hanno ancora l'accesso (scelta di Manuel Cucca del 06/10/2026).
+// Vale solo il JWT dell'accesso (DEC-121): il gettone statico delle app senza accesso non c'è più.
 
 import type { FastifyInstance } from "fastify";
 import { ArchivioSincronizzazione, PROTOCOLLO, VersioneSuperata } from "./sincronizzazione.js";
@@ -17,7 +16,7 @@ const schemaId = {
 export function rotteSincronizzazione(
   server: FastifyInstance,
   sinc: ArchivioSincronizzazione,
-  autorizza: (gettone: string | undefined) => boolean = (g) => sinc.autorizzato(g),
+  autorizza: (gettone: string | undefined) => boolean,
 ): void {
   server.register(async (rami) => {
     rami.addHook("onRequest", async (richiesta, risposta) => {

@@ -6,7 +6,6 @@
 /** In locale l'API ascolta solo sulla macchina stessa (architettura/api.md). */
 export const HOST_API = "127.0.0.1";
 export const PORTA_API = 4317;
-export const INDIRIZZO_API = `http://${HOST_API}:${PORTA_API}`;
 
 /**
  * Limite di una richiesta al server: Vercel non accetta più di 4,5 MB per richiesta e per

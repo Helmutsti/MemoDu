@@ -37,15 +37,14 @@ const entro = <T>(lavoro: Promise<T>, ms: number): Promise<T> =>
 
 /**
  * Aggiunge al server la gestione degli errori, i controlli e le rotte. `preparazione` è lo
- * schema dell'archivio: le richieste della sincronizzazione lo aspettano, `/vivo` no. Senza
- * `accesso` (nessun utente fisso configurato) le richieste /accesso non ci sono e vale solo il
- * gettone statico.
+ * schema dell'archivio: le richieste della sincronizzazione lo aspettano, `/vivo` no. Le
+ * richieste della sincronizzazione valgono solo con il JWT di `accesso` (DEC-121).
  */
 export function configuraServer(
   server: FastifyInstance,
   sincronizzazione: ArchivioSincronizzazione,
+  accesso: Accesso,
   preparazione: () => Promise<void> = () => Promise.resolve(),
-  accesso?: Accesso,
 ): FastifyInstance {
   server.setErrorHandler<{ statusCode?: number }>((errore, richiesta, risposta) => {
     const codice = errore.statusCode ?? 500;
@@ -75,19 +74,15 @@ export function configuraServer(
         .send({ stato: "archivio non raggiungibile", motivo: motivo(errore) });
     }
   });
-  if (accesso) rotteAccesso(server, accesso);
-  rotteSincronizzazione(
-    server,
-    sincronizzazione,
-    (g) => (accesso?.autorizzato(g) ?? false) || sincronizzazione.autorizzato(g),
-  );
+  rotteAccesso(server, accesso);
+  rotteSincronizzazione(server, sincronizzazione, (g) => accesso.autorizzato(g));
   return server;
 }
 
 /** Per le prove: un server senza registro. */
 export function creaServer(
   sincronizzazione: ArchivioSincronizzazione,
-  accesso?: Accesso,
+  accesso: Accesso,
 ): FastifyInstance {
-  return configuraServer(Fastify(opzioniServer()), sincronizzazione, undefined, accesso);
+  return configuraServer(Fastify(opzioniServer()), sincronizzazione, accesso);
 }

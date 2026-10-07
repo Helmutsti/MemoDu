@@ -1,9 +1,8 @@
 // Deposito della sincronizzazione (RF-10, DEC-75 … DEC-83). Il server non legge i blocchi:
 // conserva per ogni elemento la versione attuale e le precedenti in PostgreSQL (DEC-105), con
 // numero d'ordine, ora e dimensione. Le versioni precedenti si sfoltiscono a scalare per 7
-// giorni (DEC-77, DEC-113). Il server conosce solo l'impronta del gettone (DEC-79).
+// giorni (DEC-77, DEC-113). Chi può leggere e scrivere lo decide l'accesso (DEC-121).
 
-import { createHash, timingSafeEqual } from "node:crypto";
 import { LIMITE_PAGINA_BYTE } from "./costanti.js";
 import type { Database, Sql } from "./database.js";
 
@@ -45,25 +44,11 @@ export function inChiaro(dati: string): boolean {
   }
 }
 
-export const impronta = (gettone: string) => createHash("sha256").update(gettone).digest("hex");
-
 export class ArchivioSincronizzazione {
-  /**
-   * @param impronta l'impronta SHA-256 del gettone dell'installazione, in esadecimale.
-   */
   constructor(
     private readonly db: Database,
-    private readonly impronta: string,
     private readonly adesso: () => Date = () => new Date(),
   ) {}
-
-  /** Il gettone è quello dell'installazione? Il confronto non rivela dove differisce. */
-  autorizzato(gettone: string | undefined): boolean {
-    if (!gettone || !/^[0-9a-f]{64}$/.test(this.impronta)) return false;
-    const a = Buffer.from(impronta(gettone), "hex");
-    const b = Buffer.from(this.impronta, "hex");
-    return a.length === b.length && timingSafeEqual(a, b);
-  }
 
   /** L'archivio risponde: per il controllo di salute. */
   async pronto(): Promise<boolean> {

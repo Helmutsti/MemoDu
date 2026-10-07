@@ -473,3 +473,4 @@
 | 07/10/2026 | Manuel Cucca | Criteri CA-17.20 … CA-17.24 e prove TC-146 … TC-149 approvati per la comparsa del file di Locale | DEC-123 |
 | 07/10/2026 | Agente IA | Codice della comparsa del file di Locale (`InfoFile`): rinomina, Chiudi file e Togli da Locale; TC-146 e TC-148 superati e TC-147 in parte nell'app di sviluppo | DEC-123 |
 | 07/10/2026 | Agente IA | Prove con due app di sviluppo in parallelo contro l'API in locale: TC-143, TC-144, TC-145, TC-147 e TC-149 superati; TC-127 e TC-136 superati in locale, da ripetere in produzione con il Mac | DEC-121, DEC-122, DEC-123 |
+| 07/10/2026 | Agente IA | Tolto il gettone statico delle app senza accesso: `credenziali.ts`, `npm run credenziali` e `MEMODU_IMPRONTA` non ci sono più, la sincronizzazione vale solo con il JWT; il server non parte senza l'utente fisso | DEC-121 |

@@ -11,11 +11,10 @@ import {
   scriviRecupero,
   type ParametriArgon2,
 } from "./chiavi.js";
-import { nuoveCredenziali } from "./credenziali.js";
 import { daPglite, type Database } from "./database.js";
 import { aggiornaSchema } from "./schema.js";
 import { creaServer } from "./servizio.js";
-import { ArchivioSincronizzazione, impronta } from "./sincronizzazione.js";
+import { ArchivioSincronizzazione } from "./sincronizzazione.js";
 import { svolgi } from "./xchacha.js";
 
 // Argon2id leggero nelle prove: i passi sono gli stessi, cambia solo il costo.
@@ -133,14 +132,13 @@ describe("accesso dell'utente fisso", () => {
 describe("richieste dell'accesso e sincronizzazione", () => {
   let db: Database;
   let server: FastifyInstance;
-  const statico = nuoveCredenziali("https://memodu.example");
   beforeAll(async () => {
     db = await daPglite();
     await aggiornaSchema(db);
   });
   afterAll(() => db.chiudi());
   beforeEach(() => {
-    server = creaServer(new ArchivioSincronizzazione(db, impronta(statico.gettone)), accesso);
+    server = creaServer(new ArchivioSincronizzazione(db), accesso);
   });
   afterEach(() => server.close());
 
@@ -187,22 +185,10 @@ describe("richieste dell'accesso e sincronizzazione", () => {
     );
   });
 
-  it("finché c'è l'impronta, vale anche il gettone statico delle app di oggi", async () => {
-    expect((await modifiche(statico.gettone)).statusCode).toBe(200);
+  it("vale solo il JWT dell'accesso: un gettone qualsiasi è 401 (DEC-121)", async () => {
+    expect((await modifiche(Buffer.alloc(32, 1).toString("base64url"))).statusCode).toBe(401);
     expect((await modifiche("sbagliato")).statusCode).toBe(401);
-  });
-
-  it("senza impronta vale solo il JWT", async () => {
-    await server.close();
-    server = creaServer(new ArchivioSincronizzazione(db, ""), accesso);
-    expect((await modifiche(statico.gettone)).statusCode).toBe(401);
     const { gettone } = accesso.accedi(dati.email, provaGiusta())!;
     expect((await modifiche(gettone)).statusCode).toBe(200);
-  });
-
-  it("senza utente fisso le richieste dell'accesso non ci sono", async () => {
-    await server.close();
-    server = creaServer(new ArchivioSincronizzazione(db, impronta(statico.gettone)));
-    expect((await post("/accesso/parametri", { email: "a@b.it" })).statusCode).toBe(404);
   });
 });

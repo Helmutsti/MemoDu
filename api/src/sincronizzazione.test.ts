@@ -1,19 +1,26 @@
-import { mkdtemp, readFile, rm } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import type { FastifyInstance } from "fastify";
 import { LIMITE_CORPO_BYTE } from "@memodu/condiviso";
 import { LIMITE_PAGINA_BYTE, LIMITE_RICHIESTA_BYTE } from "./costanti.js";
-import { credenzialiNelFile, nuoveCredenziali } from "./credenziali.js";
+import { Accesso } from "./accesso.js";
+import { creaUtente, daPassword, type ParametriArgon2 } from "./chiavi.js";
 import { daPglite, type Database } from "./database.js";
 import { aggiornaSchema, VERSIONE_SCHEMA } from "./schema.js";
 import { creaServer } from "./servizio.js";
-import { ArchivioSincronizzazione, impronta } from "./sincronizzazione.js";
+import { ArchivioSincronizzazione } from "./sincronizzazione.js";
 
 const A = "7d1c4a52-6b8f-4c1e-9a3d-2f5e8b7c6a10";
 const B = "0b9e8d7c-6f5a-4b3c-8d2e-1a0f9e8d7c6b";
-const credenziali = nuoveCredenziali("https://memodu.example");
+// L'utente fisso delle prove, con Argon2id leggero: le richieste portano il suo JWT (DEC-121).
+const LEGGERO: ParametriArgon2 = { memoria: 1024, passaggi: 1, fili: 1 };
+const { dati } = creaUtente("prove@memodu.example", "una frase lunga e mia", {}, LEGGERO);
+const accesso = new Accesso(dati, Buffer.alloc(32, 7).toString("base64url"));
+const { gettone } = accesso.accedi(
+  dati.email,
+  daPassword("una frase lunga e mia", Buffer.from(dati.sale, "base64url"), LEGGERO).prova.toString(
+    "base64url",
+  ),
+)!;
 
 let db: Database;
 let orologio: Date;
@@ -29,13 +36,13 @@ afterAll(() => db.chiudi());
 beforeEach(async () => {
   await db.esegui("TRUNCATE versioni");
   orologio = new Date("2026-09-30T08:00:00Z");
-  sinc = new ArchivioSincronizzazione(db, impronta(credenziali.gettone), () => orologio);
-  server = creaServer(sinc);
+  sinc = new ArchivioSincronizzazione(db, () => orologio);
+  server = creaServer(sinc, accesso);
 });
 afterEach(() => server.close());
 
-const intestazioni = (gettone = credenziali.gettone, protocollo = "1") => ({
-  authorization: `Bearer ${gettone}`,
+const intestazioni = (jwt = gettone, protocollo = "1") => ({
+  authorization: `Bearer ${jwt}`,
   "memodu-protocollo": protocollo,
 });
 const scrivi = (id: string, base: number, dati: string) =>
@@ -59,21 +66,7 @@ const modifiche = async (dopo = 0) =>
     archivio: string;
   }>();
 
-describe("credenziali dell'installazione (CA-14.1, DEC-79, DEC-104)", () => {
-  it("il file nasce una volta e non si sovrascrive; il server tiene solo l'impronta", async () => {
-    const cartella = await mkdtemp(join(tmpdir(), "memodu-credenziali-"));
-    try {
-      const file = join(cartella, "credenziali");
-      const prime = credenzialiNelFile(file, "http://127.0.0.1:4317");
-      expect(JSON.parse(await readFile(file, "utf8"))).toEqual(prime);
-      expect(credenzialiNelFile(file, "http://altro")).toEqual(prime);
-      expect(impronta(prime.gettone)).toMatch(/^[0-9a-f]{64}$/);
-      expect(impronta(prime.gettone)).not.toContain(prime.gettone);
-    } finally {
-      await rm(cartella, { recursive: true, force: true });
-    }
-  });
-
+describe("autorizzazione (RB-57, DEC-83, DEC-121)", () => {
   it("senza gettone valido risponde 401 (RB-57)", async () => {
     const senza = await server.inject({ method: "GET", url: "/sincronizzazione/modifiche" });
     const sbagliato = await server.inject({
@@ -84,22 +77,21 @@ describe("credenziali dell'installazione (CA-14.1, DEC-79, DEC-104)", () => {
     expect([senza.statusCode, sbagliato.statusCode]).toEqual([401, 401]);
   });
 
-  it("senza impronta configurata nessun gettone vale", async () => {
-    const senzaImpronta = creaServer(new ArchivioSincronizzazione(db, ""));
-    const r = await senzaImpronta.inject({
+  it("il gettone statico delle app senza accesso non vale più (DEC-121)", async () => {
+    const statico = Buffer.alloc(32, 1).toString("base64url");
+    const r = await server.inject({
       method: "GET",
       url: "/sincronizzazione/modifiche",
-      headers: intestazioni(),
+      headers: intestazioni(statico),
     });
     expect(r.statusCode).toBe(401);
-    await senzaImpronta.close();
   });
 
   it("con un protocollo diverso risponde 426 (DEC-83)", async () => {
     const r = await server.inject({
       method: "GET",
       url: "/sincronizzazione/modifiche",
-      headers: intestazioni(credenziali.gettone, "2"),
+      headers: intestazioni(gettone, "2"),
     });
     expect(r.statusCode).toBe(426);
   });
@@ -186,13 +178,11 @@ describe("server", () => {
 
   it("con il database rotto /vivo risponde e /salute dice il motivo, senza appendersi", async () => {
     const rotto = creaServer(
-      new ArchivioSincronizzazione(
-        {
-          ...db,
-          righe: () => Promise.reject(Object.assign(new Error("no"), { code: "ENOTFOUND" })),
-        },
-        impronta(credenziali.gettone),
-      ),
+      new ArchivioSincronizzazione({
+        ...db,
+        righe: () => Promise.reject(Object.assign(new Error("no"), { code: "ENOTFOUND" })),
+      }),
+      accesso,
     );
     const vivo = await rotto.inject({ method: "GET", url: "/vivo" });
     const salute = await rotto.inject({ method: "GET", url: "/salute" });
@@ -209,10 +199,11 @@ describe("server", () => {
 
   it("un errore interno è 500 senza dettagli", async () => {
     const rotto = creaServer(
-      new ArchivioSincronizzazione(
-        { ...db, righe: () => Promise.reject(new Error("dettaglio interno")) },
-        impronta(credenziali.gettone),
-      ),
+      new ArchivioSincronizzazione({
+        ...db,
+        righe: () => Promise.reject(new Error("dettaglio interno")),
+      }),
+      accesso,
     );
     const r = await rotto.inject({
       method: "GET",
