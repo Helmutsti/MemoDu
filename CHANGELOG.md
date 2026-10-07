@@ -7,6 +7,12 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+## [0.1.10] – 2026-10-07
+
+### Cambiato
+- Impostazioni riordinate: in cima un riquadro con il tuo account, lo stato della sincronizzazione con un pallino colorato (verde, ambra o rosso) e il nome di questo computer; sotto, Generale (con il tema) e Ricerca, ognuna nel suo riquadro
+- Con il server irraggiungibile le impostazioni dicono a che ora è riuscito l'ultimo backup
+
 ## [0.1.9] – 2026-10-06
 
 ### Aggiunto
