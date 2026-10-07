@@ -5,7 +5,7 @@
 La scrittura viene prima di tutto: aprire l'app e iniziare a scrivere deve essere immediato (`RNF-01`).
 
 ## RF-01 – Nota rapida da scorciatoia
-**Priorità:** Must · **Origine:** — · **Fase:** 9 · **Stato:** Pronto
+**Priorità:** Must · **Origine:** — · **Fase:** 9 · **Stato:** Implementato (rilasciato fino alla 0.1.13, 07/10/2026)
 
 Come *utente desktop* voglio aprire con una scorciatoia da tastiera una finestra di nota rapida per annotare un'idea senza interrompere quello che sto facendo.
 
@@ -39,7 +39,7 @@ Frammento Must A: la scorciatoia è fissa (Ctrl + Alt + N su Windows, Control + 
 ---
 
 ## RF-02 – Scrittura in markdown con formattazione minima
-**Priorità:** Must · **Origine:** — · **Fase:** 9 · **Stato:** Pronto
+**Priorità:** Must · **Origine:** — · **Fase:** 9 · **Stato:** Implementato solo come testo puro (la formattazione è rinviata con DEC-125) (rilasciato fino alla 0.1.13, 07/10/2026)
 
 **Nella v1 (DEC-125):** testo puro; la formattazione resta sospesa con DEC-64 e si riprende dopo la v1.
 
@@ -108,7 +108,7 @@ Condiviso con RF-02: vedi lo scenario di RF-02.
 ---
 
 ## RF-04 – Metadati della nota
-**Priorità:** Must · **Origine:** — · **Fase:** 9 (frammento Must C, nella finestra Info) · **Stato:** Pronto
+**Priorità:** Must · **Origine:** — · **Fase:** 9 · **Stato:** Implementato (nella finestra Info, DEC-96) (rilasciato fino alla 0.1.13, 07/10/2026)
 
 Come *utente* voglio associare dei metadati a ogni nota per descriverla con titolo, date e tag.
 

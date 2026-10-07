@@ -481,3 +481,4 @@
 | 07/10/2026 | Agente IA | RF-11 Interazioni rapide: prove TC-150 … TC-157 superate nell'app di sviluppo (scorciatoie, tasto destro, trascinamento con il puntatore) | — |
 | 07/10/2026 | Manuel Cucca | La v1 personale esce con il testo puro e senza immagini: formattazione di RF-02 e RF-03 rinviate a dopo la v1 | DEC-125 |
 | 07/10/2026 | Manuel Cucca | Fase 9: runbook approvato (pubblicare una versione, installare e aggiornare su Windows e macOS, computer nuovo, dove stanno i dati, server, monitoraggio, casi «se succede X»); backup in sospeso | DEC-125 |
+| 07/10/2026 | Agente IA | Fase 9, fotografia: RF-01, RF-02 (testo puro), RF-04, RF-05, RF-06, RF-08, RF-10, RF-11, RF-14, RF-15, RF-17 Implementati; ID-03, ID-10, ID-15, ID-27, ID-29, ID-32 … ID-34 Implementate; tolti dai documenti il file `credenziali`, il gettone statico, il server in chiaro e la sezione Sincronizzazione delle impostazioni dove descrivevano ancora l'app di oggi | DEC-121, DEC-122, DEC-125 |

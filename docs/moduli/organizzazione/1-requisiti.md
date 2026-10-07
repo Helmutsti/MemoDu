@@ -5,7 +5,7 @@
 L'organizzazione è un effetto secondario della scrittura: l'utente ha piena libertà su come organizzare le proprie note.
 
 ## RF-05 – Struttura di cartelle
-**Priorità:** Must · **Origine:** ID-15 · **Fase:** 9 (frammento Must B; RB-29 con la ricerca) · **Stato:** Pronto
+**Priorità:** Must · **Origine:** ID-15 · **Fase:** 9 · **Stato:** Implementato (rilasciato fino alla 0.1.13, 07/10/2026)
 
 Come *utente* voglio organizzare le note in un albero di cartelle per dare loro una collocazione fisica.
 
@@ -37,7 +37,7 @@ Frammento Must B «Smistare» (DEC-36): cartelle come sottocartelle di Documenti
 ---
 
 ## RF-06 – Tag
-**Priorità:** Must · **Origine:** — · **Fase:** 9 (frammento Must C; trovare le note per tag con la ricerca, RF-08) · **Stato:** Pronto
+**Priorità:** Must · **Origine:** — · **Fase:** 9 · **Stato:** Implementato (rilasciato fino alla 0.1.13, 07/10/2026)
 
 Come *utente* voglio assegnare tag alle note per raggrupparle in modo trasversale alle cartelle.
 
@@ -65,7 +65,7 @@ Frammento Must C (DEC-41, DEC-44): i tag si modificano in Info (DEC-96); trovare
 ---
 
 ## RF-15 – Cestino
-**Priorità:** Must · **Origine:** — · **Fase:** 9 (frammento Must B; RB-29 con la ricerca) · **Stato:** Pronto
+**Priorità:** Must · **Origine:** — · **Fase:** 9 · **Stato:** Implementato (rilasciato fino alla 0.1.13, 07/10/2026)
 
 Come *utente* voglio che le note e le cartelle eliminate finiscano in un cestino per poterle recuperare se ho sbagliato.
 
@@ -111,7 +111,7 @@ Nella prima fase la separazione tra ambiti si ottiene con le cartelle principali
 ---
 
 ## RF-08 – Ricerca e filtro
-**Priorità:** Must · **Origine:** — · **Fase:** 8 (completa; sviluppo fatto, restano le prove con il secondo dispositivo) · **Stato:** Pronto
+**Priorità:** Must · **Origine:** — · **Fase:** 9 · **Stato:** Implementato (rilasciato fino alla 0.1.13, 07/10/2026)
 
 Come *utente* voglio cercare e filtrare le note per trovare subito quella che mi serve.
 

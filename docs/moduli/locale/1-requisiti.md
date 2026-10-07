@@ -5,7 +5,7 @@
 Memodu come editor di file del disco, accanto alle note: niente passa dal server (DEC-115).
 
 ## RF-17 – File locali
-**Priorità:** Must · **Origine:** ID-03, DEC-115 · **Fase:** 9 · **Stato:** Pronto
+**Priorità:** Must · **Origine:** ID-03, DEC-115 · **Fase:** 9 · **Stato:** Implementato (rilasciato fino alla 0.1.13, 07/10/2026)
 
 Come *utente* voglio aprire e modificare in Memodu i file di testo delle mie cartelle sul disco per usarlo come editor anche per quello che non sta nelle note, senza che niente vada sul server.
 

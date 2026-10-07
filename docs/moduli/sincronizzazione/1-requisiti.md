@@ -3,7 +3,7 @@
 <!-- Fase 1 della guida, con i criteri di accettazione della Fase 8. Copia il blocco per ogni requisito. -->
 
 ## RF-10 – Sincronizzazione cloud cifrata end-to-end
-**Priorità:** Must · **Origine:** DEC-01, DEC-02, DEC-06, DEC-121 · **Fase:** 9 (la cifratura con DEC-121: criteri e piano di test approvati il 06/10/2026, codice da fare) · **Stato:** Pronto
+**Priorità:** Must · **Origine:** DEC-01, DEC-02, DEC-06, DEC-121 · **Fase:** 9 · **Stato:** Implementato (cifrata end-to-end con DEC-121) (rilasciato fino alla 0.1.13, 07/10/2026)
 
 Come *utente* voglio che tutte le mie note siano sincronizzate nel cloud con cifratura end-to-end per avere l'intera struttura a disposizione su ogni dispositivo, senza che altri possano leggerla.
 
@@ -42,7 +42,7 @@ Scritti dall'agente dai flussi e dalle decisioni (FL-07, DEC-75 … DEC-83). Con
 ---
 
 ## RF-14 – Accesso all'installazione
-**Priorità:** Must · **Origine:** DEC-05, DEC-121 · **Fase:** 9 (criteri e piano di test approvati il 06/10/2026) · **Stato:** Pronto
+**Priorità:** Must · **Origine:** DEC-05, DEC-121 · **Fase:** 9 · **Stato:** Implementato (email e password dell'utente fisso, DEC-121) (rilasciato fino alla 0.1.13, 07/10/2026)
 
 Come *utente* voglio accedere una volta con email e password per sincronizzare le mie note cifrate, restare collegato senza ripetere l'accesso e poter uscire da un dispositivo.
 
