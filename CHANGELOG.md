@@ -7,6 +7,15 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+## [0.1.13] – 2026-10-07
+
+### Cambiato
+- La finestra di accesso e le finestre di conferma si chiudono anche con un clic fuori, come con Esc
+- Su tutto ciò che si clicca il puntatore diventa la manina
+
+### Corretto
+- Nel campo della password c'è un solo occhio per mostrarla
+
 ## [0.1.12] – 2026-10-07
 
 ### Cambiato
