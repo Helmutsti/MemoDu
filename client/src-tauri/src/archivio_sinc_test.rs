@@ -453,6 +453,36 @@ fn con_un_server_nuovo_si_riparte_da_zero_senza_copie() {
 }
 
 #[test]
+fn con_un_server_nuovo_gli_elementi_solo_ricevuti_partono_una_volta_sola() {
+    // TC-103 (07/10/2026): un elemento nato sull'altro dispositivo e solo ricevuto qui non ha
+    // l'ora della modifica locale; dopo l'azzeramento partiva a ogni giro, senza fine.
+    let (mut a, mut b, mut vecchio) = due();
+    b.a.crea_cartella("", Some("Offline"), SeEsiste::Chiedi).unwrap();
+    let id = nota(&mut b, "Nata su B", "testo", Some("Offline"));
+    b.a.aggiungi_tag(&id, "senza-rete").unwrap();
+    b.sincronizza(&mut vecchio);
+    a.sincronizza(&mut vecchio);
+
+    let mut nuovo = Server::default();
+    for d in [&mut a, &mut b] {
+        d.a.azzera_sinc().unwrap();
+        d.visto = 0;
+    }
+    a.sincronizza(&mut nuovo);
+    b.sincronizza(&mut nuovo);
+    a.sincronizza(&mut nuovo);
+    let versioni: Vec<i64> = nuovo.attuali.values().map(|(v, _, _)| *v).collect();
+    for d in [&mut a, &mut b] {
+        assert!(d.a.da_inviare().unwrap().is_empty());
+        assert_eq!(d.titoli(), vec!["Nata su B"]);
+    }
+    // Un altro giro non manda niente: le versioni sul server restano quelle.
+    a.sincronizza(&mut nuovo);
+    b.sincronizza(&mut nuovo);
+    assert_eq!(nuovo.attuali.values().map(|(v, _, _)| *v).collect::<Vec<_>>(), versioni);
+}
+
+#[test]
 fn il_primo_giro_cifrato_rimanda_tutto_una_volta_sola() {
     // CA-10.13: al primo accesso cifrato ogni elemento riparte, anche quelli solo ricevuti, e
     // dopo l'invio non resta niente da mandare (niente giri senza fine).

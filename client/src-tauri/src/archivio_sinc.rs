@@ -90,7 +90,19 @@ impl Archivio {
                 .collect::<Result<_, _>>()?;
             let mut blocchi = Vec::new();
             for (id, tipo, versione, modificato_il) in righe {
-                let modificato_il = modificato_il.unwrap_or_else(|| a.ora());
+                // Senza l'ora della modifica (un elemento solo ricevuto) se ne dà una e la si
+                // scrive: è quella che «inviato» confronta per togliere il segno da inviare.
+                let modificato_il = match modificato_il {
+                    Some(m) => m,
+                    None => {
+                        let ora = a.ora();
+                        a.db.execute(
+                            "UPDATE sinc_elementi SET modificato_il = ? WHERE id = ? AND modificato_il IS NULL",
+                            params![ora, id],
+                        )?;
+                        ora
+                    }
+                };
                 // Un elemento nato e sparito prima di essere mai inviato non interessa a nessuno.
                 let blocco = a.blocco_attuale(&id, &tipo, &modificato_il)?;
                 if versione == 0 && blocco["eliminato"] == json!(true) {
@@ -133,9 +145,16 @@ impl Archivio {
 
     /// L'archivio del server è cambiato (un server nuovo o ricreato, DEC-105): si riparte da
     /// zero. Ogni elemento torna da inviare dalla versione 0 e le modifiche si ricevono tutte.
+    /// Un elemento solo ricevuto prende l'ora della versione che aveva, come nel primo giro
+    /// cifrato: senza, partiva a ogni giro (TC-103, 07/10/2026).
     pub fn azzera_sinc(&mut self) -> Esito<()> {
+        let ora = self.ora();
         self.con_riconnessione(|a| {
-            a.db.execute("UPDATE sinc_elementi SET versione = 0, base = NULL, modificato = 1", [])?;
+            a.db.execute(
+                "UPDATE sinc_elementi SET versione = 0, base = NULL, modificato = 1,
+                   modificato_il = coalesce(modificato_il, json_extract(base, '$.modificato_il'), ?)",
+                [&ora],
+            )?;
             a.db.execute("DELETE FROM sinc_stato WHERE chiave = 'ultimo_ordine'", [])?;
             Ok(())
         })
