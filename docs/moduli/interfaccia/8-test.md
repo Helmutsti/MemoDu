@@ -6,6 +6,14 @@
 | Codice | Riferimento | Caso di prova | Ambiente | Set di dati | Esito |
 |---|---|---|---|---|---|
 | TC-00 | RF-00 criterio 1 | | Collaudo | | |
+| TC-150 | RF-11 CA-11.1 | Ctrl + N con una nota aperta, con un file di Locale aperto, con il cestino e con le impostazioni aperti, con la colonna chiusa: ogni volta una nota nuova nella radice, aperta, pronta per scrivere | Locale | Note di prova | |
+| TC-151 | RF-11 CA-11.2 | Ctrl + W su una nota, su una nota con Info aperta, su un file di Locale, sul cestino, sulle impostazioni: si chiude e l'area resta vuota; con l'area vuota niente | Locale | Note di prova | |
+| TC-152 | RF-11 CA-11.3 | Colonna chiusa, cursore nella nota: Ctrl + K apre la colonna con il cursore nella ricerca; Esc richiude la colonna e il cursore torna nella nota; Ctrl + Maiusc + K apre la ricerca avanzata | Locale | Note di prova | |
+| TC-153 | RF-11 CA-11.4 | Ctrl + \ fissa la colonna; ancora Ctrl + \ la rimette a scomparsa | Locale | — | |
+| TC-154 | RF-11 CA-11.5 | Con la conferma di Svuota cestino aperta, poi con l'accesso aperto, poi con Info dal tasto destro: Ctrl + N, Ctrl + W, Ctrl + K e Ctrl + \ non fanno niente dietro; Esc e un clic sul velo chiudono | Locale | Note di prova | |
+| TC-155 | RF-11 CA-11.6 | Tasto destro su una nota, su una cartella di CLOUD, su una cartella e un file di Locale, su un tag nei suggerimenti: le voci giuste; frecce, Invio ed Esc funzionano; un clic fuori chiude | Locale | Note e cartelle di prova, Prove locale | |
+| TC-156 | RF-11 CA-11.7 | Trascinare una nota su una cartella, una cartella in un'altra, una nota sul titolo CLOUD, una nota sulla riga Cestino; un trascinamento annullato con Esc; una cartella su sé stessa: destinazione evidenziata, spostamenti giusti, niente cambiato dove annullato | Locale | Note e cartelle di prova | |
+| TC-157 | RF-11 CA-11.8 | Le scorciatoie scritte nei menu e nelle voci (Chiudi nota, Chiudi file, ricerca) corrispondono a quelle che funzionano | Locale | — | |
 
 ## Domande aperte
 | Riguarda | Domanda | Chi risponde | Risposta | Decisione |

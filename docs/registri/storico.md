@@ -477,3 +477,4 @@
 | 07/10/2026 | Agente IA | Prove a mano della sincronizzazione con due app in parallelo: TC-87 … TC-95 superati; TC-103 superato dopo la correzione di un invio senza fine degli elementi solo ricevuti quando l'archivio del server cambia (`azzera_sinc`, `da_inviare`, una prova nuova del nucleo) | DEC-105 |
 | 07/10/2026 | Agente IA | Prove a mano di scrivere, ricerca e Locale con app di sviluppo guidate da script: TC-02, TC-03, TC-23, TC-24, TC-26, TC-27, TC-30, TC-74 e la parte del secondo computer di TC-104 superati | DEC-121 |
 | 07/10/2026 | Manuel Cucca | Le finestre al centro con il velo (accesso, conferme) si chiudono con un clic fuori come con Esc; la manina su tutto ciò che si clicca; tolto il doppio occhio di Edge nel campo password | DEC-124 |
+| 07/10/2026 | Manuel Cucca | RF-11 Interazioni rapide: criteri CA-11.1 … CA-11.8 e piano di test TC-150 … TC-157 approvati; RF-11 Pronto | — |
