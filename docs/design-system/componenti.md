@@ -7,7 +7,7 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | Codice | Componente | Tipo | Stato |
 |---|---|---|---|
 | CMP-01 | Pulsante (con la variante Diviso, DEC-34) | base | Disegnato |
-| CMP-02 | Icona | base | 41 icone, 4 dimensioni |
+| CMP-02 | Icona | base | 42 icone, 4 dimensioni |
 | CMP-03 | Campo di testo | base | Disegnato |
 | CMP-04 | Interruttore | base | Disegnato |
 | CMP-05 | Tag | base | Disegnato |
@@ -29,7 +29,7 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-21 | Immagine nel testo e area di trascinamento | composto | Disegnato |
 | CMP-22 | Modulo di accesso (finestra sopra le note, DEC-121) | composto | Disegnato |
 | CMP-23 | Nota rapida | composto | Disegnato |
-| CMP-24 | Info (comparsa sotto il titolo e finestra al centro, DEC-96; righe con l'icona, DEC-97) | composto | Disegnato |
+| CMP-24 | Info (comparsa sotto il titolo e finestra al centro, DEC-96; righe con l'icona, DEC-97; Info del file, DEC-123) | composto | Disegnato |
 | CMP-25 | Barra di scorrimento | composto | Disegnato |
 | CMP-26 | Percorso (titolo della nota con le cartelle, DEC-71) | composto | Disegnato |
 | CMP-27 | Comparsa dei metadati (DEC-71) | composto | Superato da CMP-24 (DEC-96) |
@@ -174,7 +174,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 - Variante **Dimensione**: 12, 16 (default, `misura-icona`), 20 e 24 px. Il tratto resta 1,5 (`tratto-icona`) a tutte le dimensioni, così le icone piccole non diventano sottili e le grandi non diventano pesanti.
 - Ogni icona è un set di componenti `Icona/<nome>` con la fonte Lucide nella descrizione. Nei componenti si scambia con la proprietà Icona e si sceglie la dimensione con la variante, senza ridimensionare l'istanza.
 - Le icone restano fatte di più tracciati, come in Lucide. Se in un'istanza si cambia icona dopo averla colorata, il colore non passa alla nuova: si ricolorano tutti i tracciati insieme (in Figma, dal pannello "Colori della selezione").
-- Primo nucleo: **più** (`plus`), **altro** (`ellipsis`), **caricamento** (`loader-circle`), **cerca** (`search`), **calendario** (`calendar`), **chiudi** (`x`), **errore** (`circle-alert`), **freccia destra** (`chevron-right`), **freccia giù** (`chevron-down`), **titolo** (`heading-1`), **sottotitolo** (`heading-2`), **elenco puntato** (`list`), **elenco numerato** (`list-ordered`), **checklist** (`list-checks`), **immagine** (`image`), **elimina** (`trash-2`), **tag** (`tag`), **sposta** (`folder-input`), **impostazioni** (`settings`), **grassetto** (`bold`), **corsivo** (`italic`), **sottolineato** (`underline`), **barrato** (`strikethrough`), **spunta** (`check`), **freccia sinistra** (`chevron-left`), **cartella** (`folder`), **cartella aperta** (`folder-open`, per la colonna, DEC-99), **utente** (`user`, per il box dell'account senza accesso, DEC-122), **nota** (`file-text`), **avviso** (`triangle-alert`), **informazione** (`info`), **mostra** (`eye`), **rinomina** (`pencil`), **taglia** (`scissors`), **copia** (`copy`), **incolla** (`clipboard`), **apri colonna** (`panel-left-open`), **chiudi colonna** (`panel-left-close`) e **puntina** (`pin`) per la colonna del foglio unico (DEC-55), **maiusc** (`arrow-big-up`) e **invio** (`corner-down-left`) per la scorciatoia di Chiudi nella nota rapida (DEC-65). Le altre si aggiungono quando servono ai componenti.
+- Primo nucleo: **più** (`plus`), **altro** (`ellipsis`), **caricamento** (`loader-circle`), **cerca** (`search`), **calendario** (`calendar`), **chiudi** (`x`), **errore** (`circle-alert`), **freccia destra** (`chevron-right`), **freccia giù** (`chevron-down`), **titolo** (`heading-1`), **sottotitolo** (`heading-2`), **elenco puntato** (`list`), **elenco numerato** (`list-ordered`), **checklist** (`list-checks`), **immagine** (`image`), **elimina** (`trash-2`), **tag** (`tag`), **sposta** (`folder-input`), **impostazioni** (`settings`), **grassetto** (`bold`), **corsivo** (`italic`), **sottolineato** (`underline`), **barrato** (`strikethrough`), **spunta** (`check`), **freccia sinistra** (`chevron-left`), **cartella** (`folder`), **cartella aperta** (`folder-open`, per la colonna, DEC-99), **utente** (`user`, per il box dell'account senza accesso, DEC-122), **togli da locale** (`folder-minus`, per Togli da Locale nella comparsa del file, DEC-123), **nota** (`file-text`), **avviso** (`triangle-alert`), **informazione** (`info`), **mostra** (`eye`), **rinomina** (`pencil`), **taglia** (`scissors`), **copia** (`copy`), **incolla** (`clipboard`), **apri colonna** (`panel-left-open`), **chiudi colonna** (`panel-left-close`) e **puntina** (`pin`) per la colonna del foglio unico (DEC-55), **maiusc** (`arrow-big-up`) e **invio** (`corner-down-left`) per la scorciatoia di Chiudi nella nota rapida (DEC-65). Le altre si aggiungono quando servono ai componenti.
 
 ### Stati
 | Stato | Descrizione |
@@ -937,7 +937,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 ---
 
 ## CMP-24 – Info
-**Tipo:** composto (usa CMP-01 solo icona, CMP-03, CMP-05, CMP-07 e il separatore; suggerimenti CMP-09, calendario CMP-12 e pannello Sposta in CMP-11 sopra) · **Usato in:** SC-03 (Comparsa, dal titolo del percorso), SC-01 (Finestra, dal tasto destro su una nota della colonna) · **Figma:** pagina Componenti composti, sezione CMP-24 Info
+**Tipo:** composto (usa CMP-01 solo icona, CMP-03, CMP-05, CMP-07 e il separatore; suggerimenti CMP-09, calendario CMP-12 e pannello Sposta in CMP-11 sopra) · **Usato in:** SC-03 (Comparsa, dal titolo del percorso), SC-01 (Finestra, dal tasto destro su una nota della colonna), SC-03 del modulo Locale (Info del file, dal nome del file nel percorso) · **Figma:** pagina Componenti composti, sezione CMP-24 Info
 
 **Scopo:** tutto ciò che riguarda la nota in un punto solo: titolo, date, tag, cartella, chiudere ed eliminare (DEC-96, RF-04, RF-06). Supera la finestra dei dettagli di DEC-44 e la comparsa dei metadati (CMP-27).
 **Quando usarlo:** con un clic sul titolo nel percorso (CMP-26) per la nota aperta; da «Info» nel tasto destro su una nota della colonna, anche non aperta.
@@ -945,6 +945,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 
 ### Varianti e dimensioni
 - **Comparsa:** sotto il titolo del percorso, centrata su di lui, 8 sotto; livello 20, senza velo, come i menu. In fondo, dopo un divisore, «Chiudi nota» (Ctrl + W) ed «Elimina» (voce distruttiva).
+- **Info del file** (componente a parte nella sezione, DEC-123): con un clic sul nome di un file di Locale nel percorso, come la Comparsa (posizione, livello, spazi, larghezza) ma solo con il campo del nome (rinomina, RB-82), il divisore e le voci «Chiudi file» (Ctrl + W) e, solo per un file aggiunto da solo all'elenco, «Togli da Locale» con l'icona togli da locale (voce normale, non distruttiva: sul disco non cambia niente, RB-76). Varianti Voci = Chiudi e Togli, Solo Chiudi (file dentro una cartella aggiunta, o file nuovo mai salvato: il nome lo prende al primo Ctrl + S, RB-81). Niente cartella, date, tag o «Modificata» (RF-17).
 - **Finestra:** al centro, livello 30 (`z-overlay`) con il velo; le finestre di conferma stanno sopra, a 40. In testa «Info» (Interfaccia/Titolo) e la ✕ (CMP-01 solo icona). In fondo solo «Elimina»: la nota non è aperta, non c'è niente da chiudere.
 - Larga 360; `sfondo-flottante`, `raggio-contenitore`, `ombra`. Ruolo **pannello** (DEC-100): margine `spazio-pannello` (16) su tutti i lati; `spazio-blocco` (16) tra i blocchi (titolo, righe, «Modificata», divisore, voci); `spazio-elemento` (4) tra le righe. Righe, «Modificata», intestazione, campo del titolo e voci sono pillole con `spazio-controllo` (12) dentro: pillole a 16 dal bordo, icone e testi a 28. La ✕ dell'intestazione sta sul bordo della pillola, a 16.
 - **Titolo:** il campo (CMP-03) largo quanto Info, senza etichetta; una nota senza titolo ha il campo vuoto con «Senza titolo» come segnaposto.
