@@ -470,3 +470,4 @@
 | 07/10/2026 | Manuel Cucca | Clic sul nome di un file di Locale: una comparsa come Info con il nome, Chiudi file e, per un file aggiunto da solo, Togli da Locale | DEC-123 |
 | 07/10/2026 | Manuel Cucca | Libreria approvata per DEC-123: Info del file in CMP-24 (campo del nome, Chiudi file e, per un file aggiunto da solo, Togli da Locale; variante Solo Chiudi) e icona togli da locale (`folder-minus`) in CMP-02 | DEC-123 |
 | 07/10/2026 | Manuel Cucca | Mockup della comparsa del file approvati per DEC-123: file in una cartella (solo Chiudi file) e file aggiunto da solo (con Togli da Locale), esportati | DEC-123 |
+| 07/10/2026 | Manuel Cucca | Criteri CA-17.20 … CA-17.24 e prove TC-146 … TC-149 approvati per la comparsa del file di Locale | DEC-123 |

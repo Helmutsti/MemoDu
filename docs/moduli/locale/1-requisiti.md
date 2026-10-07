@@ -45,6 +45,11 @@ Scritti dall'agente da flussi, regole e decisioni (FL-10 … FL-13, RB-73 … RB
 - **CA-17.17** *Dato* un percorso fuori dalle cartelle dell'elenco, anche dietro un collegamento simbolico, *quando* l'interfaccia chiede di leggerlo o scriverlo, *allora* il nucleo rifiuta (DEC-118).
 - **CA-17.18** *Dato* l'uso di Locale, *quando* Memodu sincronizza, *allora* al server non arriva niente di Locale: né file, né elenco, né modifiche in sospeso (DEC-115).
 - **CA-17.19** *Dato* Esplora file o il Finder, *quando* trascino dentro Memodu, in qualsiasi punto, una cartella e un file .md, *allora* mentre trascino tutta la finestra si oscura con «Rilascia per aggiungere a Locale» e, rilasciando, niente entra nel testo aperto, la cartella compare in Locale come cartella e il file da solo, prima delle cartelle; un file di altro tipo resta fuori con un avviso (DEC-120, da confermare).
+- **CA-17.20** *Dato* un file aperto, *quando* clicco sul suo nome nel percorso, *allora* sotto il percorso si apre la comparsa con il campo del nome, un divisore e Chiudi file (Ctrl + W); per un file aggiunto da solo all'elenco c'è anche Togli da Locale, per un file dentro una cartella aggiunta no. Niente cartella, date o tag; Esc o un clic fuori la chiudono (DEC-123).
+- **CA-17.21** *Dato* la comparsa del file, *quando* cambio il nome nel campo e premo Invio, *allora* il file si rinomina sul disco con le stesse regole di oggi e il percorso e la colonna mostrano il nome nuovo (RB-82, DEC-123).
+- **CA-17.22** *Dato* un file con modifiche non salvate, *quando* nella comparsa scelgo Chiudi file, *allora* l'area resta vuota, nessuna domanda, il pallino resta nella colonna e riaprendo il file ritrovo le modifiche (RB-78, DEC-117, DEC-123).
+- **CA-17.23** *Dato* un file aggiunto da solo all'elenco, *quando* nella comparsa scelgo Togli da Locale, *allora* il file sparisce dalla colonna, l'area resta vuota e sul disco il file c'è ancora (RB-76, DEC-123).
+- **CA-17.24** *Dato* un file nuovo mai salvato («Senza titolo»), *quando* clicco sul suo nome nel percorso, *allora* la comparsa ha solo Chiudi file e il nome non si cambia dal campo: lo prende al primo Ctrl + S (RB-81, DEC-123).
 
 ---
 
