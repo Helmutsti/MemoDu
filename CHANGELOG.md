@@ -7,6 +7,14 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+## [0.1.12] – 2026-10-07
+
+### Cambiato
+- Il server accetta solo l'accesso con email e password: le app fino alla 0.1.8, senza accesso, non sincronizzano più e vanno aggiornate
+
+### Corretto
+- Dopo che il server è stato ricreato, le note e le cartelle arrivate da un altro computer non vengono più rimandate al server all'infinito
+
 ## [0.1.11] – 2026-10-07
 
 ### Aggiunto
