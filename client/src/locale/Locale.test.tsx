@@ -276,3 +276,101 @@ describe("file locale aperto (RF-17, FL-11, FL-13)", () => {
     expect(apiLocale.salva).toHaveBeenCalledWith(provvisorio, "Lista per il trasloco", null);
   });
 });
+
+describe("comparsa del file (DEC-123)", () => {
+  it("dentro una cartella ha il nome e solo Chiudi file; Esc la chiude (CA-17.20)", async () => {
+    vi.mocked(apiLocale.apri).mockResolvedValue(letto());
+    render(
+      <FileAperto percorso={RIUNIONE} locale={stato()} onPercorso={() => {}} onChiudi={() => {}} />,
+    );
+    await userEvent.click(await screen.findByRole("button", { name: "riunione.txt" }));
+    const comparsa = screen.getByRole("dialog", { name: "Info di riunione.txt" });
+    expect(within(comparsa).getByRole("textbox", { name: "Nome del file" })).toHaveValue(
+      "riunione.txt",
+    );
+    expect(within(comparsa).getByRole("button", { name: /Chiudi file/ })).toBeInTheDocument();
+    expect(within(comparsa).queryByRole("button", { name: "Togli da Locale" })).toBeNull();
+    await userEvent.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(apiLocale.rinomina).not.toHaveBeenCalled();
+  });
+
+  it("un file aggiunto da solo ha anche Togli da Locale, che lo toglie e chiude (CA-17.20, CA-17.23)", async () => {
+    vi.mocked(apiLocale.apri).mockResolvedValue(letto());
+    vi.mocked(apiLocale.togli).mockResolvedValue(undefined);
+    const locale = stato();
+    const onChiudi = vi.fn();
+    render(
+      <FileAperto
+        percorso={"D:\\lettera.txt"}
+        locale={locale}
+        onPercorso={() => {}}
+        onChiudi={onChiudi}
+      />,
+    );
+    await userEvent.click(await screen.findByRole("button", { name: "lettera.txt" }));
+    await userEvent.click(screen.getByRole("button", { name: "Togli da Locale" }));
+    await waitFor(() => expect(onChiudi).toHaveBeenCalled());
+    expect(apiLocale.togli).toHaveBeenCalledWith("D:\\lettera.txt");
+    expect(locale.ricaricaCartelle).toHaveBeenCalled();
+  });
+
+  it("il nome cambiato con Invio rinomina il file (CA-17.21)", async () => {
+    vi.mocked(apiLocale.apri).mockResolvedValue(letto());
+    vi.mocked(apiLocale.rinomina).mockResolvedValue({ percorso: `${APPUNTI}\\verbale.txt` });
+    const onPercorso = vi.fn();
+    render(
+      <FileAperto
+        percorso={RIUNIONE}
+        locale={stato()}
+        onPercorso={onPercorso}
+        onChiudi={() => {}}
+      />,
+    );
+    await userEvent.click(await screen.findByRole("button", { name: "riunione.txt" }));
+    const campo = screen.getByRole("textbox", { name: "Nome del file" });
+    await userEvent.clear(campo);
+    await userEvent.type(campo, "verbale.txt{Enter}");
+    await waitFor(() => expect(onPercorso).toHaveBeenCalledWith(`${APPUNTI}\\verbale.txt`));
+    expect(apiLocale.rinomina).toHaveBeenCalledWith(RIUNIONE, "verbale.txt");
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("Chiudi file con modifiche non salvate chiude senza domande e le lascia in sospeso (CA-17.22)", async () => {
+    vi.mocked(apiLocale.apri).mockResolvedValue(letto());
+    const onChiudi = vi.fn();
+    const { unmount } = render(
+      <FileAperto percorso={RIUNIONE} locale={stato()} onPercorso={() => {}} onChiudi={onChiudi} />,
+    );
+    await screen.findByRole("textbox", { name: "Testo di riunione.txt" });
+    scrivi(", dopo");
+    await userEvent.click(screen.getByRole("button", { name: "riunione.txt" }));
+    await userEvent.click(screen.getByRole("button", { name: /Chiudi file/ }));
+    expect(onChiudi).toHaveBeenCalled();
+    expect(screen.queryByRole("alertdialog")).toBeNull();
+    unmount();
+    await waitFor(() =>
+      expect(apiLocale.sospendi).toHaveBeenCalledWith(RIUNIONE, "prima, dopo", "aaa"),
+    );
+    expect(apiLocale.salva).not.toHaveBeenCalled();
+  });
+
+  it("un file nuovo mai salvato ha solo Chiudi file e il nome non si cambia (CA-17.24)", async () => {
+    vi.mocked(apiLocale.apri).mockResolvedValue(
+      letto({ testo: "", nuovo: true, sospeso: true, impronta: null }),
+    );
+    render(
+      <FileAperto
+        percorso={`${APPUNTI}\\.memodu-nuovo-1.md`}
+        locale={stato()}
+        onPercorso={() => {}}
+        onChiudi={() => {}}
+      />,
+    );
+    await userEvent.click(await screen.findByRole("button", { name: "Senza titolo" }));
+    expect(screen.getByRole("textbox", { name: "Nome del file" })).toHaveAttribute("readonly");
+    expect(screen.queryByRole("button", { name: "Togli da Locale" })).toBeNull();
+    await userEvent.keyboard("{Enter}");
+    expect(apiLocale.rinomina).not.toHaveBeenCalled();
+  });
+});

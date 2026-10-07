@@ -2,7 +2,8 @@
 // «Locale › cartella › nome» con il pallino delle modifiche non salvate (CMP-26, RB-77); sotto il
 // testo, con lo stesso editor delle note. Si salva solo con Ctrl + S (⌘ + S su Mac, RB-79);
 // mentre si scrive il testo resta in sospeso nel nucleo (RB-78). Se il file cambia o sparisce sul
-// disco compare sempre l'avviso con la scelta (RB-85).
+// disco compare sempre l'avviso con la scelta (RB-85). Un clic sul nome apre la comparsa del file
+// (DEC-123): rinomina, Chiudi file e, per un file aggiunto da solo, Togli da Locale.
 
 import { ChevronRight, FileText } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type ReactElement } from "react";
@@ -14,6 +15,7 @@ import { StatoVuoto } from "../componenti/StatoVuoto";
 import { cursoreDalClic, Editor } from "../editor/Editor";
 import { SU_MAC } from "../finestra";
 import { apiLocale, cartellaDi, dentroDi, nomeDi, type FileLocale } from "./api";
+import { InfoFile } from "./InfoFile";
 import type { StatoLocale } from "./useLocale";
 import "../schermate/NotaAperta.css";
 import "../componenti/Percorso.css";
@@ -32,7 +34,7 @@ interface Proprieta {
   locale: StatoLocale;
   /** Il file ha un percorso nuovo: nato al primo salvataggio o rinominato. */
   onPercorso: (nuovo: string) => void;
-  /** «Chiudi» dell'avviso del file sparito. */
+  /** Chiudi file (DEC-123), Togli da Locale e «Chiudi» dell'avviso del file sparito: l'area resta vuota. */
   onChiudi: () => void;
 }
 
@@ -42,7 +44,8 @@ export function FileAperto({ percorso, locale, onPercorso, onChiudi }: Proprieta
   const [versione, setVersione] = useState(0);
   const [sospeso, setSospeso] = useState(false);
   const [avviso, setAvviso] = useState<AvvisoFile | null>(null);
-  const [rinomina, setRinomina] = useState(false);
+  /** La comparsa del file è aperta, sotto il nome nel percorso (DEC-123). */
+  const [comparsa, setComparsa] = useState<{ x: number; y: number } | null>(null);
   const pagina = useRef<HTMLElement>(null);
   const testo = useRef("");
   /** Impronta del disco quando il testo si è letto; "" se il disco è cambiato e non si è scelto. */
@@ -216,7 +219,7 @@ export function FileAperto({ percorso, locale, onPercorso, onChiudi }: Proprieta
   };
 
   const confermaNome = async (nome: string) => {
-    setRinomina(false);
+    setComparsa(null);
     const pulito = nome.trim();
     if (!pulito || pulito === nomeDi(percorso)) return;
     try {
@@ -242,6 +245,20 @@ export function FileAperto({ percorso, locale, onPercorso, onChiudi }: Proprieta
           ]
         : [nomeDi(cartellaDi(percorso))];
   const nome = nuovo ? "Senza titolo" : nomeDi(percorso);
+
+  // Togli da Locale (DEC-123): solo per un file aggiunto da solo; sul disco non cambia niente (RB-76).
+  const togli = async () => {
+    setComparsa(null);
+    if (radice?.tipo !== "file") return;
+    try {
+      await scarica();
+      await apiLocale.togli(radice.percorso);
+      await locale.ricaricaCartelle();
+      onChiudi();
+    } catch (e) {
+      setAvviso({ tipo: "errore", testo: e instanceof Error ? e.message : String(e) });
+    }
+  };
   const separatore = (
     <span className="percorso-separatore" aria-hidden="true">
       <Icona di={ChevronRight} misura={12} />
@@ -259,42 +276,40 @@ export function FileAperto({ percorso, locale, onPercorso, onChiudi }: Proprieta
             </li>
           ))}
           <li className="percorso-elemento">
-            {rinomina ? (
-              <input
-                className="percorso-campo interfaccia-controllo-attivo"
-                aria-label="Nome del file"
-                defaultValue={nome}
-                autoFocus
-                onFocus={(e) => e.currentTarget.select()}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") void confermaNome(e.currentTarget.value);
-                  else if (e.key === "Escape") {
-                    e.stopPropagation();
-                    setRinomina(false);
-                  }
-                }}
-                onBlur={(e) => void confermaNome(e.currentTarget.value)}
-              />
-            ) : (
-              <button
-                type="button"
-                className={`percorso-segmento percorso-titolo interfaccia-controllo-attivo ${nuovo ? "percorso-senza-titolo" : ""}`}
-                aria-current="page"
-                title={
-                  nuovo ? "Il nome viene dalla prima riga al primo salvataggio" : `Rinomina ${nome}`
-                }
-                disabled={nuovo}
-                onClick={() => setRinomina(true)}
-              >
-                {nome}
-              </button>
-            )}
+            <button
+              type="button"
+              className={`percorso-segmento percorso-titolo interfaccia-controllo-attivo ${nuovo ? "percorso-senza-titolo" : ""}`}
+              aria-current="page"
+              aria-haspopup="dialog"
+              aria-expanded={comparsa !== null}
+              onClick={(e) => {
+                if (comparsa) return setComparsa(null);
+                const r = e.currentTarget.getBoundingClientRect();
+                setComparsa({ x: r.left + r.width / 2, y: r.bottom });
+              }}
+            >
+              {nome}
+            </button>
             {sospeso && (
               <span className="percorso-non-salvato" role="img" aria-label="non salvato" />
             )}
           </li>
         </ol>
       </nav>
+      {comparsa && (
+        <InfoFile
+          nome={nome}
+          nuovo={nuovo}
+          siPuoTogliere={radice?.tipo === "file"}
+          ancora={comparsa}
+          onChiudi={(n) => (nuovo ? setComparsa(null) : void confermaNome(n))}
+          onChiudiFile={() => {
+            setComparsa(null);
+            onChiudi();
+          }}
+          onTogli={() => void togli()}
+        />
+      )}
       {avviso?.tipo === "cambiato" && (
         <Avviso
           tipo="avviso"
