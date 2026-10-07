@@ -62,6 +62,7 @@ flowchart TD
 - File nuovo: il + accanto a una cartella apre un file vuoto, non ancora sul disco, in sospeso; al primo Ctrl + S nasce sul disco con il nome dalla prima riga e l'estensione .md (RB-81).
 - File non UTF-8: si legge come Windows-1252; al primo Ctrl + S si salva in UTF-8 e lo si dice una volta (RB-80).
 - File in sola lettura sul disco: si apre ma non si modifica, con il motivo.
+- Chiudere il file o toglierlo da Locale: clic sul nome nel percorso, poi Chiudi file (l'area resta vuota, le modifiche restano in sospeso, RB-78) o, per un file aggiunto da solo, Togli da Locale (RB-76) (DEC-123).
 
 ### Sfighe gestite
 | Sfiga | Rilevamento | Comunicazione | Via d'uscita |
