@@ -2,12 +2,12 @@
 
 <!-- Fase 5 della guida. Copia il blocco per ogni componente. -->
 
-I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE), che diventa la libreria: pagina **Componenti base** (CMP-01 … CMP-08 e CMP-28) e pagina **Componenti composti** (CMP-09 … CMP-27, CMP-29 e CMP-30). Ogni componente usa solo token semantici, anche per gli spazi (regola 12, vedi `tokens.md`) e ha un'anteprima in modo scuro.
+I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE), che diventa la libreria: pagina **Componenti base** (CMP-01 … CMP-08 e CMP-28) e pagina **Componenti composti** (CMP-09 … CMP-27 e CMP-29 … CMP-32). Ogni componente usa solo token semantici, anche per gli spazi (regola 12, vedi `tokens.md`) e ha un'anteprima in modo scuro.
 
 | Codice | Componente | Tipo | Stato |
 |---|---|---|---|
 | CMP-01 | Pulsante (con la variante Diviso, DEC-34) | base | Disegnato |
-| CMP-02 | Icona | base | 40 icone, 4 dimensioni |
+| CMP-02 | Icona | base | 41 icone, 4 dimensioni |
 | CMP-03 | Campo di testo | base | Disegnato |
 | CMP-04 | Interruttore | base | Disegnato |
 | CMP-05 | Tag | base | Disegnato |
@@ -36,6 +36,8 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-28 | Scelta a segmenti (tema, DEC-91) | base | Disegnato |
 | CMP-29 | Ricerca avanzata (DEC-96) | composto | Disegnato |
 | CMP-30 | Fondo della colonna (Cestino e Impostazioni, ombra quando il contenuto scorre sotto) | composto | Disegnato |
+| CMP-31 | Gruppo di impostazioni (titolo e righe in un riquadro, DEC-122) | composto | Disegnato |
+| CMP-32 | Box dell'account (in cima alle impostazioni, DEC-122) | composto | Disegnato |
 
 L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'icona di sistema e non è un componente.
 
@@ -96,24 +98,25 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 
 | Componente | Nota | Colonna | Flottante | Fondi propri |
 |---|---|---|---|---|
-| CMP-01 Pulsante | ✓ (cestino, impostazioni, stati vuoti) | ✓ (+) | ✓ (finestre di conferma, pannelli) | campo, hover, premuto, pieno |
+| CMP-01 Pulsante | ✓ (cestino, stati vuoti) | ✓ (+, riquadri delle impostazioni) | ✓ (finestre di conferma, pannelli) | campo, hover, premuto, pieno |
 | CMP-02 Icona | ✓ | ✓ | ✓ | — |
-| CMP-03 Campo di testo | ✓ (impostazioni) | ✓ (ricerca) | ✓ (pannelli, menu, Info, accesso) | campo |
-| CMP-04 Interruttore | ✓ (impostazioni) | | | hover, pieno |
+| CMP-03 Campo di testo | | ✓ (ricerca, riquadri delle impostazioni) | ✓ (pannelli, menu, Info, accesso) | campo |
+| CMP-04 Interruttore | | ✓ (riquadri delle impostazioni) | | hover, pieno |
 | CMP-05 Tag | | | ✓ (Info, filtri della ricerca) | campo, hover, pieno |
 | CMP-06 Riga della colonna | | ✓ | | hover, pieno; numero di note in testo tenue (RB-56) |
 | CMP-07 Voce di menu | | | ✓ | hover, errore |
 | CMP-08 Suggerimento | ✓ | ✓ | ✓ | pieno (flottante lui stesso) |
 | CMP-14 Albero delle cartelle | | ✓ | | hover, pieno, campo, errore (cestino di trascinamento) |
 | CMP-17 Elemento del cestino | ✓ | | | hover |
-| CMP-18 Riga di impostazione | ✓ | | | hover, campo |
+| CMP-18 Riga di impostazione | ✓ (titolo di gruppo) | ✓ (nei riquadri di CMP-31 e CMP-32) | | hover, campo |
 | CMP-19 Stato vuoto | ✓ | ✓ (riga) | ✓ (card dei risultati) | pieno (pulsante) |
 | CMP-20 Testo della nota | ✓ | | | pieno (casella spuntata), evidenziazione |
 | CMP-21 Immagine nel testo | ✓ | | | campo (segnaposto), pieno (selezione) |
 | CMP-25 Barra di scorrimento | ✓ | ✓ | ✓ (Info, card dei risultati, ricerca avanzata, Sposta in) | nessuno: `icona-tenue` al 50 % o all'80 % |
 | CMP-26 Percorso | ✓ (fascia in alto) | | | hover |
 | CMP-27 Comparsa dei metadati (superata) | sopra la nota | | è la superficie | flottante, con ombra; dentro: tag |
-| CMP-28 Scelta a segmenti | ✓ (impostazioni) | | | campo, hover, pieno |
+| CMP-28 Scelta a segmenti | | ✓ (riquadri delle impostazioni) | | campo, hover, pieno |
+| CMP-31 Gruppo di impostazioni · CMP-32 Box dell'account | ✓ (il riquadro è `sfondo-colonna` su `sfondo-nota`) | | | i fondi delle righe, dei campi, degli interruttori e dei pulsanti stanno su `sfondo-colonna`; pieno (iniziale), stati (pallino) |
 | CMP-09 Menu · CMP-10 Pillola · CMP-11 Pannello · CMP-12 Date picker · CMP-13 Card dei risultati · CMP-15 Avviso · CMP-16 Finestra di conferma · CMP-22 Modulo di accesso · CMP-24 Info · CMP-29 Ricerca avanzata | sopra la nota | sopra la colonna | sono la superficie | flottante, con ombra; dentro: hover, pieno, campo |
 
 **Verifica per ogni componente nuovo:** prima di segnarlo come Disegnato, (1) elencare le superfici su cui compare in questa tabella; (2) controllare nella tabella dei token che ogni suo fondo sia sopra la soglia su quelle superfici, in entrambi i modi; (3) controllarlo a occhio nell'anteprima scura, meglio se dentro un menu o un pannello, dove i grigi sono più vicini.
@@ -171,7 +174,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 - Variante **Dimensione**: 12, 16 (default, `misura-icona`), 20 e 24 px. Il tratto resta 1,5 (`tratto-icona`) a tutte le dimensioni, così le icone piccole non diventano sottili e le grandi non diventano pesanti.
 - Ogni icona è un set di componenti `Icona/<nome>` con la fonte Lucide nella descrizione. Nei componenti si scambia con la proprietà Icona e si sceglie la dimensione con la variante, senza ridimensionare l'istanza.
 - Le icone restano fatte di più tracciati, come in Lucide. Se in un'istanza si cambia icona dopo averla colorata, il colore non passa alla nuova: si ricolorano tutti i tracciati insieme (in Figma, dal pannello "Colori della selezione").
-- Primo nucleo: **più** (`plus`), **altro** (`ellipsis`), **caricamento** (`loader-circle`), **cerca** (`search`), **calendario** (`calendar`), **chiudi** (`x`), **errore** (`circle-alert`), **freccia destra** (`chevron-right`), **freccia giù** (`chevron-down`), **titolo** (`heading-1`), **sottotitolo** (`heading-2`), **elenco puntato** (`list`), **elenco numerato** (`list-ordered`), **checklist** (`list-checks`), **immagine** (`image`), **elimina** (`trash-2`), **tag** (`tag`), **sposta** (`folder-input`), **impostazioni** (`settings`), **grassetto** (`bold`), **corsivo** (`italic`), **sottolineato** (`underline`), **barrato** (`strikethrough`), **spunta** (`check`), **freccia sinistra** (`chevron-left`), **cartella** (`folder`), **cartella aperta** (`folder-open`, per la colonna, DEC-99), **nota** (`file-text`), **avviso** (`triangle-alert`), **informazione** (`info`), **mostra** (`eye`), **rinomina** (`pencil`), **taglia** (`scissors`), **copia** (`copy`), **incolla** (`clipboard`), **apri colonna** (`panel-left-open`), **chiudi colonna** (`panel-left-close`) e **puntina** (`pin`) per la colonna del foglio unico (DEC-55), **maiusc** (`arrow-big-up`) e **invio** (`corner-down-left`) per la scorciatoia di Chiudi nella nota rapida (DEC-65). Le altre si aggiungono quando servono ai componenti.
+- Primo nucleo: **più** (`plus`), **altro** (`ellipsis`), **caricamento** (`loader-circle`), **cerca** (`search`), **calendario** (`calendar`), **chiudi** (`x`), **errore** (`circle-alert`), **freccia destra** (`chevron-right`), **freccia giù** (`chevron-down`), **titolo** (`heading-1`), **sottotitolo** (`heading-2`), **elenco puntato** (`list`), **elenco numerato** (`list-ordered`), **checklist** (`list-checks`), **immagine** (`image`), **elimina** (`trash-2`), **tag** (`tag`), **sposta** (`folder-input`), **impostazioni** (`settings`), **grassetto** (`bold`), **corsivo** (`italic`), **sottolineato** (`underline`), **barrato** (`strikethrough`), **spunta** (`check`), **freccia sinistra** (`chevron-left`), **cartella** (`folder`), **cartella aperta** (`folder-open`, per la colonna, DEC-99), **utente** (`user`, per il box dell'account senza accesso, DEC-122), **nota** (`file-text`), **avviso** (`triangle-alert`), **informazione** (`info`), **mostra** (`eye`), **rinomina** (`pencil`), **taglia** (`scissors`), **copia** (`copy`), **incolla** (`clipboard`), **apri colonna** (`panel-left-open`), **chiudi colonna** (`panel-left-close`) e **puntina** (`pin`) per la colonna del foglio unico (DEC-55), **maiusc** (`arrow-big-up`) e **invio** (`corner-down-left`) per la scorciatoia di Chiudi nella nota rapida (DEC-65). Le altre si aggiungono quando servono ai componenti.
 
 ### Stati
 | Stato | Descrizione |
@@ -728,21 +731,21 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 ---
 
 ## CMP-18 – Riga di impostazione
-**Tipo:** composto (usa CMP-01, CMP-03 e CMP-04) · **Usato in:** SC-06 · **Figma:** pagina Componenti composti, [Riga di impostazione](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=74-2255)
+**Tipo:** composto (usa CMP-01, CMP-03, CMP-04 e CMP-28) · **Usato in:** SC-06, dentro CMP-31 e CMP-32 · **Figma:** pagina Componenti composti, [Riga di impostazione](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=74-2255)
 
 **Scopo:** una preferenza, con il suo controllo.
-**Quando usarlo:** in SC-06, una riga per impostazione, raggruppate sotto un titolo (Generale, Tema, Sincronizzazione, Ricerca, Dispositivo; DEC-91, DEC-94).
+**Quando usarlo:** in SC-06, una riga per impostazione, dentro il riquadro di una sezione (CMP-31: Generale, Ricerca) o del box dell'account (CMP-32: Nome del dispositivo; DEC-122).
 **Quando non usarlo:** per azioni (pulsante); le informazioni non modificabili usano la variante Informazione.
 
 ### Varianti e dimensioni
 - **Interruttore:** etichetta (Interfaccia/Controllo) e descrizione (Interfaccia/Dettaglio, `testo-tenue`) a sinistra, interruttore (CMP-04) a destra; tutta la riga si clicca.
 - **Campo:** come sopra, con un campo (CMP-03, largo 200) a destra, es. la scorciatoia della nota rapida o il nome del dispositivo.
-- **Azione:** etichetta e valore (in `testo-tenue`) a sinistra, pulsante secondario (CMP-01) a destra, es. «Account · nome@esempio.it» con Esci, o «Account · Non hai fatto l'accesso» con Accedi: la riga Account della sezione Sincronizzazione di SC-06 (DEC-121, RB-87, RB-89). Si attiva solo il pulsante, come il campo.
-- **Titolo di gruppo:** Interfaccia/Titolo di gruppo in `testo-tenue`, alto 32.
+- **Azione:** etichetta e valore (in `testo-tenue`) a sinistra, pulsante secondario (CMP-01) a destra, es. «Cambia». Si attiva solo il pulsante, come il campo. La riga Account di DEC-121 non c'è più: l'account sta nel box CMP-32 (DEC-122).
+- **Titolo di gruppo:** Interfaccia/Titolo di sezione (Semi Bold 11, maiuscolo, spaziatura 6 %) in `testo-tenue`, come i titoli CLOUD e LOCALE della colonna, alto 32 (DEC-122; prima Interfaccia/Titolo di gruppo). Sta sopra il riquadro di CMP-31.
 - **Scelta:** etichetta e descrizione a sinistra, scelta a segmenti (CMP-28) a destra, es. il tema Sistema · Chiaro · Scuro (DEC-91). Si attiva solo la scelta.
 - **Scorciatoia:** come Campo, con il campo della combinazione e a destra il pulsante tenue «Ripristina», che torna al valore di default. Si clicca il campo e si preme la combinazione nuova; se un altro programma la usa già, l'errore è nel campo e resta la vecchia (DEC-91).
 - **Informazione:** etichetta e valore in `testo-tenue`, senza controllo e senza hover, es. «Stato · Sincronizzata alle 14:32» (DEC-91).
-- Largo 560, su `sfondo-nota`. Spazi (DEC-100): `spazio-controllo` (12) a sinistra; a destra `spazio-controllo-piccolo` (8) quando la riga finisce con un controllo (interruttore, campo, scelta, pulsante), `spazio-controllo` (12) senza controllo (Informazione); `spazio-controllo-piccolo` (8) sopra e sotto; `spazio-blocco` (16) tra testo e controllo.
+- A tutta larghezza nel riquadro, su `sfondo-colonna` (DEC-122). Spazi (DEC-100): `spazio-controllo` (12) a sinistra; a destra `spazio-controllo-piccolo` (8) quando la riga finisce con un controllo (interruttore, campo, scelta, pulsante), `spazio-controllo` (12) senza controllo (Informazione); `spazio-controllo-piccolo` (8) sopra e sotto; `spazio-blocco` (16) tra testo e controllo.
 
 ### Stati
 | Stato | Descrizione |
@@ -1165,3 +1168,69 @@ Compare e sparisce con `movimento-durata-breve` (120 ms).
 ### Esempi
 - ✅ Corretto: colonna lunga, scorsa in cima: il fondo ha l'ombra e le note gli passano sotto; scorsa fino in fondo: l'ombra sparisce.
 - ❌ Scorretto: l'ombra sempre accesa, anche quando sotto non c'è niente.
+
+---
+
+## CMP-31 – Gruppo di impostazioni
+**Tipo:** composto (usa CMP-18) · **Usato in:** SC-06 · **Figma:** pagina Componenti composti, [Gruppo di impostazioni](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=305-4254)
+
+**Scopo:** dare a ogni sezione delle impostazioni un titolo marcato e un confine, così si vede dove finisce una sezione e comincia l'altra (DEC-122).
+**Quando usarlo:** in SC-06, una volta per sezione: Generale (scorciatoia della nota rapida, avvio all'accensione, primo piano, tema) e Ricerca.
+**Quando non usarlo:** per l'account e il nome del dispositivo, che stanno nel box dell'account (CMP-32).
+
+### Varianti e dimensioni
+- Largo quanto il contenuto di SC-06 (560 nella libreria), su `sfondo-nota`.
+- **Intestazione:** il titolo di gruppo di CMP-18, con `spazio-elenco` (8) ai lati come il riquadro: il titolo parte a 20 dal bordo, allineato ai testi delle righe (stessa anatomia, 8 + 12).
+- **Riquadro:** `sfondo-colonna`, `raggio-contenitore` (20), ruolo elenco: `spazio-elenco` (8) su tutti i lati. Le righe di CMP-18 vanno a tutta larghezza, con l'hover a `raggio-interno` (12) concentrico agli angoli; testi a 20 dal bordo, controlli a 16 (8 + 8).
+- Tra una riga e l'altra un divisore di 1 px in `bordo-divisore-tenue` a tutta larghezza, con `spazio-elemento` (4) sopra e sotto.
+- `spazio-icona` (8) tra intestazione e riquadro; tra due gruppi `spazio-gruppo` (24).
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Default | Come sopra |
+| Hover · Focus · Attivo · Disabilitato · Errore | Li gestiscono le righe (CMP-18) |
+| Caricamento · Vuoto | Non previsti: le impostazioni sono sulla copia di lavoro |
+
+### Accessibilità
+- **Lettori di schermo:** il titolo è l'intestazione del gruppo (ruolo `group` con `aria-labelledby` sul titolo); il riquadro e i divisori sono solo visivi.
+- **Contrasti:** il titolo in `testo-tenue` su `sfondo-nota` come i titoli della colonna; le righe come CMP-18, su `sfondo-colonna` (tabella dei fondi in `tokens.md`).
+
+### Esempi
+- ✅ Corretto: Generale con quattro righe nel suo riquadro, Ricerca in un riquadro a parte sotto.
+- ❌ Scorretto: righe di sezioni diverse nello stesso riquadro, o una riga fuori dal riquadro.
+
+---
+
+## CMP-32 – Box dell'account
+**Tipo:** composto (usa CMP-01, CMP-02, CMP-18) · **Usato in:** SC-06, in cima · **Figma:** pagina Componenti composti, [Box dell'account](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=305-4403)
+
+**Scopo:** mettere in evidenza chi ha fatto l'accesso e se la sincronizzazione va, nel primo posto che si guarda (DEC-122).
+**Quando usarlo:** solo in cima a SC-06, sotto il titolo Impostazioni e prima dei gruppi.
+**Quando non usarlo:** per avvisare di un problema mentre si lavora: quello è l'avviso (CMP-15, RB-87).
+
+### Varianti e dimensioni
+- Lo stesso riquadro di CMP-31 (`sfondo-colonna`, `raggio-contenitore`, `spazio-elenco`) con in più il bordo di 1 px in `bordo-divisore`, dentro, per stare in evidenza.
+- **Intestazione:** `spazio-controllo` (12) a sinistra, sopra e sotto, `spazio-controllo-piccolo` (8) a destra come le righe che finiscono con un controllo; `spazio-blocco` (16) tra le parti. Cerchio da 40 (`raggio-pillola`); testi con `spazio-elemento` (4) tra loro: in alto Interfaccia/Titolo in `testo-primario`, sotto Interfaccia/Dettaglio in `testo-tenue`; pulsante a destra.
+- **Stato = Senza accesso:** cerchio `sfondo-campo` con l'icona utente da 20 in `icona-tenue`; «Non hai fatto l'accesso», sotto «Le note restano su questo computer.»; Accedi primario, apre SC-05. Niente nome del dispositivo.
+- **Stato = Sincronizzata:** cerchio `sfondo-pieno` con l'iniziale dell'email in maiuscolo (Interfaccia/Titolo di schermata, `testo-su-pieno`); email; pallino da 8 in `icona-successo` a `spazio-icona` (8) da «Sincronizzata · oggi alle 14:32»; Esci secondario.
+- **Stato = Non raggiungibile:** come Sincronizzata, pallino `icona-avviso` e «Server non raggiungibile da…» (DEC-112).
+- **Stato = Accesso scaduto:** come Sincronizzata, pallino `icona-errore`, «Accedi di nuovo per sincronizzare» e Accedi primario al posto di Esci (RB-87).
+- Dopo l'accesso, sotto un divisore come in CMP-31, la riga Campo di CMP-18 «Nome del dispositivo» (RB-51). Testi a 20 dal bordo, pulsante e campo a 16.
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Default | Le quattro varianti sopra |
+| Hover · Focus · Premuto | Del pulsante (CMP-01) e del campo (CMP-03) |
+| Caricamento | Non previsto: la sincronizzazione in corso non ha un suo stato, resta l'ultimo (DEC-122) |
+| Errore | Gli stati Non raggiungibile e Accesso scaduto; gli errori dell'accesso stanno in SC-05 |
+
+### Accessibilità
+- **Lettori di schermo:** il box è una regione «Account»; lo stato si legge come testo, il pallino è solo visivo (il colore non è l'unica informazione, DEC-14). Il cerchio con l'iniziale è decorativo.
+- **Tastiera:** Tab raggiunge il pulsante, poi il campo del nome.
+- **Contrasti:** testi come CMP-18 su `sfondo-colonna`; pallini `icona-<stato>` su `sfondo-colonna` da 4,66:1 (successo in chiaro) a 6,95:1, sopra 3:1; `testo-tenue` su `sfondo-colonna` 4,99:1 in chiaro e 6,53:1 in scuro; iniziale `testo-su-pieno` su `sfondo-pieno` come il pulsante primario.
+
+### Esempi
+- ✅ Corretto: aprendo le impostazioni si vede subito l'email e il pallino verde con l'ora dell'ultima sincronizzazione.
+- ❌ Scorretto: lo stato della sincronizzazione in una sezione separata dall'account, o il pallino senza il testo.
