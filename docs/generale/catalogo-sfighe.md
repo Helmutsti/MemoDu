@@ -82,3 +82,8 @@ Le sfighe incontrate davvero, in test o in produzione, si aggiungono qui a parti
 | Codice | Sfiga | Domanda da porsi | Scoperta il | Origine |
 |---|---|---|---|---|
 | SF-37 | Il disco rifiuta l'operazione | Permessi mancanti, disco pieno, file bloccato da un altro programma, chiavetta tolta: cosa resta fatto e cosa no? | 04/10/2026 | Fase 2 di RF-17 (file locali) |
+| SF-38 | Disco senza Cestino | Su un disco di rete o una chiavetta eliminare cancella per sempre: l'utente viene avvisato prima? | 05/10/2026 | TC-114 non superato su una condivisione di rete (0.1.8) |
+| SF-39 | Server ricreato o svuotato | I dispositivi capiscono che il server è nuovo, o rimandano gli stessi dati all'infinito? | 07/10/2026 | TC-103, invio senza fine dopo il cambio di archivio (0.1.12) |
+| SF-40 | Controlli del sistema che si aggiungono ai nostri | Il browser o il sistema aggiungono pezzi propri (occhio della password, menu, correttore) che si sommano ai nostri? | 07/10/2026 | Doppio occhio di Edge nel campo password (0.1.13) |
+| SF-41 | Installatore bloccato | Un installatore non firmato viene fermato da SmartScreen, Gatekeeper, browser o antivirus: l'utente sa come andare avanti? | 07/10/2026 | Installatori non firmati dalla 0.1.2; runbook di rilascio |
+| SF-42 | Fatti successi ad app chiusa | Un avviso nato mentre l'app era chiusa (accesso scaduto, conflitto) compare quando la riapri? | 06/10/2026 | TC-138, avviso dell'accesso scaduto non mostrato alla riapertura |

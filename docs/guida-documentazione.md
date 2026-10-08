@@ -433,7 +433,8 @@ I casi di prova nascono dalla documentazione, non si inventano:
 
 - ogni criterio di accettazione diventa almeno un caso di prova;
 - ogni coppia flusso-sfiga gestita diventa un caso di prova;
-- per ogni caso si indica in quale ambiente eseguirlo e con quale set di dati (dalla Fase 7).
+- per ogni caso si indica in quale ambiente eseguirlo e con quale set di dati (dalla Fase 7);
+- se il prodotto gira su più sistemi o dispositivi, per ogni caso si indica su quali va eseguito, e prima di un rilascio i casi principali si ripetono su ciascuno.
 
 ### Domande aperte
 Durante l'handoff emergono sempre dubbi. Si raccolgono in un elenco, ciascuno collegato al codice che riguarda, e ognuno deve avere una risposta prima che il requisito sia considerato pronto. Se la risposta cambia qualcosa di importante, diventa una `DEC-`.
@@ -468,6 +469,8 @@ Si scrivono partendo dai requisiti rilasciati: ogni `RF-` implementato e visibil
 
 ### Aggiornamento della fotografia
 I requisiti rilasciati passano a stato *Implementato*, e così le idee collegate nel registro. Se durante lo sviluppo qualcosa è stato realizzato in modo diverso dal progettato, la fotografia va corretta ora: una documentazione che descrive un sistema diverso da quello reale induce in errore.
+
+Le differenze si trovano confrontando i documenti con il prodotto in funzione, non con altri documenti: scrivere la documentazione per gli utenti usando il prodotto è il modo più efficace. Per evitarle, quando una decisione cambia un testo visibile (un nome, un pulsante, un messaggio), se ne cercano subito tutte le occorrenze nella documentazione.
 
 ### Retrospettiva
 Un momento in cui il team si chiede cosa è andato bene, cosa no e cosa si è scoperto. Gli esiti hanno una destinazione precisa:
