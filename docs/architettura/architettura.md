@@ -7,7 +7,7 @@
 |---|---|---|
 | App desktop (Windows, macOS) | Tauri 2: interfaccia web in TypeScript, parte nativa in Rust | DEC-23 |
 | Interfaccia | React con TypeScript | DEC-26 |
-| Editor della nota | CodeMirror 6. Per ora testo puro: l'anteprima dal vivo del markdown è sospesa | DEC-27, DEC-64 |
+| Editor della nota | CodeMirror 6, uno solo. Vista Testo: testo puro; vista Markdown: un compartimento con `@codemirror/lang-markdown` e la resa a simboli nascosti (vedi «Vista della nota») | DEC-27, DEC-64, DEC-130 |
 | Barra di scorrimento | OverlayScrollbars (`overlayscrollbars`, `overlayscrollbars-react`) per la barra sottile sovrapposta al contenuto (CMP-25) | DEC-89 |
 | Icone e carattere | `lucide-react` per le icone Lucide; Inter incorporato nell'app con `@fontsource-variable/inter`, così non dipende dai caratteri installati | DEC-15, tokens.md |
 | Token nel codice | Variabili CSS in `client/src/stili/token.css`, stili di testo come classi in `client/src/stili/base.css`; il modo chiaro o scuro segue il sistema | DEC-21, DEC-22 |
@@ -57,6 +57,13 @@ Le regole stanno solo nella copia di lavoro del client (`client/src-tauri/src/ar
 - **Cestino** (DEC-37, DEC-48): eliminare segna «eliminata il» sulla nota o sulla cartella; una cartella eliminata porta con sé tutto il contenuto, che non si apre più finché non torna. Ripristinare la riporta nella radice (RB-28); eliminare per sempre cancella la riga e, per una cartella, tutto il contenuto, tranne gli elementi eliminati a parte, che restano nel cestino. Quando un'unione svuota una cartella, la cartella sparisce anche se nel cestino ci sono elementi che venivano da lì: si staccano e restano ripristinabili nella radice.
 - **Riconnessione:** ogni operazione dell'archivio passa da un'unica funzione (`con_riconnessione`): se SQLite risponde che il file è in sola lettura, la connessione si riapre e l'operazione si riprova una volta, così quando il file torna scrivibile non serve riavviare l'app. Scelta di Manuel Cucca il 29/09/2026.
 - **Dove:** la cartella dei dati delle applicazioni (DEC-46); la variabile d'ambiente `MEMODU_CARTELLA` la sostituisce (prove e sviluppo).
+
+## Vista della nota (RF-02, DEC-130, 1.1.0)
+- **Copia di lavoro:** schema 7, `ALTER TABLE note ADD COLUMN vista TEXT`, con i valori `testo` e `markdown`; vuota vale Testo, così le note scritte prima della 1.1.0 non cambiano (RB-91). Il nucleo crea con `markdown` le note nuove (Nuova nota, Ctrl + N, nota rapida); la copia in conflitto prende la vista dell'originale.
+- **Comando:** `cambia_vista(id, vista)`; il tipo `Nota` in `condiviso` riceve `vista`. Cambiare la vista non tocca «modificata» e non sposta la nota nell'elenco (RB-91); il trigger della sincronizzazione la segna comunque da inviare.
+- **Sincronizzazione:** `vista` entra nei `campi` del blocco solo se c'è; un blocco ricevuto senza `vista` non cambia quella che c'è, sia applicandolo sia nella fusione (RB-92). Per il resto è un campo come gli altri, vince la modifica arrivata per ultima (DEC-109). Il server non cambia; il nome non può essere `formato`, che nei blocchi indica la cifratura (DEC-78).
+- **Editor:** in `Editor.tsx` la vista Markdown è un compartimento di CodeMirror che si cambia senza ricreare l'editor: `markdown({ base: markdownLanguage })`, la resa che nasconde i simboli (da `anteprima.ts`, con i simboli come intervalli atomici, CA-02.15), la casella della checklist cliccabile (CA-02.20) e i tasti di CA-02.17 e CA-02.18 (`insertNewlineContinueMarkup` e `deleteMarkupBackward` della libreria per gli elenchi, poco codice nostro per i titoli e per il testo scritto ai bordi di un pezzo formattato, CA-02.16). Niente pillola, menu «/», tasto destro né scorciatoie (`EditorMarkdown.tsx`, `comandi.ts` e `formati.ts` restano non collegati).
+- **Dove:** nota aperta e nota rapida con la vista della nota; file di Locale con la vista dall'estensione (CA-17.25); in Info `SceltaSegmenti` chiama `cambia_vista`.
 
 ## Sincronizzazione (RF-10, Fase 7 completa, codice del 30/09/2026)
 - **Codice:** server in `api/src/sincronizzazione.ts`; client in `client/src-tauri/src/sincronizzazione.rs` (il filo in background) e `archivio_sinc.rs` (blocchi, fusione e conflitti); schema 2 della copia di lavoro con i trigger che segnano gli elementi modificati. Se una modifica ricevuta cambia la nota aperta mentre la finestra ha ancora il testo vecchio, il testo della finestra va in una copia in conflitto e non la sovrascrive (DEC-06).

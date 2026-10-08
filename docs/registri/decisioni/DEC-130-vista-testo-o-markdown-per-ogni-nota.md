@@ -14,7 +14,7 @@ Per l'impostazione generale nessuna alternativa: è la richiesta di Manuel Cucca
 ## Decisione
 Scelte di Manuel Cucca del 08/10/2026:
 - **Una vista per ogni nota: Testo o Markdown.** Il testo salvato è sempre lo stesso, Markdown vero con i suoi simboli; cambia solo come l'editor lo mostra. In Testo i simboli si vedono come caratteri normali; in Markdown il testo appare già formattato.
-- **La vista si salva con la nota**, e quindi la segue sugli altri computer.
+- **La vista si salva con la nota**, e quindi la segue sugli altri computer. Cambiarla non è una modifica: non aggiorna «Modificata» e non sposta la nota nell'elenco.
 - **Le note nuove nascono in Markdown; quelle scritte prima della 1.1.0 restano in Testo**, così nessuna nota già scritta cambia aspetto senza che lo si chieda.
 - **La nota rapida (SC-02) mostra la nota nella sua vista**, come la finestra principale, ma senza la scelta: la vista si cambia dalla finestra principale.
 - **I file di Locale prendono la vista dall'estensione:** `.md` in Markdown, `.txt` in Testo, senza scelta nella comparsa del file; la resa non cambia mai il contenuto del file.

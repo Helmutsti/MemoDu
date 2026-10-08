@@ -413,6 +413,16 @@ Comandi di DEC-51 per Info (CMP-24, DEC-44, DEC-96). Valgono le regole generali 
 
 ---
 
+## Vista (RF-02, DEC-130)
+L'oggetto Nota ha in più `"vista": "markdown"` oppure `"testo"`: una nota senza vista nella copia di lavoro (scritta prima della 1.1.0) arriva come `"testo"` (RB-91).
+
+## PUT /note/:id/vista (`cambia_vista`)
+**Input:** `{ "vista": "markdown" }`, solo `testo` o `markdown`. Non cambia il contenuto e non aggiorna `modificata` (RB-91); la nota si sincronizza come per le altre modifiche.
+**Output:** l'oggetto Nota.
+**Errori:** 400 (vista non valida), 404 (nota non trovata o nel cestino), 500.
+
+---
+
 ## Ricerca (RF-08, DEC-94, DEC-95)
 Comando del nucleo, sulla copia di lavoro: la ricerca non passa mai dal server. Valgono le regole generali delle note.
 
