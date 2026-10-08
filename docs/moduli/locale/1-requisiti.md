@@ -50,6 +50,7 @@ Scritti dall'agente da flussi, regole e decisioni (FL-10 … FL-13, RB-73 … RB
 - **CA-17.22** *Dato* un file con modifiche non salvate, *quando* nella comparsa scelgo Chiudi file, *allora* l'area resta vuota, nessuna domanda, il pallino resta nella colonna e riaprendo il file ritrovo le modifiche (RB-78, DEC-117, DEC-123).
 - **CA-17.23** *Dato* un file aggiunto da solo all'elenco, *quando* nella comparsa scelgo Togli da Locale, *allora* il file sparisce dalla colonna, l'area resta vuota e sul disco il file c'è ancora (RB-76, DEC-123).
 - **CA-17.24** *Dato* un file nuovo mai salvato («Senza titolo»), *quando* clicco sul suo nome nel percorso, *allora* la comparsa ha solo Chiudi file e il nome non si cambia dal campo: lo prende al primo Ctrl + S (RB-81, DEC-123).
+- **CA-17.25** *Dato* un file di Locale aperto, *allora* un `.md` si mostra in vista Markdown, con i simboli nascosti come in CA-02.2, e un `.txt` in vista Testo; la comparsa del file non ha la scelta della vista e il file salvato contiene solo ciò che ho scritto (DEC-130).
 
 ---
 

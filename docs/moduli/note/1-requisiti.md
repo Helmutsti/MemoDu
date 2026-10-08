@@ -39,7 +39,7 @@ La scorciatoia predefinita è Ctrl + Alt + N su Windows e Control + Option + N s
 ---
 
 ## RF-02 – Scrittura in markdown con formattazione minima
-**Priorità:** Must · **Origine:** — · **Fase:** 9 · **Stato:** Implementato solo come testo puro (la formattazione è rinviata con DEC-125) (rilasciato fino alla 0.1.13, 07/10/2026)
+**Priorità:** Must · **Origine:** — · **Fase:** 1 per la vista Markdown (1.1.0, DEC-130) · **Stato:** In progettazione; il testo puro, che diventa la vista Testo, è Implementato (rilasciato fino alla 0.1.13, 07/10/2026)
 
 **Nella v1 (DEC-125):** testo puro; la formattazione resta sospesa con DEC-64 e si riprende dopo la v1.
 
@@ -66,7 +66,7 @@ Scrivo la nota come testo semplice: la formattazione arriverà dopo la v1 (DEC-1
 Frammento Must A: senza immagini (RF-03) e senza metadati (RF-04).
 
 - **CA-02.1** *Dato* il programma aperto, *quando* scelgo Nuova nota dal + di CLOUD, premo Ctrl + N o il pulsante Nuova nota, *allora* nasce una nota vuota in cima all'elenco, aperta con il cursore nel corpo; se la lascio vuota, sparisce (FL-09, RB-10, RB-60, DEC-39).
-- **CA-02.2** *(Sospeso con DEC-64: per ora testo puro.)* *Dato* una nota aperta, *quando* scrivo la sintassi markdown (`#`, `##`, `**`, `*`, `~~`, `-`, `1.`, `- [ ]`), *allora* il testo si formatta subito e i simboli spariscono appena riconosciuti, anche sulla riga in cui scrivo; le frecce e Canc li trattano come un blocco unico (RF-02, DEC-58).
+- **CA-02.2** *Dato* una nota in vista Markdown, *quando* scrivo la sintassi Markdown (`#`, `##`, `**`, `*`, `~~`, `-`, `1.`, `- [ ]`), *allora* il testo si formatta subito e i simboli spariscono appena riconosciuti, anche sulla riga in cui scrivo; la nota salvata contiene il Markdown con i suoi simboli (RF-02, DEC-58, DEC-130).
 - **CA-02.3** *(Sospeso con DEC-64: per ora testo puro.)* *Dato* del testo selezionato, *quando* premo Ctrl + B, I, U o Ctrl + Maiusc + X (⌘ su macOS), *allora* diventa grassetto, corsivo, sottolineato o barrato; il sottolineato si salva come `<u>…</u>` (DEC-28).
 - **CA-02.4** *(Sospeso con DEC-64: per ora testo puro.)* *Dato* del testo selezionato, *allora* 8 px sopra compare la pillola di formattazione; *dato* un clic sul vuoto, compare quella di inserimento; *dato* `/` su una riga vuota, si apre il menu di inserimento. In nessuno c'è la voce Immagine; la pillola sparisce riprendendo a scrivere, con Esc o con un clic altrove (CMP-10, CMP-09).
 - **CA-02.5** *(Sospeso con DEC-64: per ora testo puro.)* *Dato* il cursore nel testo, *quando* premo Alt + F10 (Option + F10), *allora* il focus va sulla pillola; le frecce passano da uno strumento all'altro ed Esc torna al testo (CMP-10, RNF-04).
@@ -78,6 +78,12 @@ Frammento Must A: senza immagini (RF-03) e senza metadati (RF-04).
 - **CA-02.11** *Dato* una nota aperta, *quando* premo Ctrl + Z (⌘ + Z), *allora* si annulla l'ultima modifica, qualunque sia (RB-59).
 - **CA-02.12** *Dato* un'interruzione improvvisa (crash o spegnimento), *quando* riapro la nota, *allora* trovo l'ultimo salvataggio e i dati non sono rovinati (RB-06, SF-10, SF-32).
 - **CA-02.13** *Dato* un errore di salvataggio della copia di lavoro, *allora* valgono SC-07, il testo in memoria e la conferma alla chiusura, come in CA-01.7 e CA-01.8 (RB-61, RB-62, DEC-127).
+- **CA-02.14** *Dato* una nota aperta, *quando* apro la comparsa Info dal titolo e scelgo Testo o Markdown nella riga Vista, *allora* il testo si mostra subito nella vista scelta senza che cambi il testo salvato; la scelta resta alla nota riaprendola e sugli altri computer. Le note nuove nascono in Markdown, quelle scritte prima della 1.1.0 restano in Testo; la nota rapida mostra la nota nella sua vista, senza la scelta (DEC-130).
+- **CA-02.15** *Dato* una nota in vista Markdown, *quando* muovo il cursore con le frecce o il clic o seleziono, *allora* il cursore si ferma solo tra caratteri visibili e salta i simboli nascosti, come in Word (DEC-130).
+- **CA-02.16** *Dato* il cursore in fondo a un pezzo formattato (per esempio una parola in grassetto), *quando* scrivo, *allora* il testo nuovo prende la stessa formattazione; *dato* il cursore subito prima del pezzo, il testo nuovo resta normale. *Quando* cancello tutte le lettere del pezzo, spariscono anche i suoi simboli; se ne cancello solo una parte, il resto resta formattato (DEC-130).
+- **CA-02.17** *Dato* il cursore in fondo a un titolo, *quando* premo Invio, *allora* la riga nuova è testo normale; *dato* il cursore in una voce d'elenco (`-`, `1.`, `- [ ]`), *quando* premo Invio, *allora* nasce una voce nuova con lo stesso segno (il numero successivo per gli elenchi numerati), e su una voce vuota l'elenco finisce e la riga torna normale (DEC-130).
+- **CA-02.18** *Dato* il cursore all'inizio del testo di una voce d'elenco, *quando* premo Backspace, *allora* il segno dell'elenco sparisce e il testo resta; *dato* il cursore all'inizio di un titolo, *quando* premo Backspace, *allora* la riga si unisce a quella sopra come testo normale (DEC-130).
+- **CA-02.19** *Dato* del testo formattato selezionato, *quando* lo copio, *allora* negli appunti finisce il Markdown con i suoi simboli; incollare in Memodu segue CA-02.8 (DEC-130).
 
 ---
 
