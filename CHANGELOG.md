@@ -7,6 +7,10 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+Diventerà la 1.1.0, con la formattazione Markdown nelle note.
+
+## [1.0.0] – in preparazione sul ramo rilascio/1.0
+
 Diventerà la 1.0.0, la prima versione completa per l'uso personale: nota rapida da qualsiasi programma, note con cartelle e tag, ricerca, cestino, sincronizzazione cifrata tra i tuoi computer e i file del disco in Locale, su Windows e sui Mac con processore Apple. Il testo delle note è semplice, senza formattazione, e nelle note non si possono ancora mettere immagini: arriveranno nelle prossime versioni. Come si usa Memodu è spiegato nella guida per gli utenti (`docs/rilascio/guida-utenti.md`).
 
 ### Aggiunto

@@ -495,3 +495,4 @@
 | 08/10/2026 | Manuel Cucca | Retrospettiva della Fase 9: nel registro idee ID-37 Installatori firmati e ID-38 Aggiornamento dall'app, Proposte da decidere con il servizio gestito | ID-37, ID-38 |
 | 08/10/2026 | Manuel Cucca | La 1.0.0 esce dopo le prove sul Mac: nota rapida, accesso, sincronizzazione con il PC e Locale (TC-01, TC-02, TC-06, TC-142, TC-135, TC-127, TC-87, TC-88, TC-112, TC-113, TC-114, TC-146) | DEC-128 |
 | 08/10/2026 | Manuel Cucca | Guida alla documentazione: nel piano di test i sistemi su cui eseguire ogni caso, con i casi principali ripetuti su ciascuno prima di un rilascio; nell'aggiornamento della fotografia il confronto con il prodotto in funzione e la ricerca di tutte le occorrenze quando una decisione cambia un testo visibile | — |
+| 08/10/2026 | Manuel Cucca | Ramo `rilascio/1.0` da `e4faad9` per la 1.0.0 in attesa delle prove sul Mac; `main` verso la 1.1.0 con il Markdown; runbook e CHANGELOG adeguati | DEC-129 |
