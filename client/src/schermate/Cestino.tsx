@@ -28,10 +28,10 @@ const data = (istante: string) =>
 
 const note = (n: number) => (n === 1 ? "1 nota" : `${n} note`);
 
-/** «da Lavoro › Clienti», oppure dalla radice «dalle non organizzate» o «dalle cartelle». */
+/** «da Lavoro › Clienti», oppure dalla radice «da CLOUD», come nella colonna (DEC-119). */
 function provenienza(e: ElementoCestino): string {
   if (e.provenienza !== "") return `da ${e.provenienza.split("/").join(" › ")}`;
-  return e.tipo === "nota" ? "dalle non organizzate" : "dalle cartelle";
+  return "da CLOUD";
 }
 
 export function dettagli(e: ElementoCestino): string {

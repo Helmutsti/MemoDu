@@ -801,7 +801,7 @@ describe("SC-04 Cestino (RF-15)", () => {
       screen.getByText("Nota · da Lavoro › Clienti · eliminata il 24/09/2026"),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Cartella con 1 nota · dalle cartelle · eliminata il 20/09/2026"),
+      screen.getByText("Cartella con 1 nota · da CLOUD · eliminata il 20/09/2026"),
     ).toBeInTheDocument();
   });
 
@@ -827,7 +827,7 @@ describe("SC-04 Cestino (RF-15)", () => {
     fireEvent.contextMenu(await riga(/Personale/));
     await userEvent.click(screen.getByRole("menuitem", { name: "Elimina" }));
     expect(
-      await screen.findByText("Cartella con 0 note · dalle cartelle · eliminata il 29/09/2026"),
+      await screen.findByText("Cartella con 0 note · da CLOUD · eliminata il 29/09/2026"),
     ).toBeInTheDocument();
   });
 

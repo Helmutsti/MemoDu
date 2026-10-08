@@ -488,3 +488,4 @@
 | 08/10/2026 | Agente IA | CA-05.1 e SC-01: dentro una cartella prima le note, poi le sottocartelle, come già stabilito da DEC-119 e RB-65 e come fa il codice | DEC-119 |
 | 08/10/2026 | Manuel Cucca | «Scegli le date…» nei filtri della ricerca sceglie un giorno solo, come fa il codice: CA-08.7, CA-08.18, CMP-09 e CMP-29 corretti | DEC-126 |
 | 08/10/2026 | Manuel Cucca | SC-07 con il testo nuovo «Memodu non riesce a salvare le note su questo computer. Premi Riprova; se non basta, controlla lo spazio sul disco.» nel codice e in SC-07, RB-61, SF-30, CA-01.7, CA-01.8, CA-02.13; la nota oltre 4 MB parcheggiata come ID-36 | DEC-127 |
+| 08/10/2026 | Manuel Cucca | Cestino: per gli elementi della radice la provenienza è «da CLOUD», come nella colonna e nella ricerca, al posto di «dalle non organizzate» e «dalle cartelle» | DEC-119 |

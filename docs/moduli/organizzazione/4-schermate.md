@@ -47,7 +47,7 @@ Si apre dalla riga Cestino in fondo alla colonna (DEC-40), al posto della nota; 
 ### Testi definitivi
 | Dove | Testo |
 |---|---|
-| Elemento nota | «Nota · da ‹Cartella› › ‹Sottocartella› · eliminata il gg/mm/aaaa»; dalla radice «Nota · dalle non organizzate · eliminata il gg/mm/aaaa» |
-| Elemento cartella | «Cartella con ‹n› note · da ‹cartella› · eliminata il gg/mm/aaaa» (una nota: «con 1 nota»; dal primo livello: «dalle cartelle») |
+| Elemento nota | «Nota · da ‹Cartella› › ‹Sottocartella› · eliminata il gg/mm/aaaa»; dalla radice «Nota · da CLOUD · eliminata il gg/mm/aaaa» (DEC-119) |
+| Elemento cartella | «Cartella con ‹n› note · da ‹cartella› · eliminata il gg/mm/aaaa» (una nota: «con 1 nota»; dal primo livello: «da CLOUD», DEC-119) |
 | Conferma svuotamento (RB-32) | «Svuotare il cestino?» · «‹n› elementi verranno eliminati per sempre.» (uno: «1 elemento verrà eliminato per sempre.») · «Annulla», «Svuota» |
 | Conferma eliminazione definitiva (RB-55) | «Eliminare per sempre «‹nome›»?» · cartella: «La cartella e le sue ‹n› note verranno eliminate per sempre.»; nota: «La nota verrà eliminata per sempre.» · «Annulla», «Elimina definitivamente» |
