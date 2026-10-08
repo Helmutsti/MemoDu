@@ -7,6 +7,18 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+Diventerà la 1.0.0, la prima versione completa per l'uso personale: nota rapida da qualsiasi programma, note con cartelle e tag, ricerca, cestino, sincronizzazione cifrata tra i tuoi computer e i file del disco in Locale, su Windows e sui Mac con processore Apple. Il testo delle note è semplice, senza formattazione, e nelle note non si possono ancora mettere immagini: arriveranno nelle prossime versioni. Come si usa Memodu è spiegato nella guida per gli utenti (`docs/rilascio/guida-utenti.md`).
+
+### Aggiunto
+- La guida per gli utenti: primi passi, nota rapida, scrivere, organizzare, cercare, cestino, più computer, Locale, impostazioni, scorciatoie e domande frequenti
+
+### Cambiato
+- Nel cestino, per le note e le cartelle che stavano fuori dalle cartelle, si legge «da CLOUD», come nella colonna e nella ricerca
+
+### Corretto
+- La schermata «Memodu non riesce a collegarsi» non parla più del server delle note, che non esiste più: dice di premere Riprova e, se non basta, di controllare lo spazio sul disco
+- Il messaggio della scorciatoia della nota rapida che non va bene nomina i tasti del tuo sistema (sul Mac Control, Option, Maiusc e Command) e dice che come ultimo tasto vanno bene anche i tasti F e Spazio
+
 ## [0.1.13] – 2026-10-07
 
 ### Cambiato
