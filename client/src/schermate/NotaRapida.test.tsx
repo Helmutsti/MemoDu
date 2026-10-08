@@ -44,6 +44,7 @@ const nota = {
   creataScelta: null,
   fineValidita: null,
   tag: [],
+  vista: "testo" as const,
 };
 
 beforeEach(() => {

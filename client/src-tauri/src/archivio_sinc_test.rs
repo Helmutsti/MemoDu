@@ -424,6 +424,61 @@ fn le_impostazioni_senza_il_campo_del_cestino_non_lo_azzerano() {
     );
 }
 
+/// Come un dispositivo con una versione precedente alla 1.1.0: il server riceve la nota con il
+/// testo cambiato e senza la vista.
+fn rimanda_senza_vista(s: &mut Server, id: &str, contenuto: &str) {
+    let (versione, dati, _) = s.attuali[id].clone();
+    let mut blocco: serde_json::Value = serde_json::from_str(&dati).unwrap();
+    blocco["campi"].as_object_mut().unwrap().remove("vista");
+    blocco["campi"]["contenuto"] = serde_json::json!(contenuto);
+    blocco["modificato_il"] = serde_json::json!("2026-09-30T09:00:00.000Z");
+    s.ordine += 1;
+    let ordine = s.ordine;
+    s.attuali.insert(id.to_string(), (versione + 1, blocco.to_string(), ordine));
+}
+
+#[test]
+fn la_vista_arriva_sull_altro_dispositivo() {
+    // CA-02.14, DEC-130
+    let (mut a, mut b, mut s) = due();
+    let id = nota(&mut a, "Lista", "- latte", None);
+    a.sincronizza(&mut s);
+    b.sincronizza(&mut s);
+    assert_eq!(b.a.leggi(&id).unwrap().vista, "markdown");
+    a.a.cambia_vista(&id, "testo").unwrap();
+    a.sincronizza(&mut s);
+    b.sincronizza(&mut s);
+    assert_eq!(b.a.leggi(&id).unwrap().vista, "testo");
+}
+
+#[test]
+fn una_nota_ricevuta_senza_vista_tiene_quella_che_ha() {
+    // TC-165, RB-92: applicata senza modifiche di qui e fusa con una modifica di qui.
+    let (mut a, _, mut s) = due();
+    let id = nota(&mut a, "Lista", "- latte", None);
+    a.sincronizza(&mut s);
+    rimanda_senza_vista(&mut s, &id, "- latte
+- pane");
+    a.sincronizza(&mut s);
+    let ricevuta = a.a.leggi(&id).unwrap();
+    assert_eq!(ricevuta.contenuto, "- latte
+- pane");
+    assert_eq!(ricevuta.vista, "markdown");
+    a.a.salva(&id, &DatiNota { titolo: Some("Spesa".into()), contenuto: None }).unwrap();
+    rimanda_senza_vista(&mut s, &id, "- latte
+- pane
+- uova");
+    a.sincronizza(&mut s);
+    let fusa = a.a.leggi(&id).unwrap();
+    assert_eq!((fusa.titolo.as_str(), fusa.contenuto.as_str()), ("Spesa", "- latte
+- pane
+- uova"));
+    assert_eq!(fusa.vista, "markdown");
+    // Al server torna con la vista.
+    let dati: serde_json::Value = serde_json::from_str(&s.attuali[&id].1).unwrap();
+    assert_eq!(dati["campi"]["vista"], "markdown");
+}
+
 #[test]
 fn con_un_server_nuovo_si_riparte_da_zero_senza_copie() {
     // DEC-105: l'archivio del server è cambiato, i dispositivi rimandano tutto.

@@ -271,6 +271,7 @@ pub fn run() {
             comandi::elimina_se_vuota,
             comandi::sposta_nota,
             comandi::salva_dettagli,
+            comandi::cambia_vista,
             comandi::elenca_tag,
             comandi::aggiungi_tag,
             comandi::togli_tag,

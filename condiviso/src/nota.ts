@@ -20,7 +20,12 @@ export interface Nota {
   fineValidita: string | null;
   /** Tag della nota: percorsi completi come scritti (RB-18, RB-22), in ordine alfabetico. */
   tag: string[];
+  /** Come si mostra il testo (DEC-130); una nota scritta prima della 1.1.0 vale "testo" (RB-91). */
+  vista: Vista;
 }
+
+/** Vista della nota: il testo salvato è sempre Markdown, cambia solo come si mostra (DEC-130). */
+export type Vista = "testo" | "markdown";
 
 /** Una riga dell'elenco di GET /note, ordinato per ultima modifica (RB-60). */
 export interface VoceElenco {

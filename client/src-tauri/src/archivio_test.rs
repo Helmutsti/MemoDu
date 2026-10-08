@@ -158,9 +158,9 @@ fn segna_la_versione_dello_schema() {
     p.chiudi();
     let db = Connection::open(p.file()).unwrap();
     let versione: i64 = db.pragma_query_value(None, "user_version", |r| r.get(0)).unwrap();
-    // Schema 6: sincronizzazione (DEC-75, DEC-76), impostazioni (DEC-91), note del cestino nella
-    // ricerca e indice di ricerca (DEC-95), Locale (DEC-118).
-    assert_eq!(versione, 6);
+    // Schema 7: sincronizzazione (DEC-75, DEC-76), impostazioni (DEC-91), note del cestino nella
+    // ricerca e indice di ricerca (DEC-95), Locale (DEC-118), vista della nota (DEC-130).
+    assert_eq!(versione, 7);
 }
 
 #[test]
@@ -174,6 +174,7 @@ fn una_copia_di_lavoro_con_lo_schema_2_riceve_le_impostazioni() {
          DROP TRIGGER ricerca_note_INSERT; DROP TRIGGER ricerca_note_UPDATE; DROP TRIGGER ricerca_note_DELETE;
          DROP TRIGGER ricerca_note_tag_INSERT; DROP TRIGGER ricerca_note_tag_DELETE; DROP TRIGGER ricerca_tag_UPDATE;
          DROP TRIGGER ricerca_note_tag_UPDATE; DROP TABLE ricerca; DROP TABLE ricerca_righe;
+         ALTER TABLE note DROP COLUMN vista;
          PRAGMA user_version = 2;",
     )
     .unwrap();
@@ -1037,6 +1038,46 @@ fn aggiunge_e_toglie_tag_elenca_elimina_e_salva_i_dettagli() {
         DatiDettagli { creata_scelta: Some(Some("2026-02-30".into())), fine_validita: None };
     assert_eq!(p.a().salva_dettagli(&nota.id, &sbagliata).unwrap_err().stato(), Some(400));
     assert_eq!(p.a().aggiungi_tag(&nota.id, " / ").unwrap_err().stato(), Some(400));
+}
+
+// ——— Vista della nota (DEC-130) ———
+
+#[test]
+fn le_note_nuove_nascono_in_markdown_e_quelle_di_prima_valgono_testo() {
+    // RB-91, CA-02.14
+    let mut p = Prova::nuova("2026-10-08T08:00:00Z");
+    let nuova = p.crea("Nuova", "", "");
+    assert_eq!(nuova.vista, "markdown");
+    let vecchia = p.crea("Vecchia", "- latte", "");
+    p.a().db.execute("UPDATE note SET vista = NULL WHERE id = ?", [&vecchia.id]).unwrap();
+    assert_eq!(p.a().leggi(&vecchia.id).unwrap().vista, "testo");
+}
+
+#[test]
+fn cambiare_la_vista_non_e_una_modifica() {
+    // RB-91: «modificata» e l'ordine dell'elenco restano, il contenuto non cambia.
+    let mut p = Prova::nuova("2026-10-08T08:00:00Z");
+    let prima = p.crea("Prima", "**ciao**", "");
+    p.passa(60);
+    let seconda = p.crea("Seconda", "", "");
+    p.passa(60);
+    let cambiata = p.a().cambia_vista(&prima.id, "testo").unwrap();
+    assert_eq!(cambiata.vista, "testo");
+    assert_eq!(cambiata.modificata, prima.modificata);
+    assert_eq!(cambiata.contenuto, "**ciao**");
+    let ordine: Vec<String> = p.a().elenca().unwrap().into_iter().map(|v| v.id).collect();
+    assert_eq!(ordine, vec![seconda.id, prima.id.clone()]);
+    assert_eq!(p.a().cambia_vista(&prima.id, "markdown").unwrap().vista, "markdown");
+}
+
+#[test]
+fn una_vista_sconosciuta_vale_400() {
+    let mut p = Prova::nuova("2026-10-08T08:00:00Z");
+    let nota = p.crea("Nota", "", "");
+    assert_eq!(p.a().cambia_vista(&nota.id, "html").unwrap_err().stato(), Some(400));
+    assert_eq!(p.a().leggi(&nota.id).unwrap().vista, "markdown");
+    let altra = uuid::Uuid::new_v4().to_string();
+    assert_eq!(p.a().cambia_vista(&altra, "testo").unwrap_err().stato(), Some(404));
 }
 
 // ——— Dati dall'interfaccia (api.md, SF-34) ———

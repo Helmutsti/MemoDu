@@ -12,6 +12,7 @@ const nota = (id: string, dati: DatiNota): Nota => ({
   creataScelta: null,
   fineValidita: null,
   tag: [],
+  vista: "testo",
 });
 
 let salva: Mock<(id: string, dati: DatiNota) => Promise<Nota>>;

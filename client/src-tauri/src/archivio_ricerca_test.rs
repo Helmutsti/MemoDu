@@ -258,6 +258,7 @@ fn una_copia_di_lavoro_con_lo_schema_3_riempie_l_indice() {
          DROP TRIGGER ricerca_note_tag_INSERT; DROP TRIGGER ricerca_note_tag_DELETE; DROP TRIGGER ricerca_tag_UPDATE;
          DROP TRIGGER ricerca_note_tag_UPDATE; DROP TABLE ricerca; DROP TABLE ricerca_righe;
          ALTER TABLE impostazioni DROP COLUMN cestino_in_ricerca;
+         ALTER TABLE note DROP COLUMN vista;
          PRAGMA user_version = 3;",
     )
     .unwrap();
@@ -367,6 +368,7 @@ fn una_copia_di_lavoro_con_il_primo_schema_4_rifa_l_indice() {
          CREATE TRIGGER ricerca_note_UPDATE AFTER UPDATE OF titolo, contenuto ON note BEGIN
            UPDATE ricerca SET titolo = NEW.titolo, contenuto = NEW.contenuto WHERE id = NEW.id;
          END;
+         ALTER TABLE note DROP COLUMN vista;
          PRAGMA user_version = 4;",
     )
     .unwrap();

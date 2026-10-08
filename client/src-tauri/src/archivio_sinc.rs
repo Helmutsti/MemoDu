@@ -287,7 +287,12 @@ impl Archivio {
             // Un campo che manca in una base che c'è non esisteva ancora (per esempio
             // cestino_in_ricerca, DEC-95): valeva null.
             let vb = if base.is_null() { b.get(k) } else { Some(b.get(k).unwrap_or(&Value::Null)) };
-            let (vl, vr) = (l.get(k), r.get(k));
+            let (mut vl, mut vr) = (l.get(k), r.get(k));
+            // Una vista che manca, da una versione che non la conosce, non è un cambio (RB-92).
+            if k == "vista" {
+                vl = vl.or(vb);
+                vr = vr.or(vb);
+            }
             let valore = if vl == vr || vl == vb {
                 vr
             } else if vr == vb {
@@ -347,10 +352,10 @@ impl Archivio {
                 .db
                 .query_row(
                     "SELECT titolo, contenuto, cartella, creata, creata_scelta, modificata,
-                            fine_validita, eliminata_il, provenienza FROM note WHERE id = ?",
+                            fine_validita, eliminata_il, provenienza, vista FROM note WHERE id = ?",
                     [id],
                     |r| {
-                        Ok(json!({
+                        Ok((json!({
                             "titolo": r.get::<_, String>(0)?,
                             "contenuto": r.get::<_, String>(1)?,
                             "cartella": r.get::<_, Option<String>>(2)?,
@@ -360,11 +365,15 @@ impl Archivio {
                             "fine_validita": r.get::<_, Option<String>>(6)?,
                             "eliminata_il": r.get::<_, Option<String>>(7)?,
                             "provenienza": r.get::<_, Option<String>>(8)?,
-                        }))
+                        }), r.get::<_, Option<String>>(9)?))
                     },
                 )
                 .optional()?
-                .map(|mut c| -> Esito<Value> {
+                .map(|(mut c, vista)| -> Esito<Value> {
+                    // Solo se c'è: le note senza vista restano senza anche sul server (RB-91).
+                    if let Some(vista) = vista {
+                        c["vista"] = json!(vista);
+                    }
                     let mut tag: Vec<String> = self
                         .db
                         .prepare("SELECT tag FROM note_tag WHERE nota = ?")?
@@ -449,11 +458,11 @@ impl Archivio {
                 let adesso = self.ora();
                 self.db.execute(
                     "INSERT INTO note (id, titolo, contenuto, cartella, creata, creata_scelta, modificata,
-                                       fine_validita, eliminata_il, provenienza)
-                     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)
+                                       fine_validita, eliminata_il, provenienza, vista)
+                     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)
                      ON CONFLICT(id) DO UPDATE SET titolo = ?2, contenuto = ?3, cartella = ?4,
                        creata = ?5, creata_scelta = ?6, modificata = ?7, fine_validita = ?8,
-                       eliminata_il = ?9, provenienza = ?10",
+                       eliminata_il = ?9, provenienza = ?10, vista = coalesce(?11, vista)",
                     params![
                         id,
                         testo("titolo").unwrap_or_default(),
@@ -465,6 +474,8 @@ impl Archivio {
                         testo("fine_validita"),
                         testo("eliminata_il"),
                         testo("provenienza"),
+                        // Senza vista nel blocco resta quella che c'è (RB-92).
+                        testo("vista"),
                     ],
                 )?;
                 self.db.execute("DELETE FROM note_tag WHERE nota = ?", [id])?;
@@ -601,8 +612,8 @@ impl Archivio {
             format!("{titolo} (copia in conflitto)")
         };
         self.db.execute(
-            "INSERT INTO note (id, titolo, contenuto, cartella, creata, modificata)
-             SELECT ?1, ?2, ?3, cartella, ?4, ?4 FROM note WHERE id = ?5",
+            "INSERT INTO note (id, titolo, contenuto, cartella, creata, modificata, vista)
+             SELECT ?1, ?2, ?3, cartella, ?4, ?4, vista FROM note WHERE id = ?5",
             params![id, titolo, contenuto, adesso, originale],
         )?;
         self.db.execute(

@@ -102,6 +102,14 @@ pub async fn salva_dettagli(app: AppHandle,
     dati.modifica(&app, |a| a.salva_dettagli(&id, &dettagli))
 }
 
+/// La vista della nota, "testo" o "markdown" (DEC-130).
+#[tauri::command]
+pub async fn cambia_vista(app: AppHandle,
+    dati: Stato<'_>, id: String, vista: String) -> Esito<Nota> {
+    id_valido(&id)?;
+    dati.modifica(&app, |a| a.cambia_vista(&id, &vista))
+}
+
 #[tauri::command]
 pub async fn elenca_tag(dati: Stato<'_>) -> Esito<Vec<VoceTag>> {
     dati.con(|a| a.elenca_tag())

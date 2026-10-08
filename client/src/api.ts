@@ -16,6 +16,7 @@ import {
   type SeEsiste,
   type VoceElenco,
   type VoceTag,
+  type Vista,
 } from "@memodu/condiviso";
 
 /** L'archivio non risponde (stato null) o risponde con un errore (RB-61, SF-32). */
@@ -85,6 +86,8 @@ export const api = {
   // Dettagli e tag della nota (DEC-51).
   salvaDettagli: (id: string, dati: DatiDettagli) =>
     comando<Nota>("salva_dettagli", { id, dettagli: dati }),
+  /** Non è una modifica: «modificata» e l'ordine dell'elenco restano (RB-91). */
+  cambiaVista: (id: string, vista: Vista) => comando<Nota>("cambia_vista", { id, vista }),
   elencaTag: () => comando<VoceTag[]>("elenca_tag"),
   aggiungiTag: (id: string, nome: string) => comando<Nota>("aggiungi_tag", { id, nome }),
   togliTag: (id: string, nome: string) => comando<Nota>("togli_tag", { id, nome }),

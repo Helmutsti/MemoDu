@@ -52,7 +52,7 @@
 | TC-162 | RF-02 CA-02.18 | Backspace all'inizio del testo di una voce d'elenco: il segno sparisce e il testo resta; all'inizio di un titolo: la riga si unisce a quella sopra come testo normale, senza `#` | Locale | Nota con titolo ed elenchi | Da fare (1.1.0) |
 | TC-163 | RF-02 CA-02.19 | Copiare una frase con una parola in grassetto e incollarla nel Blocco note: c'è `**`; incollarla in un'altra nota di Memodu: entra come testo (CA-02.8) | Locale | Nota con testo formattato | Da fare (1.1.0) |
 | TC-164 | RF-02 CA-02.20 | Cliccare la casella di una voce della checklist: si spunta e nel database `[ ]` diventa `[x]`; di nuovo: torna `[ ]`; Ctrl + Z ripristina | Locale | Nota con una checklist | Da fare (1.1.0) |
-| TC-165 | RB-92 | Prova automatica del nucleo: un blocco di una nota ricevuto senza `vista` (come da una versione precedente), applicato e fuso con una nota che ha `markdown`: la vista resta `markdown`; un blocco con `testo` la cambia | Locale | Copia di lavoro di prova | Da fare (1.1.0) |
+| TC-165 | RB-92 | Prova automatica del nucleo: un blocco di una nota ricevuto senza `vista` (come da una versione precedente), applicato e fuso con una nota che ha `markdown`: la vista resta `markdown`; un blocco con `testo` la cambia | Locale | Copia di lavoro di prova | Superato il 08/10/2026 (agente, prova automatica del nucleo `una_nota_ricevuta_senza_vista_tiene_quella_che_ha`) |
 
 Frammenti Must A (TC-01 … TC-32) e Must C (TC-51 … TC-56, TC-79, TC-80); vista della nota della 1.1.0 (TC-10, TC-158 … TC-165, DEC-130). Ambiente Locale, l'unico della prima fase (`architettura/ambienti.md`); set di dati inventati, senza dati personali reali. FL-09 × SF-20 riguarda la sincronizzazione ed è fuori da Must A.
 

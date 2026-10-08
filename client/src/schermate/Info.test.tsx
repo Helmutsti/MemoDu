@@ -14,6 +14,7 @@ const nota: Nota = {
   creataScelta: null,
   fineValidita: null,
   tag: ["riunioni"],
+  vista: "testo",
 };
 const tutti: VoceTag[] = [
   { nome: "lavoro", note: 3 },

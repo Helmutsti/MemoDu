@@ -54,6 +54,7 @@ const nota = (id: string, titolo: string, contenuto = "", cartella = ""): Nota =
   creataScelta: null,
   fineValidita: null,
   tag: [],
+  vista: "testo",
 });
 const voce = (
   id: string,

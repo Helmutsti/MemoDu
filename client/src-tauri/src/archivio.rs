@@ -22,7 +22,7 @@ pub const FILE_DATABASE: &str = "copia-di-lavoro.db";
 /// File dell'API quando girava sulla stessa macchina (DEC-46): da lì si copiano le note alla
 /// prima apertura, così non si perde niente.
 pub const FILE_API: &str = "memodu.db";
-const VERSIONE_SCHEMA: i64 = 6;
+const VERSIONE_SCHEMA: i64 = 7;
 const SENZA_TITOLO: &str = "Senza titolo";
 const NUOVA_CARTELLA: &str = "Nuova cartella";
 const LUNGHEZZA_MASSIMA_NOME: usize = 100;
@@ -98,6 +98,10 @@ const SCHEMA_IMPOSTAZIONI: &str = "
   );
   CREATE TABLE dispositivo (chiave TEXT PRIMARY KEY, valore TEXT NOT NULL);
 ";
+
+/// Schema 7 (DEC-130): la vista della nota, `testo` o `markdown`; vuota vale Testo, così le note
+/// scritte prima non cambiano aspetto (RB-91).
+const SCHEMA_VISTA: &str = "ALTER TABLE note ADD COLUMN vista TEXT;";
 
 /// Schema 4 (DEC-95): l'impostazione delle note del cestino nei risultati, che si sincronizza
 /// con le altre (RB-29, RB-52); vuota vale accesa.
@@ -226,6 +230,8 @@ pub enum Errore {
     SpostamentoImpossibile,
     TagNonTrovato(String),
     DataNonValida(String),
+    /// Vista diversa da "testo" e "markdown" (DEC-130).
+    VistaNonValida(String),
     /// Id di una nota o di un elemento del cestino che non è un UUID (SF-34).
     IdNonValido(String),
     /// La nota non è vuota e non si cancella da sola (DEC-39).
@@ -269,6 +275,7 @@ impl Errore {
             | Errore::FileNonTrovato(_) => Some(404),
             Errore::PercorsoNonValido(_)
             | Errore::DataNonValida(_)
+            | Errore::VistaNonValida(_)
             | Errore::IdNonValido(_)
             | Errore::ScorciatoiaNonValida(_) => Some(400),
             Errore::NomeEsistente(_)
@@ -294,6 +301,7 @@ impl Errore {
             Errore::NomeEsistente(nome) => format!("Esiste già «{nome}»"),
             Errore::SpostamentoImpossibile => "Una cartella non si sposta dentro sé stessa".into(),
             Errore::TagNonTrovato(nome) => format!("Nessun tag «{nome}»"),
+            Errore::VistaNonValida(vista) => format!("Vista non valida: {vista}"),
             Errore::IdNonValido(id) => format!("«{id}» non è un id valido"),
             Errore::NotaNonVuota => "La nota non è vuota".into(),
             Errore::NonDisponibile(testo) | Errore::ScorciatoiaNonValida(testo) => testo.clone(),
@@ -368,6 +376,8 @@ pub struct Nota {
     pub creata_scelta: Option<String>,
     pub fine_validita: Option<String>,
     pub tag: Vec<String>,
+    /// "testo" o "markdown" (DEC-130); una nota senza vista vale "testo" (RB-91).
+    pub vista: String,
 }
 
 /// Una riga dell'elenco, ordinato per ultima modifica (RB-60).
@@ -491,6 +501,7 @@ struct RigaNota {
     fine_validita: Option<String>,
     eliminata_il: Option<String>,
     provenienza: Option<String>,
+    vista: Option<String>,
 }
 
 impl RigaNota {
@@ -506,6 +517,7 @@ impl RigaNota {
             fine_validita: riga.get("fine_validita")?,
             eliminata_il: riga.get("eliminata_il")?,
             provenienza: riga.get("provenienza")?,
+            vista: riga.get("vista")?,
         })
     }
 }
@@ -644,6 +656,9 @@ impl Archivio {
             if versione < 6 {
                 tx.execute_batch(locale::SCHEMA_LOCALE)?;
             }
+            if versione < 7 {
+                tx.execute_batch(SCHEMA_VISTA)?;
+            }
             tx.pragma_update(None, "user_version", VERSIONE_SCHEMA)?;
             tx.commit()?;
         }
@@ -711,7 +726,8 @@ impl Archivio {
         self.con_riconnessione(|a| a.nota_da_id(id))
     }
 
-    /// Crea una nota nella radice (RB-01) o nella cartella indicata (RB-09), anche vuota (RB-10).
+    /// Crea una nota nella radice (RB-01) o nella cartella indicata (RB-09), anche vuota (RB-10),
+    /// in vista Markdown (DEC-130).
     pub fn crea(&mut self, dati: &DatiNuovaNota) -> Esito<Nota> {
         self.con_riconnessione(|a| {
             let cartella = dati.cartella.as_deref().unwrap_or("");
@@ -720,7 +736,8 @@ impl Archivio {
             let adesso = a.ora();
             let id = uuid::Uuid::new_v4().to_string();
             a.db.execute(
-                "INSERT INTO note (id, titolo, contenuto, cartella, creata, modificata) VALUES (?, ?, ?, ?, ?, ?)",
+                "INSERT INTO note (id, titolo, contenuto, cartella, creata, modificata, vista)
+                 VALUES (?, ?, ?, ?, ?, ?, 'markdown')",
                 params![
                     id,
                     dati.titolo.as_deref().unwrap_or(""),
@@ -1069,6 +1086,19 @@ impl Archivio {
         })
     }
 
+    /// Cambia la vista della nota (DEC-130). Non è una modifica: «modificata» resta e la nota
+    /// non si sposta nell'elenco; il trigger la segna comunque da sincronizzare (RB-91).
+    pub fn cambia_vista(&mut self, id: &str, vista: &str) -> Esito<Nota> {
+        if !matches!(vista, "testo" | "markdown") {
+            return Err(Errore::VistaNonValida(vista.to_string()));
+        }
+        self.con_riconnessione(|a| {
+            a.trova(id)?;
+            a.db.execute("UPDATE note SET vista = ? WHERE id = ?", params![vista, id])?;
+            a.nota_da_id(id)
+        })
+    }
+
     /// Tutti i tag, anche senza note (RB-49), con quante note fuori dal cestino usano il tag o
     /// un suo sotto-tag: è il numero della conferma di eliminazione (RB-19).
     pub fn elenca_tag(&mut self) -> Esito<Vec<VoceTag>> {
@@ -1236,6 +1266,7 @@ impl Archivio {
             modificata: riga.modificata,
             creata_scelta: riga.creata_scelta,
             fine_validita: riga.fine_validita,
+            vista: riga.vista.unwrap_or_else(|| "testo".to_string()),
         })
     }
 
