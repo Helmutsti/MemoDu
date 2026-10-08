@@ -81,14 +81,17 @@ flowchart TD
 ---
 
 ## FL-02 – Scrivere e formattare una nota
-**Requisito:** RF-02 · **Attori:** Utente · **Interazioni rapide:** scorciatoie da tastiera, menu del tasto destro (RF-11)
+**Requisito:** RF-02 · **Attori:** Utente · **Interazioni rapide:** nessuna per la formattazione: scorciatoie, pillola e menu del tasto destro sono sospesi (DEC-130)
 
 ```mermaid
 flowchart TD
-    A[Apro una nota] --> B[La nota compare formattata; i simboli markdown non si vedono - DEC-58]
+    A[Apro una nota] --> V{Vista della nota - RB-91}
+    V -- Markdown --> B[Il testo compare formattato; i simboli non si vedono - DEC-58]
+    V -- Testo --> B2[Il testo compare con i simboli come caratteri normali]
     B --> C[Scrivo]
+    B2 --> C
     C --> D{Voglio formattare?}
-    D -- Sì --> E[Scrivo i simboli, uso una scorciatoia, la pillola degli strumenti o il tasto destro]
+    D -- Sì --> E[Scrivo i simboli Markdown]
     E --> C
     D -- No --> F{Incollo testo da fuori?}
     F -- Sì --> G[Si incolla come testo semplice - RB-07]
@@ -101,7 +104,8 @@ flowchart TD
 ```
 
 ### Percorsi alternativi
-- **Formattazione:** si applica in quattro modi equivalenti: scrivendo i simboli markdown, con le scorciatoie da tastiera, con la pillola degli strumenti che compare sopra il testo selezionato (SC-03) o con il menu del tasto destro. Per ora sospesa: il testo è puro (DEC-64).
+- **Formattazione:** per ora si applica solo scrivendo i simboli Markdown; in vista Markdown il testo si formatta subito e la scrittura segue Word (CA-02.15 … CA-02.19). Scorciatoie, pillola degli strumenti e menu del tasto destro restano sospesi (DEC-130).
+- **Cambio di vista:** dal titolo si apre la comparsa Info e nella riga Vista si sceglie Testo o Markdown; il testo si mostra subito nell'altra vista, senza cambiare (RB-91). La nota rapida mostra la nota nella sua vista, senza la scelta.
 - **Cambio di nota:** il programma mostra una nota alla volta (RF-01): aprendone un'altra, quella corrente è già salvata (RB-06).
 
 ### Sfighe gestite
@@ -114,6 +118,7 @@ flowchart TD
 | SF-32 Errore a metà operazione | Crash del programma durante la scrittura | Alla riapertura la nota mostra l'ultimo salvataggio | Si perde al massimo l'ultima pausa di scrittura (RB-06) |
 | SF-30 Copia di lavoro fuori uso (DEC-85, DEC-127; prima l'API delle note, DEC-30) | La copia di lavoro non si apre o non si scrive quando si salva, si apre o si crea una nota | SC-07 al posto del contenuto della finestra: «Memodu non riesce a collegarsi», con la spiegazione «Memodu non riesce a salvare le note su questo computer. Premi Riprova; se non basta, controlla lo spazio sul disco.» e Riprova | Si libera spazio sul disco o si sistemano i permessi; il testo non ancora salvato resta in memoria e si salva dopo Riprova (RB-61); chiudendo prima, conferma (RB-62) |
 | SF-36 Input malevolo | Script o HTML attivo nel testo, incollato o scritto | Il codice si vede come testo oppure viene rimosso | Il contenuto delle note non esegue mai codice (RB-08) |
+| SF-33 Versioni diverse | Una nota arriva dalla sincronizzazione senza la vista, da un computer con una versione precedente alla 1.1.0 | Nessun messaggio | La nota tiene la vista che ha su questo computer (RB-92) |
 
 ### Sfighe considerate e scartate
 - SF-01 Doppio invio, SF-03 Tasto indietro e refresh: non esiste un'azione di invio, il salvataggio è continuo (RB-06).
@@ -123,7 +128,7 @@ flowchart TD
 - SF-16 Vuoto: la nuova nota lasciata vuota sparisce (RB-10), vedi FL-09.
 - SF-17 Troppo: una nota arriva fino a 4 MB di testo (EN-01, DEC-106); oltre, il salvataggio fallisce e compare SC-07 (RB-61). Nessuna soglia sulla digitazione (RNF-01).
 - SF-22 Modifica simultanea: gestita in FL-07.
-- SF-13 … SF-15, SF-18 … SF-21, SF-23 … SF-31, SF-33 … SF-35: nessuna data, valore limite, file, permesso o sistema esterno coinvolto. I file sono in FL-03.
+- SF-13 … SF-15, SF-18 … SF-21, SF-23 … SF-31, SF-34, SF-35: nessuna data, valore limite, file, permesso o sistema esterno coinvolto. I file sono in FL-03.
 
 ---
 
@@ -252,3 +257,5 @@ La posizione di una nota (radice, cartella, cestino) è descritta nel diagramma 
 | RB-61 | Se la copia di lavoro non si apre o non riesce a salvare (nota non trovata, contenuto oltre 4 MB, file non scritto), la finestra (programma o nota rapida) mostra SC-07 al posto del contenuto, con «Memodu non riesce a salvare le note su questo computer. Premi Riprova; se non basta, controlla lo spazio sul disco.»; il testo non ancora salvato resta in memoria e si salva appena Riprova riesce (DEC-85, DEC-127; nel frammento Must A era l'API delle note, DEC-30). Per la nota oltre 4 MB vedi ID-36 | FL-01, FL-02, FL-09 |
 | RB-62 | Solo nel frammento Must A: se si chiude una finestra (Chiudi, Esc o chiusura di Memodu) mentre c'è testo non salvato per RB-61, compare una finestra di conferma (CMP-16): titolo «La nota non è salvata», testo «Chiudendo, il testo va perso.», pulsanti «Annulla» e «Chiudi comunque». Annulla lascia la finestra aperta con il testo. Con SC-07 davanti alla nota rapida, il tasto Esc apre questa conferma, così la finestra si può sempre chiudere (confermato da Manuel Cucca il 29/09/2026). Con «Esci da Memodu» dall'icona ogni finestra prova a salvare; ognuna che non ci riesce mostra la sua conferma (la finestra principale torna in primo piano) e Memodu esce solo dopo «Chiudi comunque» in tutte; Annulla in una qualsiasi ferma l'uscita (scelta di Manuel Cucca il 29/09/2026). Alt + F4 su una nota rapida vale come Chiudi | FL-01, FL-02 |
 | RB-68 | Se la nota aperta non c'è più quando si salva (eliminata altrove), si chiude e l'avviso (CMP-15, tipo Avviso) dice «La nota è nel cestino.» con Ripristina, che la riporta, la riapre e salva il testo rimasto in sospeso; se è stata eliminata per sempre dice «La nota è stata eliminata.» e le modifiche non salvate si perdono. Scelta di Manuel Cucca il 29/09/2026 | FL-02 |
+| RB-91 | La vista di una nota (Testo o Markdown) cambia solo come si mostra il testo, mai il testo salvato, che è sempre Markdown. Le note nuove nascono in Markdown; quelle senza vista, scritte prima della 1.1.0 o da una versione precedente, si mostrano in Testo; i file di Locale la prendono dall'estensione (DEC-130) | FL-02 |
+| RB-92 | Una nota che arriva dalla sincronizzazione senza la vista non cambia la vista che ha su questo computer: una vista mancante non vale come cambio (DEC-130, SF-33) | FL-02 |
