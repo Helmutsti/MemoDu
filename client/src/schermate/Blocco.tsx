@@ -1,6 +1,6 @@
-// SC-07 Collegamento bloccato, nel frammento Must A quando l'API delle note non risponde o
-// non riesce a salvare (RB-61): al posto del contenuto della finestra. Il testo non salvato
-// resta in memoria e si salva appena Riprova riesce.
+// SC-07 Collegamento bloccato, quando la copia di lavoro non si apre o non si scrive, o una
+// nota supera 4 MB (RB-61, DEC-127): al posto del contenuto della finestra. Il testo non
+// salvato resta in memoria e si salva appena Riprova riesce.
 
 import { CircleAlert } from "lucide-react";
 import type { ReactElement } from "react";
@@ -11,11 +11,11 @@ import "./Blocco.css";
 export function Blocco({
   inCorso,
   onRiprova,
-  testo = "Il server delle note non risponde. Avvialo e premi Riprova.",
+  testo = "Memodu non riesce a salvare le note su questo computer. Premi Riprova; se non basta, controlla lo spazio sul disco.",
 }: {
   inCorso: boolean;
   onRiprova: () => void;
-  /** Cosa correggere: di default il server delle note che non risponde (RB-61). */
+  /** Cosa correggere: di default la copia di lavoro che non si scrive (RB-61, DEC-127). */
   testo?: string;
 }): ReactElement {
   return (

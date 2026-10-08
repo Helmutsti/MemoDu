@@ -33,8 +33,8 @@ La scorciatoia predefinita è Ctrl + Alt + N su Windows e Control + Option + N s
 - **CA-01.4** *Dato* una nota rapida aperta, *quando* premo di nuovo la scorciatoia, *allora* la prima viene salvata e resta aperta, e ne compare un'altra spostata di 32 px a destra e in basso (RB-04, SF-01, SF-04).
 - **CA-01.5** *Dato* una nota rapida con del testo e un'altra nota aperta nel programma, *quando* dalla freccia di Chiudi scelgo Apri nel programma, *allora* la nota del programma viene salvata e chiusa e al suo posto si apre la nota rapida (RB-05).
 - **CA-01.6** *Dato* Memodu in background, *quando* uso l'icona nell'area di notifica (Windows) o nella barra dei menu (macOS), *allora* posso aprire la nota rapida o il programma. Su Windows il clic sinistro apre il programma e il destro il menu (DEC-72); l'icona è nera con la barra chiara e bianca con quella scura (DEC-73).
-- **CA-01.7** *Dato* il server spento, *quando* la nota rapida prova a salvare, *allora* compare SC-07 con «Il server delle note non risponde. Avvialo e premi Riprova.»; avviato il server, Riprova salva la nota con tutto il testo (RB-61, SF-30). (superato da DEC-85: il server delle note non c'è più e SC-07 compare se la copia di lavoro non si apre o non si scrive; da riscrivere con i testi definitivi di SC-07)
-- **CA-01.8** *Dato* del testo non salvato perché il server non risponde, *quando* chiudo la finestra, *allora* compare la conferma «La nota non è salvata»; Annulla lascia la finestra aperta con il testo, Chiudi comunque la chiude (RB-62). (superato da DEC-85; da riscrivere con i testi definitivi di SC-07)
+- **CA-01.7** *Dato* la copia di lavoro che non si scrive, *quando* la nota rapida prova a salvare, *allora* compare SC-07 con «Memodu non riesce a salvare le note su questo computer. Premi Riprova; se non basta, controlla lo spazio sul disco.»; sistemato il disco, Riprova salva la nota con tutto il testo (RB-61, SF-30, DEC-127).
+- **CA-01.8** *Dato* del testo non salvato perché la copia di lavoro non si scrive, *quando* chiudo la finestra, *allora* compare la conferma «La nota non è salvata»; Annulla lascia la finestra aperta con il testo, Chiudi comunque la chiude (RB-62, DEC-127).
 
 ---
 
@@ -77,7 +77,7 @@ Frammento Must A: senza immagini (RF-03) e senza metadati (RF-04).
 - **CA-02.10** *Dato* una nota senza titolo, *allora* nell'elenco compaiono le prime parole del testo; senza titolo né testo compare «Nota vuota» in grigio chiaro (RB-15).
 - **CA-02.11** *Dato* una nota aperta, *quando* premo Ctrl + Z (⌘ + Z), *allora* si annulla l'ultima modifica, qualunque sia (RB-59).
 - **CA-02.12** *Dato* un'interruzione improvvisa (crash o spegnimento), *quando* riapro la nota, *allora* trovo l'ultimo salvataggio e i dati non sono rovinati (RB-06, SF-10, SF-32).
-- **CA-02.13** *Dato* il server spento o un errore di salvataggio, *allora* valgono SC-07, il testo in memoria e la conferma alla chiusura, come in CA-01.7 e CA-01.8 (RB-61, RB-62). (superato da DEC-85; da riscrivere con i testi definitivi di SC-07)
+- **CA-02.13** *Dato* un errore di salvataggio della copia di lavoro, *allora* valgono SC-07, il testo in memoria e la conferma alla chiusura, come in CA-01.7 e CA-01.8 (RB-61, RB-62, DEC-127).
 
 ---
 

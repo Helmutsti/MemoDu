@@ -868,7 +868,9 @@ describe("SC-07 quando l'API non risponde (RB-61, CA-01.7, CA-02.13)", () => {
     render(<FinestraPrincipale />);
     expect(await screen.findByText("Memodu non riesce a collegarsi")).toBeInTheDocument();
     expect(
-      screen.getByText("Il server delle note non risponde. Avvialo e premi Riprova."),
+      screen.getByText(
+        "Memodu non riesce a salvare le note su questo computer. Premi Riprova; se non basta, controlla lo spazio sul disco.",
+      ),
     ).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Riprova" }));
     expect(await titoloNota("Lista della spesa")).toBeInTheDocument();

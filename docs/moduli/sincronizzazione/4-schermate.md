@@ -31,7 +31,7 @@ L'avviso resta sul dispositivo in cui nasce (DEC-90). L'avviso dell'accesso scad
 - **Esportazioni:** `immagini/SC-07.png`
 - **Mockup:** [Fase 6]
 
-Al posto della finestra principale e della nota rapida quando la copia di lavoro non si apre o non si scrive (DEC-67) e nell'interfaccia aperta nel browser, che non ha il nucleo (DEC-85). Non compare più per le credenziali: senza un gettone valido si lavora in locale (RB-87, DEC-121). Finestra vuota con, al centro, icona di errore, «Memodu non riesce a collegarsi», una riga che spiega cosa correggere e il pulsante Riprova, con la spiegazione «Il server delle note non risponde. Avvialo e premi Riprova.», da rivedere (domanda aperta su SC-07).
+Al posto della finestra principale e della nota rapida quando la copia di lavoro non si apre o non si scrive (DEC-67) e nell'interfaccia aperta nel browser, che non ha il nucleo (DEC-85). Non compare più per le credenziali: senza un gettone valido si lavora in locale (RB-87, DEC-121). Finestra vuota con, al centro, icona di errore, «Memodu non riesce a collegarsi», una riga che spiega cosa correggere e il pulsante Riprova, con la spiegazione «Memodu non riesce a salvare le note su questo computer. Premi Riprova; se non basta, controlla lo spazio sul disco.» (DEC-127). Compare anche quando una nota supera 4 MB (DEC-106): un avviso che lasci la nota modificabile è ID-36.
 
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |
