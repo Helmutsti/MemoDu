@@ -501,3 +501,4 @@
 | 08/10/2026 | Manuel Cucca | Ciclo 1.1.0, Fase 3 di RF-02: attributo Vista di EN-01 (`vista`, testo o markdown, assente vale testo) | DEC-130 |
 | 08/10/2026 | Manuel Cucca | Entità di note, organizzazione e interfaccia: «Dati sensibili» dice che la cifratura è attiva dalla 0.1.13, al posto di «per ora in chiaro» | DEC-121 |
 | 08/10/2026 | Manuel Cucca | Ciclo 1.1.0, Fase 4 di RF-02: riga Vista in Info, ultima delle righe dopo Tag, con «Vista» e la Scelta a segmenti Testo · Markdown, nella Comparsa e nella Finestra | DEC-130 |
+| 08/10/2026 | Manuel Cucca | Ciclo 1.1.0, Fase 5 di RF-02: riga Vista in CMP-24 con la Scelta a segmenti (CMP-28, verificata su `sfondo-flottante`); in CMP-20 le varianti Vista Testo e Vista Markdown, tastiera senza scorciatoie di formattazione; nuovo CA-02.20, la casella della checklist si spunta con un clic | DEC-130 |

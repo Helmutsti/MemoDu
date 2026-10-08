@@ -84,6 +84,7 @@ Frammento Must A: senza immagini (RF-03) e senza metadati (RF-04).
 - **CA-02.17** *Dato* il cursore in fondo a un titolo, *quando* premo Invio, *allora* la riga nuova è testo normale; *dato* il cursore in una voce d'elenco (`-`, `1.`, `- [ ]`), *quando* premo Invio, *allora* nasce una voce nuova con lo stesso segno (il numero successivo per gli elenchi numerati), e su una voce vuota l'elenco finisce e la riga torna normale (DEC-130).
 - **CA-02.18** *Dato* il cursore all'inizio del testo di una voce d'elenco, *quando* premo Backspace, *allora* il segno dell'elenco sparisce e il testo resta; *dato* il cursore all'inizio di un titolo, *quando* premo Backspace, *allora* la riga si unisce a quella sopra come testo normale (DEC-130).
 - **CA-02.19** *Dato* del testo formattato selezionato, *quando* lo copio, *allora* negli appunti finisce il Markdown con i suoi simboli; incollare in Memodu segue CA-02.8 (DEC-130).
+- **CA-02.20** *Dato* una voce della checklist in vista Markdown, *quando* clicco la casella, *allora* si spunta o si toglie la spunta, come in Word; nel testo salvato `[ ]` diventa `[x]` e viceversa, e Annulla la ripristina (DEC-130).
 
 ---
 

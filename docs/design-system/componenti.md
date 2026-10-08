@@ -118,7 +118,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 | CMP-25 Barra di scorrimento | ✓ | ✓ | ✓ (Info, card dei risultati, ricerca avanzata, Sposta in) | nessuno: `icona-tenue` al 50 % o all'80 % |
 | CMP-26 Percorso | ✓ (fascia in alto) | | | hover |
 | CMP-27 Comparsa dei metadati (superata) | sopra la nota | | è la superficie | flottante, con ombra; dentro: tag |
-| CMP-28 Scelta a segmenti | | ✓ (riquadri delle impostazioni) | | campo, hover, pieno |
+| CMP-28 Scelta a segmenti | | ✓ (riquadri delle impostazioni) | ✓ (Info, riga Vista) | campo, hover, pieno |
 | CMP-31 Gruppo di impostazioni · CMP-32 Box dell'account | ✓ (il riquadro è `sfondo-colonna` su `sfondo-nota`) | | | i fondi delle righe, dei campi, degli interruttori e dei pulsanti stanno su `sfondo-colonna`; pieno (iniziale), stati (pallino) |
 | CMP-09 Menu · CMP-10 Pillola · CMP-11 Pannello · CMP-12 Date picker · CMP-13 Card dei risultati · CMP-15 Avviso · CMP-16 Finestra di conferma · CMP-22 Modulo di accesso · CMP-24 Info · CMP-29 Ricerca avanzata | sopra la nota | sopra la colonna | sono la superficie | flottante, con ombra; dentro: hover, pieno, campo |
 
@@ -809,8 +809,8 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 
 ### Varianti e dimensioni
 - **Riga dei metadati** (parte interna), sotto il titolo, su due righe larghe quanto la nota (DEC-44): in alto la data di ultima modifica in Interfaccia/Dettaglio e `testo-tenue` (es. «Modificata oggi alle 11:42»); sotto i tag in sola lettura (CMP-05 senza ✕, `spazio-elemento` tra l'uno e l'altro), che vanno a capo. Date e tag si modificano nella finestra Info (CMP-24). Sta `spazio-icona` (8) sotto il titolo e `spazio-blocco` (16) sopra il testo; tra le due righe `spazio-icona` (8) (DEC-58, anche nel componente in Figma). Proprietà **Data** e **Mostra tag**; nella nota nuova niente tag e "Creata ora". Il componente ha la proprietà **Mostra metadati** per nasconderla dove non c'è il titolo (nota rapida, SC-02) e **Mostra titolo**: nella nota aperta sono spenti tutti e due, perché il titolo sta nel percorso (CMP-26, DEC-71) e ultima modifica e tag in Info (CMP-24, DEC-96).
-- **Testo puro** (DEC-64, la variante in uso finché non torna il markdown): titolo, riga dei metadati e un solo paragrafo in Nota/Corpo, dove `#`, `-`, `**` e le tabulazioni si vedono come caratteri, senza formattazione. In Figma è la variante `Tipo=Testo puro`.
-- **Con testo:** titolo (Nota/Titolo), riga dei metadati, corpo (Nota/Corpo), sottotitolo (Nota/Sottotitolo), checklist, elenco puntato, elenco numerato; `spazio-blocco` (16) tra i blocchi, `spazio-elemento` (4) tra le voci, `spazio-gruppo` (24) tra intestazione e testo. Il testo occupa tutta la larghezza del foglio, con `spazio-gruppo` (24) ai lati (DEC-107; prima la larghezza di lettura 640 di DEC-58).
+- **Vista Testo** (DEC-64, DEC-130): titolo, riga dei metadati e un solo paragrafo in Nota/Corpo, dove `#`, `-`, `**` e le tabulazioni si vedono come caratteri, senza formattazione. In Figma è la variante `Tipo=Testo puro`. È la vista delle note scritte prima della 1.1.0 e dei file `.txt` di Locale (RB-91).
+- **Vista Markdown** (`Tipo=Con testo` in Figma, DEC-130): la vista delle note nuove e dei file `.md` di Locale. Titolo (Nota/Titolo), riga dei metadati, corpo (Nota/Corpo), sottotitolo (Nota/Sottotitolo), checklist, elenco puntato, elenco numerato; `spazio-blocco` (16) tra i blocchi, `spazio-elemento` (4) tra le voci, `spazio-gruppo` (24) tra intestazione e testo. Il testo occupa tutta la larghezza del foglio, con `spazio-gruppo` (24) ai lati (DEC-107; prima la larghezza di lettura 640 di DEC-58).
 - **Simboli markdown:** non si vedono mai, nemmeno sulla riga del cursore (DEC-58).
 - **Elenchi:** segni (•, 1.) in `testo-tenue`, in una colonna di 16 px.
 - **Checklist:** casella tonda di 16, coerente con le pillole: vuota con contorno `icona-tenue` 1,5; spuntata `sfondo-pieno` con spunta `icona-su-pieno`; la voce spuntata va in `testo-tenue` barrato.
@@ -827,7 +827,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 | Disabilitato · Errore · Caricamento | Non previsti |
 
 ### Accessibilità
-- **Tastiera:** le scorciatoie di formattazione (CMP-09); Ctrl + Invio spunta la voce della checklist in cui si trova il cursore. Tab porta una voce di elenco un livello più dentro, altrove scrive una tabulazione; Maiusc + Tab torna indietro. Per uscire dal testo da tastiera: Esc e poi Tab (ID-26).
+- **Tastiera:** nessuna scorciatoia di formattazione e niente Ctrl + Invio sulla checklist per ora (DEC-130). In vista Markdown il cursore salta i simboli nascosti, Invio e Backspace su elenchi e titoli funzionano come in Word (CA-02.15 … CA-02.18). Tab scrive una tabulazione o rientra le righe selezionate, Maiusc + Tab toglie il rientro (DEC-64). Per uscire dal testo da tastiera: Esc e poi Tab (ID-26).
 - **Lettori di schermo:** titoli come intestazioni, elenchi come elenchi, voci della checklist come caselle di controllo.
 - **Contrasti:** testo primario ≥ 16,48:1 su `sfondo-nota`; simboli e segni in `testo-tenue` 5,49:1 e 7,30:1; voce spuntata 5,49:1.
 
@@ -942,7 +942,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 ## CMP-24 – Info
 **Tipo:** composto (usa CMP-01 solo icona, CMP-03, CMP-05, CMP-07 e il separatore; suggerimenti CMP-09, calendario CMP-12 e pannello Sposta in CMP-11 sopra) · **Usato in:** SC-03 (Comparsa, dal titolo del percorso), SC-01 (Finestra, dal tasto destro su una nota della colonna), SC-03 del modulo Locale (Info del file, dal nome del file nel percorso) · **Figma:** pagina Componenti composti, sezione CMP-24 Info
 
-**Scopo:** tutto ciò che riguarda la nota in un punto solo: titolo, date, tag, cartella, chiudere ed eliminare (DEC-96, RF-04, RF-06). Supera la finestra dei dettagli di DEC-44 e la comparsa dei metadati (CMP-27).
+**Scopo:** tutto ciò che riguarda la nota in un punto solo: titolo, date, tag, cartella, vista, chiudere ed eliminare (DEC-96, RF-04, RF-06, DEC-130). Supera la finestra dei dettagli di DEC-44 e la comparsa dei metadati (CMP-27).
 **Quando usarlo:** con un clic sul titolo nel percorso (CMP-26) per la nota aperta; da «Info» nel tasto destro su una nota della colonna, anche non aperta.
 **Quando non usarlo:** per azioni non reversibili senza conferma (finestra di conferma, CMP-16) o per scegliere la cartella (Sposta in, CMP-11, che si apre dalla riga della cartella).
 
@@ -957,6 +957,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
   - **Creazione** (`calendar`): «Creata il 12/09/2026»; il suggerimento della riga dà la data di sistema, «Data di sistema: 12/09/2026 alle 10:14» (RB-21). Se la data è stata cambiata, a destra «Ripristina» in `testo-tenue` (in `testo-primario` passandoci sopra) torna a quella di sistema.
   - **Fine validità** (`calendar`): «Fine validità il …» o, in `testo-tenue`, «Nessuna fine validità»; il suggerimento è «Solo un promemoria: alla scadenza non succede nulla» (RF-04).
   - **Tag** (`tag`): i tag (CMP-05 rimovibili, vanno a capo) e «+ Tag», pillola alta 24 con il bordo tratteggiato; un clic la sostituisce con il campo «Aggiungi un tag» (largo 132), che lasciato vuoto torna «+ Tag».
+  - **Vista** (`eye`, DEC-130): «Vista» e, allineata a destra, la Scelta a segmenti (CMP-28) Testo · Markdown; la riga non è un pulsante e non prende `sfondo-hover`: hover e scelta stanno sui segmenti. Ultima delle righe, nella Comparsa e nella Finestra; non c'è in Info del file (la vista di un file dipende dall'estensione, CA-17.25).
 - **Riga di data aperta:** con un clic, al posto della frase c'è il campo con la data selezionata (GG/MM/AAAA, senza fondo suo: la pillola resta evidenziata) e sotto la riga il calendario (CMP-12).
 - **«Modificata oggi alle 11:42»** in Interfaccia/Dettaglio e `testo-tenue`, allineata alle righe (pillola con `spazio-controllo` dentro, DEC-100), in sola lettura. Poi il divisore e le voci (CMP-07).
 
@@ -970,8 +971,8 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 | Disabilitato · Caricamento | Non previsti per ora |
 
 ### Accessibilità
-- **Tastiera:** all'apertura il focus va sul campo del titolo; Tab passa da un controllo all'altro (righe, tag, «+ Tag», «Ripristina») fino a Chiudi nota ed Elimina. Invio o spazio aprono una riga; nella riga di data Invio conferma, ↓ passa al calendario (dove Esc torna nel campo), Esc chiude la riga con il calendario e il focus torna sulla riga. Esc fuori dalle righe chiude (prima un suggerimento aperto, poi Info) e il focus torna dove era. La Comparsa si chiude anche con un clic fuori; la Finestra con un clic sul velo, dopo aver chiuso menu, calendario o conferma aperti (DEC-81).
-- **Lettori di schermo:** ruolo «dialog» con il nome «Info di ‹titolo›»; le righe sono pulsanti con il nome intero («Cartella Lavoro › Clienti: Sposta in…», «Data di creazione: Creata il 12/09/2026», «Fine validità: Nessuna fine validità»); la ✕ si chiama «Chiudi».
+- **Tastiera:** all'apertura il focus va sul campo del titolo; Tab passa da un controllo all'altro (righe, tag, «+ Tag», «Ripristina», la scelta della vista) fino a Chiudi nota ed Elimina; nella scelta della vista le frecce sinistra e destra cambiano Testo e Markdown (CMP-28). Invio o spazio aprono una riga; nella riga di data Invio conferma, ↓ passa al calendario (dove Esc torna nel campo), Esc chiude la riga con il calendario e il focus torna sulla riga. Esc fuori dalle righe chiude (prima un suggerimento aperto, poi Info) e il focus torna dove era. La Comparsa si chiude anche con un clic fuori; la Finestra con un clic sul velo, dopo aver chiuso menu, calendario o conferma aperti (DEC-81).
+- **Lettori di schermo:** ruolo «dialog» con il nome «Info di ‹titolo›»; le righe sono pulsanti con il nome intero («Cartella Lavoro › Clienti: Sposta in…», «Data di creazione: Creata il 12/09/2026», «Fine validità: Nessuna fine validità»); la scelta della vista è un gruppo di pulsanti di opzione con il nome «Vista»; la ✕ si chiama «Chiudi».
 - **Contrasti:** come CMP-03, CMP-05, CMP-07 sulla superficie flottante.
 
 ### Esempi
@@ -1080,7 +1081,7 @@ Compare e sparisce con `movimento-durata-breve` (120 ms).
 ---
 
 ## CMP-28 – Scelta a segmenti
-**Tipo:** base · **Usato in:** SC-06 (tema, CMP-18 Scelta) · **Figma:** pagina Componenti base, sezione CMP-28 Scelta a segmenti
+**Tipo:** base · **Usato in:** SC-06 (tema, CMP-18 Scelta), CMP-24 Info (vista della nota, DEC-130) · **Figma:** pagina Componenti base, sezione CMP-28 Scelta a segmenti
 
 **Scopo:** scegliere uno tra pochi valori, vedendoli tutti (DEC-91).
 **Quando usarlo:** da due a quattro valori brevi che si escludono, es. Sistema · Chiaro · Scuro.
