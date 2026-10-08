@@ -55,6 +55,7 @@ Un clic sul titolo nel percorso (CMP-26) apre Info (CMP-24, tipo Comparsa) sotto
 | Creazione | «Creata il …»: un clic apre il campo e il calendario; la data di sistema nel suggerimento; cambiata, «Ripristina» a destra (RF-04, DEC-97) |
 | Fine validità | «Fine validità il …» o «Nessuna fine validità»: un clic apre il campo e il calendario (RF-04) |
 | Tag | I tag con la ✕ e «+ Tag», che apre il campo «Aggiungi un tag» con i suggerimenti (RF-06) |
+| Vista | «Vista» e la Scelta a segmenti Testo · Markdown: la nota si mostra subito nella vista scelta, il testo salvato non cambia (RF-02, RB-91, DEC-130). Anche nella Finestra |
 | Modificata | L'ultima modifica, in sola lettura (RF-04) |
 | Azioni | Chiudi nota (Ctrl + W, ⌘ + W su macOS, DEC-70): salva la nota e lascia l'area vuota con «Nessuna nota aperta», senza aprirne un'altra; una nota vuota sparisce (DEC-39). Elimina: nel cestino (RB-26) |
 

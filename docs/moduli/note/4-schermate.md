@@ -92,7 +92,7 @@ Stessi tasti fisici sui due sistemi, libere nelle configurazioni di default di e
 
 | Cosa | Dove | Come |
 |---|---|---|
-| Clic sul titolo del percorso (DEC-96) | Info (CMP-24), tipo Comparsa, sotto il titolo, senza velo | Passando sul titolo non compare niente: la comparsa dei metadati (CMP-27, DEC-71) è superata. Righe e azioni di Info in `interfaccia/4-schermate.md` («Info della nota»): titolo, cartella, date, tag, ultima modifica, poi Chiudi nota ed Elimina |
+| Clic sul titolo del percorso (DEC-96) | Info (CMP-24), tipo Comparsa, sotto il titolo, senza velo | Passando sul titolo non compare niente: la comparsa dei metadati (CMP-27, DEC-71) è superata. Righe e azioni di Info in `interfaccia/4-schermate.md` («Info della nota»): titolo, cartella, date, tag, vista (DEC-130), ultima modifica, poi Chiudi nota ed Elimina |
 | Info dal tasto destro (DEC-96) | Tasto destro sulla nota nella colonna, voce «Info» | Info, tipo Finestra, al centro con il velo: in testa «Info» e la ✕, senza Chiudi nota |
 | Info in generale (DEC-44, DEC-96, DEC-97, ID-27) | — | Ogni modifica vale subito, come nel resto dell'app (RB-06): nessun Salva. La Comparsa si chiude con un clic fuori o con Esc, la Finestra con la ✕, con Esc o con un clic sul velo (DEC-81); l'eliminazione di un tag da tutte le note resta con la sua conferma (RB-19). Il conteggio delle parole è l'idea ID-28 |
 | Eliminare un tag del tutto | Tasto destro su un suggerimento | "Elimina tag…", poi finestra di conferma con il numero di note coinvolte (RB-19) |

@@ -500,3 +500,4 @@
 | 08/10/2026 | Manuel Cucca | Ciclo 1.1.0, Fase 2 di RF-02: FL-02 con la vista della nota e il cambio di vista dalla comparsa Info; SF-33 Versioni diverse gestita; nuove RB-91 (la vista cambia solo l'aspetto) e RB-92 (una vista mancante non vale come cambio) | DEC-130 |
 | 08/10/2026 | Manuel Cucca | Ciclo 1.1.0, Fase 3 di RF-02: attributo Vista di EN-01 (`vista`, testo o markdown, assente vale testo) | DEC-130 |
 | 08/10/2026 | Manuel Cucca | Entità di note, organizzazione e interfaccia: «Dati sensibili» dice che la cifratura è attiva dalla 0.1.13, al posto di «per ora in chiaro» | DEC-121 |
+| 08/10/2026 | Manuel Cucca | Ciclo 1.1.0, Fase 4 di RF-02: riga Vista in Info, ultima delle righe dopo Tag, con «Vista» e la Scelta a segmenti Testo · Markdown, nella Comparsa e nella Finestra | DEC-130 |
