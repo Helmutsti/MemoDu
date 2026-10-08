@@ -57,14 +57,14 @@ Cosa protegge oggi:
 | `https://memodu-api.vercel.app/vivo` | Non risponde `200` | Manuel Cucca, controllo a mano |
 | `https://memodu-api.vercel.app/salute` | `503` (l'archivio non risponde) o più di 8 secondi | Manuel Cucca, controllo a mano |
 | Box dell'account in Impostazioni | Pallino ambra o rosso | Chi usa quel computer |
-| Avviso «Il server non risponde da più di un'ora» | Compare | Chi usa quel computer |
+| Avviso «Il server non risponde da più di un'ora: le modifiche restano su questo computer.» | Compare | Chi usa quel computer |
 | Spazio e calcolo su Neon | Vicino al limite del piano gratuito | Manuel Cucca, dalle email di Neon |
 | Errori delle funzioni su Vercel | Errori 500 ripetuti nei log | Manuel Cucca, dalla dashboard di Vercel |
 
 ## Se succede X, fai Y
 
 ### Il server non risponde
-**Sintomi:** nel box il pallino ambra «Server non raggiungibile: ultimo backup …»; dopo un'ora l'avviso «Il server non risponde da più di un'ora».
+**Sintomi:** nel box il pallino ambra «Server non raggiungibile: ultimo backup …»; dopo un'ora l'avviso «Il server non risponde da più di un'ora: le modifiche restano su questo computer.».
 **Cosa fare:**
 1. Niente è perso: si scrive come sempre e le modifiche restano sul computer (DEC-02).
 2. Apri `https://memodu-api.vercel.app/vivo`: se non risponde, il problema è Vercel (stato su vercel-status.com, oppure un deploy fallito: Deployments, poi Redeploy dell'ultimo buono).

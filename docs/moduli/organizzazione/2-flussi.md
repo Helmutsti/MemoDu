@@ -29,7 +29,7 @@ flowchart TD
 ```
 
 ### Percorsi alternativi
-- **Tornare al primo livello trascinando:** una nota trascinata sul titolo «Non organizzate» torna tra le non organizzate; una cartella trascinata sul titolo «Cartelle» va al primo livello.
+- **Tornare al primo livello trascinando:** una nota trascinata sul titolo «CLOUD» torna tra le non organizzate; una cartella trascinata sul titolo «CLOUD» va al primo livello (DEC-119).
 - **Nuova cartella dal tasto destro:** su una cartella crea una sottocartella; sullo spazio vuoto dell'albero crea una cartella al primo livello.
 - **Nuova nota dal tasto destro su una cartella:** vedi FL-09.
 - **Elemento ritrovato con la ricerca mentre è nel cestino:** è segnalato come "nel cestino" (RB-29).
@@ -44,7 +44,7 @@ flowchart TD
 | SF-32 Errore del server a metà operazione | La copia di lavoro risponde che la nota o la cartella non esiste più (per esempio tolta da un'altra finestra di Memodu) o che non ha scritto (DEC-85) | Avviso (CMP-15), testo definitivo in Fase 6 | L'app ricarica la colonna: si vede lo stato vero e si riprova (DEC-37) |
 | SF-20 Riferimenti spariti | Nota creata o spostata, su un altro dispositivo, in una cartella finita nel cestino | Nessun messaggio | La nota va tra le non organizzate, la cartella resta nel cestino (RB-30) |
 | SF-17 Troppo | Cestino con moltissimi elementi | Nessun messaggio | Resta finché l'utente non lo svuota (RB-27) |
-| SF-16 Vuoto | Nessuna cartella | Sotto il titolo Cartelle: «Nessuna cartella. Creane una con +» (CA-05.12) | Il + accanto al titolo crea la prima cartella |
+| SF-16 Vuoto | Nessuna nota e nessuna cartella | Sotto il titolo CLOUD: «Nessuna nota. Crea con +» (CA-05.12, DEC-119) | Il + accanto al titolo apre Aggiungi: Nuova nota o Nuova cartella |
 
 ### Sfighe considerate e scartate
 - SF-01 Doppio invio, SF-02 Abbandono: ogni operazione è immediata e salvata (RB-06).

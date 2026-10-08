@@ -50,7 +50,7 @@ Al posto della finestra principale e della nota rapida quando la copia di lavoro
 - **Esportazioni:** `immagini/SC-05.png`, `immagini/SC-05-errore.png`
 - **Mockup (approvati da Manuel Cucca il 06/10/2026):** [accesso](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=210-2936) · [email o password errate](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=210-3109); esportazioni `immagini/SC-05-mockup.png`, `immagini/SC-05-errore-mockup.png`
 
-**Attiva con DEC-121**, che supera DEC-19. Si apre da «Accedi per sincronizzare» nel box dell'account delle impostazioni (SC-06, DEC-122) o dall'avviso «Accedi di nuovo per sincronizzare» (RB-87); non compare all'avvio, che resta sulla copia di lavoro (RNF-01).
+**Attiva con DEC-121**, che supera DEC-19. Si apre da «Accedi» nel box dell'account delle impostazioni (SC-06, DEC-122) o dall'avviso «Accedi di nuovo per sincronizzare» (RB-87); non compare all'avvio, che resta sulla copia di lavoro (RNF-01).
 
 Finestra sopra le note velate (livello 40, scelta di Manuel Cucca il 06/10/2026): titolo «Accedi a Memodu», email, password e i pulsanti «Non voglio usare il cloud» e Accedi. «Non voglio usare il cloud» scollega il dispositivo come «Esci» (RB-89) e si torna alle note; Esc chiude soltanto la finestra, senza scollegare: un tasto premuto per sbaglio non deve far uscire (scelta di Manuel Cucca il 06/10/2026). L'app non crea l'account (lo crea il comando del server, DEC-121): il wireframe del primo avvio è caduto. Regole: RB-86, RB-88; nessun limite ai tentativi per ora.
 

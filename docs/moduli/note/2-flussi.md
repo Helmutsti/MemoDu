@@ -54,7 +54,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A{Come creo la nota?} -- + accanto a Non organizzate --> E
+    A{Come creo la nota?} -- + accanto a CLOUD, Nuova nota --> E
     A -- Ctrl + N, ⌘ + N su macOS - DEC-69 --> E
     A -- Tasto destro su una cartella, Nuova nota qui --> D[La nota nasce in quella cartella - RB-09]
     E[La nota nasce nella radice - RB-09]
@@ -231,7 +231,7 @@ La posizione di una nota (radice, cartella, cestino) è descritta nel diagramma 
 | RB-06 | Ogni modifica a una nota si salva da sola sulla copia di lavoro dopo 2 s di pausa di scrittura, e subito quando si chiude la finestra, si cambia nota o la finestra perde il focus. Ogni salvataggio è una transazione della copia di lavoro (DEC-45, DEC-67), così una chiusura a metà non la rompe. Non esiste un pulsante Salva | FL-01, FL-02 |
 | RB-07 | Il testo incollato da fuori (Word, web, email) si incolla sempre come testo semplice | FL-02 |
 | RB-08 | Il contenuto delle note non esegue mai codice: script e HTML attivo si mostrano come testo o vengono rimossi, su desktop e web | FL-02 |
-| RB-09 | Una nuova nota creata con il + delle Non organizzate nasce sempre nella radice, tra le non organizzate, qualunque sia la nota aperta. Con «Nuova nota qui» dal tasto destro su una cartella nasce in quella cartella | FL-09 |
+| RB-09 | Una nuova nota creata con il + di CLOUD (Nuova nota), con Ctrl + N o con il pulsante Nuova nota nasce sempre nella radice, tra le non organizzate, qualunque sia la nota aperta. Con «Nuova nota qui» dal tasto destro su una cartella nasce in quella cartella | FL-09 |
 | RB-10 | Una nota senza titolo né testo (gli spazi contano come vuoto) si cancella per sempre, senza passare dal cestino, quando la si lascia: aprendo un'altra nota, creandone una nuova, aprendo il cestino o chiudendo la finestra (DEC-39) | FL-09 |
 | RB-11 | Nella prima fase si possono inserire solo immagini leggibili; gli altri file e le immagini corrotte vengono rifiutati con un messaggio | FL-03 |
 | RB-12 | Un'immagine può pesare al massimo 25 MB | FL-03 |

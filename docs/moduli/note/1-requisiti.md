@@ -25,7 +25,7 @@ Piattaforme:
 Premo la scorciatoia e compare la finestra della nota rapida. A quel punto posso decidere di aprire il programma completo senza perdere la nota, oppure salvare e chiudere la finestra. Se nel programma è già aperta un'altra nota, viene semplicemente salvata e messa da parte.
 
 ### Criteri di accettazione
-Frammento Must A: la scorciatoia è fissa (Ctrl + Alt + N su Windows, Control + Option + N su macOS); cambiarla dalle impostazioni (RF-11, SC-06) arriva con le Impostazioni (DEC-91).
+La scorciatoia predefinita è Ctrl + Alt + N su Windows e Control + Option + N su macOS; si cambia nelle impostazioni, «Scorciatoia della nota rapida» (SC-06, DEC-91).
 
 - **CA-01.1** *Dato* Memodu in background, *quando* premo la scorciatoia da un altro programma, *allora* entro 0,2 s compare SC-02 con il cursore nell'area di scrittura (RNF-01).
 - **CA-01.2** *Dato* una nota rapida con del testo, *quando* la chiudo con Chiudi, con Maiusc + Invio o con il tasto Esc, *allora* la finestra si chiude e la nota compare in cima all'elenco del programma, nella radice (RB-01, RB-02, RB-60).
@@ -60,12 +60,12 @@ Ogni modifica si salva da sola, senza pulsante Salva (RB-06). Il testo incollato
 **Collegamenti:** FL-02 · FL-09 · EN-01 · SC-00
 
 ### Scenario d'uso
-Scrivo la nota e inserisco un'immagine trascinandola nel testo, oppure premendo il pulsante degli allegati. Sull'immagine inserita posso poi aprire delle impostazioni, in stile Word.
+Scrivo la nota come testo semplice: la formattazione arriverà dopo la v1 (DEC-125). Le immagini hanno il loro scenario in RF-03.
 
 ### Criteri di accettazione
 Frammento Must A: senza immagini (RF-03) e senza metadati (RF-04).
 
-- **CA-02.1** *Dato* il programma aperto, *quando* premo il + della sezione Non organizzate o Nuova nota, *allora* nasce una nota vuota in cima all'elenco, aperta con il cursore nel corpo; se la lascio vuota, sparisce (FL-09, RB-10, RB-60, DEC-39).
+- **CA-02.1** *Dato* il programma aperto, *quando* scelgo Nuova nota dal + di CLOUD, premo Ctrl + N o il pulsante Nuova nota, *allora* nasce una nota vuota in cima all'elenco, aperta con il cursore nel corpo; se la lascio vuota, sparisce (FL-09, RB-10, RB-60, DEC-39).
 - **CA-02.2** *(Sospeso con DEC-64: per ora testo puro.)* *Dato* una nota aperta, *quando* scrivo la sintassi markdown (`#`, `##`, `**`, `*`, `~~`, `-`, `1.`, `- [ ]`), *allora* il testo si formatta subito e i simboli spariscono appena riconosciuti, anche sulla riga in cui scrivo; le frecce e Canc li trattano come un blocco unico (RF-02, DEC-58).
 - **CA-02.3** *(Sospeso con DEC-64: per ora testo puro.)* *Dato* del testo selezionato, *quando* premo Ctrl + B, I, U o Ctrl + Maiusc + X (⌘ su macOS), *allora* diventa grassetto, corsivo, sottolineato o barrato; il sottolineato si salva come `<u>…</u>` (DEC-28).
 - **CA-02.4** *(Sospeso con DEC-64: per ora testo puro.)* *Dato* del testo selezionato, *allora* 8 px sopra compare la pillola di formattazione; *dato* un clic sul vuoto, compare quella di inserimento; *dato* `/` su una riga vuota, si apre il menu di inserimento. In nessuno c'è la voce Immagine; la pillola sparisce riprendendo a scrivere, con Esc o con un clic altrove (CMP-10, CMP-09).
@@ -100,7 +100,7 @@ Ritaglio e rotazione sono reversibili: l'immagine originale resta intatta (RB-14
 **Collegamenti:** FL-03 · EN-02 · SC-00 · RNF-04
 
 ### Scenario d'uso
-Condiviso con RF-02: vedi lo scenario di RF-02.
+Scrivo la nota e inserisco un'immagine trascinandola nel testo, oppure premendo il pulsante degli allegati. Sull'immagine inserita posso poi aprire delle impostazioni, in stile Word. (Scenario spostato qui da RF-02 il 08/10/2026, DEC-125.)
 
 ### Criteri di accettazione
 - [Da compilare]
@@ -124,7 +124,7 @@ Come *utente* voglio associare dei metadati a ogni nota per descriverla con tito
 **Collegamenti:** FL-04 · EN-01 · EN-04 · SC-00 · RF-06
 
 ### Scenario d'uso
-Scrivo la nota. Le note non ancora organizzate compaiono in una barra laterale e da lì le trascino nell'albero delle cartelle. Quando apro una nota, dal menu in alto a destra posso aggiungere tag, spostarla in un'altra cartella o modificarne i metadati. Il titolo è l'unico metadato che modifico direttamente nella schermata di scrittura.
+Scrivo la nota. Le note non ancora organizzate compaiono in cima alla sezione CLOUD della colonna e da lì le trascino nell'albero delle cartelle. Quando apro una nota, con un clic sul titolo nel percorso apro Info: lì scrivo il titolo, aggiungo tag, la sposto in un'altra cartella e cambio le date. (Aggiornato il 08/10/2026 a DEC-96 e DEC-119.)
 
 ### Criteri di accettazione
 Frammento Must C (DEC-44), ridisegnato con DEC-96: titolo, date, tag e cartella in Info (CMP-24), che si apre con un clic sul titolo del percorso o dal tasto destro sulla nota. Criteri approvati da Manuel Cucca il 29/09/2026; CA-04.1, CA-04.2, CA-04.5, CA-04.7 e CA-04.8 riscritti dall'agente il 01/10/2026 per DEC-96 e approvati da Manuel Cucca lo stesso giorno; CA-04.1, CA-04.3 e CA-04.5 riscritti dall'agente il 01/10/2026 per DEC-97 e approvati da Manuel Cucca lo stesso giorno.

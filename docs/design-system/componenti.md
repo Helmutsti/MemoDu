@@ -87,7 +87,7 @@ Il **padding** appartiene a chi ha un **bordo** (fondo, contorno, evidenziazione
 | Stessa cosa, ripetuta | righe della colonna e di Info, tag | `spazio-elemento` 4 |
 | Pezzi diversi che si leggono come uno | icona e testo, titolo e descrizione | `spazio-icona` 8 (`spazio-icona-piccola` 4 nei controlli alti 24) |
 | Blocchi diversi dello stesso contenitore | titolo, righe e voci di Info | `spazio-blocco` 16 |
-| Sezioni con un titolo proprio | «Non organizzate» e «Cartelle» | `spazio-gruppo` 24 |
+| Sezioni con un titolo proprio | «CLOUD» e «LOCALE» | `spazio-gruppo` 24 |
 
 Controlli:
 - **Fuori non meno che dentro:** in un contenitore il gap tra i blocchi non supera il suo margine (pannello: 16 e 16), così si legge come un'unità. Le pillole fanno eccezione: le separa il loro fondo, non lo spazio.
@@ -137,7 +137,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 - **Primario:** sfondo `sfondo-pieno`, testo `testo-su-pieno`. L'azione principale della zona, al massimo uno (es. "Svuota" nella finestra di conferma).
 - **Secondario:** sfondo `sfondo-campo`, testo `testo-primario`. Azioni di supporto accanto al primario (Annulla).
 - **Tenue:** senza sfondo, testo `testo-tenue`. Azioni minori in liste e pannelli (Ripristina nel cestino).
-- **Solo icona:** 32 × 32, icona `icona-tenue`. Azioni ripetute con un'icona chiara (+ delle non organizzate, ✕ delle finestre). Il ··· della fascia in alto di SC-01 non c'è più: le azioni della nota stanno in Info (CMP-24, DEC-96).
+- **Solo icona:** 32 × 32, icona `icona-tenue`. Azioni ripetute con un'icona chiara (+ di CLOUD e di LOCALE, ✕ delle finestre). Il ··· della fascia in alto di SC-01 non c'è più: le azioni della nota stanno in Info (CMP-24, DEC-96).
 - **Solo icona piccolo:** 24 × 24 (`misura-controllo-piccolo`), tondo (`raggio-pillola`), margini 4 (`spazio-elemento`), icona 16 in `icona-tenue`; stessi stati del solo icona da 32 (in Figma `Tipo=Solo icona piccolo`). Solo dentro la pillola flottante in alto a destra di SC-01: i pulsanti della finestra _ [] X (DEC-62, DEC-63; il ··· non c'è più, DEC-96). L'anello di focus è largo 32. Chiudi, sotto il mouse e premuto, è rosso (`rosso-500`) con la croce bianca (`grigio-0`), in chiaro e in scuro, come su Windows: usa i primitivi, perché nessun token semantico ha questo ruolo.
 - **Diviso** (DEC-34): solo primario. Può mostrare la scorciatoia dell'azione accanto all'etichetta con le icone dei tasti, 12 px, `icona-su-pieno` al 70 %, 8 px dopo il testo e 4 tra le icone (DEC-65, in SC-02: ⇧ ↵). A sinistra l'azione (Chiudi nella nota rapida, margini 16 e 12), a destra la freccia ▾ (`chevron-down`, `icona-su-pieno`, margini 8 e 12) che apre un menu (CMP-09) con le azioni collegate; tra le due un divisore di 1 × 16 in `sfondo-pieno-hover`. Hover separato sulle due metà (`sfondo-pieno-hover`); con il menu aperto la freccia è `sfondo-pieno-premuto`; l'anello di focus segue la pillola intera. La freccia ha il nome accessibile e il suggerimento «Altre azioni» (CMP-08). In Figma è il componente [Pulsante diviso](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=136-703), con le proprietà Etichetta, **Mostra scorciatoia** (spenta di default, e allora il pulsante non cambia) e **Tasto 1** e **Tasto 2** per scambiare le icone dei tasti (di default Maiusc e Invio). Usato in SC-02.
 - Una sola dimensione, a parte il solo icona piccolo: alto 32 (`misura-riga`), pillola (`raggio-pillola`), margini laterali 16 (8 per il solo icona), distanza tra icona e testo 8, testo Interfaccia/Controllo attivo.
@@ -191,7 +191,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 - **Lettori di schermo:** decorativa se c'è un'etichetta accanto; altrimenti il nome accessibile sta sul componente che la contiene.
 
 ### Esempi
-- ✅ Corretto: `+` accanto a "Non organizzate" con suggerimento "Nuova nota".
+- ✅ Corretto: `+` accanto a "CLOUD" con suggerimento "Aggiungi".
 - ❌ Scorretto: disegnare un'icona a mano quando Lucide ne ha una equivalente.
 
 ---
@@ -313,7 +313,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 ### Varianti e dimensioni
 - **Nota:** solo il titolo, in `testo-primario`, margine 12. Una nota senza titolo mostra "Nota vuota" in `testo-tenue` (RB-15).
 - **Cartella chiusa / aperta:** icona della cartella chiusa (`folder`) o aperta (`folder-open`), 16 px in `icona-tenue`, al posto della freccia (DEC-99), nome e, a destra, il numero di note che contiene, sottocartelle comprese (Interfaccia/Dettaglio in `testo-tenue`; primario in hover; RB-56, ID-15). Le note restano senza icona: la cartella basta a dividerle (DEC-99).
-- **Sezione aperta / chiusa:** freccia di 12 px, titolo in Interfaccia/Titolo di sezione (maiuscolo Semi Bold, spaziatura 6%) in `testo-tenue`, il numero di note e il + per creare (nuova nota o nuova cartella). Il numero si mostra per Non organizzate; nel titolo Cartelle si nasconde.
+- **Sezione aperta / chiusa:** freccia di 12 px, titolo in Interfaccia/Titolo di sezione (maiuscolo Semi Bold, spaziatura 6%) in `testo-tenue`, e il + per creare (in CLOUD apre il menu Aggiungi con Nuova nota e Nuova cartella, in LOCALE Aggiungi cartella). Accanto al titolo della sezione non c'è il numero di note (DEC-119).
 - Alta 32 (`misura-riga`), pillola con `spazio-controllo` (12) ai lati (`spazio-controllo-piccolo`, 8, a destra nei titoli di sezione, che finiscono con il +), `spazio-icona` (8) tra icona (o freccia) e testo (DEC-100). Il testo troppo lungo finisce con i puntini.
 - **Tra una riga e l'altra**, e tra il titolo della sezione e la prima riga: `spazio-elemento` (4), così le pillole dell'hover e della selezione non si toccano.
 - **Rientro:** `spazio-rientro` (24) per ogni livello (DEC-100).
@@ -410,7 +410,7 @@ Compare e sparisce con `movimento-durata-breve` (120 ms). Compare dopo 500 ms di
 - **Contrasti:** 16,48:1 in chiaro e 16,75:1 in scuro.
 
 ### Esempi
-- ✅ Corretto: "Nuova nota" sopra il + delle non organizzate.
+- ✅ Corretto: "Aggiungi" sopra il + di CLOUD.
 - ❌ Scorretto: un suggerimento su un pulsante che dice già "Nuova nota".
 
 ---
@@ -781,7 +781,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 ### Varianti e dimensioni
 - **Nota:** icona `file-text` 24, «Nessuna nota aperta», spiegazione e il pulsante primario «Nuova nota».
 - **Cestino:** icona elimina 24, «Il cestino è vuoto», spiegazione, senza azioni (niente Svuota cestino).
-- **Colonna:** una riga Interfaccia/Dettaglio in `testo-tenue`, «Nessuna cartella. Creane una con +».
+- **Colonna:** una riga Interfaccia/Dettaglio in `testo-tenue`: in CLOUD «Nessuna nota. Crea con +», in LOCALE «Nessuna cartella. Aggiungine una con +» (DEC-119).
 - **Blocco:** al posto della finestra quando la copia di lavoro non si apre o non si scrive (SC-07, DEC-67); non più per le credenziali (DEC-121). Icona errore 24 in `icona-errore`, «Memodu non riesce a collegarsi», cosa correggere e il pulsante primario «Riprova».
 - Icona in `icona-tenue`, titolo Interfaccia/Titolo, testo Interfaccia/Messaggio in `testo-tenue`, centrati, largo 320, 8 px di distanza.
 - I testi sono esempi nel tono di voce; quelli definitivi si scrivono in Fase 6.

@@ -32,14 +32,14 @@ La finestra è sempre la stessa: cambia solo cosa c'è dentro l'area della nota.
 |---|---|---|
 | 1 | Area della nota (centro-destra) | La nota aperta: SC-03. È la zona più grande e la prima che si nota: aprire e scrivere viene prima di tutto (RNF-01) |
 | 2 | Colonna sinistra, in cima | Ricerca (FL-06), sotto la riga della puntina; Ctrl + K (⌘ + K) la raggiunge anche con la colonna chiusa (DEC-94, RB-71) |
-| 3 | Colonna sinistra, sezione **Non organizzate** | Le note nella radice (RF-05), in cima, una riga ciascuna con il solo titolo, la modificata più di recente in cima (RB-60): sono quelle appena scritte, ed è da qui che si trascinano nell'albero. Il **+** accanto al titolo della sezione crea una nuova nota (FL-09) |
-| 4 | Colonna sinistra, sezione **Cartelle** | Albero delle cartelle, sotto, con il pulsante **+** in cima alla sezione (FL-05). Aprendo una cartella compaiono le sottocartelle e poi le sue note, in ordine alfabetico (RB-64, RB-65) |
+| 3 | Colonna sinistra, sezione **CLOUD** (DEC-119) | Nella radice prima le note non organizzate (RF-05), una riga ciascuna con il solo titolo, la modificata più di recente in cima (RB-60): sono quelle appena scritte, ed è da qui che si trascinano nell'albero. Sotto, l'albero delle cartelle (FL-05). Aprendo una cartella compaiono le sottocartelle e poi le sue note, in ordine alfabetico (RB-64, RB-65). Il **+** accanto al titolo apre il menu Aggiungi con Nuova nota e Nuova cartella (FL-09, CMP-09) |
+| 4 | Colonna sinistra, sezione **LOCALE** | Le cartelle del disco aggiunte a Locale (RF-17, DEC-115); il **+** accanto al titolo aggiunge una cartella |
 
-Nessuna barra superiore: con la colonna fissata, colonna e area della nota occupano tutta l'altezza della finestra, divise da una sola linea verticale; in cima alla colonna una riga di 32 px per la puntina (e «← |» quando è aperta sopra il foglio) (DEC-55). Nessun pulsante Nuova nota in evidenza: si crea dal + delle non organizzate, dalla scorciatoia o dal tasto destro su una cartella.
+Nessuna barra superiore: con la colonna fissata, colonna e area della nota occupano tutta l'altezza della finestra, divise da una sola linea verticale; in cima alla colonna una riga di 32 px per la puntina (e «← |» quando è aperta sopra il foglio) (DEC-55). Nessun pulsante Nuova nota in evidenza: si crea dal + di CLOUD, dalla scorciatoia o dal tasto destro su una cartella.
 
-La colonna sinistra ha due sezioni impilate senza separatore: le cartelle iniziano subito sotto l'ultima nota non organizzata e la colonna scorre tutta insieme.
+La colonna sinistra ha due sezioni impilate senza separatore, CLOUD e LOCALE: in CLOUD le cartelle iniziano subito sotto l'ultima nota non organizzata e la colonna scorre tutta insieme.
 
-**Le due sezioni si chiudono** con un clic sul titolo (▾ aperta, ▸ chiusa), così molte non organizzate non spingono le cartelle in fondo. Accanto a ogni cartella e a Non organizzate c'è il numero di note che contengono, sottocartelle comprese (RB-56, ID-15): in grigio piccolo, allineato a destra, a sinistra del +.
+**Le due sezioni si chiudono** con un clic sul titolo (▾ aperta, ▸ chiusa). Accanto a ogni cartella c'è il numero di note che contiene, sottocartelle comprese (RB-56, ID-15): in grigio piccolo, allineato a destra; accanto al titolo CLOUD non c'è (DEC-119).
 
 Le **non organizzate stanno sopra le cartelle**: sono la posta in arrivo della scrittura veloce (RB-01), quindi la lista che si guarda più spesso, e il trascinamento verso l'albero va dall'alto verso il basso.
 
@@ -79,7 +79,7 @@ Sono al centro della finestra, con un velo sul resto. L'azione principale sta a 
 | Stato | Descrizione | Testo mostrato |
 |---|---|---|
 | Vuoto | Nessuna nota e nessuna cartella (primo utilizzo): l'area della nota mostra l'invito a scrivere e il pulsante per creare la prima nota; le non organizzate sono vuote | Testo definitivo in Fase 6 |
-| Vuoto (albero) | Albero senza cartelle: al posto dell'albero una riga che spiega come crearne una (SF-16), vedi lo stato vuoto | «Nessuna cartella. Creane una con +» |
+| Vuoto (albero) | CLOUD senza note e senza cartelle: una riga che spiega come crearne (SF-16); LOCALE senza cartelle: una riga che spiega come aggiungerne | «Nessuna nota. Crea con +»; in LOCALE «Nessuna cartella. Aggiungine una con +» |
 | Caricamento | Solo al primo accesso su un dispositivo, mentre arriva la copia di lavoro: l'ossatura resta, le liste e la nota mostrano segnaposto ([wireframe](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=32-192), `immagini/SC-01-caricamento.png`) | Nessun messaggio |
 | Errore | Avviso di sincronizzazione al centro, sotto la fascia in alto (DEC-86), non bloccante (RB-40) | Testo definitivo in Fase 6 |
 | Successo | Non previsto: la sincronizzazione riuscita è invisibile (RB-40) | — |
@@ -188,7 +188,7 @@ flowchart LR
     SC02 -- Apri nel programma --> SC01
     SC02b -- Apri nel programma --> SC01
 
-    SC01[SC-01 Finestra principale con la nota aperta] -- + accanto a Non organizzate --> Nuova[SC-03 Nota nuova vuota]
+    SC01[SC-01 Finestra principale con la nota aperta] -- + accanto a CLOUD, Nuova nota --> Nuova[SC-03 Nota nuova vuota]
     SC01 -- tasto destro su una cartella --> TdC[Menu della cartella] -- Nuova nota qui --> Nuova
 
     SC01 -- cursore nel testo --> Md[SC-03 Simboli markdown sulla riga]
