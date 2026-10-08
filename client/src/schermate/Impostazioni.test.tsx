@@ -118,7 +118,9 @@ describe("SC-06 Impostazioni (DEC-91, DEC-122)", () => {
     await userEvent.click(campo);
     await userEvent.keyboard("{Control>}c{/Control}");
     expect(api.cambiaScorciatoia).not.toHaveBeenCalled();
-    expect(await screen.findByRole("alert")).toHaveTextContent(/almeno due tasti/);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Usa almeno due tasti tra Ctrl, Alt, Maiusc e Win, poi una lettera, una cifra, un tasto F o Spazio",
+    );
   });
 
   it("tema e avvio all'accensione valgono subito", async () => {

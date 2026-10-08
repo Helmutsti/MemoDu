@@ -202,7 +202,7 @@ Si aprono dalla riga «Impostazioni» in fondo alla colonna e si chiudono con «
 
 - **Riquadro dell'account**, in cima: accesso, stato della sincronizzazione, «Esci» e il **nome del dispositivo**, che serve a riconoscere il computer.
 - **Generale:**
-  - **Scorciatoia della nota rapida:** fai clic sul campo e premi la combinazione nuova (almeno due tasti tra Ctrl, Alt, Maiusc e Win, più una lettera o una cifra). «Ripristina» torna a quella di partenza.
+  - **Scorciatoia della nota rapida:** fai clic sul campo e premi la combinazione nuova (almeno due tasti tra Ctrl, Alt, Maiusc e Win, più una lettera, una cifra, un tasto F o Spazio; sul Mac Control, Option, Maiusc e Command). «Ripristina» torna a quella di partenza.
   - **Avvia Memodu all'accensione:** Memodu parte da sola e la nota rapida è subito pronta.
   - **Tieni Memodu in primo piano:** la finestra resta sopra gli altri programmi.
   - **Tema:** «Sistema», «Chiaro» o «Scuro».

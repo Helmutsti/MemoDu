@@ -32,8 +32,11 @@ const TEMI: { valore: Tema; etichetta: string }[] = [
 ];
 
 const TESTO_OCCUPATA = "Già usata da un altro programma";
-const TESTO_NON_VALIDA =
-  "Usa almeno due tasti tra Ctrl, Alt, Maiusc e Win, poi una lettera o una cifra";
+/** Con i nomi dei tasti del sistema e i tasti finali che accetta `scorciatoia.ts`. */
+const testoNonValida = (sistema: Sistema): string =>
+  `Usa almeno due tasti tra ${
+    sistema === "macos" ? "Control, Option, Maiusc e Command" : "Ctrl, Alt, Maiusc e Win"
+  }, poi una lettera, una cifra, un tasto F o Spazio`;
 
 interface Proprieta {
   /** Esegue un comando: se non riesce, l'avviso o SC-07 come nel resto della finestra. */
@@ -173,7 +176,9 @@ export function Impostazioni({
       await rileggi();
     } catch (errore) {
       if (errore instanceof ErroreApi && (errore.stato === 409 || errore.stato === 400)) {
-        setErroreScorciatoia(errore.stato === 409 ? TESTO_OCCUPATA : TESTO_NON_VALIDA);
+        setErroreScorciatoia(
+          errore.stato === 409 ? TESTO_OCCUPATA : testoNonValida(valori.sistema),
+        );
       } else {
         await esegui(() => Promise.reject(errore));
       }
@@ -246,7 +251,7 @@ export function Impostazioni({
                 errore={erroreScorciatoia}
                 idEtichetta={idScorciatoia}
                 onCombinazione={(c) => void cambiaScorciatoia(c)}
-                onNonValida={() => setErroreScorciatoia(TESTO_NON_VALIDA)}
+                onNonValida={() => setErroreScorciatoia(testoNonValida(sistema))}
               />
               <Pulsante
                 tipo="tenue"
