@@ -433,7 +433,7 @@ Compare e sparisce con `movimento-durata-breve` (120 ms). Compare dopo 500 ms di
 - **Inserimento** (`/` su una riga vuota): Titolo, Sottotitolo, Elenco puntato, Elenco numerato, Checklist · Immagine, ognuna con la sua icona.
 - **Tag** (sotto il campo dei tag): i tag che corrispondono a ciò che si scrive, · Crea il tag "…". Il tasto destro su un suggerimento apre "Elimina tag…" (RB-19).
 - **Filtro tag** (dalla pillola Tag della ricerca, CMP-13): campo "Cerca un tag", divisore, i tag con la spunta su quelli scelti (si possono sceglierne più d'uno), divisore, "Togli il filtro".
-- **Filtro data** (dalle pillole Creazione e Modifica; Fine validità per ora non c'è, DEC-94): Qualsiasi data, Oggi, Ultimi 7 giorni, Ultimi 30 giorni, Quest'anno, con la spunta sulla scelta attiva · Scegli le date… (apre il calendario, CMP-12).
+- **Filtro data** (dalle pillole Creazione e Modifica; Fine validità per ora non c'è, DEC-94): Qualsiasi data, Oggi, Ultimi 7 giorni, Ultimi 30 giorni, Quest'anno, con la spunta sulla scelta attiva · Scegli le date… (apre il calendario, CMP-12, per scegliere un giorno, DEC-126).
 - I puntini "…" indicano che la voce apre un pannello o una conferma; la freccia › un sottomenu.
 - Le scorciatoie sono quelle di Windows; su macOS Ctrl diventa ⌘ e Maiusc ⇧.
 
@@ -1121,7 +1121,7 @@ Compare e sparisce con `movimento-durata-breve` (120 ms).
 ### Varianti e dimensioni
 - Finestra al centro, livello 30 con il velo; larga 1040, alta 820; `sfondo-flottante`, `raggio-contenitore`, `ombra`.
 - **Barra:** il campo di ricerca (CMP-03, tipo Ricerca) largo quanto la finestra e la ✕; margine `spazio-pannello` (16) su tutti i lati, come le colonne dei filtri e dei risultati (ruolo pannello, DEC-100); tra il campo e la ✕ `spazio-icona` (8); sotto un divisore `bordo-divisore`.
-- **Filtri sempre aperti**, a sinistra, larghi 260, con un divisore verticale: titoli di gruppo Tag, Creazione e Modifica; sotto le stesse voci dei menu dei filtri (CMP-09), come voci di menu (CMP-07) con la spunta a destra: i tag con più scelte, i periodi con una sola («Qualsiasi data», «Oggi», «Ultimi 7 giorni», «Ultimi 30 giorni», «Quest'anno», «Scegli le date…», che apre il calendario).
+- **Filtri sempre aperti**, a sinistra, larghi 260, con un divisore verticale: titoli di gruppo Tag, Creazione e Modifica; sotto le stesse voci dei menu dei filtri (CMP-09), come voci di menu (CMP-07) con la spunta a destra: i tag con più scelte, i periodi con una sola («Qualsiasi data», «Oggi», «Ultimi 7 giorni», «Ultimi 30 giorni», «Quest'anno», «Scegli le date…», che apre il calendario per scegliere un giorno, DEC-126).
 - **Risultati**, a destra: il conteggio in Interfaccia/Messaggio e `testo-tenue` (es. «"rilascio" con il tag lavoro · 4 note»), poi i risultati come nella card, con lo stesso ordine (RB-34) e le note del cestino attenuate (RB-29).
 - Testo e filtri arrivano dalla card e tornano alla card quando la finestra si chiude.
 
