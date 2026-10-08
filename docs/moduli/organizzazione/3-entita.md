@@ -18,7 +18,7 @@ Il diagramma di tutto il sistema è in `moduli/note/3-entita.md`.
 - **Chi la crea:** l'utente (FL-05). Fino a DEC-110 anche il sistema, con la cartella vuota di una rinomina in conflitto (RB-38).
 - **Chi la modifica:** l'utente; il sistema, applicando le modifiche arrivate dagli altri dispositivi (FL-07).
 - **Cancellazione:** archiviazione nel cestino con tutto il contenuto (RB-25); definitiva solo svuotando il cestino o con Elimina definitivamente (RB-27, RB-32, RB-55). Non torna dal cestino da sola: una nota che vi arriva da un altro dispositivo va tra le non organizzate (RB-30, DEC-111).
-- **Dati sensibili:** nome e posizione nell'albero sono cifrati end-to-end (DEC-08); per ora in chiaro, con il server solo in locale (DEC-78).
+- **Dati sensibili:** nome e posizione nell'albero sono cifrati end-to-end (DEC-08); la cifratura è attiva dalla 0.1.13 (DEC-121).
 
 ## EN-04 – Tag
 **Descrizione:** etichetta che raggruppa le note in modo trasversale alle cartelle, organizzata in gerarchia (RF-06).
@@ -32,4 +32,4 @@ Il diagramma di tutto il sistema è in `moduli/note/3-entita.md`.
 - **Chi lo crea:** l'utente, scrivendolo (RB-17).
 - **Chi lo modifica:** l'utente; il sistema, applicando le modifiche arrivate dagli altri dispositivi (FL-07).
 - **Cancellazione:** definitiva, solo a mano, dopo una conferma; viene tolto dalle note e i sotto-tag seguono la stessa sorte (RB-19). Un tag che nessuna nota usa più continua a esistere (RB-49).
-- **Dati sensibili:** il nome è cifrato end-to-end (DEC-08); per ora in chiaro, con il server solo in locale (DEC-78).
+- **Dati sensibili:** il nome è cifrato end-to-end (DEC-08); la cifratura è attiva dalla 0.1.13 (DEC-121).

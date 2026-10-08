@@ -24,6 +24,7 @@ erDiagram
         id identificativo
         testo titolo
         markdown contenuto
+        scelta vista
         dataora creazione_sistema
         data creazione_scelta
         dataora ultima_modifica
@@ -50,6 +51,7 @@ erDiagram
 | Identificativo | Codice | Sì | Unico e stabile: non cambia se la nota viene rinominata o spostata | Tecnico, non visibile |
 | Titolo | Testo | No | Può ripetersi (RB-16) | Se manca, nelle liste si mostrano le prime parole del testo (RB-15) |
 | Contenuto | Markdown | No | Fino a 4 MB (circa 2.000 pagine, DEC-106) | Può essere vuoto (RB-10) |
+| Vista | testo \| markdown | No | Cambia solo come si mostra il contenuto, mai il contenuto (RB-91) | Nome tecnico `vista`. Le note nuove nascono con markdown; assente vale testo (note scritte prima della 1.1.0); una vista assente arrivata dalla sincronizzazione non sovrascrive quella che c'è (RB-92, DEC-130) |
 | Data di creazione di sistema | Data e ora | Sì | Non modificabile (RB-21) | Si vede in Info (CMP-24) |
 | Data di creazione scelta | Data | No | Qualsiasi valore (RB-20) | Se c'è, è la data di creazione mostrata (RF-04) |
 | Data di ultima modifica | Data e ora | Sì | Impostata dal sistema | |
@@ -62,7 +64,7 @@ erDiagram
 - **Chi la crea:** l'utente (FL-01, FL-09); il sistema, quando nasce una nota in conflitto (DEC-06).
 - **Chi la modifica:** l'utente; il sistema, applicando le modifiche arrivate dagli altri dispositivi (FL-07).
 - **Cancellazione:** archiviazione nel cestino (RB-26). Diventa definitiva solo quando l'utente svuota il cestino o la elimina definitivamente dal cestino, con conferma (RB-27, RB-32, RB-55).
-- **Dati sensibili:** tutti gli attributi sono cifrati end-to-end (DEC-08); per ora in chiaro, con il server solo in locale (DEC-78). Si conservano finché l'utente non li elimina definitivamente.
+- **Dati sensibili:** tutti gli attributi sono cifrati end-to-end (DEC-08); la cifratura è attiva dalla 0.1.13 (DEC-121). Si conservano finché l'utente non li elimina definitivamente.
 
 ## EN-02 – Immagine
 **Descrizione:** un'immagine inserita in una nota, con le sue impostazioni (RF-03).
@@ -83,4 +85,4 @@ erDiagram
 - **Chi la modifica:** l'utente, dalle impostazioni dell'immagine.
 - **Cancellazione:** togliendola dal testo si recupera con Annulla finché la nota è aperta, poi è definitiva (RB-46). Eliminando la nota, le sue immagini la seguono nel cestino e tornano con lei (RB-58).
 - **Copia:** copiata in un'altra nota diventa un'immagine indipendente (RB-47).
-- **Dati sensibili:** tutti gli attributi, file compreso, sono cifrati end-to-end (DEC-08); per ora in chiaro, con il server solo in locale (DEC-78).
+- **Dati sensibili:** tutti gli attributi, file compreso, sono cifrati end-to-end (DEC-08); la cifratura è attiva dalla 0.1.13 (DEC-121).

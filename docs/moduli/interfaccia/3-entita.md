@@ -23,4 +23,4 @@ Il nome del dispositivo non è qui: appartiene al dispositivo (EN-06, RB-51). I 
 - **Chi le crea:** il sistema, con i valori di default, alla prima apertura di Memodu.
 - **Chi le modifica:** l'utente, dalle impostazioni.
 - **Cancellazione:** non prevista.
-- **Dati sensibili:** cifrate end-to-end come tutti i dati (DEC-08); per ora in chiaro, con il server solo in locale (DEC-78).
+- **Dati sensibili:** cifrate end-to-end come tutti i dati (DEC-08); la cifratura è attiva dalla 0.1.13 (DEC-121).
