@@ -5,11 +5,13 @@
 // Backspace e Canc cancellano un carattere visibile, mai un simbolo da solo; un pezzo svuotato
 // perde i suoi simboli; una cancellazione non spezza mai una coppia di simboli. Invio negli elenchi
 // è il comando pronto della libreria, che su una voce vuota chiude l'elenco.
+// Con la bollicina (DEC-131): il sottolineato `<u>…</u>` vale come gli altri pezzi, il testo
+// scritto con un formato in attesa entra nei suoi simboli (formati.ts) e `-[]` a inizio riga
+// diventa la casella.
 // Le funzioni lavorano sullo stato, così si provano senza il DOM.
 
 import { insertNewlineAndIndent } from "@codemirror/commands";
 import { insertNewlineContinueMarkupCommand } from "@codemirror/lang-markdown";
-import { ensureSyntaxTree, syntaxTree } from "@codemirror/language";
 import {
   EditorSelection,
   EditorState,
@@ -23,6 +25,7 @@ import {
 } from "@codemirror/state";
 import { EditorView, keymap } from "@codemirror/view";
 import { calcolaSegni } from "./anteprima";
+import { formatoInAttesa, pezziFormattati, scriviConAttesa } from "./formati";
 
 interface Tratto {
   da: number;
@@ -39,9 +42,6 @@ interface Formato {
 interface Prefisso extends Tratto {
   titolo: boolean;
 }
-
-const FORMATI = new Set(["StrongEmphasis", "Emphasis", "Strikethrough"]);
-const MARCHE = new Set(["EmphasisMark", "StrikethroughMark"]);
 
 /** Simboli nascosti dentro la riga e simbolo di inizio riga, se c'è. */
 function riga(
@@ -64,34 +64,9 @@ function riga(
   return { line, nascosti, prefisso };
 }
 
-/** I pezzi formattati che toccano le righe tra `da` e `a`. */
+/** I pezzi formattati che toccano le righe tra `da` e `a`, compreso `<u>…</u>` (DEC-131). */
 function formati(state: EditorState, da: number, a: number): Formato[] {
-  const inizio = state.doc.lineAt(da).from;
-  const fine = state.doc.lineAt(a).to;
-  const albero = ensureSyntaxTree(state, fine, 200) ?? syntaxTree(state);
-  const trovati: Formato[] = [];
-  albero.iterate({
-    from: inizio,
-    to: fine,
-    enter: (nodo) => {
-      if (!FORMATI.has(nodo.name)) return;
-      const primo = nodo.node.firstChild;
-      const ultimo = nodo.node.lastChild;
-      if (
-        primo &&
-        ultimo &&
-        primo !== ultimo &&
-        MARCHE.has(primo.name) &&
-        MARCHE.has(ultimo.name)
-      ) {
-        trovati.push({
-          apre: { da: primo.from, a: primo.to },
-          chiude: { da: ultimo.from, a: ultimo.to },
-        });
-      }
-    },
-  });
-  return trovati;
+  return pezziFormattati(state, da, a);
 }
 
 /** Dopo un salto a capo il cursore non resta davanti al simbolo di inizio riga. */
@@ -314,6 +289,21 @@ export function proteggiSimboli(tr: Transaction): TransactionSpec | null {
   };
 }
 
+/** `-[]` scritto a inizio riga diventa la casella da spuntare, `- [ ] ` (CA-02.24). */
+export function casellaDaTrattino(tr: Transaction): TransactionSpec | null {
+  if (!tr.docChanged || !tr.isUserEvent("input")) return null;
+  const pos = tr.state.selection.main.head;
+  const line = tr.state.doc.lineAt(pos);
+  const trovato = /^([ \t]*)-\[\]$/.exec(tr.state.sliceDoc(line.from, pos));
+  if (!trovato) return null;
+  const da = line.from + trovato[1].length;
+  return {
+    changes: { from: da, to: pos, insert: "- [ ] " },
+    selection: EditorSelection.cursor(da + 6),
+    sequential: true,
+  };
+}
+
 /** Il testo scritto va dove lo metterebbe Word (CA-02.16); un a capo resta dov'è. */
 export function spostaScrittura(tr: Transaction): TransactionSpec | null {
   if (!tr.docChanged || !tr.isUserEvent("input")) return null;
@@ -325,6 +315,9 @@ export function spostaScrittura(tr: Transaction): TransactionSpec | null {
   const { da, a, testo } = cambi[0];
   if (da !== a || !testo || testo.includes("\n")) return null;
   const dove = doveScrivere(tr.startState, da);
+  // Con un formato in attesa il testo entra già nei suoi simboli (CA-02.22).
+  const conAttesa = scriviConAttesa(tr.startState, da, dove, testo);
+  if (conAttesa) return conAttesa;
   if (dove === da) return null;
   return {
     changes: { from: dove, insert: testo },
@@ -337,6 +330,8 @@ export function spostaScrittura(tr: Transaction): TransactionSpec | null {
 const filtri = EditorState.transactionFilter.of((tr) => {
   const spec = spostaScrittura(tr) ?? proteggiSimboli(tr);
   if (spec) return spec;
+  const casella = casellaDaTrattino(tr);
+  if (casella) return [tr, casella];
   if (tr.selection && !tr.docChanged) {
     const st = tr.state;
     const sistemata = EditorSelection.create(
@@ -365,6 +360,7 @@ const copiaConISimboli = EditorView.clipboardOutputFilter.of((testo, state) => {
 
 /** Tutto il comportamento della scrittura in vista Markdown. */
 export const scritturaComeWord: Extension = [
+  formatoInAttesa,
   Prec.high(
     keymap.of([
       { key: "Enter", run: invio },
