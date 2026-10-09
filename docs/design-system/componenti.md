@@ -907,7 +907,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 ---
 
 ## CMP-23 – Nota rapida
-**Tipo:** composto (usa CMP-01 tenue e diviso, CMP-09, CMP-20) · **Usato in:** SC-02 · **Figma:** pagina Componenti composti, [Nota rapida](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=140-3837)
+**Tipo:** composto (usa CMP-01 tenue e diviso, CMP-09, CMP-20, CMP-10) · **Usato in:** SC-02 · **Figma:** pagina Componenti composti, [Nota rapida](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=140-3837)
 
 **Scopo:** la finestra per annotare un'idea da qualsiasi programma (RF-01, FL-01).
 **Quando usarlo:** solo per SC-02, una finestra per ogni nota rapida.
@@ -916,6 +916,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 ### Varianti e dimensioni
 - **Vuota:** «Scrivi qui…» in `testo-tenue`. **Con testo:** il testo della nota in Nota/Corpo, `testo-primario`.
 - Finestra senza cornice 480 × 320 (ridimensionabile), `sfondo-nota`, `raggio-contenitore`, `ombra`; `spazio-finestra` (24) ai bordi, `spazio-blocco` (16) tra testo e azioni. Nessun titolo (RB-15), nessuna barra, nessun divisore.
+- In basso a sinistra la **bollicina del formato** (CMP-10, DEC-131), istanza esposta: la nota rapida nasce in Markdown (DEC-130), quindi c'è sempre; il cassetto si apre verso destra, su due righe verso l'alto se non ci sta. La fascia delle azioni è alta 40, come la bollicina, e spinge i due lati ai bordi.
 - In basso a destra **Chiudi** (CMP-01 diviso), con la scorciatoia ⇧ ↵ accanto (Maiusc + Invio, DEC-65): salva e chiude; nel menu della freccia **Apri nel programma** (DEC-34, DEC-50). Nessuna ✕ e nessun altro pulsante.
 - Il margine in alto non si vede e serve a trascinare la finestra. Nell'app gli angoli sono squadrati (scostamento accettato, vedi SC-02).
 
@@ -928,7 +929,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 | Disabilitato · Caricamento | Non previsti: la finestra compare già pronta (RNF-01) |
 
 ### Accessibilità
-- **Tastiera:** il cursore è nel testo all'apertura; Esc salva e chiude; Tab raggiunge Chiudi e la freccia «Altre azioni».
+- **Tastiera:** il cursore è nel testo all'apertura; Esc salva e chiude; Tab raggiunge la bollicina, Chiudi e la freccia «Altre azioni»; Alt + F10 apre il cassetto (CMP-10).
 - **Lettori di schermo:** la freccia si annuncia come «Altre azioni», con un menu.
 - **Contrasti:** come CMP-01 e CMP-20.
 

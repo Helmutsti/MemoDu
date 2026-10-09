@@ -10,7 +10,8 @@ L'impostazione generale (desktop-first, breakpoint, scala z-index, inventario de
 - **Wireframe:** [finestra singola](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=2-2) · [più finestre a cascata](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=2-14)
 - **Esportazioni:** `immagini/SC-02.png`, `immagini/SC-02-cascata.png`
 - **Mockup (frammento Must A, approvati da Manuel Cucca il 27/09/2026):** [vuota](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=20-316) · [con testo](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=20-346) · [più note a cascata](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=20-371)
-- **Esportazioni mockup:** `immagini/SC-02-mockup.png`, `immagini/SC-02-testo-mockup.png`, `immagini/SC-02-cascata-mockup.png`
+- **Esportazioni mockup:** `immagini/SC-02-mockup.png`, `immagini/SC-02-testo-mockup.png`, `immagini/SC-02-cascata-mockup.png`, esportate di nuovo il 09/10/2026 con la bollicina del formato (CMP-23 aggiornato, DEC-131)
+- **Mockup della bollicina (DEC-131, approvati da Manuel Cucca il 09/10/2026):** [cassetto aperto](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=242-3104): nella nota rapida il cassetto si apre verso destra, su due righe verso l'alto, con Testo normale evidenziato; la nota rapida vuota e quella con testo mostrano la bollicina chiusa con T; esportazione `immagini/SC-02-cassetto-mockup.png`
 
 Finestra di sistema, solo su desktop (RF-01). Niente cromatura dell'applicazione: nessuna colonna, nessun albero, nessuna ricerca. Compare entro 0,2 s (RNF-01), già pronta alla scrittura, con il cursore nel testo.
 
@@ -123,6 +124,8 @@ Nessuna barra fissa sopra il testo e niente pillola sopra la selezione: la pillo
 | Tastiera | Alt + F10 apre il cassetto con il focus sulla prima voce; frecce, Invio o spazio, Esc torna al testo (CA-02.5) |
 
 Restano la sintassi markdown (RF-02) e le scorciatoie (CA-02.3). Il menu del tasto destro resta sospeso (DEC-64). Niente + a margine.
+
+- **Mockup (DEC-131, approvati da Manuel Cucca il 09/10/2026):** [bollicina chiusa con H2](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=237-6652) · [cassetto aperto](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=237-6880) · [nota nuova vuota con T](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=238-6951); esportazioni `immagini/SC-03-bollicina-mockup.png`, `immagini/SC-03-cassetto-mockup.png`, `immagini/SC-03-vuoto-bollicina-mockup.png`. I mockup della pillola di formattazione, della pillola di inserimento e del menu `/` di Must A sono SUPERATI (DEC-131), con la didascalia aggiornata; il tasto destro resta SOSPESO
 
 Il testo ha una larghezza massima di lettura anche su schermi larghi: oltre una certa misura le righe diventano difficili da seguire. Lo spazio restante resta vuoto.
 
