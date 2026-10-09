@@ -39,7 +39,7 @@ La scorciatoia predefinita è Ctrl + Alt + N su Windows e Control + Option + N s
 ---
 
 ## RF-02 – Scrittura in markdown con formattazione minima
-**Priorità:** Must · **Origine:** — · **Fase:** 1 per la vista Markdown (1.1.0, DEC-130) · **Stato:** In progettazione; il testo puro, che diventa la vista Testo, è Implementato (rilasciato fino alla 0.1.13, 07/10/2026)
+**Priorità:** Must · **Origine:** — · **Fase:** 1 per la bollicina del formato (DEC-131) · **Stato:** In progettazione; la vista Testo o Markdown (DEC-130) è Pronta per il rilascio con la 1.1.0; il testo puro, che diventa la vista Testo, è Implementato (rilasciato fino alla 0.1.13, 07/10/2026)
 
 **Nella v1 (DEC-125):** testo puro; la formattazione resta sospesa con DEC-64 e si riprende dopo la v1.
 
@@ -53,24 +53,24 @@ Formattazioni previste:
 - titoli e sottotitoli;
 - elenchi puntati, numerati e checklist.
 
-La nota si vede formattata mentre si scrive: i simboli markdown non si vedono, nemmeno dove c'è il cursore (DEC-58), e il testo resta markdown. La formattazione si applica scrivendo i simboli, con le scorciatoie da tastiera, con la pillola degli strumenti o con il menu del tasto destro. Per ora il testo è puro e la formattazione è sospesa (DEC-64).
+Ogni nota si vede come Testo o come Markdown (DEC-130). In vista Markdown la nota si vede formattata mentre si scrive: i simboli markdown non si vedono, nemmeno dove c'è il cursore (DEC-58), e il testo resta markdown. La formattazione si applica scrivendo i simboli, con le scorciatoie da tastiera o con la bollicina del formato, che mostra il formato dove sta il cursore e si apre come un cassetto (DEC-131). Il menu del tasto destro resta sospeso (DEC-64).
 
 Ogni modifica si salva da sola, senza pulsante Salva (RB-06). Il testo incollato da fuori entra come testo semplice (RB-07).
 
 **Collegamenti:** FL-02 · FL-09 · EN-01 · SC-00
 
 ### Scenario d'uso
-Scrivo la nota come testo semplice: la formattazione arriverà dopo la v1 (DEC-125). Le immagini hanno il loro scenario in RF-03.
+Scrivo una nota in Markdown: guardando la bollicina in basso a destra so se sono in un titolo o in un grassetto; con un clic la apro e trasformo la riga in una lista di caselle, oppure premo Ctrl + B e scrivo in grassetto, e lo spengo con un altro Ctrl + B. Le immagini hanno il loro scenario in RF-03.
 
 ### Criteri di accettazione
 Frammento Must A: senza immagini (RF-03) e senza metadati (RF-04).
 
 - **CA-02.1** *Dato* il programma aperto, *quando* scelgo Nuova nota dal + di CLOUD, premo Ctrl + N o il pulsante Nuova nota, *allora* nasce una nota vuota in cima all'elenco, aperta con il cursore nel corpo; se la lascio vuota, sparisce (FL-09, RB-10, RB-60, DEC-39).
 - **CA-02.2** *Dato* una nota in vista Markdown, *quando* scrivo la sintassi Markdown (`#`, `##`, `**`, `*`, `~~`, `-`, `1.`, `- [ ]`), *allora* il testo si formatta subito e i simboli spariscono appena riconosciuti, anche sulla riga in cui scrivo; la nota salvata contiene il Markdown con i suoi simboli (RF-02, DEC-58, DEC-130).
-- **CA-02.3** *(Sospeso con DEC-64: per ora testo puro.)* *Dato* del testo selezionato, *quando* premo Ctrl + B, I, U o Ctrl + Maiusc + X (⌘ su macOS), *allora* diventa grassetto, corsivo, sottolineato o barrato; il sottolineato si salva come `<u>…</u>` (DEC-28).
-- **CA-02.4** *(Sospeso con DEC-64: per ora testo puro.)* *Dato* del testo selezionato, *allora* 8 px sopra compare la pillola di formattazione; *dato* un clic sul vuoto, compare quella di inserimento; *dato* `/` su una riga vuota, si apre il menu di inserimento. In nessuno c'è la voce Immagine; la pillola sparisce riprendendo a scrivere, con Esc o con un clic altrove (CMP-10, CMP-09).
-- **CA-02.5** *(Sospeso con DEC-64: per ora testo puro.)* *Dato* il cursore nel testo, *quando* premo Alt + F10 (Option + F10), *allora* il focus va sulla pillola; le frecce passano da uno strumento all'altro ed Esc torna al testo (CMP-10, RNF-04).
-- **CA-02.6** *(Sospeso con DEC-64: per ora testo puro.)* *Dato* del testo, *quando* uso il tasto destro, *allora* compare il menu con Taglia, Copia, Incolla, la formattazione con le scorciatoie, Titolo › ed Elenco › (RF-11).
+- **CA-02.3** *Dato* una nota in vista Markdown, *quando* premo Ctrl + B, Ctrl + I, Ctrl + U o Ctrl + Maiusc + S (⌘ su macOS), *allora* il testo diventa grassetto, corsivo, sottolineato o barrato, o lo smette se lo era già, come con un clic nel cassetto (CA-02.21); *quando* premo Ctrl + 1 o Ctrl + 2, *allora* la riga diventa titolo o sottotitolo, o torna testo normale se lo era già. Il sottolineato si salva come `<u>…</u>`; Ctrl + S resta «salva» e Ctrl + 3 non fa niente. Non ci sono altre scorciatoie di formattazione (DEC-131).
+- **CA-02.4** *Dato* una nota in vista Markdown, *allora* in basso a destra del foglio c'è la bollicina del formato, che mostra il formato della riga e quelli del carattere dove sta il cursore (`H1 B`, `T B I`, `• S`; `T` sul testo normale) e si aggiorna mentre il cursore si muove; *dato* una selezione che mescola formati diversi, mostra solo quelli che valgono per tutta la selezione, con un trattino al posto del formato della riga se le righe sono diverse. In vista Testo la bollicina non c'è (CMP-10, DEC-131).
+- **CA-02.5** *Dato* il cursore nel testo di una nota in vista Markdown, *quando* premo Alt + F10 (Option + F10), *allora* il cassetto della bollicina si apre con il focus sulla prima voce; le frecce passano da una voce all'altra, Invio o spazio la scelgono ed Esc torna al testo, con il cursore dove era (CMP-10, RNF-04, DEC-131).
+- **CA-02.6** *(Sospeso con DEC-64; non ripreso da DEC-131: il tasto destro apre il menu del sistema.)* *Dato* del testo, *quando* uso il tasto destro, *allora* compare il menu con Taglia, Copia, Incolla, la formattazione con le scorciatoie, Titolo › ed Elenco › (RF-11).
 - **CA-02.7** *Dato* una modifica, *quando* passano 2 s senza scrivere, o cambio nota, o chiudo, o la finestra perde il focus, *allora* la nota si salva senza messaggi e sale in cima all'elenco (RB-06, RB-60).
 - **CA-02.8** *Dato* testo copiato da Word, dal web o da un'email, *quando* lo incollo, *allora* entra come testo semplice (RB-07, SF-06).
 - **CA-02.9** *Dato* uno script o dell'HTML attivo nel testo, *quando* la nota si mostra, *allora* il codice non viene eseguito: si vede come testo o viene rimosso (RB-08, SF-36).
@@ -85,6 +85,11 @@ Frammento Must A: senza immagini (RF-03) e senza metadati (RF-04).
 - **CA-02.18** *Dato* il cursore all'inizio del testo di una voce d'elenco, *quando* premo Backspace, *allora* il segno dell'elenco sparisce e il testo resta; *dato* il cursore all'inizio di un titolo, *quando* premo Backspace, *allora* la riga si unisce a quella sopra come testo normale (DEC-130).
 - **CA-02.19** *Dato* del testo formattato selezionato, *quando* lo copio, *allora* negli appunti finisce il Markdown con i suoi simboli; incollare in Memodu segue CA-02.8 (DEC-130).
 - **CA-02.20** *Dato* una voce della checklist in vista Markdown, *quando* clicco la casella, *allora* si spunta o si toglie la spunta, come in Word; nel testo salvato `[ ]` diventa `[x]` e viceversa, e Annulla la ripristina (DEC-130).
+- **CA-02.21** *Dato* la bollicina, *quando* ci clicco, *allora* si apre come un cassetto con i formati di riga (testo normale, titolo, sottotitolo, elenco puntato, elenco numerato, casella), i formati di carattere (grassetto, corsivo, barrato, sottolineato) e «Rimuovi formattazione», con evidenziati quelli in uso; *quando* scelgo una voce, *allora* il formato si applica subito, la bollicina si aggiorna e il cassetto resta aperto; si chiude quando riprendo a scrivere, con Esc, con un clic nel testo o fuori, o con un altro clic sulla bollicina. Il cursore e la selezione restano dove erano (DEC-131).
+- **CA-02.22** *Dato* del testo selezionato, *quando* scelgo un formato di carattere, *allora* vale per tutta la selezione; uno di riga vale per tutte le righe toccate. *Dato* il cursore dentro una parola senza selezione, un formato di carattere vale per quella parola; *dato* il cursore tra due parole o in fondo alla riga, il formato si accende per il testo che scrivo da lì, e scegliendolo di nuovo si spegne e torno a scrivere normale; un formato di riga vale per la riga del cursore (DEC-131).
+- **CA-02.23** *Dato* del testo formattato, *quando* scelgo «Rimuovi formattazione», *allora* sparisce tutto quello che la bollicina mostra: con una selezione, il testo selezionato perde grassetto, corsivo, barrato e sottolineato e le righe toccate tornano testo normale; senza selezione, la parola sotto il cursore perde i formati di carattere e la riga torna testo normale. La bollicina mostra `T` (DEC-131).
+- **CA-02.24** *Dato* l'inizio di una riga in vista Markdown, *quando* scrivo `-[]`, *allora* la riga diventa una casella da spuntare e nel testo salvato c'è `- [ ] `; `- ` e `1. ` fanno gli elenchi come in CA-02.2 (DEC-131).
+- **CA-02.25** *Dato* una nota rapida o un file `.md` di Locale, *allora* c'è la stessa bollicina con lo stesso cassetto e le stesse scorciatoie: nella nota rapida a sinistra nella fascia delle azioni, con il cassetto che si apre verso destra; nel file in basso a destra, come nelle note. I file `.txt` non l'hanno (DEC-131).
 
 ---
 

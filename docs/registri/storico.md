@@ -513,3 +513,5 @@
 | 09/10/2026 | Manuel Cucca | TC-10: il testo scritto subito dopo i simboli di chiusura scritti a mano resta nel formato; è il comportamento previsto, che non si porrà più con il cambio del formato | DEC-130 |
 | 09/10/2026 | Agente IA | Ciclo 1.1.0, Fase 9: note di rilascio della 1.1.0 in CHANGELOG e guida per gli utenti con la vista della nota (sezione «Markdown o Testo», riga Vista in Info, vista dei file di Locale) | DEC-130 |
 | 09/10/2026 | Manuel Cucca | La 1.1.0 si pubblica dopo la 1.0.0: prima le prove sul Mac e il rilascio della 1.0.0 dal ramo `rilascio/1.0`, poi la 1.1.0 da `main` | DEC-128, DEC-129 |
+| 09/10/2026 | Manuel Cucca | DEC-131: bollicina del formato in vista Markdown al posto della pillola degli strumenti; cassetto con formati di riga e di carattere e «Rimuovi formattazione»; sottolineato con U; scorciatoie Ctrl + B, I, U, Ctrl + Maiusc + S, Ctrl + 1, 2; `-[]` per la casella | DEC-131 |
+| 09/10/2026 | Agente IA | Fase 1 di RF-02 per la bollicina: CA-02.3 … CA-02.5 riscritti, nuovi CA-02.21 … CA-02.25, scenario e descrizione aggiornati; approvata da Manuel Cucca | DEC-131 |
