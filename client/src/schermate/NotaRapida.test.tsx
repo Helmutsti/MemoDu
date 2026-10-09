@@ -28,8 +28,12 @@ vi.mock("../finestra", () => ({
 }));
 // L'editor vero è CodeMirror; qui basta un campo che riporta le modifiche.
 vi.mock("../editor/Editor", () => ({
-  Editor: ({ onModifica }: { onModifica: (t: string) => void }) => (
-    <textarea aria-label="Testo" onChange={(e) => onModifica(e.target.value)} />
+  Editor: ({ onModifica, markdown }: { onModifica: (t: string) => void; markdown?: boolean }) => (
+    <textarea
+      aria-label="Testo"
+      data-vista={markdown ? "markdown" : "testo"}
+      onChange={(e) => onModifica(e.target.value)}
+    />
   ),
   cursoreDalClic: () => false,
 }));
@@ -200,5 +204,16 @@ describe("SC-02 Nota rapida (FL-01)", () => {
     fireEvent.keyDown(screen.getByLabelText("Testo"), { key: "Enter", shiftKey: true });
     await waitFor(() => expect(chiudiNotaRapida).toHaveBeenCalled());
     expect(api.crea).toHaveBeenCalledWith({ contenuto: "idea" });
+  });
+});
+
+describe("vista della nota rapida (DEC-130)", () => {
+  it("è sempre una nota nuova: si mostra in Markdown, senza scelta (CA-02.14)", () => {
+    render(<NotaRapida />);
+    expect(screen.getByRole("textbox", { name: "Testo" })).toHaveAttribute(
+      "data-vista",
+      "markdown",
+    );
+    expect(screen.queryByRole("radiogroup", { name: "Vista" })).toBeNull();
   });
 });

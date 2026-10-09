@@ -332,3 +332,25 @@ describe("CMP-24 Info (DEC-96)", () => {
     expect(f.onSpostaIn).toHaveBeenCalledTimes(1);
   });
 });
+
+describe("riga Vista di Info (DEC-130)", () => {
+  it("sceglie Testo o Markdown; la vista già scelta non richiama nulla (CA-02.14)", async () => {
+    apri();
+    const vista = screen.getByRole("radiogroup", { name: "Vista" });
+    expect(within(vista).getByRole("radio", { name: "Testo" })).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+    await userEvent.click(within(vista).getByRole("radio", { name: "Testo" }));
+    expect(f.onVista).not.toHaveBeenCalled();
+    await userEvent.click(within(vista).getByRole("radio", { name: "Markdown" }));
+    expect(f.onVista).toHaveBeenCalledWith("markdown");
+  });
+
+  it("c'è anche nella Comparsa, ultima delle righe prima della modifica", () => {
+    apri(nota, "comparsa");
+    const vista = screen.getByRole("radiogroup", { name: "Vista" });
+    const righe = vista.closest(".info-righe")!;
+    expect(righe.lastElementChild).toContainElement(vista);
+  });
+});

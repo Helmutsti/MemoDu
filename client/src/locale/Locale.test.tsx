@@ -374,3 +374,24 @@ describe("comparsa del file (DEC-123)", () => {
     expect(apiLocale.rinomina).not.toHaveBeenCalled();
   });
 });
+
+describe("vista di un file locale (CA-17.25, DEC-130)", () => {
+  const apriFile = async (percorso: string, nome: string) => {
+    vi.mocked(apiLocale.apri).mockResolvedValue(letto({ testo: "- [ ] fare" }));
+    render(
+      <FileAperto percorso={percorso} locale={stato()} onPercorso={() => {}} onChiudi={() => {}} />,
+    );
+    await screen.findByRole("textbox", { name: `Testo di ${nome}` });
+  };
+
+  it("un .md si mostra in Markdown, con i simboli nascosti", async () => {
+    await apriFile(`${RADICE}\\idee.md`, "idee.md");
+    expect(screen.getByRole("checkbox", { name: "Da fare" })).toBeInTheDocument();
+  });
+
+  it("un .txt si mostra in Testo, con i simboli come caratteri", async () => {
+    await apriFile(RIUNIONE, "riunione.txt");
+    expect(screen.queryByRole("checkbox")).toBeNull();
+    expect(screen.getByText("- [ ] fare")).toBeInTheDocument();
+  });
+});

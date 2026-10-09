@@ -23,6 +23,7 @@ vi.mock("../api", async (originale) => ({
     crea: vi.fn(),
     salva: vi.fn(),
     eliminaSeVuota: vi.fn(),
+    cambiaVista: vi.fn(),
     spostaNota: vi.fn(),
     albero: vi.fn(),
     creaCartella: vi.fn(),
@@ -761,6 +762,39 @@ describe("menu ··· e Sposta in (CA-05.4, CA-15.1)", () => {
     expect(api.cestinaNota).toHaveBeenCalledWith("r");
     expect(await screen.findByText("Nessuna nota aperta")).toBeInTheDocument();
     expect(screen.queryByRole("button", { current: "page" })).not.toBeInTheDocument();
+  });
+});
+
+describe("vista della nota (DEC-130)", () => {
+  const riunione = (vista: Nota["vista"]) => ({
+    ...nota("r", "Riunione di lunedì", "- [ ] fare"),
+    vista,
+  });
+  beforeEach(() => {
+    vi.mocked(api.albero).mockResolvedValue(alberoDiProva());
+  });
+
+  it("scegliendo Markdown in Info la nota si mostra subito formattata, senza salvarla (CA-02.14, RB-91)", async () => {
+    vi.mocked(api.leggi).mockResolvedValue(riunione("testo"));
+    vi.mocked(api.cambiaVista).mockResolvedValue(riunione("markdown"));
+    render(<FinestraPrincipale />);
+    const info = await apriInfo("Riunione di lunedì");
+    expect(screen.queryByRole("checkbox", { name: "Da fare" })).toBeNull();
+    const vista = within(info).getByRole("radiogroup", { name: "Vista" });
+    await userEvent.click(within(vista).getByRole("radio", { name: "Markdown" }));
+    expect(api.cambiaVista).toHaveBeenCalledWith("r", "markdown");
+    expect(await screen.findByRole("checkbox", { name: "Da fare" })).toBeInTheDocument();
+    expect(within(vista).getByRole("radio", { name: "Markdown" })).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+    expect(api.salva).not.toHaveBeenCalled();
+  });
+
+  it("una nota in Markdown si apre già formattata (CA-02.2)", async () => {
+    vi.mocked(api.leggi).mockResolvedValue(riunione("markdown"));
+    render(<FinestraPrincipale />);
+    expect(await screen.findByRole("checkbox", { name: "Da fare" })).toBeInTheDocument();
   });
 });
 
