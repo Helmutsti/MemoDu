@@ -509,3 +509,5 @@
 | 09/10/2026 | Agente IA | Ciclo 1.1.0, attività 2 (editor): compartimento della vista Markdown in `Editor.tsx` con la resa di `anteprima.ts`; `scrittura.ts` con cursore, bordi, Invio, Backspace, Canc e copia come in Word (CA-02.15 … CA-02.19), 15 prove automatiche | DEC-130 |
 | 09/10/2026 | Agente IA | Ciclo 1.1.0, attività 3 (interfaccia): riga Vista in Info (Comparsa e Finestra) con la Scelta a segmenti e `cambia_vista`; vista della nota aperta, nota rapida sempre in Markdown, file di Locale per estensione (CA-02.14, CA-17.25) | DEC-130 |
 | 09/10/2026 | Agente IA | Ciclo 1.1.0, attività 4 (prove automatiche): riga Vista in Info, vista della nota aperta, della nota rapida e dei file di Locale per estensione; 248 prove passate, lint pulito | DEC-130 |
+| 09/10/2026 | Agente IA | Ciclo 1.1.0, attività 5 (prove a mano): TC-10, TC-158 … TC-164 e TC-166 superate nell'app di sviluppo con dati di prova; vista della nota Pronta per il rilascio | DEC-130 |
+| 09/10/2026 | Manuel Cucca | TC-10: il testo scritto subito dopo i simboli di chiusura scritti a mano resta nel formato; è il comportamento previsto, che non si porrà più con il cambio del formato | DEC-130 |
