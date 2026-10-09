@@ -4,16 +4,25 @@
 // (anteprima.ts) e la scrittura come in Word (scrittura.ts); il testo salvato è lo stesso.
 // Tab rientra e Maiusc + Tab torna indietro, Esc e poi Tab escono dall'editor; annulla, ripeti,
 // selezione, taglia, copia e incolla (solo testo, RB-07) come in ogni editor; il tasto destro
-// apre il menu del sistema. Niente pillola, menu «/» o scorciatoie di formattazione
-// (EditorMarkdown.tsx resta non collegato).
+// apre il menu del sistema. In vista Markdown l'editor dice alla bollicina (CMP-10, DEC-131) il
+// formato dove sta il cursore e applica la voce scelta nel cassetto; niente menu «/» né
+// scorciatoie di formattazione, rinviate (EditorMarkdown.tsx resta non collegato).
 
 import { defaultKeymap, history, historyKeymap, indentLess, insertTab } from "@codemirror/commands";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { indentUnit } from "@codemirror/language";
 import { Compartment, EditorState, type Extension } from "@codemirror/state";
 import { EditorView, keymap, placeholder } from "@codemirror/view";
-import { useEffect, useRef, type ReactElement } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef, type ReactElement } from "react";
+import type { VoceFormato } from "../componenti/Bollicina";
 import { anteprimaDalVivo } from "./anteprima";
+import {
+  alternaCarattere,
+  formatoDove,
+  type FormatoDove,
+  impostaRiga,
+  rimuoviFormattazione,
+} from "./formati";
 import { scritturaComeWord } from "./scrittura";
 import "./Editor.css";
 
@@ -37,17 +46,43 @@ interface Proprieta {
   etichetta?: string;
   /** Vista Markdown: testo formattato con i simboli nascosti (DEC-130). */
   markdown?: boolean;
+  /** Il formato dove sta il cursore, per la bollicina; null in vista Testo (DEC-131). */
+  onFormato?: (formato: FormatoDove | null) => void;
 }
 
-export function Editor({
-  contenuto,
-  onModifica,
-  focus = false,
-  invito = "Scrivi qui…",
-  solaLettura = false,
-  etichetta = "Testo della nota",
-  markdown: inMarkdown = false,
-}: Proprieta): ReactElement {
+/** Quello che la bollicina chiede all'editor. */
+export interface ManigliaEditor {
+  /** Applica una voce del cassetto e rimette il cursore nel testo (CA-02.21). */
+  applica: (voce: VoceFormato) => void;
+}
+
+/** Il comando di una voce del cassetto. */
+function comandoDi(voce: VoceFormato) {
+  if (voce === "rimuovi") return rimuoviFormattazione;
+  if (voce === "grassetto" || voce === "corsivo" || voce === "barrato" || voce === "sottolineato")
+    return alternaCarattere(voce);
+  return impostaRiga(voce);
+}
+
+/** Uguali per la bollicina? Evita di avvisarla a ogni tasto se il formato non cambia. */
+function stessoFormato(a: FormatoDove | null, b: FormatoDove | null): boolean {
+  if (!a || !b) return a === b;
+  return a.riga === b.riga && [...a.caratteri].join() === [...b.caratteri].join();
+}
+
+export const Editor = forwardRef<ManigliaEditor, Proprieta>(function Editor(
+  {
+    contenuto,
+    onModifica,
+    focus = false,
+    invito = "Scrivi qui…",
+    solaLettura = false,
+    etichetta = "Testo della nota",
+    markdown: inMarkdown = false,
+    onFormato,
+  },
+  maniglia,
+): ReactElement {
   const contenitore = useRef<HTMLDivElement>(null);
   const vista = useRef<EditorView | null>(null);
   const compartimento = useRef(new Compartment());
@@ -55,6 +90,28 @@ export function Editor({
   useEffect(() => {
     suModifica.current = onModifica;
   }, [onModifica]);
+  const suFormato = useRef(onFormato);
+  useEffect(() => {
+    suFormato.current = onFormato;
+  }, [onFormato]);
+  const markdownAcceso = useRef(inMarkdown);
+  const ultimoFormato = useRef<FormatoDove | null>(null);
+  // Avvisa la bollicina solo quando il formato cambia.
+  const avvisaFormato = (view: EditorView) => {
+    const f = markdownAcceso.current ? formatoDove(view.state) : null;
+    if (stessoFormato(f, ultimoFormato.current)) return;
+    ultimoFormato.current = f;
+    suFormato.current?.(f);
+  };
+
+  useImperativeHandle(maniglia, () => ({
+    applica: (voce) => {
+      const view = vista.current;
+      if (!view || solaLettura) return;
+      comandoDi(voce)(view);
+      view.focus();
+    },
+  }));
 
   useEffect(() => {
     const view = new EditorView({
@@ -77,11 +134,14 @@ export function Editor({
           EditorView.editable.of(!solaLettura),
           EditorView.updateListener.of((u) => {
             if (u.docChanged) suModifica.current(u.state.doc.toString());
+            if (u.docChanged || u.selectionSet || u.transactions.some((t) => t.effects.length))
+              avvisaFormato(u.view);
           }),
         ],
       }),
     });
     vista.current = view;
+    avvisaFormato(view);
     if (focus) view.focus();
     return () => {
       vista.current = null;
@@ -93,13 +153,17 @@ export function Editor({
 
   // Cambiare vista non ricrea l'editor: cursore, annulla e testo restano (RB-91).
   useEffect(() => {
-    vista.current?.dispatch({
+    markdownAcceso.current = inMarkdown;
+    const view = vista.current;
+    if (!view) return;
+    view.dispatch({
       effects: compartimento.current.reconfigure(inMarkdown ? vistaMarkdown : []),
     });
+    avvisaFormato(view);
   }, [inMarkdown]);
 
   return <div ref={contenitore} className="editor nota-corpo" />;
-}
+});
 
 /**
  * Clic nel vuoto attorno al testo (sotto l'ultima riga, a destra o a sinistra): il cursore va
