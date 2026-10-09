@@ -50,7 +50,7 @@ erDiagram
 |---|---|---|---|---|
 | Identificativo | Codice | Sì | Unico e stabile: non cambia se la nota viene rinominata o spostata | Tecnico, non visibile |
 | Titolo | Testo | No | Può ripetersi (RB-16) | Se manca, nelle liste si mostrano le prime parole del testo (RB-15) |
-| Contenuto | Markdown | No | Fino a 4 MB (circa 2.000 pagine, DEC-106) | Può essere vuoto (RB-10) |
+| Contenuto | Markdown | No | Fino a 4 MB (circa 2.000 pagine, DEC-106) | Può essere vuoto (RB-10). I formati scelti con la bollicina o con le scorciatoie si salvano qui con i simboli Markdown, il sottolineato con `<u>…</u>` (RB-95, DEC-131): la bollicina non ha attributi suoi |
 | Vista | testo \| markdown | No | Cambia solo come si mostra il contenuto, mai il contenuto (RB-91) | Nome tecnico `vista`. Le note nuove nascono con markdown; assente vale testo (note scritte prima della 1.1.0); una vista assente arrivata dalla sincronizzazione non sovrascrive quella che c'è (RB-92, DEC-130) |
 | Data di creazione di sistema | Data e ora | Sì | Non modificabile (RB-21) | Si vede in Info (CMP-24) |
 | Data di creazione scelta | Data | No | Qualsiasi valore (RB-20) | Se c'è, è la data di creazione mostrata (RF-04) |

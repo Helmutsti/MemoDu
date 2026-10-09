@@ -516,3 +516,4 @@
 | 09/10/2026 | Manuel Cucca | DEC-131: bollicina del formato in vista Markdown al posto della pillola degli strumenti; cassetto con formati di riga e di carattere e «Rimuovi formattazione»; sottolineato con U; scorciatoie Ctrl + B, I, U, Ctrl + Maiusc + S, Ctrl + 1, 2; `-[]` per la casella | DEC-131 |
 | 09/10/2026 | Agente IA | Fase 1 di RF-02 per la bollicina: CA-02.3 … CA-02.5 riscritti, nuovi CA-02.21 … CA-02.25, scenario e descrizione aggiornati; approvata da Manuel Cucca | DEC-131 |
 | 09/10/2026 | Agente IA | Fase 2 di RF-02 per la bollicina: FL-02 con simboli, bollicina e scorciatoie; RB-93 … RB-96 (formato senza selezione, un solo formato di riga, come si salvano i formati, Rimuovi formattazione); SF-36 con `<u>`; approvata da Manuel Cucca | DEC-131 |
+| 09/10/2026 | Agente IA | Fase 3 di RF-02 per la bollicina: nessun attributo nuovo in EN-01; nel Contenuto i formati con i simboli Markdown e `<u>…</u>` (RB-95); approvata da Manuel Cucca | DEC-131 |
