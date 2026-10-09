@@ -5,7 +5,7 @@
 L'impostazione generale (desktop-first, breakpoint, scala z-index, inventario dei componenti) è in `moduli/interfaccia/4-schermate.md`.
 
 ## SC-02 – Nota rapida
-**Flussi:** FL-01 · **Componenti:** CMP-23 Nota rapida (con CMP-01, CMP-09, CMP-20)
+**Flussi:** FL-01 · FL-02 · **Componenti:** CMP-23 Nota rapida (con CMP-01, CMP-09, CMP-20, CMP-10 Bollicina del formato)
 
 - **Wireframe:** [finestra singola](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=2-2) · [più finestre a cascata](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=2-14)
 - **Esportazioni:** `immagini/SC-02.png`, `immagini/SC-02-cascata.png`
@@ -18,6 +18,7 @@ Finestra di sistema, solo su desktop (RF-01). Niente cromatura dell'applicazione
 | Elemento | Nota |
 |---|---|
 | Area di scrittura | Occupa quasi tutta la finestra; un clic nel vuoto porta il cursore nel testo (DEC-66). Nessun campo titolo: il titolo si mette dopo, nel programma completo (RB-15) |
+| **Bollicina del formato** (DEC-131) | A sinistra nella fascia in basso, sulla stessa linea di Chiudi: la nota rapida nasce in Markdown (DEC-130), quindi la bollicina c'è sempre. Il cassetto si apre verso destra fino a Chiudi; se non ci sta su una riga, va su due, verso l'alto (vedi SC-03, «Bollicina del formato») |
 | **Chiudi** | Pulsante primario diviso in basso a destra (CMP-01, variante Diviso), l'unico della finestra, con accanto all'etichetta le icone della scorciatoia ⇧ ↵ (Maiusc + Invio, DEC-65). Salva e chiude, come il tasto `Esc`; un clic altrove salva ma non chiude (RB-02, DEC-53); la freccia ▾ apre un menu con **Apri nel programma**, che salva e chiude la nota aperta nel programma, e ci porta questa (RB-05). Esc vuol dire «ho finito», non annulla: per cancellare una nota rapida si entra nel programma. Nessuna ✕ (DEC-34, DEC-50) |
 
 **Nessuna cornice:** niente barra del titolo, niente divisori, niente bordo. La finestra è una superficie bianca con ombra. Si trascina dal margine in alto, che non si vede.
@@ -54,7 +55,7 @@ Stessi tasti fisici sui due sistemi, libere nelle configurazioni di default di e
 ---
 
 ## SC-03 – Schermata di scrittura
-**Flussi:** FL-02 · FL-03 · FL-04 · FL-09 · **Componenti:** percorso (CMP-26), editor markdown, pillola degli strumenti, menu di inserimento, Info (CMP-24), menu del tasto destro, immagine inline, stato vuoto
+**Flussi:** FL-02 · FL-03 · FL-04 · FL-09 · **Componenti:** percorso (CMP-26), editor markdown (CMP-20), bollicina del formato (CMP-10, DEC-131), menu di inserimento (sospeso), Info (CMP-24), menu del tasto destro (sospeso), immagine inline, stato vuoto
 
 - **Wireframe:** [immagine selezionata](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=2-36) · [nota nuova vuota](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=2-66) · [testo selezionato e riga vuota](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=15-96) · [clic sul vuoto](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=15-180)
 - **Esportazioni:** `immagini/SC-03.png`, `immagini/SC-03-vuoto.png`, `immagini/SC-03-selezione.png`, `immagini/SC-03-pillola.png`
@@ -67,9 +68,9 @@ Stessi tasti fisici sui due sistemi, libere nelle configurazioni di default di e
 ### Zone e gerarchia
 | Ordine di lettura | Zona | Contenuto |
 |---|---|---|
-| 1 | Corpo della nota | Testo formattato mentre si scrive; i simboli markdown non si vedono mai, nemmeno sulla riga del cursore (RF-02, DEC-58); per ora testo puro (DEC-64). Testo allineato a sinistra con spazi discreti; barra di scorrimento sottile e a scomparsa, che non occupa spazio (DEC-58). Un clic in un punto vuoto del foglio porta il cursore nel testo più vicino (DEC-66) |
+| 1 | Corpo della nota | Testo formattato mentre si scrive; in vista Markdown i simboli markdown non si vedono mai, nemmeno sulla riga del cursore (RF-02, DEC-58); in vista Testo sono caratteri normali (DEC-130). Testo allineato a sinistra con spazi discreti; barra di scorrimento sottile e a scomparsa, che non occupa spazio (DEC-58). Un clic in un punto vuoto del foglio porta il cursore nel testo più vicino (DEC-66) |
 | 2 | Percorso con il titolo (DEC-71) | Al centro della fascia in alto: le cartelle che contengono la nota e il titolo (CMP-26). Un clic sul titolo apre Info (CMP-24) sotto di lui, dove il titolo si modifica; può restare vuoto e allora si legge «Senza titolo» (RB-15). Passando sul titolo non compare niente (DEC-96). Nel foglio non c'è più il campo titolo |
-| 3 | Strumenti di formattazione | Nessuna barra fissa: compaiono solo quando servono (livello 20), vedi sotto; per ora sospesi (DEC-64) |
+| 3 | Bollicina del formato | Solo in vista Markdown: in basso a destra del foglio, galleggiante (livello 20), con il formato dove sta il cursore; nessuna barra fissa (DEC-131), vedi sotto |
 
 ### Scrittura, tasto destro e immagini (FL-02, FL-03)
 - **Wireframe:** [tasto destro sul testo](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=30-67) · [simboli markdown sulla riga del cursore](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=30-144) · [trascinamento di un'immagine](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=30-244)
@@ -78,7 +79,7 @@ Stessi tasti fisici sui due sistemi, libere nelle configurazioni di default di e
 | Cosa | Come |
 |---|---|
 | Tasto destro sul testo | Taglia, Copia, Incolla; poi grassetto, corsivo, sottolineato, barrato con le scorciatoie accanto; poi Titolo ▸ ed Elenco ▸ (RF-11). Sospeso con DEC-64: per ora il tasto destro apre il menu del sistema |
-| Simboli markdown | Non si vedono mai: si scrivono (es. `## ` davanti a un titolo) e spariscono appena riconosciuti; le frecce li saltano e Canc li toglie in un colpo solo (RF-02, DEC-58). Sospeso con DEC-64: per ora sono caratteri normali |
+| Simboli markdown | In vista Markdown non si vedono mai: si scrivono (es. `## ` davanti a un titolo) e spariscono appena riconosciuti; le frecce li saltano e la scrittura segue Word (RF-02, DEC-58, DEC-130). In vista Testo sono caratteri normali |
 | Trascinamento di un'immagine | Tutta l'area della nota si copre di un bordo tratteggiato con "Rilascia qui l'immagine" e i limiti (solo immagini, fino a 25 MB). File non validi: messaggio in linea (RB-11, RB-12) |
 
 ### Metadati (FL-04)
@@ -102,19 +103,26 @@ Stessi tasti fisici sui due sistemi, libere nelle configurazioni di default di e
 
 Il calendario è il componente CMP-12 (Date picker).
 
-### Strumenti di formattazione
-Sospesi con DEC-64: per ora testo puro, senza pillola né menu `/`.
+### Bollicina del formato (DEC-131)
+Nessuna barra fissa sopra il testo e niente pillola sopra la selezione: la pillola degli strumenti, con il menu `/`, è superata dalla **bollicina del formato** (CMP-10). C'è solo in vista Markdown: se c'è, la nota è in Markdown.
 
-Nessuna barra fissa sopra il testo. Una sola **pillola degli strumenti** compare solo quando serve, **sopra il punto dell'evento** (la selezione o il punto del clic), e cambia contenuto in base al contesto:
+```
+│ testo della nota …                                          │
+│                                                             │
+│                                                  ( H1 B )   │   chiusa
+│        ( T H1 H2 • 1. ☐ │ B I S U │ ⌫ )  ( H1 B )            │   aperta
+```
 
-| Situazione | Contenuto della pillola |
+| Cosa | Come |
 |---|---|
-| Testo selezionato | Formattazione: grassetto, corsivo, sottolineato, barrato, titoli |
-| Clic sul vuoto, senza selezione | Inserimento: titoli, elenchi, checklist, immagine |
+| Posizione | In basso a destra del foglio, galleggiante, ferma anche quando il testo scorre (livello 20). Sotto l'ultima riga del testo c'è un margine, così la bollicina non la copre mai |
+| Bollicina chiusa | Pillola piccola con il formato della riga e quelli del carattere dove sta il cursore: `T`, `H1`, `H2`, `•`, `1.`, `☐`, poi `B`, `I`, `S`, `U` (per esempio `H1 B`, `T B I`). Con una selezione mista, solo i formati comuni e un trattino al posto della riga se le righe sono diverse (CA-02.4) |
+| Cassetto aperto | Con un clic sulla bollicina si apre verso sinistra, sulla stessa linea: formati di riga (testo normale, titolo, sottotitolo, elenco puntato, elenco numerato, casella), un divisore, formati di carattere (grassetto, corsivo, barrato, sottolineato), un divisore, «Rimuovi formattazione». I formati in uso sono evidenziati come lo stato Attivo della pillola (DEC-35). Resta aperto finché si riprende a scrivere, con Esc, con un clic nel testo o fuori, o con un altro clic sulla bollicina (CA-02.21) |
+| Poco spazio | Se il cassetto non ci sta su una riga (finestra stretta, nota rapida), va su due righe, verso l'alto: sopra i formati di riga, sotto quelli di carattere e «Rimuovi formattazione» (proposta dell'agente) |
+| Suggerimenti | Passando su una voce compare il nome con la scorciatoia, se c'è: «Grassetto · Ctrl + B», «Barrato · Ctrl + Maiusc + S», «Titolo · Ctrl + 1»; «Rimuovi formattazione» ha l'icona della gomma e il nome solo nel suggerimento |
+| Tastiera | Alt + F10 apre il cassetto con il focus sulla prima voce; frecce, Invio o spazio, Esc torna al testo (CA-02.5) |
 
-La pillola sparisce quando si riprende a scrivere. In più, `/` su una riga vuota apre il menu di inserimento.
-
-Restano sempre le scorciatoie da tastiera, la sintassi markdown (RF-02) e il menu del tasto destro (RF-11). Niente + a margine.
+Restano la sintassi markdown (RF-02) e le scorciatoie (CA-02.3). Il menu del tasto destro resta sospeso (DEC-64). Niente + a margine.
 
 Il testo ha una larghezza massima di lettura anche su schermi larghi: oltre una certa misura le righe diventano difficili da seguire. Lo spazio restante resta vuoto.
 
@@ -123,7 +131,7 @@ Il testo ha una larghezza massima di lettura anche su schermi larghi: oltre una 
 |---|---|---|
 | Vuoto (primo utilizzo) | Nessuna nota e nessuna cartella: invito a scrivere più pulsante per creare la prima nota | Titolo "Nessuna nota, per ora." · spiegazione "Inizia a scrivere." · pulsante "Nuova nota" (stato vuoto, CMP-19) |
 | Vuoto (nessuna nota aperta) | Dopo «Chiudi nota» o con la nota aperta finita nel cestino (DEC-68, RB-67) | Titolo "Nessuna nota aperta" · spiegazione e pulsante "Nuova nota" (stato vuoto, CMP-19) |
-| Vuoto (nota nuova) | Nota creata e ancora senza testo: il percorso mostra «Senza titolo» e il corpo vuoto il suo invito (DEC-71). La nota esiste già; lasciata vuota, sparisce (RB-10, DEC-39) | Percorso: "Senza titolo" · corpo: "Scrivi qui…" (per ora testo puro, DEC-64) |
+| Vuoto (nota nuova) | Nota creata e ancora senza testo: il percorso mostra «Senza titolo» e il corpo vuoto il suo invito (DEC-71). La nota esiste già; lasciata vuota, sparisce (RB-10, DEC-39). Nasce in Markdown, quindi in basso a destra c'è la bollicina con `T` (DEC-131) | Percorso: "Senza titolo" · corpo: "Scrivi qui…" |
 | Caricamento | Non previsto: la nota arriva dalla copia di lavoro sul dispositivo | — |
 | Errore | Immagine rifiutata: messaggio accanto al punto di inserimento, non bloccante (RB-11, RB-12) | Testo definitivo in Fase 6 |
 | Successo | Non previsto: il salvataggio è silenzioso (RB-06) | — |
