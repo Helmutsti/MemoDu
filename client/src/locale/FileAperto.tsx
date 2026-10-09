@@ -3,16 +3,19 @@
 // testo, con lo stesso editor delle note. Si salva solo con Ctrl + S (⌘ + S su Mac, RB-79);
 // mentre si scrive il testo resta in sospeso nel nucleo (RB-78). Se il file cambia o sparisce sul
 // disco compare sempre l'avviso con la scelta (RB-85). Un clic sul nome apre la comparsa del file
-// (DEC-123): rinomina, Chiudi file e, per un file aggiunto da solo, Togli da Locale.
+// (DEC-123): rinomina, Chiudi file e, per un file aggiunto da solo, Togli da Locale. Un `.md`
+// ha la bollicina del formato come le note (CA-02.25, DEC-131); un `.txt` no.
 
 import { ChevronRight, FileText } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type ReactElement } from "react";
 import { ErroreApi } from "../api";
 import { AreaScorrevole } from "../componenti/AreaScorrevole";
 import { Avviso } from "../componenti/Avviso";
+import { Bollicina } from "../componenti/Bollicina";
 import { Icona } from "../componenti/Icona";
 import { StatoVuoto } from "../componenti/StatoVuoto";
-import { cursoreDalClic, Editor } from "../editor/Editor";
+import { cursoreDalClic, Editor, type ManigliaEditor } from "../editor/Editor";
+import type { FormatoDove } from "../editor/formati";
 import { SU_MAC } from "../finestra";
 import { apiLocale, cartellaDi, dentroDi, nomeDi, type FileLocale } from "./api";
 import { InfoFile } from "./InfoFile";
@@ -47,6 +50,8 @@ export function FileAperto({ percorso, locale, onPercorso, onChiudi }: Proprieta
   /** La comparsa del file è aperta, sotto il nome nel percorso (DEC-123). */
   const [comparsa, setComparsa] = useState<{ x: number; y: number } | null>(null);
   const pagina = useRef<HTMLElement>(null);
+  const editor = useRef<ManigliaEditor>(null);
+  const [formato, setFormato] = useState<FormatoDove | null>(null);
   const testo = useRef("");
   /** Impronta del disco quando il testo si è letto; "" se il disco è cambiato e non si è scelto. */
   const impronta = useRef<string | null>(null);
@@ -339,13 +344,14 @@ export function FileAperto({ percorso, locale, onPercorso, onChiudi }: Proprieta
         file && (
           <article
             ref={pagina}
-            className="nota-aperta"
+            className={`nota-aperta ${formato ? "nota-aperta-con-bollicina" : ""}`}
             onMouseDown={(e) => pagina.current && cursoreDalClic(pagina.current, e)}
           >
             <AreaScorrevole className="nota-aperta-scorrimento">
               <div className="nota-aperta-corpo">
                 <div className="nota-aperta-misura">
                   <Editor
+                    ref={editor}
                     key={versione}
                     contenuto={file.testo}
                     focus
@@ -354,10 +360,20 @@ export function FileAperto({ percorso, locale, onPercorso, onChiudi }: Proprieta
                     markdown={nuovo || /\.md$/i.test(percorso)}
                     etichetta={`Testo di ${nome}`}
                     onModifica={modifica}
+                    onFormato={setFormato}
                   />
                 </div>
               </div>
             </AreaScorrevole>
+            {formato && !file.solaLettura && (
+              <div className="nota-aperta-bollicina">
+                <Bollicina
+                  formato={formato}
+                  lato="sinistra"
+                  onScegli={(voce) => editor.current?.applica(voce)}
+                />
+              </div>
+            )}
           </article>
         )
       )}

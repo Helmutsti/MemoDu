@@ -225,6 +225,19 @@ describe("formato in attesa per il testo che si scrive dopo (CA-02.22)", () => {
     expect(s.doc.toString()).toBe("uno **xy**z");
   });
 
+  it("uno spazio non spegne il formato acceso", () => {
+    let s = fai(testo("**uno**|"), alternaCarattere("corsivo"));
+    s = scrivi(s, " due");
+    expect(s.doc.toString()).toBe("**uno** ***due***");
+  });
+
+  it("il formato resta se il cursore torna nello stesso punto, prima dei simboli nascosti", () => {
+    let s = fai(testo("**uno**|"), alternaCarattere("corsivo"));
+    s = s.update({ selection: { anchor: 5 } }).state;
+    s = scrivi(s, " due");
+    expect(s.doc.toString()).toBe("**uno** ***due***");
+  });
+
   it("tra due parole, anche per il sottolineato", () => {
     let s = fai(testo("uno |due"), alternaCarattere("sottolineato"));
     s = scrivi(s, "x");

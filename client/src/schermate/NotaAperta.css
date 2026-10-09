@@ -1,6 +1,7 @@
 /* Scorre tutta la pagina sotto la fascia in alto (DEC-59). Titolo e metadati stanno nel
    percorso (CMP-26, DEC-71). */
 .nota-aperta {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -18,4 +19,25 @@
   padding-top: calc(var(--misura-riga) + var(--spazio-blocco));
   padding-bottom: var(--spazio-finestra);
   user-select: text;
+}
+
+/* Bollicina del formato (CMP-10): in basso a destra del foglio, a 24 dai bordi, ferma mentre il
+   testo scorre. Il contenitore va da bordo a bordo, così la bollicina sa quanto posto ha per il
+   cassetto; non prende i clic fuori dalla bollicina. */
+.nota-aperta-bollicina {
+  position: absolute;
+  right: var(--spazio-gruppo);
+  bottom: var(--spazio-gruppo);
+  left: var(--spazio-gruppo);
+  z-index: var(--z-comparsa);
+  display: flex;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+.nota-aperta-bollicina > * {
+  pointer-events: auto;
+}
+/* Sotto l'ultima riga lo spazio della bollicina: 24 + 32 + 24 = 80. */
+.nota-aperta-con-bollicina .nota-aperta-corpo {
+  padding-bottom: calc(var(--spazio-gruppo) * 2 + var(--misura-riga));
 }

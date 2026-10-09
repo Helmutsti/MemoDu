@@ -2,7 +2,8 @@
 // clic si apre il cassetto dei formati (CA-02.21). Una voce scelta vale subito e il cassetto resta
 // aperto; si chiude quando si riprende a scrivere, con Esc, con un clic fuori o con un altro clic
 // sulla bollicina. Non ruba il focus mentre si scrive: un clic sulle voci lascia il cursore nel
-// testo. Il cassetto va su due righe se accanto non c'è posto. Le scorciatoie e Alt + F10 sono
+// testo. La bollicina è alta 32 come gli altri pulsanti; il cassetto le sta accanto, allineato in
+// basso, sopra il resto della pagina (non sposta niente), e va su due righe se non c'è posto. Le scorciatoie e Alt + F10 sono
 // rinviati: da tastiera la bollicina si raggiunge come ogni pulsante.
 
 import {
@@ -46,12 +47,12 @@ const CARATTERE: { voce: FormatoTesto; nome: string; icona: LucideIcon }[] = [
   { voce: "sottolineato", nome: "Sottolineato", icona: Underline },
 ];
 
-/** Larghezza del cassetto su una riga con la bollicina accanto (CMP-10: 426 + 8 + 60). */
-const LARGHEZZA_UNA_RIGA = 494;
+/** Larghezza del cassetto su una riga (CMP-10) più la distanza dalla bollicina. */
+const LARGHEZZA_UNA_RIGA = 426 + 8;
 
 interface Proprieta {
   formato: FormatoDove;
-  /** Da che parte si apre il cassetto: a sinistra nel foglio, a destra nella nota rapida. */
+  /** Da che parte della bollicina si apre il cassetto. */
   lato: "sinistra" | "destra";
   onScegli: (voce: VoceFormato) => void;
 }
@@ -66,28 +67,35 @@ export function Bollicina({ formato, lato, onScegli }: Proprieta): ReactElement 
   const [dueRighe, setDueRighe] = useState(false);
   const radice = useRef<HTMLDivElement>(null);
 
-  // Su due righe se il contenitore non lascia posto per una (CMP-10, Righe=Due).
+  // Su due righe se dalla bollicina al bordo del contenitore non c'è posto per una (Righe=Due).
   useLayoutEffect(() => {
     const contenitore = radice.current?.parentElement;
     if (!contenitore) return;
-    const misura = () => setDueRighe(contenitore.clientWidth < LARGHEZZA_UNA_RIGA);
+    const misura = () => {
+      const r = radice.current!.getBoundingClientRect();
+      const c = contenitore.getBoundingClientRect();
+      const posto = lato === "sinistra" ? r.left - c.left : c.right - r.right;
+      setDueRighe(posto < LARGHEZZA_UNA_RIGA);
+    };
     misura();
+    if (typeof ResizeObserver === "undefined") return;
     const osservatore = new ResizeObserver(misura);
     osservatore.observe(contenitore);
     return () => osservatore.disconnect();
-  }, []);
+  }, [lato]);
 
   // Si chiude scrivendo, con Esc o con un clic fuori.
   useEffect(() => {
     if (!aperta) return;
     const suTasto = (e: KeyboardEvent) => {
       if (radice.current?.contains(e.target as Node) && e.key !== "Escape") return;
-      if (
-        e.key === "Escape" ||
-        e.key.length === 1 ||
-        ["Enter", "Backspace", "Delete"].includes(e.key)
-      )
+      if (e.key === "Escape") {
+        // Esc chiude il cassetto e basta: non chiude anche la nota rapida.
+        e.preventDefault();
         setAperta(false);
+      } else if (e.key.length === 1 || ["Enter", "Backspace", "Delete"].includes(e.key)) {
+        setAperta(false);
+      }
     };
     const suClic = (e: MouseEvent) => {
       if (!radice.current?.contains(e.target as Node)) setAperta(false);
@@ -132,23 +140,24 @@ export function Bollicina({ formato, lato, onScegli }: Proprieta): ReactElement 
     <div
       ref={radice}
       className={`bollicina bollicina-${lato}`}
-      // Il clic su bollicina e cassetto non toglie il cursore dal testo.
-      onMouseDown={(e) => e.preventDefault()}
+      // Il clic su bollicina e cassetto non toglie il cursore dal testo e non arriva al foglio.
+      onMouseDown={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
     >
-      <div className="bollicina-pillola">
-        <button
-          type="button"
-          className={`bollicina-pulsante ${aperta ? "bollicina-aperta" : ""}`}
-          aria-label={`Formato: ${descrizione}`}
-          aria-expanded={aperta}
-          onClick={() => setAperta((a) => !a)}
-        >
-          <Icona di={iconaRiga} />
-          {caratteri.map((c) => (
-            <Icona key={c.voce} di={c.icona} />
-          ))}
-        </button>
-      </div>
+      <button
+        type="button"
+        className={`bollicina-pulsante ${aperta ? "bollicina-aperta" : ""}`}
+        aria-label={`Formato: ${descrizione}`}
+        aria-expanded={aperta}
+        onClick={() => setAperta((a) => !a)}
+      >
+        <Icona di={iconaRiga} />
+        {caratteri.map((c) => (
+          <Icona key={c.voce} di={c.icona} />
+        ))}
+      </button>
       {aperta && (
         <div
           role="toolbar"

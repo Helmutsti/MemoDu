@@ -34,4 +34,6 @@
   flex: none;
   align-items: center;
   justify-content: flex-end;
+  /* La bollicina del formato (CMP-10, DEC-131) subito a sinistra di Chiudi. */
+  gap: var(--spazio-icona);
 }

@@ -459,19 +459,19 @@ Compare con `movimento-durata-breve` (120 ms) e `movimento-spostamento` (4 px). 
 ---
 
 ## CMP-10 – Bollicina del formato
-**Tipo:** composto (con le parti interne "Bollicina", "Cassetto della bollicina", "Strumento della pillola" e "Divisore della pillola") · **Usato in:** SC-03 (in basso a destra del foglio), SC-02 (a sinistra nella fascia delle azioni), file `.md` di Locale · **Figma:** pagina Componenti composti, [Bollicina del formato](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=324-7605)
+**Tipo:** composto (con le parti interne "Bollicina", "Cassetto della bollicina", "Strumento della pillola" e "Divisore della pillola") · **Usato in:** SC-03 (in basso a destra del foglio), SC-02 (nella fascia delle azioni, a sinistra di Chiudi), file `.md` di Locale · **Figma:** pagina Componenti composti, [Bollicina del formato](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=324-7605)
 
 **Scopo:** vedere il formato dove sta il cursore e cambiarlo senza scrivere i simboli (DEC-131). Sostituisce la pillola degli strumenti, che compariva sopra la selezione (DEC-64).
 **Quando usarlo:** sempre, e solo, in vista Markdown: nelle note, nella nota rapida e nei file `.md` di Locale. Una sola bollicina per finestra.
 **Quando non usarlo:** in vista Testo e nei `.txt`; per azioni sulla nota intera (sono in Info, CMP-24); come barra fissa sopra il testo.
 
 ### Varianti e dimensioni
-- **Stato=Chiusa:** la bollicina, una pillola su `sfondo-flottante` con `ombra-flottante`, margini 4 (`spazio-elemento`), alta 40. Dentro il pulsante alto 32 (`misura-riga`), margini 8 (`spazio-controllo-piccolo`), 4 tra le icone: l'icona del formato di riga (testo normale, titolo, sottotitolo, elenco puntato, elenco numerato, casella, o il trattino «misto» per una selezione con righe diverse) e quelle dei formati di carattere in uso (grassetto, corsivo, barrato, sottolineato), icone da 16 in `icona-tenue`. Larga quanto il contenuto: 60 con `H1 B`.
-- **Stato=Aperta:** il cassetto accanto alla bollicina, a 8 (`spazio-icona`), allineati in basso; la bollicina premuta ha il pulsante su `sfondo-hover` con le icone in `testo-primario`.
+- **Stato=Chiusa:** la bollicina, un pulsante alto 32 (`misura-riga`) come gli altri, su `sfondo-flottante` con `ombra-flottante`, margini 8 (`spazio-controllo-piccolo`), 4 tra le icone (alta 32 e non più pillola da 40 con il pulsante dentro: ritocco di Manuel Cucca del 09/10/2026, Figma da aggiornare): l'icona del formato di riga (testo normale, titolo, sottotitolo, elenco puntato, elenco numerato, casella, o il trattino «misto» per una selezione con righe diverse) e quelle dei formati di carattere in uso (grassetto, corsivo, barrato, sottolineato), icone da 16 in `icona-tenue`. Larga quanto il contenuto: 52 con `H1 B`.
+- **Stato=Aperta:** il cassetto accanto alla bollicina, a 8 (`spazio-icona`), centrato sulla bollicina se è su una riga, allineato in basso se è su due; si apre sopra la pagina, senza spostare niente; la bollicina premuta ha il pulsante su `sfondo-hover` con le icone in `testo-primario`.
 - **Cassetto:** strumenti tondi da 32 (la parte interna della pillola), 4 tra uno e l'altro: testo normale, titolo, sottotitolo, elenco puntato, elenco numerato, casella · grassetto, corsivo, barrato, sottolineato · Rimuovi formattazione (icona gomma), con il divisore della pillola tra i gruppi. Pillola alta 40 su `sfondo-flottante` con `ombra-flottante`, margini 4; largo 426.
 - **Righe=Due:** quando il cassetto non ci sta su una riga (finestra stretta, nota rapida): sopra i formati di riga, sotto quelli di carattere, il divisore e Rimuovi formattazione; 220 × 76, angoli `raggio-contenitore` (20), concentrici con gli strumenti (20 − 4 = 16).
-- **Lato=Sinistra** (foglio): il cassetto si apre a sinistra della bollicina. **Lato=Destra** (nota rapida): a destra.
-- **Posizione:** galleggiante, livello 20, a 24 (`spazio-gruppo`) dal bordo destro e da quello in basso del foglio, ferma mentre il testo scorre. Sotto l'ultima riga il testo ha in fondo 24 + 40 + 24 = 88, così la bollicina non la copre mai (regola dello spazio in fondo).
+- **Lato=Sinistra** (foglio e nota rapida): il cassetto si apre a sinistra della bollicina. **Lato=Destra**: a destra, oggi non usato.
+- **Posizione:** galleggiante, livello 20, a 24 (`spazio-gruppo`) dal bordo destro e da quello in basso del foglio, ferma mentre il testo scorre. Sotto l'ultima riga il testo ha in fondo 24 + 32 + 24 = 80, così la bollicina non la copre mai (regola dello spazio in fondo).
 - Proprietà della bollicina: **Riga** (scambio di icona, con le sette scelte), **Grassetto**, **Corsivo**, **Barrato**, **Sottolineato** (mostra o nascondi).
 
 ### Stati
@@ -916,7 +916,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 ### Varianti e dimensioni
 - **Vuota:** «Scrivi qui…» in `testo-tenue`. **Con testo:** il testo della nota in Nota/Corpo, `testo-primario`.
 - Finestra senza cornice 480 × 320 (ridimensionabile), `sfondo-nota`, `raggio-contenitore`, `ombra`; `spazio-finestra` (24) ai bordi, `spazio-blocco` (16) tra testo e azioni. Nessun titolo (RB-15), nessuna barra, nessun divisore.
-- In basso a sinistra la **bollicina del formato** (CMP-10, DEC-131), istanza esposta: la nota rapida nasce in Markdown (DEC-130), quindi c'è sempre; il cassetto si apre verso destra, su due righe verso l'alto se non ci sta. La fascia delle azioni è alta 40, come la bollicina, e spinge i due lati ai bordi.
+- In basso, subito a sinistra di Chiudi a 8, la **bollicina del formato** (CMP-10, DEC-131), istanza esposta: la nota rapida nasce in Markdown (DEC-130), quindi c'è sempre; il cassetto si apre verso sinistra, sopra il testo, su due righe se non ci sta. La fascia delle azioni resta alta 32 (ritocco di Manuel Cucca del 09/10/2026, Figma da aggiornare).
 - In basso a destra **Chiudi** (CMP-01 diviso), con la scorciatoia ⇧ ↵ accanto (Maiusc + Invio, DEC-65): salva e chiude; nel menu della freccia **Apri nel programma** (DEC-34, DEC-50). Nessuna ✕ e nessun altro pulsante.
 - Il margine in alto non si vede e serve a trascinare la finestra. Nell'app gli angoli sono squadrati (scostamento accettato, vedi SC-02).
 

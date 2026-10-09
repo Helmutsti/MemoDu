@@ -1,23 +1,11 @@
 /* CMP-10 Bollicina del formato. Gli strumenti e il divisore sono quelli della pillola. */
 .bollicina {
+  position: relative;
   display: inline-flex;
-  align-items: flex-end;
-  gap: var(--spazio-icona);
   user-select: none;
 }
-/* Nel foglio il cassetto si apre a sinistra della bollicina. */
-.bollicina-sinistra {
-  flex-direction: row-reverse;
-}
 
-/* La bollicina: pillola alta 40 con dentro il pulsante alto 32. */
-.bollicina-pillola {
-  display: flex;
-  padding: var(--spazio-elemento);
-  border-radius: var(--raggio-pillola);
-  background: var(--sfondo-flottante);
-  box-shadow: var(--ombra);
-}
+/* La bollicina: pulsante alto 32 come gli altri, su sfondo-flottante con l'ombra. */
 .bollicina-pulsante {
   display: inline-flex;
   align-items: center;
@@ -26,7 +14,8 @@
   padding: 0 var(--spazio-controllo-piccolo);
   border: none;
   border-radius: var(--raggio-pillola);
-  background: none;
+  background: var(--sfondo-flottante);
+  box-shadow: var(--ombra);
   color: var(--icona-tenue);
   cursor: pointer;
 }
@@ -41,8 +30,12 @@
   outline-offset: calc(0px - var(--focus-spessore));
 }
 
-/* Il cassetto: pillola alta 40 con gli strumenti, 4 tra uno e l'altro. */
+/* Il cassetto: accanto alla bollicina a 8, allineato in basso, sopra la pagina; pillola alta 40
+   con gli strumenti, 4 tra uno e l'altro. */
 .bollicina-cassetto {
+  position: absolute;
+  bottom: calc((var(--misura-riga) - 40px) / 2);
+  z-index: var(--z-comparsa);
   display: flex;
   align-items: center;
   gap: var(--spazio-elemento);
@@ -52,7 +45,14 @@
   border-radius: var(--raggio-pillola);
   background: var(--sfondo-flottante);
   box-shadow: var(--ombra);
+  white-space: nowrap;
   animation: bollicina-apri var(--movimento-durata-breve) ease-out;
+}
+.bollicina-sinistra .bollicina-cassetto {
+  right: calc(100% + var(--spazio-icona));
+}
+.bollicina-destra .bollicina-cassetto {
+  left: calc(100% + var(--spazio-icona));
 }
 .bollicina-due-righe {
   flex-direction: column;

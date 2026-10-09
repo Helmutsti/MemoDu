@@ -4,15 +4,18 @@
 // DEC-50, DEC-53); chiusa vuota non crea niente (RB-03). Un clic altrove o la scorciatoia
 // premuta di nuovo la salvano e la lasciano aperta (RB-04). "Apri nel programma", dalla freccia di Chiudi, la porta nella
 // finestra principale (RB-05). Se l'API non risponde: SC-07 e conferma alla chiusura
-// (RB-61, RB-62).
+// (RB-61, RB-62). Nella fascia delle azioni, subito a sinistra di Chiudi, c'è la bollicina del
+// formato (CMP-10, DEC-131): la nota rapida nasce in Markdown; il cassetto si apre verso sinistra.
 
 import { ArrowBigUp, CornerDownLeft } from "lucide-react";
 import { useEffect, useRef, useState, type ReactElement } from "react";
 import { api } from "../api";
 import { AreaScorrevole } from "../componenti/AreaScorrevole";
+import { Bollicina } from "../componenti/Bollicina";
 import { FinestraConferma } from "../componenti/FinestraConferma";
 import { PulsanteDiviso } from "../componenti/Pulsante";
-import { cursoreDalClic, Editor } from "../editor/Editor";
+import { cursoreDalClic, Editor, type ManigliaEditor } from "../editor/Editor";
+import type { FormatoDove } from "../editor/formati";
 import {
   allaRichiestaDiChiusura,
   allUscita,
@@ -36,6 +39,8 @@ export function NotaRapida(): ReactElement {
   const [conferma, setConferma] = useState(false);
   /** La conferma è comparsa per «Esci da Memodu». */
   const uscendo = useRef(false);
+  const editor = useRef<ManigliaEditor>(null);
+  const [formato, setFormato] = useState<FormatoDove | null>(null);
 
   /** Salva quello che manca; `false` se l'API non risponde (SC-07). */
   const salva = (): Promise<boolean> => {
@@ -160,6 +165,7 @@ export function NotaRapida(): ReactElement {
       >
         <AreaScorrevole className="nota-rapida-scorrimento">
           <Editor
+            ref={editor}
             contenuto=""
             focus
             // La nota rapida è sempre una nota nuova: nasce in Markdown (CA-02.14).
@@ -170,10 +176,18 @@ export function NotaRapida(): ReactElement {
               clearTimeout(timer.current);
               timer.current = setTimeout(() => void salva(), PAUSA_MS);
             }}
+            onFormato={setFormato}
           />
         </AreaScorrevole>
       </div>
       <div className="nota-rapida-azioni" data-tauri-drag-region inert={bloccata}>
+        {formato && (
+          <Bollicina
+            formato={formato}
+            lato="sinistra"
+            onScegli={(voce) => editor.current?.applica(voce)}
+          />
+        )}
         <PulsanteDiviso
           etichetta="Chiudi"
           scorciatoia={{ icone: [ArrowBigUp, CornerDownLeft], tasti: "Shift+Enter" }}

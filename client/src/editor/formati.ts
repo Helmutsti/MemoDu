@@ -327,20 +327,34 @@ function riscrivi(
 // ---------------------------------------------------------------------------------------------
 // Il formato in attesa per il testo che si scrive dopo (CA-02.22)
 
-/** I formati accesi (true) o spenti (false) per il testo che si scrive in `pos`. */
+/** I formati del testo che si scrive in `pos`, scelti nel cassetto. */
 export interface Attesa {
   pos: number;
-  formati: Map<FormatoTesto, boolean>;
+  formati: Set<FormatoTesto>;
 }
 
 const impostaAttesa = StateEffect.define<Attesa | null>();
+
+/** Due posizioni separate solo da simboli nascosti: per chi scrive sono lo stesso punto. */
+function stessoPosto(state: EditorState, p: number, q: number): boolean {
+  if (p === q) return true;
+  const line = state.doc.lineAt(p);
+  if (q < line.from || q > line.to) return false;
+  const pezzi = pezziFormattati(state, line.from, line.to);
+  return lettere(line, pezzi, Math.min(p, q), Math.max(p, q)).length === 0;
+}
 
 /** Si svuota appena il cursore si sposta o il testo cambia per altre vie. */
 export const formatoInAttesa = StateField.define<Attesa | null>({
   create: () => null,
   update(valore, tr) {
     for (const e of tr.effects) if (e.is(impostaAttesa)) return e.value;
-    return tr.docChanged || tr.selection ? null : valore;
+    if (!valore || tr.docChanged) return null;
+    // Il focus che torna nel testo rimette la stessa selezione: il formato resta.
+    const sel = tr.selection;
+    return sel && (!sel.main.empty || !stessoPosto(tr.state, sel.main.head, valore.pos))
+      ? null
+      : valore;
   },
 });
 
@@ -356,14 +370,10 @@ function formatiAlCursore(state: EditorState, pos: number): Set<FormatoTesto> {
 
 /** I formati per il testo scritto in `pos`, compresi quelli in attesa. */
 function formatiPerScrivere(state: EditorState, pos: number): Set<FormatoTesto> {
-  const formati = formatiAlCursore(state, pos);
   const attesa = state.field(formatoInAttesa, false);
-  if (attesa && attesa.pos === pos)
-    for (const [f, acceso] of attesa.formati) {
-      if (acceso) formati.add(f);
-      else formati.delete(f);
-    }
-  return formati;
+  return attesa && stessoPosto(state, attesa.pos, pos)
+    ? new Set(attesa.formati)
+    : formatiAlCursore(state, pos);
 }
 
 /**
@@ -377,14 +387,30 @@ export function scriviConAttesa(
   testo: string,
 ): TransactionSpec | null {
   const attesa = state.field(formatoInAttesa, false);
-  if (!attesa || attesa.pos !== pos || !testo || testo.includes("\n")) return null;
+  if (!attesa || !stessoPosto(state, attesa.pos, pos) || !testo || testo.includes("\n"))
+    return null;
   const voluti = formatiPerScrivere(state, pos);
+  // Uno spazio non porta formati (il Markdown non li riconosce sui bordi): resta dov'è, fuori
+  // dai simboli, e il formato resta in attesa per la parola che segue.
+  if (/^\s+$/.test(testo)) {
+    // Dei punti equivalenti si prende quello dopo i simboli di chiusura.
+    const fuori = Math.max(pos, attesa.pos);
+    const cursore = fuori + testo.length;
+    return {
+      changes: { from: fuori, insert: testo },
+      selection: EditorSelection.cursor(cursore),
+      effects: impostaAttesa.of({ pos: cursore, formati: voluti }),
+      scrollIntoView: true,
+      userEvent: "input.type",
+    };
+  }
   const inserito = state.update({ changes: { from: dove, insert: testo } });
   const s1 = inserito.state;
   const { changes, dopo } = riscrivi(s1, dove, dove + testo.length, () => new Set(voluti));
+  const cursore = dopo(dove + testo.length - 1);
   return {
     changes: inserito.changes.compose(changes),
-    selection: EditorSelection.cursor(dopo(dove + testo.length - 1)),
+    selection: EditorSelection.cursor(cursore),
     scrollIntoView: true,
     userEvent: "input.type",
   };
@@ -485,17 +511,13 @@ export function alternaCarattere(formato: FormatoTesto): StateCommand {
     const r = state.selection.main;
     const tratto = r.empty ? parolaSotto(state, r.head) : { da: r.from, a: r.to };
     if (!tratto) {
-      const attuale = formatiPerScrivere(state, r.head);
+      const formati = formatiPerScrivere(state, r.head);
+      if (formati.has(formato)) formati.delete(formato);
+      else formati.add(formato);
       const naturali = formatiAlCursore(state, r.head);
-      const attesa = state.field(formatoInAttesa, false);
-      const formati = new Map(attesa && attesa.pos === r.head ? attesa.formati : []);
-      const acceso = !attuale.has(formato);
-      if (acceso === naturali.has(formato)) formati.delete(formato);
-      else formati.set(formato, acceso);
+      const uguali = formati.size === naturali.size && [...formati].every((f) => naturali.has(f));
       dispatch(
-        state.update({
-          effects: impostaAttesa.of(formati.size ? { pos: r.head, formati } : null),
-        }),
+        state.update({ effects: impostaAttesa.of(uguali ? null : { pos: r.head, formati }) }),
       );
       return true;
     }
