@@ -81,7 +81,7 @@ flowchart TD
 ---
 
 ## FL-02 – Scrivere e formattare una nota
-**Requisito:** RF-02 · **Attori:** Utente · **Interazioni rapide:** nessuna per la formattazione: scorciatoie, pillola e menu del tasto destro sono sospesi (DEC-130)
+**Requisito:** RF-02 · **Attori:** Utente · **Interazioni rapide:** in vista Markdown Ctrl + B, I, U, Ctrl + Maiusc + S, Ctrl + 1 e 2 per formattare, Alt + F10 per il cassetto della bollicina (DEC-131); il menu del tasto destro resta sospeso (DEC-64)
 
 ```mermaid
 flowchart TD
@@ -91,8 +91,15 @@ flowchart TD
     B --> C[Scrivo]
     B2 --> C
     C --> D{Voglio formattare?}
-    D -- Sì --> E[Scrivo i simboli Markdown]
+    D -- Sì, in vista Markdown --> M{Come?}
+    M -- Simboli --> E[Scrivo i simboli Markdown]
+    M -- Bollicina --> P[Apro il cassetto della bollicina e scelgo il formato - DEC-131]
+    M -- Tastiera --> T[Premo la scorciatoia del formato]
+    P --> Q[Il formato vale per la selezione, la parola o la riga - RB-93]
+    T --> Q
+    Q --> R[La bollicina mostra il formato nuovo]
     E --> C
+    R --> C
     D -- No --> F{Incollo testo da fuori?}
     F -- Sì --> G[Si incolla come testo semplice - RB-07]
     G --> C
@@ -104,7 +111,7 @@ flowchart TD
 ```
 
 ### Percorsi alternativi
-- **Formattazione:** per ora si applica solo scrivendo i simboli Markdown; in vista Markdown il testo si formatta subito e la scrittura segue Word (CA-02.15 … CA-02.19). Scorciatoie, pillola degli strumenti e menu del tasto destro restano sospesi (DEC-130).
+- **Formattazione:** in vista Markdown si applica scrivendo i simboli, con la bollicina del formato o con le scorciatoie (DEC-131); il testo si formatta subito e la scrittura segue Word (CA-02.15 … CA-02.19). La bollicina mostra sempre il formato dove sta il cursore; con un clic si apre il cassetto, che resta aperto finché si torna a scrivere. Senza selezione un formato di carattere vale per la parola o si accende per il testo che si scrive dopo (RB-93). In vista Testo non c'è la bollicina e le scorciatoie non formattano. Il menu del tasto destro resta sospeso (DEC-64).
 - **Cambio di vista:** dal titolo si apre la comparsa Info e nella riga Vista si sceglie Testo o Markdown; il testo si mostra subito nell'altra vista, senza cambiare (RB-91). La nota rapida mostra la nota nella sua vista, senza la scelta.
 - **Cambio di nota:** il programma mostra una nota alla volta (RF-01): aprendone un'altra, quella corrente è già salvata (RB-06).
 
@@ -117,7 +124,7 @@ flowchart TD
 | SF-10 App in background o schermo bloccato | Sospensione del dispositivo durante la scrittura | Nessun messaggio | Si perde al massimo l'ultima pausa di scrittura (RB-06) |
 | SF-32 Errore a metà operazione | Crash del programma durante la scrittura | Alla riapertura la nota mostra l'ultimo salvataggio | Si perde al massimo l'ultima pausa di scrittura (RB-06) |
 | SF-30 Copia di lavoro fuori uso (DEC-85, DEC-127; prima l'API delle note, DEC-30) | La copia di lavoro non si apre o non si scrive quando si salva, si apre o si crea una nota | SC-07 al posto del contenuto della finestra: «Memodu non riesce a collegarsi», con la spiegazione «Memodu non riesce a salvare le note su questo computer. Premi Riprova; se non basta, controlla lo spazio sul disco.» e Riprova | Si libera spazio sul disco o si sistemano i permessi; il testo non ancora salvato resta in memoria e si salva dopo Riprova (RB-61); chiudendo prima, conferma (RB-62) |
-| SF-36 Input malevolo | Script o HTML attivo nel testo, incollato o scritto | Il codice si vede come testo oppure viene rimosso | Il contenuto delle note non esegue mai codice (RB-08) |
+| SF-36 Input malevolo | Script o HTML attivo nel testo, incollato o scritto | Il codice si vede come testo oppure viene rimosso; l'unico tag che si mostra come formato è `<u>…</u>`, il sottolineato (RB-95) | Il contenuto delle note non esegue mai codice (RB-08) |
 | SF-33 Versioni diverse | Una nota arriva dalla sincronizzazione senza la vista, da un computer con una versione precedente alla 1.1.0 | Nessun messaggio | La nota tiene la vista che ha su questo computer (RB-92) |
 
 ### Sfighe considerate e scartate
@@ -259,3 +266,7 @@ La posizione di una nota (radice, cartella, cestino) è descritta nel diagramma 
 | RB-68 | Se la nota aperta non c'è più quando si salva (eliminata altrove), si chiude e l'avviso (CMP-15, tipo Avviso) dice «La nota è nel cestino.» con Ripristina, che la riporta, la riapre e salva il testo rimasto in sospeso; se è stata eliminata per sempre dice «La nota è stata eliminata.» e le modifiche non salvate si perdono. Scelta di Manuel Cucca il 29/09/2026 | FL-02 |
 | RB-91 | La vista di una nota (Testo o Markdown) cambia solo come si mostra il testo, mai il testo salvato, che è sempre Markdown. Le note nuove nascono in Markdown; quelle senza vista, scritte prima della 1.1.0 o da una versione precedente, si mostrano in Testo; i file di Locale la prendono dall'estensione. Cambiare la vista non è una modifica: non aggiorna «Modificata» e non sposta la nota nell'elenco, ma si sincronizza (DEC-130) | FL-02 |
 | RB-92 | Una nota che arriva dalla sincronizzazione senza la vista non cambia la vista che ha su questo computer: una vista mancante non vale come cambio (DEC-130, SF-33) | FL-02 |
+| RB-93 | In vista Markdown, un formato di carattere (grassetto, corsivo, barrato, sottolineato) scelto dalla bollicina o con la scorciatoia vale per la selezione; senza selezione vale per la parola sotto il cursore, e tra due parole o in fondo alla riga si accende per il testo che si scrive da lì finché non lo si spegne o si sposta il cursore altrove. Un formato di riga vale per tutte le righe toccate dalla selezione, o per la riga del cursore. Scegliere un formato già in uso lo spegne (DEC-131) | FL-02 |
+| RB-94 | Una riga ha un solo formato di riga: testo normale, titolo, sottotitolo, elenco puntato, elenco numerato o casella. Sceglierne un altro sostituisce quello di prima (un titolo scelto su una voce d'elenco toglie il segno dell'elenco); i formati di carattere restano (DEC-131) | FL-02 |
+| RB-95 | I formati si salvano con i simboli Markdown: `# ` titolo, `## ` sottotitolo, `**` grassetto, `*` corsivo, `~~` barrato, `- ` elenco puntato, `1. ` elenco numerato, `- [ ] ` casella; il sottolineato con `<u>…</u>`, l'unico HTML che si mostra come formato. Un formato di carattere su una selezione di più righe si salva riga per riga. `-[]` scritto a inizio riga diventa `- [ ] ` (DEC-131) | FL-02 |
+| RB-96 | «Rimuovi formattazione» toglie tutto quello che la bollicina mostra: nella selezione, o nella parola sotto il cursore, i formati di carattere; nelle righe toccate, o in quella del cursore, il formato di riga, che torna testo normale (DEC-131) | FL-02 |
