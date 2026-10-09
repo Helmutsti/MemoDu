@@ -1,16 +1,28 @@
-// CMP-20 Testo della nota, per ora in testo puro (DEC-64): CodeMirror 6 con i soli comandi
-// standard dell'editor. Quello che si scrive resta com'è (#, **, - sono caratteri normali);
-// Tab rientra e Maiusc + Tab torna indietro, Esc e poi Tab escono dall'editor; annulla,
-// ripeti, selezione, taglia, copia e incolla (solo testo, RB-07) come in ogni editor; il tasto
-// destro apre il menu del sistema. Il markdown dal vivo (DEC-27) è in EditorMarkdown.tsx e
-// tornerà più avanti.
+// CMP-20 Testo della nota: CodeMirror 6 con i comandi standard dell'editor, in due viste
+// (DEC-130). Vista Testo: quello che si scrive resta com'è (#, **, - sono caratteri normali,
+// DEC-64). Vista Markdown: un compartimento aggiunge la lingua, la resa con i simboli nascosti
+// (anteprima.ts) e la scrittura come in Word (scrittura.ts); il testo salvato è lo stesso.
+// Tab rientra e Maiusc + Tab torna indietro, Esc e poi Tab escono dall'editor; annulla, ripeti,
+// selezione, taglia, copia e incolla (solo testo, RB-07) come in ogni editor; il tasto destro
+// apre il menu del sistema. Niente pillola, menu «/» o scorciatoie di formattazione
+// (EditorMarkdown.tsx resta non collegato).
 
 import { defaultKeymap, history, historyKeymap, indentLess, insertTab } from "@codemirror/commands";
+import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { indentUnit } from "@codemirror/language";
-import { EditorState } from "@codemirror/state";
+import { Compartment, EditorState, type Extension } from "@codemirror/state";
 import { EditorView, keymap, placeholder } from "@codemirror/view";
 import { useEffect, useRef, type ReactElement } from "react";
+import { anteprimaDalVivo } from "./anteprima";
+import { scritturaComeWord } from "./scrittura";
 import "./Editor.css";
+
+/** Le estensioni della vista Markdown (DEC-130), senza i tasti pronti della lingua. */
+const vistaMarkdown: Extension = [
+  markdown({ base: markdownLanguage, addKeymap: false }),
+  anteprimaDalVivo,
+  scritturaComeWord,
+];
 
 interface Proprieta {
   contenuto: string;
@@ -23,6 +35,8 @@ interface Proprieta {
   solaLettura?: boolean;
   /** Nome per i lettori di schermo. */
   etichetta?: string;
+  /** Vista Markdown: testo formattato con i simboli nascosti (DEC-130). */
+  markdown?: boolean;
 }
 
 export function Editor({
@@ -32,8 +46,11 @@ export function Editor({
   invito = "Scrivi qui…",
   solaLettura = false,
   etichetta = "Testo della nota",
+  markdown: inMarkdown = false,
 }: Proprieta): ReactElement {
   const contenitore = useRef<HTMLDivElement>(null);
+  const vista = useRef<EditorView | null>(null);
+  const compartimento = useRef(new Compartment());
   const suModifica = useRef(onModifica);
   useEffect(() => {
     suModifica.current = onModifica;
@@ -46,6 +63,7 @@ export function Editor({
         doc: contenuto,
         extensions: [
           history(),
+          compartimento.current.of(inMarkdown ? vistaMarkdown : []),
           indentUnit.of("\t"),
           keymap.of([
             { key: "Tab", run: insertTab, shift: indentLess },
@@ -63,11 +81,22 @@ export function Editor({
         ],
       }),
     });
+    vista.current = view;
     if (focus) view.focus();
-    return () => view.destroy();
+    return () => {
+      vista.current = null;
+      view.destroy();
+    };
     // L'editor nasce una volta per nota: il contenuto iniziale non cambia mentre si scrive.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Cambiare vista non ricrea l'editor: cursore, annulla e testo restano (RB-91).
+  useEffect(() => {
+    vista.current?.dispatch({
+      effects: compartimento.current.reconfigure(inMarkdown ? vistaMarkdown : []),
+    });
+  }, [inMarkdown]);
 
   return <div ref={contenitore} className="editor nota-corpo" />;
 }
