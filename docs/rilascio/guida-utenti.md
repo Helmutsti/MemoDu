@@ -2,7 +2,7 @@
 
 <!-- Fase 9 della guida. Si scrive con il linguaggio di chi usa il prodotto. Gli scenari d'uso della Fase 1 sono un buon punto di partenza per i capitoli. -->
 
-Questa guida descrive Memodu 0.1.13. Memodu serve a scrivere note al volo, tenerle in ordine e ritrovarle su tutti i tuoi computer. Le note sono testo semplice: i caratteri come `#` o `**` restano come li scrivi.
+Questa guida descrive Memodu 1.1.0. Memodu serve a scrivere note al volo, tenerle in ordine e ritrovarle su tutti i tuoi computer. Ogni nota si vede come Markdown, già formattata, o come Testo, con i caratteri come `#` o `**` così come li scrivi (vedi [Markdown o Testo](#markdown-o-testo)).
 
 Su Mac, dove la guida dice Ctrl si usa ⌘ (per esempio ⌘ + N al posto di Ctrl + N). Fa eccezione la scorciatoia della nota rapida, che sul Mac è Control + Option + N.
 
@@ -75,10 +75,29 @@ Dall'alto in basso, Info contiene:
 - la **data di creazione**: puoi cambiarla, e «Ripristina» la riporta alla data vera;
 - la **data di fine validità**: è solo un promemoria, alla scadenza non succede nulla;
 - i **tag** (vedi [Tag](#tag));
+- la **vista**, Testo o Markdown (vedi [Markdown o Testo](#markdown-o-testo));
 - la **data dell'ultima modifica**;
 - **«Chiudi nota»** ed **«Elimina»**, che manda la nota nel cestino.
 
 Per cambiare una data fai clic sulla riga: scrivi la data come GG/MM/AAAA oppure sceglila dal calendario, che ha anche «Oggi» e «Nessuna data». Svuotando il campo e premendo Invio la data si toglie.
+
+### Markdown o Testo
+Ogni nota si mostra in uno di due modi, che scegli nella riga **Vista** di Info:
+
+- **Markdown:** i simboli non si vedono e il testo appare già formattato. All'inizio di una riga `# ` fa un titolo, `## ` un sottotitolo, `- ` un elenco puntato, `1. ` un elenco numerato e `- [ ] ` una casella, che si spunta con un clic. Dentro la riga `**…**` fa il grassetto, `*…*` il corsivo e `~~…~~` il barrato.
+- **Testo:** quello che scrivi resta com'è, con i simboli in vista.
+
+Il testo salvato è lo stesso nelle due viste: cambia solo come lo vedi, e cambiare vista non conta come una modifica. Le note nuove e le note rapide nascono in Markdown; quelle scritte prima della 1.1.0 restano in Testo finché non cambi la vista. La scelta resta alla nota, anche sugli altri computer.
+
+In Markdown si scrive come in un programma di scrittura:
+
+- il cursore salta i simboli nascosti;
+- scrivendo in fondo a una parola in grassetto il testo nuovo resta in grassetto, scrivendo subito prima no;
+- Invio in un elenco crea la voce dopo (2. dopo 1.), e su una voce vuota l'elenco finisce;
+- Backspace all'inizio di una voce toglie il segno; all'inizio di un titolo unisce la riga a quella sopra come testo normale;
+- copiando, negli appunti finisce il Markdown con i simboli, pronto per altri programmi.
+
+Per ora non ci sono pulsanti né scorciatoie per formattare: i simboli si scrivono a mano. Subito dopo aver chiuso un formato scrivendone i simboli (per esempio `**forte**`), il testo che continui a scrivere resta nel formato.
 
 ## Organizzare le note
 
@@ -193,6 +212,8 @@ F2 rinomina; per spostare un file lo trascini su un'altra cartella di Locale. Tu
 
 Un **file nuovo** si chiama «Senza titolo» e nasce sul disco al primo Ctrl + S, con il nome preso dalla prima riga.
 
+**Come si vedono.** I file `.md`, compresi quelli nuovi, si mostrano in Markdown e i `.txt` in Testo (vedi [Markdown o Testo](#markdown-o-testo)); qui la vista non si sceglie. Nel file finisce solo quello che scrivi.
+
 **Il nome del file nel percorso** apre una scheda con il nome (puoi cambiarlo), «Chiudi file» (anche Ctrl + W) e, per un file aggiunto da solo, «Togli da Locale».
 
 **Se il file cambia fuori da Memodu.** Se un altro programma cambia il file aperto, Memodu te lo dice: «Ricarica» mostra la versione del disco, «Tieni la mia versione» la sovrascrive al prossimo Ctrl + S. Se il file è sparito, «Ricrealo» lo fa rinascere al prossimo Ctrl + S.
@@ -237,7 +258,7 @@ Sì, resta attiva nell'icona in basso a destra (barra dei menu sul Mac), così l
 In CLOUD, fuori dalle cartelle, in cima: le note non organizzate sono in ordine dalla più recente.
 
 **Scrivo `**grassetto**` ma non diventa grassetto.**
-In questa versione le note sono testo semplice: la formattazione arriverà più avanti.
+La nota è in vista Testo: in Info scegli Markdown nella riga Vista (vedi [Markdown o Testo](#markdown-o-testo)). Le note scritte prima della 1.1.0 restano in Testo finché non cambi la vista.
 
 **Ho eliminato per sbaglio una nota o una cartella.**
 È nel cestino: aprilo dal fondo della colonna e premi «Ripristina». La ritrovi anche cercandola, con l'etichetta «nel cestino».

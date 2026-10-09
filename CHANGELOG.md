@@ -9,6 +9,17 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 Diventerà la 1.1.0, con la formattazione Markdown nelle note.
 
+### Aggiunto
+- Ogni nota si può vedere come Testo o come Markdown: si sceglie nella nuova riga Vista di Info e la scelta resta alla nota, anche sugli altri computer
+- In vista Markdown titoli, sottotitoli, grassetto, corsivo, barrato, elenchi puntati e numerati e caselle si vedono già formattati, senza i simboli; il testo salvato resta Markdown, con i simboli
+- Le caselle delle checklist si spuntano e si tolgono con un clic
+- In Locale i file `.md` si mostrano in Markdown e i `.txt` come testo
+
+### Cambiato
+- Le note nuove e le note rapide nascono in vista Markdown; quelle scritte prima restano in Testo finché non cambi la vista
+- In vista Markdown si scrive come in un programma di scrittura: il cursore salta i simboli nascosti, Invio negli elenchi crea la voce dopo e su una voce vuota chiude l'elenco, Backspace all'inizio di una voce toglie il segno, e copiando si copia il Markdown con i simboli
+- Sui computer con una versione precedente le note si vedono come testo, e la vista scelta non si perde
+
 ## [1.0.0] – in preparazione sul ramo rilascio/1.0
 
 Diventerà la 1.0.0, la prima versione completa per l'uso personale: nota rapida da qualsiasi programma, note con cartelle e tag, ricerca, cestino, sincronizzazione cifrata tra i tuoi computer e i file del disco in Locale, su Windows e sui Mac con processore Apple. Il testo delle note è semplice, senza formattazione, e nelle note non si possono ancora mettere immagini: arriveranno nelle prossime versioni. Come si usa Memodu è spiegato nella guida per gli utenti (`docs/rilascio/guida-utenti.md`).

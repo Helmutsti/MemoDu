@@ -511,3 +511,5 @@
 | 09/10/2026 | Agente IA | Ciclo 1.1.0, attività 4 (prove automatiche): riga Vista in Info, vista della nota aperta, della nota rapida e dei file di Locale per estensione; 248 prove passate, lint pulito | DEC-130 |
 | 09/10/2026 | Agente IA | Ciclo 1.1.0, attività 5 (prove a mano): TC-10, TC-158 … TC-164 e TC-166 superate nell'app di sviluppo con dati di prova; vista della nota Pronta per il rilascio | DEC-130 |
 | 09/10/2026 | Manuel Cucca | TC-10: il testo scritto subito dopo i simboli di chiusura scritti a mano resta nel formato; è il comportamento previsto, che non si porrà più con il cambio del formato | DEC-130 |
+| 09/10/2026 | Agente IA | Ciclo 1.1.0, Fase 9: note di rilascio della 1.1.0 in CHANGELOG e guida per gli utenti con la vista della nota (sezione «Markdown o Testo», riga Vista in Info, vista dei file di Locale) | DEC-130 |
+| 09/10/2026 | Manuel Cucca | La 1.1.0 si pubblica dopo la 1.0.0: prima le prove sul Mac e il rilascio della 1.0.0 dal ramo `rilascio/1.0`, poi la 1.1.0 da `main` | DEC-128, DEC-129 |
