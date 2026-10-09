@@ -36,3 +36,8 @@ Scelte di Manuel Cucca del 09/10/2026:
 - `moduli/note/1-requisiti.md`: CA-02.3, CA-02.4 e CA-02.5 riscritti per la bollicina, le scorciatoie e il cassetto da tastiera; nuovi criteri per il cassetto, il caso senza selezione, «Rimuovi formattazione», `-[]`, la selezione mista e le superfici. CA-02.6 (menu del tasto destro) resta sospeso.
 - `design-system/componenti.md`: CMP-10 diventa la bollicina del formato, da ridisegnare in Figma (Fase 5).
 - Resta valido il comportamento di TC-10 senza la bollicina: i simboli scritti a mano tengono nel formato il testo che segue; con la bollicina o con le scorciatoie si spegne il formato.
+
+## Aggiornamento del 09/10/2026
+Scelte di Manuel Cucca durante la Fase 7: «l'importante è che la bolla funzioni e il vecchio editor per il txt anche».
+- **L'editor resta CodeMirror:** la vista Testo e i file `.txt` non cambiano; i comandi della bollicina si scrivono sopra la libreria, appoggiati al riconoscimento del Markdown che c'è già, con le prove automatiche dei criteri. Scartati un editor nato per la scrittura formattata (Tiptap: riscrive il Markdown salvato, sottolineato come `++`) e i pacchetti di terzi (nessuno copre cassetto, formati di riga e «Rimuovi formattazione»).
+- **Le scorciatoie sono rinviate:** Ctrl + B, I, U, Ctrl + Maiusc + S, Ctrl + 1, 2 e Alt + F10 (CA-02.3, CA-02.5). La bollicina funziona tutta con il mouse; da tastiera si arriva alla bollicina con Esc e poi Tab, come a ogni pulsante. I suggerimenti delle voci mostrano solo il nome.

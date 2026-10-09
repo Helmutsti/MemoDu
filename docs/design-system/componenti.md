@@ -486,8 +486,8 @@ Compare con `movimento-durata-breve` (120 ms) e `movimento-spostamento` (4 px). 
 | Caricamento | Non previsto |
 
 ### Accessibilità
-- **Tastiera:** la bollicina non ruba il focus mentre si scrive. Alt + F10 (Option + F10 su macOS) apre il cassetto con il focus sulla prima voce; le frecce passano da una voce all'altra, Invio o spazio scelgono, Esc torna al testo con il cursore dove era (CA-02.5). Le scorciatoie di formattazione valgono sempre (CA-02.3).
-- **Lettori di schermo:** la bollicina è un pulsante «Formato: titolo, grassetto» con stato espanso o chiuso; il cassetto è una barra degli strumenti «Formato»; ogni voce è un pulsante con nome e stato premuto o non premuto; ogni voce ha il suggerimento con la scorciatoia, se c'è (CMP-08): «Grassetto · Ctrl + B».
+- **Tastiera:** la bollicina non ruba il focus mentre si scrive. Per ora si raggiunge con Esc e poi Tab, come ogni pulsante (scorciatoie e Alt + F10 rinviati da Manuel Cucca il 09/10/2026, DEC-131). Con il rinvio risolto: Alt + F10 (Option + F10 su macOS) apre il cassetto con il focus sulla prima voce; le frecce passano da una voce all'altra, Invio o spazio scelgono, Esc torna al testo con il cursore dove era (CA-02.5). Le scorciatoie di formattazione valgono sempre (CA-02.3).
+- **Lettori di schermo:** la bollicina è un pulsante «Formato: titolo, grassetto» con stato espanso o chiuso; il cassetto è una barra degli strumenti «Formato»; ogni voce è un pulsante con nome e stato premuto o non premuto; ogni voce ha il suggerimento con il nome (CMP-08), con la scorciatoia quando arriva: «Grassetto · Ctrl + B».
 - **Contrasti:** icone `icona-tenue` su `sfondo-flottante` 5,49:1 in chiaro e 5,61:1 in scuro, su `sfondo-hover` ≥ 4,16:1; attivo 16,48:1 (come la pillola).
 
 ### Esempi
@@ -929,7 +929,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 | Disabilitato · Caricamento | Non previsti: la finestra compare già pronta (RNF-01) |
 
 ### Accessibilità
-- **Tastiera:** il cursore è nel testo all'apertura; Esc salva e chiude; Tab raggiunge la bollicina, Chiudi e la freccia «Altre azioni»; Alt + F10 apre il cassetto (CMP-10).
+- **Tastiera:** il cursore è nel testo all'apertura; Esc salva e chiude; Tab raggiunge la bollicina, Chiudi e la freccia «Altre azioni» (Alt + F10 rinviato, CMP-10).
 - **Lettori di schermo:** la freccia si annuncia come «Altre azioni», con un menu.
 - **Contrasti:** come CMP-01 e CMP-20.
 

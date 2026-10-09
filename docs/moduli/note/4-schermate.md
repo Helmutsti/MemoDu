@@ -120,8 +120,8 @@ Nessuna barra fissa sopra il testo e niente pillola sopra la selezione: la pillo
 | Bollicina chiusa | Pillola piccola con il formato della riga e quelli del carattere dove sta il cursore: `T`, `H1`, `H2`, `•`, `1.`, `☐`, poi `B`, `I`, `S`, `U` (per esempio `H1 B`, `T B I`). Con una selezione mista, solo i formati comuni e un trattino al posto della riga se le righe sono diverse (CA-02.4) |
 | Cassetto aperto | Con un clic sulla bollicina si apre verso sinistra, sulla stessa linea: formati di riga (testo normale, titolo, sottotitolo, elenco puntato, elenco numerato, casella), un divisore, formati di carattere (grassetto, corsivo, barrato, sottolineato), un divisore, «Rimuovi formattazione». I formati in uso sono evidenziati come lo stato Attivo della pillola (DEC-35). Resta aperto finché si riprende a scrivere, con Esc, con un clic nel testo o fuori, o con un altro clic sulla bollicina (CA-02.21) |
 | Poco spazio | Se il cassetto non ci sta su una riga (finestra stretta, nota rapida), va su due righe, verso l'alto: sopra i formati di riga, sotto quelli di carattere e «Rimuovi formattazione» (proposta dell'agente) |
-| Suggerimenti | Passando su una voce compare il nome con la scorciatoia, se c'è: «Grassetto · Ctrl + B», «Barrato · Ctrl + Maiusc + S», «Titolo · Ctrl + 1»; «Rimuovi formattazione» ha l'icona della gomma e il nome solo nel suggerimento |
-| Tastiera | Alt + F10 apre il cassetto con il focus sulla prima voce; frecce, Invio o spazio, Esc torna al testo (CA-02.5) |
+| Suggerimenti | Passando su una voce compare il suo nome («Grassetto», «Titolo»); «Rimuovi formattazione» ha l'icona della gomma e il nome solo nel suggerimento. Con le scorciatoie, oggi rinviate, il suggerimento le mostrerà accanto al nome («Grassetto · Ctrl + B») |
+| Tastiera | Per ora (rinvio del 09/10/2026) la bollicina si raggiunge come ogni pulsante, con Esc e poi Tab; Invio la apre. Alt + F10, frecce e scorciatoie arrivano con CA-02.3 e CA-02.5 |
 
 Restano la sintassi markdown (RF-02) e le scorciatoie (CA-02.3). Il menu del tasto destro resta sospeso (DEC-64). Niente + a margine.
 

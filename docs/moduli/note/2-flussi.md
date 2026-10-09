@@ -81,7 +81,7 @@ flowchart TD
 ---
 
 ## FL-02 – Scrivere e formattare una nota
-**Requisito:** RF-02 · **Attori:** Utente · **Interazioni rapide:** in vista Markdown Ctrl + B, I, U, Ctrl + Maiusc + S, Ctrl + 1 e 2 per formattare, Alt + F10 per il cassetto della bollicina (DEC-131); il menu del tasto destro resta sospeso (DEC-64)
+**Requisito:** RF-02 · **Attori:** Utente · **Interazioni rapide:** in vista Markdown Ctrl + B, I, U, Ctrl + Maiusc + S, Ctrl + 1 e 2 per formattare, Alt + F10 per il cassetto della bollicina (DEC-131), rinviate da Manuel Cucca il 09/10/2026; il menu del tasto destro resta sospeso (DEC-64)
 
 ```mermaid
 flowchart TD
