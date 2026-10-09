@@ -15,7 +15,7 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-07 | Voce di menu | base | Disegnato |
 | CMP-08 | Suggerimento | base | Disegnato |
 | CMP-09 | Menu (tasto destro, inserimento con `/`, suggerimenti dei tag) | composto | Disegnato |
-| CMP-10 | Pillola degli strumenti | composto | Disegnato |
+| CMP-10 | Bollicina del formato (prima Pillola degli strumenti, DEC-131) | composto | Disegnato |
 | CMP-11 | Pannello a comparsa | composto | Disegnato |
 | CMP-12 | Date picker | composto | Disegnato |
 | CMP-13 | Ricerca con card dei risultati e filtri | composto | Disegnato |
@@ -42,7 +42,7 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'icona di sistema e non è un componente.
 
 ### Parti interne
-Nella sezione **Parti interne** della pagina Componenti composti ci sono i pezzi con cui sono costruiti i composti: non si usano da soli, si modificano lì e cambiano ovunque. Strumento e Divisore della pillola (CMP-10), Giorno del calendario (CMP-12), Filtro e Risultato della ricerca (CMP-13), Campo nome nell'albero e Cestino di trascinamento (CMP-14), Casella della checklist e Riga dei metadati (CMP-20), Segmento del percorso (CMP-26).
+Nella sezione **Parti interne** della pagina Componenti composti ci sono i pezzi con cui sono costruiti i composti: non si usano da soli, si modificano lì e cambiano ovunque. Bollicina, Cassetto della bollicina, Strumento e Divisore della pillola (CMP-10), Giorno del calendario (CMP-12), Filtro e Risultato della ricerca (CMP-13), Campo nome nell'albero e Cestino di trascinamento (CMP-14), Casella della checklist e Riga dei metadati (CMP-20), Segmento del percorso (CMP-26).
 
 ### Stato Focus
 L'anello `focus-anello` degli stati Focus si vede solo mentre ci si muove con la tastiera (Tab e frecce fuori dal testo); un clic lo spegne (DEC-74). L'anello di errore dei campi resta sempre.
@@ -120,7 +120,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 | CMP-27 Comparsa dei metadati (superata) | sopra la nota | | è la superficie | flottante, con ombra; dentro: tag |
 | CMP-28 Scelta a segmenti | | ✓ (riquadri delle impostazioni) | ✓ (Info, riga Vista) | campo, hover, pieno |
 | CMP-31 Gruppo di impostazioni · CMP-32 Box dell'account | ✓ (il riquadro è `sfondo-colonna` su `sfondo-nota`) | | | i fondi delle righe, dei campi, degli interruttori e dei pulsanti stanno su `sfondo-colonna`; pieno (iniziale), stati (pallino) |
-| CMP-09 Menu · CMP-10 Pillola · CMP-11 Pannello · CMP-12 Date picker · CMP-13 Card dei risultati · CMP-15 Avviso · CMP-16 Finestra di conferma · CMP-22 Modulo di accesso · CMP-24 Info · CMP-29 Ricerca avanzata | sopra la nota | sopra la colonna | sono la superficie | flottante, con ombra; dentro: hover, pieno, campo |
+| CMP-09 Menu · CMP-10 Bollicina del formato · CMP-11 Pannello · CMP-12 Date picker · CMP-13 Card dei risultati · CMP-15 Avviso · CMP-16 Finestra di conferma · CMP-22 Modulo di accesso · CMP-24 Info · CMP-29 Ricerca avanzata | sopra la nota | sopra la colonna | sono la superficie | flottante, con ombra; dentro: hover, pieno, campo |
 
 **Verifica per ogni componente nuovo:** prima di segnarlo come Disegnato, (1) elencare le superfici su cui compare in questa tabella; (2) controllare nella tabella dei token che ogni suo fondo sia sopra la soglia su quelle superfici, in entrambi i modi; (3) controllarlo a occhio nell'anteprima scura, meglio se dentro un menu o un pannello, dove i grigi sono più vicini.
 
@@ -176,8 +176,8 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 - Libreria **Lucide** (DEC-15), icone di linea, colore `icona-tenue` o `icona-su-pieno`.
 - Variante **Dimensione**: 12, 16 (default, `misura-icona`), 20 e 24 px. Il tratto resta 1,5 (`tratto-icona`) a tutte le dimensioni, così le icone piccole non diventano sottili e le grandi non diventano pesanti.
 - Ogni icona è un set di componenti `Icona/<nome>` con la fonte Lucide nella descrizione. Nei componenti si scambia con la proprietà Icona e si sceglie la dimensione con la variante, senza ridimensionare l'istanza.
-- Le icone restano fatte di più tracciati, come in Lucide. Se in un'istanza si cambia icona dopo averla colorata, il colore non passa alla nuova: si ricolorano tutti i tracciati insieme (in Figma, dal pannello "Colori della selezione").
-- Primo nucleo: **più** (`plus`), **altro** (`ellipsis`), **caricamento** (`loader-circle`), **cerca** (`search`), **calendario** (`calendar`), **chiudi** (`x`), **errore** (`circle-alert`), **freccia destra** (`chevron-right`), **freccia giù** (`chevron-down`), **titolo** (`heading-1`), **sottotitolo** (`heading-2`), **elenco puntato** (`list`), **elenco numerato** (`list-ordered`), **checklist** (`list-checks`), **immagine** (`image`), **elimina** (`trash-2`), **tag** (`tag`), **sposta** (`folder-input`), **impostazioni** (`settings`), **grassetto** (`bold`), **corsivo** (`italic`), **sottolineato** (`underline`), **barrato** (`strikethrough`), **spunta** (`check`), **freccia sinistra** (`chevron-left`), **cartella** (`folder`), **cartella aperta** (`folder-open`, per la colonna, DEC-99), **utente** (`user`, per il box dell'account senza accesso, DEC-122), **togli da locale** (`folder-minus`, per Togli da Locale nella comparsa del file, DEC-123), **nota** (`file-text`), **avviso** (`triangle-alert`), **informazione** (`info`), **mostra** (`eye`), **rinomina** (`pencil`), **taglia** (`scissors`), **copia** (`copy`), **incolla** (`clipboard`), **apri colonna** (`panel-left-open`), **chiudi colonna** (`panel-left-close`) e **puntina** (`pin`) per la colonna del foglio unico (DEC-55), **maiusc** (`arrow-big-up`) e **invio** (`corner-down-left`) per la scorciatoia di Chiudi nella nota rapida (DEC-65). Le altre si aggiungono quando servono ai componenti.
+- Ogni icona è **un tracciato solo**, chiamato `forma` (i tracciati di Lucide uniti, 09/10/2026): così il colore dato a un'istanza (attivo, `icona-errore`, `icona-su-pieno`) vale per tutta l'icona e resta quando si scambia l'icona. Un'icona nuova si unisce allo stesso modo prima di entrare nella libreria.
+- Primo nucleo: **più** (`plus`), **altro** (`ellipsis`), **caricamento** (`loader-circle`), **cerca** (`search`), **calendario** (`calendar`), **chiudi** (`x`), **errore** (`circle-alert`), **freccia destra** (`chevron-right`), **freccia giù** (`chevron-down`), **titolo** (`heading-1`), **sottotitolo** (`heading-2`), **elenco puntato** (`list`), **elenco numerato** (`list-ordered`), **checklist** (`list-checks`), **immagine** (`image`), **elimina** (`trash-2`), **tag** (`tag`), **sposta** (`folder-input`), **impostazioni** (`settings`), **grassetto** (`bold`), **corsivo** (`italic`), **sottolineato** (`underline`), **barrato** (`strikethrough`), **spunta** (`check`), **freccia sinistra** (`chevron-left`), **cartella** (`folder`), **cartella aperta** (`folder-open`, per la colonna, DEC-99), **utente** (`user`, per il box dell'account senza accesso, DEC-122), **togli da locale** (`folder-minus`, per Togli da Locale nella comparsa del file, DEC-123), **nota** (`file-text`), **avviso** (`triangle-alert`), **informazione** (`info`), **mostra** (`eye`), **rinomina** (`pencil`), **taglia** (`scissors`), **copia** (`copy`), **incolla** (`clipboard`), **apri colonna** (`panel-left-open`), **chiudi colonna** (`panel-left-close`) e **puntina** (`pin`) per la colonna del foglio unico (DEC-55), **maiusc** (`arrow-big-up`) e **invio** (`corner-down-left`) per la scorciatoia di Chiudi nella nota rapida (DEC-65), **testo normale** (`type`), **rimuovi formattazione** (`remove-formatting`) e **misto** (`minus`) per la bollicina del formato (DEC-131). Le altre si aggiungono quando servono ai componenti.
 
 ### Stati
 | Stato | Descrizione |
@@ -458,42 +458,41 @@ Compare con `movimento-durata-breve` (120 ms) e `movimento-spostamento` (4 px). 
 
 ---
 
-## CMP-10 – Pillola degli strumenti
-**Tipo:** composto (con le parti interne "Strumento della pillola" e "Divisore della pillola") · **Usato in:** SC-03 (sopra la selezione o il punto del clic sul vuoto) · **Figma:** pagina Componenti composti, [Pillola degli strumenti](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=52-504)
+## CMP-10 – Bollicina del formato
+**Tipo:** composto (con le parti interne "Bollicina", "Cassetto della bollicina", "Strumento della pillola" e "Divisore della pillola") · **Usato in:** SC-03 (in basso a destra del foglio), SC-02 (a sinistra nella fascia delle azioni), file `.md` di Locale · **Figma:** pagina Componenti composti, [Bollicina del formato](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=324-7605)
 
-**Scopo:** formattare il testo selezionato o inserire un elemento senza una barra fissa sopra la nota.
-**Quando usarlo:** con testo selezionato (formattazione) o con un clic sul vuoto (inserimento). Una sola pillola alla volta.
-**Quando non usarlo:** come barra permanente, o per azioni sulla nota intera (sono in Info, CMP-24).
+**Scopo:** vedere il formato dove sta il cursore e cambiarlo senza scrivere i simboli (DEC-131). Sostituisce la pillola degli strumenti, che compariva sopra la selezione (DEC-64).
+**Quando usarlo:** sempre, e solo, in vista Markdown: nelle note, nella nota rapida e nei file `.md` di Locale. Una sola bollicina per finestra.
+**Quando non usarlo:** in vista Testo e nei `.txt`; per azioni sulla nota intera (sono in Info, CMP-24); come barra fissa sopra il testo.
 
 ### Varianti e dimensioni
-- **Formattazione:** grassetto, corsivo, sottolineato, barrato · titolo, sottotitolo.
-- **Inserimento:** titolo, sottotitolo · elenco puntato, elenco numerato, checklist · immagine.
-- Pillola su `sfondo-flottante` (bianca in chiaro, scura in scuro), `ombra`, margini 4, alta 40, livello 20.
-- 4 px (`spazio-elemento`) tra uno strumento e l'altro: passando con il mouse, il cerchio dell'hover non tocca mai quello dello strumento attivo.
-- Tra i gruppi, il **divisore della pillola**: linea di 1 px in `bordo-divisore-tenue` a tutta altezza (da bordo a bordo della pillola), con 4 px ai lati. È lo stesso segno leggero dei divisori dei menu. Scelta tra solo spazio, linea corta leggera, linea corta visibile, linea a tutta altezza e puntino.
-- **Strumento della pillola:** pulsante tondo 32 × 32 con icona Lucide 16 in `icona-tenue`; proprietà **Icona**.
-- Compare 8 px sopra la selezione o il punto del clic, centrata; se non c'è spazio sopra, sotto. Sparisce quando si riprende a scrivere, con Esc o con un clic altrove.
-- Inizialmente la pillola era scura (`sfondo-pieno`); è stata invertita perché in mezzo al testo era troppo pesante. Ora parla come menu e colonna. Dal 28/09/2026 anche ciò che è attivo non è più scuro: ha il colore dell'hover (DEC-35).
+- **Stato=Chiusa:** la bollicina, una pillola su `sfondo-flottante` con `ombra-flottante`, margini 4 (`spazio-elemento`), alta 40. Dentro il pulsante alto 32 (`misura-riga`), margini 8 (`spazio-controllo-piccolo`), 4 tra le icone: l'icona del formato di riga (testo normale, titolo, sottotitolo, elenco puntato, elenco numerato, casella, o il trattino «misto» per una selezione con righe diverse) e quelle dei formati di carattere in uso (grassetto, corsivo, barrato, sottolineato), icone da 16 in `icona-tenue`. Larga quanto il contenuto: 60 con `H1 B`.
+- **Stato=Aperta:** il cassetto accanto alla bollicina, a 8 (`spazio-icona`), allineati in basso; la bollicina premuta ha il pulsante su `sfondo-hover` con le icone in `testo-primario`.
+- **Cassetto:** strumenti tondi da 32 (la parte interna della pillola), 4 tra uno e l'altro: testo normale, titolo, sottotitolo, elenco puntato, elenco numerato, casella · grassetto, corsivo, barrato, sottolineato · Rimuovi formattazione (icona gomma), con il divisore della pillola tra i gruppi. Pillola alta 40 su `sfondo-flottante` con `ombra-flottante`, margini 4; largo 426.
+- **Righe=Due:** quando il cassetto non ci sta su una riga (finestra stretta, nota rapida): sopra i formati di riga, sotto quelli di carattere, il divisore e Rimuovi formattazione; 220 × 76, angoli `raggio-contenitore` (20), concentrici con gli strumenti (20 − 4 = 16).
+- **Lato=Sinistra** (foglio): il cassetto si apre a sinistra della bollicina. **Lato=Destra** (nota rapida): a destra.
+- **Posizione:** galleggiante, livello 20, a 24 (`spazio-gruppo`) dal bordo destro e da quello in basso del foglio, ferma mentre il testo scorre. Sotto l'ultima riga il testo ha in fondo 24 + 40 + 24 = 88, così la bollicina non la copre mai (regola dello spazio in fondo).
+- Proprietà della bollicina: **Riga** (scambio di icona, con le sette scelte), **Grassetto**, **Corsivo**, **Barrato**, **Sottolineato** (mostra o nascondi).
 
 ### Stati
 | Stato | Descrizione |
 |---|---|
-| Default | Strumento senza sfondo, icona `icona-tenue` |
-| Hover | `sfondo-hover` |
-| Focus | Anello interno di 2 px in `focus-anello` |
-| Attivo | Formato già applicato alla selezione (es. il testo è in grassetto): cerchio `sfondo-hover` come l'hover, con icona in `testo-primario`, come la riga selezionata (DEC-35) |
-| Disabilitato | Opacità 40% (es. titoli dentro una checklist, se non ammessi) |
+| Default | Bollicina: pulsante senza sfondo, icone `icona-tenue`. Strumento: senza sfondo |
+| Hover | `sfondo-hover` sul pulsante della bollicina o sullo strumento |
+| Focus | Anello interno di 2 px in `focus-anello` sul pulsante o sullo strumento |
+| Attivo | Strumento di un formato in uso: cerchio `sfondo-hover` con icona in `testo-primario` (DEC-35). Bollicina con il cassetto aperto: Stato=Aperta, come l'attivo |
+| Disabilitato | Non previsto: ogni formato vale su ogni riga (un formato di riga sostituisce il precedente, RB-94) |
 | Errore | Non previsto |
 | Caricamento | Non previsto |
 
 ### Accessibilità
-- **Tastiera:** la pillola non ruba il focus mentre si scrive; si raggiunge con Alt + F10 (Option + F10 su macOS), lo standard degli editor per la barra degli strumenti e poi con le frecce sinistra e destra tra gli strumenti; Esc torna al testo. Le scorciatoie di formattazione restano sempre valide (CMP-09).
-- **Lettori di schermo:** barra degli strumenti con nome ("Formattazione" o "Inserimento"); ogni strumento è un pulsante con nome e, per la formattazione, stato premuto o non premuto; ogni strumento ha il suggerimento (CMP-08).
-- **Contrasti:** icone `icona-tenue` su `sfondo-flottante` 5,49:1 in chiaro e 5,61:1 in scuro, su `sfondo-hover` ≥ 4,16:1; attivo 16,48:1.
+- **Tastiera:** la bollicina non ruba il focus mentre si scrive. Alt + F10 (Option + F10 su macOS) apre il cassetto con il focus sulla prima voce; le frecce passano da una voce all'altra, Invio o spazio scelgono, Esc torna al testo con il cursore dove era (CA-02.5). Le scorciatoie di formattazione valgono sempre (CA-02.3).
+- **Lettori di schermo:** la bollicina è un pulsante «Formato: titolo, grassetto» con stato espanso o chiuso; il cassetto è una barra degli strumenti «Formato»; ogni voce è un pulsante con nome e stato premuto o non premuto; ogni voce ha il suggerimento con la scorciatoia, se c'è (CMP-08): «Grassetto · Ctrl + B».
+- **Contrasti:** icone `icona-tenue` su `sfondo-flottante` 5,49:1 in chiaro e 5,61:1 in scuro, su `sfondo-hover` ≥ 4,16:1; attivo 16,48:1 (come la pillola).
 
 ### Esempi
-- ✅ Corretto: selezionare "spostare" e vedere la pillola sopra la parola con il grassetto già attivo.
-- ❌ Scorretto: lasciare la pillola visibile mentre si continua a scrivere.
+- ✅ Corretto: il cursore in un titolo con una parola in grassetto, la bollicina mostra `H1 B`; un clic, e nel cassetto H1 e B sono evidenziati.
+- ❌ Scorretto: mostrare la bollicina in una nota in vista Testo, o lasciarla sopra l'ultima riga del testo.
 
 ---
 
@@ -827,7 +826,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 | Disabilitato · Errore · Caricamento | Non previsti |
 
 ### Accessibilità
-- **Tastiera:** nessuna scorciatoia di formattazione e niente Ctrl + Invio sulla checklist per ora (DEC-130). In vista Markdown il cursore salta i simboli nascosti, Invio e Backspace su elenchi e titoli funzionano come in Word (CA-02.15 … CA-02.18). Tab scrive una tabulazione o rientra le righe selezionate, Maiusc + Tab toglie il rientro (DEC-64). Per uscire dal testo da tastiera: Esc e poi Tab (ID-26).
+- **Tastiera:** in vista Markdown Ctrl + B, I, U, Ctrl + Maiusc + S, Ctrl + 1 e 2 formattano e Alt + F10 apre il cassetto della bollicina (CMP-10, DEC-131); niente Ctrl + Invio sulla checklist per ora (DEC-130). In vista Markdown il cursore salta i simboli nascosti, Invio e Backspace su elenchi e titoli funzionano come in Word (CA-02.15 … CA-02.18). Tab scrive una tabulazione o rientra le righe selezionate, Maiusc + Tab toglie il rientro (DEC-64). Per uscire dal testo da tastiera: Esc e poi Tab (ID-26).
 - **Lettori di schermo:** titoli come intestazioni, elenchi come elenchi, voci della checklist come caselle di controllo.
 - **Contrasti:** testo primario ≥ 16,48:1 su `sfondo-nota`; simboli e segni in `testo-tenue` 5,49:1 e 7,30:1; voce spuntata 5,49:1.
 
