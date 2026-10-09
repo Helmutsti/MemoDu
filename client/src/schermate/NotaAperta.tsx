@@ -53,6 +53,7 @@ export function NotaAperta({
               <Editor
                 contenuto={nota.contenuto}
                 focus={nuova}
+                markdown={nota.vista === "markdown"}
                 onModifica={(contenuto) => onModifica({ contenuto })}
               />
             </div>

@@ -85,6 +85,10 @@
   flex-shrink: 0;
   color: var(--icona-tenue);
 }
+/* Riga Vista (DEC-130): la scelta a destra; la riga non si evidenzia, i segmenti sì. */
+.info-riga-vista .info-riga-testo {
+  flex: 1;
+}
 .info-riga-testo {
   overflow: hidden;
   text-overflow: ellipsis;

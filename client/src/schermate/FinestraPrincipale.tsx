@@ -1120,6 +1120,7 @@ export function FinestraPrincipale(): ReactElement {
             creataScelta: nota.creataScelta,
             fineValidita: nota.fineValidita,
             tag: nota.tag,
+            vista: nota.vista,
           }
         : a,
     );
@@ -1530,6 +1531,7 @@ export function FinestraPrincipale(): ReactElement {
           onAggiungiTag={(nome) => void cambiaDettagli(() => api.aggiungiTag(info.nota.id, nome))}
           onTogliTag={(nome) => void cambiaDettagli(() => api.togliTag(info.nota.id, nome))}
           onEliminaTag={(nome) => void eliminaTag(info.nota.id, nome)}
+          onVista={(vista) => void cambiaDettagli(() => api.cambiaVista(info.nota.id, vista))}
           onSpostaIn={(pulsante) =>
             // Info resta aperta sotto il pannello (CMP-24).
             setSpostaIn({

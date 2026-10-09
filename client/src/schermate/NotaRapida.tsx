@@ -162,6 +162,8 @@ export function NotaRapida(): ReactElement {
           <Editor
             contenuto=""
             focus
+            // La nota rapida è sempre una nota nuova: nasce in Markdown (CA-02.14).
+            markdown
             invito="Scrivi qui…"
             onModifica={(nuovo) => {
               testo.current = nuovo;

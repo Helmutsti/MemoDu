@@ -350,6 +350,8 @@ export function FileAperto({ percorso, locale, onPercorso, onChiudi }: Proprieta
                     contenuto={file.testo}
                     focus
                     solaLettura={file.solaLettura}
+                    // La vista dipende dall'estensione; un file nuovo nasce .md (CA-17.25, CA-17.9).
+                    markdown={nuovo || /\.md$/i.test(percorso)}
                     etichetta={`Testo di ${nome}`}
                     onModifica={modifica}
                   />

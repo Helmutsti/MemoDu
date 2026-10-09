@@ -31,6 +31,7 @@ const funzioni = () => ({
   onAggiungiTag: vi.fn(),
   onTogliTag: vi.fn(),
   onEliminaTag: vi.fn(),
+  onVista: vi.fn(),
   onChiudi: vi.fn(),
 });
 let f: ReturnType<typeof funzioni>;

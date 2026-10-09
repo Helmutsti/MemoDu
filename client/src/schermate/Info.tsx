@@ -1,7 +1,7 @@
 // CMP-24 Info (DEC-96, proposta C di DEC-97, RF-04, RF-06): tutto ciò che riguarda la nota in un
 // punto solo. In cima il titolo; sotto una riga per cosa, con la sua icona e la frase intera
 // (cartella, data di creazione con «Ripristina» se è stata cambiata, fine validità, tag con
-// «+ Tag»); l'ultima modifica; poi Chiudi nota ed Elimina. Ogni riga si apre con un clic; ogni
+// «+ Tag», vista Testo o Markdown, DEC-130); l'ultima modifica; poi Chiudi nota ed Elimina. Ogni riga si apre con un clic; ogni
 // modifica vale subito.
 // - Comparsa: con un clic sul titolo del percorso, sotto di lui, livello 20 e senza velo; si
 //   chiude con un clic fuori o con Esc. In fondo Chiudi nota ed Elimina.
@@ -11,16 +11,17 @@
 // Suggerimenti, calendario e menu si aprono sopra Info; la conferma di eliminazione di un tag
 // sopra tutto (livello 40).
 
-import { Calendar, CircleAlert, Folder, Plus, Tag as TagIcona, Trash2, X } from "lucide-react";
+import { Calendar, CircleAlert, Eye, Folder, Plus, Tag as TagIcona, Trash2, X } from "lucide-react";
 import { useEffect, useId, useRef, useState, type ReactElement } from "react";
 import { createPortal } from "react-dom";
-import type { DatiDettagli, Nota, VoceTag } from "@memodu/condiviso";
+import type { DatiDettagli, Nota, Vista, VoceTag } from "@memodu/condiviso";
 import { AreaScorrevole } from "../componenti/AreaScorrevole";
 import { Calendario } from "../componenti/Calendario";
 import { FinestraConferma } from "../componenti/FinestraConferma";
 import { Icona } from "../componenti/Icona";
 import { Menu, type VoceMenu } from "../componenti/Menu";
 import { PulsanteIcona } from "../componenti/Pulsante";
+import { SceltaSegmenti } from "../componenti/SceltaSegmenti";
 import { Tag } from "../componenti/Tag";
 import { VoceAzione } from "../componenti/VoceAzione";
 import { leggiGiorno, scriviGiorno, testoCreata, testoModificata } from "../date";
@@ -42,6 +43,8 @@ interface Proprieta {
   onAggiungiTag: (nome: string) => void;
   onTogliTag: (nome: string) => void;
   onEliminaTag: (nome: string) => void;
+  /** Testo o Markdown: cambia solo come si mostra la nota (RB-91). */
+  onVista: (vista: Vista) => void;
   /** «Sposta in…»: il pannello si apre accanto al pulsante, sopra Info che resta aperta. */
   onSpostaIn: (pulsante: DOMRect) => void;
   /** Il pannello Sposta in è aperto sopra Info. */
@@ -334,6 +337,21 @@ export function Info(p: Proprieta): ReactElement {
                   </button>
                 )}
               </div>
+            </div>
+            <div className="info-riga info-riga-vista">
+              <span className="info-riga-icona">
+                <Icona di={Eye} />
+              </span>
+              <span className="info-riga-testo">Vista</span>
+              <SceltaSegmenti
+                nome="Vista"
+                opzioni={[
+                  { valore: "testo", etichetta: "Testo" },
+                  { valore: "markdown", etichetta: "Markdown" },
+                ]}
+                valore={p.nota.vista}
+                onScegli={(vista) => vista !== p.nota.vista && p.onVista(vista)}
+              />
             </div>
           </div>
 
