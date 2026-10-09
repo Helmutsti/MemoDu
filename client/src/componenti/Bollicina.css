@@ -30,7 +30,7 @@
   outline-offset: calc(0px - var(--focus-spessore));
 }
 
-/* Il cassetto: accanto alla bollicina a 8, allineato in basso, sopra la pagina; pillola alta 40
+/* Il cassetto: accanto alla bollicina a 8, centrato su di lei, sopra la pagina; pillola alta 40
    con gli strumenti, 4 tra uno e l'altro. */
 .bollicina-cassetto {
   position: absolute;
@@ -55,6 +55,8 @@
   left: calc(100% + var(--spazio-icona));
 }
 .bollicina-due-righe {
+  /* Su due righe il cassetto è allineato in basso con la bollicina. */
+  bottom: 0;
   flex-direction: column;
   align-items: flex-start;
   height: auto;
