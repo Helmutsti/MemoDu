@@ -1,5 +1,5 @@
 import { EditorView } from "@codemirror/view";
-import { act, render, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ErroreApi } from "../api";
@@ -393,5 +393,13 @@ describe("vista di un file locale (CA-17.25, DEC-130)", () => {
     await apriFile(RIUNIONE, "riunione.txt");
     expect(screen.queryByRole("checkbox")).toBeNull();
     expect(screen.getByText("- [ ] fare")).toBeInTheDocument();
+  });
+
+  it("un .md ha la bollicina del formato, un .txt no (CA-02.25, DEC-131)", async () => {
+    await apriFile(`${RADICE}\\idee.md`, "idee.md");
+    expect(screen.getByRole("button", { name: "Formato: casella" })).toBeInTheDocument();
+    cleanup();
+    await apriFile(RIUNIONE, "riunione.txt");
+    expect(screen.queryByRole("button", { name: /^Formato/ })).toBeNull();
   });
 });

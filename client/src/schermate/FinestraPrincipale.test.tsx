@@ -796,6 +796,28 @@ describe("vista della nota (DEC-130)", () => {
     render(<FinestraPrincipale />);
     expect(await screen.findByRole("checkbox", { name: "Da fare" })).toBeInTheDocument();
   });
+
+  it("in Markdown c'è la bollicina con il formato della riga; in Testo no (CA-02.4, DEC-131)", async () => {
+    vi.mocked(api.leggi).mockResolvedValue(riunione("testo"));
+    vi.mocked(api.cambiaVista).mockResolvedValue(riunione("markdown"));
+    render(<FinestraPrincipale />);
+    const info = await apriInfo("Riunione di lunedì");
+    expect(screen.queryByRole("button", { name: /^Formato/ })).toBeNull();
+    const vista = within(info).getByRole("radiogroup", { name: "Vista" });
+    await userEvent.click(within(vista).getByRole("radio", { name: "Markdown" }));
+    expect(await screen.findByRole("button", { name: "Formato: casella" })).toBeInTheDocument();
+  });
+
+  it("dal cassetto la riga diventa un titolo e la bollicina lo dice (CA-02.21)", async () => {
+    vi.mocked(api.leggi).mockResolvedValue(riunione("markdown"));
+    render(<FinestraPrincipale />);
+    await userEvent.click(await screen.findByRole("button", { name: "Formato: casella" }));
+    await userEvent.click(screen.getByRole("button", { name: "Titolo" }));
+    expect(await screen.findByRole("button", { name: "Formato: titolo" })).toBeInTheDocument();
+    expect(screen.queryByRole("checkbox", { name: "Da fare" })).toBeNull();
+    expect(document.querySelector(".md-titolo")).toHaveTextContent("fare");
+    expect(screen.getByRole("toolbar", { name: "Formato" })).toBeInTheDocument();
+  });
 });
 
 describe("SC-04 Cestino (RF-15)", () => {

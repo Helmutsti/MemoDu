@@ -26,12 +26,24 @@ vi.mock("../finestra", () => ({
   apriNelProgramma: vi.fn(),
   chiudiNotaRapida: vi.fn(),
 }));
-// L'editor vero è CodeMirror; qui basta un campo che riporta le modifiche.
+// L'editor vero è CodeMirror; qui basta un campo che riporta le modifiche e il formato.
+const testoNormale = vi.hoisted(() => ({ riga: "testo", caratteri: new Set() }));
 vi.mock("../editor/Editor", () => ({
-  Editor: ({ onModifica, markdown }: { onModifica: (t: string) => void; markdown?: boolean }) => (
+  Editor: ({
+    onModifica,
+    markdown,
+    onFormato,
+  }: {
+    onModifica: (t: string) => void;
+    markdown?: boolean;
+    onFormato?: (f: unknown) => void;
+  }) => (
     <textarea
       aria-label="Testo"
       data-vista={markdown ? "markdown" : "testo"}
+      ref={(el) => {
+        if (el && markdown) onFormato?.(testoNormale);
+      }}
       onChange={(e) => onModifica(e.target.value)}
     />
   ),
@@ -215,5 +227,12 @@ describe("vista della nota rapida (DEC-130)", () => {
       "markdown",
     );
     expect(screen.queryByRole("radiogroup", { name: "Vista" })).toBeNull();
+  });
+
+  it("la bollicina del formato sta subito a sinistra di Chiudi (CA-02.25, DEC-131)", () => {
+    render(<NotaRapida />);
+    const bollicina = screen.getByRole("button", { name: "Formato: testo normale" });
+    const chiudi = screen.getByRole("button", { name: /^Chiudi/ });
+    expect(bollicina.closest(".bollicina")?.nextElementSibling?.contains(chiudi)).toBe(true);
   });
 });
