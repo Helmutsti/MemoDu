@@ -38,6 +38,7 @@ Premi **Ctrl + Alt + N** da qualsiasi programma (Control + Option + N sul Mac): 
 - **Per continuare nel programma** premi la freccia accanto a «Chiudi» e scegli «Apri nel programma». La nota rapida si apre nella finestra di Memodu; la nota che avevi aperta lì viene salvata e messa da parte.
 - Se premi di nuovo la scorciatoia, la nota rapida aperta si salva e ne compare un'altra, un po' spostata.
 - Una nota rapida chiusa senza testo non lascia niente dietro di sé.
+- La nota rapida nasce in Markdown: accanto a «Chiudi» c'è la bollicina del formato (vedi [La bollicina del formato](#la-bollicina-del-formato)). Con il cassetto aperto, il primo Esc chiude il cassetto e il secondo la nota.
 
 Le note rapide finiscono in CLOUD, fuori dalle cartelle, pronte da sistemare. La scorciatoia si cambia nelle [Impostazioni](#impostazioni).
 
@@ -97,7 +98,23 @@ In Markdown si scrive come in un programma di scrittura:
 - Backspace all'inizio di una voce toglie il segno; all'inizio di un titolo unisce la riga a quella sopra come testo normale;
 - copiando, negli appunti finisce il Markdown con i simboli, pronto per altri programmi.
 
-Per ora non ci sono pulsanti né scorciatoie per formattare: i simboli si scrivono a mano. Subito dopo aver chiuso un formato scrivendone i simboli (per esempio `**forte**`), il testo che continui a scrivere resta nel formato.
+#### La bollicina del formato
+In vista Markdown, in basso a destra del foglio c'è la **bollicina**: mostra il formato dove sta il cursore, per esempio **H1 B** in una parola in grassetto dentro un titolo, oppure **T** sul testo normale. Con una selezione che prende righe diverse mostra un trattino, e dei formati di carattere solo quelli che valgono per tutta la selezione. In vista Testo la bollicina non c'è.
+
+Con un clic la bollicina si apre come un cassetto:
+
+- **formati di riga:** testo normale, titolo, sottotitolo, elenco puntato, elenco numerato, casella;
+- **formati di carattere:** grassetto, corsivo, barrato, sottolineato;
+- **Rimuovi formattazione**, che toglie tutto: la riga torna testo normale e il testo perde grassetto, corsivo, barrato e sottolineato.
+
+I formati in uso sono evidenziati; scegliendone uno che c'è già, lo togli. Il cassetto resta aperto finché non riprendi a scrivere, premi Esc o fai clic fuori o di nuovo sulla bollicina.
+
+- **Con del testo selezionato** il formato vale per la selezione; un formato di riga vale per tutte le righe toccate.
+- **Senza selezione**, con il cursore dentro una parola, vale per quella parola. Tra due parole o in fondo alla riga si accende per il testo che scrivi da lì; sceglilo di nuovo per spegnerlo e tornare a scrivere normale.
+- Il sottolineato si salva come `<u>…</u>`.
+- Scrivendo `-[]` all'inizio di una riga, la riga diventa una casella da spuntare.
+
+Per ora non ci sono scorciatoie per formattare; i simboli si possono sempre scrivere anche a mano. Subito dopo aver chiuso un formato scrivendone i simboli (per esempio `**forte**`), il testo che continui a scrivere resta nel formato: per spegnerlo usa la bollicina.
 
 ## Organizzare le note
 
@@ -212,7 +229,7 @@ F2 rinomina; per spostare un file lo trascini su un'altra cartella di Locale. Tu
 
 Un **file nuovo** si chiama «Senza titolo» e nasce sul disco al primo Ctrl + S, con il nome preso dalla prima riga.
 
-**Come si vedono.** I file `.md`, compresi quelli nuovi, si mostrano in Markdown e i `.txt` in Testo (vedi [Markdown o Testo](#markdown-o-testo)); qui la vista non si sceglie. Nel file finisce solo quello che scrivi.
+**Come si vedono.** I file `.md`, compresi quelli nuovi, si mostrano in Markdown, con la bollicina del formato, e i `.txt` in Testo (vedi [Markdown o Testo](#markdown-o-testo)); qui la vista non si sceglie. Nel file finisce solo quello che scrivi.
 
 **Il nome del file nel percorso** apre una scheda con il nome (puoi cambiarlo), «Chiudi file» (anche Ctrl + W) e, per un file aggiunto da solo, «Togli da Locale».
 

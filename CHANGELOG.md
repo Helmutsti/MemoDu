@@ -14,6 +14,9 @@ Diventerà la 1.1.0, con la formattazione Markdown nelle note.
 - In vista Markdown titoli, sottotitoli, grassetto, corsivo, barrato, elenchi puntati e numerati e caselle si vedono già formattati, senza i simboli; il testo salvato resta Markdown, con i simboli
 - Le caselle delle checklist si spuntano e si tolgono con un clic
 - In Locale i file `.md` si mostrano in Markdown e i `.txt` come testo
+- La bollicina del formato, in vista Markdown: in basso a destra del foglio (nella nota rapida accanto a «Chiudi») mostra il formato dove sta il cursore; con un clic si apre il cassetto per scegliere testo normale, titolo, sottotitolo, elenchi, casella, grassetto, corsivo, barrato, sottolineato o «Rimuovi formattazione»
+- Senza selezione un formato vale per la parola sotto il cursore, oppure si accende per il testo che scrivi dopo
+- Scrivendo `-[]` all'inizio di una riga nasce una casella da spuntare
 
 ### Cambiato
 - Le note nuove e le note rapide nascono in vista Markdown; quelle scritte prima restano in Testo finché non cambi la vista
