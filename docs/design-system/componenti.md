@@ -2,7 +2,7 @@
 
 <!-- Fase 5 della guida. Copia il blocco per ogni componente. -->
 
-I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE), che diventa la libreria: pagina **Componenti base** (CMP-01 … CMP-08 e CMP-28) e pagina **Componenti composti** (CMP-09 … CMP-27 e CMP-29 … CMP-32). Ogni componente usa solo token semantici, anche per gli spazi (regola 12, vedi `tokens.md`) e ha un'anteprima in modo scuro.
+I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE), che diventa la libreria: pagina **Componenti base** (CMP-01 … CMP-08, CMP-28 e CMP-33) e pagina **Componenti composti** (CMP-09 … CMP-27, CMP-29 … CMP-32 e CMP-34 … CMP-36). Ogni componente usa solo token semantici, anche per gli spazi (regola 12, vedi `tokens.md`) e ha un'anteprima in modo scuro.
 
 | Codice | Componente | Tipo | Stato |
 |---|---|---|---|
@@ -37,12 +37,16 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-29 | Ricerca avanzata (DEC-96) | composto | Disegnato |
 | CMP-30 | Fondo della colonna (Cestino e Impostazioni, ombra quando il contenuto scorre sotto) | composto | Disegnato |
 | CMP-31 | Gruppo di impostazioni (titolo e righe in un riquadro, DEC-122) | composto | Disegnato |
-| CMP-32 | Box dell'account (in cima alle impostazioni, DEC-122) | composto | Disegnato |
+| CMP-32 | Box dell'account (in cima alle impostazioni, DEC-122; con «Cambia password» e «Dispositivi collegati», DEC-132) | composto | Disegnato |
+| CMP-33 | Casella (scelta sì o no con l'etichetta, nelle finestre, DEC-132) | base | Disegnato; raggio da confermare |
+| CMP-34 | Chiave da conservare (chiave di recupero nuova con Copia, DEC-132) | composto | Disegnato |
+| CMP-35 | Cambia password (SC-08, DEC-132) | composto | Disegnato |
+| CMP-36 | Dispositivi collegati (SC-09, DEC-132; parte interna Riga del dispositivo) | composto | Disegnato |
 
 L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'icona di sistema e non è un componente.
 
 ### Parti interne
-Nella sezione **Parti interne** della pagina Componenti composti ci sono i pezzi con cui sono costruiti i composti: non si usano da soli, si modificano lì e cambiano ovunque. Bollicina, Cassetto della bollicina, Strumento e Divisore della pillola (CMP-10), Giorno del calendario (CMP-12), Filtro e Risultato della ricerca (CMP-13), Campo nome nell'albero e Cestino di trascinamento (CMP-14), Casella della checklist e Riga dei metadati (CMP-20), Segmento del percorso (CMP-26).
+Nella sezione **Parti interne** della pagina Componenti composti ci sono i pezzi con cui sono costruiti i composti: non si usano da soli, si modificano lì e cambiano ovunque. Bollicina, Cassetto della bollicina, Strumento e Divisore della pillola (CMP-10), Giorno del calendario (CMP-12), Filtro e Risultato della ricerca (CMP-13), Campo nome nell'albero e Cestino di trascinamento (CMP-14), Casella della checklist e Riga dei metadati (CMP-20), Segmento del percorso (CMP-26), Riga del dispositivo (CMP-36).
 
 ### Stato Focus
 L'anello `focus-anello` degli stati Focus si vede solo mentre ci si muove con la tastiera (Tab e frecce fuori dal testo); un clic lo spegne (DEC-74). L'anello di errore dei campi resta sempre.
@@ -118,9 +122,11 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 | CMP-25 Barra di scorrimento | ✓ | ✓ | ✓ (Info, card dei risultati, ricerca avanzata, Sposta in) | nessuno: `icona-tenue` al 50 % o all'80 % |
 | CMP-26 Percorso | ✓ (fascia in alto) | | | hover |
 | CMP-27 Comparsa dei metadati (superata) | sopra la nota | | è la superficie | flottante, con ombra; dentro: tag |
+| CMP-33 Casella | | | ✓ (finestre dell'account) | pieno (spuntata), hover |
+| CMP-34 Chiave da conservare | | | ✓ (CMP-22, Chiave nuova) | campo |
 | CMP-28 Scelta a segmenti | | ✓ (riquadri delle impostazioni) | ✓ (Info, riga Vista) | campo, hover, pieno |
 | CMP-31 Gruppo di impostazioni · CMP-32 Box dell'account | ✓ (il riquadro è `sfondo-colonna` su `sfondo-nota`) | | | i fondi delle righe, dei campi, degli interruttori e dei pulsanti stanno su `sfondo-colonna`; pieno (iniziale), stati (pallino) |
-| CMP-09 Menu · CMP-10 Bollicina del formato · CMP-11 Pannello · CMP-12 Date picker · CMP-13 Card dei risultati · CMP-15 Avviso · CMP-16 Finestra di conferma · CMP-22 Modulo di accesso · CMP-24 Info · CMP-29 Ricerca avanzata | sopra la nota | sopra la colonna | sono la superficie | flottante, con ombra; dentro: hover, pieno, campo |
+| CMP-09 Menu · CMP-10 Bollicina del formato · CMP-11 Pannello · CMP-12 Date picker · CMP-13 Card dei risultati · CMP-15 Avviso · CMP-16 Finestra di conferma · CMP-22 Modulo di accesso · CMP-24 Info · CMP-29 Ricerca avanzata · CMP-35 Cambia password · CMP-36 Dispositivi collegati | sopra la nota | sopra la colonna | sono la superficie | flottante, con ombra; dentro: hover, pieno, campo |
 
 **Verifica per ogni componente nuovo:** prima di segnarlo come Disegnato, (1) elencare le superfici su cui compare in questa tabella; (2) controllare nella tabella dei token che ogni suo fondo sia sopra la soglia su quelle superfici, in entrambi i modi; (3) controllarlo a occhio nell'anteprima scura, meglio se dentro un menu o un pannello, dove i grigi sono più vicini.
 
@@ -877,11 +883,14 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 
 **Scopo:** accedere con email e password per sincronizzare le note (DEC-121).
 **Quando usarlo:** in SC-05, aperta da «Accedi» nel box dell'account di SC-06 (DEC-122) o dall'avviso dell'accesso scaduto (RB-87).
-**Quando non usarlo:** per creare l'account (lo crea il comando del server, DEC-121) o per uscire («Esci» nel box dell'account di SC-06, CMP-32).
+**Quando non usarlo:** per creare l'account (lo crea il comando del server, DEC-121), per uscire («Esci» nel box dell'account di SC-06, CMP-32) o per cambiare la password da collegati (CMP-35).
 
 ### Varianti e dimensioni
 - **Accesso:** titolo «Accedi a Memodu» (Interfaccia/Titolo), sottotitolo in `testo-tenue`, campi Email (CMP-03 normale) e Password (CMP-03 password) con etichette Interfaccia/Etichetta; a destra «Non voglio usare il cloud» (secondario), che scollega come «Esci» (RB-89), e «Accedi» (primario), 8 px tra loro.
 - **Errore:** messaggio in linea sopra i pulsanti, icona errore e testo `testo-errore` («Email o password non corrette.»).
+- **«Password dimenticata?»** (DEC-132): pulsante tenue (CMP-01) sotto il campo Password, in Accesso ed Errore; porta al Recupero nella stessa finestra. Il pulsante tenue ha i suoi margini da 16 e non si allinea al bordo dei campi: scelta di Manuel Cucca del 14/10/2026, niente componente collegamento.
+- **Recupero** (DEC-132, RB-99): «Recupera l'account» con la spiegazione sotto; campi Email, Chiave di recupero, Password nuova e Ripeti la password nuova (CMP-03, password per le due nuove); la Casella (CMP-33) «Scollega gli altri miei dispositivi»; «Torna all'accesso» (secondario) e «Recupera» (primario).
+- **Chiave nuova** (DEC-132, RB-99): «La tua nuova chiave di recupero» con la spiegazione; la Chiave da conservare (CMP-34); il promemoria in Interfaccia/Messaggio `testo-primario` («Durante la prova mandala a Manuel Cucca, che conserva le chiavi di tutti.»); «Ho conservato la chiave» (primario). Chiude anche il cambio della password fatto con la chiave (CMP-35).
 - Guscio della finestra di conferma (CMP-16): `sfondo-flottante`, `raggio-contenitore` (20), `ombra`, largo 400, `spazio-finestra` (24) su tutti i lati, `spazio-blocco` (16) tra i blocchi, figli a tutta larghezza. Al centro della finestra, livello 40, con il `velo` sul resto.
 - I testi sono esempi; quelli definitivi in Fase 6. Il primo avvio non c'è più (DEC-121).
 
@@ -1221,6 +1230,7 @@ Compare e sparisce con `movimento-durata-breve` (120 ms).
 - **Stato = Sincronizzata:** cerchio `sfondo-pieno` con l'iniziale dell'email in maiuscolo (Interfaccia/Titolo di schermata, `testo-su-pieno`); email; pallino da 8 in `icona-successo` a `spazio-icona` (8) da «Sincronizzata · oggi alle 14:32»; Esci secondario.
 - **Stato = Non raggiungibile:** come Sincronizzata, pallino `icona-avviso` e «Server non raggiungibile: ultimo backup 14:32» (l'ora dell'ultima sincronizzazione riuscita, con la data davanti se non è di oggi: «05/10/2026 14:32»); «Non riuscita: riprovo da sola» con un errore del server. Stato = Sincronizzata con il pallino `icona-tenue` per «In attesa della prima sincronizzazione»; Accesso scaduto con «Memodu e il server hanno versioni diverse» ed Esci per il protocollo diverso (DEC-122).
 - **Stato = Accesso scaduto:** come Sincronizzata, pallino `icona-errore`, «Accedi di nuovo per sincronizzare» e Accedi primario al posto di Esci (RB-87).
+- **Collegamenti** (DEC-132): in Sincronizzata e Non raggiungibile, sotto lo stato, «Cambia password» (apre SC-08, CMP-35) e «Dispositivi collegati» (apre SC-09, CMP-36), due pulsanti tenui (CMP-01) a `spazio-elemento` (4); non in Senza accesso e Accesso scaduto. I margini del pulsante tenue li spostano di 16 rispetto all'email: scelta di Manuel Cucca del 14/10/2026.
 - Dopo l'accesso, sotto un divisore come in CMP-31, la riga Campo di CMP-18 «Nome del dispositivo» (RB-51). Testi a 20 dal bordo, pulsante e campo a 16.
 
 ### Stati
@@ -1239,3 +1249,135 @@ Compare e sparisce con `movimento-durata-breve` (120 ms).
 ### Esempi
 - ✅ Corretto: aprendo le impostazioni si vede subito l'email e il pallino verde con l'ora dell'ultima sincronizzazione.
 - ❌ Scorretto: lo stato della sincronizzazione in una sezione separata dall'account, o il pallino senza il testo.
+
+---
+
+## CMP-33 – Casella
+**Tipo:** base · **Usato in:** SC-05 (Recupero), SC-08 · **Figma:** pagina Componenti base, [Casella](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=348-780)
+
+**Scopo:** una scelta sì o no con la sua etichetta, nelle finestre (DEC-132).
+**Quando usarlo:** per una scelta che vale per l'azione della finestra, come «Scollega gli altri miei dispositivi» nel recupero e nel cambio della password.
+**Quando non usarlo:** per un'impostazione che ha effetto subito (interruttore, CMP-04) o per le voci delle checklist nelle note (Casella della checklist, tonda, CMP-20).
+
+### Varianti e dimensioni
+- Quadrata da 16 (`misura-icona`), contorno `icona-tenue` da 1,5 (`tratto-icona`); spuntata `sfondo-pieno` con la spunta da 12 in `icona-su-pieno`.
+- Etichetta Interfaccia/Controllo in `testo-primario` a 8 dalla casella (`spazio-icona`); proprietà **Etichetta** (testo).
+- Raggio 4: nessun token adatto. *Proposta dell'agente, da confermare:* un token nuovo `raggio-casella` = 4 (anello del focus 8, concentrico a 2 di distanza).
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Default | Vuota |
+| Hover | `sfondo-hover` dentro la casella |
+| Focus | Anello `focus-anello` da 2 a 2 di distanza |
+| Attivo | Spuntata |
+| Disabilitato | Opacità 40 % (`opacita-disabilitato`) |
+| Errore · Caricamento | Non previsti: la scelta non può essere sbagliata e non aspetta il server |
+
+### Accessibilità
+- **Lettori di schermo:** casella di controllo con l'etichetta come nome; si legge «selezionata» o «non selezionata».
+- **Tastiera:** Tab la raggiunge, Spazio la cambia; si clicca su tutta la riga, etichetta compresa.
+- **Contrasti:** contorno `icona-tenue` su `sfondo-flottante` 5,49:1 in chiaro e 5,61:1 in scuro; `sfondo-pieno` su `sfondo-flottante` 16,48:1 e 12,87:1; spunta `icona-su-pieno` su `sfondo-pieno` 16,48:1 e 16,75:1; etichetta 16,48:1 e 12,87:1.
+
+### Esempi
+- ✅ Corretto: «Scollega gli altri miei dispositivi» spenta di default, sopra i pulsanti della finestra.
+- ❌ Scorretto: una casella per un'impostazione che cambia subito, o la casella tonda delle note in una finestra.
+
+---
+
+## CMP-34 – Chiave da conservare
+**Tipo:** composto (usa CMP-01) · **Usato in:** SC-05 (Chiave nuova), dentro CMP-22 · **Figma:** pagina Componenti composti, [Chiave da conservare](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=349-4345)
+
+**Scopo:** mostrare la chiave di recupero nuova, una volta sola, e permettere di copiarla (DEC-132, RB-99).
+**Quando usarlo:** solo nella variante Chiave nuova del modulo di accesso (CMP-22).
+**Quando non usarlo:** per scrivere la chiave (si usa il campo di testo, CMP-03).
+
+### Varianti e dimensioni
+- Come un campo di sola lettura: alto 32 (`misura-riga`), pillola, `sfondo-campo`, margine `spazio-controllo` a sinistra, `spazio-blocco` tra la chiave e il pulsante; la chiave in Interfaccia/Controllo attivo `testo-primario`, su una riga.
+- A destra «Copia», pulsante tenue (CMP-01); **Stato = Copiata:** dopo il clic dice «Copiata». Con la spunta accanto la chiave non stava su una riga nella finestra da 400: la spunta è tolta.
+- Proprietà **Chiave** (testo).
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Default | La chiave e «Copia» |
+| Hover · Focus · Premuto | Del pulsante (CMP-01) |
+| Attivo | Copiata |
+| Errore · Caricamento · Disabilitato | Non previsti: la chiave arriva insieme alla finestra |
+
+### Accessibilità
+- **Lettori di schermo:** la chiave si legge come testo; «Copia» annuncia «Copiata».
+- **Tastiera:** Tab raggiunge «Copia»; la chiave si può anche selezionare.
+- **Contrasti:** chiave `testo-primario` su `sfondo-campo` 13,83:1 in chiaro e 10,66:1 in scuro; «Copia» `testo-tenue` su `sfondo-campo` 4,61:1 e 4,65:1.
+
+### Esempi
+- ✅ Corretto: la chiave intera su una riga, con «Copia» accanto.
+- ❌ Scorretto: la chiave spezzata su due righe, o la chiave in un campo modificabile.
+
+---
+
+## CMP-35 – Cambia password
+**Tipo:** composto (usa CMP-01, CMP-03, CMP-33) · **Usato in:** SC-08 · **Figma:** pagina Componenti composti, [Cambia password](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=351-4686)
+
+**Scopo:** cambiare la password da un dispositivo collegato (DEC-132, FL-14, RB-98).
+**Quando usarlo:** in SC-08, aperta da «Cambia password» nel box dell'account (CMP-32).
+**Quando non usarlo:** per la password dimenticata da scollegati: quello è il Recupero del modulo di accesso (CMP-22).
+
+### Varianti e dimensioni
+- Lo stesso guscio del modulo di accesso (CMP-22): largo 400, `sfondo-flottante`, `raggio-contenitore`, `ombra`, `spazio-finestra`, `spazio-blocco` tra i blocchi.
+- **Tipo = Password attuale:** campo Password attuale (CMP-03 password) e sotto il pulsante tenue «Usa la chiave di recupero»; Password nuova e Ripeti la password nuova; la Casella (CMP-33); «Annulla» (secondario) e «Cambia password» (primario).
+- **Tipo = Chiave di recupero:** il primo campo diventa Chiave di recupero (CMP-03 normale) e il pulsante tenue «Usa la password attuale».
+- **Tipo = Errore:** messaggio in linea sopra i pulsanti, come CMP-22 («Chiave di recupero non corretta.», «Password attuale non corretta.», o il motivo della password nuova, RB-88).
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Default | Password attuale, focus sul primo campo |
+| Hover · Focus | Di campi, casella e pulsanti |
+| Attivo | «Cambia password» in caricamento mentre il dispositivo calcola Argon2id e il server risponde; poi la finestra si chiude (con la chiave, prima la Chiave nuova di CMP-22) |
+| Errore | Tipo = Errore |
+| Disabilitato | Non previsto |
+
+### Accessibilità
+- **Lettori di schermo:** finestra con il titolo «Cambia password»; il messaggio d'errore si annuncia quando compare.
+- **Tastiera:** Tab nell'ordine dei campi, poi casella, poi pulsanti; Invio conferma, Esc annulla.
+- **Contrasti:** come CMP-22 e CMP-33 su `sfondo-flottante`.
+
+### Esempi
+- ✅ Corretto: chi non ricorda la password attuale passa alla chiave di recupero senza chiudere la finestra.
+- ❌ Scorretto: due finestre diverse per la password e per la chiave.
+
+---
+
+## CMP-36 – Dispositivi collegati
+**Tipo:** composto (usa CMP-01; parte interna Riga del dispositivo) · **Usato in:** SC-09 · **Figma:** pagina Componenti composti, [Dispositivi collegati](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=352-4877) · [Riga del dispositivo](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=352-4737)
+
+**Scopo:** vedere i propri dispositivi collegati e scollegarne uno a distanza (DEC-132, FL-15, RB-100).
+**Quando usarlo:** in SC-09, aperta da «Dispositivi collegati» nel box dell'account (CMP-32).
+**Quando non usarlo:** per scollegare il dispositivo che si sta usando («Esci» in CMP-32, RB-89).
+
+### Varianti e dimensioni
+- Lo stesso guscio del modulo di accesso (CMP-22), con titolo e spiegazione.
+- **Stato = Elenco:** i dispositivi in un riquadro come il gruppo di impostazioni (CMP-31): `sfondo-colonna`, `raggio-contenitore`, `spazio-elenco`, divisori `bordo-divisore-tenue`. Ogni riga è la **Riga del dispositivo** (parte interna): margini come CMP-18 (`spazio-controllo` a sinistra, `spazio-controllo-piccolo` sugli altri lati), `raggio-interno`, nome in Interfaccia/Controllo `testo-primario`, sotto tipo e ultima sincronizzazione in Interfaccia/Dettaglio `testo-tenue`; Tipo = Questo dispositivo senza pulsanti, Tipo = Altro con «Scollega» (secondario). Proprietà **Nome** e **Dettaglio**.
+- **Stato = Conferma:** la riga diventa Tipo = Conferma: la domanda e la spiegazione, sotto a destra «Annulla» (secondario) e «Scollega» (primario). Niente seconda finestra (scelta di Manuel Cucca del 14/10/2026).
+- **Stato = Non raggiungibile:** messaggio in linea come CMP-22 al posto dell'elenco.
+- «Chiudi» (secondario) in basso a destra.
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Default | Elenco |
+| Hover · Focus · Premuto | Dei pulsanti (CMP-01) |
+| Attivo | Conferma; dopo «Scollega» la riga sparisce |
+| Caricamento | L'elenco arriva dal server: non ha un aspetto suo, la finestra si apre con l'elenco |
+| Errore | Non raggiungibile |
+| Disabilitato | Non previsto |
+
+### Accessibilità
+- **Lettori di schermo:** elenco con un elemento per dispositivo, letto come nome e dettaglio; la conferma si annuncia quando prende il posto della riga.
+- **Tastiera:** Tab passa tra i pulsanti «Scollega»; nella conferma il focus va su «Annulla»; Esc chiude la conferma, poi la finestra.
+- **Contrasti:** nome `testo-primario` su `sfondo-colonna` 14,99:1 in chiaro e in scuro; dettaglio `testo-tenue` su `sfondo-colonna` 4,99:1 e 6,53:1.
+
+### Esempi
+- ✅ Corretto: il computer perso si scollega dall'elenco con una conferma nella sua riga.
+- ❌ Scorretto: «Scollega» anche sul dispositivo che si sta usando.
