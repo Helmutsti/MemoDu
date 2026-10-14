@@ -220,12 +220,20 @@ pub async fn cambia_cestino_in_ricerca(app: AppHandle, dati: State<'_, Dati>, at
     Ok(())
 }
 
-/// Il nome di questo dispositivo; vuoto torna il nome del computer (RB-51).
+/// Il nome di questo dispositivo: quello scelto, o il nome del computer (RB-51).
+pub fn nome_dispositivo(app: &AppHandle) -> String {
+    let dati = app.state::<Dati>();
+    dati.con(|a| a.valore_dispositivo(CHIAVE_NOME)).ok().flatten().unwrap_or_else(nome_del_computer)
+}
+
+/// Il nome di questo dispositivo; vuoto torna il nome del computer (RB-51). Con l'accesso va
+/// anche al server, cifrato, per l'elenco dei dispositivi (RB-100).
 #[tauri::command]
-pub async fn cambia_nome_dispositivo(dati: State<'_, Dati>, nome: String) -> Esito<String> {
+pub async fn cambia_nome_dispositivo(app: AppHandle, dati: State<'_, Dati>, nome: String) -> Esito<String> {
     let nome: String = nome.trim().chars().take(LUNGHEZZA_MASSIMA_NOME).collect();
     let valore = (!nome.is_empty() && nome != nome_del_computer()).then_some(nome.as_str());
     dati.con(|a| a.imposta_valore_dispositivo(CHIAVE_NOME, valore))?;
+    crate::accesso::manda_nome(&app);
     Ok(valore.map(str::to_string).unwrap_or_else(nome_del_computer))
 }
 

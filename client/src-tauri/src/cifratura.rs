@@ -21,8 +21,14 @@ pub const FORMATO_CIFRATO: &str = "xchacha20poly1305";
 const SCOPO_PROVA: &str = "memodu/prova/accesso";
 const SCOPO_CASSAFORTE: &str = "memodu/cassaforte/password";
 const SCOPO_CHIAVE_DATI: &str = "memodu/chiave-dati/password";
+const SCOPO_PROVA_RECUPERO: &str = "memodu/prova/recupero";
+const SCOPO_CASSAFORTE_RECUPERO: &str = "memodu/cassaforte/recupero";
+const SCOPO_CHIAVE_DATI_RECUPERO: &str = "memodu/chiave-dati/recupero";
 
-#[derive(Debug, Clone, Copy, Deserialize, PartialEq)]
+/// I parametri di Argon2id di una password nuova: 64 MiB, 3 passaggi, 1 filo (DEC-121).
+pub const ARGON2: ParametriArgon2 = ParametriArgon2 { memoria: 65536, passaggi: 3, fili: 1 };
+
+#[derive(Debug, Clone, Copy, Deserialize, serde::Serialize, PartialEq)]
 pub struct ParametriArgon2 {
     /// In KiB.
     pub memoria: u32,
@@ -66,6 +72,79 @@ pub fn da_password(password: &str, sale: &[u8], p: ParametriArgon2) -> Result<(C
     Ok((ricava(&base.0, SCOPO_PROVA), ricava(&base.0, SCOPO_CASSAFORTE)))
 }
 
+/// Prova di recupero e chiave della cassaforte di recupero dalla chiave di recupero (RB-99).
+pub fn da_recupero(recupero: &[u8; 32]) -> (Chiave, Chiave) {
+    (ricava(recupero, SCOPO_PROVA_RECUPERO), ricava(recupero, SCOPO_CASSAFORTE_RECUPERO))
+}
+
+/// Byte casuali dal generatore del sistema.
+pub fn casuali<const N: usize>() -> [u8; N] {
+    use chacha20poly1305::aead::rand_core::RngCore;
+    use chacha20poly1305::aead::OsRng;
+    let mut byte = [0u8; N];
+    OsRng.fill_bytes(&mut byte);
+    byte
+}
+
+const ALFABETO: &[u8; 32] = b"ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+/// La chiave di recupero da mostrare: 52 caratteri in gruppi di 4, senza 0, O, 1 e I, come
+/// `scriviRecupero` del server.
+pub fn scrivi_recupero(chiave: &[u8; 32]) -> String {
+    let mut bit: String = chiave.iter().map(|b| format!("{b:08b}")).collect();
+    while bit.len() % 5 != 0 {
+        bit.push('0');
+    }
+    let lettere: Vec<char> = (0..bit.len())
+        .step_by(5)
+        .map(|i| ALFABETO[usize::from_str_radix(&bit[i..i + 5], 2).unwrap()] as char)
+        .collect();
+    lettere.chunks(4).map(|g| g.iter().collect::<String>()).collect::<Vec<_>>().join("-")
+}
+
+/// L'inverso di `scrivi_recupero`; accetta minuscole, spazi e trattini. None se non è una chiave.
+pub fn leggi_recupero(testo: &str) -> Option<[u8; 32]> {
+    let pulito: Vec<u8> =
+        testo.to_uppercase().bytes().filter(|c| !c.is_ascii_whitespace() && *c != b'-').collect();
+    if pulito.len() != 52 {
+        return None;
+    }
+    let mut bit = String::new();
+    for c in pulito {
+        let i = ALFABETO.iter().position(|a| *a == c)?;
+        bit.push_str(&format!("{i:05b}"));
+    }
+    let mut chiave = [0u8; 32];
+    for (i, b) in chiave.iter_mut().enumerate() {
+        *b = u8::from_str_radix(&bit[i * 8..i * 8 + 8], 2).ok()?;
+    }
+    Some(chiave)
+}
+
+/// Le password più comuni, in minuscolo: lo stesso elenco di `api/src/chiavi.ts` (RB-88).
+const COMUNI: &[&str] = &[
+    "123456789012", "1234567890123", "password1234", "passwordpassword", "qwertyuiopas", "qwerty123456",
+    "abcdefghijkl", "abc123456789", "000000000000", "111111111111", "iloveyou1234", "ciaociaociao",
+    "password123!", "amore1234567", "juventus1234", "napoli123456", "forzainter12", "forzamilan12",
+    "admin1234567", "benvenuto123", "passwordciao", "qwertyqwerty", "asdfghjklzxc", "1q2w3e4r5t6y",
+    "letmein12345", "welcome12345", "memodu123456", "memodumemodu", "passw0rd1234", "aaaaaaaaaaaa",
+];
+
+/// Il motivo per cui la password non va bene, o None (RB-88): gli stessi testi del server.
+pub fn problema_password(password: &str) -> Option<&'static str> {
+    let testo: String = password.nfc().collect();
+    if testo.chars().count() < 12 {
+        return Some("La password deve avere almeno 12 caratteri.");
+    }
+    let minuscola = testo.to_lowercase();
+    let mut lettere = minuscola.chars();
+    let prima = lettere.next();
+    if COMUNI.contains(&minuscola.as_str()) || lettere.all(|c| Some(c) == prima) {
+        return Some("Questa password è tra le più usate: scegline un'altra.");
+    }
+    None
+}
+
 fn cifra(chiave: &[u8; 32], nonce: &[u8; 24], testo: &[u8], aggiunti: &[u8]) -> Vec<u8> {
     XChaCha20Poly1305::new(chiave.into())
         .encrypt(XNonce::from_slice(nonce), Payload { msg: testo, aad: aggiunti })
@@ -89,6 +168,26 @@ pub fn svolgi_chiave_dati(cassaforte: &Chiave, avvolta: &str) -> Option<Chiave> 
         return None;
     }
     let chiave = decifra(&cassaforte.0, &byte[..24], &byte[24..], SCOPO_CHIAVE_DATI.as_bytes())?;
+    Some(Chiave(chiave.try_into().ok()?))
+}
+
+/// La chiave dati avvolta con una cassaforte, come la conserva il server: con la password o con
+/// la chiave di recupero (FL-14).
+pub fn avvolgi_chiave_dati(cassaforte: &Chiave, chiave: &Chiave, con_recupero: bool) -> String {
+    let scopo = if con_recupero { SCOPO_CHIAVE_DATI_RECUPERO } else { SCOPO_CHIAVE_DATI };
+    let nonce = rand_nonce();
+    let mut byte = nonce.to_vec();
+    byte.extend(cifra(&cassaforte.0, &nonce, &chiave.0, scopo.as_bytes()));
+    b64(&byte)
+}
+
+/// La chiave dati avvolta con la cassaforte di recupero, aperta (FL-14).
+pub fn svolgi_chiave_dati_recupero(cassaforte: &Chiave, avvolta: &str) -> Option<Chiave> {
+    let byte = da_b64(avvolta)?;
+    if byte.len() != 24 + 32 + 16 {
+        return None;
+    }
+    let chiave = decifra(&cassaforte.0, &byte[..24], &byte[24..], SCOPO_CHIAVE_DATI_RECUPERO.as_bytes())?;
     Some(Chiave(chiave.try_into().ok()?))
 }
 
@@ -174,6 +273,40 @@ mod prove {
         dati[0] ^= 1;
         busta["dati"] = json!(b64(&dati));
         assert!(apri_blocco(&chiave, "id", &busta.to_string()).is_none());
+    }
+
+    #[test]
+    fn la_chiave_di_recupero_da_le_stesse_prove_e_si_scrive_come_sul_server() {
+        let r = [0x22; 32];
+        let (prova, cassaforte) = da_recupero(&r);
+        assert_eq!(prova.0.to_vec(), esa("e32fa610c5e29957383dfa393316c665f9ba7aee85a8a6e1c60a7ceaee9f4b99"));
+        assert_eq!(cassaforte.0.to_vec(), esa("926154ec01673d40dfa411f9d3f6a222fe8fa47e842d46e628e89a222bd1aa8c"));
+        let testo = scrivi_recupero(&r);
+        assert_eq!(testo, "EJTC-EJTC-EJTC-EJTC-EJTC-EJTC-EJTC-EJTC-EJTC-EJTC-EJTC-EJTC-EJTA");
+        assert_eq!(leggi_recupero(&testo.to_lowercase().replace('-', " ")), Some(r));
+        assert_eq!(leggi_recupero("EJTC"), None);
+        assert_eq!(leggi_recupero(&testo.replace('E', "0")), None);
+        let avvolta = "HIdC6mVNUdCxVM00QB8fNCaJjDVM9d4v3UT0hA0cjNgwFKl9rqsudB285Ee0Gf99PrBiRpsqiJDYf4lwFjnGnyoZ8KxGWIYU";
+        assert_eq!(svolgi_chiave_dati_recupero(&cassaforte, avvolta).unwrap().0, [0x33; 32]);
+    }
+
+    #[test]
+    fn la_chiave_dati_riavvolta_si_riapre_con_la_sua_cassaforte() {
+        let cassaforte = Chiave([5; 32]);
+        let avvolta = avvolgi_chiave_dati(&cassaforte, &Chiave([9; 32]), false);
+        assert_eq!(svolgi_chiave_dati(&cassaforte, &avvolta).unwrap().0, [9; 32]);
+        assert!(svolgi_chiave_dati_recupero(&cassaforte, &avvolta).is_none());
+        let di_recupero = avvolgi_chiave_dati(&cassaforte, &Chiave([9; 32]), true);
+        assert_eq!(svolgi_chiave_dati_recupero(&cassaforte, &di_recupero).unwrap().0, [9; 32]);
+    }
+
+    #[test]
+    fn la_password_almeno_12_caratteri_e_non_tra_le_piu_comuni() {
+        assert!(problema_password("corta12345").unwrap().contains("12 caratteri"));
+        assert!(problema_password("Password1234").unwrap().contains("più usate"));
+        assert!(problema_password("zzzzzzzzzzzzzz").unwrap().contains("più usate"));
+        assert_eq!(problema_password("àèìòù àèìòù xy"), None);
+        assert_eq!(problema_password("una frase lunga e mia"), None);
     }
 
     #[test]

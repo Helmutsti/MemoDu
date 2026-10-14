@@ -554,3 +554,4 @@
 | 14/10/2026 | Agente IA | Fase 8 di RF-14 e RF-16: CA-14.23 … CA-14.36 (superati CA-14.7, CA-14.12, CA-14.16), CA-16.1 … CA-16.6, CA-10.17, TC-174 … TC-194; da approvare | DEC-132 |
 | 14/10/2026 | Manuel Cucca | Fase 8 di RF-14 e RF-16 approvata: criteri, piano di test, testi «Le due password non sono uguali.» e «Password attuale non corretta.», cinque attività di sviluppo | DEC-132 |
 | 14/10/2026 | Agente IA | DEC-132, attività 1: server con account e dispositivi nel database, gettone del dispositivo (DEC-133), sincronizzazione per account, migrazione dell'utente fisso, comando degli account; 47 prove automatiche | DEC-132, DEC-133 |
+| 14/10/2026 | Agente IA | DEC-132, attività 2: nucleo con la sessione del dispositivo senza scadenza, cambio della password, recupero, dispositivi collegati, nome cifrato del dispositivo; 133 prove e accesso vero contro l'API in locale | DEC-132, DEC-133 |
