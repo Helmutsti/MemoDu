@@ -3,7 +3,7 @@
 <!-- Fase 1 della guida, con i criteri di accettazione della Fase 8. Copia il blocco per ogni requisito. -->
 
 ## RF-18 – Brainet, il diario a rete
-**Priorità:** da decidere · **Origine:** ID-39, DEC-134 · **Fase:** 1 · **Stato:** In progettazione
+**Priorità:** Must (scelta di Manuel Cucca del 14/10/2026: nella versione dopo la 1.2.0) · **Origine:** ID-39, DEC-134 · **Fase:** 1 · **Stato:** In progettazione
 
 Come *utente* voglio scrivere un flusso di pensiero nel tempo, collegato a persone, oggetti, eventi e argomenti, per ritrovare tutto quello che ho pensato su ognuno di loro senza dover creare e ordinare file.
 
@@ -46,7 +46,7 @@ Nelle Impostazioni accendo «Usa Brainet», e nella colonna compare la sezione B
 - Dove si assegna il tipo a un'entità nata senza tipo (prima il Database, ora Entità). Fermo: l'entità nasce subito senza interrompere la scrittura; il resto si definisce più avanti, non è urgente (Manuel Cucca, 14/10/2026).
 - ~~La stessa persona scritta con nomi diversi: unire due entità.~~ Deciso il 14/10/2026: vedi «Unire due entità».
 - ~~Sincronizzazione e cifratura di frammenti, entità, aree e stati: come le note?~~ Deciso il 14/10/2026: vedi «Sincronizzazione».
-- Priorità di RF-18.
+- ~~Priorità di RF-18.~~ Must, nella versione dopo la 1.2.0 (14/10/2026).
 
 ### Criteri di accettazione
 - [Fase 8]

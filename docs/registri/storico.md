@@ -585,3 +585,4 @@
 | 14/10/2026 | Manuel Cucca | RF-18: dove si assegna il tipo resta da definire, non urgente; fermo che l'entità nasce senza interrompere | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18: due entità si uniscono in Entità con il tasto destro, «Unisci a…»; resta il nome di quella scelta | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18: Brainet si sincronizza e si cifra come le note, con lo stesso account | DEC-134 |
+| 14/10/2026 | Manuel Cucca | RF-18 Must, nella versione dopo la 1.2.0; la progettazione continua adesso | DEC-134 |
