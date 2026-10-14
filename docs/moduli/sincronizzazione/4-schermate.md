@@ -44,10 +44,11 @@ Al posto della finestra principale e della nota rapida quando la copia di lavoro
 ---
 
 ## SC-05 – Accesso
-**Flussi:** FL-08 · **Componenti:** modulo di accesso (CMP-22), campo di testo con password (CMP-03), pulsante, messaggio in linea
+**Flussi:** FL-08, FL-14 · **Componenti:** modulo di accesso (CMP-22), campo di testo con password (CMP-03), pulsante, messaggio in linea
 
 - **Wireframe:** [accesso](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-181) · [email o password errate](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=38-196) (approvati da Manuel Cucca il 06/10/2026)
 - **Esportazioni:** `immagini/SC-05.png`, `immagini/SC-05-errore.png`
+- **Wireframe del recupero (DEC-132, approvati da Manuel Cucca il 14/10/2026):** [recupero](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=85-195) · [chiave di recupero nuova](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=85-280); esportazioni `immagini/SC-05-recupero.png`, `immagini/SC-05-chiave-nuova.png`. Nell'accesso, sotto la password, il collegamento «Password dimenticata?» (anche nei due wireframe qui sopra, esportazioni rifatte il 14/10/2026); i mockup sono da rifare in Fase 6
 - **Mockup (approvati da Manuel Cucca il 06/10/2026):** [accesso](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=210-2936) · [email o password errate](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=210-3109); esportazioni `immagini/SC-05-mockup.png`, `immagini/SC-05-errore-mockup.png`
 
 **Attiva con DEC-121**, che supera DEC-19. Si apre da «Accedi» nel box dell'account delle impostazioni (SC-06, DEC-122) o dall'avviso «Accedi di nuovo per sincronizzare» (RB-87); non compare all'avvio, che resta sulla copia di lavoro (RNF-01).
@@ -61,3 +62,66 @@ Finestra sopra le note velate (livello 40, scelta di Manuel Cucca il 06/10/2026)
 | Caricamento | Dopo Accedi, Accedi in caricamento mentre il dispositivo calcola Argon2id (circa mezzo secondo) e il server risponde | — |
 | Errore | Email o password errate, oppure server irraggiungibile: messaggio in linea sopra i pulsanti | «Email o password non corrette.»; server irraggiungibile: «Non riesco a raggiungere il server. Riprova tra poco.» |
 | Successo | Si torna dove si era e la sincronizzazione parte; si resta collegati (RB-86) | — |
+
+**Recupero (DEC-132, FL-14, RB-99).** «Password dimenticata?» cambia il contenuto della stessa finestra (scelta di Manuel Cucca il 14/10/2026): titolo «Recupera l'account», una riga di spiegazione, email, chiave di recupero, password nuova due volte, la casella «Scollega gli altri miei dispositivi» e i pulsanti «Torna all'accesso» e «Recupera». Dopo la conferma del server la finestra mostra la chiave di recupero nuova, una volta sola, con «Copia» e il promemoria di mandarla a Manuel Cucca durante la prova; «Ho conservato la chiave» chiude e il dispositivo risulta collegato. La stessa schermata della chiave nuova chiude il cambio della password fatto con la chiave (SC-08). Testi: proposta dell'agente approvata con i wireframe il 14/10/2026, definitivi in Fase 6.
+
+| Stato | Descrizione | Testo mostrato |
+|---|---|---|
+| Recupero, vuoto | Email già scritta se c'era nell'accesso | «Recupera l'account», «Scrivi la chiave di recupero e scegli una password nuova. Le tue note restano tutte.» |
+| Recupero, caricamento | «Recupera» in caricamento | — |
+| Recupero, errore | Chiave non corretta, password nuova non valida (RB-88) o server irraggiungibile: messaggio in linea sopra i pulsanti | «Chiave di recupero non corretta.»; per la password, il motivo; server: come nell'accesso |
+| Chiave nuova | Dopo la conferma del server | «La tua nuova chiave di recupero», «La vedi solo adesso. Conservala: ti serve se dimentichi la password. Quella di prima non vale più.», «Durante la prova mandala a Manuel Cucca, che conserva le chiavi di tutti.» |
+
+---
+
+## SC-08 – Cambia password
+**Flussi:** FL-14 · **Regole:** RB-88, RB-98, RB-99 · **Componenti:** finestra, campo di testo, collegamento, casella, messaggio in linea, pulsanti
+
+- **Wireframe (DEC-132, approvati da Manuel Cucca il 14/10/2026):** [cambia password](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=85-353) · [con la chiave di recupero, chiave non corretta](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=85-477); esportazioni `immagini/SC-08.png`, `immagini/SC-08-chiave-errata.png`
+
+Finestra sopra le impostazioni velate (livello 40), aperta da «Cambia password» nel box dell'account di SC-06 (scelta di Manuel Cucca il 14/10/2026). Campo della password attuale con sotto il collegamento «Usa la chiave di recupero», che lo scambia con il campo della chiave (e il collegamento diventa «Usa la password attuale»); password nuova due volte; casella «Scollega gli altri miei dispositivi»; «Annulla» e «Cambia password». Dopo un cambio fatto con la chiave si mostra la chiave nuova come in SC-05 (RB-99). Questo dispositivo resta collegato.
+
+| Stato | Descrizione | Testo mostrato |
+|---|---|---|
+| Vuoto | Campi vuoti, casella spenta | «Cambia password» |
+| Caricamento | «Cambia password» in caricamento | — |
+| Errore | Password attuale o chiave non corretta, password nuova non valida (RB-88), le due nuove diverse, server irraggiungibile: messaggio in linea sopra i pulsanti | «Password attuale non corretta.», «Chiave di recupero non corretta.»; server: «Non riesco a raggiungere il server. Riprova tra poco.» |
+| Successo | La finestra si chiude; con la chiave, prima la chiave nuova | — |
+
+---
+
+## SC-09 – Dispositivi collegati
+**Flussi:** FL-15 · **Regole:** RB-100, RB-89 · **Componenti:** finestra, riquadro con righe, pulsanti, messaggio in linea
+
+- **Wireframe (DEC-132, approvati da Manuel Cucca il 14/10/2026):** [elenco](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=85-603) · [conferma](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=85-732) · [server non raggiungibile](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=85-863); esportazioni `immagini/SC-09.png`, `immagini/SC-09-conferma.png`, `immagini/SC-09-non-raggiungibile.png`
+
+Finestra sopra le impostazioni velate (livello 40), aperta da «Dispositivi collegati» nel box dell'account di SC-06. Una riga di spiegazione, poi i dispositivi nel riquadro come le righe delle impostazioni: nome, tipo e ultima sincronizzazione; questo dispositivo è segnato e non ha «Scollega» (si esce con Esci, RB-89). «Scollega» chiede conferma dentro la riga stessa, senza una seconda finestra: «Annulla» e «Scollega»; dopo, la riga sparisce. «Chiudi» chiude la finestra. Parola «Scollega» e conferma nella riga: proposta dell'agente approvata da Manuel Cucca il 14/10/2026.
+
+| Stato | Descrizione | Testo mostrato |
+|---|---|---|
+| Vuoto | Solo questo dispositivo: una riga | — |
+| Caricamento | L'elenco arriva dal server | — |
+| Errore | Server irraggiungibile: messaggio in linea al posto dell'elenco | «Server non raggiungibile. Riprova tra poco.» |
+| Conferma | La riga del dispositivo diventa la domanda | «Scollegare «MacBook dell'ufficio»?», «Le note su quel computer restano, ma non si sincronizzano più.» |
+| Successo | La riga sparisce | — |
+
+---
+
+## Wireflow – account nel database (DEC-132)
+
+```mermaid
+flowchart LR
+    SC06[SC-06 Impostazioni, collegato] -- Cambia password --> SC08[SC-08 Cambia password]
+    SC08 -- Usa la chiave di recupero --> SC08k[SC-08 con la chiave]
+    SC08k -- Usa la password attuale --> SC08
+    SC08 -- Cambia password --> SC06
+    SC08k -- Cambia password --> Kn[SC-05 Chiave nuova] -- Ho conservato la chiave --> SC06
+    SC08 -- Annulla, Esc --> SC06
+    SC06 -- Dispositivi collegati --> SC09[SC-09 Dispositivi collegati]
+    SC09 -- Scollega --> Conf[Conferma nella riga] -- Scollega --> SC09
+    Conf -- Annulla --> SC09
+    SC09 -- Chiudi, Esc --> SC06
+    SC05[SC-05 Accesso] -- Password dimenticata? --> Rec[SC-05 Recupero]
+    Rec -- Torna all'accesso --> SC05
+    Rec -- Recupera --> Kn2[SC-05 Chiave nuova] -- Ho conservato la chiave --> SC01[SC-01 Finestra principale, collegato]
+```

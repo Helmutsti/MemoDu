@@ -113,6 +113,8 @@ Si apre dalla riga **Impostazioni** in fondo alla colonna, sotto il Cestino, al 
 | Generale | Scorciatoia della nota rapida: clic sul campo e si preme la combinazione nuova; se un altro programma la usa già lo si dice e resta la vecchia; «Ripristina» torna al default (separata per Windows e macOS e sincronizzata, RB-52). Avvia Memodu all'accensione: interruttore, spento di default, solo su questo dispositivo. Tieni Memodu in primo piano: interruttore, spento di default, solo su questo dispositivo; la finestra principale resta sopra gli altri programmi (DEC-93, resta qui per DEC-122). Tema: Sistema · Chiaro · Scuro, di default Sistema; solo su questo dispositivo |
 | Ricerca | «Mostra le note del cestino nei risultati»: interruttore, acceso di default, sincronizzato come la scorciatoia (RB-29, RB-52, DEC-94) |
 
+Con DEC-132 nel box dell'account, sotto l'email e lo stato, ci sono i collegamenti «Cambia password» (apre SC-08) e «Dispositivi collegati» (apre SC-09), solo dopo l'accesso (scelta di Manuel Cucca il 14/10/2026; [wireframe aggiornato](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=75-260), esportazione `immagini/SC-06-collegato.png` rifatta il 14/10/2026; mockup da rifare in Fase 6).
+
 Le sezioni Sincronizzazione, Tema e Dispositivo non ci sono più (DEC-122): stato, account e nome del dispositivo stanno nel box dell'account, il tema in Generale.
 
 ### Stati della schermata
@@ -172,7 +174,10 @@ Elementi che si ripetono, notati disegnando i wireframe. Sono l'ingresso della F
 | Campo nome nell'albero | Crea o rinomina una cartella sul posto, con il nome selezionato (RB-48) | SC-01 |
 | Cestino durante il trascinamento | Zona di rilascio in fondo alla colonna, solo mentre si trascina | SC-01 |
 | Elemento del cestino | Icona, nome, provenienza e data, Ripristina | SC-04 |
-| Riga di impostazione | Etichetta a sinistra, controllo a destra | SC-06 |
+| Riga di impostazione | Etichetta a sinistra, controllo a destra | SC-06, SC-09 |
+| Collegamento | Testo sottolineato che porta altrove o cambia un campo: «Password dimenticata?», «Cambia password», «Usa la chiave di recupero» (DEC-132) | SC-05, SC-06, SC-08 |
+| Casella | Una scelta sì o no con la sua etichetta: «Scollega gli altri miei dispositivi» (DEC-132) | SC-05, SC-08 |
+| Chiave da conservare | Testo da copiare in un riquadro, con «Copia» (DEC-132) | SC-05 |
 | Stato vuoto | Spiegazione più azione, al posto di una lista vuota | SC-01, SC-03 |
 | Icona in background | Area di notifica (Windows) o barra dei menu (macOS): apre la nota rapida e il programma | Fuori dalle schermate |
 
