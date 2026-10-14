@@ -592,3 +592,4 @@
 | 14/10/2026 | Manuel Cucca | RF-18 Fase 2: le note di CLOUD si importano in Brainet dal menu della colonna, «Importa in Brainet» › Copia o Sposta | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18 Fase 2: spegnere Brainet vuol dire cancellare tutto, con la conferma «Annulla» / «Spegni e cancella tutto» | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18 Fase 2: togliendo uno stato Memodu propone di cambiarlo; tolto, sparisce dalle aree, e un'area sparisce solo se era il suo ultimo legame | DEC-134 |
+| 14/10/2026 | Manuel Cucca | RF-18 Fase 2: una nota importata in Brainet prende le date della nota | DEC-134 |
