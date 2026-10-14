@@ -3,7 +3,7 @@
 <!-- Fase 1 della guida, con i criteri di accettazione della Fase 8. Copia il blocco per ogni requisito. -->
 
 ## RF-10 – Sincronizzazione cloud cifrata end-to-end
-**Priorità:** Must · **Origine:** DEC-01, DEC-02, DEC-06, DEC-121 · **Fase:** 9 · **Stato:** Implementato (cifrata end-to-end con DEC-121) (rilasciato fino alla 0.1.13, 07/10/2026)
+**Priorità:** Must · **Origine:** DEC-01, DEC-02, DEC-06, DEC-121, DEC-132 · **Fase:** 9 · **Stato:** Implementato (cifrata end-to-end con DEC-121) (rilasciato fino alla 0.1.13, 07/10/2026)
 
 Come *utente* voglio che tutte le mie note siano sincronizzate nel cloud con cifratura end-to-end per avere l'intera struttura a disposizione su ogni dispositivo, senza che altri possano leggerla.
 
@@ -11,7 +11,7 @@ Il cloud è la fonte di verità. Sul dispositivo resta una copia di lavoro su cu
 
 Se una nota è stata modificata su un solo dispositivo, si salva la versione più aggiornata. Se la stessa nota è stata modificata su due dispositivi c'è un conflitto: il programma salva entrambe le versioni e nessun dato va perso (DEC-06): una resta la nota originale, l'altra diventa una nota indipendente nella stessa cartella, con lo stesso titolo seguito da "(copia in conflitto)" (RB-39).
 
-Per sincronizzare il dispositivo deve aver fatto l'accesso (RF-14). La cifratura avviene sul dispositivo: le note si cifrano con la chiave dati, che si apre con la password o con la chiave di recupero; il server vede solo blocchi illeggibili (DEC-08, DEC-121).
+Per sincronizzare il dispositivo deve aver fatto l'accesso (RF-14). La cifratura avviene sul dispositivo: le note si cifrano con la chiave dati, che si apre con la password o con la chiave di recupero; il server vede solo blocchi illeggibili (DEC-08, DEC-121). Con più utenti in prova i blocchi e le versioni di ogni utente sono separati sul server: un dispositivo legge e scrive solo quelli del suo account (DEC-132).
 
 **Collegamenti:** FL-07 · EN-06 · EN-08 · SC-01 · RNF-02
 
@@ -42,23 +42,28 @@ Scritti dall'agente dai flussi e dalle decisioni (FL-07, DEC-75 … DEC-83). Con
 ---
 
 ## RF-14 – Accesso all'installazione
-**Priorità:** Must · **Origine:** DEC-05, DEC-121 · **Fase:** 9 · **Stato:** Implementato (email e password dell'utente fisso, DEC-121) (rilasciato fino alla 0.1.13, 07/10/2026)
+**Priorità:** Must · **Origine:** DEC-05, DEC-121, DEC-132 · **Fase:** 2 · **Stato:** In progettazione (account nel database, DEC-132); implementato con l'utente fisso di DEC-121 (rilasciato fino alla 0.1.13, 07/10/2026)
 
-Come *utente* voglio accedere una volta con email e password per sincronizzare le mie note cifrate, restare collegato senza ripetere l'accesso e poter uscire da un dispositivo.
+> DEC-132 (13/10/2026): requisito riaperto dalla Fase 1 per gli account nel database. Lo scenario d'uso è riscritto per gli account nel database (approvato da Manuel Cucca il 14/10/2026); i criteri di accettazione qui sotto valgono per l'utente fisso e si riscrivono in Fase 8, dopo flussi e mockup.
 
-- L'installazione è personale: un solo utente e nessuna registrazione (DEC-05, DEC-13). Per ora l'utente è fisso: lo crea, con email e password, un comando del server, e l'app non crea account (DEC-121).
+Come *utente* voglio accedere una volta con email e password per sincronizzare le mie note cifrate, restare collegato senza ripetere l'accesso, cambiare la password, recuperare l'account se la dimentico e poter uscire da un dispositivo.
+
+- Più utenti, per la prova: ognuno ha il suo account e sul server nessuno legge le note degli altri. Nessuna registrazione dall'app: gli account li crea Manuel Cucca con un comando del server che scrive nel database (DEC-132). L'utente fisso di oggi diventa il primo account, con la stessa chiave dati: le note non si ricifrano.
 - L'accesso avviene in SC-05 con email e password (RB-86). Dalla password, sul dispositivo, si ricavano la prova per il server e la chiave che apre la chiave dati: il server non vede mai né la password né la chiave (DEC-121).
-- Dopo l'accesso si resta collegati: il gettone dura 30 giorni e l'app lo rinnova da sola (RB-86). Gettone e chiave dati stanno nel portachiavi del sistema.
-- Senza accesso, o con il gettone scaduto o rifiutato, Memodu si apre comunque sulla copia di lavoro e non si blocca mai: le modifiche aspettano e un avviso porta a SC-05 (RB-87). Senza rete si lavora come sempre (DEC-02). L'avvio resta istantaneo (RNF-01).
+- Dopo l'accesso si resta collegati: ogni dispositivo ha il suo accesso, che non scade e dura finché si esce o finché lo si chiude a distanza (RF-16, DEC-132). Accesso e chiave dati stanno nel portachiavi del sistema.
+- Senza accesso, o con l'accesso chiuso o rifiutato, Memodu si apre comunque sulla copia di lavoro e non si blocca mai: le modifiche aspettano e un avviso porta a SC-05 (RB-87). Senza rete si lavora come sempre (DEC-02). L'avvio resta istantaneo (RNF-01).
 - La password ha almeno 12 caratteri, senza regole di complessità, e non può essere una delle più comuni (RB-88).
+- Dall'app si cambia la password; al cambio la persona sceglie se scollegare gli altri suoi dispositivi, che dovranno rifare l'accesso con la password nuova (scelta di Manuel Cucca il 13/10/2026). Le note non si ricifrano.
 - «Esci» nel box dell'account delle impostazioni (SC-06, DEC-122) scollega il dispositivo; la copia di lavoro resta (RB-89).
-- Password persa: con la chiave di recupero stampata alla creazione dell'utente se ne sceglie una nuova senza perdere le note (RB-90, procedura nel runbook).
-- Nessun limite ai tentativi di accesso, per ora (rinvio in `avanzamento.md`).
+- Password persa: dall'app, con la chiave di recupero stampata alla creazione dell'account, se ne sceglie una nuova senza perdere le note (RB-90, DEC-132). Al recupero nasce una chiave di recupero nuova, mostrata una volta, e quella usata smette di valere (scelta di Manuel Cucca il 13/10/2026). Durante la prova le chiavi di recupero le conserva Manuel Cucca: la chiave nuova la vede solo l'utente, che ha cura di mandarla a Manuel Cucca, e solo in questa fase di prova (scelta di Manuel Cucca il 14/10/2026).
+- Nessun limite ai tentativi di accesso durante la prova (DEC-132, rischio accettato in `avanzamento.md`).
 
 **Collegamenti:** FL-08 · EN-05 · EN-06 · SC-05 · SC-06 · RF-10 · RNF-02
 
 ### Scenario d'uso
-Creo l'utente sul server con il comando, stampo la chiave di recupero e la metto al sicuro. Apro Memodu sul PC Windows: le note della copia di lavoro ci sono subito; dal box dell'account in cima alle impostazioni accedo con email e password e le note si sincronizzano cifrate. Faccio lo stesso sul Mac. Per un mese non devo più accedere; se un computer resta spento più a lungo, alla riapertura scrivo come sempre e un avviso mi chiede di accedere di nuovo.
+Creo dal server l'account di una collega che vuole provare Memodu, con la sua email e una prima password: il comando mi mostra la sua chiave di recupero, che conservo io. Le mando email e password. Lei installa Memodu, accede dalle impostazioni e cambia subito la password con una sua. Vede solo le sue note, io solo le mie. Il suo computer resta collegato senza più chiederle l'accesso. Un mese dopo dimentica la password: dalla schermata di accesso sceglie di recuperare l'account, inserisce la chiave di recupero che le ridò e una password nuova; l'app le mostra una chiave nuova una sola volta e lei me la manda. Le note ci sono tutte. Più tardi perde il portatile: dal computer fisso vede l'elenco dei dispositivi collegati e chiude quello perso (RF-16).
+
+Lo scenario precedente, per l'utente fisso di DEC-121: ~~Creo l'utente sul server con il comando, stampo la chiave di recupero e la metto al sicuro. Apro Memodu sul PC Windows: le note della copia di lavoro ci sono subito; dal box dell'account in cima alle impostazioni accedo con email e password e le note si sincronizzano cifrate. Faccio lo stesso sul Mac. Per un mese non devo più accedere; se un computer resta spento più a lungo, alla riapertura scrivo come sempre e un avviso mi chiede di accedere di nuovo.~~
 
 ### Criteri di accettazione
 Scritti dall'agente dai flussi, dalle regole e dai mockup (FL-08, RB-86 … RB-90, DEC-121), approvati da Manuel Cucca il 06/10/2026. Numerati dopo quelli superati. Con DEC-122 la riga Account e la sezione Sincronizzazione diventano il box dell'account in cima a SC-06: CA-14.8, CA-14.9 e CA-14.14 si riscrivono in Fase 6, dopo i mockup nuovi.
@@ -109,7 +114,7 @@ Anche se si sviluppa dopo la prima fase, il modo in cui si salvano le note deve 
 ---
 
 ## RF-16 – Elenco dei dispositivi e uscita a distanza
-**Priorità:** Should · **Origine:** — · **Fase:** 1 · **Stato:** In progettazione
+**Priorità:** Must (da Should, DEC-132) · **Origine:** DEC-132 · **Fase:** 2 · **Stato:** In progettazione
 
 > Da ripensare (DEC-13, DEC-121): nell'architettura temporanea di DEC-121 tutti i dispositivi condividono il segreto dei gettoni e non se ne può far uscire uno solo; nell'architettura finale ognuno ha il suo gettone di rinnovo, che si può revocare. Senza web cade l'esempio del browser dimenticato aperto, e uscendo la copia di lavoro resta (RB-89).
 
@@ -120,7 +125,7 @@ Nell'elenco: nome, tipo e ultima sincronizzazione di ogni dispositivo (EN-06), c
 **Collegamenti:** FL-00 · EN-06 · SC-00 · RF-14
 
 ### Scenario d'uso
-[Da compilare]
+Nello scenario d'uso di RF-14: chi perde il portatile vede dal computer fisso l'elenco dei dispositivi collegati e chiude quello perso (approvato da Manuel Cucca il 14/10/2026).
 
 ### Criteri di accettazione
 - [Da compilare]
