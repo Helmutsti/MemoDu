@@ -545,3 +545,4 @@
 | 14/10/2026 | Manuel Cucca | Fase 5 di DEC-132: inventario dei componenti approvato; per i collegamenti si usa il pulsante tenue (CMP-01) così com'è, senza un componente nuovo | DEC-132 |
 | 14/10/2026 | Manuel Cucca | Fase 5 di DEC-132: casella quadrata come nei wireframe (CMP-33) e via libera ai componenti composti nuovi (CMP-34 Chiave da conservare, CMP-35 Cambia password, CMP-36 Dispositivi collegati) | DEC-132 |
 | 14/10/2026 | Manuel Cucca | Componenti dell'account approvati; token nuovo `raggio-casella` = 4 per la casella quadrata | DEC-132 |
+| 14/10/2026 | Manuel Cucca | Fase 5 di DEC-132 chiusa: libreria pubblicata con CMP-33 … CMP-36, CMP-22 e CMP-32 aggiornati | DEC-132 |
