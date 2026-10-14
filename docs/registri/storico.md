@@ -594,3 +594,4 @@
 | 14/10/2026 | Manuel Cucca | RF-18 Fase 2: togliendo uno stato Memodu propone di cambiarlo; tolto, sparisce dalle aree, e un'area sparisce solo se era il suo ultimo legame | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18 Fase 2: una nota importata in Brainet prende le date della nota | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18 Fase 2: importando in Brainet, per ora tag e cartella si perdono | DEC-134 |
+| 14/10/2026 | Agente IA | RF-18 Fase 2: flussi FL-16 … FL-22 e regole RB-101 … RB-112 scritti, da approvare | DEC-134 |
