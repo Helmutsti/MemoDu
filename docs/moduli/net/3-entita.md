@@ -55,7 +55,7 @@ erDiagram
 
 - **Chi lo crea:** l'utente, scrivendo; il sistema, importando una nota.
 - **Chi lo modifica:** l'utente, dal Database.
-- **Cancellazione:** definitiva, spegnendo Brainet (RB-111). Togliere un singolo frammento: da decidere.
+- **Cancellazione:** un singolo frammento si elimina dal Database con il tasto destro, «Elimina»: va nel Cestino, in una parte dedicata a Brainet, e con lui spariscono le sue citazioni e le sue aree; dal Cestino si ripristina o si elimina per sempre (scelta di Manuel Cucca del 14/10/2026). Spegnendo Brainet, tutto definitivamente (RB-111).
 - **Dati sensibili:** tutto il testo; cifrato end-to-end come le note (RF-10).
 
 ## EN-13 – Entità
@@ -117,4 +117,4 @@ erDiagram
 ## Da decidere
 - ~~Da dove arriva la foto di un'entità.~~ Dal disco, scelta dall'utente in Entità, per tutte le entità (14/10/2026).
 - ~~Se «Mostra il Database» vale solo per questo computer o per tutti.~~ Per tutti (14/10/2026).
-- Se un singolo frammento si può eliminare dal Database.
+- ~~Se un singolo frammento si può eliminare dal Database.~~ Sì, nel Cestino, in una parte dedicata a Brainet (14/10/2026).
