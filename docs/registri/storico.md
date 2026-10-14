@@ -605,3 +605,4 @@
 | 14/10/2026 | Manuel Cucca | RF-18 Fase 3: una nota Brainet si elimina dal Database e va nel Cestino, in una parte dedicata a Brainet | DEC-134 |
 | 14/10/2026 | Manuel Cucca | Fase 3 di RF-18 approvata: EN-12 … EN-16 e le impostazioni di Brainet | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18: niente wireframe in bianco e nero, si passa direttamente ai mockup | DEC-134 |
+| 14/10/2026 | Agente IA | RF-18: mockup di Brainet completati (tasto destro in Database e in Entità, Unisci a…, conferma dell'unione, Cestino con la parte di Brainet, Importa in Brainet, conferma per spegnere, avviso «spento da un altro computer», menu dalla linguetta con le spunte); blocco rinominato «FL-16 … FL-22 · Brainet» e messo in ordine di flusso; scritto `moduli/net/4-schermate.md` con SC-10, SC-11, SC-12 (proposta) | DEC-134 |
