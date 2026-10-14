@@ -575,3 +575,4 @@
 | 14/10/2026 | Manuel Cucca | RF-18: le aree si evidenziano come con un evidenziatore invece di sottolinearle | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18: la nota nuova si crea con il + accanto a Brainet, come nelle altre sezioni; tolta la voce «Nuova nota Brainet» | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18: le evidenziature si possono associare anche a stati, come «importante» | DEC-134 |
+| 14/10/2026 | Manuel Cucca | RF-18: un'area si lega a più entità e più stati; le pillole sono citazioni senza area; un'area con una pillola prende da sola quell'entità; gli stati sono un elenco breve e personalizzabile, ognuno con un colore | DEC-134 |
