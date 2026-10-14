@@ -111,13 +111,15 @@ flowchart TD
 flowchart TD
     A[In Entità, tasto destro su una riga] --> B[Unisci a…]
     B --> C[Scelgo l'altra entità - RB-108]
-    C --> D[Resta l'entità scelta, con il suo nome; citazioni e aree dell'altra passano a lei - RB-108]
+    C --> X[Conferma: quante citazioni e aree si spostano; Annulla o Unisci - RB-108]
+    X -- Annulla --> A
+    X -- Unisci --> D[Resta l'entità scelta, con il suo nome; citazioni e aree dell'altra passano a lei - RB-108]
 ```
 
 ### Sfighe gestite
 | Sfiga | Rilevamento | Comunicazione | Via d'uscita |
 |---|---|---|---|
-| SF-05 Cambio idea | Unione sbagliata | Nessuna | Da decidere: annullare l'unione (proposta dell'agente: Ctrl + Z subito dopo) |
+| SF-05 Cambio idea | Unione sbagliata | La finestra di conferma, con quante citazioni e aree si spostano | «Annulla» prima di unire; dopo non si torna indietro (RB-108) |
 | SF-22 Modifica simultanea | La stessa entità usata su un altro computer mentre si unisce | Nessuna | Le citazioni nuove arrivate dopo passano anch'esse all'entità che resta (RB-108) |
 
 ---
@@ -184,7 +186,7 @@ flowchart TD
 
 ## Punti da decidere nei flussi
 - ~~Cosa fa un clic su un giorno del Calendario.~~ Niente: il Calendario si guarda soltanto (scelta di Manuel Cucca del 14/10/2026, RB-113).
-- Come si annulla un'unione di entità sbagliata (FL-19).
+- ~~Come si annulla un'unione sbagliata (FL-19).~~ Prima di unire una finestra chiede conferma, con quante citazioni e aree si spostano; poi non si annulla (scelta di Manuel Cucca del 14/10/2026, RB-108).
 - Cosa vede chi sta scrivendo quando Brainet viene cancellato da un altro computer (FL-20).
 - Se Brainet, spento su un computer, resta acceso sugli altri: oggi spegnere cancella tutto, quindi vale per tutti.
 
@@ -198,7 +200,7 @@ flowchart TD
 | RB-105 | «Crea «…»» fa nascere l'entità senza tipo, senza interrompere la scrittura; il tipo si assegna più avanti | FL-17 |
 | RB-106 | «Usa Brainet» spento: niente Brainet né nella colonna né nelle Impostazioni, a parte l'interruttore. «Mostra il Database» spento: la voce Database sparisce dalla colonna, i dati restano | FL-16, FL-20 |
 | RB-107 | Un'area è una frase evidenziata legata a uno o più stati ed entità, scelti dal menu della selezione; un'area che contiene una pillola prende anche l'entità citata | FL-17, FL-18 |
-| RB-108 | «Unisci a…» in Entità: resta l'entità scelta, con il suo nome; citazioni e aree dell'altra passano a lei | FL-19 |
+| RB-108 | «Unisci a…» in Entità: una finestra chiede conferma e dice quante citazioni e aree si spostano; unite, resta l'entità scelta con il suo nome e citazioni e aree dell'altra passano a lei; l'unione non si annulla | FL-19 |
 | RB-109 | Passando sopra un'area compaiono il riquadro e la linguetta con i suoi legami; la freccia apre il menu con le voci spuntate; tolte tutte, l'area sparisce | FL-18 |
 | RB-110 | Gli stati sono un elenco breve nelle Impostazioni, ognuno con un colore; togliendone uno Memodu propone di cambiarlo, e tolto sparisce dalle aree, che spariscono solo se era il loro ultimo legame | FL-18, FL-21 |
 | RB-111 | Spegnere Brainet vuol dire cancellarlo: conferma con «Annulla» e «Spegni e cancella tutto»; si cancellano note, entità, aree e stati su tutti i computer | FL-20 |
