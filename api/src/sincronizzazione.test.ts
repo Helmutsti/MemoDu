@@ -11,16 +11,18 @@ import { ArchivioSincronizzazione } from "./sincronizzazione.js";
 
 const A = "7d1c4a52-6b8f-4c1e-9a3d-2f5e8b7c6a10";
 const B = "0b9e8d7c-6f5a-4b3c-8d2e-1a0f9e8d7c6b";
-// L'utente fisso delle prove, con Argon2id leggero: le richieste portano il suo JWT (DEC-121).
+// Un account delle prove, con Argon2id leggero: le richieste portano il gettone del suo
+// dispositivo (DEC-133).
 const LEGGERO: ParametriArgon2 = { memoria: 1024, passaggi: 1, fili: 1 };
 const { dati } = creaUtente("prove@memodu.example", "una frase lunga e mia", {}, LEGGERO);
-const accesso = new Accesso(dati, Buffer.alloc(32, 7).toString("base64url"));
-const { gettone } = accesso.accedi(
-  dati.email,
-  daPassword("una frase lunga e mia", Buffer.from(dati.sale, "base64url"), LEGGERO).prova.toString(
-    "base64url",
-  ),
-)!;
+const prova = daPassword(
+  "una frase lunga e mia",
+  Buffer.from(dati.sale, "base64url"),
+  LEGGERO,
+).prova.toString("base64url");
+let accesso: Accesso;
+let gettone: string;
+let UTENTE: string;
 
 let db: Database;
 let orologio: Date;
@@ -31,6 +33,10 @@ let server: FastifyInstance;
 beforeAll(async () => {
   db = await daPglite();
   await aggiornaSchema(db);
+  accesso = new Accesso(db, Buffer.alloc(32, 7).toString("base64url"));
+  await accesso.creaAccount(dati);
+  gettone = (await accesso.accedi(dati.email, prova, "windows"))!.gettone;
+  UTENTE = (await accesso.autorizza(gettone))!.utente;
 });
 afterAll(() => db.chiudi());
 beforeEach(async () => {
@@ -66,7 +72,7 @@ const modifiche = async (dopo = 0) =>
     archivio: string;
   }>();
 
-describe("autorizzazione (RB-57, DEC-83, DEC-121)", () => {
+describe("autorizzazione (RB-57, DEC-83, DEC-133)", () => {
   it("senza gettone valido risponde 401 (RB-57)", async () => {
     const senza = await server.inject({ method: "GET", url: "/sincronizzazione/modifiche" });
     const sbagliato = await server.inject({
@@ -77,7 +83,7 @@ describe("autorizzazione (RB-57, DEC-83, DEC-121)", () => {
     expect([senza.statusCode, sbagliato.statusCode]).toEqual([401, 401]);
   });
 
-  it("il gettone statico delle app senza accesso non vale più (DEC-121)", async () => {
+  it("un gettone che non è di un dispositivo collegato non vale (DEC-133)", async () => {
     const statico = Buffer.alloc(32, 1).toString("base64url");
     const r = await server.inject({
       method: "GET",
@@ -157,16 +163,16 @@ describe("elementi e versioni (DEC-75, DEC-76)", () => {
 describe("pagine delle modifiche (DEC-106)", () => {
   it("si fermano prima del limite in byte, con almeno un elemento, e dicono che ce ne sono altre", async () => {
     const ids = [A, B, "1b4e28ba-2fa1-41d2-883f-0016d3cca427"];
-    for (const id of ids) await sinc.scrivi(id, 0, "x".repeat(98));
+    for (const id of ids) await sinc.scrivi(UTENTE, id, 0, "x".repeat(98));
     // Ogni blocco viaggia come 100 byte (98 più le virgolette): ne stanno due in 250.
-    const prima = await sinc.modificheDopo(0, 500, 250);
+    const prima = await sinc.modificheDopo(UTENTE, 0, 500, 250);
     expect(prima.modifiche.map((m) => m.id)).toEqual([A, B]);
     expect(prima.altre).toBe(true);
-    const seconda = await sinc.modificheDopo(prima.ultimo, 500, 250);
+    const seconda = await sinc.modificheDopo(UTENTE, prima.ultimo, 500, 250);
     expect(seconda.modifiche.map((m) => m.id)).toEqual([ids[2]]);
     expect(seconda.altre).toBe(false);
     // Un blocco più grande del limite arriva comunque, da solo.
-    expect((await sinc.modificheDopo(0, 500, 10)).modifiche).toHaveLength(1);
+    expect((await sinc.modificheDopo(UTENTE, 0, 500, 10)).modifiche).toHaveLength(1);
   });
 });
 
@@ -223,11 +229,11 @@ describe("versioni precedenti a scalare (DEC-77, DEC-113, CA-10.11)", () => {
     // Una versione ogni 20 minuti per 10 giorni.
     for (let t = inizio; t < inizio + 10 * 86400000; t += 20 * 60000) {
       orologio = new Date(t);
-      await sinc.scrivi(A, versione, `v${versione + 1}`);
+      await sinc.scrivi(UTENTE, A, versione, `v${versione + 1}`);
       versione++;
     }
     const ora = orologio.getTime();
-    const tenute = (await sinc.versioni(A)).map((v) => ora - Date.parse(v.ora));
+    const tenute = (await sinc.versioni(UTENTE, A)).map((v) => ora - Date.parse(v.ora));
     expect(tenute[0]).toBe(0);
     // Nell'ultima ora ci sono tutte: la attuale e le due di 20 e 40 minuti prima.
     expect(tenute.filter((e) => e <= 3600000)).toHaveLength(4);
@@ -244,17 +250,17 @@ describe("passaggio alla cifratura (DEC-121, CA-10.13)", () => {
   const cifrato = JSON.stringify({ formato: "xchacha20poly1305", nonce: "AAAA", dati: "BBBB" });
 
   it("la prima versione cifrata cancella le precedenti in chiaro dello stesso elemento", async () => {
-    await sinc.scrivi(A, 0, chiaro(1));
-    await sinc.scrivi(A, 1, chiaro(2));
-    await sinc.scrivi(B, 0, chiaro(3));
-    await sinc.scrivi(A, 2, cifrato);
-    expect((await sinc.versioni(A)).map((v) => v.versione)).toEqual([3]);
-    expect((await sinc.versioni(B)).map((v) => v.versione)).toEqual([1]);
+    await sinc.scrivi(UTENTE, A, 0, chiaro(1));
+    await sinc.scrivi(UTENTE, A, 1, chiaro(2));
+    await sinc.scrivi(UTENTE, B, 0, chiaro(3));
+    await sinc.scrivi(UTENTE, A, 2, cifrato);
+    expect((await sinc.versioni(UTENTE, A)).map((v) => v.versione)).toEqual([3]);
+    expect((await sinc.versioni(UTENTE, B)).map((v) => v.versione)).toEqual([1]);
   });
 
   it("le versioni cifrate precedenti restano", async () => {
-    await sinc.scrivi(A, 0, cifrato);
-    await sinc.scrivi(A, 1, cifrato);
-    expect((await sinc.versioni(A)).map((v) => v.versione)).toEqual([2, 1]);
+    await sinc.scrivi(UTENTE, A, 0, cifrato);
+    await sinc.scrivi(UTENTE, A, 1, cifrato);
+    expect((await sinc.versioni(UTENTE, A)).map((v) => v.versione)).toEqual([2, 1]);
   });
 });

@@ -2,9 +2,10 @@
 // porta il gettone nell'intestazione Authorization e la versione del protocollo in
 // Memodu-Protocollo: senza gettone valido 401 (il client tiene le modifiche e mostra l'avviso
 // dell'accesso scaduto, RB-87), con un protocollo diverso 426 (avviso di errore, DEC-83).
-// Vale solo il JWT dell'accesso (DEC-121): il gettone statico delle app senza accesso non c'è più.
+// Il gettone è quello del dispositivo (DEC-133): dice anche di quale account sono gli elementi.
 
-import type { FastifyInstance } from "fastify";
+import type { FastifyInstance, FastifyRequest } from "fastify";
+import type { Autorizzazione } from "./accesso.js";
 import { ArchivioSincronizzazione, PROTOCOLLO, VersioneSuperata } from "./sincronizzazione.js";
 
 const schemaId = {
@@ -16,16 +17,20 @@ const schemaId = {
 export function rotteSincronizzazione(
   server: FastifyInstance,
   sinc: ArchivioSincronizzazione,
-  autorizza: (gettone: string | undefined) => boolean,
+  autorizza: (gettone: string | undefined) => Promise<Autorizzazione | null>,
+  sincronizzato: (chi: Autorizzazione) => Promise<void> = async () => undefined,
 ): void {
+  const chi = new WeakMap<FastifyRequest, Autorizzazione>();
   server.register(async (rami) => {
     rami.addHook("onRequest", async (richiesta, risposta) => {
       if (richiesta.method === "OPTIONS") return;
       const intestazione = richiesta.headers.authorization;
       const gettone = intestazione?.startsWith("Bearer ") ? intestazione.slice(7) : undefined;
-      if (!autorizza(gettone)) {
+      const autorizzazione = await autorizza(gettone);
+      if (!autorizzazione) {
         return risposta.code(401).send({ statusCode: 401, message: "Credenziali non valide" });
       }
+      chi.set(richiesta, autorizzazione);
       if (richiesta.headers["memodu-protocollo"] !== String(PROTOCOLLO)) {
         return risposta.code(426).send({
           statusCode: 426,
@@ -46,7 +51,12 @@ export function rotteSincronizzazione(
           },
         },
       },
-      (richiesta) => sinc.modificheDopo(Number(richiesta.query.dopo ?? 0)),
+      async (richiesta) => {
+        const a = chi.get(richiesta)!;
+        const esito = await sinc.modificheDopo(a.utente, Number(richiesta.query.dopo ?? 0));
+        await sincronizzato(a);
+        return esito;
+      },
     );
 
     rami.put<{ Params: { id: string }; Body: { base: number; dati: string } }>(
@@ -64,7 +74,12 @@ export function rotteSincronizzazione(
       },
       async (richiesta, risposta) => {
         try {
-          return await sinc.scrivi(richiesta.params.id, richiesta.body.base, richiesta.body.dati);
+          return await sinc.scrivi(
+            chi.get(richiesta)!.utente,
+            richiesta.params.id,
+            richiesta.body.base,
+            richiesta.body.dati,
+          );
         } catch (errore) {
           if (!(errore instanceof VersioneSuperata)) throw errore;
           return risposta.code(409).send({ attuale: errore.attuale });

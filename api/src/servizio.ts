@@ -38,7 +38,7 @@ const entro = <T>(lavoro: Promise<T>, ms: number): Promise<T> =>
 /**
  * Aggiunge al server la gestione degli errori, i controlli e le rotte. `preparazione` è lo
  * schema dell'archivio: le richieste della sincronizzazione lo aspettano, `/vivo` no. Le
- * richieste della sincronizzazione valgono solo con il JWT di `accesso` (DEC-121).
+ * richieste della sincronizzazione valgono solo con il gettone di un dispositivo (DEC-133).
  */
 export function configuraServer(
   server: FastifyInstance,
@@ -54,7 +54,6 @@ export function configuraServer(
   });
   server.addHook("onRequest", async (richiesta) => {
     if (richiesta.url === "/vivo" || richiesta.url === "/salute") return;
-    if (richiesta.url.startsWith("/accesso")) return;
     await preparazione();
   });
   // La funzione risponde, senza toccare il database.
@@ -75,7 +74,12 @@ export function configuraServer(
     }
   });
   rotteAccesso(server, accesso);
-  rotteSincronizzazione(server, sincronizzazione, (g) => accesso.autorizzato(g));
+  rotteSincronizzazione(
+    server,
+    sincronizzazione,
+    (g) => accesso.autorizza(g),
+    (chi) => accesso.sincronizzato(chi),
+  );
   return server;
 }
 

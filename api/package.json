@@ -7,7 +7,7 @@
     "start": "tsx src/index.ts",
     "test": "vitest run --passWithNoTests",
     "typecheck": "tsc --noEmit",
-    "utente": "tsx src/utente.ts"
+    "account": "tsx src/account.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",

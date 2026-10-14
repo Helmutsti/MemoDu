@@ -1,9 +1,10 @@
 // Avvio del server (Vercel lo riconosce da questo file, DEC-105).
-// - In rete: DATABASE_URL è l'indirizzo di Neon; l'utente fisso sta nelle variabili MEMODU_*
-//   stampate da `npm run utente` (DEC-121).
-// - In locale, senza DATABASE_URL: l'archivio è PGlite nella cartella dei dati e l'utente fisso
-//   in api/.env (scelta di Manuel Cucca del 06/10/2026).
-// Senza utente fisso il server non parte: la sincronizzazione vale solo con il suo JWT.
+// - In rete: DATABASE_URL è l'indirizzo di Neon; gli account stanno nel database (DEC-132) e
+//   MEMODU_SEGRETO è il segreto del server.
+// - In locale, senza DATABASE_URL: l'archivio è PGlite nella cartella dei dati e le variabili
+//   stanno in api/.env (scelta di Manuel Cucca del 06/10/2026).
+// Le variabili dell'utente fisso (DEC-121), se ci sono, servono solo alla migrazione che ne fa
+// il primo account; dopo si possono togliere.
 
 import { existsSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -11,7 +12,7 @@ import Fastify from "fastify";
 import { join } from "node:path";
 import { cartellaPredefinita } from "./cartella.js";
 import { HOST_API, PORTA_API } from "./costanti.js";
-import { Accesso, utenteDaAmbiente } from "./accesso.js";
+import { Accesso, NOME_SEGRETO, segretoDaAmbiente, utenteFissoDaAmbiente } from "./accesso.js";
 import { daPglite, daPostgres, type Database } from "./database.js";
 import { aggiornaSchema } from "./schema.js";
 import { configuraServer, opzioniServer } from "./servizio.js";
@@ -30,15 +31,13 @@ if (process.env.VERCEL && !indirizzoDatabase) {
 const inRete = Boolean(indirizzoDatabase);
 const fileUtente = fileURLToPath(new URL("../.env", import.meta.url));
 if (!inRete && existsSync(fileUtente)) process.loadEnvFile(fileUtente);
-const utente = utenteDaAmbiente(process.env);
-if (!utente) {
+const segreto = segretoDaAmbiente(process.env);
+if (!segreto) {
   throw new Error(
-    inRete
-      ? "Manca l'utente fisso: le variabili MEMODU_* di `npm run utente -w @memodu/api`"
-      : "Manca l'utente fisso: crea api/.env con `npm run utente -w @memodu/api`",
+    `Manca ${NOME_SEGRETO}: 32 byte casuali in base64url, ${inRete ? "su Vercel" : "in api/.env"}`,
   );
 }
-const accesso = new Accesso(utente.dati, utente.segreto);
+const utenteFisso = utenteFissoDaAmbiente(process.env);
 let db: Database;
 if (inRete) {
   db = daPostgres(indirizzoDatabase!);
@@ -53,7 +52,7 @@ if (inRete) {
 const avvio = Date.now();
 let schema: Promise<void> | undefined;
 const schemaPronto = () =>
-  (schema ??= aggiornaSchema(db).then(
+  (schema ??= aggiornaSchema(db, { utenteFisso }).then(
     () => console.log(`Schema pronto in ${Date.now() - avvio} ms`),
     (errore: unknown) => {
       schema = undefined;
@@ -66,7 +65,7 @@ schemaPronto().catch(() => undefined);
 const server = configuraServer(
   Fastify(opzioniServer({ registro: inRete })),
   new ArchivioSincronizzazione(db),
-  accesso,
+  new Accesso(db, segreto),
   schemaPronto,
 );
 // Su Vercel come nella sua guida per Fastify: basta la porta, e `listen` non si aspetta. Vercel

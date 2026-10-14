@@ -1,7 +1,8 @@
 // Deposito della sincronizzazione (RF-10, DEC-75 … DEC-83). Il server non legge i blocchi:
 // conserva per ogni elemento la versione attuale e le precedenti in PostgreSQL (DEC-105), con
 // numero d'ordine, ora e dimensione. Le versioni precedenti si sfoltiscono a scalare per 7
-// giorni (DEC-77, DEC-113). Chi può leggere e scrivere lo decide l'accesso (DEC-121).
+// giorni (DEC-77, DEC-113). Ogni account vede e scrive solo i suoi elementi (DEC-132): l'account
+// lo decide il gettone del dispositivo, mai l'app (DEC-133).
 
 import { LIMITE_PAGINA_BYTE } from "./costanti.js";
 import type { Database, Sql } from "./database.js";
@@ -62,16 +63,18 @@ export class ArchivioSincronizzazione {
    * elemento c'è sempre, se ne esiste uno.
    */
   async modificheDopo(
+    utente: string,
     dopo: number,
     limite = 500,
     limiteByte = LIMITE_PAGINA_BYTE,
   ): Promise<{ modifiche: Modifica[]; ultimo: number; altre: boolean; archivio: string }> {
     const righe = await this.db.righe<Omit<Modifica, "dati"> & { dimensione: number }>(
       `SELECT v.id, v.versione, v.ordine, v.ora, v.dimensione FROM versioni v
-       WHERE v.ordine > $1
-         AND v.versione = (SELECT max(w.versione) FROM versioni w WHERE w.id = v.id)
-       ORDER BY v.ordine LIMIT $2`,
-      [dopo, limite + 1],
+       WHERE v.utente = $1 AND v.ordine > $2
+         AND v.versione = (SELECT max(w.versione) FROM versioni w
+                           WHERE w.utente = v.utente AND w.id = v.id)
+       ORDER BY v.ordine LIMIT $3`,
+      [utente, dopo, limite + 1],
     );
     const scelte: typeof righe = [];
     let somma = 0;
@@ -97,7 +100,9 @@ export class ArchivioSincronizzazione {
       dati: dati.get(ordine) ?? "",
     }));
     const ultimo =
-      modifiche.length > 0 ? modifiche[modifiche.length - 1]!.ordine : await this.ultimoOrdine();
+      modifiche.length > 0
+        ? modifiche[modifiche.length - 1]!.ordine
+        : await this.ultimoOrdine(utente);
     return {
       modifiche,
       ultimo: Math.max(ultimo, dopo),
@@ -112,6 +117,7 @@ export class ArchivioSincronizzazione {
    * attuale (DEC-76). Versione, numero d'ordine e sfoltimento stanno in una transazione.
    */
   async scrivi(
+    utente: string,
     id: string,
     base: number,
     dati: string,
@@ -119,9 +125,9 @@ export class ArchivioSincronizzazione {
     return this.db.transazione(async (sql) => {
       await sql.righe("SELECT pg_advisory_xact_lock($1)", [BLOCCO_SCRITTURE]);
       const [attuale] = await sql.righe<Modifica>(
-        `SELECT id, versione, ordine, ora, dati FROM versioni WHERE id = $1
+        `SELECT id, versione, ordine, ora, dati FROM versioni WHERE utente = $1 AND id = $2
          ORDER BY versione DESC LIMIT 1`,
-        [id],
+        [utente, id],
       );
       if ((attuale?.versione ?? 0) !== base) {
         throw new VersioneSuperata(attuale ?? { id, versione: 0, ordine: 0, ora: "", dati: "" });
@@ -132,35 +138,48 @@ export class ArchivioSincronizzazione {
       );
       const ordine = prossimo!.ordine;
       await sql.righe(
-        `INSERT INTO versioni (id, versione, ordine, ora, dimensione, dati)
-         VALUES ($1, $2, $3, $4, $5, $6)`,
-        [id, versione, ordine, this.adesso().toISOString(), JSON.stringify(dati).length, dati],
+        `INSERT INTO versioni (utente, id, versione, ordine, ora, dimensione, dati)
+         VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+        [
+          utente,
+          id,
+          versione,
+          ordine,
+          this.adesso().toISOString(),
+          JSON.stringify(dati).length,
+          dati,
+        ],
       );
       // La prima versione cifrata di un elemento: le precedenti in chiaro si cancellano, così sul
       // server non resta niente di leggibile (DEC-78, condizione 3; CA-10.13).
       if (!inChiaro(dati)) {
         const vecchie = await sql.righe<{ versione: number; dati: string }>(
-          "SELECT versione, dati FROM versioni WHERE id = $1 AND versione < $2",
-          [id, versione],
+          "SELECT versione, dati FROM versioni WHERE utente = $1 AND id = $2 AND versione < $3",
+          [utente, id, versione],
         );
         const daTogliere = vecchie.filter((v) => inChiaro(v.dati)).map((v) => v.versione);
         if (daTogliere.length > 0) {
-          await sql.righe("DELETE FROM versioni WHERE id = $1 AND versione = ANY($2::integer[])", [
-            id,
-            daTogliere,
-          ]);
+          await sql.righe(
+            "DELETE FROM versioni WHERE utente = $1 AND id = $2 AND versione = ANY($3::integer[])",
+            [utente, id, daTogliere],
+          );
         }
       }
-      await this.sfoltisci(sql, id);
+      await this.sfoltisci(sql, utente, id);
       return { versione, ordine };
     });
   }
 
   /** Le versioni conservate di un elemento, dalla più recente. */
-  versioni(id: string, sql: Sql = this.db): Promise<{ versione: number; ora: string }[]> {
-    return sql.righe("SELECT versione, ora FROM versioni WHERE id = $1 ORDER BY versione DESC", [
-      id,
-    ]);
+  versioni(
+    utente: string,
+    id: string,
+    sql: Sql = this.db,
+  ): Promise<{ versione: number; ora: string }[]> {
+    return sql.righe(
+      "SELECT versione, ora FROM versioni WHERE utente = $1 AND id = $2 ORDER BY versione DESC",
+      [utente, id],
+    );
   }
 
   /**
@@ -168,9 +187,9 @@ export class ArchivioSincronizzazione {
    * ora nell'ultimo giorno, l'ultima di ogni giorno fino a 7 giorni; la versione attuale resta
    * sempre. Guarda solo versione e ora.
    */
-  private async sfoltisci(sql: Sql, id: string): Promise<void> {
+  private async sfoltisci(sql: Sql, utente: string, id: string): Promise<void> {
     const ora = this.adesso().getTime();
-    const [attuale, ...precedenti] = await this.versioni(id, sql);
+    const [attuale, ...precedenti] = await this.versioni(utente, id, sql);
     if (!attuale) return;
     const tenute = new Set<string>();
     const via: number[] = [];
@@ -188,17 +207,18 @@ export class ArchivioSincronizzazione {
       else tenute.add(gruppo);
     }
     if (via.length > 0) {
-      await sql.righe("DELETE FROM versioni WHERE id = $1 AND versione = ANY($2::integer[])", [
-        id,
-        via,
-      ]);
+      await sql.righe(
+        "DELETE FROM versioni WHERE utente = $1 AND id = $2 AND versione = ANY($3::integer[])",
+        [utente, id, via],
+      );
     }
   }
 
-  private async ultimoOrdine(): Promise<number> {
+  private async ultimoOrdine(utente: string): Promise<number> {
     // L'ultima scrittura è sempre una versione attuale, che lo sfoltimento non tocca.
     const [riga] = await this.db.righe<{ n: number }>(
-      "SELECT coalesce(max(ordine), 0) AS n FROM versioni",
+      "SELECT coalesce(max(ordine), 0) AS n FROM versioni WHERE utente = $1",
+      [utente],
     );
     return riga?.n ?? 0;
   }
