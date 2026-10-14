@@ -66,7 +66,7 @@ erDiagram
 | Identificativo | Codice | Sì | Unico e stabile | Tecnico |
 | Nome | Testo | Sì | Fino a 200 caratteri (proposta dell'agente) | Il nome della pillola |
 | Tipo | Persona \| Oggetto \| Evento \| Argomento \| nessuno | No | | Nasce senza tipo con «Crea» (RB-105); dove si assegna è da decidere |
-| Foto | Immagine | No | | La pillola con la foto (MiaPropostaLink); da dove arriva è da decidere |
+| Foto | Immagine | No | | La sceglie l'utente dal disco, in Entità, con il tasto destro sulla riga, «Scegli una foto…», per qualsiasi entità; se c'è, la pillola la mostra, altrimenti solo il nome (scelta di Manuel Cucca del 14/10/2026) |
 | Unita in | EN-13 | No | | Dopo «Unisci a…» punta all'entità che resta, per le citazioni che arrivano dopo da un altro computer (RB-108) |
 
 - **Chi la crea:** l'utente, con «Crea» nel menu di @ o della selezione.
@@ -115,6 +115,6 @@ erDiagram
 | Mostra il Database | Sì \| No | Per computer o per tutti: da decidere |
 
 ## Da decidere
-- Da dove arriva la foto di un'entità.
+- ~~Da dove arriva la foto di un'entità.~~ Dal disco, scelta dall'utente in Entità, per tutte le entità (14/10/2026).
 - Se «Mostra il Database» vale solo per questo computer o per tutti.
 - Se un singolo frammento si può eliminare dal Database.

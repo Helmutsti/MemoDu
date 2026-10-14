@@ -600,3 +600,4 @@
 | 14/10/2026 | Manuel Cucca | RF-18 Fase 2: Brainet cancellato da un altro computer chiude il foglio aperto con un avviso, e il testo si perde | DEC-134 |
 | 14/10/2026 | Manuel Cucca | Fase 2 di RF-18 approvata: FL-16 … FL-22, RB-101 … RB-113 | DEC-134 |
 | 14/10/2026 | Agente IA | Fase 3 di RF-18 scritta: EN-12 Frammento, EN-13 Entità, EN-14 Citazione, EN-15 Area, EN-16 Stato; da approvare | DEC-134 |
+| 14/10/2026 | Manuel Cucca | RF-18 Fase 3: la foto di un'entità si sceglie dal disco in Entità, per tutte le entità; la pillola la mostra se c'è | DEC-134 |
