@@ -133,6 +133,28 @@ export const api = {
   accedi: (email: string, password: string) => comando<void>("accedi", { email, password }),
   /** «Esci» e «Non voglio usare il cloud» (RB-89). */
   esci: () => comando<void>("esci"),
+  /**
+   * Cambia la password (RB-98): con la chiave di recupero restituisce quella nuova (RB-99).
+   * Errori, nel messaggio: «password:<motivo>», «verifica», «rete», «accesso» o «errore».
+   */
+  cambiaPassword: (
+    verifica: { attuale: string } | { chiaveRecupero: string },
+    nuova: string,
+    scollegaAltri: boolean,
+  ) =>
+    comando<string | null>("cambia_password", {
+      attuale: "attuale" in verifica ? verifica.attuale : null,
+      chiaveRecupero: "chiaveRecupero" in verifica ? verifica.chiaveRecupero : null,
+      nuova,
+      scollegaAltri,
+    }),
+  /** Recupera l'account (RB-99): la chiave di recupero nuova. Errori: «password:<motivo>»,
+   * «credenziali», «rete» o «errore». */
+  recuperaAccount: (email: string, chiaveRecupero: string, nuova: string, scollegaAltri: boolean) =>
+    comando<string>("recupera_account", { email, chiaveRecupero, nuova, scollegaAltri }),
+  /** I dispositivi dell'account (RB-100). Errori: «rete», «accesso» o «errore». */
+  elencaDispositivi: () => comando<DispositivoCollegato[]>("elenca_dispositivi"),
+  scollegaDispositivo: (id: string) => comando<void>("scollega_dispositivo", { id }),
   /** Si sincronizza con le altre impostazioni (RB-29, RB-52, DEC-95). */
   cambiaCestinoInRicerca: (attivo: boolean) =>
     comando<void>("cambia_cestino_in_ricerca", { attivo }),
@@ -183,8 +205,18 @@ export interface Impostazioni {
 }
 
 export interface StatoAccesso {
-  /** L'email dell'utente, se il dispositivo ha fatto l'accesso (RB-86). */
+  /** L'email dell'utente, se il dispositivo ha fatto l'accesso (RB-97). */
   email: string | null;
+}
+
+/** Un dispositivo dell'account (RB-100). */
+export interface DispositivoCollegato {
+  id: string;
+  /** Il nome scelto, aperto con la chiave dati; null se non è ancora arrivato. */
+  nome: string | null;
+  tipo: "windows" | "macos";
+  ultimaSincronizzazione: string | null;
+  questo: boolean;
 }
 
 export interface StatoSincronizzazione {

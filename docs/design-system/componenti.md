@@ -1293,7 +1293,7 @@ Compare e sparisce con `movimento-durata-breve` (120 ms).
 **Quando non usarlo:** per scrivere la chiave (si usa il campo di testo, CMP-03).
 
 ### Varianti e dimensioni
-- Come un campo di sola lettura: alto 32 (`misura-riga`), pillola, `sfondo-campo`, margine `spazio-controllo` a sinistra, `spazio-blocco` tra la chiave e il pulsante; la chiave in Interfaccia/Controllo attivo `testo-primario`, su una riga.
+- Come un campo di sola lettura su due righe (scelta di Manuel Cucca del 14/10/2026: la chiave vera ha 64 caratteri e su una riga usciva dalla finestra): rettangolo con `raggio-interno`, `sfondo-campo`, margine `spazio-controllo` a sinistra e `spazio-controllo-piccolo` sugli altri lati, `spazio-blocco` tra la chiave e il pulsante; la chiave in Interfaccia/Dettaglio `testo-primario` con le cifre a larghezza fissa, i primi 7 gruppi sulla prima riga e gli altri 6 sotto, a `spazio-elemento`. «Copia» copia la chiave intera su una riga.
 - A destra «Copia», pulsante tenue (CMP-01); **Stato = Copiata:** dopo il clic dice «Copiata». Con la spunta accanto la chiave non stava su una riga nella finestra da 400: la spunta è tolta.
 - Proprietà **Chiave** (testo).
 
@@ -1311,8 +1311,8 @@ Compare e sparisce con `movimento-durata-breve` (120 ms).
 - **Contrasti:** chiave `testo-primario` su `sfondo-campo` 13,83:1 in chiaro e 10,66:1 in scuro; «Copia» `testo-tenue` su `sfondo-campo` 4,61:1 e 4,65:1.
 
 ### Esempi
-- ✅ Corretto: la chiave intera su una riga, con «Copia» accanto.
-- ❌ Scorretto: la chiave spezzata su due righe, o la chiave in un campo modificabile.
+- ✅ Corretto: la chiave intera su due righe a gruppi interi, con «Copia» accanto.
+- ❌ Scorretto: un gruppo spezzato a metà tra le due righe, la chiave fuori dalla finestra, o la chiave in un campo modificabile.
 
 ---
 

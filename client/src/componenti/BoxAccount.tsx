@@ -1,6 +1,7 @@
 // CMP-32 Box dell'account (DEC-122): in cima a SC-06. Senza accesso invita ad accedere; dopo
 // l'accesso l'iniziale, l'email, lo stato della sincronizzazione con il pallino del suo colore,
-// Esci (o Accedi con il gettone rifiutato, RB-87) e sotto il nome del dispositivo.
+// Esci (o Accedi con il gettone rifiutato, RB-87) e sotto il nome del dispositivo. Collegato,
+// sotto lo stato ci sono «Cambia password» e «Dispositivi collegati» (DEC-132, pulsanti tenui).
 
 import { User } from "lucide-react";
 import type { ReactElement, ReactNode } from "react";
@@ -43,6 +44,8 @@ interface Proprieta {
   uscendo: boolean;
   onAccedi: () => void;
   onEsci: () => void;
+  onCambiaPassword?: () => void;
+  onDispositivi?: () => void;
   /** La riga Nome del dispositivo, solo dopo l'accesso. */
   children?: ReactNode;
 }
@@ -53,6 +56,8 @@ export function BoxAccount({
   uscendo,
   onAccedi,
   onEsci,
+  onCambiaPassword,
+  onDispositivi,
   children,
 }: Proprieta): ReactElement {
   if (!email) {
@@ -92,6 +97,16 @@ export function BoxAccount({
               <span className={`box-account-pallino box-account-pallino-${tono}`} />
               {testo}
             </span>
+            {!scaduto && (
+              <span className="box-account-collegamenti">
+                <Pulsante tipo="tenue" onClick={onCambiaPassword}>
+                  Cambia password
+                </Pulsante>
+                <Pulsante tipo="tenue" onClick={onDispositivi}>
+                  Dispositivi collegati
+                </Pulsante>
+              </span>
+            )}
           </span>
           {scaduto ? (
             <Pulsante tipo="primario" onClick={onAccedi}>

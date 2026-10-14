@@ -46,6 +46,7 @@ import {
   TESTO_CREDENZIALI_ERRATE,
   TESTO_SERVER_IRRAGGIUNGIBILE,
 } from "../componenti/ModuloAccesso";
+import { TESTO_CHIAVE_ERRATA } from "../componenti/FinestraAccount";
 import { Icona } from "../componenti/Icona";
 import { Menu, type VoceMenu } from "../componenti/Menu";
 import { PannelloSpostaIn } from "../componenti/PannelloSpostaIn";
@@ -648,6 +649,30 @@ export function FinestraPrincipale(): ReactElement {
     setAvvisoSinc((a) => (a?.tipo === "accesso" ? null : a));
     setVersioneAccesso((v) => v + 1);
     return null;
+  };
+
+  /** Il recupero dall'accesso (RB-99): la chiave nuova, o il messaggio in linea (CA-14.27). */
+  const recupera = async (
+    email: string,
+    chiave: string,
+    nuova: string,
+    scollegaAltri: boolean,
+  ): Promise<{ chiave: string } | { errore: string }> => {
+    try {
+      return { chiave: await api.recuperaAccount(email, chiave, nuova, scollegaAltri) };
+    } catch (errore) {
+      const motivo = errore instanceof ErroreApi ? errore.message : "";
+      if (motivo.startsWith("password:")) return { errore: motivo.slice("password:".length) };
+      if (motivo === "credenziali") return { errore: TESTO_CHIAVE_ERRATA };
+      return { errore: TESTO_SERVER_IRRAGGIUNGIBILE };
+    }
+  };
+
+  /** «Ho conservato la chiave»: il dispositivo è già collegato. */
+  const recuperato = () => {
+    setAccesso(null);
+    setAvvisoSinc((a) => (a?.tipo === "accesso" ? null : a));
+    setVersioneAccesso((v) => v + 1);
   };
 
   /** «Non voglio usare il cloud»: scollega come Esci, e l'avviso non torna (RB-89). */
@@ -1572,6 +1597,8 @@ export function FinestraPrincipale(): ReactElement {
         <ModuloAccesso
           emailIniziale={accesso.email}
           onAccedi={accedi}
+          onRecupera={recupera}
+          onRecuperato={recuperato}
           onSenzaCloud={() => void senzaCloud()}
           onChiudi={() => setAccesso(null)}
         />

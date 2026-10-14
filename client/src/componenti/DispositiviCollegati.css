@@ -1,0 +1,40 @@
+/* CMP-36: le righe dei dispositivi come quelle di CMP-18 (spazio-controllo a sinistra,
+   spazio-controllo-piccolo sugli altri lati, raggio-interno), nel riquadro di CMP-31. La
+   conferma mette i pulsanti sotto il testo, a destra. */
+.dispositivo {
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-blocco);
+  padding: var(--spazio-controllo-piccolo) var(--spazio-controllo-piccolo)
+    var(--spazio-controllo-piccolo) var(--spazio-controllo);
+  border-radius: var(--raggio-interno);
+}
+.dispositivo-conferma {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--spazio-icona);
+}
+.dispositivo-testi {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spazio-elemento);
+  min-width: 0;
+}
+.dispositivo-nome {
+  overflow: hidden;
+  color: var(--testo-primario);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dispositivo-conferma .dispositivo-nome {
+  white-space: normal;
+}
+.dispositivo-dettaglio {
+  color: var(--testo-tenue);
+}
+.dispositivo-azioni {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spazio-icona);
+}

@@ -1,0 +1,22 @@
+/* CMP-34: un blocco su due righe, quindi un rettangolo con raggio-interno e non una pillola;
+   sfondo-campo, margine spazio-controllo a sinistra, sopra e sotto spazio-controllo-piccolo; la
+   chiave in Interfaccia/Dettaglio con le cifre a larghezza fissa, a spazio-blocco dal pulsante. */
+.chiave-da-conservare {
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-blocco);
+  padding: var(--spazio-controllo-piccolo) var(--spazio-controllo-piccolo)
+    var(--spazio-controllo-piccolo) var(--spazio-controllo);
+  border-radius: var(--raggio-interno);
+  background: var(--sfondo-campo);
+}
+.chiave-da-conservare-testo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spazio-elemento);
+  color: var(--testo-primario);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  user-select: all;
+}

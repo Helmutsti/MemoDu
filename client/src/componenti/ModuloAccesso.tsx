@@ -1,26 +1,43 @@
-// CMP-22 Modulo di accesso (SC-05, DEC-121): una finestra sopra le note, livello 40, con il
-// guscio della finestra di conferma (CMP-16). Email e password, «Non voglio usare il cloud»,
-// che scollega come Esci (RB-89), e Accedi. Il focus parte dall'email e resta dentro; Invio
-// da un campo accede; Esc e un clic sul velo chiudono soltanto, senza scollegare (DEC-124).
-// Un solo messaggio per email o password sbagliate, senza dire quale delle due; l'email non si
-// svuota. Testi in 4-schermate.md.
+// CMP-22 Modulo di accesso (SC-05, DEC-121, DEC-132): una finestra sopra le note, livello 40,
+// con il guscio della finestra di conferma (CMP-16). Email e password, «Password dimenticata?»,
+// «Non voglio usare il cloud», che scollega come Esci (RB-89), e Accedi. Il focus parte dall'email
+// e resta dentro; Invio da un campo accede; Esc e un clic sul velo chiudono soltanto, senza
+// scollegare (DEC-124). Un solo messaggio per email o password sbagliate, senza dire quale delle
+// due; l'email non si svuota. «Password dimenticata?» porta al recupero nella stessa finestra
+// (RB-99), che finisce con la chiave di recupero nuova. Testi in 4-schermate.md.
 
-import { CircleAlert, Eye, EyeOff } from "lucide-react";
-import { useEffect, useId, useRef, useState, type FormEvent, type ReactElement } from "react";
-import { createPortal } from "react-dom";
-import { Icona } from "./Icona";
+import { useState, type ReactElement } from "react";
+import { Casella } from "./Casella";
+import {
+  CampoFinestra,
+  ChiaveNuova,
+  FinestraAccount,
+  MessaggioInLinea,
+  PulsantiFinestra,
+  TESTO_PASSWORD_DIVERSE,
+  TESTO_SERVER_IRRAGGIUNGIBILE,
+} from "./FinestraAccount";
 import { Pulsante } from "./Pulsante";
-import { useClicSulVelo } from "./velo";
-import "./FinestraConferma.css";
-import "./ModuloAccesso.css";
 
+export { TESTO_SERVER_IRRAGGIUNGIBILE };
 export const TESTO_CREDENZIALI_ERRATE = "Email o password non corrette.";
-export const TESTO_SERVER_IRRAGGIUNGIBILE = "Non riesco a raggiungere il server. Riprova tra poco.";
 
 interface Proprieta {
   emailIniziale?: string;
   /** Prova l'accesso: null se è riuscito, altrimenti il messaggio da mostrare. */
   onAccedi: (email: string, password: string) => Promise<string | null>;
+  /**
+   * Recupera l'account (RB-99): la chiave di recupero nuova se è riuscito, altrimenti il
+   * messaggio da mostrare.
+   */
+  onRecupera?: (
+    email: string,
+    chiave: string,
+    nuova: string,
+    scollegaAltri: boolean,
+  ) => Promise<{ chiave: string } | { errore: string }>;
+  /** Dopo «Ho conservato la chiave»: il dispositivo è già collegato. */
+  onRecuperato?: () => void;
   /** «Non voglio usare il cloud». */
   onSenzaCloud: () => void;
   /** Esc o un clic sul velo: si chiude soltanto. */
@@ -30,27 +47,24 @@ interface Proprieta {
 export function ModuloAccesso({
   emailIniziale = "",
   onAccedi,
+  onRecupera,
+  onRecuperato,
   onSenzaCloud,
   onChiudi,
 }: Proprieta): ReactElement {
-  const finestra = useRef<HTMLFormElement>(null);
-  const campoEmail = useRef<HTMLInputElement>(null);
+  const [modo, setModo] = useState<"accesso" | "recupero">("accesso");
   const [email, setEmail] = useState(emailIniziale);
   const [password, setPassword] = useState("");
-  const [visibile, setVisibile] = useState(false);
+  const [chiave, setChiave] = useState("");
+  const [nuova, setNuova] = useState("");
+  const [ripetuta, setRipetuta] = useState("");
+  const [scollega, setScollega] = useState(false);
   const [inCorso, setInCorso] = useState(false);
   const [errore, setErrore] = useState<string | null>(null);
-  const id = useId();
-  // Mentre l'accesso è in corso il clic fuori non conta, come i pulsanti fermi.
-  const velo = useClicSulVelo(onChiudi, !inCorso);
+  const [chiaveNuova, setChiaveNuova] = useState<string | null>(null);
 
-  useEffect(() => {
-    campoEmail.current?.focus();
-  }, []);
-
-  const accedi = async (e?: FormEvent) => {
-    e?.preventDefault();
-    if (inCorso || !email.trim() || !password) return;
+  const accedi = async () => {
+    if (!email.trim() || !password) return;
     setInCorso(true);
     setErrore(null);
     const messaggio = await onAccedi(email, password);
@@ -58,95 +72,117 @@ export function ModuloAccesso({
     if (messaggio) setErrore(messaggio);
   };
 
-  const suTasto = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") {
-      e.preventDefault();
-      onChiudi();
-    } else if (e.key === "Tab") {
-      // Il focus resta dentro la finestra.
-      const fermate = [...(finestra.current?.querySelectorAll<HTMLElement>("input, button") ?? [])];
-      const i = fermate.indexOf(document.activeElement as HTMLElement);
-      e.preventDefault();
-      fermate[(i + (e.shiftKey ? -1 : 1) + fermate.length) % fermate.length]?.focus();
-    }
+  const recupera = async () => {
+    if (!onRecupera || !email.trim() || !chiave.trim() || !nuova || !ripetuta) return;
+    if (nuova !== ripetuta) return setErrore(TESTO_PASSWORD_DIVERSE);
+    setInCorso(true);
+    setErrore(null);
+    const esito = await onRecupera(email, chiave, nuova, scollega);
+    setInCorso(false);
+    if ("errore" in esito) setErrore(esito.errore);
+    else setChiaveNuova(esito.chiave);
   };
 
-  return createPortal(
-    <div className="velo" {...velo}>
-      <form
-        ref={finestra}
-        className="finestra-conferma modulo-accesso"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={`${id}-titolo`}
-        aria-describedby={`${id}-sottotitolo`}
-        onKeyDown={suTasto}
-        onSubmit={(e) => void accedi(e)}
+  const vaiA = (nuovoModo: "accesso" | "recupero") => {
+    setModo(nuovoModo);
+    setErrore(null);
+  };
+
+  if (chiaveNuova) return <ChiaveNuova chiave={chiaveNuova} onFatto={() => onRecuperato?.()} />;
+
+  if (modo === "recupero") {
+    return (
+      <FinestraAccount
+        titolo="Recupera l'account"
+        sottotitolo="Scrivi la chiave di recupero e scegli una password nuova. Le tue note restano tutte."
+        inCorso={inCorso}
+        onChiudi={onChiudi}
+        onInvia={() => void recupera()}
       >
-        <div>
-          <p id={`${id}-titolo`} className="interfaccia-titolo">
-            Accedi a Memodu
-          </p>
-          <p id={`${id}-sottotitolo`} className="finestra-conferma-testo interfaccia-messaggio">
-            Accedi alla tua installazione.
-          </p>
-        </div>
-        <label className="modulo-accesso-campo">
-          <span className="interfaccia-etichetta">Email</span>
-          <input
-            ref={campoEmail}
-            className="campo-impostazione interfaccia-controllo"
-            type="email"
-            autoComplete="username"
-            value={email}
-            aria-invalid={errore === TESTO_CREDENZIALI_ERRATE || undefined}
-            aria-describedby={errore ? `${id}-errore` : undefined}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </label>
-        <label className="modulo-accesso-campo">
-          <span className="interfaccia-etichetta">Password</span>
-          <span className="modulo-accesso-password">
-            <input
-              className="campo-impostazione interfaccia-controllo"
-              type={visibile ? "text" : "password"}
-              autoComplete="current-password"
-              value={password}
-              aria-invalid={errore === TESTO_CREDENZIALI_ERRATE || undefined}
-              aria-describedby={errore ? `${id}-errore` : undefined}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button
-              type="button"
-              className="modulo-accesso-occhio"
-              aria-label={visibile ? "Nascondi la password" : "Mostra la password"}
-              aria-pressed={visibile}
-              onClick={() => setVisibile((v) => !v)}
-            >
-              <Icona di={visibile ? EyeOff : Eye} />
-            </button>
-          </span>
-        </label>
-        {errore && (
-          <p
-            id={`${id}-errore`}
-            className="modulo-accesso-errore interfaccia-dettaglio"
-            role="alert"
-          >
-            <Icona di={CircleAlert} />
-            {errore}
-          </p>
-        )}
-        <div className="finestra-conferma-pulsanti modulo-accesso-pulsanti">
-          <Pulsante tipo="secondario" onClick={onSenzaCloud} disabled={inCorso}>
-            Non voglio usare il cloud
+        <CampoFinestra
+          etichetta="Email"
+          tipo="email"
+          autoComplete="username"
+          valore={email}
+          onCambia={setEmail}
+        />
+        <CampoFinestra
+          etichetta="Chiave di recupero"
+          autoComplete="off"
+          valore={chiave}
+          onCambia={setChiave}
+        />
+        <CampoFinestra
+          etichetta="Password nuova"
+          password
+          autoComplete="new-password"
+          valore={nuova}
+          onCambia={setNuova}
+        />
+        <CampoFinestra
+          etichetta="Ripeti la password nuova"
+          password
+          autoComplete="new-password"
+          valore={ripetuta}
+          onCambia={setRipetuta}
+        />
+        <Casella
+          etichetta="Scollega gli altri miei dispositivi"
+          spuntata={scollega}
+          onCambia={setScollega}
+          disabled={inCorso}
+        />
+        {errore && <MessaggioInLinea testo={errore} />}
+        <PulsantiFinestra>
+          <Pulsante tipo="secondario" onClick={() => vaiA("accesso")} disabled={inCorso}>
+            Torna all'accesso
           </Pulsante>
           <Pulsante type="submit" inCorso={inCorso}>
-            Accedi
+            Recupera
           </Pulsante>
-        </div>
-      </form>
-    </div>,
-    document.body,
+        </PulsantiFinestra>
+      </FinestraAccount>
+    );
+  }
+
+  return (
+    <FinestraAccount
+      titolo="Accedi a Memodu"
+      sottotitolo="Accedi alla tua installazione."
+      inCorso={inCorso}
+      onChiudi={onChiudi}
+      onInvia={() => void accedi()}
+    >
+      <CampoFinestra
+        etichetta="Email"
+        tipo="email"
+        autoComplete="username"
+        valore={email}
+        onCambia={setEmail}
+        invalido={errore === TESTO_CREDENZIALI_ERRATE}
+      />
+      <CampoFinestra
+        etichetta="Password"
+        password
+        autoComplete="current-password"
+        valore={password}
+        onCambia={setPassword}
+        invalido={errore === TESTO_CREDENZIALI_ERRATE}
+      />
+      {onRecupera && (
+        <Pulsante tipo="tenue" onClick={() => vaiA("recupero")} disabled={inCorso}>
+          Password dimenticata?
+        </Pulsante>
+      )}
+      {errore && <MessaggioInLinea testo={errore} />}
+      <PulsantiFinestra>
+        <Pulsante tipo="secondario" onClick={onSenzaCloud} disabled={inCorso}>
+          Non voglio usare il cloud
+        </Pulsante>
+        <Pulsante type="submit" inCorso={inCorso}>
+          Accedi
+        </Pulsante>
+      </PulsantiFinestra>
+    </FinestraAccount>
   );
 }

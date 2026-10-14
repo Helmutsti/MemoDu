@@ -64,3 +64,8 @@
 .box-account-pallino-errore {
   background: var(--icona-errore);
 }
+/* I collegamenti dell'account (DEC-132): pulsanti tenui a spazio-elemento. */
+.box-account-collegamenti {
+  display: flex;
+  gap: var(--spazio-elemento);
+}

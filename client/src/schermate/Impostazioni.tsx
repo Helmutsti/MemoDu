@@ -18,6 +18,9 @@ import { alCambioDelloStatoSinc } from "../finestra";
 import { Icona } from "../componenti/Icona";
 import { AreaScorrevole } from "../componenti/AreaScorrevole";
 import { BoxAccount } from "../componenti/BoxAccount";
+import { CambiaPassword } from "../componenti/CambiaPassword";
+import { DispositiviCollegati } from "../componenti/DispositiviCollegati";
+import { TESTO_CHIAVE_ERRATA, TESTO_SERVER_IRRAGGIUNGIBILE } from "../componenti/FinestraAccount";
 import { GruppoImpostazioni } from "../componenti/GruppoImpostazioni";
 import { Pulsante } from "../componenti/Pulsante";
 import { RigaImpostazione, RigaInterruttore } from "../componenti/RigaImpostazione";
@@ -147,6 +150,7 @@ export function Impostazioni({
   const [stato, setStato] = useState<StatoSincronizzazione | null>(null);
   const [accesso, setAccesso] = useState<StatoAccesso>({ email: null });
   const [uscendo, setUscendo] = useState(false);
+  const [finestra, setFinestra] = useState<"password" | "dispositivi" | null>(null);
   const [erroreScorciatoia, setErroreScorciatoia] = useState<string | null>(null);
   const idScorciatoia = useId();
   const idNome = useId();
@@ -195,6 +199,27 @@ export function Impostazioni({
     if (!riuscito) setValori(prima);
   };
 
+  /** SC-08: la chiave nuova (o null) se è riuscito, altrimenti il messaggio (CA-14.33). */
+  const cambiaPassword = async (
+    verifica: { attuale: string } | { chiaveRecupero: string },
+    nuova: string,
+    scollegaAltri: boolean,
+  ): Promise<{ chiave: string | null } | { errore: string }> => {
+    try {
+      return { chiave: await api.cambiaPassword(verifica, nuova, scollegaAltri) };
+    } catch (errore) {
+      const motivo = errore instanceof ErroreApi ? errore.message : "";
+      if (motivo.startsWith("password:")) return { errore: motivo.slice("password:".length) };
+      if (motivo === "verifica") {
+        return {
+          errore: "attuale" in verifica ? "Password attuale non corretta." : TESTO_CHIAVE_ERRATA,
+        };
+      }
+      if (motivo === "accesso") return { errore: "Accedi di nuovo per sincronizzare." };
+      return { errore: TESTO_SERVER_IRRAGGIUNGIBILE };
+    }
+  };
+
   const sistema = valori.sistema;
   return (
     <section className="impostazioni" aria-labelledby="impostazioni-titolo">
@@ -217,6 +242,8 @@ export function Impostazioni({
                 await rileggi();
               })()
             }
+            onCambiaPassword={() => setFinestra("password")}
+            onDispositivi={() => setFinestra("dispositivi")}
           >
             <RigaImpostazione
               id={idNome}
@@ -302,6 +329,16 @@ export function Impostazioni({
           </GruppoImpostazioni>
         </div>
       </AreaScorrevole>
+      {finestra === "password" && (
+        <CambiaPassword onCambia={cambiaPassword} onChiudi={() => setFinestra(null)} />
+      )}
+      {finestra === "dispositivi" && (
+        <DispositiviCollegati
+          onElenca={api.elencaDispositivi}
+          onScollega={api.scollegaDispositivo}
+          onChiudi={() => setFinestra(null)}
+        />
+      )}
     </section>
   );
 }

@@ -1,0 +1,46 @@
+/* CMP-33: riquadro da 16 (misura-icona), contorno icona-tenue da 1,5, raggio-casella; spuntata
+   sfondo-pieno con la spunta; etichetta a spazio-icona. L'input vero resta per tastiera e lettori
+   di schermo, nascosto sotto il riquadro. */
+.casella {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spazio-icona);
+  color: var(--testo-primario);
+  cursor: pointer;
+}
+.casella-input {
+  position: absolute;
+  width: var(--misura-icona);
+  height: var(--misura-icona);
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.casella-riquadro {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--misura-icona);
+  height: var(--misura-icona);
+  border: calc(var(--tratto-icona) * 1px) solid var(--icona-tenue);
+  border-radius: var(--raggio-casella);
+  color: var(--icona-su-pieno);
+}
+.casella:hover .casella-riquadro {
+  background: var(--sfondo-hover);
+}
+.casella-input:checked + .casella-riquadro {
+  border-color: var(--sfondo-pieno);
+  background: var(--sfondo-pieno);
+}
+.casella-input:focus-visible + .casella-riquadro {
+  outline: var(--focus-spessore) solid var(--focus-anello);
+  outline-offset: var(--focus-distanza);
+}
+.casella:has(.casella-input:disabled) {
+  opacity: var(--opacita-disabilitato);
+  cursor: default;
+}
