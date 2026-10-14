@@ -574,3 +574,4 @@
 | 14/10/2026 | Manuel Cucca | RF-18: le aree si creano selezionando la frase e scegliendo il nodo dal menu di @; disegnate la selezione e l'area creata | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18: le aree si evidenziano come con un evidenziatore invece di sottolinearle | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18: la nota nuova si crea con il + accanto a Brainet, come nelle altre sezioni; tolta la voce «Nuova nota Brainet» | DEC-134 |
+| 14/10/2026 | Manuel Cucca | RF-18: le evidenziature si possono associare anche a stati, come «importante» | DEC-134 |
