@@ -145,7 +145,7 @@ flowchart TD
 | SF-01 Doppio invio | Doppio clic su «Spegni e cancella tutto» | Nessuna | Una cancellazione sola |
 | SF-05 Cambio idea | Interruttore spento per sbaglio | La finestra di conferma | «Annulla» (RB-111) |
 | SF-08 Rete che cade | La cancellazione parte senza rete | Nessuna | Parte quando la rete torna; sugli altri computer Brainet si cancella al primo contatto |
-| SF-24 Modifiche «da sopra» | Brainet cancellato da un altro computer mentre scrivo | Da decidere | Proposta dell'agente: la sezione sparisce e il foglio aperto si chiude, con un avviso |
+| SF-24 Modifiche «da sopra» | Brainet cancellato da un altro computer mentre scrivo | Avviso «Brainet è stato spento da un altro computer» | La sezione sparisce e il foglio si chiude; il testo che si stava scrivendo si perde (RB-111) |
 
 ---
 
@@ -187,8 +187,8 @@ flowchart TD
 ## Punti da decidere nei flussi
 - ~~Cosa fa un clic su un giorno del Calendario.~~ Niente: il Calendario si guarda soltanto (scelta di Manuel Cucca del 14/10/2026, RB-113).
 - ~~Come si annulla un'unione sbagliata (FL-19).~~ Prima di unire una finestra chiede conferma, con quante citazioni e aree si spostano; poi non si annulla (scelta di Manuel Cucca del 14/10/2026, RB-108).
-- Cosa vede chi sta scrivendo quando Brainet viene cancellato da un altro computer (FL-20).
-- Se Brainet, spento su un computer, resta acceso sugli altri: oggi spegnere cancella tutto, quindi vale per tutti.
+- ~~Cosa vede chi sta scrivendo quando Brainet viene cancellato da un altro computer (FL-20).~~ La sezione sparisce, il foglio si chiude e un avviso dice «Brainet è stato spento da un altro computer»; il testo che si stava scrivendo si perde (scelta di Manuel Cucca del 14/10/2026, RB-111).
+- ~~Se Brainet, spento su un computer, resta acceso sugli altri.~~ No: spegnere cancella tutto, quindi vale per tutti i computer (RB-111).
 
 ## Regole di business
 | Codice | Regola | Usata in |
@@ -203,6 +203,6 @@ flowchart TD
 | RB-108 | «Unisci a…» in Entità: una finestra chiede conferma e dice quante citazioni e aree si spostano; unite, resta l'entità scelta con il suo nome e citazioni e aree dell'altra passano a lei; l'unione non si annulla | FL-19 |
 | RB-109 | Passando sopra un'area compaiono il riquadro e la linguetta con i suoi legami; la freccia apre il menu con le voci spuntate; tolte tutte, l'area sparisce | FL-18 |
 | RB-110 | Gli stati sono un elenco breve nelle Impostazioni, ognuno con un colore; togliendone uno Memodu propone di cambiarlo, e tolto sparisce dalle aree, che spariscono solo se era il loro ultimo legame | FL-18, FL-21 |
-| RB-111 | Spegnere Brainet vuol dire cancellarlo: conferma con «Annulla» e «Spegni e cancella tutto»; si cancellano note, entità, aree e stati su tutti i computer | FL-20 |
+| RB-111 | Spegnere Brainet vuol dire cancellarlo: conferma con «Annulla» e «Spegni e cancella tutto»; si cancellano note, entità, aree e stati su tutti i computer; su un computer dove si sta scrivendo la sezione sparisce, il foglio si chiude con l'avviso «Brainet è stato spento da un altro computer» e il testo si perde | FL-20 |
 | RB-112 | Una nota di CLOUD si importa in Brainet dal menu della colonna, «Importa in Brainet» › Copia o Sposta; prende le date della nota, tag e cartella si perdono | FL-22 |
 | RB-113 | Il Calendario si guarda soltanto: un clic su un giorno non fa niente | — |

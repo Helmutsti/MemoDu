@@ -597,3 +597,4 @@
 | 14/10/2026 | Agente IA | RF-18 Fase 2: flussi FL-16 … FL-22 e regole RB-101 … RB-112 scritti, da approvare | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18 Fase 2: il Calendario si guarda soltanto, un clic su un giorno non fa niente | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18 Fase 2: unire due entità chiede conferma con quante citazioni e aree si spostano, e poi non si annulla | DEC-134 |
+| 14/10/2026 | Manuel Cucca | RF-18 Fase 2: Brainet cancellato da un altro computer chiude il foglio aperto con un avviso, e il testo si perde | DEC-134 |
