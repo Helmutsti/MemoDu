@@ -563,3 +563,4 @@
 | 14/10/2026 | Agente IA | Mockup della chiave nuova su due righe dopo la pubblicazione della libreria; note di rilascio della 1.2.0 e guida per gli utenti (password dimenticata, cambio della password, dispositivi collegati) | DEC-132 |
 | 14/10/2026 | Manuel Cucca | Push di `main`, di `rilascio/1.0`, `rilascio/1.1` e del tag `1.2.0` senza «v»: il server con gli account è in produzione e l'utente fisso è diventato il primo account; la pubblicazione del server dai rami si ripensa dopo | DEC-132 |
 | 14/10/2026 | Manuel Cucca | Tolte da Vercel le sette variabili dell'utente fisso; restano `DATABASE_URL` e `MEMODU_SEGRETO` | DEC-132 |
+| 14/10/2026 | Manuel Cucca | Net, il diario a rete: modello di Reflect o Mem, sezione Net con l'icona del cervello tra CLOUD e Locale, voci fisse Database (elenco dei «documenti»: persone, oggetti, eventi, argomenti) e Doc (date che si espandono con il testo e i collegamenti); ID-39 diventa RF-18 | DEC-134 |
