@@ -42,7 +42,7 @@ Scritti dall'agente dai flussi e dalle decisioni (FL-07, DEC-75 … DEC-83). Con
 ---
 
 ## RF-14 – Accesso all'installazione
-**Priorità:** Must · **Origine:** DEC-05, DEC-121, DEC-132 · **Fase:** 3 · **Stato:** In progettazione (account nel database, DEC-132); implementato con l'utente fisso di DEC-121 (rilasciato fino alla 0.1.13, 07/10/2026)
+**Priorità:** Must · **Origine:** DEC-05, DEC-121, DEC-132 · **Fase:** 4 · **Stato:** In progettazione (account nel database, DEC-132); implementato con l'utente fisso di DEC-121 (rilasciato fino alla 0.1.13, 07/10/2026)
 
 > DEC-132 (13/10/2026): requisito riaperto dalla Fase 1 per gli account nel database. Lo scenario d'uso è riscritto per gli account nel database (approvato da Manuel Cucca il 14/10/2026); i criteri di accettazione qui sotto valgono per l'utente fisso e si riscrivono in Fase 8, dopo flussi e mockup.
 
@@ -114,7 +114,7 @@ Anche se si sviluppa dopo la prima fase, il modo in cui si salvano le note deve 
 ---
 
 ## RF-16 – Elenco dei dispositivi e uscita a distanza
-**Priorità:** Must (da Should, DEC-132) · **Origine:** DEC-132 · **Fase:** 3 · **Stato:** In progettazione
+**Priorità:** Must (da Should, DEC-132) · **Origine:** DEC-132 · **Fase:** 4 · **Stato:** In progettazione
 
 > Da ripensare (DEC-13, DEC-121): nell'architettura temporanea di DEC-121 tutti i dispositivi condividono il segreto dei gettoni e non se ne può far uscire uno solo; nell'architettura finale ognuno ha il suo gettone di rinnovo, che si può revocare. Senza web cade l'esempio del browser dimenticato aperto, e uscendo la copia di lavoro resta (RB-89).
 

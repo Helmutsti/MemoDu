@@ -539,3 +539,4 @@
 | 14/10/2026 | Manuel Cucca | RF-14: per cambiare la password dall'app si scrive la password attuale oppure la chiave di recupero, più quella nuova | DEC-132 |
 | 14/10/2026 | Manuel Cucca | RF-14: anche nel recupero dall'app la persona sceglie se scollegare gli altri dispositivi, come nel cambio della password | DEC-132 |
 | 14/10/2026 | Manuel Cucca | Fase 2 di RF-14 e RF-16 approvata: FL-08 aggiornato, FL-14 cambio della password e recupero, FL-15 dispositivi e chiusura a distanza, RB-97 … RB-100 (password nuova scritta due volte, niente cambio senza rete, conferma prima di chiudere un dispositivo, il dispositivo in uso si scollega con Esci); RB-86 superata | DEC-132 |
+| 14/10/2026 | Manuel Cucca | Fase 3 di RF-14 e RF-16 approvata: EN-05 Account in una tabella del server, EN-06 Dispositivo con accesso senza scadenza, stato Chiuso al posto di Scaduto; email e cancellazione dell'account non si cambiano dall'app | DEC-132 |
