@@ -25,6 +25,7 @@ Come *utente* voglio scrivere un flusso di pensiero nel tempo, collegato a perso
   - mentre evidenzi compare un menu da cui scegli anche gli stati; l'elenco degli stati si crea nelle Impostazioni (scelte di Manuel Cucca del 14/10/2026);
   - approvate da Manuel Cucca il 14/10/2026 le proposte dell'agente: nel menu una sezione «Stati» in cima, con il pallino del colore; nelle Impostazioni, sotto il gruppo Brainet, l'elenco «Stati delle evidenziature» con pallino, nome e Togli, e «Aggiungi uno stato»; come colori i quattro di stato del design system (avviso, informazione, successo, errore);
   - passando sopra un'area compare un riquadro rettangolare con una linguetta e una freccia verso il basso (idea di Manuel Cucca, disegnata nel riquadro «ideamia»): la linguetta ha lo stesso fondo dell'area e mostra gli stati e le entità dell'area. Proposte dell'agente, disegnate in «Brainet · area, mouse sopra»: il pallino del primo stato, i nomi separati da «·», la freccia apre il menu per cambiarli. La freccia apre lo stesso menu della selezione, con gli stati e le entità già scelti spuntati: li togli o ne aggiungi altri (scelta di Manuel Cucca del 14/10/2026). Togliendo tutte le voci l'area sparisce: la frase torna testo normale (scelta di Manuel Cucca del 14/10/2026).
+- **Unire due entità:** in Entità, con il tasto destro su una riga, «Unisci a…»: scegli l'altra entità; resta il nome dell'entità scelta e le citazioni e le aree passano a lei (scelta di Manuel Cucca del 14/10/2026).
 - **Dati (proposta dell'agente):** tutto si interroga sul computer, nella copia di lavoro relazionale, perché sul server le note sono cifrate: frammenti, nodi con il tipo, e legami frammento–nodo con l'inizio e la fine del testo (la pillola copre il nome, l'area una frase); un database a grafo non serve.
 - **Come nasce un collegamento:** scrivendo `@` si apre il menu dei suggerimenti e funziona come i destinatari di Gmail: si filtra scrivendo, si sceglie un nodo che esiste o se ne crea uno nuovo, e diventa una pillola (scelta di Manuel Cucca del 14/10/2026). Il menu ha un titolo sopra ogni sezione (scelta di Manuel Cucca). Proposte dell'agente, da confermare: sezioni Persone, Argomenti, Eventi, Oggetti in quest'ordine, «Crea «…»» in fondo, frecce e Invio per scegliere, Esc per chiudere, Backspace subito dopo una pillola la toglie tutta.
 - **Un nodo nuovo:** «Crea «…»» fa nascere subito la pillola, senza tipo; il tipo si assegna dopo dal Database (scelta di Manuel Cucca del 14/10/2026). Proposta dell'agente, da confermare: «Senza tipo» come sezione del menu e come etichetta nel Database.
@@ -42,7 +43,7 @@ Nelle Impostazioni accendo «Usa Brainet», e nella colonna compare la sezione B
 ### Punti aperti
 - I modi di «leggere» la knowledge base: da studiare (Manuel Cucca).
 - Dove si assegna il tipo a un'entità nata senza tipo (prima il Database, ora Entità). Fermo: l'entità nasce subito senza interrompere la scrittura; il resto si definisce più avanti, non è urgente (Manuel Cucca, 14/10/2026).
-- La stessa persona scritta con nomi diversi: unire due entità.
+- ~~La stessa persona scritta con nomi diversi: unire due entità.~~ Deciso il 14/10/2026: vedi «Unire due entità».
 - Sincronizzazione e cifratura di frammenti, entità, aree e stati: come le note?
 - Priorità di RF-18.
 
