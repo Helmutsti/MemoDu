@@ -587,3 +587,4 @@
 | 14/10/2026 | Manuel Cucca | RF-18: Brainet si sincronizza e si cifra come le note, con lo stesso account | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18 Must, nella versione dopo la 1.2.0; la progettazione continua adesso | DEC-134 |
 | 14/10/2026 | Manuel Cucca | Fase 1 di RF-18 approvata, con aperti i modi di leggere e dove si assegna il tipo; prossimo: Fase 2, flussi | DEC-134 |
+| 14/10/2026 | Manuel Cucca | RF-18 Fase 2: una nota Brainet si modifica sempre dal Database; nel Calendario resta il giorno in cui è stata scritta | DEC-134 |
