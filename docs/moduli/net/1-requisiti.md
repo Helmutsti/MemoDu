@@ -41,7 +41,7 @@ Nelle Impostazioni accendo «Usa Brainet», e nella colonna compare la sezione B
 
 ### Punti aperti
 - I modi di «leggere» la knowledge base: da studiare (Manuel Cucca).
-- Dove si assegna il tipo a un'entità nata senza tipo (prima il Database, ora Entità).
+- Dove si assegna il tipo a un'entità nata senza tipo (prima il Database, ora Entità). Fermo: l'entità nasce subito senza interrompere la scrittura; il resto si definisce più avanti, non è urgente (Manuel Cucca, 14/10/2026).
 - La stessa persona scritta con nomi diversi: unire due entità.
 - Sincronizzazione e cifratura di frammenti, entità, aree e stati: come le note?
 - Priorità di RF-18.

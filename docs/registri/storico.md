@@ -582,3 +582,4 @@
 | 14/10/2026 | Manuel Cucca | RF-18: la freccia della linguetta apre lo stesso menu della selezione, con le voci già scelte spuntate | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18: togliendo tutti gli stati e le entità di un'area, l'area sparisce | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18: scenario d'uso approvato; restano aperti i modi di leggere, il tipo delle entità senza tipo, i nomi doppi, la sincronizzazione e la priorità | DEC-134 |
+| 14/10/2026 | Manuel Cucca | RF-18: dove si assegna il tipo resta da definire, non urgente; fermo che l'entità nasce senza interrompere | DEC-134 |
