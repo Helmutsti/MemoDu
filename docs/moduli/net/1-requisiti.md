@@ -9,8 +9,8 @@ Come *utente* voglio scrivere un flusso di pensiero nel tempo, collegato a perso
 
 - Il modello è quello di Reflect o Mem: un flusso unico nel tempo, non un file per ogni nota (DEC-134).
 - Nella colonna una sezione **Brainet** (il nome «Net» di DEC-134 è cambiato in «Brainet», scelta di Manuel Cucca del 14/10/2026), sotto CLOUD e sopra Locale (DEC-134). Il cervello non sta più accanto al titolo: è l'icona della voce Database (scelta di Manuel Cucca del 14/10/2026).
-- Subito sotto il titolo della sezione la voce **Nuova nota Brainet** (scelta di Manuel Cucca del 14/10/2026): apre un foglio nuovo che accetta testo. Il foglio si archivia ma non si consulta come le altre note: entra a far parte di una «knowledge base» di nodi e connessioni. Come si consulta la knowledge base è ancora da capire; per ora si progetta l'input (Manuel Cucca, 14/10/2026).
-- Sotto Brainet, in quest'ordine: **Nuova nota Brainet**, **Database** (icona del database), **Entità** (icona del cervello), **Calendario** (scelte di Manuel Cucca del 14/10/2026; prima c'erano Database con l'elenco dei nodi e Doc con le date).
+- **Una nota nuova** si crea con il **+** accanto al titolo Brainet, come nelle altre sezioni (scelta di Manuel Cucca del 14/10/2026; prima era la voce «Nuova nota Brainet»): apre un foglio nuovo che accetta testo. Il foglio si archivia ma non si consulta come le altre note: entra a far parte di una «knowledge base» di nodi e connessioni. Come si consulta la knowledge base è ancora da capire; per ora si progetta l'input (Manuel Cucca, 14/10/2026).
+- Sotto Brainet, in quest'ordine: **Database** (icona del database), **Entità** (icona del cervello), **Calendario** (scelte di Manuel Cucca del 14/10/2026; prima c'erano Database con l'elenco dei nodi e Doc con le date).
 - **Database:** i singoli frammenti, cioè le note Brainet, con il loro testo. È l'unica vista che mostra il testo grezzo; si può nascondere dalle impostazioni.
 - **Entità:** i nodi della knowledge base: persone, oggetti, eventi, argomenti, e quelli senza tipo.
 - **Calendario:** i giorni con un pallino per ogni nota scritta, senza il testo.

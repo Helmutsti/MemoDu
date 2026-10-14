@@ -573,3 +573,4 @@
 | 14/10/2026 | Manuel Cucca | RF-18: Database diventa l'elenco dei frammenti con il testo, l'unica vista con il testo grezzo; Entità con il cervello per i nodi; Calendario con i pallini al posto di Doc; gruppo Brainet nelle impostazioni con «Usa Brainet» (spento non mostra altro) e «Mostra il Database»; richieste le «aree» di testo associate a oggetti o concetti | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18: le aree si creano selezionando la frase e scegliendo il nodo dal menu di @; disegnate la selezione e l'area creata | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18: le aree si evidenziano come con un evidenziatore invece di sottolinearle | DEC-134 |
+| 14/10/2026 | Manuel Cucca | RF-18: la nota nuova si crea con il + accanto a Brainet, come nelle altre sezioni; tolta la voce «Nuova nota Brainet» | DEC-134 |
