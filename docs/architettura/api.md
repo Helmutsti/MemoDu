@@ -508,7 +508,54 @@ Comandi del nucleo (`client/src-tauri/src/locale.rs`) su file e cartelle del dis
 **Output:** `{ "versione": 8, "ordine": 1521 }`. Il server tiene le versioni precedenti a scalare per 7 giorni (DEC-77, DEC-113).
 **Errori:** 409 `{ "attuale": { "id", "versione", "ordine", "ora", "dati" } }` se l'elemento è già a un'altra versione: il client fonde e riprova (DEC-76); 400, 401, 413, 426.
 
-## Accesso (RF-14, DEC-121; server fatto il 06/10/2026, client da fare)
+## Accesso con gli account (RF-14, RF-16, DEC-132, DEC-133; Fase 7, da sviluppare)
+Sostituisce, alla consegna, l'accesso dell'utente fisso descritto più sotto. Le chiavi si ricavano come oggi (sezione «Chiavi» qui sotto, `api/src/chiavi.ts`): cambia solo dove stanno i dati dell'utente e come si autorizza un dispositivo. Tutte le richieste portano `Memodu-Protocollo: 1` (altrimenti `426`); il corpo non va mai nel registro; l'email si confronta senza maiuscole e senza spazi ai lati. Nessun limite ai tentativi durante la prova (DEC-132).
+
+**Gettone del dispositivo (DEC-133):** 32 byte casuali in base64url, senza scadenza. Il server tiene solo la sua impronta SHA-256 nella riga del dispositivo e la cerca a ogni richiesta con `Authorization: Bearer <gettone>`: se la riga non c'è più (uscito, chiuso a distanza, scollegato da un cambio della password) risponde `401` e l'app mostra «Accedi di nuovo per sincronizzare» (RB-87). Le richieste della sincronizzazione restano quelle di oggi; cambia solo il controllo del gettone, che ora dice anche di quale account sono i blocchi.
+
+**Account:** li crea Manuel Cucca con `npm run account -w @memodu/api` (chiede email e password senza eco, controllate con RB-88; scrive la riga nel database di `DATABASE_URL`; stampa una volta sola la chiave di recupero, che durante la prova conserva lui). `-- --elenco` mostra email e data di creazione degli account. Il comando dell'utente fisso (`npm run utente`) si toglie.
+
+### POST /accesso/parametri
+Come oggi: `{ "email" }` → `{ "sale", "argon2" }`, cercati nella tabella degli account; per un'email sconosciuta il sale finto calcolato da `MEMODU_SEGRETO`.
+
+### POST /accesso
+**Input:** `{ "email", "prova", "tipo": "windows" | "macos" }`. **Output:** `{ "gettone", "dispositivo": "<uuid>", "chiave": "<chiave dati avvolta con la password>" }`. Crea la riga del dispositivo. **Errori:** 401 `Credenziali non valide` (SF-07, senza dire se è sbagliata l'email o la prova); 400 con la prova malformata.
+
+### POST /accesso/recupero/chiave
+**Input:** `{ "email", "prova_recupero" }`. **Output:** `{ "chiave_recupero": "<chiave dati avvolta con la chiave di recupero>", "sale", "argon2" }`: serve all'app per aprire la chiave dati e riavvolgerla con la password nuova (FL-14). **Errori:** 401.
+
+### POST /accesso/recupero
+**Input:** `{ "email", "prova_recupero", "nuova": { "sale", "argon2", "prova", "chiave" }, "recupero_nuovo": { "prova", "chiave" }, "scollega_altri": bool, "tipo" }`. `nuova.chiave` è la chiave dati avvolta con la password nuova, `recupero_nuovo.chiave` quella avvolta con la chiave di recupero nuova, nata sul dispositivo. In una transazione: controlla la prova di recupero, scrive sale, parametri, impronte e chiavi nuove, con `scollega_altri` cancella i dispositivi dell'account, crea la riga di questo dispositivo. **Output:** `{ "gettone", "dispositivo" }`; la chiave di recupero nuova si mostra solo dopo questa risposta (RB-99). **Ripetizione (SF-08):** se la prova di recupero non vale più ma l'impronta della prova di accesso è già quella di `nuova.prova` e quella di recupero è già quella di `recupero_nuovo.prova`, la richiesta era già passata: risponde con un dispositivo nuovo come se fosse riuscita. **Errori:** 401; 400 se mancano parti.
+
+### POST /accesso/password
+Con il gettone. **Input:** `{ "verifica": { "tipo": "password" | "recupero", "prova" }, "nuova": { "sale", "argon2", "prova", "chiave" }, "recupero_nuovo"?: { "prova", "chiave" }, "scollega_altri": bool }`; `recupero_nuovo` c'è solo con `tipo` `recupero` (RB-99). In una transazione controlla la prova, scrive i dati nuovi e con `scollega_altri` cancella gli altri dispositivi dell'account, non questo (RB-98). **Output:** `204`. **Ripetizione:** come il recupero, se i dati nuovi sono già quelli registrati risponde `204`. **Errori:** 401 senza gettone valido; 403 `Verifica non riuscita` con la password attuale o la chiave sbagliate (il dispositivo resta collegato); 400.
+
+### GET /dispositivi
+Con il gettone. **Output:** `[{ "id", "nome": "<cifrato>" | null, "tipo", "ultima_sincronizzazione": "<UTC>" | null, "questo": bool }]`, ordinati con questo dispositivo per primo, poi per ultima sincronizzazione. Il nome è cifrato con la chiave dati: lo apre l'app.
+
+### PUT /dispositivi/questo
+Con il gettone. **Input:** `{ "nome": "<cifrato>" }`, lungo al massimo 1 KB. L'app lo manda dopo l'accesso e quando il nome cambia (RB-51). **Output:** `204`.
+
+### DELETE /dispositivi/:id
+Con il gettone. Cancella la riga di un altro dispositivo dello stesso account (FL-15, RB-100). **Output:** `204`, anche se la riga non c'era più (SF-01, SF-20). **Errori:** 404 se l'id è di un altro account (SF-34, senza dire che esiste); 409 `Questo dispositivo` se è il dispositivo che chiede (si esce con `POST /accesso/esci`).
+
+### POST /accesso/esci
+Con il gettone. Cancella la riga di questo dispositivo. **Output:** `204`; senza gettone valido risponde `204` lo stesso, perché il dispositivo è già scollegato. Senza rete l'app scollega solo sé stessa: la riga resta sul server e il dispositivo si vede nell'elenco, da dove si può scollegare (RB-89).
+
+### Comandi del nucleo (`client/src-tauri/src/accesso.rs`)
+| Comando | Input | Output | Errori |
+|---|---|---|---|
+| `stato_accesso` | — | `{ "email": "…" \| null }` | — |
+| `accedi` | `{ "email", "password" }` | — | `"credenziali"`, `"rete"`, `"errore"`; dopo l'accesso manda il nome cifrato del dispositivo |
+| `esci` | — | — | Nessuno: manda le modifiche in attesa, chiama `POST /accesso/esci` se c'è rete, toglie la sessione (RB-89) |
+| `cambia_password` | `{ "attuale" \| "chiave_recupero", "nuova", "scollega_altri" }` | `{ "chiave_recupero": "…" \| null }`: la chiave nuova se si è usata quella di recupero | `"verifica"` (403), `"password"` (RB-88, con il motivo), `"rete"`, `"accesso"` (401), `"errore"` |
+| `recupera_account` | `{ "email", "chiave_recupero", "nuova", "scollega_altri" }` | `{ "chiave_recupero": "…" }` | `"credenziali"`, `"password"`, `"rete"`, `"errore"`; riuscito salva la sessione e fa partire la sincronizzazione |
+| `elenca_dispositivi` | — | `[{ "id", "nome", "tipo", "ultima_sincronizzazione", "questo" }]` | `"rete"`, `"accesso"`, `"errore"` |
+| `scollega_dispositivo` | `{ "id" }` | — | `"rete"`, `"accesso"`, `"errore"` |
+
+Argon2id gira fuori dal filo dell'interfaccia, come in `accedi`. **Sessione:** email, gettone del dispositivo, id del dispositivo e chiave dati nella voce «sessione» del portachiavi, senza scadenza; una sessione del formato vecchio (con il JWT) si scarta, e l'app chiede di accedere di nuovo una volta (DEC-133). L'evento `sincronizzazione` con `{ "tipo": "accesso-scaduto" }` resta quello di RB-87.
+
+## Accesso dell'utente fisso (RF-14, DEC-121; superato alla consegna di DEC-132)
 **Utente fisso:** `npm run utente -w @memodu/api` chiede email e password (senza eco, controllate con RB-88) e stampa le variabili d'ambiente del server e, una volta sola, la chiave di recupero: `MEMODU_EMAIL`, `MEMODU_SALE`, `MEMODU_ARGON2` (parametri), `MEMODU_IMPRONTA_ACCESSO`, `MEMODU_IMPRONTA_RECUPERO`, `MEMODU_CHIAVE_PASSWORD` e `MEMODU_CHIAVE_RECUPERO` (la chiave dati avvolta nei due modi), `MEMODU_SEGRETO` (firma dei JWT, 32 byte casuali, nuovo a ogni esecuzione). Con `-- --recupero` chiede la chiave di recupero e una password nuova e riusa la stessa chiave dati (RB-90); con `-- --nuovo-recupero` chiede la password e stampa una chiave di recupero nuova. Le ultime due leggono i dati attuali da `api/.env` o dalle variabili d'ambiente. Con tutte le variabili assenti l'accesso è spento; con alcune sì e altre no il server non parte e dice quali mancano. In locale le stesse variabili stanno in `api/.env`, accanto all'API, che fa da database simulato degli utenti ed è escluso da git (scelta di Manuel Cucca il 06/10/2026): ci si copiano a mano le righe stampate dal comando, nel formato di `api/.env.esempio`; `npm run api` lo legge all'avvio. Nessuna richiesta porta mai la password, la chiave di recupero o la chiave dati in chiaro, e nessuna di queste va nel registro.
 
 **Chiavi (il nucleo del client deve fare gli stessi passi, `api/src/chiavi.ts`):**

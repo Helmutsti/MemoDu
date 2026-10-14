@@ -89,6 +89,25 @@ Approvata da Manuel Cucca il 09/10/2026. L'editor resta CodeMirror (DEC-131, agg
 - **Avviso:** «server irraggiungibile» dopo un'ora senza sincronizzazioni riuscite (RB-40, DEC-112).
 - **Versioni di app e server:** ogni richiesta porta la versione del protocollo; se incompatibile, avviso «errore di sincronizzazione» e si continua sulla copia di lavoro (DEC-83).
 
+## Account nel database (RF-14, RF-16, DEC-132, DEC-133; Fase 7)
+**Modello dati fisico** (migrazione 2 dello schema del server, `api/src/schema.ts`):
+
+| Tabella | Colonne | Chiavi e indici |
+|---|---|---|
+| `utenti` (EN-05) | `id` uuid, `email` text (minuscola), `sale` text, `argon2` text («memoria,passaggi,fili»), `impronta_accesso` text, `impronta_recupero` text, `chiave_password` text, `chiave_recupero` text, `creato_il` timestamptz | `id` chiave; `email` unica |
+| `dispositivi` (EN-06) | `id` uuid, `utente` uuid, `impronta_gettone` text, `tipo` text («windows» o «macos»), `nome` text cifrato o null, `collegato_il` timestamptz, `ultima_sincronizzazione` timestamptz o null | `id` chiave; `utente` riferisce `utenti` con cancellazione a cascata; `impronta_gettone` unica |
+| `versioni` | in più `utente` uuid, non nullo | chiave `(utente, id, versione)`; indice `(utente, ordine)` |
+
+**Migrazione dell'utente fisso:** la migrazione 2 crea le tabelle; se nelle variabili d'ambiente c'è l'utente fisso (DEC-121), lo inserisce come primo account con gli stessi dati (stessa chiave dati: le note non si ricifrano) e gli assegna tutte le righe di `versioni`; poi rende `utente` obbligatorio. Con righe in `versioni` e senza utente fisso la migrazione si ferma con un errore. Dopo il rilascio, su Vercel restano `DATABASE_URL` e `MEMODU_SEGRETO`; le altre variabili `MEMODU_*` si tolgono (runbook).
+
+**Sincronizzazione:** ogni lettura e scrittura filtra per l'account del gettone (RF-10): `modificheDopo(utente, n)` e `scrivi(utente, id, base, dati)`. Il numero d'ordine resta unico per tutto il database, così un account vede numeri crescenti ma non consecutivi, e il client non cambia; l'identificativo dell'archivio resta uno solo. Il blocco che mette in fila le scritture resta unico. A ogni lettura delle modifiche il server aggiorna `ultima_sincronizzazione` del dispositivo (RB-100).
+
+**Cambio della password e recupero (FL-14):** la chiave dati non cambia mai; il dispositivo la riavvolge con la password nuova (e con la chiave di recupero nuova, se nasce) e il server scrive tutto in una transazione, insieme alla cancellazione degli altri dispositivi se richiesta. Una richiesta ripetuta dopo una risposta persa trova i dati già scritti e risponde come riuscita (SF-08).
+
+**Risposta tecnica alle sfighe:** SF-01 il pulsante in caricamento e le richieste ripetibili; SF-08 e SF-10 le richieste ripetibili e la chiave nuova mostrata solo dopo la conferma; SF-20 lo scollegamento di un dispositivo già scollegato risponde `204`; SF-22 vale l'ultima transazione; SF-25 e SF-42 il `401` alla prima richiesta; SF-30 i messaggi del server non raggiungibile; SF-34 ogni richiesta è legata all'account del gettone, mai a un id mandato dall'app; SF-35 nessun limite durante la prova (rischio accettato, DEC-132).
+
+**Ambienti:** gli stessi di oggi (`architettura/ambienti.md`): locale con un database Postgres di prova e `api/.env`; prova e produzione sono il database Neon e il server su Vercel di oggi (DEC-132). Le prove del server girano su un database effimero.
+
 ## Schema generale
 ```mermaid
 flowchart LR
@@ -101,8 +120,9 @@ flowchart LR
 ```
 
 ## Sicurezza
+- **Autenticazione con gli account (DEC-132, DEC-133, alla consegna):** più account nella tabella `utenti`; le chiavi si ricavano come qui sotto; ogni dispositivo ha un gettone opaco senza scadenza, di cui il server tiene l'impronta e che controlla a ogni richiesta (sezione «Account nel database»). Fino alla consegna vale il punto seguente.
 - **Autenticazione (DEC-121):** un solo utente, per ora fisso. Sul dispositivo Argon2id(password, sale) con 64 MiB, 3 passaggi e 1 filo (crate `argon2`); dal risultato HKDF-SHA256 (crate `hkdf`) ricava la prova di accesso, che va al server, e la chiave della cassaforte, che non lascia il dispositivo. Il server confronta l'impronta SHA-256 della prova e restituisce un JWT HS256 firmato con un segreto suo (`node:crypto`, nessuna libreria). Architettura temporanea: un JWT di 30 giorni, rinnovato dall'app quando ne mancano meno di 7, e i dati dell'utente nelle variabili d'ambiente. Architettura finale: JWT di 15 minuti, gettone di rinnovo opaco di 90 giorni ruotato a ogni uso e revocabile, e i dati dell'utente in una tabella. Nessun limite ai tentativi, per ora.
-- **Autorizzazione per ruolo:** nessun ruolo: un solo utente (DEC-13).
+- **Autorizzazione per ruolo:** nessun ruolo. Con gli account (DEC-132) ogni richiesta vede solo i blocchi e i dispositivi dell'account del gettone; gli account li gestisce Manuel Cucca dal comando del server.
 - **Protezione dei dati sensibili:** cifratura end-to-end (DEC-08, DEC-121): le note si cifrano con una chiave dati casuale, che sul server sta solo avvolta due volte, con la chiave della cassaforte e con quella ricavata dalla chiave di recupero (RB-90). Sul dispositivo gettone e chiave dati stanno nel portachiavi del sistema (crate `keyring`); la copia di lavoro sul disco resta in chiaro (rischio accettato).
 - **File locali (DEC-118):** i comandi di Locale accettano solo percorsi dentro le cartelle che l'utente ha aggiunto; il nucleo risolve il percorso vero (anche dietro un collegamento simbolico) e rifiuta quelli che escono. L'elenco e le modifiche in sospeso restano nella copia di lavoro di questo computer.
 
