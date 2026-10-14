@@ -27,7 +27,7 @@ Se il download dalla release è bloccato (fiducia del browser o dell'antivirus),
 
 ### Collegare un computer nuovo
 1. Installa Memodu come sopra.
-2. Impostazioni › box dell'account › Accedi, con email e password dell'utente.
+2. Impostazioni › box dell'account › Accedi, con email e password dell'account.
 3. Al primo accesso arrivano tutte le note; nel box il pallino passa da grigio a verde «Sincronizzata». Dai al computer un nome nel box («Nome del dispositivo»).
 4. Locale non si sincronizza: le cartelle si aggiungono di nuovo su ogni computer.
 
@@ -42,7 +42,8 @@ Il vecchio `memodu.db` e il file `credenziali` nella stessa cartella vengono dal
 
 ### Server
 - **Vercel**, progetto dell'API (Root Directory `api`): ripubblica da solo a ogni invio su `main`; dopo un cambio delle variabili si rifà il deploy a mano (Deployments › Redeploy).
-- **Variabili:** `DATABASE_URL` (messa dall'integrazione con Neon) e le otto `MEMODU_*` dell'utente fisso stampate da `npm run utente -w @memodu/api` (`MEMODU_EMAIL`, `MEMODU_SALE`, `MEMODU_ARGON2`, `MEMODU_IMPRONTA_ACCESSO`, `MEMODU_IMPRONTA_RECUPERO`, `MEMODU_CHIAVE_PASSWORD`, `MEMODU_CHIAVE_RECUPERO`, `MEMODU_SEGRETO`). Senza utente fisso il server non parte.
+- **Variabili (account nel database, DEC-132):** `DATABASE_URL` (messa dall'integrazione con Neon) e `MEMODU_SEGRETO` (32 byte casuali in base64url; senza, il server non parte). Gli account stanno nel database. Le altre sette `MEMODU_*` dell'utente fisso (DEC-121) servono solo alla prima partenza della versione con gli account, che ne fa il primo account (vedi «Passare agli account nel database»); dopo si tolgono.
+- **Account:** li crea Manuel Cucca dalla cartella del progetto con `npm run account -w @memodu/api`, con `DATABASE_URL` di Neon nell'ambiente (o in `api/.env`): chiede email e password (almeno 12 caratteri, RB-88) e stampa una volta sola la chiave di recupero, che durante la prova conserva lui (DEC-132). `npm run account -w @memodu/api -- --elenco` mostra gli account. Senza `DATABASE_URL` il comando usa il database del server locale, che va fermato prima.
 - **Neon:** il database lo crea e lo aggiorna il server da solo (schema in `api/src/schema.ts`); non ci sono passi a mano.
 
 ## Backup e ripristino
@@ -83,7 +84,7 @@ Cosa protegge oggi:
 
 ### «Accedi di nuovo per sincronizzare»
 **Sintomi:** pallino rosso e Accedi al posto di Esci; avviso in alto.
-**Cause:** il computer non si è collegato per più di 30 giorni, oppure è cambiato `MEMODU_SEGRETO` o la password.
+**Cause (DEC-132, DEC-133):** il dispositivo è stato scollegato da un altro (Dispositivi collegati), o da un cambio della password o da un recupero con «Scollega gli altri miei dispositivi»; oppure è la prima apertura dopo il passaggio agli account. L'accesso non scade.
 **Cosa fare:** Impostazioni › Accedi. Le modifiche fatte nel frattempo partono dopo l'accesso.
 
 ### Il server è stato ricreato (database nuovo o perso)
@@ -98,23 +99,24 @@ Cosa protegge oggi:
 **Cosa fare:** è voluto, nessun testo è perso (DEC-06). Apri le due note, tieni nell'originale quello che serve e manda la copia nel cestino.
 
 ### Computer perso o rubato
-Vedi «Dispositivo perso» qui sotto: si cambia `MEMODU_SEGRETO`, e la copia di lavoro su quel computer resta leggibile da chi ha il computer (rischio accettato, la copia di lavoro non è cifrata sul disco).
+Da un altro computer: Impostazioni › box dell'account › Dispositivi collegati › Scollega sul computer perso (RB-100). Al primo contatto con il server smette di sincronizzare. Cambia anche la password se poteva essere salvata lì. La copia di lavoro su quel computer resta leggibile da chi ha il computer (rischio accettato, la copia di lavoro non è cifrata sul disco).
 
 ### L'installatore è bloccato
 **Sintomi:** Windows mostra SmartScreen, il browser o l'antivirus non lasciano scaricare; macOS dice che l'app non si può aprire.
 **Cosa fare:** su Windows «Ulteriori informazioni» › «Esegui comunque», oppure compila l'installatore sul computer stesso (vedi sopra); su macOS tasto destro › Apri. Succede perché gli installatori non sono firmati (rinvio: prima di dare Memodu ad altre persone).
 
-### Password persa (DEC-121)
-**Sintomi:** non ricordi la password dell'utente fisso.
-**Cosa fare:**
-1. Prendi il foglio con la chiave di recupero.
-2. Dalla cartella del progetto, con `api/.env` attuale o le variabili di Vercel nell'ambiente: `npm run utente -w @memodu/api -- --recupero`; chiede la chiave di recupero e la password nuova (almeno 12 caratteri, RB-88) e riusa la stessa chiave dati, quindi le note non si ricifrano.
-3. Su Vercel, progetto dell'API › Settings › Environment Variables: metti i valori nuovi e rifai il deploy.
-4. Su ogni dispositivo compare «Accedi di nuovo per sincronizzare»: accedi con la password nuova.
+### Password persa (DEC-132)
+**Sintomi:** chi prova Memodu non ricorda la password.
+**Cosa fare:** dalla finestra di accesso, «Password dimenticata?»: email, chiave di recupero e password nuova (RB-99). Le note non si ricifrano. Alla fine l'app mostra una chiave di recupero nuova, una volta sola: durante la prova la persona la manda a Manuel Cucca, che tiene le chiavi di tutti; quella di prima non vale più. Se la persona non ha la chiave, gliela ridà Manuel Cucca.
 
-Senza il foglio e senza la password le note sul server non si recuperano: restano solo le copie di lavoro dei dispositivi (RB-90).
+Senza password e senza chiave di recupero le note sul server non si recuperano: restano solo le copie di lavoro dei dispositivi (RB-90).
 
-### Dispositivo perso, o chiave di recupero finita in mani sbagliate (DEC-121)
-**Cosa fare:**
-1. Dispositivo perso: cambia `MEMODU_SEGRETO` su Vercel e rifai il deploy; tutti i gettoni smettono di valere e ogni dispositivo rifà l'accesso. Cambia anche la password se poteva essere salvata su quel dispositivo.
-2. Chiave di recupero in mani sbagliate: `npm run utente -w @memodu/api -- --nuovo-recupero` chiede la password e stampa una chiave di recupero nuova e le variabili; aggiornale, stampa la chiave nuova e distruggi il foglio vecchio.
+### Chiave di recupero finita in mani sbagliate (DEC-132)
+Dall'app: Impostazioni › Cambia password › «Usa la chiave di recupero»: con la chiave di recupero e una password nuova nasce una chiave nuova e quella vecchia smette di valere (RB-99). Accendi «Scollega gli altri miei dispositivi» se qualcuno potrebbe essersi collegato.
+
+### Passare agli account nel database (DEC-132, una volta sola)
+1. Prima del rilascio, prova la migrazione su un ramo di Neon copiato dalla produzione (TC-175): un server locale con `DATABASE_URL` del ramo e le otto variabili `MEMODU_*` di Vercel; accedi e controlla che le note ci siano.
+2. Rilascia il server con gli account lasciando su Vercel le variabili dell'utente fisso: alla prima partenza lo schema 2 ne fa il primo account, con la stessa chiave dati, e gli assegna tutte le note.
+3. Su ogni computer, dopo l'aggiornamento dell'app, compare una volta «Accedi di nuovo per sincronizzare»: accedi con la stessa email e la stessa password.
+4. Togli da Vercel `MEMODU_EMAIL`, `MEMODU_SALE`, `MEMODU_ARGON2`, `MEMODU_IMPRONTA_ACCESSO`, `MEMODU_IMPRONTA_RECUPERO`, `MEMODU_CHIAVE_PASSWORD` e `MEMODU_CHIAVE_RECUPERO`; resta `MEMODU_SEGRETO`.
+5. Crea gli account delle persone che provano con `npm run account -w @memodu/api` e conserva le loro chiavi di recupero.
