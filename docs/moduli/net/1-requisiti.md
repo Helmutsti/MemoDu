@@ -35,7 +35,16 @@ Proposta disegnata il 14/10/2026 nel file Mockup, blocco «Proposta · Brainet (
 **Collegamenti:** FL-00 · EN-00 · SC-00 · ID-04
 
 ### Scenario d'uso
-[Da scrivere]
+Approvato da Manuel Cucca il 14/10/2026.
+
+Nelle Impostazioni accendo «Usa Brainet», e nella colonna compare la sezione Brainet tra CLOUD e LOCALE. Dopo una telefonata premo il «+» accanto a Brainet e si apre un foglio nuovo. Scrivo «Chiamata con @lu», dal menu scelgo Luca Bianchi e il nome diventa una pillola. Continuo: «il preventivo della serra arriva venerdì». Seleziono la frase e, dal menu che compare, scelgo lo stato «Importante», l'oggetto Serra e l'argomento Preventivi: la frase resta evidenziata. A pranzo scrivo un'altra nota con «@gior»: Giorgio non c'è ancora, lo creo e nasce senza tipo. Passando sopra la frase evidenziata vedo la linguetta «Importante · Serra · Preventivi»; con la freccia tolgo Preventivi. La sera apro il Calendario e vedo tre pallini su oggi. In Entità trovo Luca, la Serra e Giorgio «senza tipo». Il testo intero lo rileggo solo nel Database; quando presto il computer a qualcuno, spengo «Mostra il Database».
+
+### Punti aperti
+- I modi di «leggere» la knowledge base: da studiare (Manuel Cucca).
+- Dove si assegna il tipo a un'entità nata senza tipo (prima il Database, ora Entità).
+- La stessa persona scritta con nomi diversi: unire due entità.
+- Sincronizzazione e cifratura di frammenti, entità, aree e stati: come le note?
+- Priorità di RF-18.
 
 ### Criteri di accettazione
 - [Fase 8]
