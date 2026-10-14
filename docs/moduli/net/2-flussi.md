@@ -1,6 +1,6 @@
 # Brainet – Flussi
 
-<!-- Fase 2 della guida. I diagrammi si scrivono in Mermaid. Scritti dall'agente il 14/10/2026 dalle scelte di Manuel Cucca in `1-requisiti.md`; da approvare. -->
+<!-- Fase 2 della guida. I diagrammi si scrivono in Mermaid. Scritti dall'agente il 14/10/2026 dalle scelte di Manuel Cucca in `1-requisiti.md`; approvati da Manuel Cucca il 14/10/2026, con le proposte dell'agente. -->
 
 ## FL-16 – Scrivere una nota Brainet
 **Requisito:** RF-18 · **Attori:** Utente, Sistema
