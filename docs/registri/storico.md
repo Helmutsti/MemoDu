@@ -579,3 +579,4 @@
 | 14/10/2026 | Manuel Cucca | RF-18: gli stati si scelgono dal menu che compare evidenziando; l'elenco degli stati si crea nelle Impostazioni; passando sopra un'area compare un riquadro con una linguetta e una freccia | DEC-134 |
 | 14/10/2026 | Agente IA | RF-18: disegnati la sezione Stati nel menu della selezione e l'elenco degli stati nelle Impostazioni (proposte) | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18: approvati la sezione Stati nel menu e l'elenco degli stati nelle Impostazioni; disegnata la linguetta sopra l'area dal suo riquadro «ideamia» | DEC-134 |
+| 14/10/2026 | Manuel Cucca | RF-18: la freccia della linguetta apre lo stesso menu della selezione, con le voci già scelte spuntate | DEC-134 |
