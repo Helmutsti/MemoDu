@@ -550,3 +550,5 @@
 | 14/10/2026 | Manuel Cucca | Pulizia del file dei wireframe: una pagina sola con un blocco per flusso; cancellate 12 schermate superate e la versione web stretta (collegamenti segnati «rimosso» nei documenti) | — |
 | 14/10/2026 | Manuel Cucca | Fase 6 di RF-14 e RF-16 approvata: mockup del recupero, del cambio della password e dei dispositivi collegati | DEC-132 |
 | 14/10/2026 | Agente IA | Fase 7 di RF-14 e RF-16 scritta: account e dispositivi nel database, gettone del dispositivo senza scadenza (DEC-133, proposta); da approvare | DEC-132, DEC-133 |
+| 14/10/2026 | Manuel Cucca | Fase 7 di RF-14 e RF-16 approvata; DEC-133 accettata: un gettone per dispositivo senza scadenza, controllato a ogni richiesta | DEC-133 |
+| 14/10/2026 | Agente IA | Fase 8 di RF-14 e RF-16: CA-14.23 … CA-14.36 (superati CA-14.7, CA-14.12, CA-14.16), CA-16.1 … CA-16.6, CA-10.17, TC-174 … TC-194; da approvare | DEC-132 |

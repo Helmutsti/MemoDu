@@ -508,7 +508,7 @@ Comandi del nucleo (`client/src-tauri/src/locale.rs`) su file e cartelle del dis
 **Output:** `{ "versione": 8, "ordine": 1521 }`. Il server tiene le versioni precedenti a scalare per 7 giorni (DEC-77, DEC-113).
 **Errori:** 409 `{ "attuale": { "id", "versione", "ordine", "ora", "dati" } }` se l'elemento è già a un'altra versione: il client fonde e riprova (DEC-76); 400, 401, 413, 426.
 
-## Accesso con gli account (RF-14, RF-16, DEC-132, DEC-133; Fase 7, da sviluppare)
+## Accesso con gli account (RF-14, RF-16, DEC-132, DEC-133; Fase 7 approvata il 14/10/2026, da sviluppare)
 Sostituisce, alla consegna, l'accesso dell'utente fisso descritto più sotto. Le chiavi si ricavano come oggi (sezione «Chiavi» qui sotto, `api/src/chiavi.ts`): cambia solo dove stanno i dati dell'utente e come si autorizza un dispositivo. Tutte le richieste portano `Memodu-Protocollo: 1` (altrimenti `426`); il corpo non va mai nel registro; l'email si confronta senza maiuscole e senza spazi ai lati. Nessun limite ai tentativi durante la prova (DEC-132).
 
 **Gettone del dispositivo (DEC-133):** 32 byte casuali in base64url, senza scadenza. Il server tiene solo la sua impronta SHA-256 nella riga del dispositivo e la cerca a ogni richiesta con `Authorization: Bearer <gettone>`: se la riga non c'è più (uscito, chiuso a distanza, scollegato da un cambio della password) risponde `401` e l'app mostra «Accedi di nuovo per sincronizzare» (RB-87). Le richieste della sincronizzazione restano quelle di oggi; cambia solo il controllo del gettone, che ora dice anche di quale account sono i blocchi.

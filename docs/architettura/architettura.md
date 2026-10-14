@@ -89,7 +89,7 @@ Approvata da Manuel Cucca il 09/10/2026. L'editor resta CodeMirror (DEC-131, agg
 - **Avviso:** «server irraggiungibile» dopo un'ora senza sincronizzazioni riuscite (RB-40, DEC-112).
 - **Versioni di app e server:** ogni richiesta porta la versione del protocollo; se incompatibile, avviso «errore di sincronizzazione» e si continua sulla copia di lavoro (DEC-83).
 
-## Account nel database (RF-14, RF-16, DEC-132, DEC-133; Fase 7)
+## Account nel database (RF-14, RF-16, DEC-132, DEC-133; Fase 7 approvata il 14/10/2026)
 **Modello dati fisico** (migrazione 2 dello schema del server, `api/src/schema.ts`):
 
 | Tabella | Colonne | Chiavi e indici |
