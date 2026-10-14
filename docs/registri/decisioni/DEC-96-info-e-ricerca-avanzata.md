@@ -3,7 +3,7 @@
 **Data:** 2026-10-01 · **Stato:** Accettata · **Idea di origine:** ID-32, ID-33
 
 ## Contesto
-Manuel Cucca ha chiesto di ridisegnare la finestra dei dettagli (ID-32, CMP-24: una finestra modale al centro con il velo, aperta dal menu `···` o dal tasto destro sulla nota) e di avere un «filtro a tutto schermo» quando i risultati non stanno nella card della ricerca (ID-33, CMP-13). Proposte nelle pagine [Proposta · Dettagli](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=136-2382) e [Proposta · Filtro a tutto schermo](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=132-2382) del file dei mockup.
+Manuel Cucca ha chiesto di ridisegnare la finestra dei dettagli (ID-32, CMP-24: una finestra modale al centro con il velo, aperta dal menu `···` o dal tasto destro sulla nota) e di avere un «filtro a tutto schermo» quando i risultati non stanno nella card della ricerca (ID-33, CMP-13). Proposte nelle pagine [Proposta · Dettagli](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=136-2382) *(rimosso dal file il 14/10/2026)* e [Proposta · Filtro a tutto schermo](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=132-2382) *(rimosso dal file il 14/10/2026)* del file dei mockup.
 
 ## Opzioni valutate
 Per i dettagli: A) una pagina al posto del foglio, come Impostazioni; B) un pannello fisso a destra, non modale; C) una comparsa sotto il titolo del percorso; C2) come C, ma senza il menu `···`, con Chiudi nota ed Elimina nella comparsa (idea di Manuel Cucca).

@@ -10,7 +10,7 @@ A) Barra del sistema dello stesso colore dell'app (DEC-54).
 B) Foglio unico: niente barra; in alto a destra solo ··· e i pulsanti della finestra; la colonna compare a sinistra quando serve e si può fissare.
 
 ## Decisione
-Scelta di Manuel Cucca: **B**, come disegnata nella pagina [Proposta · Foglio unico](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=70-1636) del file Mockup.
+Scelta di Manuel Cucca: **B**, come disegnata nella pagina [Proposta · Foglio unico](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=70-1636) *(rimosso dal file il 14/10/2026)* del file Mockup.
 - Niente barra del programma. In alto a destra ··· (Altre azioni) e i pulsanti _ [] X; su Windows li disegna Memodu uguali a quelli del sistema, su macOS restano i tre pallini del sistema su una barra trasparente. Si trascina la finestra dalla fascia in alto (32 px); il doppio clic la ingrandisce.
 - Colonna chiusa: nessuna icona. Con il mouse entro 48 px dal bordo sinistro compare «| →» in alto a sinistra (anche con il focus da tastiera); allontanandosi sparisce.
 - «| →» apre la colonna sopra il foglio, con l'ombra dei flottanti; il foglio non si sposta. «← |» la richiude; scegliere una nota non la chiude.

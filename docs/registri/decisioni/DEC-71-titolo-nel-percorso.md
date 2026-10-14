@@ -3,7 +3,7 @@
 **Data:** 2026-09-30 · **Stato:** Accettata · **Idea di origine:** —
 
 ## Contesto
-Nel foglio della nota aperta (SC-03) il titolo sta in cima, grande (Nota/Titolo), con sotto la riga dei metadati: ultima modifica e tag in sola lettura (DEC-44). Manuel Cucca: «voglio spostare il titolo in alto in una breadcrumb che mostra anche eventuali cartelle» e poi «dobbiamo trovare un posto più carino per tag e ultima modifica». Proposte nella pagina [Proposta · Titolo nel percorso](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=88-4408) del file dei mockup.
+Nel foglio della nota aperta (SC-03) il titolo sta in cima, grande (Nota/Titolo), con sotto la riga dei metadati: ultima modifica e tag in sola lettura (DEC-44). Manuel Cucca: «voglio spostare il titolo in alto in una breadcrumb che mostra anche eventuali cartelle» e poi «dobbiamo trovare un posto più carino per tag e ultima modifica». Proposte nella pagina [Proposta · Titolo nel percorso](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=88-4408) *(rimosso dal file il 14/10/2026)* del file dei mockup.
 
 ## Opzioni valutate
 Per il percorso: A) nella fascia in alto, allineato al testo; B) in una pillola flottante a sinistra; C) al centro della fascia, come il titolo di una finestra.

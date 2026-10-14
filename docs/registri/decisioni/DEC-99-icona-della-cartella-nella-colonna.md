@@ -3,7 +3,7 @@
 **Data:** 2026-10-01 · **Stato:** Accettata · **Idea di origine:** ID-34
 
 ## Contesto
-Nella colonna le cartelle si riconoscevano dalle note solo per la freccia ▸/▾ e per il numero di note (CMP-06); in CMP-06 c'era scritto «Niente icona di cartella: la direzione C tiene la colonna pulita (DEC-12)». Manuel Cucca ha chiesto un'icona della cartella al posto della freccia, per dividere di più note e cartelle. Proposte nella pagina [Proposta · Icona della cartella](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=180-2948) del file dei mockup.
+Nella colonna le cartelle si riconoscevano dalle note solo per la freccia ▸/▾ e per il numero di note (CMP-06); in CMP-06 c'era scritto «Niente icona di cartella: la direzione C tiene la colonna pulita (DEC-12)». Manuel Cucca ha chiesto un'icona della cartella al posto della freccia, per dividere di più note e cartelle. Proposte nella pagina [Proposta · Icona della cartella](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=180-2948) *(rimosso dal file il 14/10/2026)* del file dei mockup.
 
 ## Opzioni valutate
 A) La cartella chiusa o aperta al posto della freccia; le note restano senza icona.
