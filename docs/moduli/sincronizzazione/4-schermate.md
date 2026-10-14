@@ -27,7 +27,7 @@ L'avviso resta sul dispositivo in cui nasce (DEC-90). L'avviso dell'accesso scad
 ## SC-07 – Collegamento bloccato
 **Flussi:** FL-08 · **Componenti:** stato vuoto (variante Blocco), pulsante
 
-- **Wireframe:** [collegamento bloccato](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=51-169)
+- **Wireframe:** [collegamento bloccato](https://www.figma.com/design/ioeRDMTxu3TEMoLN8rinAK/Memodu--Wireframe--Fase-4-?node-id=51-169) *(rimosso dal file il 14/10/2026)*
 - **Esportazioni:** `immagini/SC-07.png`
 - **Mockup:** [Fase 6]
 

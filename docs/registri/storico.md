@@ -547,3 +547,4 @@
 | 14/10/2026 | Manuel Cucca | Componenti dell'account approvati; token nuovo `raggio-casella` = 4 per la casella quadrata | DEC-132 |
 | 14/10/2026 | Manuel Cucca | Fase 5 di DEC-132 chiusa: libreria pubblicata con CMP-33 … CMP-36, CMP-22 e CMP-32 aggiornati | DEC-132 |
 | 14/10/2026 | Manuel Cucca | Pulizia del file dei mockup: una pagina sola con un blocco per flusso, l'ultimo in fondo; cancellate le 7 pagine di proposte decise, le 2 pagine vuote e 20 schermate superate (collegamenti segnati «rimosso» nei documenti) | — |
+| 14/10/2026 | Manuel Cucca | Pulizia del file dei wireframe: una pagina sola con un blocco per flusso; cancellate 12 schermate superate e la versione web stretta (collegamenti segnati «rimosso» nei documenti) | — |
