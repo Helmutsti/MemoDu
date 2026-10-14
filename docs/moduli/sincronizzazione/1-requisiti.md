@@ -42,7 +42,7 @@ Scritti dall'agente dai flussi e dalle decisioni (FL-07, DEC-75 … DEC-83). Con
 ---
 
 ## RF-14 – Accesso all'installazione
-**Priorità:** Must · **Origine:** DEC-05, DEC-121, DEC-132 · **Fase:** 2 · **Stato:** In progettazione (account nel database, DEC-132); implementato con l'utente fisso di DEC-121 (rilasciato fino alla 0.1.13, 07/10/2026)
+**Priorità:** Must · **Origine:** DEC-05, DEC-121, DEC-132 · **Fase:** 3 · **Stato:** In progettazione (account nel database, DEC-132); implementato con l'utente fisso di DEC-121 (rilasciato fino alla 0.1.13, 07/10/2026)
 
 > DEC-132 (13/10/2026): requisito riaperto dalla Fase 1 per gli account nel database. Lo scenario d'uso è riscritto per gli account nel database (approvato da Manuel Cucca il 14/10/2026); i criteri di accettazione qui sotto valgono per l'utente fisso e si riscrivono in Fase 8, dopo flussi e mockup.
 
@@ -53,9 +53,9 @@ Come *utente* voglio accedere una volta con email e password per sincronizzare l
 - Dopo l'accesso si resta collegati: ogni dispositivo ha il suo accesso, che non scade e dura finché si esce o finché lo si chiude a distanza (RF-16, DEC-132). Accesso e chiave dati stanno nel portachiavi del sistema.
 - Senza accesso, o con l'accesso chiuso o rifiutato, Memodu si apre comunque sulla copia di lavoro e non si blocca mai: le modifiche aspettano e un avviso porta a SC-05 (RB-87). Senza rete si lavora come sempre (DEC-02). L'avvio resta istantaneo (RNF-01).
 - La password ha almeno 12 caratteri, senza regole di complessità, e non può essere una delle più comuni (RB-88).
-- Dall'app si cambia la password; al cambio la persona sceglie se scollegare gli altri suoi dispositivi, che dovranno rifare l'accesso con la password nuova (scelta di Manuel Cucca il 13/10/2026). Le note non si ricifrano.
+- Dall'app si cambia la password, scrivendo la password attuale oppure la chiave di recupero, più quella nuova (scelta di Manuel Cucca il 14/10/2026); con la chiave di recupero ne nasce una nuova, come nel recupero. Al cambio la persona sceglie se scollegare gli altri suoi dispositivi, che dovranno rifare l'accesso con la password nuova (scelta di Manuel Cucca il 13/10/2026). Le note non si ricifrano.
 - «Esci» nel box dell'account delle impostazioni (SC-06, DEC-122) scollega il dispositivo; la copia di lavoro resta (RB-89).
-- Password persa: dall'app, con la chiave di recupero stampata alla creazione dell'account, se ne sceglie una nuova senza perdere le note (RB-90, DEC-132). Al recupero nasce una chiave di recupero nuova, mostrata una volta, e quella usata smette di valere (scelta di Manuel Cucca il 13/10/2026). Durante la prova le chiavi di recupero le conserva Manuel Cucca: la chiave nuova la vede solo l'utente, che ha cura di mandarla a Manuel Cucca, e solo in questa fase di prova (scelta di Manuel Cucca il 14/10/2026).
+- Password persa: dall'app, con la chiave di recupero stampata alla creazione dell'account, se ne sceglie una nuova senza perdere le note (RB-90, DEC-132). Al recupero nasce una chiave di recupero nuova, mostrata una volta, e quella usata smette di valere (scelta di Manuel Cucca il 13/10/2026). Anche qui la persona sceglie se scollegare gli altri dispositivi (scelta di Manuel Cucca il 14/10/2026). Durante la prova le chiavi di recupero le conserva Manuel Cucca: la chiave nuova la vede solo l'utente, che ha cura di mandarla a Manuel Cucca, e solo in questa fase di prova (scelta di Manuel Cucca il 14/10/2026).
 - Nessun limite ai tentativi di accesso durante la prova (DEC-132, rischio accettato in `avanzamento.md`).
 
 **Collegamenti:** FL-08 · EN-05 · EN-06 · SC-05 · SC-06 · RF-10 · RNF-02
@@ -114,13 +114,13 @@ Anche se si sviluppa dopo la prima fase, il modo in cui si salvano le note deve 
 ---
 
 ## RF-16 – Elenco dei dispositivi e uscita a distanza
-**Priorità:** Must (da Should, DEC-132) · **Origine:** DEC-132 · **Fase:** 2 · **Stato:** In progettazione
+**Priorità:** Must (da Should, DEC-132) · **Origine:** DEC-132 · **Fase:** 3 · **Stato:** In progettazione
 
 > Da ripensare (DEC-13, DEC-121): nell'architettura temporanea di DEC-121 tutti i dispositivi condividono il segreto dei gettoni e non se ne può far uscire uno solo; nell'architettura finale ognuno ha il suo gettone di rinnovo, che si può revocare. Senza web cade l'esempio del browser dimenticato aperto, e uscendo la copia di lavoro resta (RB-89).
 
 Come *utente* voglio vedere l'elenco dei dispositivi da cui ho accesso e farne uscire uno a distanza, per chiudere un accesso dimenticato aperto, per esempio sul browser di un computer non mio (SF-26).
 
-Nell'elenco: nome, tipo e ultima sincronizzazione di ogni dispositivo (EN-06), con il comando "Fai uscire". Al successivo contatto con il server, quel dispositivo esce e cancella la copia di lavoro (RB-41).
+Nell'elenco: nome, tipo e ultima sincronizzazione di ogni dispositivo (EN-06), con il comando "Fai uscire". Al successivo contatto con il server, quel dispositivo si scollega come con «Esci»: la sincronizzazione si ferma e la copia di lavoro resta (scelta di Manuel Cucca il 14/10/2026, RB-89; RB-41 è superata).
 
 **Collegamenti:** FL-00 · EN-06 · SC-00 · RF-14
 
