@@ -568,3 +568,4 @@
 | 14/10/2026 | Manuel Cucca | RF-18: la sezione si chiama Brainet; «Nuova nota Brainet» subito sotto il titolo; i collegamenti sono pillole, con la foto quando c'è (MiaPropostaLink); proposta ridisegnata | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18: pillole dei collegamenti con i colori di informazione; «Nuova nota Brainet» apre un foglio nuovo che entra nella knowledge base di nodi e connessioni, non si consulta come le altre note; la consultazione è da capire, si progetta prima l'input | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18: i collegamenti nascono con @ come i destinatari di Gmail, con il menu dei suggerimenti diviso in sezioni con il titolo; disegnati il menu e la pillola scelta | DEC-134 |
+| 14/10/2026 | Manuel Cucca | RF-18: il cervello diventa l'icona di Database, non sta più accanto al titolo Brainet | DEC-134 |
