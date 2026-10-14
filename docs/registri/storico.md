@@ -557,3 +557,4 @@
 | 14/10/2026 | Agente IA | DEC-132, attività 2: nucleo con la sessione del dispositivo senza scadenza, cambio della password, recupero, dispositivi collegati, nome cifrato del dispositivo; 133 prove e accesso vero contro l'API in locale | DEC-132, DEC-133 |
 | 14/10/2026 | Manuel Cucca | CMP-34: la chiave di recupero nuova in un carattere più piccolo e su due righe, perché su una riga usciva dalla finestra | DEC-132 |
 | 14/10/2026 | Agente IA | DEC-132, attività 3 e 4: schermate del recupero, del cambio della password e dei dispositivi collegati, 11 prove nuove dell'interfaccia; attività 5: prove a mano TC-174 … TC-194 in locale | DEC-132 |
+| 14/10/2026 | Agente IA | CMP-34 nella libreria su due righe (proprietà Prima riga e Seconda riga), wireframe della chiave nuova aggiornato; da pubblicare | DEC-132 |
