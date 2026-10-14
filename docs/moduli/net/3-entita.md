@@ -112,9 +112,9 @@ erDiagram
 | Attributo | Tipo | Note |
 |---|---|---|
 | Usa Brainet | Sì \| No | Vale per tutti i computer: spegnere cancella tutto (RB-111). Di default No (proposta dell'agente) |
-| Mostra il Database | Sì \| No | Per computer o per tutti: da decidere |
+| Mostra il Database | Sì \| No | Vale per tutti i computer e si sincronizza (scelta di Manuel Cucca del 14/10/2026). Di default Sì (proposta dell'agente) |
 
 ## Da decidere
 - ~~Da dove arriva la foto di un'entità.~~ Dal disco, scelta dall'utente in Entità, per tutte le entità (14/10/2026).
-- Se «Mostra il Database» vale solo per questo computer o per tutti.
+- ~~Se «Mostra il Database» vale solo per questo computer o per tutti.~~ Per tutti (14/10/2026).
 - Se un singolo frammento si può eliminare dal Database.
