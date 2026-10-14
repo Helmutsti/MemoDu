@@ -561,3 +561,4 @@
 | 14/10/2026 | Agente IA | Runbook aggiornato per gli account nel database: variabili del server, comando degli account, password persa, chiave in mani sbagliate, computer perso, passaggio agli account | DEC-132 |
 | 14/10/2026 | Manuel Cucca | Gli account nel database escono con la 1.2.0, in coda dopo la 1.1.0 e la 1.0.0; le correzioni delle prove della 1.0.0 sul Mac si riportano a cascata nella 1.1.0 e nella 1.2.0 finché tutto è provato | DEC-132 |
 | 14/10/2026 | Agente IA | Mockup della chiave nuova su due righe dopo la pubblicazione della libreria; note di rilascio della 1.2.0 e guida per gli utenti (password dimenticata, cambio della password, dispositivi collegati) | DEC-132 |
+| 14/10/2026 | Manuel Cucca | Push di `main`, di `rilascio/1.0`, `rilascio/1.1` e del tag `1.2.0` senza «v»: il server con gli account è in produzione e l'utente fisso è diventato il primo account; la pubblicazione del server dai rami si ripensa dopo | DEC-132 |
