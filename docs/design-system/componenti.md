@@ -38,7 +38,7 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-30 | Fondo della colonna (Cestino e Impostazioni, ombra quando il contenuto scorre sotto) | composto | Disegnato |
 | CMP-31 | Gruppo di impostazioni (titolo e righe in un riquadro, DEC-122) | composto | Disegnato |
 | CMP-32 | Box dell'account (in cima alle impostazioni, DEC-122; con «Cambia password» e «Dispositivi collegati», DEC-132) | composto | Disegnato |
-| CMP-33 | Casella (scelta sì o no con l'etichetta, nelle finestre, DEC-132) | base | Disegnato; raggio da confermare |
+| CMP-33 | Casella (scelta sì o no con l'etichetta, nelle finestre, DEC-132) | base | Disegnato |
 | CMP-34 | Chiave da conservare (chiave di recupero nuova con Copia, DEC-132) | composto | Disegnato |
 | CMP-35 | Cambia password (SC-08, DEC-132) | composto | Disegnato |
 | CMP-36 | Dispositivi collegati (SC-09, DEC-132; parte interna Riga del dispositivo) | composto | Disegnato |
@@ -1262,7 +1262,7 @@ Compare e sparisce con `movimento-durata-breve` (120 ms).
 ### Varianti e dimensioni
 - Quadrata da 16 (`misura-icona`), contorno `icona-tenue` da 1,5 (`tratto-icona`); spuntata `sfondo-pieno` con la spunta da 12 in `icona-su-pieno`.
 - Etichetta Interfaccia/Controllo in `testo-primario` a 8 dalla casella (`spazio-icona`); proprietà **Etichetta** (testo).
-- Raggio 4: nessun token adatto. *Proposta dell'agente, da confermare:* un token nuovo `raggio-casella` = 4 (anello del focus 8, concentrico a 2 di distanza).
+- Raggio `raggio-casella` (4), approvato da Manuel Cucca il 14/10/2026; l'anello del focus ha raggio 8, concentrico a 2 di distanza.
 
 ### Stati
 | Stato | Descrizione |

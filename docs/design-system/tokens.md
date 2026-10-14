@@ -104,6 +104,7 @@ I primitivi `spazio-4` … `spazio-48` (4, 8, 12, 16, 24, 32, 48) non si usano d
 | `raggio-pillola` | 999 | Controlli alti una riga (regola 1) |
 | `raggio-contenitore` | 20 | Menu, pannelli, finestre, immagini (regola 2) |
 | `raggio-interno` | 12 | Evidenziazione dei blocchi su più righe dentro un contenitore: concentrico (20 − 8 di margine) |
+| `raggio-casella` | 4 | La casella quadrata da 16 (CMP-33); il suo anello di focus ha raggio 8 (DEC-132, approvato da Manuel Cucca il 14/10/2026) |
 | `misura-riga` | 32 | Righe della colonna e dei menu (regola 6) |
 | `misura-colonna` | 288 | Colonna sinistra al breakpoint largo: 16 px di margine ai lati e righe da 256 |
 | `misura-controllo-piccolo` | 24 | Controlli che stanno dentro una riga, come i tag |

@@ -544,3 +544,4 @@
 | 14/10/2026 | Manuel Cucca | Fase 4 di RF-14 e RF-16 approvata: recupero nella stessa finestra di SC-05 da «Password dimenticata?», chiave nuova con «Copia», SC-08 Cambia password con «Usa la chiave di recupero», SC-09 Dispositivi collegati con «Scollega» e conferma nella riga, collegamenti nel box dell'account di SC-06 | DEC-132 |
 | 14/10/2026 | Manuel Cucca | Fase 5 di DEC-132: inventario dei componenti approvato; per i collegamenti si usa il pulsante tenue (CMP-01) così com'è, senza un componente nuovo | DEC-132 |
 | 14/10/2026 | Manuel Cucca | Fase 5 di DEC-132: casella quadrata come nei wireframe (CMP-33) e via libera ai componenti composti nuovi (CMP-34 Chiave da conservare, CMP-35 Cambia password, CMP-36 Dispositivi collegati) | DEC-132 |
+| 14/10/2026 | Manuel Cucca | Componenti dell'account approvati; token nuovo `raggio-casella` = 4 per la casella quadrata | DEC-132 |
