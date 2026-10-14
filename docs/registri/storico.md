@@ -566,3 +566,4 @@
 | 14/10/2026 | Manuel Cucca | Net, il diario a rete: modello di Reflect o Mem, sezione Net con l'icona del cervello tra CLOUD e Locale, voci fisse Database (elenco dei «documenti»: persone, oggetti, eventi, argomenti) e Doc (date che si espandono con il testo e i collegamenti); ID-39 diventa RF-18 | DEC-134 |
 | 14/10/2026 | Agente IA | RF-18: proposta di Net disegnata nel file Mockup (colonna, Doc, Database), da guardare con Manuel Cucca | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18: la sezione si chiama Brainet; «Nuova nota Brainet» subito sotto il titolo; i collegamenti sono pillole, con la foto quando c'è (MiaPropostaLink); proposta ridisegnata | DEC-134 |
+| 14/10/2026 | Manuel Cucca | RF-18: pillole dei collegamenti con i colori di informazione; «Nuova nota Brainet» apre un foglio nuovo che entra nella knowledge base di nodi e connessioni, non si consulta come le altre note; la consultazione è da capire, si progetta prima l'input | DEC-134 |
