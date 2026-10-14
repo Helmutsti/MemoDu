@@ -183,7 +183,7 @@ flowchart TD
 ---
 
 ## Punti da decidere nei flussi
-- Cosa fa un clic su un giorno del Calendario, visto che solo il Database mostra il testo.
+- ~~Cosa fa un clic su un giorno del Calendario.~~ Niente: il Calendario si guarda soltanto (scelta di Manuel Cucca del 14/10/2026, RB-113).
 - Come si annulla un'unione di entità sbagliata (FL-19).
 - Cosa vede chi sta scrivendo quando Brainet viene cancellato da un altro computer (FL-20).
 - Se Brainet, spento su un computer, resta acceso sugli altri: oggi spegnere cancella tutto, quindi vale per tutti.
@@ -203,3 +203,4 @@ flowchart TD
 | RB-110 | Gli stati sono un elenco breve nelle Impostazioni, ognuno con un colore; togliendone uno Memodu propone di cambiarlo, e tolto sparisce dalle aree, che spariscono solo se era il loro ultimo legame | FL-18, FL-21 |
 | RB-111 | Spegnere Brainet vuol dire cancellarlo: conferma con «Annulla» e «Spegni e cancella tutto»; si cancellano note, entità, aree e stati su tutti i computer | FL-20 |
 | RB-112 | Una nota di CLOUD si importa in Brainet dal menu della colonna, «Importa in Brainet» › Copia o Sposta; prende le date della nota, tag e cartella si perdono | FL-22 |
+| RB-113 | Il Calendario si guarda soltanto: un clic su un giorno non fa niente | — |
