@@ -570,3 +570,4 @@
 | 14/10/2026 | Manuel Cucca | RF-18: i collegamenti nascono con @ come i destinatari di Gmail, con il menu dei suggerimenti diviso in sezioni con il titolo; disegnati il menu e la pillola scelta | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18: il cervello diventa l'icona di Database, non sta più accanto al titolo Brainet | DEC-134 |
 | 14/10/2026 | Manuel Cucca | RF-18: un nodo creato dal menu nasce senza tipo, il tipo si assegna dopo dal Database | DEC-134 |
+| 14/10/2026 | Manuel Cucca | RF-18: Database diventa l'elenco dei frammenti con il testo, l'unica vista con il testo grezzo; Entità con il cervello per i nodi; Calendario con i pallini al posto di Doc; gruppo Brainet nelle impostazioni con «Usa Brainet» (spento non mostra altro) e «Mostra il Database»; richieste le «aree» di testo associate a oggetti o concetti | DEC-134 |
