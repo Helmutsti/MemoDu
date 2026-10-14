@@ -559,3 +559,5 @@
 | 14/10/2026 | Agente IA | DEC-132, attività 3 e 4: schermate del recupero, del cambio della password e dei dispositivi collegati, 11 prove nuove dell'interfaccia; attività 5: prove a mano TC-174 … TC-194 in locale | DEC-132 |
 | 14/10/2026 | Agente IA | CMP-34 nella libreria su due righe (proprietà Prima riga e Seconda riga), wireframe della chiave nuova aggiornato; da pubblicare | DEC-132 |
 | 14/10/2026 | Agente IA | Runbook aggiornato per gli account nel database: variabili del server, comando degli account, password persa, chiave in mani sbagliate, computer perso, passaggio agli account | DEC-132 |
+| 14/10/2026 | Manuel Cucca | Gli account nel database escono con la 1.2.0, in coda dopo la 1.1.0 e la 1.0.0; le correzioni delle prove della 1.0.0 sul Mac si riportano a cascata nella 1.1.0 e nella 1.2.0 finché tutto è provato | DEC-132 |
+| 14/10/2026 | Agente IA | Mockup della chiave nuova su due righe dopo la pubblicazione della libreria; note di rilascio della 1.2.0 e guida per gli utenti (password dimenticata, cambio della password, dispositivi collegati) | DEC-132 |

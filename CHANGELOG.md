@@ -7,7 +7,21 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
-Diventerà la 1.1.0, con la formattazione Markdown nelle note.
+In coda dopo la 1.1.0 e la 1.0.0: diventerà la 1.2.0, con gli account per più persone.
+
+### Aggiunto
+- Ognuno accede con il suo account: le note di un account non si vedono dagli altri
+- «Password dimenticata?» nella finestra di accesso: con la chiave di recupero scegli una password nuova senza perdere le note; alla fine Memodu mostra una chiave di recupero nuova, una volta sola, con «Copia»
+- «Cambia password» nelle Impostazioni, con la password attuale o con la chiave di recupero
+- Nel recupero e nel cambio della password puoi scollegare gli altri tuoi computer
+- «Dispositivi collegati» nelle Impostazioni: vedi i computer collegati al tuo account e ne scolleghi uno a distanza, per esempio se lo perdi
+
+### Cambiato
+- L'accesso non scade più: dura finché esci o finché scolleghi il computer da un altro
+- Dopo l'aggiornamento ogni computer chiede una volta di accedere di nuovo, con la stessa email e la stessa password
+- «Esci» toglie il computer anche dall'elenco dei dispositivi collegati
+
+Prima, e già pronta: la 1.1.0, con la formattazione Markdown nelle note.
 
 ### Aggiunto
 - Ogni nota si può vedere come Testo o come Markdown: si sceglie nella nuova riga Vista di Info e la scelta resta alla nota, anche sugli altri computer

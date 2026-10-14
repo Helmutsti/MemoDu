@@ -175,13 +175,24 @@ Il cestino si chiude con «Chiudi cestino» o Ctrl + W.
 Con l'accesso, le note di CLOUD si sincronizzano tra tutti i computer su cui usi Memodu. Viaggiano e restano sul server **cifrate**: solo i tuoi computer possono leggerle.
 
 ### Accedere
-Apri «Impostazioni» e, nel riquadro in cima, premi «Accedi». Scrivi l'email e la password della tua installazione e premi «Accedi». Al primo accesso su un computer arrivano tutte le note.
+Apri «Impostazioni» e, nel riquadro in cima, premi «Accedi». Scrivi l'email e la password del tuo account e premi «Accedi». Al primo accesso su un computer arrivano tutte le tue note. L'account te lo crea Manuel Cucca, che ti dà anche la chiave di recupero.
 
-- L'accesso vale 30 giorni e Memodu lo rinnova da sola: se il computer si collega almeno una volta al mese non devi più accedere.
+- L'accesso non scade: dura finché esci o finché scolleghi il computer da un altro.
 - «Non voglio usare il cloud» chiude la finestra e lascia le note solo su questo computer.
 - **Esci**, nel riquadro dell'account, scollega il computer. Prima prova a mandare le ultime modifiche; le note restano comunque sul computer.
 
-Conserva la **chiave di recupero** che hai ricevuto quando è stato creato l'utente: serve a scegliere una password nuova senza perdere le note. Se perdi sia la password sia la chiave, le note sul server non si recuperano più.
+Conserva la **chiave di recupero** che hai ricevuto con l'account: serve a scegliere una password nuova senza perdere le note. Se perdi sia la password sia la chiave, le note sul server non si recuperano più.
+
+### Password dimenticata
+Nella finestra di accesso premi «Password dimenticata?». Scrivi l'email, la chiave di recupero e due volte la password nuova, poi «Recupera». Se pensi che qualcuno conosca la tua password, accendi «Scollega gli altri miei dispositivi»: gli altri computer ti chiederanno di accedere con la password nuova.
+
+Alla fine Memodu mostra una **chiave di recupero nuova**, una volta sola: quella di prima non vale più. Premi «Copia» e, durante la prova, mandala a Manuel Cucca, che conserva le chiavi di tutti. Poi «Ho conservato la chiave».
+
+### Cambiare la password
+Impostazioni › «Cambia password», nel riquadro dell'account. Scrivi la password attuale e due volte quella nuova. Se non ricordi la password attuale, «Usa la chiave di recupero»: in quel caso alla fine ricevi una chiave di recupero nuova, come nel recupero. Questo computer resta collegato; con «Scollega gli altri miei dispositivi» gli altri ti chiederanno di accedere di nuovo.
+
+### Dispositivi collegati
+Impostazioni › «Dispositivi collegati» mostra i computer collegati al tuo account, con l'ultima sincronizzazione; quello che stai usando è il primo. «Scollega» su un altro computer, poi di nuovo «Scollega» per confermare: quel computer smette di sincronizzarsi alla prima occasione. Le note che ci sono sopra restano lì. Il computer che stai usando si scollega con «Esci».
 
 ### Quando si sincronizza
 Da sola: all'avvio, pochi secondi dopo ogni modifica e ogni 30 secondi. Non devi fare niente.
