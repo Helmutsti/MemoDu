@@ -38,12 +38,12 @@ Scritti dall'agente dai flussi e dalle decisioni (FL-07, DEC-75 … DEC-83). Con
 - **CA-10.14** *Dato* due dispositivi che hanno fatto l'accesso con lo stesso utente, *quando* scrivo una nota su uno, *allora* sull'altro arriva leggibile entro 30 secondi, come in CA-10.1: la cifratura non cambia i tempi (DEC-80).
 - **CA-10.15** *Dato* un blocco alterato sul server, *quando* il dispositivo lo riceve, *allora* non lo apre, compare l'avviso «errore di sincronizzazione» e la copia di lavoro resta intatta (RB-40, SF-32).
 - **CA-10.16** *Dato* un dispositivo senza accesso, *quando* guardo la copia di lavoro e il portachiavi, *allora* la chiave dati non c'è da nessuna parte; dopo l'accesso sta solo nel portachiavi del sistema, mai in un file (RB-86, RB-89).
-- **CA-10.17** *Dato* due account con note diverse, *quando* sincronizzano dai loro computer, *allora* ognuno riceve solo le sue note e nessuna richiesta legge o scrive i blocchi dell'altro (DEC-132, da approvare).
+- **CA-10.17** *Dato* due account con note diverse, *quando* sincronizzano dai loro computer, *allora* ognuno riceve solo le sue note e nessuna richiesta legge o scrive i blocchi dell'altro (DEC-132, approvato il 14/10/2026).
 
 ---
 
 ## RF-14 – Accesso all'installazione
-**Priorità:** Must · **Origine:** DEC-05, DEC-121, DEC-132 · **Fase:** 8 · **Stato:** In progettazione (account nel database, DEC-132); implementato con l'utente fisso di DEC-121 (rilasciato fino alla 0.1.13, 07/10/2026)
+**Priorità:** Must · **Origine:** DEC-05, DEC-121, DEC-132 · **Fase:** 9 · **Stato:** In sviluppo (account nel database, DEC-132); implementato con l'utente fisso di DEC-121 (rilasciato fino alla 0.1.13, 07/10/2026)
 
 > DEC-132 (13/10/2026): requisito riaperto dalla Fase 1 per gli account nel database. Lo scenario d'uso è riscritto per gli account nel database (approvato da Manuel Cucca il 14/10/2026); i criteri di accettazione per gli account sono CA-14.23 … CA-14.36 (Fase 8, 14/10/2026); dei precedenti, CA-14.7, CA-14.12 e CA-14.16 sono superati.
 
@@ -87,7 +87,7 @@ Con DEC-122 la riga Account diventa il box dell'account in cima a SC-06 (CMP-32)
 - **CA-14.21** *Dato* un dispositivo collegato e il server che non risponde, *quando* guardo le impostazioni, *allora* il box mostra il pallino ambra «Server non raggiungibile: ultimo backup 14:32» (l'ora dell'ultima sincronizzazione riuscita, con la data davanti se non è di oggi) e Esci resta; con un errore del server il pallino ambra dice «Non riuscita: riprovo da sola» (DEC-112, DEC-122).
 - **CA-14.22** *Dato* il gettone scaduto o rifiutato, *quando* guardo le impostazioni, *allora* il box mostra il pallino rosso «Accedi di nuovo per sincronizzare» con Accedi al posto di Esci, e Accedi apre SC-05; con versioni diverse di Memodu e del server il pallino rosso dice «Memodu e il server hanno versioni diverse» e resta Esci (RB-87, DEC-83, DEC-122).
 
-Con DEC-132 e DEC-133: criteri scritti dall'agente dai flussi FL-08, FL-14, RB-97 … RB-100 e dai mockup approvati il 14/10/2026; da approvare. CA-14.10, CA-14.11, CA-14.13, CA-14.15, CA-14.17 … CA-14.22 restano validi, con «accesso chiuso» al posto di «gettone scaduto».
+Con DEC-132 e DEC-133: criteri scritti dall'agente dai flussi FL-08, FL-14, RB-97 … RB-100 e dai mockup approvati il 14/10/2026, approvati da Manuel Cucca il 14/10/2026. CA-14.10, CA-14.11, CA-14.13, CA-14.15, CA-14.17 … CA-14.22 restano validi, con «accesso chiuso» al posto di «gettone scaduto».
 - **CA-14.23** *Dato* il comando che crea un account, *quando* gli do un'email nuova e una password di almeno 12 caratteri che non sia tra le più comuni, *allora* scrive l'account nel database e stampa una volta sola la chiave di recupero; con un'email già usata, o una password più corta o comune, rifiuta e dice perché. Password, prova e chiavi non finiscono mai nel registro (RB-88, RB-90).
 - **CA-14.24** *Dato* il server con l'utente fisso e le sue note, *quando* parte la versione con gli account, *allora* l'utente fisso diventa il primo account con la stessa chiave dati: dopo un nuovo accesso su ogni computer tutte le note ci sono, senza essere ricifrate (DEC-132, DEC-133).
 - **CA-14.25** *Dato* un dispositivo collegato, *quando* lo riapro dopo più di 90 giorni, *allora* non mi chiede di accedere (RB-97).
@@ -131,7 +131,7 @@ Anche se si sviluppa dopo la prima fase, il modo in cui si salvano le note deve 
 ---
 
 ## RF-16 – Elenco dei dispositivi e uscita a distanza
-**Priorità:** Must (da Should, DEC-132) · **Origine:** DEC-132 · **Fase:** 8 · **Stato:** In progettazione
+**Priorità:** Must (da Should, DEC-132) · **Origine:** DEC-132 · **Fase:** 9 · **Stato:** In sviluppo
 
 > Da ripensare (DEC-13, DEC-121): nell'architettura temporanea di DEC-121 tutti i dispositivi condividono il segreto dei gettoni e non se ne può far uscire uno solo; nell'architettura finale ognuno ha il suo gettone di rinnovo, che si può revocare. Senza web cade l'esempio del browser dimenticato aperto, e uscendo la copia di lavoro resta (RB-89).
 
@@ -145,7 +145,7 @@ Nell'elenco: nome, tipo e ultima sincronizzazione di ogni dispositivo (EN-06), c
 Nello scenario d'uso di RF-14: chi perde il portatile vede dal computer fisso l'elenco dei dispositivi collegati e chiude quello perso (approvato da Manuel Cucca il 14/10/2026).
 
 ### Criteri di accettazione
-Criteri scritti dall'agente da FL-15, RB-100 e dai mockup approvati il 14/10/2026; da approvare.
+Criteri scritti dall'agente da FL-15, RB-100 e dai mockup, approvati da Manuel Cucca il 14/10/2026.
 - **CA-16.1** *Dato* più dispositivi collegati con lo stesso account, *quando* apro «Dispositivi collegati», *allora* vedo nome, tipo e ultima sincronizzazione di ognuno; questo dispositivo è il primo, segnato «questo dispositivo», senza «Scollega» (RB-100).
 - **CA-16.2** *Dato* l'elenco, *quando* premo «Scollega» su un altro dispositivo, *allora* la sua riga chiede «Scollegare «nome»?» con «Annulla» e «Scollega»; «Annulla» torna alla riga, «Scollega» la toglie dall'elenco (SF-05).
 - **CA-16.3** *Dato* un dispositivo scollegato a distanza, *quando* è acceso o quando lo riapro, *allora* alla prima richiesta smette di sincronizzare e compare «Accedi di nuovo per sincronizzare»; le note restano sul dispositivo (RB-89, SF-42).
