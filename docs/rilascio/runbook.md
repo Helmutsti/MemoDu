@@ -122,7 +122,7 @@ Dall'app: Impostazioni › Cambia password › «Usa la chiave di recupero»: co
 5. Crea gli account delle persone che provano con `npm run account -w @memodu/api` e conserva le loro chiavi di recupero.
 
 ### Allegati di Brainet su Cloudflare R2 (DEC-135, una volta sola)
-I file allegati alle note Brainet stanno in un bucket privato di Cloudflare R2; le note restano su Neon. Il server non tocca i file: firma indirizzi di 15 minuti con cui l'app li carica e li scarica, già cifrati. Scritto dall'agente il 15/10/2026; le voci della dashboard di Cloudflare possono avere nomi un po' diversi.
+I file allegati alle note Brainet stanno in un bucket privato di Cloudflare R2; le note restano su Neon. Il server non tocca i file: firma indirizzi di 15 minuti con cui l'app li carica e li scarica, già cifrati. Scritto dall'agente il 15/10/2026, fatto da Manuel Cucca lo stesso giorno; le voci della dashboard di Cloudflare possono avere nomi un po' diversi.
 
 **Prima del rilascio con gli allegati** (l'invio su `main` ripubblica il server):
 1. **Cloudflare, account:** accedi a dash.cloudflare.com (o crea l'account). R2 si attiva da «R2 Object Storage» e chiede una carta, anche se l'uso resta nella fascia gratuita (10 GB di file al mese).
