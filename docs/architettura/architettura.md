@@ -141,7 +141,7 @@ L'indice serve a Entità (quante volte, l'ultima volta), alle unioni e ai conteg
 
 **Spegnere Brainet (RB-111).** Il comando cancella le tabelle di Brainet in una transazione, segna ogni frammento, entità e stato come «eliminato» (DEC-76) e mette `brainet` a 0 nelle impostazioni; tutto parte nella sincronizzazione successiva. Un computer che riceve `brainet` a 0 cancella le sue tabelle di Brainet e manda all'interfaccia l'evento `brainet-spento`: la sezione sparisce, il foglio aperto si chiude senza salvare e compare l'avviso. Le versioni precedenti dei blocchi restano sul server, cifrate, fino a 7 giorni (DEC-77), poi spariscono.
 
-**Importare (RB-112).** Il nucleo crea il frammento con il testo della nota (il titolo, se c'è, come prima riga), `nato_il` uguale alla data di creazione della nota e `da_nota`; tag e cartella si perdono. Con «Sposta» la nota va nel Cestino di CLOUD (proposta dell'agente, da confermare), così l'errore si ripara.
+**Importare (RB-112).** Il nucleo crea il frammento con il testo della nota (il titolo, se c'è, come prima riga), `nato_il` uguale alla data di creazione della nota e `da_nota`; tag e cartella si perdono. Con «Sposta» la nota va nel Cestino di CLOUD (scelta di Manuel Cucca del 15/10/2026), così l'errore si ripara.
 
 **Cestino.** I frammenti eliminati compaiono nella parte Brainet del Cestino (SC-04); «Ripristina» toglie `eliminato_il`, «Elimina per sempre» e «Svuota cestino» li cancellano e mandano il blocco «eliminato».
 

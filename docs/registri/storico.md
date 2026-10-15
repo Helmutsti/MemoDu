@@ -615,3 +615,4 @@
 | 15/10/2026 | Agente IA | Menu di Brainet nei mockup (Database, Entità, Importa in Brainet); 21 esportazioni di Brainet rifatte | DEC-134 |
 | 15/10/2026 | Manuel Cucca | RF-18, Fase 7: pillole e aree scritte nel testo con segni nascosti, come il sottolineato; citazioni e aree diventano un indice ricavato dal testo (modo 2) | DEC-134 |
 | 15/10/2026 | Agente IA | RF-18, Fase 7 proposta: copia di lavoro (schema 8), segni `<cita>` e `<area>`, editor con il compartimento Brainet, tre tipi di blocco nuovi, spegnimento, importazione, comandi del nucleo in `api.md` | DEC-134 |
+| 15/10/2026 | Manuel Cucca | RF-18: con «Importa in Brainet › Sposta» la nota di CLOUD va nel Cestino | DEC-134 |

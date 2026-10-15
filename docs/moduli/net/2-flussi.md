@@ -171,7 +171,7 @@ flowchart TD
     A[Tasto destro su una nota di CLOUD nella colonna] --> B[Importa in Brainet]
     B --> C{Copia o Sposta? - RB-112}
     C -- Copia --> D[La nota resta in CLOUD e una copia entra in Brainet]
-    C -- Sposta --> E[La nota esce da CLOUD ed entra in Brainet]
+    C -- Sposta --> E[La nota va nel Cestino di CLOUD ed entra in Brainet]
     D --> F[In Brainet prende le date della nota: nel Calendario il giorno in cui era stata creata; tag e cartella si perdono - RB-112]
     E --> F
 ```
@@ -204,5 +204,5 @@ flowchart TD
 | RB-109 | Passando sopra un'area compaiono il riquadro e la linguetta con i suoi legami; la freccia apre il menu con le voci spuntate; tolte tutte, l'area sparisce | FL-18 |
 | RB-110 | Gli stati sono un elenco breve nelle Impostazioni, ognuno con un colore; togliendone uno Memodu propone di cambiarlo, e tolto sparisce dalle aree, che spariscono solo se era il loro ultimo legame | FL-18, FL-21 |
 | RB-111 | Spegnere Brainet vuol dire cancellarlo: conferma con «Annulla» e «Spegni e cancella tutto»; si cancellano note, entità, aree e stati su tutti i computer; su un computer dove si sta scrivendo la sezione sparisce, il foglio si chiude con l'avviso «Brainet è stato spento da un altro computer» e il testo si perde | FL-20 |
-| RB-112 | Una nota di CLOUD si importa in Brainet dal menu della colonna, «Importa in Brainet» › Copia o Sposta; prende le date della nota, tag e cartella si perdono | FL-22 |
+| RB-112 | Una nota di CLOUD si importa in Brainet dal menu della colonna, «Importa in Brainet» › Copia o Sposta; con Sposta la nota va nel Cestino di CLOUD (scelta di Manuel Cucca del 15/10/2026); prende le date della nota, tag e cartella si perdono | FL-22 |
 | RB-113 | Il Calendario si guarda soltanto: un clic su un giorno non fa niente | — |
