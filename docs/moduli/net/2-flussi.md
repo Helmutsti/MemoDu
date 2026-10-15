@@ -180,7 +180,93 @@ flowchart TD
 | Sfiga | Rilevamento | Comunicazione | Via d'uscita |
 |---|---|---|---|
 | SF-01 Doppio invio | La stessa nota copiata due volte | Nessuna | Due frammenti uguali; si toglie uno dal Database |
-| SF-21 File problematici | Una nota con immagini (rinviate dopo la v1) | Nessuna | Da decidere quando arrivano le immagini |
+| SF-21 File problematici | Una nota di CLOUD con immagini (rinviate dopo la v1) | Nessuna | Le note di CLOUD non hanno allegati: in Brainet non ne arrivano (15/10/2026) |
+
+---
+
+## FL-23 – Allegare un file
+**Requisito:** RF-18 (allegati) · **Attori:** Utente, Sistema
+
+```mermaid
+flowchart TD
+    A{Come allego?} -- Trascino un file nel testo --> B[Il punto in cui lo lascio]
+    A -- Incollo con Ctrl + V --> C[Il punto del cursore]
+    A -- @ › Allega un file… --> D[La finestra del sistema per scegliere il file - RB-114]
+    D --> C
+    B --> E{Tipo e grandezza vanno bene? - RB-115}
+    C --> E
+    E -- No --> F[Avviso con il motivo; il file non entra - RB-115]
+    E -- Sì --> G{È una foto?}
+    G -- No --> H[Pillola con l'icona del tipo e il nome del file - RB-116]
+    G -- Sì --> I{Dentro un paragrafo scritto? - RB-117}
+    I -- Sì --> J[Bolla nel testo - RB-117]
+    I -- No --> K[Foto piccola su una riga sua - RB-117]
+    H --> L[Il file si cifra e parte per il server, a parte dalla nota - RB-118]
+    J --> L
+    K --> L
+```
+
+### Percorsi alternativi
+- **Più file insieme:** trascinati o incollati insieme, entrano uno dopo l'altro nello stesso punto; quelli che non vanno bene restano fuori con un avviso solo (proposta dell'agente).
+- **Senza rete:** l'allegato entra lo stesso e parte quando la rete torna (RF-10).
+
+### Sfighe gestite
+| Sfiga | Rilevamento | Comunicazione | Via d'uscita |
+|---|---|---|---|
+| SF-17 Troppo | Il file supera 25 MB | Avviso «Il file supera 25 MB: non si può allegare.» | Il file resta fuori (RB-115) |
+| SF-21 File problematici | Tipo non ammesso, o un'immagine che non si apre | Avviso «Si allegano solo foto e documenti (JPG, PNG, PDF, Word, Excel, PowerPoint, testo).» | Il file resta fuori (RB-115) |
+| SF-01 Doppio invio | Lo stesso file trascinato due volte | Nessuna | Due allegati; se ne toglie uno |
+| SF-08 Connessione che cade a metà | Il file non finisce di partire | Nessuna | Riparte al giro dopo della sincronizzazione (RB-118) |
+| SF-37 Il disco rifiuta l'operazione | Il file non si legge | Avviso «Non riesco a leggere il file.» | Il file resta fuori |
+
+### Sfighe considerate e scartate
+- SF-34, SF-36: il file è cifrato e il server non lo apre mai.
+
+---
+
+## FL-24 – Usare un allegato
+**Requisito:** RF-18 (allegati) · **Attori:** Utente, Sistema
+
+```mermaid
+flowchart TD
+    A[Clic su un allegato] --> B[Menu dell'allegato - RB-119]
+    B -- Apri --> C{Il file è sul computer? - RB-118}
+    C -- No --> D[Si scarica e si decifra]
+    D --> E[Si apre con il programma del computer]
+    C -- Sì --> E
+    B -- Mostra nella cartella --> F[Esplora file o il Finder sul file, scaricato se serve]
+    B -- Dimensioni › Piccola, Media, Grande --> G[La foto cambia grandezza - RB-120]
+    B -- Togli --> H[L'allegato esce dalla nota - RB-121]
+    H --> I{Un'altra nota, anche nel Cestino, lo usa?}
+    I -- No --> J[Il file sparisce anche dal server e dagli altri computer - RB-121]
+    I -- Sì --> K[Il file resta per le altre note]
+```
+
+### Percorsi alternativi
+- **Dimensioni:** c'è solo per le foto fuori dal paragrafo; la grandezza attuale ha la spunta (RB-120).
+- **Annulla:** Ctrl + Z dopo «Togli» rimette l'allegato, finché il file c'è ancora (proposta dell'agente).
+
+### Sfighe gestite
+| Sfiga | Rilevamento | Comunicazione | Via d'uscita |
+|---|---|---|---|
+| SF-08 Connessione che cade a metà | Il file non si scarica | Avviso «Non riesco a scaricare l'allegato. Riprova quando c'è la rete.» | Si riprova con «Apri» |
+| SF-20 Riferimenti spariti | Il file è stato tolto da un altro computer | La pillola o la foto mostra «Allegato non più disponibile» | «Togli» |
+| SF-22 Modifica simultanea | La stessa nota cambiata su due computer | Come le note | Una copia in conflitto con i suoi allegati (DEC-06) |
+| SF-40 Controlli del sistema | Il programma del computer non apre il file, o il sistema lo blocca | Avviso del sistema | «Mostra nella cartella» |
+
+---
+
+## FL-25 – Mostrare una foto
+**Requisito:** RF-18 (allegati) · **Attori:** Sistema
+
+```mermaid
+flowchart TD
+    A[Una nota con una foto si apre] --> B{La foto è sul computer?}
+    B -- Sì --> C[Si vede ridotta: bolla o piccola, media, grande - RB-117, RB-120]
+    B -- No --> D{C'è la rete?}
+    D -- Sì --> E[Si scarica, poi si vede - RB-118]
+    D -- No --> F[Riquadro vuoto con il nome; si vede quando torna la rete - RB-118]
+```
 
 ---
 
@@ -206,3 +292,11 @@ flowchart TD
 | RB-111 | Spegnere Brainet vuol dire cancellarlo: conferma con «Annulla» e «Spegni e cancella tutto»; si cancellano note, entità, aree e stati su tutti i computer; su un computer dove si sta scrivendo la sezione sparisce, il foglio si chiude con l'avviso «Brainet è stato spento da un altro computer» e il testo si perde | FL-20 |
 | RB-112 | Una nota di CLOUD si importa in Brainet dal menu della colonna, «Importa in Brainet» › Copia o Sposta; con Sposta la nota va nel Cestino di CLOUD (scelta di Manuel Cucca del 15/10/2026); prende le date della nota, tag e cartella si perdono | FL-22 |
 | RB-113 | Il Calendario si guarda soltanto: un clic su un giorno non fa niente | — |
+| RB-114 | Si allega trascinando un file nel testo, incollandolo o con @ › «Allega un file…», in fondo al menu dopo «Crea» | FL-23 |
+| RB-115 | Si allegano solo foto e documenti comuni (JPG, PNG, PDF, Word, Excel, PowerPoint, testo) fino a 25 MB; un file diverso non entra e un avviso dice perché | FL-23 |
+| RB-116 | Un documento è una pillola come quella di una persona, con l'icona del tipo e il nome del file | FL-23 |
+| RB-117 | Una foto dentro un paragrafo scritto è una bolla; fuori, su una riga sua, arriva piccola | FL-23, FL-25 |
+| RB-118 | Gli allegati viaggiano a parte dalle note, cifrati; sul computer si scaricano la prima volta che servono; senza rete una foto non scaricata è un riquadro vuoto con il nome | FL-23, FL-24, FL-25 |
+| RB-119 | Un clic su un allegato apre il menu: «Apri» (con il programma del computer), «Mostra nella cartella», «Togli»; per le foto fuori dal paragrafo anche «Dimensioni» | FL-24 |
+| RB-120 | «Dimensioni» apre Piccola, Media e Grande, con la spunta su quella attuale; nella nota le foto si vedono ridotte, «Apri» apre il file vero | FL-24, FL-25 |
+| RB-121 | «Togli» toglie l'allegato dalla nota; il file sparisce dal server e dagli altri computer quando nessuna nota lo usa più, anche nel Cestino | FL-24 |

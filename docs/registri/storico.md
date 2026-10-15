@@ -638,3 +638,5 @@
 | 15/10/2026 | Manuel Cucca | RF-18, allegati: la foto fuori dal paragrafo arriva piccola e si può ingrandire | DEC-134 |
 | 15/10/2026 | Manuel Cucca | RF-18, allegati: la foto si ingrandisce dal menu con la voce Dimensioni | DEC-134 |
 | 15/10/2026 | Agente IA | RF-18, allegati: proposte da confermare (sottomenu Dimensioni, Togli e file sul server, avviso oltre 25 MB o tipo non ammesso, scaricare quando serve, foto ridotte, niente allegati importando) | DEC-134 |
+| 15/10/2026 | Manuel Cucca | RF-18, allegati: confermate le sei proposte; requisiti degli allegati approvati | DEC-134 |
+| 15/10/2026 | Agente IA | RF-18, allegati: flussi FL-23 Allegare un file, FL-24 Usare un allegato, FL-25 Mostrare una foto, regole RB-114 … RB-121, da approvare | DEC-134 |
