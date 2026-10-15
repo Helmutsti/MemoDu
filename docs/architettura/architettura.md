@@ -17,6 +17,7 @@
 | Server (deposito della sincronizzazione) | L'API non gestisce più le note: conserva solo i blocchi della sincronizzazione e le loro versioni (DEC-75, DEC-85); conosce solo i dati dell'utente fisso che non permettono di leggere le note (DEC-121) | DEC-85 |
 | File locali (RF-17) | Nel nucleo Rust (`locale.rs`): `tauri-plugin-dialog` per scegliere la cartella, `notify` per i cambi sul disco, `sha2` per l'impronta, `encoding_rs` per Windows-1252, `trash` per il Cestino del sistema; niente va sul server | DEC-118 |
 | Hosting | Vercel, funzione con Fastify senza configurazione, solo HTTPS; regione Francoforte | DEC-104, DEC-105 |
+| Allegati di Brainet | Cloudflare R2, raggiunto dal dispositivo con indirizzi firmati dal server (`aws4fetch`) | DEC-135 |
 
 ## Struttura del repository
 Un solo repository con workspace npm (DEC-33); client e API si avviano separatamente (DEC-67):
@@ -150,6 +151,36 @@ L'indice serve a Entità (quante volte, l'ultima volta), alle unioni e ai conteg
 **Risposta tecnica alle sfighe:** SF-01 «Crea» e «Spegni e cancella tutto» si disattivano dopo il primo clic, «Copia» due volte dà due frammenti (FL-22); SF-22 copia in conflitto per il testo, l'ultima modifica per il resto; SF-24 evento `brainet` con `spento: true`; un'entità unita su un altro computer mentre qui la si cita: il collegamento nuovo segue `unita_in` (RB-108).
 
 **Ambienti:** gli stessi di oggi; le prove del nucleo usano una copia di lavoro temporanea (`MEMODU_CARTELLA`).
+
+## Allegati di Brainet (RF-18, DEC-135; Fase 7 proposta dall'agente il 15/10/2026, da approvare)
+Le note restano su Neon; i file vanno in un bucket di Cloudflare R2, che il dispositivo raggiunge direttamente con indirizzi firmati dal server (scelta di Manuel Cucca del 15/10/2026). Il server non vede mai il contenuto: il file è cifrato prima di partire.
+
+**Nel testo.** Un segno nascosto come le pillole (EN-18): `<allegato id="ID" f="documento|bolla|piccola|media|grande">nome del file</allegato>`. Il segno si sposta con il testo; «Dimensioni» riscrive solo `f`. L'editor di Brainet (solo testo) lo mostra con il Collegamento Documento (CMP-38) o la Foto allegata (CMP-44), come blocco unico.
+
+**Sul dispositivo** (copia di lavoro, schema 9):
+
+| Tabella | Colonne | Note |
+|---|---|---|
+| `allegati` (EN-17) | `id`, `nome`, `tipo` (`jpg`, `png`, `pdf`, `word`, `excel`, `powerpoint`, `testo`), `grandezza`, `impronta` (SHA-256 del file in chiaro), `larghezza`, `altezza` (solo foto), `creato_il` | Si sincronizza come blocco `allegato`, cifrato come gli altri |
+| `allegati_file` | `id`, `stato` (`da_caricare`, `caricato`, `da_scaricare`, `scaricato`) | Solo su questo dispositivo, senza trigger |
+
+- I file stanno nella cartella dei dati, in `allegati/ID` (il file) e `allegati/ID-anteprima.jpg` (per le foto: lato lungo 1440 px, JPEG), in chiaro come la copia di lavoro (rischio accettato, DEC-121).
+- Allegare: il nucleo legge il file, controlla tipo (estensione e primi byte del file) e grandezza (25 MB, RB-115), calcola l'impronta, fa l'anteprima delle foto, lo copia nella cartella e lo segna `da_caricare`.
+- «Togli» toglie il segno. Quando nessun frammento, nemmeno nel Cestino, ha più il segno di un allegato, il nucleo lo cancella: blocco «eliminato», file locali via, cancellazione sul server (RB-121). Su un altro computer, ricevuto il blocco «eliminato», i file locali spariscono.
+
+**Il viaggio del file** (un filo a parte da quello della sincronizzazione, così un file grande non ferma le note):
+1. Caricare: `POST /allegati/:id/caricamento` con la grandezza del file cifrato → il server controlla il limite, scrive la riga e risponde con due indirizzi `PUT` firmati di R2, per il file e per l'anteprima, validi 15 minuti → il dispositivo carica il file cifrato (XChaCha20-Poly1305 con la chiave dati e l'id come dati aggiunti, come i blocchi, DEC-121) → `POST /allegati/:id/fatto` → il server controlla su R2 che ci sia e che la grandezza torni, e lo segna presente.
+2. Scaricare: quando serve (una foto da mostrare, «Apri», «Mostra nella cartella», RB-118) `GET /allegati/:id/scaricamento` → indirizzo `GET` firmato → il dispositivo scarica, decifra, controlla l'impronta e lo mette nella cartella.
+3. Cancellare: `DELETE /allegati/:id` → il server cancella file e anteprima da R2 e la riga.
+- Un caricamento interrotto riparte dall'inizio al giro dopo (SF-08); un file che non arriva intero non si segna presente.
+
+**Sul server** (migrazione 3 dello schema): tabella `allegati` con `id`, `utente`, `grandezza`, `presente`, `creato_il`; chiave `(utente, id)`. Ogni richiesta vale solo per gli allegati dell'account del gettone (SF-34). La firma degli indirizzi usa l'API compatibile con S3 di R2, con la libreria `aws4fetch` (piccola, senza dipendenze); variabili `MEMODU_R2_ACCOUNT`, `MEMODU_R2_CHIAVE`, `MEMODU_R2_SEGRETO`, `MEMODU_R2_BUCKET`, create da Manuel Cucca su Vercel. In locale e nelle prove il server fa da deposito in una cartella sua, con gli stessi indirizzi.
+
+**Aprire e mostrare.** «Apri» apre il file della cartella con il programma del computer (`tauri-plugin-opener`), «Mostra nella cartella» con Esplora file o il Finder. Le foto si mostrano dall'anteprima.
+
+**Risposta tecnica alle sfighe:** SF-17 e SF-21 il controllo nel nucleo prima di copiare (avviso, RB-115); SF-08 il caricamento che riparte e lo scaricamento che si riprova con «Apri»; SF-20 un allegato senza file sul server: «Allegato non più disponibile»; SF-22 i segni seguono la copia in conflitto; SF-30 R2 che non risponde: i file aspettano da caricare, le note si sincronizzano lo stesso; SF-40 il programma del computer che non apre: «Mostra nella cartella».
+
+**Ambienti:** in locale il deposito finto del server; in produzione il bucket R2 su Cloudflare, con l'accesso pubblico spento (solo indirizzi firmati).
 
 ## Schema generale
 ```mermaid

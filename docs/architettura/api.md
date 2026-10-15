@@ -621,5 +621,17 @@ Comandi del nucleo (`client/src-tauri/src/brainet.rs`, regole in `archivio_brain
 - `togli_stato` toglie lo stato dai segni `<area>` di tutti i frammenti che lo usano, anche nel Cestino (o lo sostituisce), e le aree rimaste senza legami spariscono (RB-110).
 - Evento di sincronizzazione verso l'interfaccia: `{ tipo: "brainet", spento }`, quando arrivano modifiche di Brainet; con `spento: true` Brainet è stato spento da un altro computer e qui si è già cancellato tutto (RB-111).
 
+## Allegati (RF-18, DEC-135; proposta dell'agente del 15/10/2026, da approvare)
+Richieste al server con il gettone del dispositivo, come la sincronizzazione; valgono solo per gli allegati dell'account.
+
+| Richiesta | Ingresso | Uscita | Errori |
+|---|---|---|---|
+| `POST /allegati/:id/caricamento` | `{ grandezza, anteprima }` (byte del file e dell'anteprima cifrati) | `{ file, anteprima }`: indirizzi `PUT` firmati, 15 minuti | `401`, `413` oltre 25 MB più la cifratura, `400` id non valido |
+| `POST /allegati/:id/fatto` | — | `204` | `401`, `404` niente caricamento, `409` file mancante o grandezza diversa su R2 |
+| `GET /allegati/:id/scaricamento` | — | `{ file, anteprima }`: indirizzi `GET` firmati, 15 minuti | `401`, `404` allegato che non c'è o non presente |
+| `DELETE /allegati/:id` | — | `204`, anche se non c'era (SF-20) | `401` |
+
+Comandi del nucleo (`archivio_allegati.rs`, `allegati.rs`): `allega_file(percorso)` e `allega_dati(nome, byte)` (trascinare, incollare, «Allega un file…»: la finestra del sistema) → `{ id, nome, tipo, forma }` o `400`/`413` con il motivo; `leggi_allegato(id)` → `{ nome, tipo, grandezza, anteprima }` (l'anteprima come indirizzo locale, o niente se non è scaricata); `apri_allegato(id)`, `mostra_allegato(id)` (scaricano se serve; `503` senza rete); evento `allegato-pronto` quando un file è scaricato.
+
 ## GET /salute
 Controllo di salute, senza gettone né protocollo. **Output:** `200 { "stato": "ok" }` se l'archivio risponde, altrimenti `503` (DEC-105).
