@@ -13,6 +13,7 @@ import { join } from "node:path";
 import { cartellaPredefinita } from "./cartella.js";
 import { HOST_API, PORTA_API } from "./costanti.js";
 import { Accesso, NOME_SEGRETO, segretoDaAmbiente, utenteFissoDaAmbiente } from "./accesso.js";
+import { DepositoLocale, r2DaAmbiente } from "./allegati.js";
 import { daPglite, daPostgres, type Database } from "./database.js";
 import { aggiornaSchema } from "./schema.js";
 import { configuraServer, opzioniServer } from "./servizio.js";
@@ -39,6 +40,9 @@ if (!segreto) {
 }
 const utenteFisso = utenteFissoDaAmbiente(process.env);
 let db: Database;
+// Gli allegati di Brainet (DEC-135): in rete Cloudflare R2 con le variabili MEMODU_R2_*; senza,
+// le richieste degli allegati rispondono 503. In locale una cartella con gli stessi indirizzi.
+let deposito = r2DaAmbiente(process.env);
 if (inRete) {
   db = daPostgres(indirizzoDatabase!);
 } else {
@@ -46,6 +50,11 @@ if (inRete) {
   mkdirSync(cartella, { recursive: true });
   db = await daPglite(join(cartella, "archivio"));
   console.log(`Archivio in ${cartella}`);
+  deposito ??= new DepositoLocale(
+    join(cartella, "allegati"),
+    `http://${HOST_API}:${Number(process.env.PORT ?? PORTA_API)}`,
+    segreto,
+  );
 }
 // Il server si mette subito in ascolto; lo schema si prepara intanto e le richieste lo aspettano.
 // Se il database non risponde, la richiesta riceve un errore e la successiva riprova.
@@ -67,6 +76,7 @@ const server = configuraServer(
   new ArchivioSincronizzazione(db),
   new Accesso(db, segreto),
   schemaPronto,
+  deposito ? { db, deposito } : null,
 );
 // Su Vercel come nella sua guida per Fastify: basta la porta, e `listen` non si aspetta. Vercel
 // lo intercetta: aspettandolo al primo livello il modulo non finirebbe mai di caricarsi.

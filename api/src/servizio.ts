@@ -2,6 +2,13 @@ import Fastify, { type FastifyInstance, type FastifyServerOptions } from "fastif
 import type { Accesso } from "./accesso.js";
 import { LIMITE_RICHIESTA_BYTE } from "./costanti.js";
 import { rotteAccesso } from "./rotteAccesso.js";
+import {
+  ArchivioAllegati,
+  type Deposito,
+  DepositoLocale,
+  LIMITE_ALLEGATO_BYTE,
+} from "./allegati.js";
+import type { Database } from "./database.js";
 import { rotteSincronizzazione } from "./rotteSincronizzazione.js";
 import type { ArchivioSincronizzazione } from "./sincronizzazione.js";
 
@@ -45,6 +52,8 @@ export function configuraServer(
   sincronizzazione: ArchivioSincronizzazione,
   accesso: Accesso,
   preparazione: () => Promise<void> = () => Promise.resolve(),
+  /** Gli allegati (DEC-135): il database dell'elenco e il deposito dei file (R2 o una cartella). */
+  allegati: { db: Database; deposito: Deposito } | null = null,
 ): FastifyInstance {
   server.setErrorHandler<{ statusCode?: number }>((errore, richiesta, risposta) => {
     const codice = errore.statusCode ?? 500;
@@ -79,14 +88,51 @@ export function configuraServer(
     sincronizzazione,
     (g) => accesso.autorizza(g),
     (chi) => accesso.sincronizzato(chi),
+    allegati ? new ArchivioAllegati(allegati.db, allegati.deposito) : null,
   );
+  if (allegati?.deposito instanceof DepositoLocale) rotteDeposito(server, allegati.deposito);
   return server;
+}
+
+/**
+ * Il deposito finto di locale e delle prove: gli stessi indirizzi firmati di R2, serviti dal
+ * server. La firma nell'indirizzo è l'unico permesso, come su R2.
+ */
+function rotteDeposito(server: FastifyInstance, deposito: DepositoLocale): void {
+  server.register(async (rami) => {
+    rami.addContentTypeParser(
+      "*",
+      { parseAs: "buffer", bodyLimit: LIMITE_ALLEGATO_BYTE },
+      (_r, corpo, fatto) => fatto(null, corpo),
+    );
+    type Richiesta = { Params: { "*": string }; Querystring: { scade?: string; firma?: string } };
+    const permesso = (
+      r: { params: { "*": string }; query: { scade?: string; firma?: string } },
+      metodo: string,
+    ) => deposito.valida(r.params["*"], metodo, Number(r.query.scade), r.query.firma ?? "");
+    rami.put<Richiesta>(
+      "/deposito/*",
+      { bodyLimit: LIMITE_ALLEGATO_BYTE },
+      async (richiesta, risposta) => {
+        if (!permesso(richiesta, "PUT")) return risposta.code(403).send();
+        await deposito.scrivi(richiesta.params["*"], richiesta.body as Buffer);
+        return risposta.code(200).send();
+      },
+    );
+    rami.get<Richiesta>("/deposito/*", async (richiesta, risposta) => {
+      if (!permesso(richiesta, "GET")) return risposta.code(403).send();
+      const byte = await deposito.leggi(richiesta.params["*"]);
+      if (!byte) return risposta.code(404).send();
+      return risposta.type("application/octet-stream").send(byte);
+    });
+  });
 }
 
 /** Per le prove: un server senza registro. */
 export function creaServer(
   sincronizzazione: ArchivioSincronizzazione,
   accesso: Accesso,
+  allegati: { db: Database; deposito: Deposito } | null = null,
 ): FastifyInstance {
-  return configuraServer(Fastify(opzioniServer()), sincronizzazione, accesso);
+  return configuraServer(Fastify(opzioniServer()), sincronizzazione, accesso, undefined, allegati);
 }

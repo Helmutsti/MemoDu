@@ -93,6 +93,18 @@ const MIGRAZIONI: Migrazione[] = [
        CREATE INDEX versioni_utente_ordine ON versioni (utente, ordine);`,
     );
   },
+
+  // 3 – Allegati di Brainet (RF-18, DEC-135): l'elenco per account; i file stanno nel deposito.
+  // `anteprima` è la grandezza dell'anteprima di una foto, 0 se non c'è.
+  `CREATE TABLE allegati (
+     utente uuid NOT NULL REFERENCES utenti (id) ON DELETE CASCADE,
+     id uuid NOT NULL,
+     grandezza bigint NOT NULL,
+     anteprima bigint NOT NULL,
+     presente boolean NOT NULL,
+     creato_il timestamptz NOT NULL,
+     PRIMARY KEY (utente, id)
+   );`,
 ];
 
 export const VERSIONE_SCHEMA = MIGRAZIONI.length;

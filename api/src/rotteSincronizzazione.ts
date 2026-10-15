@@ -6,6 +6,7 @@
 
 import type { FastifyInstance, FastifyRequest } from "fastify";
 import type { Autorizzazione } from "./accesso.js";
+import { type ArchivioAllegati, ErroreAllegato } from "./allegati.js";
 import { ArchivioSincronizzazione, PROTOCOLLO, VersioneSuperata } from "./sincronizzazione.js";
 
 const schemaId = {
@@ -19,6 +20,8 @@ export function rotteSincronizzazione(
   sinc: ArchivioSincronizzazione,
   autorizza: (gettone: string | undefined) => Promise<Autorizzazione | null>,
   sincronizzato: (chi: Autorizzazione) => Promise<void> = async () => undefined,
+  /** Gli allegati di Brainet (DEC-135); senza deposito le richieste rispondono 503. */
+  allegati: ArchivioAllegati | null = null,
 ): void {
   const chi = new WeakMap<FastifyRequest, Autorizzazione>();
   server.register(async (rami) => {
@@ -85,6 +88,81 @@ export function rotteSincronizzazione(
           return risposta.code(409).send({ attuale: errore.attuale });
         }
       },
+    );
+
+    // ——— Allegati di Brainet (architettura/api.md, «Allegati») ———
+
+    const conAllegati = async <T>(
+      risposta: { code: (c: number) => { send: (b: unknown) => unknown } },
+      lavoro: (a: ArchivioAllegati) => Promise<T>,
+    ) => {
+      if (!allegati) {
+        return risposta.code(503).send({ statusCode: 503, message: "Allegati non configurati" });
+      }
+      try {
+        return await lavoro(allegati);
+      } catch (errore) {
+        if (!(errore instanceof ErroreAllegato)) throw errore;
+        return risposta
+          .code(errore.codice)
+          .send({ statusCode: errore.codice, message: errore.message });
+      }
+    };
+
+    rami.post<{ Params: { id: string }; Body: { grandezza: number; anteprima: number } }>(
+      "/allegati/:id/caricamento",
+      {
+        schema: {
+          params: schemaId,
+          body: {
+            type: "object",
+            additionalProperties: false,
+            required: ["grandezza", "anteprima"],
+            properties: {
+              grandezza: { type: "integer", minimum: 1 },
+              anteprima: { type: "integer", minimum: 0 },
+            },
+          },
+        },
+      },
+      async (richiesta, risposta) =>
+        conAllegati(risposta, (a) =>
+          a.caricamento(
+            chi.get(richiesta)!.utente,
+            richiesta.params.id,
+            richiesta.body.grandezza,
+            richiesta.body.anteprima,
+          ),
+        ),
+    );
+
+    rami.post<{ Params: { id: string } }>(
+      "/allegati/:id/fatto",
+      { schema: { params: schemaId } },
+      async (richiesta, risposta) =>
+        conAllegati(risposta, async (a) => {
+          await a.fatto(chi.get(richiesta)!.utente, richiesta.params.id);
+          return risposta.code(204).send();
+        }),
+    );
+
+    rami.get<{ Params: { id: string } }>(
+      "/allegati/:id/scaricamento",
+      { schema: { params: schemaId } },
+      async (richiesta, risposta) =>
+        conAllegati(risposta, (a) =>
+          a.scaricamento(chi.get(richiesta)!.utente, richiesta.params.id),
+        ),
+    );
+
+    rami.delete<{ Params: { id: string } }>(
+      "/allegati/:id",
+      { schema: { params: schemaId } },
+      async (richiesta, risposta) =>
+        conAllegati(risposta, async (a) => {
+          await a.cancella(chi.get(richiesta)!.utente, richiesta.params.id);
+          return risposta.code(204).send();
+        }),
     );
   });
 }
