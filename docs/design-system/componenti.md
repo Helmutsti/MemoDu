@@ -2,12 +2,12 @@
 
 <!-- Fase 5 della guida. Copia il blocco per ogni componente. -->
 
-I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE), che diventa la libreria: pagina **Componenti base** (CMP-01 … CMP-08, CMP-28 e CMP-33) e pagina **Componenti composti** (CMP-09 … CMP-27, CMP-29 … CMP-32 e CMP-34 … CMP-36). Ogni componente usa solo token semantici, anche per gli spazi (regola 12, vedi `tokens.md`) e ha un'anteprima in modo scuro.
+I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE), che diventa la libreria: pagina **Componenti base** (CMP-01 … CMP-08, CMP-28, CMP-33 e CMP-37 … CMP-39) e pagina **Componenti composti** (CMP-09 … CMP-27, CMP-29 … CMP-32, CMP-34 … CMP-36 e CMP-40 … CMP-43). Ogni componente usa solo token semantici, anche per gli spazi (regola 12, vedi `tokens.md`) e ha un'anteprima in modo scuro.
 
 | Codice | Componente | Tipo | Stato |
 |---|---|---|---|
 | CMP-01 | Pulsante (con la variante Diviso, DEC-34) | base | Disegnato |
-| CMP-02 | Icona | base | 42 icone, 4 dimensioni |
+| CMP-02 | Icona | base | 47 icone, 4 dimensioni (cervello e database per Brainet, DEC-134) |
 | CMP-03 | Campo di testo | base | Disegnato |
 | CMP-04 | Interruttore | base | Disegnato |
 | CMP-05 | Tag | base | Disegnato |
@@ -42,11 +42,20 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-34 | Chiave da conservare (chiave di recupero nuova con Copia, DEC-132) | composto | Disegnato |
 | CMP-35 | Cambia password (SC-08, DEC-132) | composto | Disegnato |
 | CMP-36 | Dispositivi collegati (SC-09, DEC-132; parte interna Riga del dispositivo) | composto | Disegnato |
+| CMP-37 | Pallino dello stato (colore di uno stato di Brainet, DEC-134) | base | Disegnato |
+| CMP-38 | Collegamento (pillola di un'entità citata con @, DEC-134) | base | Disegnato |
+| CMP-39 | Titolo di sezione (sopra un gruppo di voci: menu, pannello, Cestino) | base | Disegnato |
+| CMP-40 | Area evidenziata (parte interna Linguetta, DEC-134) | composto | Disegnato |
+| CMP-41 | Riga dell'entità (SC-11, DEC-134) | composto | Disegnato |
+| CMP-42 | Stati delle evidenziature (SC-06, DEC-134) | composto | Disegnato |
+| CMP-43 | Calendario di Brainet (SC-12, DEC-134; parte interna Giorno con le note) | composto | Disegnato |
 
 L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'icona di sistema e non è un componente.
 
 ### Parti interne
-Nella sezione **Parti interne** della pagina Componenti composti ci sono i pezzi con cui sono costruiti i composti: non si usano da soli, si modificano lì e cambiano ovunque. Bollicina, Cassetto della bollicina, Strumento e Divisore della pillola (CMP-10), Giorno del calendario (CMP-12), Filtro e Risultato della ricerca (CMP-13), Campo nome nell'albero e Cestino di trascinamento (CMP-14), Casella della checklist e Riga dei metadati (CMP-20), Segmento del percorso (CMP-26), Riga del dispositivo (CMP-36).
+Nella sezione **Parti interne** della pagina Componenti composti ci sono i pezzi con cui sono costruiti i composti: non si usano da soli, si modificano lì e cambiano ovunque. Bollicina, Cassetto della bollicina, Strumento e Divisore della pillola (CMP-10), Giorno del calendario (CMP-12), Filtro e Risultato della ricerca (CMP-13), Campo nome nell'albero e Cestino di trascinamento (CMP-14), Casella della checklist e Riga dei metadati (CMP-20), Segmento del percorso (CMP-26), Riga del dispositivo (CMP-36), Linguetta (CMP-40), Giorno con le note (CMP-43).
+
+La riga di una nota nel Database di Brainet (SC-10) non è un componente: il suo testo mescola parole e collegamenti (CMP-38) e un'istanza non può contenere un testo così. È una disposizione della schermata: giorno e ora in Interfaccia/Dettaglio `testo-tenue`, sotto a `spazio-icona` il testo in Nota/Corpo con i collegamenti, `spazio-controllo` sopra e sotto, divisore `bordo-divisore` tra le note.
 
 ### Stato Focus
 L'anello `focus-anello` degli stati Focus si vede solo mentre ci si muove con la tastiera (Tab e frecce fuori dal testo); un clic lo spegne (DEC-74). L'anello di errore dei campi resta sempre.
@@ -430,6 +439,8 @@ Compare e sparisce con `movimento-durata-breve` (120 ms). Compare dopo 500 ms di
 
 ### Varianti e dimensioni
 - **Aggiungi** (DEC-119): il + del titolo CLOUD; Nuova nota e Nuova cartella, con le loro icone.
+- **Suggerimenti** (Brainet, DEC-134, RB-104): si apre scrivendo @. Le entità divise per tipo, ognuna con il Titolo di sezione (CMP-39) sopra (Persone, Argomenti, Eventi, Oggetti, Senza tipo), senza icone come le altre liste di valori; la prima evidenziata; in fondo, dopo il divisore, «Crea «…»» con il +. Frecce e Invio per scegliere, Esc per chiudere.
+- **Area** (Brainet, DEC-134, RB-107, RB-109): si apre selezionando una frase e dalla freccia della Linguetta (CMP-40). In cima «Stati» con il Pallino dello stato (CMP-37) come icona, poi le entità per tipo, in fondo «Crea…». Si scelgono più voci: quelle già legate all'area hanno la spunta a destra, come la cartella attuale in Sposta in (CMP-11).
 - Contenitore `sfondo-flottante`, `raggio-contenitore` (20), margine `spazio-elenco` (8) su tutti i lati (ruolo elenco, DEC-100), `ombra`, livello 20 (`z-comparsa`). Largo 236 negli esempi; si allarga fino alla voce più lunga.
 - La pillola dell'evidenziazione sta a 8 px dai lati (margine del menu); i divisori stanno dentro lo stesso margine e sono leggeri (`bordo-divisore-tenue`) (DEC-100, prima da lato a lato). Scelta tra sei alternative (divisori rientrati o da lato a lato, pieni o leggeri; margine 8 o 12; pillola, rettangolo con raggio 12 o fascia a tutta larghezza): la pillola resta per coerenza con colonna, pulsanti e tag.
 - **Icone:** tutte le voci dei menu di azioni (nota, cartella, testo, inserimento) hanno la loro icona, così i testi restano allineati ed Elimina si riconosce anche dal cestino, non solo dal rosso. Le liste di valori (suggerimenti dei tag, filtri) restano senza: sono nomi o periodi, non azioni; fa eccezione Crea il tag con il +. Scelta tra cinque alternative (nessuna icona, icone su tutte, solo Elimina a sinistra, a destra o con spazio riservato); il confronto resta nella pagina Prove.
@@ -513,6 +524,7 @@ Compare con `movimento-durata-breve` (120 ms) e `movimento-spostamento` (4 px). 
 - **Stesso aspetto del menu** (CMP-09), pur restando un componente separato: `sfondo-flottante`, `raggio-contenitore` (20), `ombra`, livello 20, largo 236, margine `spazio-elenco` (8) su tutti i lati (DEC-100). Si apre sotto la riga Cartella di Info (DEC-97) o accanto alla nota del tasto destro (DEC-96).
 - **Date** (FL-04): "Data di creazione" e "Fine validità" con etichetta Interfaccia/Etichetta in `testo-tenue` e campo con il calendario (CMP-03, con icona). Etichette e note partono a 12 px, allineate al testo dei campi, come il testo delle voci di menu. Sotto la data di creazione, in Interfaccia/Dettaglio, quella di sistema, che non cambia (RB-21). Nessun avviso sulle combinazioni di date (RB-20).
 - **Sposta in**: campo di ricerca ("Cerca una cartella"), divisore, poi le cartelle come **voci di menu** (CMP-07): come icona la cartella chiusa (`folder`) o aperta (`folder-open`), come nella colonna (DEC-99), e `spazio-rientro` (24) per livello, come nella colonna (DEC-100). Un clic sull'icona di una cartella con sottocartelle la apre o la chiude; un clic sul resto della voce la sceglie. "Non organizzate" (la radice) lascia vuoto lo spazio dell'icona, così i nomi restano allineati. La **cartella attuale** ha la spunta a destra (`check`), non la pillola scura: nel menu la pillola indica l'hover.
+- **Unisci a** (Brainet, DEC-134, RB-108): dal tasto destro su una riga di Entità (CMP-41). Campo di ricerca («Cerca un'entità»), divisore, poi le altre entità divise per tipo con il Titolo di sezione (CMP-39); un clic apre la conferma (CMP-16) con quante citazioni e aree si spostano.
 
 ### Stati
 | Stato | Descrizione |
@@ -753,6 +765,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 - **Scelta:** etichetta e descrizione a sinistra, scelta a segmenti (CMP-28) a destra, es. il tema Sistema · Chiaro · Scuro (DEC-91). Si attiva solo la scelta.
 - **Scorciatoia:** come Campo, con il campo della combinazione e a destra il pulsante tenue «Ripristina», che torna al valore di default. Si clicca il campo e si preme la combinazione nuova; se un altro programma la usa già, l'errore è nel campo e resta la vecchia (DEC-91).
 - **Informazione:** etichetta e valore in `testo-tenue`, senza controllo e senza hover, es. «Stato · Sincronizzata alle 14:32» (DEC-91).
+- **Stato** (Brainet, DEC-134): il Pallino dello stato (CMP-37) e il nome a `spazio-icona` (8), a destra «Togli» (pulsante tenue). Sta in CMP-42.
 - A tutta larghezza nel riquadro, su `sfondo-colonna` (DEC-122). Spazi (DEC-100): `spazio-controllo` (12) a sinistra; a destra `spazio-controllo-piccolo` (8) quando la riga finisce con un controllo (interruttore, campo, scelta, pulsante), `spazio-controllo` (12) senza controllo (Informazione); `spazio-controllo-piccolo` (8) sopra e sotto; `spazio-blocco` (16) tra testo e controllo.
 
 ### Stati
@@ -1381,3 +1394,142 @@ Compare e sparisce con `movimento-durata-breve` (120 ms).
 ### Esempi
 - ✅ Corretto: il computer perso si scollega dall'elenco con una conferma nella sua riga.
 - ❌ Scorretto: «Scollega» anche sul dispositivo che si sta usando.
+
+## CMP-37 – Pallino dello stato
+**Tipo:** base · **Usato in:** SC-01 (menu dell'area, Linguetta), SC-06 (CMP-42) · **Figma:** pagina Componenti base, [Pallino dello stato](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=371-787)
+
+**Scopo:** riconoscere uno stato delle aree di Brainet dal suo colore (EN-16, RB-110).
+**Quando usarlo:** accanto al nome di uno stato, nello stesso posto di un'icona.
+**Quando non usarlo:** per dire se una cosa è andata bene o male: per quello c'è l'Avviso (CMP-15).
+
+### Varianti e dimensioni
+- **Colore = Avviso · Informazione · Successo · Errore**: i quattro colori di stato del design system (`icona-avviso`, `icona-informazione`, `icona-successo`, `icona-errore`), uno per stato.
+- Grande `misura-icona` (16), con il cerchio pieno dentro come il disegno di un'icona; si scambia come un'icona (proprietà Icona delle voci di menu).
+
+### Stati
+Non si clicca: hover, focus, attivo, disabilitato, errore e caricamento non previsti.
+
+### Accessibilità
+- **Lettori di schermo:** decorativo; si legge il nome dello stato accanto.
+- **Contrasti** (forme, almeno 3:1): su `sfondo-colonna` avviso 5,11, informazione 5,04, successo 4,66, errore 5,52 in chiaro; 6,31, 6,51, 6,93, 6,03 in scuro; su `sfondo-flottante` e `sfondo-informazione` sopra 5.
+- Il colore non è l'unica informazione: c'è sempre il nome.
+
+## CMP-38 – Collegamento
+**Tipo:** base · **Usato in:** SC-01 (testo di una nota Brainet), SC-10 (Database) · **Figma:** pagina Componenti base, [Collegamento](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=371-811)
+
+**Scopo:** mostrare nel testo un'entità citata con @ (EN-14, RB-104). Disegnato da Manuel Cucca («MiaPropostaLink»).
+**Quando usarlo:** nel testo delle note Brainet, al posto di «@nome».
+**Quando non usarlo:** per i tag delle note (Tag, CMP-05) o per un'area (CMP-40).
+
+### Varianti e dimensioni
+- **Foto = No · Sì**: con la foto dell'entità se c'è (cerchio `misura-icona`), altrimenti solo il nome. Proprietà **Nome**.
+- `sfondo-informazione`, nome in Interfaccia/Dettaglio `testo-informazione`, `raggio-pillola`; `spazio-controllo-piccolo` (8) ai lati (`spazio-2` a sinistra con la foto), `spazio-2` sopra e sotto, `spazio-icona-piccola` (4) tra foto e nome. Sta in linea con il testo e non cambia l'altezza della riga.
+
+### Stati
+Default. Non si clicca: hover e focus non previsti (cosa fa un clic è da decidere). Backspace subito dopo la toglie tutta.
+
+### Accessibilità
+- **Lettori di schermo:** si legge il nome, come una parola del testo.
+- **Contrasti:** nome `testo-informazione` su `sfondo-informazione` 5,05:1 in chiaro, 5,63:1 in scuro.
+
+## CMP-39 – Titolo di sezione
+**Tipo:** base · **Usato in:** CMP-09 (Suggerimenti, Area), CMP-11 (Unisci a), SC-04 (parti CLOUD e Brainet del Cestino) · **Figma:** pagina Componenti base, [Titolo di sezione](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=371-825)
+
+**Scopo:** dare un nome a un gruppo di voci dentro un elenco.
+**Quando usarlo:** sopra un gruppo di voci di un menu, di un pannello o di un elenco a tutta larghezza.
+**Quando non usarlo:** sopra il riquadro di un gruppo di impostazioni (Riga di impostazione Titolo di gruppo, CMP-18) o per le sezioni della colonna (CMP-06).
+
+### Varianti e dimensioni
+- Interfaccia/Titolo di sezione (maiuscolo) in `testo-tenue`; `spazio-controllo` (12) ai lati, così il testo è allineato a quello delle voci; `spazio-icona` (8) sopra, `spazio-elemento` (4) sotto. A tutta larghezza del contenitore. Proprietà **Testo**.
+
+### Stati
+Non si clicca: hover e focus non previsti.
+
+### Accessibilità
+- **Lettori di schermo:** intestazione del gruppo che segue.
+- **Contrasti:** `testo-tenue` su `sfondo-nota` 5,48:1 in chiaro, 7,31:1 in scuro; su `sfondo-flottante` come le altre etichette tenui dei menu.
+
+## CMP-40 – Area evidenziata
+**Tipo:** composto (usa CMP-37 e CMP-02; parte interna Linguetta) · **Usato in:** SC-01 (testo di una nota Brainet) · **Figma:** pagina Componenti composti, [Area evidenziata](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=373-4979) · [Linguetta](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=373-4906)
+
+**Scopo:** mostrare una frase legata a stati ed entità (EN-15, RB-107), come con un evidenziatore, e cambiarne i legami (RB-109).
+**Quando usarlo:** nel testo delle note Brainet.
+**Quando non usarlo:** per una sola entità citata (Collegamento, CMP-38) o per la selezione normale del testo.
+
+### Varianti e dimensioni
+- **Stato = Selezione:** la frase selezionata mentre il menu dell'area (CMP-09 Area) è aperto, `evidenziazione-selezione`.
+- **Stato = Evidenziata:** l'area creata, `sfondo-informazione`.
+- **Stato = Mouse sopra:** l'area diventa un riquadro e sopra, senza spostare il testo, compare la **Linguetta** (idea di Manuel Cucca, «ideamia»): stesso fondo, il Pallino del primo stato, gli stati e le entità separati da «·» in Interfaccia/Dettaglio `testo-informazione`, la freccia giù (`icona-informazione`) che apre il menu dell'area con le voci spuntate. La linguetta ha `spazio-icona-piccola` ai lati e tra i pezzi, `spazio-2` sopra e sotto, `raggio-casella` sopra; l'angolo dell'area sotto la linguetta è dritto.
+- Testo in Nota/Corpo `testo-primario`; l'area ha `spazio-2` ai lati e `raggio-casella`. Proprietà **Testo**; Linguetta: **Legami**, **Mostra pallino**, **Colore**.
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Default | Evidenziata |
+| Hover | Mouse sopra |
+| Focus | Non previsto: l'area non riceve il focus; da tastiera si cambia selezionando la frase |
+| Attivo | Selezione, con il menu aperto |
+| Disabilitato · Caricamento · Errore | Non previsti |
+
+### Accessibilità
+- **Lettori di schermo:** la frase si legge come testo; i legami si annunciano come descrizione («Importante, Serra, Preventivi»).
+- **Contrasti:** testo su `sfondo-informazione` 15,00:1 in chiaro, 12,95:1 in scuro; su `evidenziazione-selezione` 12,46:1 e 9,89:1; testo e freccia della linguetta 5,05:1 e 5,63:1.
+
+## CMP-41 – Riga dell'entità
+**Tipo:** composto (usa CMP-05) · **Usato in:** SC-11 · **Figma:** pagina Componenti composti, [Riga dell'entità](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=373-5031)
+
+**Scopo:** una persona, un oggetto, un evento o un argomento nella vista Entità (EN-13).
+**Quando usarlo:** una riga per entità, in un elenco con il divisore `bordo-divisore` tra l'una e l'altra.
+**Quando non usarlo:** per le note (Database, SC-10).
+
+### Varianti e dimensioni
+- La foto (cerchio `misura-controllo-piccolo`) se c'è, nome in Interfaccia/Controllo, sotto quante volte è nominata e quando in Interfaccia/Dettaglio `testo-tenue` a `spazio-elemento`; a destra il tipo con un Tag (CMP-05) senza la x. Margini come CMP-18: `spazio-controllo` ai lati, `spazio-controllo-piccolo` sopra e sotto, `spazio-blocco` tra i pezzi, `raggio-interno`. Proprietà **Nome**, **Dettagli**, **Mostra foto**; il tag si cambia dall'istanza esposta.
+- Tasto destro: menu con «Unisci a…» e «Scegli una foto…».
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Default | Come sopra |
+| Focus | Anello `focus-anello` |
+| Hover | Non previsto: il fondo `sfondo-hover` nasconderebbe il tag (`sfondo-campo`); la riga si usa solo con il tasto destro |
+| Attivo · Disabilitato · Caricamento · Errore | Non previsti |
+
+### Accessibilità
+- **Lettori di schermo:** elemento di elenco letto come nome, tipo e dettagli; il menu del tasto destro si apre anche con Maiusc+F10.
+- **Contrasti:** nome e dettagli come le righe di CMP-18.
+
+## CMP-42 – Stati delle evidenziature
+**Tipo:** composto (usa CMP-18, CMP-37 e CMP-01) · **Usato in:** SC-06, gruppo Brainet · **Figma:** pagina Componenti composti, [Stati delle evidenziature](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=375-4973)
+
+**Scopo:** creare, vedere e togliere gli stati delle aree (EN-16, RB-110).
+**Quando usarlo:** nelle Impostazioni, sotto il gruppo Brainet, solo con «Usa Brainet» acceso.
+**Quando non usarlo:** per altre liste di impostazioni.
+
+### Varianti e dimensioni
+- Il riquadro di un gruppo di impostazioni (`sfondo-colonna`, `raggio-contenitore`, `spazio-elenco`, divisori `bordo-divisore-tenue`): in cima una Riga di impostazione Informazione con cosa sono, poi una riga Stato (CMP-18) per stato, in fondo «Aggiungi uno stato», pulsante tenue con il +.
+- «Togli» propone di cambiare lo stato nelle aree che lo usano (RB-110).
+
+### Stati
+Quelli delle righe e dei pulsanti (CMP-18, CMP-01). Vuoto: solo la riga in cima e «Aggiungi uno stato».
+
+### Accessibilità
+- **Tastiera:** Tab passa tra i «Togli» e «Aggiungi uno stato».
+- **Contrasti:** come CMP-18 su `sfondo-colonna`; pallini in CMP-37.
+
+## CMP-43 – Calendario di Brainet
+**Tipo:** composto (usa CMP-01; parte interna Giorno con le note) · **Usato in:** SC-12 · **Figma:** pagina Componenti composti, [Calendario di Brainet](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=375-5097) · [Giorno con le note](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=373-4961)
+
+**Scopo:** vedere in quali giorni sono nate le note Brainet (RB-103).
+**Quando usarlo:** nella vista Calendario.
+**Quando non usarlo:** per scegliere una data (Date picker, CMP-12).
+
+### Varianti e dimensioni
+- In cima il mese in Interfaccia/Controllo attivo tra due pulsanti Solo icona piccolo (frecce), a `spazio-elemento`; sotto, a `spazio-blocco`, i giorni della settimana in Interfaccia/Titolo di sezione `testo-tenue` e le settimane, a `spazio-elemento`. Sette colonne uguali che riempiono la larghezza (nell'esempio 56).
+- **Giorno con le note** (parte interna): il numero in un cerchio `misura-controllo-piccolo`, sotto fino a tre pallini `icona-informazione` a `spazio-2`, uno per nota (tre vuol dire tre o più); `spazio-elemento` attorno e tra i pezzi. **Stato = Default · Oggi · Futuro**, **Note = 0 … 3**, proprietà **Giorno**. Oggi ha il cerchio `sfondo-hover`; i giorni dopo oggi sono in `testo-tenue`.
+
+### Stati
+Si guarda soltanto (scelta di Manuel Cucca): i giorni non hanno hover, focus né clic. Le frecce hanno gli stati del pulsante (CMP-01).
+
+### Accessibilità
+- **Lettori di schermo:** tabella del mese; ogni giorno si legge con quante note ha.
+- **Contrasti:** giorni `testo-primario` 15,00:1; futuri `testo-tenue` 5,48:1 e 7,31:1; pallini 5,54:1 e 7,29:1 su `sfondo-nota`.
