@@ -634,3 +634,4 @@
 | 15/10/2026 | Manuel Cucca | RF-18, allegati: un documento è una pillola come quella di una persona, con l'icona del tipo e il nome del file | DEC-134 |
 | 15/10/2026 | Manuel Cucca | RF-18, allegati: un clic apre un menu di azioni, tra cui Apri | DEC-134 |
 | 15/10/2026 | Manuel Cucca | RF-18, allegati: per ora il menu ha Apri, Mostra nella cartella e Togli | DEC-134 |
+| 15/10/2026 | Manuel Cucca | RF-18, allegati: dentro un paragrafo la foto è una bolla, fuori è piccola, media o grande | DEC-134 |
