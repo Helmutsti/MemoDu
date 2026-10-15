@@ -22,7 +22,7 @@ pub const FILE_DATABASE: &str = "copia-di-lavoro.db";
 /// File dell'API quando girava sulla stessa macchina (DEC-46): da lì si copiano le note alla
 /// prima apertura, così non si perde niente.
 pub const FILE_API: &str = "memodu.db";
-const VERSIONE_SCHEMA: i64 = 7;
+const VERSIONE_SCHEMA: i64 = 8;
 const SENZA_TITOLO: &str = "Senza titolo";
 const NUOVA_CARTELLA: &str = "Nuova cartella";
 const LUNGHEZZA_MASSIMA_NOME: usize = 100;
@@ -255,6 +255,12 @@ pub enum Errore {
     CestinoNonDisponibile,
     /// La cartella è già in Locale, o dentro una cartella di Locale (RB-74).
     GiaInLocale(String),
+    /// Brainet è spento: i suoi comandi non fanno niente (RB-106).
+    BrainetSpento,
+    /// Nota, entità o stato di Brainet che non c'è.
+    BrainetNonTrovato(String),
+    /// Dato di Brainet non valido: nome vuoto, colore, mese, immagine.
+    NonValido(String),
     Database(rusqlite::Error),
 }
 
@@ -272,18 +278,21 @@ impl Errore {
             | Errore::CartellaNonTrovata(_)
             | Errore::ElementoNonTrovato(_)
             | Errore::TagNonTrovato(_)
-            | Errore::FileNonTrovato(_) => Some(404),
+            | Errore::FileNonTrovato(_)
+            | Errore::BrainetNonTrovato(_) => Some(404),
             Errore::PercorsoNonValido(_)
             | Errore::DataNonValida(_)
             | Errore::VistaNonValida(_)
             | Errore::IdNonValido(_)
-            | Errore::ScorciatoiaNonValida(_) => Some(400),
+            | Errore::ScorciatoiaNonValida(_)
+            | Errore::NonValido(_) => Some(400),
             Errore::NomeEsistente(_)
             | Errore::NotaNonVuota
             | Errore::ScorciatoiaOccupata
             | Errore::CambiatoFuori
             | Errore::CestinoNonDisponibile
-            | Errore::GiaInLocale(_) => Some(409),
+            | Errore::GiaInLocale(_)
+            | Errore::BrainetSpento => Some(409),
             Errore::DiscoRifiuta(_) => Some(403),
             Errore::TroppoGrande(_) => Some(413),
             Errore::SpostamentoImpossibile => Some(422),
@@ -312,6 +321,9 @@ impl Errore {
             Errore::CambiatoFuori => "Il file è cambiato sul disco".into(),
             Errore::CestinoNonDisponibile => "Questo disco non ha un Cestino".into(),
             Errore::GiaInLocale(percorso) => format!("«{percorso}» è già in Locale"),
+            Errore::BrainetSpento => "Brainet è spento".into(),
+            Errore::BrainetNonTrovato(id) => format!("Niente di Brainet con id {id}"),
+            Errore::NonValido(testo) => testo.clone(),
             Errore::Database(errore) => errore.to_string(),
         }
     }
@@ -339,6 +351,7 @@ impl Serialize for Errore {
             Errore::CambiatoFuori => Some("cambiato"),
             Errore::CestinoNonDisponibile => Some("cestino"),
             Errore::GiaInLocale(_) => Some("elenco"),
+            Errore::BrainetSpento => Some("brainet"),
             _ => None,
         };
         let cestino = match self {
@@ -424,7 +437,7 @@ pub struct EsitoCartella {
 #[derive(Debug, Clone, Serialize, PartialEq)]
 pub struct ElementoCestino {
     pub id: String,
-    /// "nota" o "cartella".
+    /// "nota", "cartella" o "frammento" (Brainet).
     pub tipo: &'static str,
     pub nome: String,
     pub provenienza: String,
@@ -445,6 +458,8 @@ pub struct VoceTag {
 pub enum Ripristinato {
     Nota(Nota),
     Cartella(EsitoCartella),
+    /// Una nota di Brainet (RF-18).
+    Frammento(brainet::Frammento),
 }
 
 // I dati dall'interfaccia non hanno campi in più: un campo sconosciuto è un errore (api.md).
@@ -658,6 +673,9 @@ impl Archivio {
             }
             if versione < 7 {
                 tx.execute_batch(SCHEMA_VISTA)?;
+            }
+            if versione < 8 {
+                tx.execute_batch(brainet::SCHEMA_BRAINET)?;
             }
             tx.pragma_update(None, "user_version", VERSIONE_SCHEMA)?;
             tx.commit()?;
@@ -970,6 +988,9 @@ impl Archivio {
     /// Riporta l'elemento nella radice (RB-28); una cartella con un nome già usato segue RB-31.
     pub fn ripristina(&mut self, id: &str, se_esiste: SeEsiste) -> Esito<Ripristinato> {
         self.con_riconnessione(|a| {
+            if let Some(frammento) = a.ripristina_frammento(id)? {
+                return Ok(frammento);
+            }
             let nota = a
                 .db
                 .query_row(
@@ -1027,7 +1048,7 @@ impl Archivio {
         self.con_riconnessione(|a| {
             let note =
                 a.db.execute("DELETE FROM note WHERE id = ? AND eliminata_il IS NOT NULL", [id])?;
-            if note > 0 {
+            if note > 0 || a.elimina_frammento_per_sempre(id)? {
                 return Ok(());
             }
             let cartella = a
@@ -1049,6 +1070,7 @@ impl Archivio {
     pub fn svuota_cestino(&mut self) -> Esito<()> {
         self.con_riconnessione(|a| {
             a.db.execute("DELETE FROM note WHERE eliminata_il IS NOT NULL", [])?;
+            a.svuota_frammenti()?;
             let cartelle: Vec<String> = a
                 .db
                 .prepare("SELECT id FROM cartelle WHERE eliminata_il IS NOT NULL")?
@@ -1217,6 +1239,7 @@ impl Archivio {
                 eliminato: c.eliminata_il.unwrap_or_default(),
             });
         }
+        elementi.extend(self.frammenti_nel_cestino()?);
         elementi.sort_by(|a, b| b.eliminato.cmp(&a.eliminato));
         Ok(elementi)
     }
@@ -1835,6 +1858,9 @@ pub mod ricerca;
 
 #[path = "archivio_locale.rs"]
 pub mod locale;
+
+#[path = "archivio_brainet.rs"]
+pub mod brainet;
 
 #[cfg(test)]
 #[path = "archivio_test.rs"]

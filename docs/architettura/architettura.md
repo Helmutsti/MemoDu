@@ -113,16 +113,16 @@ Brainet vive tutto nel client, come le note: copia di lavoro, comandi del nucleo
 
 **Pillole e aree dentro il testo (scelta di Manuel Cucca del 15/10/2026).** Il testo di una nota Brainet è Markdown con due segni in forma di tag, come `<u>` per il sottolineato (DEC-28):
 - collegamento (EN-14): `<cita e="ID">Luca Bianchi</cita>`; dentro c'è il nome com'era quando è stato scritto, che serve solo se l'entità non c'è più; la pillola mostra il nome attuale dell'entità;
-- area (EN-15): `<area id="ID" s="ID,ID" e="ID,ID">il preventivo della serra arriva venerdì</area>`, con gli stati (`s`) e le entità (`e`) legati. L'apertura e la chiusura si accoppiano per `id`, così due aree possono sovrapporsi; un'area che contiene un collegamento ne prende l'entità senza scriverla in `e` (RB-107).
-Con il testo si spostano anche pillole e aree, su ogni computer; una nota cambiata su due computer dà una copia in conflitto con le sue pillole e le sue aree (DEC-06). I `<` scritti a mano dall'utente si salvano come `&lt;`, così un testo non diventa mai un segno.
+- area (EN-15): `<area id="ID" s="ID,ID" e="ID,ID">il preventivo della serra arriva venerdì</area id="ID">`, con gli stati (`s`) e le entità (`e`) legati. L'apertura e la chiusura si accoppiano per `id`, così due aree possono sovrapporsi; un'area che contiene un collegamento ne prende l'entità senza scriverla in `e` (RB-107).
+Con il testo si spostano anche pillole e aree, su ogni computer; una nota cambiata su due computer dà una copia in conflitto con le sue pillole e le sue aree (DEC-06). Un `<cita` o un `<area` scritto a mano dall'utente, o arrivato con una nota importata, si salva come `&lt;cita` o `&lt;area`, così un testo non diventa mai un segno; gli altri `<` (per esempio `<u>`) restano come sono.
 
-**Modello dati fisico** (schema 8 della copia di lavoro, `client/src-tauri/src/archivio_brainet.rs`):
+**Modello dati fisico** (schema 8 della copia di lavoro, `client/src-tauri/src/archivio_brainet.rs`; comandi in `brainet.rs`):
 
 | Tabella | Colonne | Chiavi, indici, regole |
 |---|---|---|
 | `frammenti` (EN-12) | `id`, `testo` (Markdown con i segni), `nato_il`, `modificato_il`, `eliminato_il`, `da_nota` (la nota importata) | `id` chiave; indice su `nato_il` per il Calendario e il Database; nel Cestino se `eliminato_il` c'è; 4 MB come le note (DEC-106) |
 | `entita` (EN-13) | `id`, `nome`, `chiave_nome`, `tipo` (null, `persona`, `oggetto`, `evento`, `argomento`), `foto` (JPEG), `unita_in`, `creata_il` | `id` chiave; `chiave_nome` è il nome in minuscolo senza accenti, per i suggerimenti di @; un'entità unita resta come rimando (`unita_in`) e non si mostra |
-| `stati` (EN-16) | `id`, `nome`, `colore` (`avviso`, `informazione`, `successo`, `errore`), `ordine` | `id` chiave; `nome` unico senza maiuscole |
+| `stati` (EN-16) | `id`, `nome`, `chiave`, `colore` (`avviso`, `informazione`, `successo`, `errore`), `ordine` | `id` chiave; `chiave` (il nome in minuscolo) unica |
 | `brainet_citazioni` | `frammento`, `entita`, `inizio`, `fine` | Indice ricavato dal testo, non si sincronizza: si rifà a ogni salvataggio e a ogni blocco ricevuto di quel frammento |
 | `brainet_aree`, `brainet_aree_legami` | area: `frammento`, `id`, `inizio`, `fine`; legame: `area`, `tipo` (`stato` o `entita`), `id` | Come sopra |
 | `impostazioni` | in più `brainet` (0 o 1) e `mostra_database` (0 o 1) | Nell'elemento «impostazioni» che si sincronizza (RB-52); di default 0 e 1 |

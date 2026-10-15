@@ -158,9 +158,10 @@ fn segna_la_versione_dello_schema() {
     p.chiudi();
     let db = Connection::open(p.file()).unwrap();
     let versione: i64 = db.pragma_query_value(None, "user_version", |r| r.get(0)).unwrap();
-    // Schema 7: sincronizzazione (DEC-75, DEC-76), impostazioni (DEC-91), note del cestino nella
-    // ricerca e indice di ricerca (DEC-95), Locale (DEC-118), vista della nota (DEC-130).
-    assert_eq!(versione, 7);
+    // Schema 8: sincronizzazione (DEC-75, DEC-76), impostazioni (DEC-91), note del cestino nella
+    // ricerca e indice di ricerca (DEC-95), Locale (DEC-118), vista della nota (DEC-130), Brainet
+    // (RF-18, schema 8).
+    assert_eq!(versione, 8);
 }
 
 #[test]
@@ -175,6 +176,8 @@ fn una_copia_di_lavoro_con_lo_schema_2_riceve_le_impostazioni() {
          DROP TRIGGER ricerca_note_tag_INSERT; DROP TRIGGER ricerca_note_tag_DELETE; DROP TRIGGER ricerca_tag_UPDATE;
          DROP TRIGGER ricerca_note_tag_UPDATE; DROP TABLE ricerca; DROP TABLE ricerca_righe;
          ALTER TABLE note DROP COLUMN vista;
+         DROP TABLE frammenti; DROP TABLE entita; DROP TABLE stati; DROP TABLE brainet_citazioni;
+         DROP TABLE brainet_aree; DROP TABLE brainet_aree_legami;
          PRAGMA user_version = 2;",
     )
     .unwrap();

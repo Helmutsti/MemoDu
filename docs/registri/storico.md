@@ -619,3 +619,4 @@
 | 15/10/2026 | Manuel Cucca | RF-18: Fase 7 approvata | DEC-134 |
 | 15/10/2026 | Agente IA | RF-18, Fase 8 proposta: CA-18.1 … CA-18.21 e piano di test TC-195 … TC-215 in `moduli/net/8-test.md` | DEC-134 |
 | 15/10/2026 | Manuel Cucca | RF-18: Fase 8 approvata (CA-18.1 … CA-18.21, TC-195 … TC-215); via allo sviluppo | DEC-134 |
+| 15/10/2026 | Agente IA | RF-18, attività 1 fatta: `archivio_brainet.rs` (schema 8, segni `<cita>` e `<area>`, indice, entità con unioni e foto, stati, Calendario, importazione, Cestino) e `brainet.rs` con 22 comandi; 15 prove nuove, 148 prove del nucleo passate | DEC-134 |

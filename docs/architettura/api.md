@@ -589,34 +589,37 @@ Nell'architettura finale si aggiungono il gettone di rinnovo (`POST /accesso/rin
 **Sessione:** email, gettone, scadenza e chiave dati in una voce del portachiavi del sistema (servizio «Memodu», voce «sessione»; con `MEMODU_CARTELLA` un servizio per cartella, così le prove non toccano la sessione vera). L'indirizzo del server è `https://memodu-api.vercel.app`, sostituito da `MEMODU_SERVER`. Il gettone si rinnova da solo prima di sincronizzare quando mancano meno di 7 giorni (RB-86). L'evento `sincronizzazione` con `{ "tipo": "accesso-scaduto" }` sostituisce `credenziali-rifiutate`: la sincronizzazione si ferma fino a un nuovo accesso (RB-87). `stato_sincronizzazione.collegata` vale se c'è la sessione. Il file `credenziali` non si legge più.
 
 ## Brainet (RF-18, DEC-134; Fase 7 approvata da Manuel Cucca il 15/10/2026)
-Comandi del nucleo (`client/src-tauri/src/archivio_brainet.rs`), chiamati dall'interfaccia come gli altri; nessuna richiesta nuova al server. Con Brainet spento tutti, tranne `brainet_stato` e `accendi_brainet`, rispondono `BRAINET_SPENTO`.
+Comandi del nucleo (`client/src-tauri/src/brainet.rs`, regole in `archivio_brainet.rs`), chiamati dall'interfaccia come gli altri; nessuna richiesta nuova al server. Gli errori hanno la forma di quelli della copia di lavoro (`stato`, `messaggio`, `motivo`). Con Brainet spento tutti, tranne `brainet_stato` e `accendi_brainet`, rispondono `409` con `motivo: "brainet"`.
 
 | Comando | Ingresso | Uscita | Errori | Flusso |
 |---|---|---|---|---|
-| `brainet_stato` | — | `{ acceso, mostra_database }` | — | FL-20 |
-| `accendi_brainet` | — | — | — | FL-20 |
-| `spegni_brainet` | — | — | — | FL-20, RB-111 |
-| `mostra_database` | `si` | — | — | FL-20 |
-| `crea_frammento` | `testo` | Frammento | `VUOTO`, `TROPPO_GRANDE` | FL-16 |
-| `salva_frammento` | `id`, `testo` | Frammento | `NON_TROVATO`, `TROPPO_GRANDE` | FL-16, FL-17, FL-18 |
-| `elenca_frammenti` | `prima_di` (per pagine) | Frammento[] dal più recente | — | FL-16 |
-| `elimina_frammento` | `id` | — | `NON_TROVATO` | FL-16 |
-| `calendario` | `mese` (AAAA-MM) | `{ giorno, note }[]` | — | FL-16 |
-| `suggerisci_entita` | `testo` | Entità[] per tipo, al massimo 5 per tipo | — | FL-17 |
-| `crea_entita` | `nome` | Entità senza tipo | `NOME_VUOTO`, `NOME_LUNGO` | FL-17, RB-105 |
-| `elenca_entita` | — | `{ entita, citazioni, ultima_volta }[]` | — | FL-19 |
-| `anteprima_unione` | `da`, `in` | `{ citazioni, aree }` | `NON_TROVATO`, `STESSA_ENTITA` | FL-19, RB-108 |
-| `unisci_entita` | `da`, `in` | — | `NON_TROVATO`, `STESSA_ENTITA` | FL-19, RB-108 |
-| `scegli_foto` | `id` | Entità (o niente se la finestra si chiude) | `NON_TROVATO`, `IMMAGINE_NON_VALIDA` | RF-18 |
+| `brainet_stato` | — | `{ acceso, mostraDatabase }` | — | FL-20 |
+| `accendi_brainet` | — | come sopra | — | FL-20 |
+| `spegni_brainet` | — | come sopra | — | FL-20, RB-111 |
+| `mostra_database` | `si` | come sopra | — | FL-20 |
+| `crea_frammento` | `testo` | Frammento | `400` vuota, `413` oltre 4 MB | FL-16 |
+| `salva_frammento` | `id`, `testo` | Frammento, o null se il testo è vuoto e il frammento è stato cancellato (RB-102) | `404`, `413` | FL-16, FL-17, FL-18 |
+| `leggi_frammento` | `id` | Frammento | `404` | FL-16 |
+| `elenca_frammenti` | `primaDi` (il `natoIl` dell'ultimo mostrato, per le pagine da 50) | Frammento[] dal più recente | — | FL-16 |
+| `elimina_frammento` | `id` | Elemento del cestino con `tipo: "frammento"` | `404` | FL-16 |
+| `calendario` | `mese` (AAAA-MM) | `{ giorno, note }[]`, solo i giorni con note, nel fuso del computer | `400` mese non valido | FL-16 |
+| `suggerisci_entita` | `testo` | Entità[] per tipo (persona, argomento, evento, oggetto, poi senza tipo), al massimo 5 per tipo | — | FL-17 |
+| `crea_entita` | `nome` | Entità senza tipo; un nome che c'è già dà quella | `400` vuoto o oltre 200 caratteri | FL-17, RB-105 |
+| `leggi_entita` | `id` | Entità, seguendo le unioni | `404` | FL-17 |
+| `elenca_entita` | — | `{ entita, nominata, ultimaVolta }[]`, dalla nominata più di recente | — | FL-19 |
+| `anteprima_unione` | `da`, `verso` | `{ citazioni, aree }` | `404`, `400` stessa entità | FL-19, RB-108 |
+| `unisci_entita` | `da`, `verso` | `{ citazioni, aree }` spostate | `404`, `400` stessa entità | FL-19, RB-108 |
+| `scegli_foto` | `id` | Entità, o null se la finestra si chiude | `404`, `400` non è un'immagine, `403` file non leggibile | RF-18 |
 | `elenca_stati` | — | Stato[] in ordine | — | FL-21 |
-| `crea_stato` | `nome`, `colore` | Stato | `NOME_GIA_USATO`, `NOME_VUOTO` | FL-21 |
-| `togli_stato` | `id`, `sostituto` (facoltativo) | `{ aree_cambiate, aree_sparite }` | `NON_TROVATO` | FL-21, RB-110 |
-| `importa_in_brainet` | `nota`, `sposta` | Frammento | `NON_TROVATO`, `TROPPO_GRANDE` | FL-22, RB-112 |
+| `crea_stato` | `nome`, `colore` | Stato | `409` nome già usato, `400` nome vuoto o colore non valido | FL-21 |
+| `aree_con_stato` | `id` | quante aree lo usano | — | FL-21, RB-110 |
+| `togli_stato` | `id`, `sostituto` (facoltativo) | `{ areeCambiate, areeSparite }` | `404`, `400` sostituto non valido | FL-21, RB-110 |
+| `importa_in_brainet` | `nota`, `sposta` | Frammento | `404`, `400` vuota, `413` | FL-22, RB-112 |
 
-- **Frammento:** `{ id, testo, nato_il, modificato_il }`. **Entità:** `{ id, nome, tipo, foto }` (foto in base64 o null). **Stato:** `{ id, nome, colore, ordine }`.
-- I frammenti nel Cestino passano dai comandi del Cestino che ci sono (`elenca_cestino`, `ripristina`, `elimina_definitivamente`, `svuota_cestino`), con `tipo: "frammento"`.
-- `togli_stato` toglie lo stato dai segni `<area>` di tutti i frammenti che lo usano (o lo sostituisce), e le aree rimaste senza legami spariscono (RB-110).
-- Evento verso l'interfaccia: `brainet-spento`, quando Brainet viene spento da un altro computer (RB-111).
+- **Frammento:** `{ id, testo, natoIl, modificatoIl }`. **Entità:** `{ id, nome, tipo, foto }` (foto JPEG in base64 o null). **Stato:** `{ id, nome, colore, ordine }`.
+- I frammenti nel Cestino passano dai comandi del Cestino che ci sono (`elenca_cestino`, `ripristina`, `elimina_definitivamente`, `svuota_cestino`), con `tipo: "frammento"`; `ripristina` dà il Frammento.
+- `togli_stato` toglie lo stato dai segni `<area>` di tutti i frammenti che lo usano, anche nel Cestino (o lo sostituisce), e le aree rimaste senza legami spariscono (RB-110).
+- Evento verso l'interfaccia: `brainet-spento`, quando Brainet viene spento da un altro computer (RB-111; con la sincronizzazione, attività 2).
 
 ## GET /salute
 Controllo di salute, senza gettone né protocollo. **Output:** `200 { "stato": "ok" }` se l'archivio risponde, altrimenti `503` (DEC-105).

@@ -15,6 +15,7 @@
 
 mod accesso;
 mod archivio;
+mod brainet;
 mod cifratura;
 mod comandi;
 mod impostazioni;
@@ -317,6 +318,28 @@ pub fn run() {
             locale::rinomina_locale,
             locale::sposta_locale,
             locale::elimina_locale,
+            brainet::brainet_stato,
+            brainet::accendi_brainet,
+            brainet::spegni_brainet,
+            brainet::mostra_database,
+            brainet::crea_frammento,
+            brainet::salva_frammento,
+            brainet::leggi_frammento,
+            brainet::elenca_frammenti,
+            brainet::elimina_frammento,
+            brainet::calendario,
+            brainet::suggerisci_entita,
+            brainet::crea_entita,
+            brainet::leggi_entita,
+            brainet::elenca_entita,
+            brainet::anteprima_unione,
+            brainet::unisci_entita,
+            brainet::scegli_foto,
+            brainet::elenca_stati,
+            brainet::crea_stato,
+            brainet::aree_con_stato,
+            brainet::togli_stato,
+            brainet::importa_in_brainet,
         ])
         .on_window_event(|finestra, evento| {
             match evento {

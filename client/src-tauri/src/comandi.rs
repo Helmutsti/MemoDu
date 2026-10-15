@@ -38,7 +38,7 @@ impl Dati {
 
     /// Un'operazione che cambia i dati: dopo, la sincronizzazione parte presto (DEC-80), e i
     /// conflitti nati scrivendo arrivano all'interfaccia (RB-39).
-    fn modifica<T>(&self, app: &AppHandle, operazione: impl FnOnce(&mut Archivio) -> Esito<T>) -> Esito<T> {
+    pub(crate) fn modifica<T>(&self, app: &AppHandle, operazione: impl FnOnce(&mut Archivio) -> Esito<T>) -> Esito<T> {
         let (esito, conflitti) = {
             let esito = self.con(operazione);
             (esito, self.con(|a| Ok(a.prendi_conflitti())).unwrap_or_default())

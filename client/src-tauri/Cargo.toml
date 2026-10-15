@@ -48,6 +48,8 @@ hkdf = "0.12"
 chacha20poly1305 = "0.10"
 base64 = "0.22"
 keyring = { version = "3", features = ["apple-native", "windows-native"] }
+# Foto delle entità di Brainet, ridotte a 256 px in JPEG (RF-18).
+image = { version = "0.25", default-features = false, features = ["jpeg", "png", "webp", "gif", "bmp"] }
 
 
 # Tema della barra delle applicazioni di Windows, per il colore dell'icona nell'area di notifica.
