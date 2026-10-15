@@ -671,3 +671,4 @@
 | 15/10/2026 | Agente IA | Runbook: passi per il bucket di Cloudflare R2 e le quattro variabili su Vercel (allegati di Brainet), da approvare da Manuel Cucca | DEC-135 |
 | 15/10/2026 | Manuel Cucca | Allegati di Brainet: bucket di Cloudflare R2 e le quattro variabili `MEMODU_R2_*` su Vercel create; passi del runbook approvati | DEC-135 |
 | 15/10/2026 | Agente IA | Push di `main` senza tag (scelta di Manuel Cucca): Vercel ha pubblicato il server con gli allegati; `/vivo` 200, `/salute` ok, le richieste degli allegati rispondono (401 senza gettone). La configurazione di R2 si vede al primo allegato vero | DEC-135 |
+| 15/10/2026 | Manuel Cucca | Prove della 1.0 sul Mac fatte (nota rapida, accesso, Locale, sincronizzazione; tre correzioni della sincronizzazione). La 1.0.0 non esce: tronco unico con i tag, il prossimo rilascio dalla testa, da riprovare sul Mac | DEC-136 |

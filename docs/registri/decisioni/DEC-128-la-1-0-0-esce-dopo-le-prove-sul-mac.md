@@ -1,6 +1,6 @@
 # DEC-128 – La 1.0.0 esce dopo le prove sul Mac
 
-**Data:** 2026-10-08 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-10-08 · **Stato:** Superata da DEC-136 · **Idea di origine:** —
 
 ## Contesto
 Le note di rilascio della 1.0.0 la presentano per Windows e per i Mac, e il flusso «Rilascio» produce anche il `.dmg`. Sul Mac però l'ultima prova vera è sulla 0.1.8, e TC-06 (icona nella barra dei menu e nel Dock, DEC-108) è ancora in verifica. Da allora sono arrivati la sincronizzazione cifrata, l'accesso con il box dell'account e Locale, che sul Mac non sono mai stati provati. La questione è emersa nella retrospettiva della Fase 9.

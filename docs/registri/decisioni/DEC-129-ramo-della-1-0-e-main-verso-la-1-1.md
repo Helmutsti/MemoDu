@@ -1,6 +1,6 @@
 # DEC-129 – Un ramo per la 1.0.0, main verso la 1.1.0
 
-**Data:** 2026-10-08 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-10-08 · **Stato:** Superata da DEC-136 · **Idea di origine:** —
 
 ## Contesto
 Per DEC-128 la 1.0.0 esce dopo le prove sul Mac, che non sono ancora fatte. Manuel Cucca vuole intanto portare avanti la 1.1.0, con la formattazione Markdown di RF-02 sospesa con DEC-64 e rinviata dopo la v1 con DEC-125. Le due versioni non devono mescolarsi: la 1.0.0 non deve contenere il Markdown.
