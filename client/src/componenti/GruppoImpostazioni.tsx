@@ -1,7 +1,14 @@
 // CMP-31 Gruppo di impostazioni (DEC-122): il titolo di gruppo di CMP-18 sopra e le righe in un
 // riquadro (sfondo-colonna, ruolo elenco), separate da un divisore.
 
-import { Children, Fragment, useId, type ReactElement, type ReactNode } from "react";
+import {
+  Children,
+  Fragment,
+  isValidElement,
+  useId,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 import { TitoloGruppo } from "./RigaImpostazione";
 import "./GruppoImpostazioni.css";
 
@@ -17,7 +24,8 @@ export function Riquadro({
   return (
     <div className={`riquadro-impostazioni ${className ?? ""}`}>
       {righe.map((riga, i) => (
-        <Fragment key={i}>
+        // La chiave della riga, se ce l'ha: una riga che cambia posto non si ricostruisce.
+        <Fragment key={isValidElement(riga) && riga.key !== null ? riga.key : i}>
           {i > 0 && <hr className="divisore-impostazioni" />}
           {riga}
         </Fragment>

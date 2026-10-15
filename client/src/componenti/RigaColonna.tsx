@@ -14,6 +14,7 @@ import {
   Settings,
   Trash2,
   X,
+  type LucideIcon,
 } from "lucide-react";
 import {
   useEffect,
@@ -378,6 +379,42 @@ export function RigaImpostazioni({
       </span>
       <span className="riga-nome">{selezionata ? "Chiudi impostazioni" : "Impostazioni"}</span>
     </button>
+  );
+}
+
+/**
+ * Una voce fissa di una sezione, con la sua icona: Database, Entità e Calendario di Brainet
+ * (RF-18). Selezionata quando la sua vista è aperta, come una nota (DEC-35).
+ */
+export function RigaVoce({
+  nome,
+  icona,
+  selezionata,
+  onApri,
+}: {
+  nome: string;
+  icona: LucideIcon;
+  selezionata: boolean;
+  onApri: () => void;
+}): ReactElement {
+  return (
+    <li role="none">
+      <button
+        type="button"
+        role="treeitem"
+        data-riga=""
+        aria-level={1}
+        aria-selected={selezionata}
+        aria-current={selezionata ? "page" : undefined}
+        className={`riga riga-cartella ${selezionata ? "riga-selezionata interfaccia-controllo-attivo" : "interfaccia-controllo"}`}
+        onClick={onApri}
+      >
+        <span className="riga-icona">
+          <Icona di={icona} />
+        </span>
+        <span className="riga-nome">{nome}</span>
+      </button>
+    </li>
   );
 }
 

@@ -13,6 +13,8 @@
 // impostazioni o dall'avviso dell'accesso scaduto, che non blocca niente (RB-87).
 
 import {
+  Brain,
+  Copy,
   FileText,
   Folder,
   FolderInput,
@@ -78,6 +80,9 @@ import { FileAperto } from "../locale/FileAperto";
 import { SezioneLocale } from "../locale/SezioneLocale";
 import { VeloRilascio } from "../locale/VeloRilascio";
 import { useLocale } from "../locale/useLocale";
+import { brainet, type StatoBrainet } from "../brainet/api";
+import { SezioneBrainet, type VistaBrainet } from "../brainet/SezioneBrainet";
+import { VisteBrainet } from "../brainet/VisteBrainet";
 import "./FinestraPrincipale.css";
 
 const TESTO_ERRORE =
@@ -239,7 +244,16 @@ export function FinestraPrincipale(): ReactElement {
   } | null>(null);
   const [conflitto, setConflitto] = useState<Conflitto | null>(null);
   const [avviso, setAvviso] = useState(false);
-  const [vista, setVista] = useState<"nota" | "cestino" | "impostazioni" | "file">("nota");
+  const [vista, setVista] = useState<"nota" | "cestino" | "impostazioni" | "file" | "brainet">(
+    "nota",
+  );
+  // Brainet (RF-18): acceso o spento, la vista aperta, quante volte la sincronizzazione ha
+  // portato modifiche (le viste si rileggono) e il foglio nuovo (uno nuovo a ogni +).
+  const [statoBrainet, setStatoBrainet] = useState<StatoBrainet | null>(null);
+  const [vistaBrainet, setVistaBrainet] = useState<VistaBrainet>("foglio");
+  const [versioneBrainet, setVersioneBrainet] = useState(0);
+  const [foglioBrainet, setFoglioBrainet] = useState(0);
+  const [avvisoBrainet, setAvvisoBrainet] = useState(false);
   /** Il file di Locale aperto al posto della nota (RF-17). */
   const [fileAperto, setFileAperto] = useState<string | null>(null);
   /** Un'operazione di Locale sul disco non è riuscita: il motivo (SF-37). */
@@ -603,6 +617,15 @@ export function FinestraPrincipale(): ReactElement {
           case "errore":
             setAvvisoSinc({ tipo: "errore", protocollo: evento.protocollo });
             break;
+          case "brainet":
+            setVersioneBrainet((n) => n + 1);
+            void brainet.stato().then(setStatoBrainet, () => undefined);
+            // Spento da un altro computer: la vista si chiude, il testo si perde (RB-111).
+            if (evento.spento) {
+              setVista((v) => (v === "brainet" ? "nota" : v));
+              setAvvisoBrainet(true);
+            }
+            break;
         }
       }),
     [coda],
@@ -951,7 +974,7 @@ export function FinestraPrincipale(): ReactElement {
 
   const ripristina = async (elemento: ElementoCestino) => {
     await esegui(() =>
-      elemento.tipo === "nota"
+      elemento.tipo === "nota" || elemento.tipo === "frammento"
         ? api.ripristina(elemento.id)
         : conNome((s) => api.ripristina(elemento.id, s) as Promise<EsitoCartella>, ""),
     );
@@ -1004,6 +1027,33 @@ export function FinestraPrincipale(): ReactElement {
     }
     await ricaricaCestino();
     setVista("cestino");
+  };
+
+  // Brainet acceso o spento, dall'avvio (RF-18).
+  useEffect(() => {
+    void brainet.stato().then(setStatoBrainet, () => setStatoBrainet(null));
+  }, []);
+
+  /** Una vista di Brainet al posto della nota, come il cestino (RF-18); il + apre un foglio nuovo. */
+  const apriBrainet = async (v: VistaBrainet) => {
+    await coda.scarica();
+    if (coda.haModifiche) return;
+    if (await lasciaVuota()) {
+      setAperta(null);
+      await ricarica().catch(() => setBloccata(true));
+    }
+    if (v === "foglio") setFoglioBrainet((n) => n + 1);
+    setVistaBrainet(v);
+    setVista("brainet");
+  };
+
+  /** Importa in Brainet › Copia o Sposta; con Sposta la nota va nel Cestino (RB-112). */
+  const importaInBrainet = async (id: string, sposta: boolean) => {
+    if (sposta && aperta?.id === id) await chiudiVista();
+    await esegui(() => brainet.importa(id, sposta));
+    setVersioneBrainet((n) => n + 1);
+    await ricarica().catch(() => setBloccata(true));
+    if (sposta && vista === "cestino") await ricaricaCestino();
   };
 
   /** Le impostazioni al posto della nota, come il cestino (DEC-91). */
@@ -1217,6 +1267,30 @@ export function FinestraPrincipale(): ReactElement {
           daRiga: true,
         }),
     },
+    // Con Brainet acceso, dopo Sposta in… (CMP-09 Nota, RB-112).
+    ...(statoBrainet?.acceso
+      ? [
+          {
+            tipo: "voce" as const,
+            etichetta: "Importa in Brainet",
+            icona: Brain,
+            sottomenu: [
+              {
+                tipo: "voce" as const,
+                etichetta: "Copia",
+                icona: Copy,
+                azione: () => void importaInBrainet(riga.id, false),
+              },
+              {
+                tipo: "voce" as const,
+                etichetta: "Sposta",
+                icona: FolderInput,
+                azione: () => void importaInBrainet(riga.id, true),
+              },
+            ],
+          },
+        ]
+      : []),
     { tipo: "separatore" },
     {
       tipo: "voce",
@@ -1313,6 +1387,15 @@ export function FinestraPrincipale(): ReactElement {
             impostazioniAperte={vista === "impostazioni"}
             onApriImpostazioni={() => void apriImpostazioni()}
             onChiudiVista={() => void chiudiVista()}
+            brainet={
+              statoBrainet?.acceso ? (
+                <SezioneBrainet
+                  mostraDatabase={statoBrainet.mostraDatabase}
+                  aperta={vista === "brainet" ? vistaBrainet : null}
+                  onApri={(v) => void apriBrainet(v)}
+                />
+              ) : undefined
+            }
             locale={
               <SezioneLocale
                 locale={locale}
@@ -1395,6 +1478,13 @@ export function FinestraPrincipale(): ReactElement {
                 onChiudi={() => setSparita(null)}
               />
             ) : (
+              (avvisoBrainet && (
+                <Avviso
+                  tipo="avviso"
+                  testo="Brainet è stato spento da un altro computer."
+                  onChiudi={() => setAvvisoBrainet(false)}
+                />
+              )) ||
               (avviso && <Avviso testo={TESTO_ERRORE} onChiudi={() => setAvviso(false)} />) ||
               (avvisoLocale && (
                 <Avviso testo={avvisoLocale} onChiudi={() => setAvvisoLocale(null)} />
@@ -1447,6 +1537,16 @@ export function FinestraPrincipale(): ReactElement {
                 esegui={esegui}
                 onAccedi={(email) => setAccesso({ email })}
                 versioneAccesso={versioneAccesso}
+                versioneBrainet={versioneBrainet}
+                onBrainet={setStatoBrainet}
+              />
+            ) : vista === "brainet" && statoBrainet?.acceso ? (
+              <VisteBrainet
+                key={vistaBrainet === "foglio" ? `foglio:${foglioBrainet}` : vistaBrainet}
+                vista={vistaBrainet}
+                versione={versioneBrainet}
+                esegui={esegui}
+                onCestino={() => void ricarica().catch(() => setBloccata(true))}
               />
             ) : vista === "cestino" ? (
               <Cestino

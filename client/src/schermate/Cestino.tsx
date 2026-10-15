@@ -35,12 +35,13 @@ function provenienza(e: ElementoCestino): string {
 }
 
 export function dettagli(e: ElementoCestino): string {
+  if (e.tipo === "frammento") return `Nota di Brainet · eliminata il ${data(e.eliminato)}`;
   const tipo = e.tipo === "nota" ? "Nota" : `Cartella con ${note(e.conteggio ?? 0)}`;
   return `${tipo} · ${provenienza(e)} · eliminata il ${data(e.eliminato)}`;
 }
 
 function testoElimina(e: ElementoCestino): string {
-  if (e.tipo === "nota") return "La nota verrà eliminata per sempre.";
+  if (e.tipo === "nota" || e.tipo === "frammento") return "La nota verrà eliminata per sempre.";
   const n = e.conteggio ?? 0;
   if (n === 0) return "La cartella verrà eliminata per sempre.";
   if (n === 1) return "La cartella e la sua nota verranno eliminate per sempre.";
@@ -64,6 +65,15 @@ export function Cestino({ elementi, onRipristina, onElimina, onSvuota }: Proprie
   }
 
   const n = elementi.length;
+  // Con le note di Brainet il Cestino ha due parti, ognuna con il suo titolo (CMP-39, SC-04).
+  const brainet = elementi.filter((e) => e.tipo === "frammento");
+  const cloud = elementi.filter((e) => e.tipo !== "frammento");
+  const parti = brainet.length
+    ? [
+        ...(cloud.length ? [{ titolo: "CLOUD", elementi: cloud }] : []),
+        { titolo: "Brainet", elementi: brainet },
+      ]
+    : [{ titolo: "", elementi }];
   return (
     <section className="cestino" aria-labelledby="cestino-titolo">
       <AreaScorrevole className="cestino-scorrimento">
@@ -77,33 +87,44 @@ export function Cestino({ elementi, onRipristina, onElimina, onSvuota }: Proprie
             </Pulsante>
           </header>
           <ul className="cestino-elenco">
-            {elementi.map((e) => (
-              <li key={e.id} className="elemento-cestino">
-                <span className="elemento-cestino-contenuto">
-                  <span className="elemento-cestino-icona">
-                    <Icona di={e.tipo === "nota" ? FileText : Folder} />
-                  </span>
-                  <span className="elemento-cestino-testi">
-                    <span className="elemento-cestino-nome interfaccia-titolo">
-                      {e.nome || "Nota vuota"}
+            {parti.map(({ titolo, elementi: lista }) => [
+              titolo && (
+                <li
+                  key={titolo}
+                  className="menu-titolo interfaccia-titolo-sezione"
+                  role="presentation"
+                >
+                  {titolo}
+                </li>
+              ),
+              ...lista.map((e) => (
+                <li key={e.id} className="elemento-cestino">
+                  <span className="elemento-cestino-contenuto">
+                    <span className="elemento-cestino-icona">
+                      <Icona di={e.tipo === "nota" ? FileText : Folder} />
                     </span>
-                    <span className="elemento-cestino-dettagli interfaccia-dettaglio">
-                      {dettagli(e)}
+                    <span className="elemento-cestino-testi">
+                      <span className="elemento-cestino-nome interfaccia-titolo">
+                        {e.nome || "Nota vuota"}
+                      </span>
+                      <span className="elemento-cestino-dettagli interfaccia-dettaglio">
+                        {dettagli(e)}
+                      </span>
                     </span>
                   </span>
-                </span>
-                <span className="elemento-cestino-azioni">
-                  <Pulsante tipo="tenue" onClick={() => onRipristina(e)}>
-                    Ripristina
-                  </Pulsante>
-                  <PulsanteIcona
-                    nome="Elimina definitivamente"
-                    icona={<Icona di={Trash2} />}
-                    onClick={() => setDaEliminare(e)}
-                  />
-                </span>
-              </li>
-            ))}
+                  <span className="elemento-cestino-azioni">
+                    <Pulsante tipo="tenue" onClick={() => onRipristina(e)}>
+                      Ripristina
+                    </Pulsante>
+                    <PulsanteIcona
+                      nome="Elimina definitivamente"
+                      icona={<Icona di={Trash2} />}
+                      onClick={() => setDaEliminare(e)}
+                    />
+                  </span>
+                </li>
+              )),
+            ])}
           </ul>
         </div>
       </AreaScorrevole>

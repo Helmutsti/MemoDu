@@ -26,6 +26,8 @@ import { Pulsante } from "../componenti/Pulsante";
 import { RigaImpostazione, RigaInterruttore } from "../componenti/RigaImpostazione";
 import { SceltaSegmenti } from "../componenti/SceltaSegmenti";
 import { daTasto, scriviScorciatoia, type Sistema } from "../scorciatoia";
+import { GruppoBrainet } from "../brainet/GruppoBrainet";
+import type { StatoBrainet } from "../brainet/api";
 import "./Impostazioni.css";
 
 const TEMI: { valore: Tema; etichetta: string }[] = [
@@ -48,6 +50,10 @@ interface Proprieta {
   onAccedi: (email?: string) => void;
   /** Cambia dopo un accesso o un'uscita: la pagina si rilegge. */
   versioneAccesso?: number;
+  /** Cambia quando la sincronizzazione porta modifiche di Brainet (RF-18). */
+  versioneBrainet?: number;
+  /** Brainet acceso, spento o «Mostra il Database» cambiato: la colonna si aggiorna. */
+  onBrainet?: (stato: StatoBrainet) => void;
 }
 
 /** Il campo della scorciatoia: cliccato, aspetta la combinazione nuova; Esc lo lascia. */
@@ -145,6 +151,8 @@ export function Impostazioni({
   esegui,
   onAccedi,
   versioneAccesso = 0,
+  versioneBrainet = 0,
+  onBrainet,
 }: Proprieta): ReactElement | null {
   const [valori, setValori] = useState<Valori | null>(null);
   const [stato, setStato] = useState<StatoSincronizzazione | null>(null);
@@ -327,6 +335,12 @@ export function Impostazioni({
               }
             />
           </GruppoImpostazioni>
+
+          <GruppoBrainet
+            esegui={esegui}
+            versione={versioneBrainet}
+            onCambiato={(s) => onBrainet?.(s)}
+          />
         </div>
       </AreaScorrevole>
       {finestra === "password" && (

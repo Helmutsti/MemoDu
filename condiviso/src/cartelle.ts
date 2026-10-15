@@ -35,7 +35,8 @@ export interface EsitoCartella {
 /** Un elemento del cestino (SC-04, CMP-17). */
 export interface ElementoCestino {
   id: string;
-  tipo: "nota" | "cartella";
+  /** "frammento": una nota di Brainet (RF-18). */
+  tipo: "nota" | "cartella" | "frammento";
   /** Titolo della nota o nome della cartella. */
   nome: string;
   /** Percorso da cui veniva; "" la radice. */

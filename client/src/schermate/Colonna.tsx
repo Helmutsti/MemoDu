@@ -78,6 +78,8 @@ interface Proprieta {
   ricerca?: ReactNode;
   /** Larghezza scelta trascinando la maniglia (DEC-62). */
   larghezza: number;
+  /** Sotto CLOUD: la sezione Brainet, con Brainet acceso (RF-18). */
+  brainet?: ReactNode;
   /** Sotto Cartelle: la sezione Locale (RF-17). */
   locale?: ReactNode;
 }
@@ -342,6 +344,7 @@ export function Colonna(p: Proprieta): ReactElement {
                 />
               )}
             </div>
+            {p.brainet}
             {p.locale}
           </div>
           <div

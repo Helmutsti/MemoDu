@@ -1,0 +1,183 @@
+/* Viste di Brainet nell'area della nota (SC-10, SC-11, SC-12): come il Cestino (SC-04), titolo
+   in alto e contenuto largo 720, che scorre con la barra di CMP-25. */
+.vista-brainet {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.vista-brainet-corpo {
+  padding: 80px var(--spazio-gruppo);
+}
+.vista-brainet-corpo > * {
+  width: 100%;
+  max-width: 720px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.vista-brainet-corpo h1 {
+  margin-top: 0;
+  margin-bottom: var(--spazio-gruppo);
+  color: var(--testo-primario);
+}
+
+/* Database: giorno e ora sopra, il testo sotto; un divisore tra le note. */
+.database-elenco,
+.entita-elenco {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  list-style: none;
+}
+.nota-database {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spazio-icona);
+  padding: var(--spazio-controllo) 0;
+  user-select: text;
+}
+.nota-database + .nota-database {
+  border-top: 1px solid var(--bordo-divisore);
+}
+.nota-database-quando {
+  color: var(--testo-tenue);
+}
+
+/* CMP-41 Riga dell'entità: margini come CMP-18, il tipo con un Tag a destra; divisore tra le righe. */
+.riga-entita {
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-blocco);
+  padding: var(--spazio-controllo-piccolo) var(--spazio-controllo);
+  border-radius: var(--raggio-interno);
+  outline: none;
+}
+.riga-entita + .riga-entita {
+  border-top: 1px solid var(--bordo-divisore);
+}
+.riga-entita:focus-visible {
+  box-shadow: 0 0 0 var(--focus-spessore) var(--focus-anello);
+}
+.riga-entita-foto {
+  width: var(--misura-controllo-piccolo);
+  height: var(--misura-controllo-piccolo);
+  border-radius: var(--raggio-pillola);
+  object-fit: cover;
+}
+.riga-entita-testi {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spazio-elemento);
+  min-width: 0;
+  color: var(--testo-primario);
+}
+.riga-entita-dettagli {
+  color: var(--testo-tenue);
+}
+
+/* Campo di ricerca in cima al pannello «Unisci a…» (CMP-11). */
+.campo-ricerca-menu {
+  width: 100%;
+  height: var(--misura-riga);
+  padding: 0 var(--spazio-controllo);
+  border: 0;
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-campo);
+  color: var(--testo-primario);
+  outline: none;
+}
+
+/* CMP-43 Calendario di Brainet: il mese tra le frecce, sette colonne uguali. */
+.calendario-brainet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spazio-blocco);
+}
+.calendario-brainet-mese {
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-elemento);
+  color: var(--testo-primario);
+}
+.calendario-brainet-giorni {
+  width: 100%;
+  border-spacing: 0 var(--spazio-elemento);
+  table-layout: fixed;
+}
+.calendario-brainet-giorni th {
+  color: var(--testo-tenue);
+  font-weight: inherit;
+}
+.calendario-brainet-giorni td {
+  text-align: center;
+}
+/* Giorno con le note: il numero in un cerchio, sotto fino a tre pallini. */
+.giorno-brainet {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spazio-elemento);
+  padding: var(--spazio-elemento);
+  color: var(--testo-primario);
+}
+.giorno-brainet-numero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--misura-controllo-piccolo);
+  height: var(--misura-controllo-piccolo);
+  border-radius: var(--raggio-pillola);
+}
+.giorno-brainet-oggi .giorno-brainet-numero {
+  background: var(--sfondo-hover);
+}
+.giorno-brainet-futuro {
+  color: var(--testo-tenue);
+}
+.giorno-brainet-pallini {
+  display: flex;
+  gap: var(--spazio-2);
+  height: 4px;
+}
+.giorno-brainet-pallino {
+  width: 4px;
+  height: 4px;
+  border-radius: var(--raggio-pillola);
+  background: var(--icona-informazione);
+}
+
+/* Riga di impostazione Stato (CMP-18) nel riquadro di CMP-42: pallino e nome a spazio-icona,
+   «Togli» a destra. Nella riga nuova, i quattro colori prima del nome. */
+.riga-stato {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spazio-blocco);
+}
+.riga-stato-nome {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--spazio-icona);
+  min-width: 0;
+  color: var(--testo-primario);
+}
+.riga-stato-colori {
+  display: flex;
+  gap: var(--spazio-elemento);
+}
+.riga-stato-colore {
+  display: inline-flex;
+  padding: var(--spazio-elemento);
+  border: 0;
+  border-radius: var(--raggio-pillola);
+  background: none;
+  cursor: pointer;
+}
+.riga-stato-colore-scelto {
+  background: var(--sfondo-hover);
+}
+.riga-stato-errore {
+  width: 100%;
+  color: var(--testo-errore);
+}

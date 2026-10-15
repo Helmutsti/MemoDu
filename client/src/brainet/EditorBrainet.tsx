@@ -99,7 +99,7 @@ export function EditorBrainet({
   onModifica,
   focus = false,
   etichetta = "Testo della nota Brainet",
-  invito = "Scrivi qui… Con @ colleghi una persona, un oggetto, un evento o un argomento.",
+  invito = "Scrivi un pensiero…",
 }: Proprieta): ReactElement {
   const [view, setView] = useState<EditorView | null>(null);
   const [testoAttuale, setTestoAttuale] = useState(testo);
