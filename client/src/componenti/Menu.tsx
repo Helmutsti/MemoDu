@@ -15,6 +15,7 @@ import {
 import { createPortal } from "react-dom";
 import type { LucideIcon } from "lucide-react";
 import { Icona } from "./Icona";
+import { Pallino } from "./Pallino";
 import "./Menu.css";
 
 export type VoceMenu =
@@ -33,8 +34,15 @@ export type VoceMenu =
       spunta?: boolean;
       /** Dopo la scelta il menu resta aperto (filtro Tag: si scelgono più tag). */
       restaAperto?: boolean;
+      /** Al posto dell'icona, il pallino di uno stato di Brainet (CMP-37). */
+      pallino?: ColoreStato;
     }
-  | { tipo: "separatore" };
+  | { tipo: "separatore" }
+  /** Il titolo sopra un gruppo di voci (CMP-39): suggerimenti di @ e menu dell'area. */
+  | { tipo: "titolo"; etichetta: string };
+
+/** I colori degli stati di Brainet (EN-16). */
+export type ColoreStato = "avviso" | "informazione" | "successo" | "errore";
 
 interface Proprieta {
   voci: VoceMenu[];
@@ -118,7 +126,7 @@ export function Menu({
   const apriSottomenu = (i: number) => {
     // Le voci, senza la testata: gli indici sono quelli di `voci`.
     const righe = elemento.current?.querySelectorAll(
-      ":scope > .voce-menu, :scope > .menu-separatore",
+      ":scope > .voce-menu, :scope > .menu-separatore, :scope > .menu-titolo",
     );
     const r = righe?.[i]?.getBoundingClientRect();
     if (r) setSottomenu({ indice: i, x: r.right, y: r.top - 8 });
@@ -204,6 +212,10 @@ export function Menu({
       {voci.map((voce, i) =>
         voce.tipo === "separatore" ? (
           <div key={i} className="menu-separatore" role="separator" />
+        ) : voce.tipo === "titolo" ? (
+          <div key={i} className="menu-titolo interfaccia-titolo-sezione" role="presentation">
+            {voce.etichetta}
+          </div>
         ) : (
           <div
             key={i}
@@ -231,6 +243,11 @@ export function Menu({
               {voce.icona && (
                 <span className="voce-menu-icona">
                   <Icona di={voce.icona} />
+                </span>
+              )}
+              {voce.pallino && (
+                <span className="voce-menu-icona" aria-hidden="true">
+                  <Pallino colore={voce.pallino} />
                 </span>
               )}
               <span className="voce-menu-etichetta">{voce.etichetta}</span>

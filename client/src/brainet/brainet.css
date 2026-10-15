@@ -1,0 +1,55 @@
+/* Brainet nell'editor (RF-18). CMP-38 Collegamento: la pillola di un'entità, in linea con il
+   testo; con la foto, a sinistra resta solo spazio-2. */
+.bn-collegamento {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spazio-icona-piccola);
+  padding: var(--spazio-2) var(--spazio-controllo-piccolo);
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-informazione);
+  color: var(--testo-informazione);
+  vertical-align: baseline;
+}
+.bn-collegamento-foto {
+  padding-left: var(--spazio-2);
+}
+.bn-collegamento img {
+  width: var(--misura-icona);
+  height: var(--misura-icona);
+  border-radius: var(--raggio-pillola);
+  object-fit: cover;
+}
+
+/* CMP-40 Area evidenziata: come con un evidenziatore; con il mouse sopra diventa un riquadro e
+   sopra compare la Linguetta, che non sposta il testo. */
+.bn-area {
+  padding: 0 var(--spazio-2);
+  border-radius: var(--raggio-casella);
+  background: var(--sfondo-informazione);
+}
+.bn-area-sopra {
+  border-top-left-radius: 0;
+}
+
+/* Linguetta (CMP-40): sopra l'inizio dell'area, stesso fondo; livello delle comparse. */
+.bn-linguetta {
+  position: fixed;
+  z-index: var(--z-comparsa);
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-icona-piccola);
+  padding: var(--spazio-2) var(--spazio-icona-piccola);
+  border-radius: var(--raggio-casella) var(--raggio-casella) 0 0;
+  background: var(--sfondo-informazione);
+  color: var(--testo-informazione);
+  transform: translateY(-100%);
+  white-space: nowrap;
+}
+.bn-linguetta-freccia {
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--icona-informazione);
+  cursor: pointer;
+}

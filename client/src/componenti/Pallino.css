@@ -1,0 +1,18 @@
+/* CMP-37 Pallino dello stato: i quattro colori di stato del design system. */
+.pallino {
+  flex: none;
+  width: var(--misura-icona);
+  height: var(--misura-icona);
+}
+.pallino-avviso {
+  color: var(--icona-avviso);
+}
+.pallino-informazione {
+  color: var(--icona-informazione);
+}
+.pallino-successo {
+  color: var(--icona-successo);
+}
+.pallino-errore {
+  color: var(--icona-errore);
+}

@@ -90,3 +90,9 @@
   outline: var(--focus-spessore) solid var(--focus-anello);
   outline-offset: calc(0px - var(--focus-spessore));
 }
+
+/* CMP-39 Titolo di sezione: sopra un gruppo di voci, con il testo allineato a quello delle voci. */
+.menu-titolo {
+  padding: var(--spazio-icona) var(--spazio-controllo) var(--spazio-elemento);
+  color: var(--testo-tenue);
+}

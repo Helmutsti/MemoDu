@@ -133,7 +133,7 @@ L'indice serve a Entità (quante volte, l'ultima volta), alle unioni e ai conteg
 
 **Editor.** Lo stesso CodeMirror 6 delle note (DEC-27), con un compartimento Brainet sopra la vista Markdown (`client/src/brainet/`):
 - i segni si nascondono come i simboli del Markdown (`anteprima.ts`): il collegamento diventa un widget (CMP-38) ed è un intervallo atomico, che Backspace toglie tutto (RB-104); l'area diventa una decorazione con il fondo (CMP-40);
-- @ apre i suggerimenti con `@codemirror/autocomplete`, che ha già le sezioni con il titolo (CMP-09 Suggerimenti); «Crea» chiama il nucleo e inserisce il collegamento;
+- @ apre i suggerimenti nel Menu dell'interfaccia (CMP-09 Suggerimenti, con i titoli di sezione CMP-39), come gli altri menu, invece del menu di `@codemirror/autocomplete`: l'editor dice dove si scrive @ e le lettere, il menu intercetta frecce, Invio ed Esc; «Crea» chiama il nucleo e inserisce il collegamento;
 - la selezione apre il menu dell'area (CMP-09 Area), il passaggio del mouse la Linguetta con `hoverTooltip`; scegliere o togliere una voce riscrive solo il segno di apertura dell'area, in una transazione dell'editor;
 - il foglio nuovo, il Database e il Cestino usano lo stesso editor; il Calendario e Entità no.
 

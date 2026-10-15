@@ -48,6 +48,10 @@ interface Proprieta {
   markdown?: boolean;
   /** Il formato dove sta il cursore, per la bollicina; null in vista Testo (DEC-131). */
   onFormato?: (formato: FormatoDove | null) => void;
+  /** Estensioni in più, fisse per la vita dell'editor: Brainet (RF-18). */
+  estensioni?: Extension;
+  /** La vista di CodeMirror appena nasce e null quando sparisce: per i comandi di Brainet. */
+  onVista?: (vista: EditorView | null) => void;
 }
 
 /** Quello che la bollicina chiede all'editor. */
@@ -80,6 +84,8 @@ export const Editor = forwardRef<ManigliaEditor, Proprieta>(function Editor(
     etichetta = "Testo della nota",
     markdown: inMarkdown = false,
     onFormato,
+    estensioni = [],
+    onVista,
   },
   maniglia,
 ): ReactElement {
@@ -121,6 +127,7 @@ export const Editor = forwardRef<ManigliaEditor, Proprieta>(function Editor(
         extensions: [
           history(),
           compartimento.current.of(inMarkdown ? vistaMarkdown : []),
+          estensioni,
           indentUnit.of("\t"),
           keymap.of([
             { key: "Tab", run: insertTab, shift: indentLess },
@@ -141,10 +148,12 @@ export const Editor = forwardRef<ManigliaEditor, Proprieta>(function Editor(
       }),
     });
     vista.current = view;
+    onVista?.(view);
     avvisaFormato(view);
     if (focus) view.focus();
     return () => {
       vista.current = null;
+      onVista?.(null);
       view.destroy();
     };
     // L'editor nasce una volta per nota: il contenuto iniziale non cambia mentre si scrive.
