@@ -7,7 +7,9 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
-Diventerà la 1.0.0, la prima versione completa: nota rapida da qualsiasi programma, note in Markdown con cartelle e tag, ricerca, cestino, sincronizzazione cifrata tra i tuoi computer con il tuo account, i file del disco in Locale e Brainet, il diario a rete; su Windows e sui Mac con processore Apple. Come si usa Memodu è spiegato nella guida per gli utenti (`docs/rilascio/guida-utenti.md`).
+## [1.0.0] – 2026-10-15
+
+La prima versione completa: nota rapida da qualsiasi programma, note in Markdown con cartelle e tag, ricerca, cestino, sincronizzazione cifrata tra i tuoi computer con il tuo account, i file del disco in Locale e Brainet, il diario a rete; su Windows e sui Mac con processore Apple. Come si usa Memodu è spiegato nella guida per gli utenti (`docs/rilascio/guida-utenti.md`).
 
 ### Aggiunto
 - La guida per gli utenti: primi passi, nota rapida, scrivere, Markdown, organizzare, cercare, cestino, più computer, Locale, Brainet, impostazioni, scorciatoie e domande frequenti

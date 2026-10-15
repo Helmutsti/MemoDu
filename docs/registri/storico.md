@@ -679,3 +679,4 @@
 | 15/10/2026 | Manuel Cucca | SC-05, chiave nuova: tolto il promemoria «Durante la prova mandala a Manuel Cucca…»; la consegna si gestisce a voce; guida per gli utenti, CMP-35, FL-14 e RB-99 allineati | DEC-140 |
 | 15/10/2026 | Manuel Cucca | Brainet, Entità: un file che non è un'immagine scelto come foto dà «Il file scelto non è un'immagine: la foto non cambia.» invece dell'avviso generico | DEC-141 |
 | 15/10/2026 | Manuel Cucca | La testa esce come 1.0.0 con Brainet spento da accendere: note di rilascio in un solo blocco, guida per gli utenti con «Brainet, il diario a rete» (da approvare), priorità di RF-18, runbook senza rami di rilascio | DEC-142 |
+| 15/10/2026 | Manuel Cucca | Guida per gli utenti: «Brainet, il diario a rete» approvata da Manuel Cucca senza modifiche («fai tutto tu, mi fido di te»); versione 1.0.0 | DEC-142 |
