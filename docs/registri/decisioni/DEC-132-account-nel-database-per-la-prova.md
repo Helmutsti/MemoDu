@@ -1,6 +1,6 @@
 # DEC-132 – Account nel database, per più persone in prova
 
-**Data:** 2026-10-13 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-10-13 · **Stato:** Superata in parte da DEC-140 (il promemoria sotto la chiave nuova) · **Idea di origine:** —
 
 ## Contesto
 Con DEC-121 l'accesso funziona con un utente fisso, i cui dati stanno nelle variabili d'ambiente del server (architettura temporanea); sincronizzazione e cifratura end-to-end sono già quelle definitive. Manuel Cucca vuole far provare Memodu ad altre persone, ognuna con il suo account, e passare all'accesso definitivo con gli account nel database. Restano il database Neon di oggi e il server su Vercel: nessun ambiente di produzione separato per ora. DEC-13 (un solo utente, senza registrazione) e il rinvio del limite ai tentativi «prima di dare Memodu ad altre persone» (DEC-121) vanno rivisti.

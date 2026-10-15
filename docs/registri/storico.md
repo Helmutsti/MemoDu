@@ -676,3 +676,4 @@
 | 15/10/2026 | Manuel Cucca | Sincronizzazione: senza rete i tentativi si diradano fino a 30 s invece che 5 minuti, così la rete che torna si nota entro mezzo minuto; architettura e runbook allineati | DEC-138 |
 | 15/10/2026 | Manuel Cucca | Sincronizzazione: l'avviso della copia in conflitto compare anche quando il conflitto nasce alla prima sincronizzazione dopo l'avvio (RB-39) | DEC-139 |
 | 15/10/2026 | Manuel Cucca | Esiti delle prove sul Mac sul codice della 1.0 (TC-01, TC-02, TC-06, TC-142, TC-135, TC-127, TC-87, TC-88, TC-112, TC-113, TC-114, TC-146) nei piani di test, da riprovare sulla testa | DEC-136 |
+| 15/10/2026 | Manuel Cucca | SC-05, chiave nuova: tolto il promemoria «Durante la prova mandala a Manuel Cucca…»; la consegna si gestisce a voce; guida per gli utenti, CMP-35, FL-14 e RB-99 allineati | DEC-140 |

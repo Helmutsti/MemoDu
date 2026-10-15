@@ -186,7 +186,7 @@ Conserva la **chiave di recupero** che hai ricevuto con l'account: serve a scegl
 ### Password dimenticata
 Nella finestra di accesso premi «Password dimenticata?». Scrivi l'email, la chiave di recupero e due volte la password nuova, poi «Recupera». Se pensi che qualcuno conosca la tua password, accendi «Scollega gli altri miei dispositivi»: gli altri computer ti chiederanno di accedere con la password nuova.
 
-Alla fine Memodu mostra una **chiave di recupero nuova**, una volta sola: quella di prima non vale più. Premi «Copia» e, durante la prova, mandala a Manuel Cucca, che conserva le chiavi di tutti. Poi «Ho conservato la chiave».
+Alla fine Memodu mostra una **chiave di recupero nuova**, una volta sola: quella di prima non vale più. Premi «Copia», conservala e poi «Ho conservato la chiave».
 
 ### Cambiare la password
 Impostazioni › «Cambia password», nel riquadro dell'account. Scrivi la password attuale e due volte quella nuova. Se non ricordi la password attuale, «Usa la chiave di recupero»: in quel caso alla fine ricevi una chiave di recupero nuova, come nel recupero. Questo computer resta collegato; con «Scollega gli altri miei dispositivi» gli altri ti chiederanno di accedere di nuovo.

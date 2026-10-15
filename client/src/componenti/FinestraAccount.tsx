@@ -196,9 +196,6 @@ export function ChiaveNuova({
       onInvia={onFatto}
     >
       <ChiaveDaConservare chiave={chiave} />
-      <p className="modulo-accesso-promemoria interfaccia-messaggio">
-        Durante la prova mandala a Manuel Cucca, che conserva le chiavi di tutti.
-      </p>
       <PulsantiFinestra>
         <Pulsante type="submit">Ho conservato la chiave</Pulsante>
       </PulsantiFinestra>

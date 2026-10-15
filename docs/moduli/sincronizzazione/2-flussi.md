@@ -140,7 +140,7 @@ flowchart TD
     K --> D
     J -- Server irraggiungibile --> L[Messaggio in linea; non cambia niente - DEC-02]
     J -- Sì --> M{Ha usato la chiave di recupero?}
-    M -- Sì --> N[Mostro la chiave di recupero nuova, una volta sola: durante la prova va mandata a Manuel Cucca - RB-99]
+    M -- Sì --> N[Mostro la chiave di recupero nuova, una volta sola - RB-99]
     M -- No --> O[Password cambiata]
     N --> O
     O --> P{Ha scelto di scollegare gli altri dispositivi?}
@@ -240,5 +240,5 @@ flowchart TD
 | RB-90 | Creando l'utente nasce una chiave di recupero, mostrata una volta per stamparla: con questa si sceglie una password nuova senza perdere le note. Persi la password e la chiave di recupero, le note sul server non si recuperano (DEC-121) | FL-08 |
 | RB-97 | Si accede in SC-05 con email e password del proprio account (DEC-132). Dalla password, sul dispositivo, si ricavano la prova di accesso per il server e la chiave che apre la chiave dati. Ogni dispositivo riceve il suo accesso, che non scade: dura finché si esce (RB-89), finché lo si chiude a distanza (RB-100) o finché un cambio della password scollega gli altri dispositivi (RB-98). Il server ne tiene solo l'impronta. Accesso e chiave dati restano nel portachiavi del sistema | FL-08, FL-14, FL-15 |
 | RB-98 | La password si cambia dal box dell'account delle impostazioni, con il dispositivo collegato, scrivendo la password attuale oppure la chiave di recupero, poi quella nuova due volte. Prima di confermare si sceglie se scollegare gli altri propri dispositivi; questo resta collegato. Le note non si ricifrano. Senza rete non si cambia (scelte di Manuel Cucca del 13 e 14/10/2026) | FL-14 |
-| RB-99 | Da SC-05 chi ha dimenticato la password recupera l'account con email, chiave di recupero e password nuova, e sceglie se scollegare gli altri dispositivi, come in RB-98. Ogni volta che si usa la chiave di recupero (recupero o cambio della password) ne nasce una nuova, mostrata una volta sola dopo la conferma del server, e quella usata smette di valere. Durante la prova l'utente la manda a Manuel Cucca (scelte di Manuel Cucca del 13 e 14/10/2026) | FL-14 |
+| RB-99 | Da SC-05 chi ha dimenticato la password recupera l'account con email, chiave di recupero e password nuova, e sceglie se scollegare gli altri dispositivi, come in RB-98. Ogni volta che si usa la chiave di recupero (recupero o cambio della password) ne nasce una nuova, mostrata una volta sola dopo la conferma del server, e quella usata smette di valere. Durante la prova l'utente la consegna a voce a Manuel Cucca: l'app non lo dice (scelte di Manuel Cucca del 13 e 14/10/2026 e del 15/10/2026, DEC-140) | FL-14 |
 | RB-100 | Dalle impostazioni si vede l'elenco dei propri dispositivi collegati (nome, tipo, ultima sincronizzazione; questo dispositivo è segnato) e se ne chiude uno diverso da questo, dopo una conferma. Il server chiude subito il suo accesso; quel dispositivo, al contatto successivo, si scollega come con «Esci»: la copia di lavoro resta (scelta di Manuel Cucca del 14/10/2026) | FL-15 |

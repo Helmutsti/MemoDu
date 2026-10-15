@@ -49,9 +49,6 @@
 .modulo-accesso-errore svg {
   color: var(--icona-errore);
 }
-.modulo-accesso-promemoria {
-  color: var(--testo-primario);
-}
 /* «Password dimenticata?» e gli scambi di campo: pulsanti tenui, a sinistra (CMP-01). */
 .modulo-accesso .pulsante-tenue {
   align-self: flex-start;

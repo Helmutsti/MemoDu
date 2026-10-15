@@ -71,7 +71,7 @@ Finestra sopra le note velate (livello 40, scelta di Manuel Cucca il 06/10/2026)
 | Recupero, vuoto | Email già scritta se c'era nell'accesso | «Recupera l'account», «Scrivi la chiave di recupero e scegli una password nuova. Le tue note restano tutte.» |
 | Recupero, caricamento | «Recupera» in caricamento | — |
 | Recupero, errore | Chiave non corretta, password nuova non valida (RB-88) o server irraggiungibile: messaggio in linea sopra i pulsanti | «Chiave di recupero non corretta.»; per la password, il motivo; server: come nell'accesso |
-| Chiave nuova | Dopo la conferma del server | «La tua nuova chiave di recupero», «La vedi solo adesso. Conservala: ti serve se dimentichi la password. Quella di prima non vale più.», «Durante la prova mandala a Manuel Cucca, che conserva le chiavi di tutti.» |
+| Chiave nuova | Dopo la conferma del server | «La tua nuova chiave di recupero», «La vedi solo adesso. Conservala: ti serve se dimentichi la password. Quella di prima non vale più.»; nessun promemoria su a chi darla (DEC-140) |
 
 ---
 
