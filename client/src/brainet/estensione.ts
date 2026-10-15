@@ -306,6 +306,29 @@ const statoFiltro = EditorState.transactionFilter.of((tr) => {
   return [tr, { changes: finti, sequential: true }];
 });
 
+/**
+ * Un'area è sempre legata a qualcosa (RB-107): se un cambio del testo le toglie l'ultimo legame
+ * (per esempio Backspace sulla sua sola pillola), l'area sparisce e resta la frase (RB-109).
+ * Nella stessa transazione, così Ctrl+Z rimette tutto insieme.
+ */
+const areeSenzaLegami = EditorState.transactionFilter.of((tr) => {
+  if (!tr.docChanged) return tr;
+  const testo = tr.newDoc.toString();
+  const { citazioni, aree } = leggiSegni(testo);
+  const vuote = aree.filter((a) => {
+    const fine = a.chiude?.da ?? testo.length;
+    return (
+      !a.stati.length && !a.entita.length && !citazioni.some((c) => c.da >= a.apre.a && c.a <= fine)
+    );
+  });
+  if (!vuote.length) return tr;
+  const via = vuote
+    .flatMap((a) => [a.apre, ...(a.chiude ? [a.chiude] : [])])
+    .sort((x, y) => x.da - y.da)
+    .map((t) => ({ from: t.da, to: t.a }));
+  return [tr, { changes: via, sequential: true }];
+});
+
 /** Copiando si porta via il testo che si legge, senza segni. */
 const copiaSenzaSegni = EditorView.clipboardOutputFilter.of((testo) => testoSemplice(testo));
 
@@ -350,6 +373,7 @@ export function estensioneBrainet(ascolto: Ascolto): Extension {
     pluginBrainet,
     EditorView.atomicRanges.of((view) => view.plugin(pluginBrainet)?.atomiche ?? Decoration.none),
     statoFiltro,
+    areeSenzaLegami,
     copiaSenzaSegni,
     EditorView.updateListener.of((u) => {
       if (!(u.docChanged || u.selectionSet || u.focusChanged)) return;

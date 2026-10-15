@@ -228,4 +228,15 @@ describe("EditorBrainet (RF-18)", () => {
     await waitFor(() => expect(ultimo()).toContain(segnoAllegato(PDF.id, "documento", PDF.nome)));
     expect(brainet.allegaFile).toHaveBeenCalledWith("C:\Documenti\Preventivo.pdf");
   });
+
+  it("la linguetta nomina anche le entità legate solo all'area (CA-18.7)", async () => {
+    const testo = `il ${segnoApre("a1", [IMPORTANTE.id], [GIORGIO.id])}preventivo${segnoChiude("a1")}`;
+    const { container } = apri(testo);
+    fireEvent.mouseMove(container.querySelector(".bn-area")!);
+    await waitFor(() =>
+      expect(document.querySelector(".bn-linguetta")?.textContent).toContain(
+        "Importante · Giorgio",
+      ),
+    );
+  });
 });

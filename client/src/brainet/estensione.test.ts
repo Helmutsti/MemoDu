@@ -193,3 +193,16 @@ describe("allegati nell'editor (RF-18, RB-114 … RB-121)", () => {
     expect(leggiAllegati(view.state.doc.toString()).map((s) => s.id)).toEqual(["a1"]);
   });
 });
+
+describe("un'area senza legami sparisce (RB-107, RB-109)", () => {
+  it("Backspace sulla sua sola pillola toglie anche l'area; Ctrl+Z rimette tutto", () => {
+    const testo = `con ${segnoApre("a1", [], [])}${segnoCita(LUCA)} oggi${segnoChiude("a1")}`;
+    const { view } = apri(testo);
+    const fine = testo.indexOf(" oggi");
+    view.dispatch({ selection: { anchor: fine } });
+    deleteCharBackward(view);
+    expect(view.state.doc.toString()).toBe("con  oggi");
+    undo(view);
+    expect(view.state.doc.toString()).toBe(testo);
+  });
+});

@@ -175,15 +175,17 @@ export function EditorBrainet({
     estensioneBrainet(creaAscolto(setChiocciola, setSelezione, setLinguetta, setMenuAllegato)),
   );
 
-  // Nomi e foto delle entità citate, dal nucleo: seguono le unioni (RB-108).
+  // Nomi e foto delle entità citate o legate a un'area, dal nucleo: seguono le unioni (RB-108).
   const ricordaEntita = useCallback((nuove: Entita[]) => {
     if (!nuove.length) return;
     setEntita((prima) => ({ ...prima, ...Object.fromEntries(nuove.map((e) => [e.id, e])) }));
   }, []);
   useEffect(() => {
-    const ids = [...new Set(leggiSegni(testoAttuale).citazioni.map((c) => c.entita))].filter(
-      (id) => !entita[id],
-    );
+    // Le citate e quelle legate solo a un'area: i loro nomi servono anche alla Linguetta.
+    const { citazioni, aree } = leggiSegni(testoAttuale);
+    const ids = [
+      ...new Set([...citazioni.map((c) => c.entita), ...aree.flatMap((a) => a.entita)]),
+    ].filter((id) => !entita[id]);
     if (!ids.length) return;
     let vivo = true;
     void Promise.all(
