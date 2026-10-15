@@ -82,6 +82,23 @@ Link: `https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=` seguito dal
 - **Mockup (approvati il 14/10/2026):** [spento](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=276-11131) · [acceso, con gli stati](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=276-10845) · [conferma per spegnere](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=287-11670)
 - Conferma per spegnere: «Spegnere Brainet?» · «Le note, le entità, le aree e gli stati di Brainet si cancellano per sempre, su tutti i tuoi computer.» · «Annulla», «Spegni e cancella tutto» (testi proposta dell'agente; il pulsante è il principale perché la libreria non ha un pulsante rosso).
 
+## SC-01 – Gli allegati in una nota Brainet (FL-23, FL-24, FL-25)
+**Flussi:** FL-23, FL-24, FL-25 · **Componenti:** da disegnare in libreria: pillola del documento (tipo nuovo di CMP-38), bolla della foto, foto piccola, media e grande, riquadro della foto non scaricata, menu dell'allegato (tipo nuovo di CMP-09)
+
+- **Mockup (proposta dell'agente, da approvare; foto di prova: il ritratto già nel file):** [allegati nel testo](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=301-13046) · [menu del documento](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=303-13120) · [menu della foto con Dimensioni](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=303-13270) · [foto media e grande](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=303-13451) · [@ con Allega un file…](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=303-13570) · [allegato troppo grande](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=303-13724) · [foto non scaricata, senza rete](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=303-13777)
+- Proposte dell'agente: la bolla alta come la riga (24) e larga 36, con raggio-pillola; le foto fuori dal paragrafo larghe 160, 360 o 720, con raggio-interno; nel menu le icone mostra (Apri), cartella aperta, immagine (Dimensioni) ed elimina (Togli); per «Allega un file…» l'icona immagine, perché la graffetta manca nel design system; il riquadro senza rete su sfondo-campo, con l'icona immagine e il nome in Interfaccia/Dettaglio.
+
+| Azione | Come |
+|---|---|
+| Allegare | Trascinando, incollando, o @ › «Allega un file…» (RB-114) |
+| Usare | Clic: menu con Apri, Mostra nella cartella, Togli; per le foto fuori dal paragrafo anche Dimensioni › Piccola, Media, Grande (RB-119, RB-120) |
+
+| Stato | Descrizione | Testo mostrato |
+|---|---|---|
+| Errore | File troppo grande o tipo non ammesso | «Il file supera 25 MB: non si può allegare.» · «Si allegano solo foto e documenti (JPG, PNG, PDF, Word, Excel, PowerPoint, testo).» |
+| Caricamento | Foto non ancora sul computer, senza rete | Riquadro con il nome del file |
+| Errore | Allegato tolto da un altro computer | «Allegato non più disponibile» |
+
 ## Da decidere
 - ~~I codici SC-10, SC-11, SC-12.~~ Approvati (14/10/2026).
 - I testi delle viste vuote di Database ed Entità.
