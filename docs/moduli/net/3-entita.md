@@ -123,7 +123,7 @@ erDiagram
 - **Chi lo crea e lo modifica:** l'utente, nelle Impostazioni; **cancellazione:** «Togli», con la proposta di cambiarlo (RB-110).
 
 ## EN-17 – Allegato
-**Descrizione:** un documento o una foto allegati a una nota Brainet (RB-114 … RB-121). Scritto dall'agente il 15/10/2026, da approvare.
+**Descrizione:** un documento o una foto allegati a una nota Brainet (RB-114 … RB-121). Scritto dall'agente il 15/10/2026, approvato da Manuel Cucca lo stesso giorno con le proposte dell'agente.
 
 | Attributo | Tipo | Obbligatorio | Vincoli | Note |
 |---|---|---|---|---|
@@ -158,7 +158,7 @@ erDiagram
 | Mostra il Database | Sì \| No | Vale per tutti i computer e si sincronizza (scelta di Manuel Cucca del 14/10/2026). Di default Sì (proposta dell'agente) |
 
 ## Da decidere
-- Allegati (EN-17, EN-18): da approvare (15/10/2026).
+- ~~Allegati (EN-17, EN-18).~~ Approvati il 15/10/2026.
 - ~~Da dove arriva la foto di un'entità.~~ Dal disco, scelta dall'utente in Entità, per tutte le entità (14/10/2026).
 - ~~Se «Mostra il Database» vale solo per questo computer o per tutti.~~ Per tutti (14/10/2026).
 - ~~Se un singolo frammento si può eliminare dal Database.~~ Sì, nel Cestino, in una parte dedicata a Brainet (14/10/2026).

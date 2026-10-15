@@ -642,3 +642,4 @@
 | 15/10/2026 | Agente IA | RF-18, allegati: flussi FL-23 Allegare un file, FL-24 Usare un allegato, FL-25 Mostrare una foto, regole RB-114 … RB-121, da approvare | DEC-134 |
 | 15/10/2026 | Manuel Cucca | RF-18, allegati: flussi FL-23 … FL-25 e RB-114 … RB-121 approvati, con le due proposte | DEC-134 |
 | 15/10/2026 | Agente IA | RF-18, allegati: EN-17 Allegato ed EN-18 Uso di un allegato, da approvare | DEC-134 |
+| 15/10/2026 | Manuel Cucca | RF-18, allegati: dati EN-17 ed EN-18 approvati, con le tre proposte; si va ai mockup | DEC-134 |
