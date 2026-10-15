@@ -77,6 +77,22 @@ describe("EditorBrainet (RF-18)", () => {
     expect(ultimo()).toBe(`Chiamata con <cita e="${LUCA.id}">Luca Bianchi</cita> `);
   });
 
+  it("Backspace e frecce della tastiera trattano la pillola come un carattere solo (CA-18.5)", () => {
+    const testo = `con <cita e="${LUCA.id}">Luca Bianchi</cita> `;
+    const { container, view, ultimo } = apri(testo);
+    act(() => {
+      view.focus();
+      view.dispatch({ selection: { anchor: testo.length } });
+    });
+    const cm = container.querySelector(".cm-content") as HTMLElement;
+    fireEvent.keyDown(cm, { key: "ArrowLeft", code: "ArrowLeft", keyCode: 37 });
+    fireEvent.keyDown(cm, { key: "ArrowLeft", code: "ArrowLeft", keyCode: 37 });
+    expect(view.state.selection.main.head).toBe(4);
+    act(() => view.dispatch({ selection: { anchor: testo.length - 1 } }));
+    fireEvent.keyDown(cm, { key: "Backspace", code: "Backspace", keyCode: 8 });
+    expect(ultimo()).toBe("con  ");
+  });
+
   it("Crea fa nascere l'entità senza tipo e la pillola entra subito (CA-18.4)", async () => {
     const { view, ultimo } = apri();
     scrivi(view, "pranzo con @Mario");

@@ -72,6 +72,14 @@ describe("compartimento Brainet dell'editor (RF-18)", () => {
     expect(view.contentDOM.textContent).toContain("<cita");
   });
 
+  it("scrivere subito prima o dopo una pillola non la rompe", () => {
+    const testo = `con ${segnoCita(LUCA)}`;
+    const { view } = apri(testo);
+    view.dispatch({ changes: { from: 4, insert: "X" }, userEvent: "input" });
+    view.dispatch({ changes: { from: view.state.doc.length, insert: "Y" }, userEvent: "input" });
+    expect(view.state.doc.toString()).toBe(`con X${segnoCita(LUCA)}Y`);
+  });
+
   it("un'area nasce dalla selezione, cambia i legami e sparisce senza (CA-18.6, CA-18.7)", () => {
     const { view } = apri("il preventivo della serra.");
     const id = creaArea(view, 3, 25, ["s1"], []);

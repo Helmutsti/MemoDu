@@ -168,6 +168,14 @@ function trovaFinti(tr: Transaction): { from: number; to: number; insert: string
   )
     return [];
   const testo = tr.newDoc.toString();
+  // I segni veri che c'erano prima del cambio, al loro posto dopo: non si toccano mai.
+  const prima = leggiSegni(tr.startState.doc.toString());
+  const veri = new Set(
+    [
+      ...prima.citazioni.map((c) => c.da),
+      ...prima.aree.flatMap((a) => [a.apre.da, ...(a.chiude ? [a.chiude.da] : [])]),
+    ].map((p) => tr.changes.mapPos(p, 1)),
+  );
   const posizioni = new Set<number>();
   tr.changes.iterChangedRanges((_fa, _ta, daB, aB) => {
     const inizio = Math.max(0, daB - 6);
@@ -175,7 +183,7 @@ function trovaFinti(tr: Transaction): { from: number; to: number; insert: string
     for (const p of segniFinti(testo.slice(inizio, fine))) {
       const pos = inizio + p;
       // Solo i `<` che il cambio ha toccato: i segni veri accanto restano.
-      if (pos + 5 >= daB && pos <= aB) posizioni.add(pos);
+      if (pos + 5 >= daB && pos <= aB && !veri.has(pos)) posizioni.add(pos);
     }
   });
   return [...posizioni].sort((x, y) => x - y).map((p) => ({ from: p, to: p + 1, insert: "&lt;" }));

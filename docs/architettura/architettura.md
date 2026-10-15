@@ -131,8 +131,8 @@ L'indice serve a Entità (quante volte, l'ultima volta), alle unioni e ai conteg
 
 **Foto di un'entità.** «Scegli una foto…» apre la finestra del sistema (`tauri-plugin-dialog`, c'è già); il nucleo la riduce a 256 px sul lato lungo e la salva in JPEG (crate `image`), così sta nel blocco dell'entità e viaggia cifrata con lei.
 
-**Editor.** Lo stesso CodeMirror 6 delle note (DEC-27), con un compartimento Brainet sopra la vista Markdown (`client/src/brainet/`):
-- i segni si nascondono come i simboli del Markdown (`anteprima.ts`): il collegamento diventa un widget (CMP-38) ed è un intervallo atomico, che Backspace toglie tutto (RB-104); l'area diventa una decorazione con il fondo (CMP-40);
+**Editor.** Lo stesso CodeMirror 6 delle note (DEC-27) in vista Testo, senza il Markdown, con il compartimento Brainet (`client/src/brainet/`). Scelta di Manuel Cucca del 15/10/2026, dopo le prove a mano: la scrittura come in Word della vista Markdown gestisce da sé Backspace, Canc e frecce e non conosceva le pillole; l'editor delle note non si tocca. Le note Brainet non hanno grassetto né titoli; una nota importata da CLOUD mostra i simboli del Markdown come sono.
+- i segni si nascondono come fa `anteprima.ts` con i simboli del Markdown: il collegamento diventa un widget (CMP-38) ed è un intervallo atomico, che Backspace toglie tutto (RB-104); l'area diventa una decorazione con il fondo (CMP-40);
 - @ apre i suggerimenti nel Menu dell'interfaccia (CMP-09 Suggerimenti, con i titoli di sezione CMP-39), come gli altri menu, invece del menu di `@codemirror/autocomplete`: l'editor dice dove si scrive @ e le lettere, il menu intercetta frecce, Invio ed Esc; «Crea» chiama il nucleo e inserisce il collegamento;
 - la selezione apre il menu dell'area (CMP-09 Area), il passaggio del mouse la Linguetta con `hoverTooltip`; scegliere o togliere una voce riscrive solo il segno di apertura dell'area, in una transazione dell'editor;
 - il foglio nuovo, il Database e il Cestino usano lo stesso editor; il Calendario e Entità no.

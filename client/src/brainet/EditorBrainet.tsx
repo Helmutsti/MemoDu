@@ -1,5 +1,5 @@
-// L'editor di una nota Brainet (RF-18): l'editor delle note in vista Markdown con il compartimento
-// Brainet (estensione.ts), il menu di @ (CMP-09 Suggerimenti), il menu dell'area (CMP-09 Area) e
+// L'editor di una nota Brainet (RF-18): l'editor delle note in vista Testo, senza il Markdown (scelta di
+// Manuel Cucca del 15/10/2026), con il compartimento Brainet (estensione.ts), il menu di @ (CMP-09 Suggerimenti), il menu dell'area (CMP-09 Area) e
 // la Linguetta (CMP-40). Lo usano il foglio nuovo e il Database.
 
 import type { EditorView } from "@codemirror/view";
@@ -346,7 +346,6 @@ export function EditorBrainet({
         focus={focus}
         etichetta={etichetta}
         invito={invito}
-        markdown
         estensioni={estensioni}
       />
       {domanda !== null && chiocciola && vociChiocciola.length > 0 && !menuArea && (
