@@ -2,6 +2,7 @@
 // nucleo in `archivio_brainet.rs`:
 //   collegamento (EN-14): <cita e="ID">nome</cita>
 //   area (EN-15):         <area id="ID" s="ID,ID" e="ID,ID">frase</area id="ID">
+//   allegato (EN-18):     <allegato id="ID" f="documento|bolla|piccola|media|grande">nome</allegato>
 // Le posizioni sono quelle delle stringhe JavaScript, come in CodeMirror.
 
 export interface Tratto {
@@ -25,13 +26,40 @@ export interface AreaSegno {
   entita: string[];
 }
 
+/** Come si vede un allegato: pillola del documento, foto nel testo o su una riga sua (RB-117). */
+export type FormaAllegato = "documento" | "bolla" | "piccola" | "media" | "grande";
+
+export interface AllegatoSegno extends Tratto {
+  id: string;
+  forma: FormaAllegato;
+  /** Il nome com'era quando si è allegato. */
+  nome: string;
+}
+
+const ALLEGATO =
+  /<allegato id="([^"]+)" f="(documento|bolla|piccola|media|grande)">([^<]*)<\/allegato>/g;
 const CITA = /<cita e="([^"]+)">([^<]*)<\/cita>/g;
 const AREA_APRE = /<area id="([^"]+)"(?: s="([^"]*)")?(?: e="([^"]*)")?>/g;
 const AREA_CHIUDE = /<\/area id="([^"]+)">/g;
 /** Un `<` che comincia un segno senza esserlo, scritto o incollato dall'utente. */
-const FINTO_SEGNO = /<(\/?)(cita|area)\b/g;
+const FINTO_SEGNO = /<(\/?)(cita|area|allegato)\b/g;
 
 const lista = (v: string | undefined) => (v ? v.split(",").filter(Boolean) : []);
+
+/** Gli allegati scritti nel testo, nell'ordine. */
+export function leggiAllegati(testo: string): AllegatoSegno[] {
+  return [...testo.matchAll(ALLEGATO)].map((m) => ({
+    da: m.index,
+    a: m.index + m[0].length,
+    id: m[1],
+    forma: m[2] as FormaAllegato,
+    nome: m[3],
+  }));
+}
+
+export function segnoAllegato(id: string, forma: FormaAllegato, nome: string): string {
+  return `<allegato id="${id}" f="${forma}">${nome.replace(/</g, "‹")}</allegato>`;
+}
 
 export function leggiSegni(testo: string): { citazioni: Citazione[]; aree: AreaSegno[] } {
   const citazioni: Citazione[] = [];
@@ -86,6 +114,7 @@ export function segnoChiude(id: string): string {
 export function testoSemplice(testo: string): string {
   return testo
     .replace(CITA, "$2")
+    .replace(ALLEGATO, "$3")
     .replace(AREA_APRE, "")
     .replace(AREA_CHIUDE, "")
     .replace(/&lt;/g, "<");

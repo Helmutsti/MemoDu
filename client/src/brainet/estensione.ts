@@ -1,8 +1,9 @@
 // Il compartimento Brainet dell'editor (RF-18, architettura «Brainet», «Editor»), sopra la vista
 // Markdown: i segni si nascondono come i simboli del Markdown (anteprima.ts). Il collegamento
 // diventa la pillola CMP-38 ed è un intervallo atomico, che Backspace toglie tutto (RB-104);
-// l'area diventa il fondo CMP-40. Menu di @, menu dell'area e Linguetta sono dell'interfaccia
-// (EditorBrainet.tsx): qui si dice dove sono e si scrivono i segni.
+// l'area diventa il fondo CMP-40. Un allegato diventa la pillola Documento (CMP-38) o la Foto
+// allegata (CMP-44), come blocco unico. Menu di @, menu dell'area, menu dell'allegato e Linguetta
+// sono dell'interfaccia (EditorBrainet.tsx): qui si dice dove sono e si scrivono i segni.
 
 import {
   EditorState,
@@ -20,7 +21,23 @@ import {
   type ViewUpdate,
   WidgetType,
 } from "@codemirror/view";
-import { leggiSegni, segniFinti, segnoApre, segnoChiude, segnoCita, testoSemplice } from "./segni";
+import { FileText, Image as IconaImmagine, type LucideIcon } from "lucide-react";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { Icona } from "../componenti/Icona";
+import { eFoto, type TipoAllegato } from "./api";
+import {
+  leggiAllegati,
+  leggiSegni,
+  segniFinti,
+  segnoAllegato,
+  segnoApre,
+  segnoChiude,
+  segnoCita,
+  testoSemplice,
+  type AllegatoSegno,
+  type FormaAllegato,
+} from "./segni";
 
 /** Quello che serve per disegnare una pillola. */
 export interface VistaEntita {
@@ -73,6 +90,88 @@ class Pillola extends WidgetType {
   }
 }
 
+/** Quello che serve per disegnare un allegato, letto dal nucleo. */
+export interface VistaAllegato {
+  tipo: TipoAllegato;
+  /** L'anteprima di una foto (`data:`), o null se non è ancora sul computer. */
+  anteprima: string | null;
+}
+
+/** Allegati letti dal nucleo; null vuol dire tolto altrove (SF-20). */
+export const aggiornaAllegati = StateEffect.define<Record<string, VistaAllegato | null>>();
+const allegatiNoti = StateField.define<Record<string, VistaAllegato | null>>({
+  create: () => ({}),
+  update: (valore, tr) => {
+    for (const e of tr.effects) if (e.is(aggiornaAllegati)) valore = { ...valore, ...e.value };
+    return valore;
+  },
+});
+
+const NON_DISPONIBILE = "Allegato non più disponibile";
+/** Le icone dentro l'editor sono DOM semplice: lo stesso disegno di CMP-02, una volta sola. */
+const svg = new Map<LucideIcon, string>();
+function iconaDom(di: LucideIcon): HTMLElement {
+  if (!svg.has(di)) svg.set(di, renderToStaticMarkup(createElement(Icona, { di })));
+  const el = document.createElement("span");
+  el.className = "bn-allegato-icona";
+  el.innerHTML = svg.get(di)!;
+  return el;
+}
+
+class AllegatoWidget extends WidgetType {
+  constructor(
+    readonly id: string,
+    readonly forma: FormaAllegato,
+    readonly nome: string,
+    /** undefined finché non si sa; null se è stato tolto altrove. */
+    readonly vista: VistaAllegato | null | undefined,
+  ) {
+    super();
+  }
+  eq(altra: AllegatoWidget): boolean {
+    return (
+      altra.id === this.id &&
+      altra.forma === this.forma &&
+      altra.nome === this.nome &&
+      altra.vista?.tipo === this.vista?.tipo &&
+      altra.vista?.anteprima === this.vista?.anteprima &&
+      (altra.vista === null) === (this.vista === null)
+    );
+  }
+  toDOM(): HTMLElement {
+    const foto = this.forma !== "documento";
+    let el: HTMLElement;
+    if (this.vista === null || !foto) {
+      // CMP-38 Documento: l'icona e il nome; tolto altrove, il messaggio al posto del nome.
+      el = document.createElement("span");
+      el.className = "bn-collegamento bn-allegato-documento interfaccia-dettaglio";
+      el.append(iconaDom(FileText), this.vista === null ? NON_DISPONIBILE : this.nome);
+    } else if (this.vista?.anteprima) {
+      const img = document.createElement("img");
+      img.src = this.vista.anteprima;
+      img.alt = this.nome;
+      img.className = `bn-foto bn-foto-${this.forma}`;
+      el = img;
+    } else if (this.forma === "bolla") {
+      el = document.createElement("span");
+      el.className = "bn-foto bn-foto-bolla bn-foto-vuota";
+    } else {
+      // CMP-44 Non scaricata: il riquadro con l'icona e il nome (RB-118).
+      el = document.createElement("span");
+      el.className = "bn-foto bn-foto-non-scaricata interfaccia-dettaglio";
+      el.append(iconaDom(IconaImmagine), this.nome);
+    }
+    el.dataset.allegato = this.id;
+    el.setAttribute("role", "button");
+    el.setAttribute("aria-label", this.nome);
+    return el;
+  }
+  /** Il clic arriva all'editor, che apre il menu dell'allegato. */
+  ignoreEvent(): boolean {
+    return false;
+  }
+}
+
 class Minore extends WidgetType {
   eq(): boolean {
     return true;
@@ -92,6 +191,7 @@ export function decorazioniBrainet(state: EditorState): {
   const testo = state.doc.toString();
   const { citazioni, aree } = leggiSegni(testo);
   const nomi = state.field(entitaNote, false) ?? {};
+  const allegati = state.field(allegatiNoti, false) ?? {};
   const sopra = state.field(areaSopra, false) ?? null;
   const tutti: { da: number; a: number; dec: Decoration; atomica: boolean }[] = [];
   for (const c of citazioni) {
@@ -100,6 +200,16 @@ export function decorazioniBrainet(state: EditorState): {
       da: c.da,
       a: c.a,
       dec: Decoration.replace({ widget: new Pillola(e?.nome ?? c.nome, e?.foto ?? null) }),
+      atomica: true,
+    });
+  }
+  for (const s of leggiAllegati(testo)) {
+    tutti.push({
+      da: s.da,
+      a: s.a,
+      dec: Decoration.replace({
+        widget: new AllegatoWidget(s.id, s.forma, s.nome, allegati[s.id]),
+      }),
       atomica: true,
     });
   }
@@ -123,7 +233,7 @@ export function decorazioniBrainet(state: EditorState): {
         atomica: true,
       });
   }
-  for (const m of testo.matchAll(/&lt;(?=\/?(?:cita|area)\b)/g)) {
+  for (const m of testo.matchAll(/&lt;(?=\/?(?:cita|area|allegato)\b)/g)) {
     tutti.push({
       da: m.index,
       a: m.index + 4,
@@ -174,6 +284,7 @@ function trovaFinti(tr: Transaction): { from: number; to: number; insert: string
     [
       ...prima.citazioni.map((c) => c.da),
       ...prima.aree.flatMap((a) => [a.apre.da, ...(a.chiude ? [a.chiude.da] : [])]),
+      ...leggiAllegati(tr.startState.doc.toString()).map((s) => s.da),
     ].map((p) => tr.changes.mapPos(p, 1)),
   );
   const posizioni = new Set<number>();
@@ -208,6 +319,16 @@ export interface Ascolto {
   onSelezione: (s: { da: number; a: number; x: number; y: number; sopra: number } | null) => void;
   /** L'area sotto il mouse, con il rettangolo dove inizia, oppure null. */
   onAreaSopra: (a: { id: string; x: number; y: number } | null) => void;
+  /** Clic su un allegato: il suo segno e dove aprire il menu (RB-119). */
+  onAllegato: (a: AllegatoSegno & { x: number; y: number; sopra: number }) => void;
+}
+
+/** File incollati nel testo (RB-114): l'evento sul DOM dell'editor, con il punto in cui entrano. */
+export const EVENTO_FILE = "bn-file";
+export interface FileIncollati {
+  file: File[];
+  da: number;
+  a: number;
 }
 
 const CHIOCCIOLA = /(?:^|\s)@([^\s@<>]{0,40})$/;
@@ -224,6 +345,7 @@ export function estensioneBrainet(ascolto: Ascolto): Extension {
   let ultimaArea: string | null = null;
   return [
     entitaNote,
+    allegatiNoti,
     areaSopra,
     pluginBrainet,
     EditorView.atomicRanges.of((view) => view.plugin(pluginBrainet)?.atomiche ?? Decoration.none),
@@ -250,6 +372,26 @@ export function estensioneBrainet(ascolto: Ascolto): Extension {
       } else a.onSelezione(null);
     }),
     EditorView.domEventHandlers({
+      mousedown: (e, view) => {
+        const el = (e.target as Element).closest?.("[data-allegato]");
+        if (!el || e.button !== 0) return false;
+        const pos = view.posAtDOM(el);
+        const segno = leggiAllegati(view.state.doc.toString()).find(
+          (s) => s.da <= pos && pos < s.a,
+        );
+        if (!segno) return false;
+        const r = el.getBoundingClientRect();
+        ascolto.onAllegato({ ...segno, x: r.left, y: r.bottom + DISTANZA, sopra: r.top });
+        return true;
+      },
+      paste: (e, view) => {
+        const file = [...(e.clipboardData?.files ?? [])];
+        if (!file.length) return false;
+        const sel = view.state.selection.main;
+        const detail: FileIncollati = { file, da: sel.from, a: sel.to };
+        view.dom.dispatchEvent(new CustomEvent(EVENTO_FILE, { detail }));
+        return true;
+      },
       mousemove: (e, view) => {
         const el = (e.target as Element).closest?.("[data-area]");
         const id = el?.getAttribute("data-area") ?? null;
@@ -346,4 +488,50 @@ export function aggiornaArea(
     userEvent: "brainet.area",
   });
   return true;
+}
+
+// ——— Allegati (RB-114 … RB-121) ———
+
+/**
+ * Mette l'allegato al posto di [da, a]. Un documento è una pillola seguita da uno spazio; una
+ * foto dentro un paragrafo scritto è una bolla, altrimenti arriva piccola su una riga sua
+ * (RB-116, RB-117). Restituisce dove finisce, per il prossimo file.
+ */
+export function inserisciAllegato(
+  view: EditorView,
+  da: number,
+  a: number,
+  allegato: { id: string; nome: string; tipo: TipoAllegato },
+): number {
+  const riga = view.state.doc.lineAt(da);
+  const fuori = view.state.sliceDoc(riga.from, da) + view.state.sliceDoc(a, riga.to);
+  let forma: FormaAllegato = "documento";
+  if (eFoto(allegato.tipo)) forma = testoSemplice(fuori).trim() ? "bolla" : "piccola";
+  const segno = segnoAllegato(allegato.id, forma, allegato.nome);
+  const dopo = forma === "piccola" ? "\n" : " ";
+  const fine = da + segno.length + dopo.length;
+  view.dispatch({
+    changes: { from: da, to: a, insert: segno + dopo },
+    selection: { anchor: fine },
+    effects: aggiornaAllegati.of({ [allegato.id]: { tipo: allegato.tipo, anteprima: null } }),
+    userEvent: "brainet.allegato",
+  });
+  return fine;
+}
+
+/** Dimensioni › Piccola, Media, Grande: riscrive solo la forma (RB-120). */
+export function cambiaForma(view: EditorView, segno: AllegatoSegno, forma: FormaAllegato): void {
+  view.dispatch({
+    changes: { from: segno.da, to: segno.a, insert: segnoAllegato(segno.id, forma, segno.nome) },
+    userEvent: "brainet.allegato",
+  });
+}
+
+/** Toglie l'allegato dalla nota; Ctrl+Z lo rimette (RB-121). Una foto su una riga sua porta
+ * via anche il suo a capo. */
+export function togliAllegato(view: EditorView, segno: AllegatoSegno): void {
+  const suaRiga = !["documento", "bolla"].includes(segno.forma);
+  const a = suaRiga && view.state.sliceDoc(segno.a, segno.a + 1) === "\n" ? segno.a + 1 : segno.a;
+  view.dispatch({ changes: { from: segno.da, to: a }, userEvent: "brainet.allegato" });
+  view.focus();
 }

@@ -74,6 +74,20 @@ export async function comando<T>(
   }
 }
 
+/** Un comando che riceve byte (un file), con le intestazioni; gli errori come `comando`. */
+export async function comandoGrezzo<T>(
+  nome: string,
+  byte: Uint8Array,
+  intestazioni: Record<string, string>,
+): Promise<T> {
+  try {
+    return await invoke<T>(nome, byte, { headers: intestazioni });
+  } catch (errore) {
+    const e = errore as { stato?: number | null; messaggio?: string };
+    throw new ErroreApi(e.stato ?? null, e.messaggio ?? String(errore));
+  }
+}
+
 export const api = {
   elenca: () => comando<VoceElenco[]>("elenca_note"),
   leggi: (id: string) => comando<Nota>("leggi_nota", { id }),

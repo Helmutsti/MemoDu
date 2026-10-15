@@ -53,3 +53,64 @@
   color: var(--icona-informazione);
   cursor: pointer;
 }
+
+/* Allegati (RB-116 … RB-120). CMP-38 Documento: la pillola del collegamento con l'icona del
+   tipo al posto della foto. Un clic apre il menu dell'allegato. */
+.bn-allegato-documento,
+.bn-foto {
+  cursor: pointer;
+}
+.bn-allegato-icona {
+  display: inline-flex;
+  color: var(--testo-informazione);
+}
+
+/* CMP-44 Foto allegata: la bolla alta come la riga (1lh) dentro un paragrafo; piccola, media e grande
+   su una riga sua, l'altezza segue la foto. Le larghezze sono la geometria della foto (CMP-44). */
+.bn-foto {
+  object-fit: cover;
+  vertical-align: middle;
+}
+.bn-foto-bolla {
+  display: inline-block;
+  width: 36px;
+  height: 1lh;
+  border-radius: var(--raggio-pillola);
+}
+.bn-foto-piccola,
+.bn-foto-media,
+.bn-foto-grande,
+.bn-foto-non-scaricata {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--raggio-interno);
+}
+.bn-foto-piccola,
+.bn-foto-non-scaricata {
+  width: 160px;
+}
+.bn-foto-media {
+  width: 360px;
+}
+.bn-foto-grande {
+  width: 100%;
+}
+
+/* Non scaricata (RB-118): il riquadro con l'icona e il nome, finché la foto non arriva. */
+.bn-foto-vuota,
+.bn-foto-non-scaricata {
+  background: var(--sfondo-campo);
+}
+.bn-foto-non-scaricata {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spazio-elemento);
+  aspect-ratio: 4 / 3;
+  color: var(--testo-tenue);
+}
+.bn-foto-non-scaricata .bn-allegato-icona {
+  color: var(--icona-tenue);
+}

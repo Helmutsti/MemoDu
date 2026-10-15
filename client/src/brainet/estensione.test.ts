@@ -1,26 +1,44 @@
 import { EditorSelection, EditorState } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
-import { deleteCharBackward } from "@codemirror/commands";
+import { deleteCharBackward, history, undo } from "@codemirror/commands";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  aggiornaAllegati,
   aggiornaArea,
   aggiornaEntita,
+  cambiaForma,
   creaArea,
   estensioneBrainet,
+  inserisciAllegato,
   inserisciCitazione,
+  togliAllegato,
 } from "./estensione";
-import { legamiArea, leggiSegni, segnoApre, segnoChiude, segnoCita } from "./segni";
+import {
+  leggiAllegati,
+  legamiArea,
+  leggiSegni,
+  segnoAllegato,
+  segnoApre,
+  segnoChiude,
+  segnoCita,
+  testoSemplice,
+} from "./segni";
 
 const viste: EditorView[] = [];
 afterEach(() => viste.splice(0).forEach((v) => v.destroy()));
 
 function apri(
   testo: string,
-  ascolto = { onChiocciola: vi.fn(), onSelezione: vi.fn(), onAreaSopra: vi.fn() },
+  ascolto = {
+    onChiocciola: vi.fn(),
+    onSelezione: vi.fn(),
+    onAreaSopra: vi.fn(),
+    onAllegato: vi.fn(),
+  },
 ) {
   const view = new EditorView({
     parent: document.body,
-    state: EditorState.create({ doc: testo, extensions: [estensioneBrainet(ascolto)] }),
+    state: EditorState.create({ doc: testo, extensions: [history(), estensioneBrainet(ascolto)] }),
   });
   viste.push(view);
   return { view, ascolto };
@@ -107,5 +125,71 @@ describe("compartimento Brainet dell'editor (RF-18)", () => {
     const { view } = apri(`con ${segnoCita(LUCA)}`);
     const filtri = view.state.facet(EditorView.clipboardOutputFilter);
     expect(filtri.reduce((t, f) => f(t, view.state), view.state.doc.toString())).toBe("con Luca");
+  });
+});
+
+describe("allegati nell'editor (RF-18, RB-114 … RB-121)", () => {
+  const PDF = { id: "a1", nome: "Preventivo.pdf", tipo: "pdf" as const };
+  const FOTO = { id: "a2", nome: "cantiere.jpg", tipo: "jpg" as const };
+
+  it("un documento è la pillola con l'icona e il nome, come blocco unico (CA-18.22)", () => {
+    const { view } = apri("Ho mandato ");
+    inserisciAllegato(view, 11, 11, PDF);
+    const testo = view.state.doc.toString();
+    expect(testo).toBe(`Ho mandato ${segnoAllegato("a1", "documento", "Preventivo.pdf")} `);
+    const pillola = view.contentDOM.querySelector(".bn-allegato-documento");
+    expect(pillola?.textContent).toBe("Preventivo.pdf");
+    expect(pillola?.querySelector("svg")).not.toBeNull();
+    expect(testoSemplice(testo)).toBe("Ho mandato Preventivo.pdf ");
+  });
+
+  it("una foto in una frase è una bolla, su una riga vuota arriva piccola (CA-18.24)", () => {
+    const { view } = apri("e la foto  del cantiere\n");
+    inserisciAllegato(view, 10, 10, FOTO);
+    expect(leggiAllegati(view.state.doc.toString())[0].forma).toBe("bolla");
+    const fine = view.state.doc.length;
+    inserisciAllegato(view, fine, fine, { ...FOTO, id: "a3" });
+    const [, piccola] = leggiAllegati(view.state.doc.toString());
+    expect(piccola.forma).toBe("piccola");
+    expect(view.state.doc.toString().endsWith("</allegato>\n")).toBe(true);
+  });
+
+  it("con l'anteprima si vede la foto; senza, il riquadro con il nome (CA-18.29)", () => {
+    const { view } = apri(segnoAllegato("a2", "piccola", "cantiere.jpg"));
+    expect(view.contentDOM.querySelector(".bn-foto-non-scaricata")?.textContent).toBe(
+      "cantiere.jpg",
+    );
+    view.dispatch({
+      effects: aggiornaAllegati.of({ a2: { tipo: "jpg", anteprima: "data:image/jpeg;base64,AA" } }),
+    });
+    const img = view.contentDOM.querySelector("img.bn-foto-piccola") as HTMLImageElement;
+    expect(img.alt).toBe("cantiere.jpg");
+    view.dispatch({ effects: aggiornaAllegati.of({ a2: null }) });
+    expect(view.contentDOM.textContent).toContain("Allegato non più disponibile");
+  });
+
+  it("Dimensioni cambia solo la forma; Togli lo toglie e Ctrl+Z lo rimette (CA-18.25, CA-18.27)", () => {
+    const { view } = apri(`prima\n${segnoAllegato("a2", "piccola", "cantiere.jpg")}\ndopo`);
+    cambiaForma(view, leggiAllegati(view.state.doc.toString())[0], "grande");
+    expect(leggiAllegati(view.state.doc.toString())[0].forma).toBe("grande");
+    togliAllegato(view, leggiAllegati(view.state.doc.toString())[0]);
+    expect(view.state.doc.toString()).toBe("prima\ndopo");
+    undo(view);
+    expect(leggiAllegati(view.state.doc.toString())[0].forma).toBe("grande");
+  });
+
+  it("un clic sull'allegato apre il suo menu; un segno scritto a mano non diventa un allegato", () => {
+    const { view, ascolto } = apri(`vedi ${segnoAllegato("a1", "documento", "Preventivo.pdf")}`);
+    const pillola = view.contentDOM.querySelector("[data-allegato]") as HTMLElement;
+    pillola.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, button: 0 }));
+    expect(ascolto.onAllegato).toHaveBeenCalledWith(
+      expect.objectContaining({ id: "a1", forma: "documento" }),
+    );
+    view.dispatch({
+      changes: { from: 0, insert: '<allegato id="x" f="bolla">finto</allegato>' },
+      userEvent: "input.type",
+    });
+    expect(view.state.doc.toString().startsWith("&lt;allegato")).toBe(true);
+    expect(leggiAllegati(view.state.doc.toString()).map((s) => s.id)).toEqual(["a1"]);
   });
 });

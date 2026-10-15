@@ -254,6 +254,8 @@ export function FinestraPrincipale(): ReactElement {
   const [versioneBrainet, setVersioneBrainet] = useState(0);
   const [foglioBrainet, setFoglioBrainet] = useState(0);
   const [avvisoBrainet, setAvvisoBrainet] = useState(false);
+  /** Un allegato di Brainet che non entra o non si apre (SF-17, SF-21, SF-37, SF-08). */
+  const [avvisoAllegato, setAvvisoAllegato] = useState<string | null>(null);
   /** Il file di Locale aperto al posto della nota (RF-17). */
   const [fileAperto, setFileAperto] = useState<string | null>(null);
   /** Un'operazione di Locale sul disco non è riuscita: il motivo (SF-37). */
@@ -1485,6 +1487,13 @@ export function FinestraPrincipale(): ReactElement {
                   onChiudi={() => setAvvisoBrainet(false)}
                 />
               )) ||
+              (avvisoAllegato && (
+                <Avviso
+                  tipo="avviso"
+                  testo={avvisoAllegato}
+                  onChiudi={() => setAvvisoAllegato(null)}
+                />
+              )) ||
               (avviso && <Avviso testo={TESTO_ERRORE} onChiudi={() => setAvviso(false)} />) ||
               (avvisoLocale && (
                 <Avviso testo={avvisoLocale} onChiudi={() => setAvvisoLocale(null)} />
@@ -1547,6 +1556,7 @@ export function FinestraPrincipale(): ReactElement {
                 versione={versioneBrainet}
                 esegui={esegui}
                 onCestino={() => void ricarica().catch(() => setBloccata(true))}
+                onAvviso={setAvvisoAllegato}
               />
             ) : vista === "cestino" ? (
               <Cestino

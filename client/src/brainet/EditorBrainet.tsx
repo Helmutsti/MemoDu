@@ -1,25 +1,52 @@
 // L'editor di una nota Brainet (RF-18): l'editor delle note in vista Testo, senza il Markdown (scelta di
-// Manuel Cucca del 15/10/2026), con il compartimento Brainet (estensione.ts), il menu di @ (CMP-09 Suggerimenti), il menu dell'area (CMP-09 Area) e
-// la Linguetta (CMP-40). Lo usano il foglio nuovo e il Database.
+// Manuel Cucca del 15/10/2026), con il compartimento Brainet (estensione.ts), il menu di @ (CMP-09 Suggerimenti), il menu dell'area (CMP-09 Area),
+// la Linguetta (CMP-40) e gli allegati (CMP-09 Allegato, Foto allegata, Dimensioni; RB-114 …
+// RB-121). Lo usano il foglio nuovo e il Database.
 
 import type { EditorView } from "@codemirror/view";
-import { ChevronDown, Plus } from "lucide-react";
+import { listen } from "@tauri-apps/api/event";
+import {
+  ChevronDown,
+  Eye,
+  FolderOpen,
+  Image as IconaImmagine,
+  Paperclip,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import { useCallback, useEffect, useState, type ReactElement } from "react";
 import { createPortal } from "react-dom";
+import { ErroreApi } from "../api";
 import { Editor } from "../editor/Editor";
+import { IN_TAURI } from "../finestra";
 import { Icona } from "../componenti/Icona";
 import { Menu, type VoceMenu } from "../componenti/Menu";
 import { Pallino } from "../componenti/Pallino";
-import { brainet, TITOLO_TIPO, type Entita, type StatoArea, type TipoEntita } from "./api";
 import {
+  brainet,
+  eFoto,
+  TITOLO_TIPO,
+  type Allegato,
+  type Entita,
+  type StatoArea,
+  type TipoEntita,
+} from "./api";
+import {
+  aggiornaAllegati,
   aggiornaArea,
   aggiornaEntita,
+  cambiaForma,
   creaArea,
   estensioneBrainet,
+  inserisciAllegato,
   inserisciCitazione,
+  togliAllegato,
+  EVENTO_FILE,
   type Ascolto,
+  type FileIncollati,
+  type VistaAllegato,
 } from "./estensione";
-import { legamiArea, leggiSegni, testoSemplice } from "./segni";
+import { legamiArea, leggiAllegati, leggiSegni, testoSemplice, type FormaAllegato } from "./segni";
 import "./brainet.css";
 
 interface Proprieta {
@@ -28,11 +55,15 @@ interface Proprieta {
   focus?: boolean;
   etichetta?: string;
   invito?: string;
+  /** Un allegato che non entra o non si apre: l'avviso della finestra (SF-17, SF-21, SF-37). */
+  onAvviso?: (testo: string) => void;
 }
 
 type Chiocciola = Parameters<Ascolto["onChiocciola"]>[0];
 type Selezione = Parameters<Ascolto["onSelezione"]>[0];
 type Sopra = NonNullable<Parameters<Ascolto["onAreaSopra"]>[0]>;
+/** Il menu di un allegato aperto (RB-119). */
+type MenuAllegato = Parameters<Ascolto["onAllegato"]>[0];
 /** L'area sotto il mouse; `tenuta` mentre il mouse è sulla Linguetta. */
 type Linguetta = (Sopra & { tenuta: boolean }) | null;
 
@@ -55,6 +86,26 @@ const LUNGHEZZA_NOME = 200;
 /** Il mouse passa dall'area alla Linguetta senza farla sparire. */
 const RITARDO_LINGUETTA = 250;
 
+export const AVVISO_GRANDE = "Il file supera 25 MB: non si può allegare.";
+export const AVVISO_TIPO =
+  "Si allegano solo foto e documenti (JPG, PNG, PDF, Word, Excel, PowerPoint, testo).";
+const AVVISO_LETTURA = "Non riesco a leggere il file.";
+const AVVISO_RETE = "Non riesco a scaricare l'allegato. Riprova quando c'è la rete.";
+const DIMENSIONI: { forma: FormaAllegato; etichetta: string }[] = [
+  { forma: "piccola", etichetta: "Piccola" },
+  { forma: "media", etichetta: "Media" },
+  { forma: "grande", etichetta: "Grande" },
+];
+
+/** Il testo dell'avviso per un allegato che non entra o non si apre. */
+function avvisoAllegato(errore: unknown): string {
+  if (!(errore instanceof ErroreApi)) return AVVISO_LETTURA;
+  if (errore.stato === 413) return AVVISO_GRANDE;
+  if (errore.stato === 503) return AVVISO_RETE;
+  if (errore.stato === 400) return errore.message === AVVISO_TIPO ? AVVISO_TIPO : errore.message;
+  return AVVISO_LETTURA;
+}
+
 /** Le entità per tipo, con il titolo sopra ogni gruppo (CMP-09 Suggerimenti). */
 function vociPerTipo(entita: Entita[], voce: (e: Entita) => VoceMenu): VoceMenu[] {
   const voci: VoceMenu[] = [];
@@ -67,6 +118,8 @@ function vociPerTipo(entita: Entita[], voce: (e: Entita) => VoceMenu): VoceMenu[
   return voci;
 }
 
+const eFotoForma = (forma: FormaAllegato) => forma !== "documento";
+
 function abbrevia(testo: string, quanti = 30): string {
   const t = testo.replace(/\s+/g, " ").trim();
   return t.length > quanti ? `${t.slice(0, quanti)}…` : t;
@@ -77,11 +130,13 @@ function creaAscolto(
   setChiocciola: (q: Chiocciola) => void,
   setSelezione: (s: Selezione) => void,
   setLinguetta: (l: Linguetta | ((prima: Linguetta) => Linguetta)) => void,
+  setMenuAllegato: (m: MenuAllegato | null) => void,
 ): Ascolto {
   let timer: number | undefined;
   return {
     onChiocciola: setChiocciola,
     onSelezione: setSelezione,
+    onAllegato: setMenuAllegato,
     onAreaSopra: (a) => {
       window.clearTimeout(timer);
       if (a) setLinguetta({ ...a, tenuta: false });
@@ -100,6 +155,7 @@ export function EditorBrainet({
   focus = false,
   etichetta = "Testo della nota Brainet",
   invito = "Scrivi un pensiero…",
+  onAvviso = () => {},
 }: Proprieta): ReactElement {
   const [view, setView] = useState<EditorView | null>(null);
   const [testoAttuale, setTestoAttuale] = useState(testo);
@@ -112,8 +168,10 @@ export function EditorBrainet({
   const [menuArea, setMenuArea] = useState<MenuArea | null>(null);
   const [perArea, setPerArea] = useState<Entita[]>([]);
   const [linguetta, setLinguetta] = useState<Linguetta>(null);
+  const [menuAllegato, setMenuAllegato] = useState<MenuAllegato | null>(null);
+  const [allegati, setAllegati] = useState<Record<string, VistaAllegato | null>>({});
   const [estensioni] = useState(() =>
-    estensioneBrainet(creaAscolto(setChiocciola, setSelezione, setLinguetta)),
+    estensioneBrainet(creaAscolto(setChiocciola, setSelezione, setLinguetta, setMenuAllegato)),
   );
 
   // Nomi e foto delle entità citate, dal nucleo: seguono le unioni (RB-108).
@@ -155,6 +213,128 @@ export function EditorBrainet({
   useEffect(() => {
     void brainet.elencaStati().then(setStati, () => setStati([]));
   }, []);
+
+  // ——— Allegati ———
+
+  // Tipo e anteprima degli allegati nel testo, dal nucleo; tolto altrove: null (SF-20).
+  useEffect(() => {
+    const ids = [...new Set(leggiAllegati(testoAttuale).map((s) => s.id))].filter(
+      (id) => !(id in allegati),
+    );
+    if (!ids.length) return;
+    let vivo = true;
+    void Promise.all(
+      ids.map((id) =>
+        brainet.leggiAllegato(id).then(
+          (i): [string, VistaAllegato | null] => [id, { tipo: i.tipo, anteprima: i.anteprima }],
+          (e): [string, VistaAllegato | null] | null =>
+            e instanceof ErroreApi && e.stato === 404 ? [id, null] : null,
+        ),
+      ),
+    ).then((letti) => {
+      const validi = letti.filter((l) => l !== null);
+      if (vivo && validi.length) setAllegati((p) => ({ ...p, ...Object.fromEntries(validi) }));
+    });
+    return () => {
+      vivo = false;
+    };
+  }, [testoAttuale, allegati]);
+  useEffect(() => {
+    view?.dispatch({ effects: aggiornaAllegati.of(allegati) });
+  }, [view, allegati]);
+  // Una foto scaricata (RB-118): si rilegge, e compare da sola.
+  useEffect(() => {
+    if (!IN_TAURI) return;
+    const promessa = listen<{ id: string }>("allegato-pronto", (e) =>
+      setAllegati((p) =>
+        Object.fromEntries(Object.entries(p).filter(([id]) => id !== e.payload.id)),
+      ),
+    );
+    return () => void promessa.then((togli) => togli());
+  }, []);
+
+  /** Allega uno dopo l'altro; se qualcuno non entra, un avviso solo (FL-23). */
+  const allega = async (chiamate: (() => Promise<Allegato | null>)[], da: number, a: number) => {
+    if (!view) return;
+    let avviso: string | null = null;
+    let [dove, fino] = [da, a];
+    for (const chiama of chiamate) {
+      try {
+        const nuovo = await chiama();
+        if (!nuovo) continue;
+        setAllegati((p) => ({
+          ...p,
+          [nuovo.id]: p[nuovo.id] ?? { tipo: nuovo.tipo, anteprima: null },
+        }));
+        dove = inserisciAllegato(view, dove, fino, nuovo);
+        fino = dove;
+        // L'anteprima di una foto appena allegata: dal nucleo.
+        if (eFoto(nuovo.tipo))
+          setAllegati((p) =>
+            Object.fromEntries(Object.entries(p).filter(([id]) => id !== nuovo.id)),
+          );
+      } catch (errore) {
+        avviso ??= avvisoAllegato(errore);
+      }
+    }
+    if (avviso) onAvviso(avviso);
+    view.focus();
+  };
+  // File incollati (RB-114): entrano uno dopo l'altro nel punto in cui si incolla.
+  useEffect(() => {
+    if (!view) return;
+    const suFile = (e: Event) => {
+      const { file, da, a } = (e as CustomEvent<FileIncollati>).detail;
+      void allega(
+        file.map(
+          (f) => async () => brainet.allegaDati(f.name, new Uint8Array(await f.arrayBuffer())),
+        ),
+        da,
+        a,
+      );
+    };
+    view.dom.addEventListener(EVENTO_FILE, suFile);
+    return () => view.dom.removeEventListener(EVENTO_FILE, suFile);
+  });
+
+  const vociAllegato: VoceMenu[] = [];
+  if (menuAllegato && view) {
+    const m = menuAllegato;
+    const azione = (fa: (id: string) => Promise<void>) => () =>
+      void fa(m.id).catch((e: unknown) => onAvviso(avvisoAllegato(e)));
+    vociAllegato.push(
+      { tipo: "voce", etichetta: "Apri", icona: Eye, azione: azione(brainet.apriAllegato) },
+      {
+        tipo: "voce",
+        etichetta: "Mostra nella cartella",
+        icona: FolderOpen,
+        azione: azione(brainet.mostraAllegato),
+      },
+    );
+    // Dimensioni solo per le foto fuori dal paragrafo (RB-120).
+    if (DIMENSIONI.some((d) => d.forma === m.forma))
+      vociAllegato.push({
+        tipo: "voce",
+        etichetta: "Dimensioni",
+        icona: IconaImmagine,
+        sottomenu: DIMENSIONI.map((d) => ({
+          tipo: "voce",
+          etichetta: d.etichetta,
+          spunta: d.forma === m.forma,
+          azione: () => cambiaForma(view, m, d.forma),
+        })),
+      });
+    vociAllegato.push(
+      { tipo: "separatore" },
+      {
+        tipo: "voce",
+        etichetta: "Togli",
+        icona: Trash2,
+        errore: true,
+        azione: () => togliAllegato(view, m),
+      },
+    );
+  }
 
   // ——— @ ———
 
@@ -200,6 +380,19 @@ export function EditorBrainet({
         azione: () => void brainet.creaEntita(nome).then(scegliCitazione),
       });
     }
+    // In fondo, la graffetta: la finestra del sistema per scegliere il file (RB-114).
+    if (vociChiocciola.length && !(nome && !esiste)) vociChiocciola.push({ tipo: "separatore" });
+    vociChiocciola.push({
+      tipo: "voce",
+      etichetta: "Allega un file…",
+      icona: Paperclip,
+      azione: () => {
+        if (!view || !chiocciola) return;
+        const [da, a] = [chiocciola.da, view.state.selection.main.head];
+        setChiocciola(null);
+        void allega([() => brainet.allegaFile()], da, a);
+      },
+    });
   }
 
   // ——— Aree ———
@@ -348,15 +541,29 @@ export function EditorBrainet({
         invito={invito}
         estensioni={estensioni}
       />
-      {domanda !== null && chiocciola && vociChiocciola.length > 0 && !menuArea && (
+      {domanda !== null &&
+        chiocciola &&
+        vociChiocciola.length > 0 &&
+        !menuArea &&
+        !menuAllegato && (
+          <Menu
+            voci={vociChiocciola}
+            etichetta="Collega"
+            x={chiocciola.x}
+            y={chiocciola.y}
+            sopra={chiocciola.sopra}
+            attivaIniziale={vociChiocciola.findIndex((v) => v.tipo === "voce")}
+            onChiudi={() => setChiusaA(chiocciola.da)}
+          />
+        )}
+      {menuAllegato && (
         <Menu
-          voci={vociChiocciola}
-          etichetta="Collega"
-          x={chiocciola.x}
-          y={chiocciola.y}
-          sopra={chiocciola.sopra}
-          attivaIniziale={vociChiocciola.findIndex((v) => v.tipo === "voce")}
-          onChiudi={() => setChiusaA(chiocciola.da)}
+          voci={vociAllegato}
+          etichetta={eFotoForma(menuAllegato.forma) ? "Foto allegata" : "Allegato"}
+          x={menuAllegato.x}
+          y={menuAllegato.y}
+          sopra={menuAllegato.sopra}
+          onChiudi={() => setMenuAllegato(null)}
         />
       )}
       {menuArea && (

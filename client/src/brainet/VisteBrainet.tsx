@@ -22,7 +22,7 @@ import { StatoVuoto } from "../componenti/StatoVuoto";
 import { Tag } from "../componenti/Tag";
 import { brainet, TITOLO_TIPO, type Entita, type Frammento, type VoceEntita } from "./api";
 import { EditorBrainet } from "./EditorBrainet";
-import { SalvaFrammento } from "./salvataggio";
+import { pulisciDopo, SalvaFrammento } from "./salvataggio";
 import type { VistaBrainet } from "./SezioneBrainet";
 import "./viste.css";
 
@@ -34,12 +34,27 @@ interface Proprieta {
   esegui: <T>(chiamata: () => Promise<T>) => Promise<T | undefined>;
   /** Una nota è andata nel Cestino: la colonna aggiorna il numero. */
   onCestino: () => void;
+  /** Un allegato che non entra o non si apre: l'avviso della finestra. */
+  onAvviso: (testo: string) => void;
 }
 
-export function VisteBrainet({ vista, versione, esegui, onCestino }: Proprieta): ReactElement {
-  if (vista === "foglio") return <FoglioNuovo esegui={esegui} />;
+export function VisteBrainet({
+  vista,
+  versione,
+  esegui,
+  onCestino,
+  onAvviso,
+}: Proprieta): ReactElement {
+  if (vista === "foglio") return <FoglioNuovo esegui={esegui} onAvviso={onAvviso} />;
   if (vista === "database")
-    return <DatabaseBrainet versione={versione} esegui={esegui} onCestino={onCestino} />;
+    return (
+      <DatabaseBrainet
+        versione={versione}
+        esegui={esegui}
+        onCestino={onCestino}
+        onAvviso={onAvviso}
+      />
+    );
   if (vista === "entita") return <EntitaBrainet versione={versione} esegui={esegui} />;
   return <CalendarioBrainet versione={versione} esegui={esegui} />;
 }
@@ -48,16 +63,27 @@ type Esegui = Proprieta["esegui"];
 
 // ——— Foglio nuovo (RB-101, RB-102) ———
 
-function FoglioNuovo({ esegui }: { esegui: Esegui }): ReactElement {
+function FoglioNuovo({
+  esegui,
+  onAvviso,
+}: {
+  esegui: Esegui;
+  onAvviso: (testo: string) => void;
+}): ReactElement {
   const [salva] = useState(() => new SalvaFrammento(null, esegui));
-  // Chiudendo il foglio si scrive quello che aspetta.
-  useEffect(() => () => void salva.scarica(), [salva]);
+  // Chiudendo il foglio si scrive quello che aspetta, poi via gli allegati tolti.
+  useEffect(() => () => pulisciDopo(salva.scarica()), [salva]);
   return (
     <article className="nota-aperta">
       <AreaScorrevole className="nota-aperta-scorrimento">
         <div className="nota-aperta-corpo">
           <div className="nota-aperta-misura">
-            <EditorBrainet testo="" focus onModifica={(t) => salva.modifica(t)} />
+            <EditorBrainet
+              testo=""
+              focus
+              onModifica={(t) => salva.modifica(t)}
+              onAvviso={onAvviso}
+            />
           </div>
         </div>
       </AreaScorrevole>
@@ -72,13 +98,15 @@ function NotaDelDatabase({
   frammento,
   esegui,
   onMenu,
+  onAvviso,
 }: {
   frammento: Frammento;
   esegui: Esegui;
   onMenu: (x: number, y: number) => void;
+  onAvviso: (testo: string) => void;
 }): ReactElement {
   const [salva] = useState(() => new SalvaFrammento(frammento.id, esegui));
-  useEffect(() => () => void salva.scarica(), [salva]);
+  useEffect(() => () => pulisciDopo(salva.scarica()), [salva]);
   return (
     <li
       className="nota-database"
@@ -88,7 +116,11 @@ function NotaDelDatabase({
       }}
     >
       <span className="nota-database-quando interfaccia-dettaglio">{quando(frammento.natoIl)}</span>
-      <EditorBrainet testo={frammento.testo} onModifica={(t) => salva.modifica(t)} />
+      <EditorBrainet
+        testo={frammento.testo}
+        onModifica={(t) => salva.modifica(t)}
+        onAvviso={onAvviso}
+      />
     </li>
   );
 }
@@ -97,10 +129,12 @@ function DatabaseBrainet({
   versione,
   esegui,
   onCestino,
+  onAvviso,
 }: {
   versione: number;
   esegui: Esegui;
   onCestino: () => void;
+  onAvviso: (testo: string) => void;
 }): ReactElement {
   const [note, setNote] = useState<Frammento[] | null>(null);
   const [menu, setMenu] = useState<{ id: string; x: number; y: number } | null>(null);
@@ -174,6 +208,7 @@ function DatabaseBrainet({
                 frammento={f}
                 esegui={esegui}
                 onMenu={(x, y) => setMenu({ id: f.id, x, y })}
+                onAvviso={onAvviso}
               />
             ))}
           </ul>

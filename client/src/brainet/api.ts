@@ -1,6 +1,6 @@
 // Comandi di Brainet nel nucleo (architettura/api.md, «Brainet»), con le forme che restituiscono.
 
-import { comando } from "../api";
+import { comando, comandoGrezzo } from "../api";
 import type { ColoreStato } from "../componenti/Menu";
 import type { ElementoCestino } from "@memodu/condiviso";
 
@@ -43,6 +43,26 @@ export interface GiornoCalendario {
   note: number;
 }
 
+export type TipoAllegato = "jpg" | "png" | "pdf" | "word" | "excel" | "powerpoint" | "testo";
+
+/** Un allegato appena entrato: «documento» o «piccola» per le foto (RB-116, RB-117). */
+export interface Allegato {
+  id: string;
+  nome: string;
+  tipo: TipoAllegato;
+  forma: "documento" | "piccola";
+}
+
+export interface InfoAllegato {
+  nome: string;
+  tipo: TipoAllegato;
+  grandezza: number;
+  /** L'anteprima di una foto come indirizzo `data:`, o null se non è ancora sul computer. */
+  anteprima: string | null;
+}
+
+export const eFoto = (tipo: TipoAllegato): boolean => tipo === "jpg" || tipo === "png";
+
 export interface Unione {
   citazioni: number;
   aree: number;
@@ -80,6 +100,17 @@ export const brainet = {
     }),
   importa: (nota: string, sposta: boolean) =>
     comando<Frammento>("importa_in_brainet", { nota, sposta }),
+
+  // Allegati (RF-18, DEC-135): un file grande viaggia come corpo della richiesta, non in JSON.
+  /** Senza percorso apre la finestra del sistema; null se si annulla. */
+  allegaFile: (percorso?: string) =>
+    comando<Allegato | null>("allega_file", { percorso: percorso ?? null }),
+  allegaDati: (nome: string, byte: Uint8Array) =>
+    comandoGrezzo<Allegato>("allega_dati", byte, { "memodu-nome": encodeURIComponent(nome) }),
+  leggiAllegato: (id: string) => comando<InfoAllegato>("leggi_allegato", { id }),
+  apriAllegato: (id: string) => comando<void>("apri_allegato", { id }),
+  mostraAllegato: (id: string) => comando<void>("mostra_allegato", { id }),
+  pulisciAllegati: () => comando<number>("pulisci_allegati"),
 };
 
 /** Titoli delle sezioni dei menu, nell'ordine dei suggerimenti (CMP-09 Suggerimenti). */

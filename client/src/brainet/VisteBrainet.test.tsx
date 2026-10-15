@@ -111,7 +111,15 @@ describe("Entità (CA-18.11, CA-18.12)", () => {
     ]);
     vi.mocked(brainet.anteprimaUnione).mockResolvedValue({ citazioni: 1, aree: 2 });
     vi.mocked(brainet.unisciEntita).mockResolvedValue({ citazioni: 1, aree: 2 });
-    render(<VisteBrainet vista="entita" versione={0} esegui={esegui} onCestino={() => {}} />);
+    render(
+      <VisteBrainet
+        vista="entita"
+        versione={0}
+        esegui={esegui}
+        onCestino={() => {}}
+        onAvviso={() => {}}
+      />,
+    );
     expect(await screen.findByText("nominato 1 volta · ultima volta oggi")).toBeInTheDocument();
     expect(screen.getByText("Senza tipo")).toBeInTheDocument();
     fireEvent.contextMenu(screen.getByText("Luca"));
@@ -142,7 +150,13 @@ describe("Database (CA-18.9)", () => {
     vi.mocked(brainet.eliminaFrammento).mockResolvedValue({} as ElementoCestino);
     const onCestino = vi.fn();
     const { container } = render(
-      <VisteBrainet vista="database" versione={0} esegui={esegui} onCestino={onCestino} />,
+      <VisteBrainet
+        vista="database"
+        versione={0}
+        esegui={esegui}
+        onCestino={onCestino}
+        onAvviso={() => {}}
+      />,
     );
     await waitFor(() => expect(container.querySelector(".nota-database")).not.toBeNull());
     expect(screen.getByText(/^oggi alle /)).toBeInTheDocument();
@@ -160,7 +174,13 @@ describe("Calendario (CA-18.14)", () => {
     const mese = `${oggi.getFullYear()}-${due(oggi.getMonth() + 1)}`;
     vi.mocked(brainet.calendario).mockResolvedValue([{ giorno: `${mese}-01`, note: 5 }]);
     const { container } = render(
-      <VisteBrainet vista="calendario" versione={0} esegui={esegui} onCestino={() => {}} />,
+      <VisteBrainet
+        vista="calendario"
+        versione={0}
+        esegui={esegui}
+        onCestino={() => {}}
+        onAvviso={() => {}}
+      />,
     );
     await waitFor(() =>
       expect(container.querySelectorAll(".giorno-brainet-pallino")).toHaveLength(3),
