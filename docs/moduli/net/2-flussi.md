@@ -184,6 +184,8 @@ flowchart TD
 
 ---
 
+<!-- FL-23 … FL-25 e RB-114 … RB-121 scritti dall'agente il 15/10/2026 e approvati da Manuel Cucca lo stesso giorno, con le proposte dell'agente. -->
+
 ## FL-23 – Allegare un file
 **Requisito:** RF-18 (allegati) · **Attori:** Utente, Sistema
 

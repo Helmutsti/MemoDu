@@ -13,6 +13,8 @@ erDiagram
     FRAMMENTO ||--o{ AREA : "contiene"
     AREA }o--o{ ENTITA : "legata a"
     AREA }o--o{ STATO : "ha"
+    FRAMMENTO ||--o{ USO_ALLEGATO : "contiene"
+    ALLEGATO ||--o{ USO_ALLEGATO : "è usato in"
     FRAMMENTO {
         id identificativo
         markdown testo
@@ -34,6 +36,18 @@ erDiagram
         id identificativo
         numero inizio
         numero fine
+    }
+    ALLEGATO {
+        id identificativo
+        testo nome
+        scelta tipo
+        numero grandezza
+        impronta impronta
+    }
+    USO_ALLEGATO {
+        numero inizio
+        numero fine
+        scelta forma
     }
     STATO {
         id identificativo
@@ -108,6 +122,35 @@ erDiagram
 
 - **Chi lo crea e lo modifica:** l'utente, nelle Impostazioni; **cancellazione:** «Togli», con la proposta di cambiarlo (RB-110).
 
+## EN-17 – Allegato
+**Descrizione:** un documento o una foto allegati a una nota Brainet (RB-114 … RB-121). Scritto dall'agente il 15/10/2026, da approvare.
+
+| Attributo | Tipo | Obbligatorio | Vincoli | Note |
+|---|---|---|---|---|
+| Identificativo | Codice | Sì | Unico e stabile | Tecnico |
+| Nome | Testo | Sì | Il nome del file, fino a 255 caratteri | Quello della pillola |
+| Tipo | JPG \| PNG \| PDF \| Word \| Excel \| PowerPoint \| testo | Sì | Solo questi (RB-115) | Decide l'icona e se è una foto |
+| Grandezza | Numero di byte | Sì | Al massimo 25 MB (RB-115) | |
+| Impronta | Impronta del contenuto | Sì | | Riconosce lo stesso file e controlla che arrivi intero (proposta dell'agente) |
+| Contenuto | File | Sì | | Viaggia a parte dalla nota, cifrato (RB-118); sul computer si scarica la prima volta che serve |
+| Anteprima | Immagine ridotta | Solo per le foto | | Quella che si vede nella nota (RB-120) |
+
+- **Chi lo crea:** l'utente, allegando. **Chi lo modifica:** nessuno: un file cambiato si allega di nuovo.
+- **Cancellazione:** quando nessuna nota lo usa più, anche nel Cestino (RB-121); spegnendo Brainet, tutto (RB-111).
+- **Dati sensibili:** nomi e contenuti dei file; cifrati end-to-end come le note.
+
+### EN-18 – Uso di un allegato
+**Descrizione:** il punto di una nota in cui c'è un allegato, scritto nel testo con un segno nascosto come le pillole (scelta del 15/10/2026 per pillole e aree; proposta dell'agente per gli allegati).
+
+| Attributo | Tipo | Obbligatorio | Vincoli | Note |
+|---|---|---|---|---|
+| Frammento | EN-12 | Sì | | |
+| Allegato | EN-17 | Sì | | |
+| Posizione | Inizio e fine nel testo | Sì | | Il segno si sposta con il testo |
+| Forma | Pillola \| bolla \| piccola \| media \| grande | Sì | Pillola per i documenti; bolla o piccola, media, grande per le foto | Dal punto in cui si mette (RB-117); «Dimensioni» la cambia (RB-120) |
+
+- La forma sta nell'uso e non nell'allegato: la stessa foto può essere una bolla in una nota e grande in un'altra (proposta dell'agente).
+
 ## Impostazioni di Brainet (in EN-07)
 | Attributo | Tipo | Note |
 |---|---|---|
@@ -115,6 +158,7 @@ erDiagram
 | Mostra il Database | Sì \| No | Vale per tutti i computer e si sincronizza (scelta di Manuel Cucca del 14/10/2026). Di default Sì (proposta dell'agente) |
 
 ## Da decidere
+- Allegati (EN-17, EN-18): da approvare (15/10/2026).
 - ~~Da dove arriva la foto di un'entità.~~ Dal disco, scelta dall'utente in Entità, per tutte le entità (14/10/2026).
 - ~~Se «Mostra il Database» vale solo per questo computer o per tutti.~~ Per tutti (14/10/2026).
 - ~~Se un singolo frammento si può eliminare dal Database.~~ Sì, nel Cestino, in una parte dedicata a Brainet (14/10/2026).
