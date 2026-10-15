@@ -646,3 +646,5 @@
 | 15/10/2026 | Agente IA | RF-18, allegati: sette mockup nel blocco di Brainet (allegati nel testo, menu del documento, menu della foto con Dimensioni, foto media e grande, @ con Allega un file…, file troppo grande, foto senza rete), da approvare | DEC-134 |
 | 15/10/2026 | Manuel Cucca | RF-18, allegati: mockup approvati con le proposte; aggiungere l'icona della graffetta per «Allega un file…» | DEC-134 |
 | 15/10/2026 | Agente IA | RF-18, allegati: nella libreria Icona/Graffetta, Collegamento Foto=Documento, CMP-44 Foto allegata, Menu Allegato, Foto allegata e Dimensioni, «Allega un file…» nei Suggerimenti; da pubblicare | DEC-134 |
+| 15/10/2026 | Manuel Cucca | Libreria pubblicata con i componenti degli allegati | DEC-134 |
+| 15/10/2026 | Agente IA | RF-18, allegati: mockup con i componenti della libreria, 7 esportazioni; trovato e corretto nella libreria il nome del file che non arrivava nella pillola Documento (da pubblicare di nuovo) | DEC-134 |
