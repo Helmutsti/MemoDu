@@ -557,3 +557,100 @@ fn il_primo_giro_cifrato_rimanda_tutto_una_volta_sola() {
     assert_eq!(a.a.leggi(&id).unwrap().contenuto, "testo");
     assert!(a.a.da_inviare().unwrap().is_empty());
 }
+
+// ——— Brainet (RF-18, CA-18.16 … CA-18.19) ———
+
+fn brainet(d: &mut Dispositivo) {
+    d.a.accendi_brainet().unwrap();
+}
+
+#[test]
+fn brainet_arriva_sull_altro_computer() {
+    let (mut a, mut b, mut s) = due();
+    brainet(&mut a);
+    let luca = a.a.crea_entita("Luca").unwrap();
+    let imp = a.a.crea_stato("Importante", "avviso").unwrap();
+    let testo = format!(
+        r#"<area id="a1" s="{}">con <cita e="{}">Luca</cita></area id="a1">"#,
+        imp.id, luca.id
+    );
+    let f = a.a.crea_frammento(&testo).unwrap();
+    a.sincronizza(&mut s);
+    b.sincronizza(&mut s);
+    // L'impostazione è arrivata: Brainet è acceso anche su B, con tutto quanto.
+    assert!(b.a.brainet_stato().unwrap().acceso);
+    assert_eq!(b.a.leggi_frammento(&f.id).unwrap().testo, testo);
+    assert_eq!(b.a.elenca_stati().unwrap()[0].nome, "Importante");
+    let voci = b.a.elenca_entita().unwrap();
+    assert_eq!((voci[0].entita.nome.as_str(), voci[0].nominata), ("Luca", 2));
+    // Un'unione fatta su B arriva su A.
+    let lb = b.a.crea_entita("Luca Bianchi").unwrap();
+    b.a.unisci_entita(&luca.id, &lb.id).unwrap();
+    b.sincronizza(&mut s);
+    a.sincronizza(&mut s);
+    assert_eq!(a.a.leggi_entita(&luca.id).unwrap().nome, "Luca Bianchi");
+}
+
+#[test]
+fn brainet_cambiato_su_due_computer_da_una_copia() {
+    let (mut a, mut b, mut s) = due();
+    brainet(&mut a);
+    let f = a.a.crea_frammento("uno").unwrap();
+    a.sincronizza(&mut s);
+    b.sincronizza(&mut s);
+    a.a.salva_frammento(&f.id, "uno di A").unwrap();
+    b.a.salva_frammento(&f.id, "uno di B").unwrap();
+    a.sincronizza(&mut s);
+    b.sincronizza(&mut s);
+    a.sincronizza(&mut s);
+    for d in [&mut a, &mut b] {
+        let mut testi: Vec<String> = d.a.elenca_frammenti(None, 50).unwrap().into_iter().map(|f| f.testo).collect();
+        testi.sort();
+        assert_eq!(testi, ["uno di A", "uno di B"]);
+        assert_eq!(d.a.leggi_frammento(&f.id).unwrap().testo, "uno di A");
+    }
+}
+
+#[test]
+fn brainet_spento_da_un_altro_computer() {
+    let (mut a, mut b, mut s) = due();
+    brainet(&mut a);
+    a.a.crea_frammento("di A").unwrap();
+    a.sincronizza(&mut s);
+    b.sincronizza(&mut s);
+    // B scrive mentre A spegne, prima di saperlo.
+    b.a.crea_frammento("di B").unwrap();
+    a.a.spegni_brainet().unwrap();
+    a.sincronizza(&mut s);
+    let (ricevute, ultimo) = s.modifiche_dopo(b.visto);
+    let esito = b.a.ricevi(&ricevute).unwrap();
+    b.visto = ultimo;
+    assert!(esito.brainet_spento);
+    assert!(!b.a.brainet_stato().unwrap().acceso);
+    b.sincronizza(&mut s);
+    a.sincronizza(&mut s);
+    // Riaccendendo non torna niente, né su A né su B.
+    for d in [&mut a, &mut b] {
+        d.a.accendi_brainet().unwrap();
+        assert!(d.a.elenca_frammenti(None, 50).unwrap().is_empty());
+    }
+}
+
+#[test]
+fn impostazioni_da_una_versione_senza_brainet_non_lo_spengono() {
+    let (mut a, mut b, mut s) = due();
+    brainet(&mut a);
+    a.sincronizza(&mut s);
+    b.sincronizza(&mut s);
+    // Un blocco delle impostazioni come lo manda la 1.2.0: senza i campi di Brainet.
+    let id = super::super::impostazioni::ID;
+    let (v, _, _) = s.attuali[id].clone();
+    let vecchio = serde_json::json!({
+        "formato": "chiaro", "tipo": "impostazioni", "modificato_il": "2026-09-30T09:00:00Z",
+        "eliminato": false,
+        "campi": { "scorciatoia_windows": "Control+Shift+KeyM", "scorciatoia_macos": null, "cestino_in_ricerca": true }
+    });
+    s.scrivi(&DaInviare { id: id.into(), versione: v, dati: vecchio.to_string(), modificato_il: String::new() }).unwrap();
+    b.sincronizza(&mut s);
+    assert!(b.a.brainet_stato().unwrap().acceso);
+}

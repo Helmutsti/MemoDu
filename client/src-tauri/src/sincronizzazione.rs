@@ -60,6 +60,9 @@ pub enum Evento {
     AccessoScaduto,
     Irraggiungibile,
     Errore { protocollo: bool },
+    /// Note, entità, stati o impostazioni di Brainet cambiati per modifiche ricevute; `spento`:
+    /// Brainet è stato spento da un altro computer e qui si è cancellato tutto (RB-111).
+    Brainet { spento: bool },
 }
 
 /// Gettone e chiave dati di questa sincronizzazione.
@@ -194,6 +197,7 @@ fn sincronizza(app: &AppHandle) -> Result<(), Problema> {
     })?;
     let mut note_cambiate = Vec::new();
     let mut altro = false;
+    let (mut brainet, mut brainet_spento) = (false, false);
 
     // Ricevere: le versioni attuali cambiate dopo l'ultimo numero d'ordine visto.
     loop {
@@ -235,6 +239,8 @@ fn sincronizza(app: &AppHandle) -> Result<(), Problema> {
         })?;
         note_cambiate.extend(esito.note);
         altro |= esito.altro;
+        brainet |= esito.brainet;
+        brainet_spento |= esito.brainet_spento;
         if risposta["altre"] != json!(true) {
             break;
         }
@@ -277,6 +283,8 @@ fn sincronizza(app: &AppHandle) -> Result<(), Problema> {
         let esito = con_archivio(app, |a| a.ricevi(&superati))?;
         note_cambiate.extend(esito.note);
         altro |= esito.altro;
+        brainet |= esito.brainet;
+        brainet_spento |= esito.brainet_spento;
     }
 
     let conflitti = con_archivio(app, |a| {
@@ -294,6 +302,9 @@ fn sincronizza(app: &AppHandle) -> Result<(), Problema> {
             "sincronizzazione",
             Evento::Conflitto { originale: c.originale, copia: c.copia, scrivendo: c.scrivendo },
         );
+    }
+    if brainet || brainet_spento {
+        let _ = app.emit("sincronizzazione", Evento::Brainet { spento: brainet_spento });
     }
     Ok(())
 }

@@ -15,6 +15,7 @@ use chrono::{DateTime, Datelike, Local, NaiveDate, Utc};
 use regex::Regex;
 use rusqlite::{params, OptionalExtension};
 use serde::Serialize;
+use serde_json::{json, Map, Value};
 
 use super::impostazioni::ID as ID_IMPOSTAZIONI;
 use super::{chiave, normalizza, Archivio, ElementoCestino, Errore, Esito, Ripristinato};
@@ -412,7 +413,7 @@ impl Archivio {
         self.togli_indice(id)
     }
 
-    fn togli_indice(&self, id: &str) -> Esito<()> {
+    pub(super) fn togli_indice(&self, id: &str) -> Esito<()> {
         for tabella in ["brainet_citazioni", "brainet_aree", "brainet_aree_legami"] {
             self.db.execute(&format!("DELETE FROM {tabella} WHERE frammento = ?"), [id])?;
         }
@@ -864,6 +865,139 @@ impl Archivio {
             self.elimina_frammento_per_sempre(&id)?;
         }
         Ok(())
+    }
+}
+
+// ——— Sincronizzazione (DEC-75, DEC-76) ———
+
+/// Tipi dei blocchi di Brainet; le app che non li conoscono li saltano.
+pub const TIPI_BLOCCHI: [&str; 3] = ["frammento", "entita", "stato"];
+
+impl Archivio {
+    /// I campi del blocco di un elemento di Brainet; None se non c'è più.
+    pub(super) fn campi_brainet(&self, id: &str, tipo: &str) -> Esito<Option<Value>> {
+        use base64::Engine;
+        let campi = match tipo {
+            "frammento" => self
+                .db
+                .query_row(
+                    "SELECT testo, nato_il, modificato_il, eliminato_il, da_nota FROM frammenti WHERE id = ?",
+                    [id],
+                    |r| {
+                        Ok(json!({
+                            "testo": r.get::<_, String>(0)?,
+                            "nato_il": r.get::<_, String>(1)?,
+                            "modificato_il": r.get::<_, String>(2)?,
+                            "eliminato_il": r.get::<_, Option<String>>(3)?,
+                            "da_nota": r.get::<_, Option<String>>(4)?,
+                        }))
+                    },
+                )
+                .optional()?,
+            "entita" => self
+                .db
+                .query_row(
+                    "SELECT nome, tipo, foto, unita_in, creata_il FROM entita WHERE id = ?",
+                    [id],
+                    |r| {
+                        let foto: Option<Vec<u8>> = r.get(2)?;
+                        Ok(json!({
+                            "nome": r.get::<_, String>(0)?,
+                            "tipo": r.get::<_, Option<String>>(1)?,
+                            "foto": foto.map(|b| base64::engine::general_purpose::STANDARD.encode(b)),
+                            "unita_in": r.get::<_, Option<String>>(3)?,
+                            "creata_il": r.get::<_, String>(4)?,
+                        }))
+                    },
+                )
+                .optional()?,
+            _ => self
+                .db
+                .query_row("SELECT nome, colore, ordine FROM stati WHERE id = ?", [id], |r| {
+                    Ok(json!({
+                        "nome": r.get::<_, String>(0)?,
+                        "colore": r.get::<_, String>(1)?,
+                        "ordine": r.get::<_, i64>(2)?,
+                    }))
+                })
+                .optional()?,
+        };
+        Ok(campi)
+    }
+
+    /// Scrive un elemento di Brainet ricevuto (senza segnarlo: chi chiama tiene spenti i trigger)
+    /// e rifà l'indice.
+    pub(super) fn applica_brainet(&self, id: &str, tipo: &str, c: &Map<String, Value>) -> Esito<()> {
+        use base64::Engine;
+        let testo = |k: &str| c.get(k).and_then(Value::as_str).map(str::to_string);
+        let adesso = self.ora();
+        match tipo {
+            "frammento" => {
+                let t = testo("testo").unwrap_or_default();
+                self.db.execute(
+                    "INSERT INTO frammenti (id, testo, nato_il, modificato_il, eliminato_il, da_nota)
+                     VALUES (?1, ?2, ?3, ?4, ?5, ?6)
+                     ON CONFLICT(id) DO UPDATE SET testo = ?2, nato_il = ?3, modificato_il = ?4,
+                       eliminato_il = ?5, da_nota = ?6",
+                    params![
+                        id,
+                        t,
+                        testo("nato_il").unwrap_or_else(|| adesso.clone()),
+                        testo("modificato_il").unwrap_or(adesso),
+                        testo("eliminato_il"),
+                        testo("da_nota"),
+                    ],
+                )?;
+                self.indicizza(id, &t)?;
+            }
+            "entita" => {
+                let nome = testo("nome").unwrap_or_default();
+                let foto = testo("foto").and_then(|f| base64::engine::general_purpose::STANDARD.decode(f).ok());
+                self.db.execute(
+                    "INSERT INTO entita (id, nome, chiave_nome, tipo, foto, unita_in, creata_il)
+                     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
+                     ON CONFLICT(id) DO UPDATE SET nome = ?2, chiave_nome = ?3, tipo = ?4, foto = ?5,
+                       unita_in = ?6, creata_il = ?7",
+                    params![
+                        id,
+                        nome,
+                        normalizza(&nome),
+                        testo("tipo"),
+                        foto,
+                        testo("unita_in"),
+                        testo("creata_il").unwrap_or(adesso),
+                    ],
+                )?;
+            }
+            _ => {
+                let nome = testo("nome").unwrap_or_default();
+                self.db.execute(
+                    "INSERT INTO stati (id, nome, chiave, colore, ordine) VALUES (?1, ?2, ?3, ?4, ?5)
+                     ON CONFLICT(id) DO UPDATE SET nome = ?2, chiave = ?3, colore = ?4, ordine = ?5",
+                    params![
+                        id,
+                        nome,
+                        chiave(&nome),
+                        testo("colore").unwrap_or_else(|| COLORI[1].to_string()),
+                        c.get("ordine").and_then(Value::as_i64).unwrap_or(0),
+                    ],
+                )?;
+            }
+        }
+        Ok(())
+    }
+
+    /// Il testo di qui di un frammento cambiato anche altrove va in un frammento nuovo, nato lo
+    /// stesso giorno, con le sue pillole e aree (DEC-06, CA-18.17).
+    pub(super) fn copia_frammento_in_conflitto(&self, originale: &str, testo: &str) -> Esito<String> {
+        let id = uuid::Uuid::new_v4().to_string();
+        self.db.execute(
+            "INSERT INTO frammenti (id, testo, nato_il, modificato_il, da_nota)
+             SELECT ?1, ?2, nato_il, ?3, da_nota FROM frammenti WHERE id = ?4",
+            params![id, testo, self.ora(), originale],
+        )?;
+        self.indicizza(&id, testo)?;
+        Ok(id)
     }
 }
 

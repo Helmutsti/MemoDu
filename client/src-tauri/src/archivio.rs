@@ -178,6 +178,13 @@ const TRIGGER: [Trigger; 4] = [
 
 const TRIGGER_IMPOSTAZIONI: [Trigger; 1] = [("impostazioni", "impostazioni", "NEW.id", "OLD.id")];
 
+/// Brainet (RF-18): un blocco per nota, entità e stato; l'indice non si sincronizza.
+const TRIGGER_BRAINET: [Trigger; 3] = [
+    ("frammenti", "frammento", "NEW.id", "OLD.id"),
+    ("entita", "entita", "NEW.id", "OLD.id"),
+    ("stati", "stato", "NEW.id", "OLD.id"),
+];
+
 fn schema_trigger(trigger: &[Trigger]) -> String {
     let mut sql = String::new();
     for &(tabella, tipo, nuovo, vecchio) in trigger {
@@ -676,6 +683,7 @@ impl Archivio {
             }
             if versione < 8 {
                 tx.execute_batch(brainet::SCHEMA_BRAINET)?;
+                tx.execute_batch(&schema_trigger(&TRIGGER_BRAINET))?;
             }
             tx.pragma_update(None, "user_version", VERSIONE_SCHEMA)?;
             tx.commit()?;

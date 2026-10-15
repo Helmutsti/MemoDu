@@ -137,9 +137,9 @@ L'indice serve a Entità (quante volte, l'ultima volta), alle unioni e ai conteg
 - la selezione apre il menu dell'area (CMP-09 Area), il passaggio del mouse la Linguetta con `hoverTooltip`; scegliere o togliere una voce riscrive solo il segno di apertura dell'area, in una transazione dell'editor;
 - il foglio nuovo, il Database e il Cestino usano lo stesso editor; il Calendario e Entità no.
 
-**Sincronizzazione.** Tre tipi di blocco nuovi, `frammento`, `entita` e `stato`, con gli stessi trigger, la stessa cifratura e le stesse versioni delle note (DEC-75 … DEC-78, DEC-121). Le app che non conoscono Brainet saltano i blocchi di tipo sconosciuto (`archivio_sinc.rs`, già così), quindi le versioni fino alla 1.2.0 non si rompono. Conflitti: il testo di un frammento come le note (copia in conflitto, con lo stesso `nato_il`); gli altri campi, vince l'ultima modifica arrivata al server (DEC-109).
+**Sincronizzazione** (`archivio_sinc.rs` e `archivio_brainet.rs`; evento `brainet` quando arrivano modifiche di Brainet). Tre tipi di blocco nuovi, `frammento`, `entita` e `stato`, con gli stessi trigger, la stessa cifratura e le stesse versioni delle note (DEC-75 … DEC-78, DEC-121). Le app che non conoscono Brainet saltano i blocchi di tipo sconosciuto (`archivio_sinc.rs`, già così), quindi le versioni fino alla 1.2.0 non si rompono. Conflitti: il testo di un frammento come le note (copia in conflitto, con lo stesso `nato_il`); gli altri campi, vince l'ultima modifica arrivata al server (DEC-109).
 
-**Spegnere Brainet (RB-111).** Il comando cancella le tabelle di Brainet in una transazione, segna ogni frammento, entità e stato come «eliminato» (DEC-76) e mette `brainet` a 0 nelle impostazioni; tutto parte nella sincronizzazione successiva. Un computer che riceve `brainet` a 0 cancella le sue tabelle di Brainet e manda all'interfaccia l'evento `brainet-spento`: la sezione sparisce, il foglio aperto si chiude senza salvare e compare l'avviso. Le versioni precedenti dei blocchi restano sul server, cifrate, fino a 7 giorni (DEC-77), poi spariscono.
+**Spegnere Brainet (RB-111).** Il comando cancella le tabelle di Brainet in una transazione, segna ogni frammento, entità e stato come «eliminato» (DEC-76) e mette `brainet` a 0 nelle impostazioni; tutto parte nella sincronizzazione successiva. Un computer che riceve `brainet` a 0 cancella le sue tabelle di Brainet e manda all'interfaccia l'evento di sincronizzazione `brainet` con `spento: true`: la sezione sparisce, il foglio aperto si chiude senza salvare e compare l'avviso. Le versioni precedenti dei blocchi restano sul server, cifrate, fino a 7 giorni (DEC-77), poi spariscono.
 
 **Importare (RB-112).** Il nucleo crea il frammento con il testo della nota (il titolo, se c'è, come prima riga), `nato_il` uguale alla data di creazione della nota e `da_nota`; tag e cartella si perdono. Con «Sposta» la nota va nel Cestino di CLOUD (scelta di Manuel Cucca del 15/10/2026), così l'errore si ripara.
 
@@ -147,7 +147,7 @@ L'indice serve a Entità (quante volte, l'ultima volta), alle unioni e ai conteg
 
 **Fuori da Brainet.** La ricerca (RF-08) non guarda Brainet, e le note di Brainet non compaiono in CLOUD.
 
-**Risposta tecnica alle sfighe:** SF-01 «Crea» e «Spegni e cancella tutto» si disattivano dopo il primo clic, «Copia» due volte dà due frammenti (FL-22); SF-22 copia in conflitto per il testo, l'ultima modifica per il resto; SF-24 evento `brainet-spento`; un'entità unita su un altro computer mentre qui la si cita: il collegamento nuovo segue `unita_in` (RB-108).
+**Risposta tecnica alle sfighe:** SF-01 «Crea» e «Spegni e cancella tutto» si disattivano dopo il primo clic, «Copia» due volte dà due frammenti (FL-22); SF-22 copia in conflitto per il testo, l'ultima modifica per il resto; SF-24 evento `brainet` con `spento: true`; un'entità unita su un altro computer mentre qui la si cita: il collegamento nuovo segue `unita_in` (RB-108).
 
 **Ambienti:** gli stessi di oggi; le prove del nucleo usano una copia di lavoro temporanea (`MEMODU_CARTELLA`).
 

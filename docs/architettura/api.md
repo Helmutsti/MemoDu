@@ -619,7 +619,7 @@ Comandi del nucleo (`client/src-tauri/src/brainet.rs`, regole in `archivio_brain
 - **Frammento:** `{ id, testo, natoIl, modificatoIl }`. **Entità:** `{ id, nome, tipo, foto }` (foto JPEG in base64 o null). **Stato:** `{ id, nome, colore, ordine }`.
 - I frammenti nel Cestino passano dai comandi del Cestino che ci sono (`elenca_cestino`, `ripristina`, `elimina_definitivamente`, `svuota_cestino`), con `tipo: "frammento"`; `ripristina` dà il Frammento.
 - `togli_stato` toglie lo stato dai segni `<area>` di tutti i frammenti che lo usano, anche nel Cestino (o lo sostituisce), e le aree rimaste senza legami spariscono (RB-110).
-- Evento verso l'interfaccia: `brainet-spento`, quando Brainet viene spento da un altro computer (RB-111; con la sincronizzazione, attività 2).
+- Evento di sincronizzazione verso l'interfaccia: `{ tipo: "brainet", spento }`, quando arrivano modifiche di Brainet; con `spento: true` Brainet è stato spento da un altro computer e qui si è già cancellato tutto (RB-111).
 
 ## GET /salute
 Controllo di salute, senza gettone né protocollo. **Output:** `200 { "stato": "ok" }` se l'archivio risponde, altrimenti `503` (DEC-105).

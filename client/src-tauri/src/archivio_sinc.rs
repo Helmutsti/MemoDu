@@ -12,6 +12,7 @@ use std::collections::BTreeSet;
 use rusqlite::{params, OptionalExtension};
 use serde_json::{json, Map, Value};
 
+use super::brainet::TIPI_BLOCCHI;
 use super::{chiave, Archivio, ConflittoNato, Esito, SeEsiste};
 
 /// Formato dei blocchi: in chiaro finché la cifratura è spenta (DEC-78).
@@ -40,6 +41,10 @@ pub struct EsitoRicezione {
     /// Note il cui contenuto o posizione è cambiato: l'interfaccia le rilegge.
     pub note: Vec<String>,
     pub altro: bool,
+    /// Note, entità, stati o impostazioni di Brainet cambiati: l'interfaccia li rilegge.
+    pub brainet: bool,
+    /// Brainet spento da un altro computer: qui si è cancellato tutto (RB-111).
+    pub brainet_spento: bool,
 }
 
 struct Voce {
@@ -191,7 +196,9 @@ impl Archivio {
                 Err(_) => continue,
             };
             let tipo = remoto["tipo"].as_str().unwrap_or("").to_string();
-            if !["nota", "cartella", "tag", "impostazioni"].contains(&tipo.as_str()) {
+            if !["nota", "cartella", "tag", "impostazioni"].contains(&tipo.as_str())
+                && !TIPI_BLOCCHI.contains(&tipo.as_str())
+            {
                 continue;
             }
             let voce = self.voce(&r.id)?;
@@ -222,9 +229,28 @@ impl Archivio {
                 if campi(&prima).get("cartella") != campi(&risultato).get("cartella") {
                     spostate.push(r.id.clone());
                 }
+            } else if TIPI_BLOCCHI.contains(&tipo.as_str()) {
+                esito.brainet = true;
             } else {
                 esito.altro = true;
+                if tipo == "impostazioni" {
+                    let (p, d) = (campi(&prima), campi(&risultato));
+                    let vale = |m: &Map<String, Value>, k: &str| m.get(k).and_then(Value::as_bool);
+                    if vale(&p, "brainet") != vale(&d, "brainet")
+                        || vale(&p, "mostra_database") != vale(&d, "mostra_database")
+                    {
+                        esito.brainet = true;
+                    }
+                    if vale(&p, "brainet") == Some(true) && vale(&d, "brainet") == Some(false) {
+                        esito.brainet_spento = true;
+                    }
+                }
             }
+        }
+        // Brainet spento altrove: si cancella tutto anche qui, segnando le eliminazioni, così
+        // anche quello che era nato qui nel frattempo sparisce dappertutto (RB-111).
+        if esito.brainet_spento {
+            self.cancella_tutto_brainet()?;
         }
         self.sistema_riferimenti()?;
         // RB-30: una nota creata o spostata in una cartella che altrove è finita nel cestino va
@@ -288,8 +314,9 @@ impl Archivio {
             // cestino_in_ricerca, DEC-95): valeva null.
             let vb = if base.is_null() { b.get(k) } else { Some(b.get(k).unwrap_or(&Value::Null)) };
             let (mut vl, mut vr) = (l.get(k), r.get(k));
-            // Una vista che manca, da una versione che non la conosce, non è un cambio (RB-92).
-            if k == "vista" {
+            // Una vista che manca, da una versione che non la conosce, non è un cambio (RB-92); lo
+            // stesso per le impostazioni di Brainet, che le versioni fino alla 1.2.0 non hanno.
+            if k == "vista" || k == "brainet" || k == "mostra_database" {
                 vl = vl.or(vb);
                 vr = vr.or(vb);
             }
@@ -297,6 +324,13 @@ impl Archivio {
                 vr
             } else if vr == vb {
                 vl
+            } else if voce.tipo == "frammento" && k == "testo" {
+                // Come per le note: l'originale prende il testo del server, quello di qui va in
+                // una copia (DEC-06, CA-18.17).
+                if let Some(qui) = vl.and_then(Value::as_str) {
+                    self.copia_frammento_in_conflitto(id, qui)?;
+                }
+                vr
             } else if voce.tipo == "nota" && CAMPI_TESTO.contains(&k.as_str()) {
                 // Il testo cambiato da tutte e due le parti: l'originale prende quello del server,
                 // quello di qui va nella copia in conflitto (DEC-06).
@@ -402,17 +436,26 @@ impl Archivio {
             "impostazioni" => self
                 .db
                 .query_row(
-                    "SELECT scorciatoia_windows, scorciatoia_macos, cestino_in_ricerca FROM impostazioni WHERE id = ?",
+                    "SELECT scorciatoia_windows, scorciatoia_macos, cestino_in_ricerca, brainet, mostra_database
+                     FROM impostazioni WHERE id = ?",
                     [id],
                     |r| {
-                        Ok(json!({
+                        let mut c = json!({
                             "scorciatoia_windows": r.get::<_, Option<String>>(0)?,
                             "scorciatoia_macos": r.get::<_, Option<String>>(1)?,
                             "cestino_in_ricerca": r.get::<_, Option<bool>>(2)?,
-                        }))
+                        });
+                        // Solo se scelte: un blocco senza non cambia niente altrove (RB-92).
+                        for (k, i) in [("brainet", 3), ("mostra_database", 4)] {
+                            if let Some(v) = r.get::<_, Option<bool>>(i)? {
+                                c[k] = json!(v);
+                            }
+                        }
+                        Ok(c)
                     },
                 )
                 .optional()?,
+            t if TIPI_BLOCCHI.contains(&t) => self.campi_brainet(id, t)?,
             _ => self
                 .db
                 .query_row("SELECT nome, padre FROM tag WHERE id = ?", [id], |r| {
@@ -445,10 +488,16 @@ impl Archivio {
             "nota" => "note",
             "cartella" => "cartelle",
             "impostazioni" => "impostazioni",
+            "frammento" => "frammenti",
+            "entita" => "entita",
+            "stato" => "stati",
             _ => "tag",
         };
         if blocco["eliminato"] == json!(true) {
             self.db.execute(&format!("DELETE FROM {tabella} WHERE id = ?"), [id])?;
+            if tipo == "frammento" {
+                self.togli_indice(id)?;
+            }
             return Ok(());
         }
         let c = campi(blocco);
@@ -490,18 +539,23 @@ impl Archivio {
             }
             "impostazioni" => {
                 self.db.execute(
-                    "INSERT INTO impostazioni (id, scorciatoia_windows, scorciatoia_macos, cestino_in_ricerca)
-                     VALUES (?1, ?2, ?3, ?4)
+                    "INSERT INTO impostazioni (id, scorciatoia_windows, scorciatoia_macos, cestino_in_ricerca,
+                                               brainet, mostra_database)
+                     VALUES (?1, ?2, ?3, ?4, ?5, ?6)
                      ON CONFLICT(id) DO UPDATE SET scorciatoia_windows = ?2, scorciatoia_macos = ?3,
-                       cestino_in_ricerca = coalesce(?4, cestino_in_ricerca)",
+                       cestino_in_ricerca = coalesce(?4, cestino_in_ricerca),
+                       brainet = coalesce(?5, brainet), mostra_database = coalesce(?6, mostra_database)",
                     params![
                         id,
                         testo("scorciatoia_windows"),
                         testo("scorciatoia_macos"),
                         c.get("cestino_in_ricerca").and_then(Value::as_bool),
+                        c.get("brainet").and_then(Value::as_bool),
+                        c.get("mostra_database").and_then(Value::as_bool),
                     ],
                 )?;
             }
+            t if TIPI_BLOCCHI.contains(&t) => self.applica_brainet(id, t, &c)?,
             "cartella" => {
                 let madre = testo("madre");
                 let mut nome = testo("nome").unwrap_or_default();
