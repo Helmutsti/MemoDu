@@ -628,3 +628,4 @@
 | 15/10/2026 | Agente IA | RF-18, prove a mano: corretti due difetti trovati nell'app (Backspace e frecce spezzavano le pillole con il Markdown; scrivere accanto a una pillola la disinnescava); 2 prove automatiche nuove | DEC-134 |
 | 15/10/2026 | Manuel Cucca | RF-18: gli allegati entrano in questa versione di Brainet; prove a mano in pausa | DEC-134 |
 | 15/10/2026 | Manuel Cucca | RF-18, allegati: si allega trascinando, incollando e da un menu | DEC-134 |
+| 15/10/2026 | Manuel Cucca | RF-18, allegati: dal menu di @ con la voce «Allega un file…» in fondo | DEC-134 |
