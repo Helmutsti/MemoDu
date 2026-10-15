@@ -19,6 +19,7 @@ import { createPortal } from "react-dom";
 import { ErroreApi } from "../api";
 import { Editor } from "../editor/Editor";
 import { IN_TAURI } from "../finestra";
+import { EVENTO_RILASCIO, ZONA_RILASCIO, type FileRilasciati } from "../locale/rilascio";
 import { Icona } from "../componenti/Icona";
 import { Menu, type VoceMenu } from "../componenti/Menu";
 import { Pallino } from "../componenti/Pallino";
@@ -293,8 +294,23 @@ export function EditorBrainet({
         a,
       );
     };
+    // Trascinati da Esplora file o dal Finder (RB-114): nel punto in cui si lasciano.
+    const suTrascinati = (e: Event) => {
+      const { percorsi, x, y } = (e as CustomEvent<FileRilasciati>).detail;
+      const dove = view.posAtCoords({ x, y }) ?? view.state.doc.length;
+      void allega(
+        percorsi.map((p) => () => brainet.allegaFile(p)),
+        dove,
+        dove,
+      );
+    };
+    const zona = view.dom.closest(`[${ZONA_RILASCIO}]`);
     view.dom.addEventListener(EVENTO_FILE, suFile);
-    return () => view.dom.removeEventListener(EVENTO_FILE, suFile);
+    zona?.addEventListener(EVENTO_RILASCIO, suTrascinati);
+    return () => {
+      view.dom.removeEventListener(EVENTO_FILE, suFile);
+      zona?.removeEventListener(EVENTO_RILASCIO, suTrascinati);
+    };
   });
 
   const vociAllegato: VoceMenu[] = [];
@@ -528,7 +544,7 @@ export function EditorBrainet({
   };
 
   return (
-    <div className="editor-brainet" onMouseUp={suRilascio}>
+    <div className="editor-brainet" onMouseUp={suRilascio} {...{ [ZONA_RILASCIO]: "" }}>
       <Editor
         contenuto={testo}
         onModifica={(t) => {

@@ -214,4 +214,18 @@ describe("EditorBrainet (RF-18)", () => {
       expect(ultimo()).toBe(`prima\n${segnoAllegato(FOTO, "grande", "cantiere.jpg")}\n`),
     );
   });
+
+  it("un file trascinato da Esplora file si allega dove si lascia, non va in Locale (CA-18.22)", async () => {
+    const { container, ultimo } = apri("Ho mandato");
+    const zona = container.querySelector("[data-rilascio-proprio]")!;
+    act(() => {
+      zona.dispatchEvent(
+        new CustomEvent("rilascio-file", {
+          detail: { percorsi: ["C:\Documenti\Preventivo.pdf"], x: 0, y: 0 },
+        }),
+      );
+    });
+    await waitFor(() => expect(ultimo()).toContain(segnoAllegato(PDF.id, "documento", PDF.nome)));
+    expect(brainet.allegaFile).toHaveBeenCalledWith("C:\Documenti\Preventivo.pdf");
+  });
 });

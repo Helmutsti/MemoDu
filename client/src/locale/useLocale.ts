@@ -7,6 +7,7 @@ import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { IN_TAURI } from "../finestra";
 import { apiLocale, cartellaDi, type Aggiunti, type CartellaLocale, type VoceLocale } from "./api";
+import { EVENTO_RILASCIO, zonaSotto, type FileRilasciati } from "./rilascio";
 
 /** Memodu ricorda quali cartelle di Locale sono aperte (come la colonna, DEC-55). */
 const CHIAVE_APERTE = "memodu.locale-aperte";
@@ -159,15 +160,22 @@ export function useLocale(alRilascio?: AlRilascio): StatoLocale {
 
   // File e cartelle trascinati dentro la finestra da Esplora file o dal Finder: ovunque si
   // rilascino entrano in Locale (DEC-120), con il velo su tutta la finestra mentre si trascina.
-  // Le cartelle aggiunte si aprono.
+  // Le cartelle aggiunte si aprono. Sopra una zona che prende i file da sola (il testo di una
+  // nota Brainet, RB-114) niente velo: il file va a lei (rilascio.ts).
   useEffect(() => {
     if (!IN_TAURI) return;
     const promessa = getCurrentWebview().onDragDropEvent((evento) => {
       const p = evento.payload;
-      if (p.type === "enter" || p.type === "over") setEsterno(true);
+      if (p.type === "enter" || p.type === "over") setEsterno(!zonaSotto(p.position));
       else if (p.type === "leave") setEsterno(false);
       else if (p.type === "drop") {
         setEsterno(false);
+        const sotto = zonaSotto(p.position);
+        if (sotto) {
+          const detail: FileRilasciati = { percorsi: p.paths, x: sotto.x, y: sotto.y };
+          sotto.zona.dispatchEvent(new CustomEvent(EVENTO_RILASCIO, { detail }));
+          return;
+        }
         void apiLocale
           .aggiungiPercorsi(p.paths)
           .then(async (esito) => {

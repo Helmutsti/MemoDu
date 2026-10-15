@@ -294,7 +294,7 @@ flowchart TD
 | RB-111 | Spegnere Brainet vuol dire cancellarlo: conferma con «Annulla» e «Spegni e cancella tutto»; si cancellano note, entità, aree e stati su tutti i computer; su un computer dove si sta scrivendo la sezione sparisce, il foglio si chiude con l'avviso «Brainet è stato spento da un altro computer» e il testo si perde | FL-20 |
 | RB-112 | Una nota di CLOUD si importa in Brainet dal menu della colonna, «Importa in Brainet» › Copia o Sposta; con Sposta la nota va nel Cestino di CLOUD (scelta di Manuel Cucca del 15/10/2026); prende le date della nota, tag e cartella si perdono | FL-22 |
 | RB-113 | Il Calendario si guarda soltanto: un clic su un giorno non fa niente | — |
-| RB-114 | Si allega trascinando un file nel testo, incollandolo o con @ › «Allega un file…», in fondo al menu dopo «Crea» | FL-23 |
+| RB-114 | Si allega trascinando un file nel testo, incollandolo o con @ › «Allega un file…», in fondo al menu dopo «Crea». Trascinato sopra il testo di una nota Brainet, il file si allega nel punto in cui si lascia e il velo di Locale non compare; altrove va in Locale come prima (DEC-120; scelta di Manuel Cucca del 15/10/2026) | FL-23 |
 | RB-115 | Si allegano solo foto e documenti comuni (JPG, PNG, PDF, Word, Excel, PowerPoint, testo) fino a 25 MB; un file diverso non entra e un avviso dice perché | FL-23 |
 | RB-116 | Un documento è una pillola come quella di una persona, con l'icona del tipo e il nome del file | FL-23 |
 | RB-117 | Una foto dentro un paragrafo scritto è una bolla; fuori, su una riga sua, arriva piccola | FL-23, FL-25 |
