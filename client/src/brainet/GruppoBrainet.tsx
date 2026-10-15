@@ -187,6 +187,7 @@ export function GruppoBrainet({ esegui, onCambiato, versione }: Proprieta): Reac
               <Pulsante
                 key="aggiungi"
                 tipo="tenue"
+                className="aggiungi-stato"
                 icona={<Icona di={Plus} />}
                 onClick={() =>
                   setNuovo({

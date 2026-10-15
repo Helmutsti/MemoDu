@@ -181,3 +181,8 @@
   width: 100%;
   color: var(--testo-errore);
 }
+
+/* «Aggiungi uno stato» (CMP-01 tenue): largo quanto il suo testo, non quanto il riquadro. */
+.aggiungi-stato {
+  align-self: flex-start;
+}
