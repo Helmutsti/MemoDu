@@ -636,3 +636,5 @@
 | 15/10/2026 | Manuel Cucca | RF-18, allegati: per ora il menu ha Apri, Mostra nella cartella e Togli | DEC-134 |
 | 15/10/2026 | Manuel Cucca | RF-18, allegati: dentro un paragrafo la foto è una bolla, fuori è piccola, media o grande | DEC-134 |
 | 15/10/2026 | Manuel Cucca | RF-18, allegati: la foto fuori dal paragrafo arriva piccola e si può ingrandire | DEC-134 |
+| 15/10/2026 | Manuel Cucca | RF-18, allegati: la foto si ingrandisce dal menu con la voce Dimensioni | DEC-134 |
+| 15/10/2026 | Agente IA | RF-18, allegati: proposte da confermare (sottomenu Dimensioni, Togli e file sul server, avviso oltre 25 MB o tipo non ammesso, scaricare quando serve, foto ridotte, niente allegati importando) | DEC-134 |
