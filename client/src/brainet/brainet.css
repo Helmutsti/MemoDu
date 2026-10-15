@@ -1,22 +1,18 @@
 /* Brainet nell'editor (RF-18). CMP-38 Collegamento: la pillola di un'entità, in linea con il
-   testo; con la foto, a sinistra resta solo spazio-2. Si allinea sulla base del testo della
-   riga; foto e icona stanno al centro senza spostarla. */
+   testo; con la foto, a sinistra resta solo spazio-2. Poggia sul fondo del testo della riga, così
+   il suo centro cade su quello delle lettere, con o senza icona e foto. */
 .bn-collegamento {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: var(--spazio-icona-piccola);
   padding: var(--spazio-2) var(--spazio-controllo-piccolo);
   border-radius: var(--raggio-pillola);
   background: var(--sfondo-informazione);
   color: var(--testo-informazione);
-  vertical-align: baseline;
+  vertical-align: text-bottom;
 }
 .bn-collegamento-foto {
   padding-left: var(--spazio-2);
-}
-.bn-collegamento img,
-.bn-collegamento .bn-allegato-icona {
-  align-self: center;
 }
 .bn-collegamento img {
   width: var(--misura-icona);
