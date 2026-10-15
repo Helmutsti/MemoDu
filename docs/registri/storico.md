@@ -631,3 +631,4 @@
 | 15/10/2026 | Manuel Cucca | RF-18, allegati: dal menu di @ con la voce «Allega un file…» in fondo | DEC-134 |
 | 15/10/2026 | Manuel Cucca | RF-18, allegati: fino a 25 MB, i file viaggiano a parte dalle note, cifrati | DEC-134 |
 | 15/10/2026 | Manuel Cucca | RF-18, allegati: solo foto e documenti comuni (JPG, PNG, PDF, Word, Excel, PowerPoint, testo) | DEC-134 |
+| 15/10/2026 | Manuel Cucca | RF-18, allegati: un documento è una pillola come quella di una persona, con l'icona del tipo e il nome del file | DEC-134 |
