@@ -29,7 +29,7 @@ Scritto dall'agente il 15/10/2026, approvato da Manuel Cucca lo stesso giorno, c
 | TC-214 | RF-18 CA-18.20 | Nota di CLOUD «Spesa» con tag e cartella, creata il 01/10: Importa › Copia: in Brainet il 01/10, prima riga «Spesa», senza tag né cartella, e la nota resta in CLOUD; Importa › Sposta su un'altra: la nota va nel Cestino di CLOUD; con Brainet spento la voce non c'è | Locale | Note di CLOUD di prova | |
 | TC-215 | RF-18 CA-18.21 | Cercare una parola che c'è solo in una nota Brainet: nessun risultato | Locale | Una nota Brainet con «zafferano» | |
 
-### Allegati (scritti dall'agente il 15/10/2026, da approvare)
+### Allegati (scritti dall'agente il 15/10/2026, approvati da Manuel Cucca lo stesso giorno)
 Il server in locale fa da deposito al posto di R2 (DEC-135); in produzione si ripetono TC-222 e TC-224 dopo aver creato il bucket.
 
 | Codice | Riferimento | Caso di prova | Ambiente | Set di dati | Esito |

@@ -85,7 +85,7 @@ Scritti dall'agente il 15/10/2026 (Fase 8), approvati da Manuel Cucca lo stesso 
 - **CA-18.20** *Dato* una nota di CLOUD con titolo, tag e cartella, *quando* faccio tasto destro › Importa in Brainet › Copia, *allora* in Brainet c'è una nota con il titolo come prima riga e il testo, nel giorno in cui la nota era stata creata, senza tag né cartella, e la nota resta in CLOUD; con «Sposta» la nota di CLOUD va nel Cestino (RB-112). La voce c'è solo con Brainet acceso.
 - **CA-18.21** *Dato* Brainet, *quando* cerco una parola che c'è solo in una nota Brainet, *allora* la ricerca non la trova: Brainet resta fuori dalla ricerca.
 
-Allegati, scritti dall'agente il 15/10/2026 (Fase 8), da approvare da Manuel Cucca.
+Allegati, scritti dall'agente il 15/10/2026 (Fase 8), approvati da Manuel Cucca lo stesso giorno.
 
 - **CA-18.22** *Dato* un foglio Brainet, *quando* trascino un PDF nel testo, lo incollo con Ctrl + V o lo scelgo con @ › «Allega un file…», *allora* nel punto giusto compare la pillola con l'icona del tipo e il nome del file (RB-114, RB-116).
 - **CA-18.23** *Dato* un file di 26 MB, o un file .zip, *quando* lo allego, *allora* non entra e un avviso dice perché; il testo non cambia (RB-115).
