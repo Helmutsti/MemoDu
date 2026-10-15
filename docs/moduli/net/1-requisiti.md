@@ -40,7 +40,7 @@ Per Brainet si salta la Fase 4 in bianco e nero: si va direttamente ai mockup, p
 
 **Collegamenti:** FL-00 · EN-00 · SC-00 · ID-04
 
-- **Allegati** (richiesta di Manuel Cucca del 15/10/2026, durante lo sviluppo; da progettare): «devo poter allegare anche documenti e foto». Le foto in mezzo al testo sono bolle; le foto a fine paragrafo possono essere piccole, medie o grandi, ma non bolle. Entrano in questa versione di Brainet, prima delle prove a mano (scelta di Manuel Cucca del 15/10/2026): si progettano dalla Fase 1. Da decidere: come si allega un documento, come si mostra, dove viaggia (il limite di un blocco è 4 MB).
+- **Allegati** (richiesta di Manuel Cucca del 15/10/2026, durante lo sviluppo; da progettare): «devo poter allegare anche documenti e foto». Le foto in mezzo al testo sono bolle; le foto a fine paragrafo possono essere piccole, medie o grandi, ma non bolle. Entrano in questa versione di Brainet, prima delle prove a mano (scelta di Manuel Cucca del 15/10/2026): si progettano dalla Fase 1. Si allega in tre modi: trascinando il file nel testo, incollandolo (Ctrl + V) e da un menu (scelta di Manuel Cucca del 15/10/2026). Da decidere: quale menu, come si allega un documento, come si mostra, dove viaggia (il limite di un blocco è 4 MB).
 
 ### Scenario d'uso
 Approvato da Manuel Cucca il 14/10/2026.

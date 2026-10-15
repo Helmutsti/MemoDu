@@ -627,3 +627,4 @@
 | 15/10/2026 | Manuel Cucca | RF-18: richiesta di allegare documenti e foto alle note Brainet; foto in mezzo al testo come bolle, foto a fine paragrafo piccole, medie o grandi, non bolle; da progettare | DEC-134 |
 | 15/10/2026 | Agente IA | RF-18, prove a mano: corretti due difetti trovati nell'app (Backspace e frecce spezzavano le pillole con il Markdown; scrivere accanto a una pillola la disinnescava); 2 prove automatiche nuove | DEC-134 |
 | 15/10/2026 | Manuel Cucca | RF-18: gli allegati entrano in questa versione di Brainet; prove a mano in pausa | DEC-134 |
+| 15/10/2026 | Manuel Cucca | RF-18, allegati: si allega trascinando, incollando e da un menu | DEC-134 |
