@@ -3,7 +3,7 @@
 <!-- Fase 1 della guida, con i criteri di accettazione della Fase 8. Copia il blocco per ogni requisito. -->
 
 ## RF-18 – Brainet, il diario a rete
-**Priorità:** Must (scelta di Manuel Cucca del 14/10/2026: nella versione dopo la 1.2.0) · **Origine:** ID-39, DEC-134 · **Fase:** Sviluppo · **Stato:** In sviluppo
+**Priorità:** Must (nella 1.0.0, spento all'inizio e da accendere nelle Impostazioni: scelta di Manuel Cucca del 15/10/2026, DEC-142; prima, il 14/10/2026: nella versione dopo la 1.2.0) · **Origine:** ID-39, DEC-134 · **Fase:** Sviluppo · **Stato:** In sviluppo
 
 Come *utente* voglio scrivere un flusso di pensiero nel tempo, collegato a persone, oggetti, eventi e argomenti, per ritrovare tutto quello che ho pensato su ognuno di loro senza dover creare e ordinare file.
 

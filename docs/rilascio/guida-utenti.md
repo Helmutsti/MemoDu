@@ -246,6 +246,25 @@ Un **file nuovo** si chiama «Senza titolo» e nasce sul disco al primo Ctrl + S
 
 **Se il file cambia fuori da Memodu.** Se un altro programma cambia il file aperto, Memodu te lo dice: «Ricarica» mostra la versione del disco, «Tieni la mia versione» la sovrascrive al prossimo Ctrl + S. Se il file è sparito, «Ricrealo» lo fa rinascere al prossimo Ctrl + S.
 
+## Brainet, il diario a rete
+Brainet è un diario: scrivi pensieri brevi nel tempo e li colleghi a persone, oggetti, eventi e argomenti, per ritrovare poi tutto quello che hai scritto su ognuno. Come le note di CLOUD, va sugli altri tuoi computer ed è cifrato; la ricerca della colonna non lo legge.
+
+**Accenderlo.** Nelle Impostazioni, gruppo Brainet, accendi «Usa Brainet»: nella colonna compare la sezione BRAINET tra CLOUD e LOCALE, con Database, Entità e Calendario. Finché è spento non si vede niente.
+
+**Scrivere.** Premi il + accanto a BRAINET: si apre un foglio nuovo. Scrivendo `@` si apre un menu: scegli una persona, un oggetto o un argomento che c'è già, oppure «Crea «…»» per farne uno nuovo, e il nome diventa una pillola. Backspace subito dopo una pillola la toglie tutta. Selezionando una frase, dallo stesso menu la colleghi a uno stato (per esempio «Importante») o a un'entità: la frase resta evidenziata.
+
+**Allegare.** Trascina un file nel testo, incollalo, oppure `@` › «Allega un file…». Entrano foto e documenti (JPG, PNG, PDF, Word, Excel, PowerPoint, testo) fino a 25 MB. Con un clic sull'allegato: «Apri», «Mostra nella cartella», «Dimensioni» per le foto e «Togli». Un allegato si scarica su un computer la prima volta che serve; senza rete, al posto di una foto non ancora scaricata vedi un riquadro con il nome.
+
+**Ritrovare.**
+
+- **Database:** le note dalla più recente; puoi modificarle, e con il tasto destro › «Elimina» vanno nel Cestino. Si può nascondere dalle Impostazioni con «Mostra il Database».
+- **Entità:** ogni persona, oggetto o argomento, con quante volte e quando l'hai nominato. Con il tasto destro: «Unisci a…», per due nomi della stessa cosa, e «Scegli una foto…».
+- **Calendario:** i giorni del mese, con un pallino per ogni nota scritta.
+
+**Portare una nota di CLOUD in Brainet.** Tasto destro sulla nota › «Importa in Brainet»: «Copia» la lascia anche in CLOUD, «Sposta» la toglie. Nel Calendario compare nel giorno in cui era stata creata.
+
+**Spegnerlo cancella tutto.** Spegnendo «Usa Brainet» Memodu chiede conferma: «Spegni e cancella tutto» cancella note, entità e stati di Brainet su tutti i tuoi computer.
+
 ## Impostazioni
 Si aprono dalla riga «Impostazioni» in fondo alla colonna e si chiudono con «Chiudi impostazioni» o Ctrl + W. Ogni modifica vale subito.
 
@@ -256,6 +275,7 @@ Si aprono dalla riga «Impostazioni» in fondo alla colonna e si chiudono con «
   - **Tieni Memodu in primo piano:** la finestra resta sopra gli altri programmi.
   - **Tema:** «Sistema», «Chiaro» o «Scuro».
 - **Ricerca:** «Mostra le note del cestino nei risultati».
+- **Brainet:** «Usa Brainet», «Mostra il Database» e gli stati delle evidenziature (vedi «Brainet, il diario a rete»).
 
 ## Scorciatoie da tastiera
 | Tasti | Dove | Cosa fa |

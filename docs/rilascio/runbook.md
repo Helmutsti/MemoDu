@@ -7,7 +7,7 @@ Memodu ha tre pezzi: l'app sui computer (Windows e macOS, Tauri), il server dell
 ## Installazione e aggiornamento
 
 ### Pubblicare una versione
-Se esiste il ramo `rilascio/X.Y` della versione, tutti i passi si fanno lì e ogni correzione si riporta su `main` (DEC-129); altrimenti su `main`.
+Si pubblica sempre dalla testa di `main`, con il tag: niente rami di rilascio (DEC-136). Prima del tag si rifanno sul Mac i casi principali.
 
 1. Nella cartella del progetto porta la versione al numero nuovo in `client/package.json`, `client/src-tauri/tauri.conf.json`, `client/src-tauri/Cargo.toml` (e quindi `Cargo.lock`) e `package-lock.json`; scrivi la voce nuova in `CHANGELOG.md`.
 2. Commit «Versione X.Y.Z», tag `vX.Y.Z` (uguale alla versione di `tauri.conf.json`), invia il commit e poi il tag.

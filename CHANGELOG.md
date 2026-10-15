@@ -7,28 +7,15 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
-In coda dopo la 1.1.0 e la 1.0.0: diventerà la 1.2.0, con gli account per più persone.
+Diventerà la 1.0.0, la prima versione completa: nota rapida da qualsiasi programma, note in Markdown con cartelle e tag, ricerca, cestino, sincronizzazione cifrata tra i tuoi computer con il tuo account, i file del disco in Locale e Brainet, il diario a rete; su Windows e sui Mac con processore Apple. Come si usa Memodu è spiegato nella guida per gli utenti (`docs/rilascio/guida-utenti.md`).
 
 ### Aggiunto
+- La guida per gli utenti: primi passi, nota rapida, scrivere, Markdown, organizzare, cercare, cestino, più computer, Locale, Brainet, impostazioni, scorciatoie e domande frequenti
 - Ognuno accede con il suo account: le note di un account non si vedono dagli altri
 - «Password dimenticata?» nella finestra di accesso: con la chiave di recupero scegli una password nuova senza perdere le note; alla fine Memodu mostra una chiave di recupero nuova, una volta sola, con «Copia»
 - «Cambia password» nelle Impostazioni, con la password attuale o con la chiave di recupero
 - Nel recupero e nel cambio della password puoi scollegare gli altri tuoi computer
 - «Dispositivi collegati» nelle Impostazioni: vedi i computer collegati al tuo account e ne scolleghi uno a distanza, per esempio se lo perdi
-
-### Cambiato
-- L'accesso non scade più: dura finché esci o finché scolleghi il computer da un altro
-- Dopo l'aggiornamento ogni computer chiede una volta di accedere di nuovo, con la stessa email e la stessa password
-- «Esci» toglie il computer anche dall'elenco dei dispositivi collegati
-
-### Corretto
-- Una nota scritta su un computer arriva sempre sugli altri entro 30 secondi: prima a volte ci metteva qualche secondo in più
-- Quando torna la rete, le modifiche fatte senza rete partono entro mezzo minuto: prima potevano aspettare fino a 5 minuti
-- Se una nota è stata modificata su due computer e la copia nasce appena apri Memodu, compare comunque l'avviso con «Apri l'altra»
-
-Prima, e già pronta: la 1.1.0, con la formattazione Markdown nelle note.
-
-### Aggiunto
 - Ogni nota si può vedere come Testo o come Markdown: si sceglie nella nuova riga Vista di Info e la scelta resta alla nota, anche sugli altri computer
 - In vista Markdown titoli, sottotitoli, grassetto, corsivo, barrato, elenchi puntati e numerati e caselle si vedono già formattati, senza i simboli; il testo salvato resta Markdown, con i simboli
 - Le caselle delle checklist si spuntano e si tolgono con un clic
@@ -36,23 +23,21 @@ Prima, e già pronta: la 1.1.0, con la formattazione Markdown nelle note.
 - La bollicina del formato, in vista Markdown: in basso a destra del foglio (nella nota rapida accanto a «Chiudi») mostra il formato dove sta il cursore; con un clic si apre il cassetto per scegliere testo normale, titolo, sottotitolo, elenchi, casella, grassetto, corsivo, barrato, sottolineato o «Rimuovi formattazione»
 - Senza selezione un formato vale per la parola sotto il cursore, oppure si accende per il testo che scrivi dopo
 - Scrivendo `-[]` all'inizio di una riga nasce una casella da spuntare
+- Brainet, il diario a rete, da accendere nelle Impostazioni: note brevi nel tempo collegate con `@` a persone, oggetti e argomenti, frasi evidenziate con gli stati, foto e documenti allegati, e le viste Database, Entità e Calendario
+- «Importa in Brainet» nel menu di una nota di CLOUD, per copiarla o spostarla nel diario
 
 ### Cambiato
+- L'accesso non scade più: dura finché esci o finché scolleghi il computer da un altro
+- Dopo l'aggiornamento ogni computer chiede una volta di accedere di nuovo, con la stessa email e la stessa password
+- «Esci» toglie il computer anche dall'elenco dei dispositivi collegati
 - Le note nuove e le note rapide nascono in vista Markdown; quelle scritte prima restano in Testo finché non cambi la vista
 - In vista Markdown si scrive come in un programma di scrittura: il cursore salta i simboli nascosti, Invio negli elenchi crea la voce dopo e su una voce vuota chiude l'elenco, Backspace all'inizio di una voce toglie il segno, e copiando si copia il Markdown con i simboli
-- Sui computer con una versione precedente le note si vedono come testo, e la vista scelta non si perde
-
-## [1.0.0] – in preparazione sul ramo rilascio/1.0
-
-Diventerà la 1.0.0, la prima versione completa per l'uso personale: nota rapida da qualsiasi programma, note con cartelle e tag, ricerca, cestino, sincronizzazione cifrata tra i tuoi computer e i file del disco in Locale, su Windows e sui Mac con processore Apple. Il testo delle note è semplice, senza formattazione, e nelle note non si possono ancora mettere immagini: arriveranno nelle prossime versioni. Come si usa Memodu è spiegato nella guida per gli utenti (`docs/rilascio/guida-utenti.md`).
-
-### Aggiunto
-- La guida per gli utenti: primi passi, nota rapida, scrivere, organizzare, cercare, cestino, più computer, Locale, impostazioni, scorciatoie e domande frequenti
-
-### Cambiato
 - Nel cestino, per le note e le cartelle che stavano fuori dalle cartelle, si legge «da CLOUD», come nella colonna e nella ricerca
 
 ### Corretto
+- Una nota scritta su un computer arriva sempre sugli altri entro 30 secondi: prima a volte ci metteva qualche secondo in più
+- Quando torna la rete, le modifiche fatte senza rete partono entro mezzo minuto: prima potevano aspettare fino a 5 minuti
+- Se una nota è stata modificata su due computer e la copia nasce appena apri Memodu, compare comunque l'avviso con «Apri l'altra»
 - La schermata «Memodu non riesce a collegarsi» non parla più del server delle note, che non esiste più: dice di premere Riprova e, se non basta, di controllare lo spazio sul disco
 - Il messaggio della scorciatoia della nota rapida che non va bene nomina i tasti del tuo sistema (sul Mac Control, Option, Maiusc e Command) e dice che come ultimo tasto vanno bene anche i tasti F e Spazio
 
