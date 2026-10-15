@@ -324,8 +324,11 @@ function EntitaBrainet({ versione, esegui }: { versione: number; esegui: Esegui 
   const testoConferma = (c: NonNullable<typeof conferma>) => {
     const cit = c.citazioni === 1 ? "1 citazione" : `${c.citazioni} citazioni`;
     const aree = c.aree === 1 ? "1 area" : `${c.aree} aree`;
-    const verbo = c.citazioni + c.aree === 1 ? "passa" : "passano";
-    return `${cit} e ${aree} ${verbo} a «${c.verso.nome}», che tiene il suo nome. L'unione non si annulla.`;
+    // Una parte a zero non si scrive: «1 citazione passa…», non «1 citazione e 0 aree passa…».
+    const parti = [c.citazioni && cit, c.aree && aree].filter(Boolean);
+    const soggetto = parti.length ? parti.join(" e ") : `${cit} e ${aree}`;
+    const verbo = parti.length === 1 && c.citazioni + c.aree === 1 ? "passa" : "passano";
+    return `${soggetto} ${verbo} a «${c.verso.nome}», che tiene il suo nome. L'unione non si annulla.`;
   };
 
   return (
