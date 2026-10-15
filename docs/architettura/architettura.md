@@ -108,7 +108,7 @@ Approvata da Manuel Cucca il 09/10/2026. L'editor resta CodeMirror (DEC-131, agg
 
 **Ambienti:** gli stessi di oggi (`architettura/ambienti.md`): locale con un database Postgres di prova e `api/.env`; prova e produzione sono il database Neon e il server su Vercel di oggi (DEC-132). Le prove del server girano su un database effimero.
 
-## Brainet (RF-18, DEC-134; Fase 7 proposta dall'agente il 15/10/2026, da approvare)
+## Brainet (RF-18, DEC-134; Fase 7 approvata da Manuel Cucca il 15/10/2026)
 Brainet vive tutto nel client, come le note: copia di lavoro, comandi del nucleo, sincronizzazione a blocchi cifrati. Il server non cambia.
 
 **Pillole e aree dentro il testo (scelta di Manuel Cucca del 15/10/2026).** Il testo di una nota Brainet è Markdown con due segni in forma di tag, come `<u>` per il sottolineato (DEC-28):

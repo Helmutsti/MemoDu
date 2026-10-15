@@ -588,7 +588,7 @@ Nell'architettura finale si aggiungono il gettone di rinnovo (`POST /accesso/rin
 
 **Sessione:** email, gettone, scadenza e chiave dati in una voce del portachiavi del sistema (servizio «Memodu», voce «sessione»; con `MEMODU_CARTELLA` un servizio per cartella, così le prove non toccano la sessione vera). L'indirizzo del server è `https://memodu-api.vercel.app`, sostituito da `MEMODU_SERVER`. Il gettone si rinnova da solo prima di sincronizzare quando mancano meno di 7 giorni (RB-86). L'evento `sincronizzazione` con `{ "tipo": "accesso-scaduto" }` sostituisce `credenziali-rifiutate`: la sincronizzazione si ferma fino a un nuovo accesso (RB-87). `stato_sincronizzazione.collegata` vale se c'è la sessione. Il file `credenziali` non si legge più.
 
-## Brainet (RF-18, DEC-134; Fase 7 proposta dall'agente il 15/10/2026, da approvare)
+## Brainet (RF-18, DEC-134; Fase 7 approvata da Manuel Cucca il 15/10/2026)
 Comandi del nucleo (`client/src-tauri/src/archivio_brainet.rs`), chiamati dall'interfaccia come gli altri; nessuna richiesta nuova al server. Con Brainet spento tutti, tranne `brainet_stato` e `accendi_brainet`, rispondono `BRAINET_SPENTO`.
 
 | Comando | Ingresso | Uscita | Errori | Flusso |
