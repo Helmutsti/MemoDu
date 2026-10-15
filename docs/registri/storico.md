@@ -648,3 +648,5 @@
 | 15/10/2026 | Agente IA | RF-18, allegati: nella libreria Icona/Graffetta, Collegamento Foto=Documento, CMP-44 Foto allegata, Menu Allegato, Foto allegata e Dimensioni, «Allega un file…» nei Suggerimenti; da pubblicare | DEC-134 |
 | 15/10/2026 | Manuel Cucca | Libreria pubblicata con i componenti degli allegati | DEC-134 |
 | 15/10/2026 | Agente IA | RF-18, allegati: mockup con i componenti della libreria, 7 esportazioni; trovato e corretto nella libreria il nome del file che non arrivava nella pillola Documento (da pubblicare di nuovo) | DEC-134 |
+| 15/10/2026 | Manuel Cucca | Libreria pubblicata con la correzione della pillola Documento; Fase 5 degli allegati chiusa | DEC-134 |
+| 15/10/2026 | Agente IA | RF-18, allegati: pillole Documento aggiornate nei mockup, 7 esportazioni rifatte | DEC-134 |
