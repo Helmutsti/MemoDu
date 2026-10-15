@@ -7,6 +7,9 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+### Aggiunto
+- Brainet: in Entità un clic sul tipo accanto al nome lo cambia in persona, argomento, evento o oggetto, o lo riporta a «Senza tipo»
+
 ## [1.0.0] – 2026-10-15
 
 La prima versione completa: nota rapida da qualsiasi programma, note in Markdown con cartelle e tag, ricerca, cestino, sincronizzazione cifrata tra i tuoi computer con il tuo account, i file del disco in Locale e Brainet, il diario a rete; su Windows e sui Mac con processore Apple. Come si usa Memodu è spiegato nella guida per gli utenti (`docs/rilascio/guida-utenti.md`).

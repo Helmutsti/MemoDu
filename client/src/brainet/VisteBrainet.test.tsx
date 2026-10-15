@@ -138,6 +138,40 @@ describe("Entità (CA-18.11, CA-18.12)", () => {
   });
 });
 
+describe("Entità, il tipo (CA-18.31)", () => {
+  it("clic sul tipo: i tipi con la spunta su quello attuale e «Senza tipo» in fondo", async () => {
+    vi.mocked(brainet.elencaEntita).mockResolvedValue([
+      { entita: LUCA, nominata: 1, ultimaVolta: new Date().toISOString() },
+    ]);
+    vi.mocked(brainet.impostaTipo).mockResolvedValue({ ...LUCA, tipo: "persona" });
+    render(
+      <VisteBrainet
+        vista="entita"
+        versione={0}
+        esegui={esegui}
+        onCestino={() => {}}
+        onAvviso={() => {}}
+      />,
+    );
+    fireEvent.click(await screen.findByRole("button", { name: "Tipo di Luca: Senza tipo" }));
+    const voci = await screen.findAllByRole("menuitemcheckbox");
+    expect(voci.map((v) => v.textContent)).toEqual([
+      "Persona",
+      "Argomento",
+      "Evento",
+      "Oggetto",
+      "Senza tipo",
+    ]);
+    expect(screen.getByRole("menuitemcheckbox", { name: "Senza tipo" })).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+    fireEvent.click(screen.getByRole("menuitemcheckbox", { name: "Persona" }));
+    await waitFor(() => expect(brainet.impostaTipo).toHaveBeenCalledWith(LUCA.id, "persona"));
+    await waitFor(() => expect(brainet.elencaEntita).toHaveBeenCalledTimes(2));
+  });
+});
+
 describe("Entità, Scegli una foto… (CA-18.13)", () => {
   it("un file che non è un'immagine: il suo messaggio, la foto non cambia (DEC-141)", async () => {
     vi.mocked(brainet.elencaEntita).mockResolvedValue([

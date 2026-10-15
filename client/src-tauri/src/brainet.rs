@@ -104,6 +104,12 @@ pub async fn unisci_entita(app: AppHandle, dati: Stato<'_>, da: String, verso: S
     dati.modifica(&app, |a| a.unisci_entita(&da, &verso))
 }
 
+#[tauri::command]
+pub async fn imposta_tipo(app: AppHandle, dati: Stato<'_>, id: String, tipo: Option<String>) -> Esito<Entita> {
+    id_valido(&id)?;
+    dati.modifica(&app, |a| a.imposta_tipo(&id, tipo.as_deref()))
+}
+
 /// Apre la finestra del sistema per scegliere un'immagine; None se si annulla (CA-18.13).
 #[tauri::command]
 pub async fn scegli_foto(app: AppHandle, dati: Stato<'_>, id: String) -> Esito<Option<Entita>> {

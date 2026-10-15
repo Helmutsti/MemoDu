@@ -79,7 +79,7 @@ erDiagram
 |---|---|---|---|---|
 | Identificativo | Codice | Sì | Unico e stabile | Tecnico |
 | Nome | Testo | Sì | Fino a 200 caratteri (proposta dell'agente) | Il nome della pillola |
-| Tipo | Persona \| Oggetto \| Evento \| Argomento \| nessuno | No | | Nasce senza tipo con «Crea» (RB-105); dove si assegna è da decidere |
+| Tipo | Persona \| Oggetto \| Evento \| Argomento \| nessuno | No | | Nasce senza tipo con «Crea» (RB-105); si cambia in Entità (RB-122) |
 | Foto | Immagine | No | | La sceglie l'utente dal disco, in Entità, con il tasto destro sulla riga, «Scegli una foto…», per qualsiasi entità; se c'è, la pillola la mostra, altrimenti solo il nome (scelta di Manuel Cucca del 14/10/2026) |
 | Unita in | EN-13 | No | | Dopo «Unisci a…» punta all'entità che resta, per le citazioni che arrivano dopo da un altro computer (RB-108) |
 

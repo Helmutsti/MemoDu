@@ -589,6 +589,11 @@ fn brainet_arriva_sull_altro_computer() {
     b.sincronizza(&mut s);
     a.sincronizza(&mut s);
     assert_eq!(a.a.leggi_entita(&luca.id).unwrap().nome, "Luca Bianchi");
+    // Il tipo cambiato su A arriva su B (CA-18.31).
+    a.a.imposta_tipo(&lb.id, Some("persona")).unwrap();
+    a.sincronizza(&mut s);
+    b.sincronizza(&mut s);
+    assert_eq!(b.a.leggi_entita(&lb.id).unwrap().tipo.as_deref(), Some("persona"));
 }
 
 #[test]

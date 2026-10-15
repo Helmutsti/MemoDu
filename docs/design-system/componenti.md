@@ -447,6 +447,7 @@ Compare e sparisce con `movimento-durata-breve` (120 ms). Compare dopo 500 ms di
 - **Allegato** (clic su un documento allegato, RB-119): Apri (mostra), Mostra nella cartella (cartella aperta) · Togli (elimina).
 - **Foto allegata** (clic su una foto fuori dal paragrafo, RB-119, RB-120): come Allegato, con Dimensioni › (immagine) prima del divisore.
 - **Dimensioni** (sottomenu): Piccola, Media, Grande, con la spunta su quella attuale.
+- **Tipo dell'entità** (clic sulla pillola del tipo in SC-11, RB-122): Persona, Argomento, Evento, Oggetto, divisore, Senza tipo, con la spunta su quello attuale; si apre 8 px sotto la pillola.
 - **Suggerimenti** ha in fondo «Allega un file…» con la graffetta, che apre la finestra del sistema (RB-114).
 - **Importa in Brainet** (sottomenu, RB-112): Copia (copia), Sposta (sposta). Si apre dalla voce «Importa in Brainet» del tipo Nota, che si vede con la proprietà **Importa in Brainet** accesa, cioè quando Brainet è acceso; sta dopo Sposta in…, con l'icona del cervello e la freccia del sottomenu.
 - Contenitore `sfondo-flottante`, `raggio-contenitore` (20), margine `spazio-elenco` (8) su tutti i lati (ruolo elenco, DEC-100), `ombra`, livello 20 (`z-comparsa`). Largo 236 negli esempi; si allarga fino alla voce più lunga.
@@ -1484,14 +1485,14 @@ Non si clicca: hover e focus non previsti.
 - **Contrasti:** testo su `sfondo-informazione` 15,00:1 in chiaro, 12,95:1 in scuro; su `evidenziazione-selezione` 12,46:1 e 9,89:1; testo e freccia della linguetta 5,05:1 e 5,63:1.
 
 ## CMP-41 – Riga dell'entità
-**Tipo:** composto (usa CMP-05) · **Usato in:** SC-11 · **Figma:** pagina Componenti composti, [Riga dell'entità](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=373-5031)
+**Tipo:** composto (usa il filtro della ricerca di CMP-13) · **Usato in:** SC-11 · **Figma:** pagina Componenti composti, [Riga dell'entità](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=373-5031)
 
 **Scopo:** una persona, un oggetto, un evento o un argomento nella vista Entità (EN-13).
 **Quando usarlo:** una riga per entità, in un elenco con il divisore `bordo-divisore` tra l'una e l'altra.
 **Quando non usarlo:** per le note (Database, SC-10).
 
 ### Varianti e dimensioni
-- La foto (cerchio `misura-controllo-piccolo`) se c'è, nome in Interfaccia/Controllo, sotto quante volte è nominata e quando in Interfaccia/Dettaglio `testo-tenue` a `spazio-elemento`; a destra il tipo con un Tag (CMP-05) senza la x. Margini come CMP-18: `spazio-controllo` ai lati, `spazio-controllo-piccolo` sopra e sotto, `spazio-blocco` tra i pezzi, `raggio-interno`. Proprietà **Nome**, **Dettagli**, **Mostra foto**; il tag si cambia dall'istanza esposta.
+- La foto (cerchio `misura-controllo-piccolo`) se c'è, nome in Interfaccia/Controllo, sotto quante volte è nominata e quando in Interfaccia/Dettaglio `testo-tenue` a `spazio-elemento`; a destra il tipo come pillola del filtro della ricerca (parte di CMP-13), con la freccia giù: un clic apre il menu Tipo dell'entità (CMP-09, RB-122). Margini come CMP-18: `spazio-controllo` ai lati, `spazio-controllo-piccolo` sopra e sotto, `spazio-blocco` tra i pezzi, `raggio-interno`. Proprietà **Nome**, **Dettagli**, **Mostra foto**; la pillola del tipo si cambia dall'istanza esposta.
 - Tasto destro: menu con «Unisci a…» e «Scegli una foto…».
 
 ### Stati
@@ -1499,11 +1500,11 @@ Non si clicca: hover e focus non previsti.
 |---|---|
 | Default | Come sopra |
 | Focus | Anello `focus-anello` |
-| Hover | Non previsto: il fondo `sfondo-hover` nasconderebbe il tag (`sfondo-campo`); la riga si usa solo con il tasto destro |
+| Hover | Non previsto per la riga: il fondo `sfondo-hover` nasconderebbe la pillola (`sfondo-campo`); la pillola del tipo ha i suoi stati (Hover, Focus) |
 | Attivo · Disabilitato · Caricamento · Errore | Non previsti |
 
 ### Accessibilità
-- **Lettori di schermo:** elemento di elenco letto come nome, tipo e dettagli; il menu del tasto destro si apre anche con Maiusc+F10.
+- **Lettori di schermo:** elemento di elenco letto come nome, tipo e dettagli; il menu del tasto destro si apre anche con Maiusc+F10. La pillola del tipo è un pulsante «Tipo di Luca: Persona» che apre un menu; le voci sono a spunta.
 - **Contrasti:** nome e dettagli come le righe di CMP-18.
 
 ## CMP-42 – Stati delle evidenziature

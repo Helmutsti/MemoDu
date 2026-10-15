@@ -88,6 +88,8 @@ export const brainet = {
   anteprimaUnione: (da: string, verso: string) =>
     comando<Unione>("anteprima_unione", { da, verso }),
   unisciEntita: (da: string, verso: string) => comando<Unione>("unisci_entita", { da, verso }),
+  impostaTipo: (id: string, tipo: TipoEntita | null) =>
+    comando<Entita>("imposta_tipo", { id, tipo }),
   scegliFoto: (id: string) => comando<Entita | null>("scegli_foto", { id }),
   elencaStati: () => comando<StatoArea[]>("elenca_stati"),
   creaStato: (nome: string, colore: ColoreStato) =>

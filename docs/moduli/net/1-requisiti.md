@@ -33,6 +33,7 @@ Come *utente* voglio scrivere un flusso di pensiero nel tempo, collegato a perso
 - **Togliere uno stato:** togliendo uno stato dall'elenco nelle Impostazioni, Memodu propone di cambiarlo con un altro stato. Se lo togli, sparisce da tutte le aree; un'area sparisce solo se quello era il suo ultimo legame, altrimenti resta con gli altri (scelte di Manuel Cucca del 14/10/2026, Fase 2).
 - **Dati (proposta dell'agente):** tutto si interroga sul computer, nella copia di lavoro relazionale, perché sul server le note sono cifrate: frammenti, nodi con il tipo, e legami frammento–nodo con l'inizio e la fine del testo (la pillola copre il nome, l'area una frase); un database a grafo non serve.
 - **Come nasce un collegamento:** scrivendo `@` si apre il menu dei suggerimenti e funziona come i destinatari di Gmail: si filtra scrivendo, si sceglie un nodo che esiste o se ne crea uno nuovo, e diventa una pillola (scelta di Manuel Cucca del 14/10/2026). Il menu ha un titolo sopra ogni sezione (scelta di Manuel Cucca). Proposte dell'agente, da confermare: sezioni Persone, Argomenti, Eventi, Oggetti in quest'ordine, «Crea «…»» in fondo, frecce e Invio per scegliere, Esc per chiudere, Backspace subito dopo una pillola la toglie tutta.
+- **Il tipo di un'entità:** in Entità l'etichetta del tipo di ogni riga è una pillola con la freccia giù, come i filtri della ricerca; un clic apre l'elenco Persona, Argomento, Evento, Oggetto (l'ordine del menu di @) e, dopo una linea, «Senza tipo», con la spunta sul tipo attuale (scelte di Manuel Cucca del 15/10/2026, durante lo sviluppo: «manca il menu per cambiare natura a un'entità»). Il tipo cambiato arriva anche sull'altro computer.
 - **Un nodo nuovo:** «Crea «…»» fa nascere subito la pillola, senza tipo; il tipo si assegna dopo dal Database (scelta di Manuel Cucca del 14/10/2026). Proposta dell'agente, da confermare: «Senza tipo» come sezione del menu e come etichetta nel Database.
 - **I collegamenti** sono pillole con i colori di informazione del design system (`sfondo-informazione`, `testo-informazione`, scelta di Manuel Cucca del 14/10/2026) e il nome; con la foto del «documento», se c'è, tonda a sinistra (componente «MiaPropostaLink» disegnato da Manuel Cucca nel file Mockup, 14/10/2026).
 
@@ -55,7 +56,7 @@ Nelle Impostazioni accendo «Usa Brainet», e nella colonna compare la sezione B
 
 ### Punti aperti
 - I modi di «leggere» la knowledge base: da studiare (Manuel Cucca).
-- Dove si assegna il tipo a un'entità nata senza tipo (prima il Database, ora Entità). Fermo: l'entità nasce subito senza interrompere la scrittura; il resto si definisce più avanti, non è urgente (Manuel Cucca, 14/10/2026).
+- ~~Dove si assegna il tipo a un'entità nata senza tipo (prima il Database, ora Entità).~~ Deciso il 15/10/2026: vedi «Il tipo di un'entità».
 - ~~La stessa persona scritta con nomi diversi: unire due entità.~~ Deciso il 14/10/2026: vedi «Unire due entità».
 - ~~Sincronizzazione e cifratura di frammenti, entità, aree e stati: come le note?~~ Deciso il 14/10/2026: vedi «Sincronizzazione».
 - ~~Priorità di RF-18.~~ Must, nella versione dopo la 1.2.0 (14/10/2026).
@@ -96,6 +97,7 @@ Allegati, scritti dall'agente il 15/10/2026 (Fase 8), approvati da Manuel Cucca 
 - **CA-18.28** *Dato* due computer con lo stesso account, *quando* allego una foto e un PDF su uno, *allora* sull'altro le pillole e la foto compaiono dopo la sincronizzazione, e il file si scarica la prima volta che serve; sul server il file è cifrato e il server non ne vede il contenuto (RB-118).
 - **CA-18.29** *Dato* un computer senza rete, *quando* apro una nota con una foto non ancora scaricata, *allora* vedo il riquadro con il nome; tornata la rete, la foto compare da sola; «Apri» senza rete dice che manca la rete (RB-118).
 - **CA-18.30** *Dato* un file di 25 MB, *quando* lo allego e intanto scrivo e sincronizzo altre note, *allora* le note arrivano sull'altro computer senza aspettare il file; un caricamento interrotto riparte da solo (RB-118).
+- **CA-18.31** *Dato* un'entità «Senza tipo» in Entità, *quando* clicco la sua pillola del tipo, *allora* si apre l'elenco Persona, Argomento, Evento, Oggetto, «Senza tipo» con la spunta su «Senza tipo»; *quando* scelgo Persona, *allora* la riga mostra «Persona», nel menu di @ sta tra le Persone e sull'altro computer è uguale; scegliendo «Senza tipo» torna senza tipo (RB-122).
 
 ---
 

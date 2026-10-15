@@ -4,6 +4,7 @@
 
 import {
   Brain,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   Database,
@@ -20,11 +21,18 @@ import { Icona } from "../componenti/Icona";
 import { Menu, type VoceMenu } from "../componenti/Menu";
 import { PulsanteIcona } from "../componenti/Pulsante";
 import { StatoVuoto } from "../componenti/StatoVuoto";
-import { Tag } from "../componenti/Tag";
-import { brainet, TITOLO_TIPO, type Entita, type Frammento, type VoceEntita } from "./api";
+import {
+  brainet,
+  TITOLO_TIPO,
+  type Entita,
+  type Frammento,
+  type TipoEntita,
+  type VoceEntita,
+} from "./api";
 import { EditorBrainet } from "./EditorBrainet";
 import { pulisciDopo, SalvaFrammento } from "./salvataggio";
 import type { VistaBrainet } from "./SezioneBrainet";
+import "../componenti/Ricerca.css";
 import "./viste.css";
 
 interface Proprieta {
@@ -256,6 +264,7 @@ function EntitaBrainet({
   const [rilette, setRilette] = useState(0);
   const [menu, setMenu] = useState<{ entita: Entita; x: number; y: number } | null>(null);
   const [unisci, setUnisci] = useState<{ entita: Entita; x: number; y: number } | null>(null);
+  const [sceltaTipo, setSceltaTipo] = useState<{ entita: Entita; ancora: DOMRect } | null>(null);
   const [cerca, setCerca] = useState("");
   const [conferma, setConferma] = useState<{
     da: Entita;
@@ -317,6 +326,18 @@ function EntitaBrainet({
     },
   ];
 
+  // Clic sul tipo: i tipi nell'ordine di @, «Senza tipo» in fondo, spuntato quello attuale (RB-122).
+  const vociTipo = (e: Entita): VoceMenu[] => {
+    const voce = (tipo: TipoEntita | null): VoceMenu => ({
+      tipo: "voce",
+      etichetta: TITOLO_TIPO_SINGOLARE[tipo ?? "nessuno"],
+      spunta: e.tipo === tipo,
+      azione: () =>
+        void esegui(() => brainet.impostaTipo(e.id, tipo)).then(() => setRilette((n) => n + 1)),
+    });
+    return [...TIPI_IN_ORDINE.map(voce), { tipo: "separatore" }, voce(null)];
+  };
+
   // «Unisci a…»: le altre entità per tipo, con la ricerca in cima (CMP-11 Unisci a).
   const altre = unisci
     ? voci
@@ -327,7 +348,7 @@ function EntitaBrainet({
         )
     : [];
   const vociUnisci: VoceMenu[] = [];
-  for (const tipo of ["persona", "argomento", "evento", "oggetto", null] as const) {
+  for (const tipo of [...TIPI_IN_ORDINE, null]) {
     const gruppo = altre.filter((e) => e.tipo === tipo);
     if (!gruppo.length) continue;
     vociUnisci.push({ tipo: "titolo", etichetta: TITOLO_TIPO[tipo ?? "nessuno"] });
@@ -390,7 +411,24 @@ function EntitaBrainet({
                     {dettagliEntita(v)}
                   </span>
                 </span>
-                <Tag nome={TITOLO_TIPO_SINGOLARE[v.entita.tipo ?? "nessuno"]} />
+                <button
+                  type="button"
+                  className="filtro-ricerca interfaccia-controllo"
+                  aria-haspopup="menu"
+                  aria-expanded={sceltaTipo?.entita.id === v.entita.id}
+                  aria-label={`Tipo di ${v.entita.nome}: ${TITOLO_TIPO_SINGOLARE[v.entita.tipo ?? "nessuno"]}`}
+                  onClick={(ev) =>
+                    setSceltaTipo({
+                      entita: v.entita,
+                      ancora: ev.currentTarget.getBoundingClientRect(),
+                    })
+                  }
+                >
+                  {TITOLO_TIPO_SINGOLARE[v.entita.tipo ?? "nessuno"]}
+                  <span className="filtro-ricerca-freccia" aria-hidden="true">
+                    <Icona di={ChevronDown} misura={12} />
+                  </span>
+                </button>
               </li>
             ))}
           </ul>
@@ -403,6 +441,16 @@ function EntitaBrainet({
           x={menu.x}
           y={menu.y}
           onChiudi={() => setMenu(null)}
+        />
+      )}
+      {sceltaTipo && (
+        <Menu
+          voci={vociTipo(sceltaTipo.entita)}
+          etichetta={`Tipo di ${sceltaTipo.entita.nome}`}
+          x={sceltaTipo.ancora.left}
+          y={sceltaTipo.ancora.bottom + DISTANZA_MENU}
+          sopra={sceltaTipo.ancora.top}
+          onChiudi={() => setSceltaTipo(null)}
         />
       )}
       {unisci && !conferma && (
@@ -451,6 +499,11 @@ const TITOLO_TIPO_SINGOLARE: Record<keyof typeof TITOLO_TIPO, string> = {
   oggetto: "Oggetto",
   nessuno: "Senza tipo",
 };
+
+/** L'ordine dei tipi nel menu di @ (CMP-09 Suggerimenti), anche per «Unisci a…» e il tipo. */
+const TIPI_IN_ORDINE: TipoEntita[] = ["persona", "argomento", "evento", "oggetto"];
+/** Tra la pillola del tipo e il suo menu, come per i filtri della ricerca (CMP-13). */
+const DISTANZA_MENU = 8;
 
 // ——— Calendario (SC-12) ———
 

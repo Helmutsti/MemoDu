@@ -613,6 +613,21 @@ impl Archivio {
         })
     }
 
+    /// Cambia il tipo dell'entità; None la lascia senza tipo (RB-122).
+    pub fn imposta_tipo(&mut self, id: &str, tipo: Option<&str>) -> Esito<Entita> {
+        if let Some(t) = tipo {
+            if !TIPI.contains(&t) {
+                return Err(Errore::NonValido(format!("Tipo sconosciuto: {t}")));
+            }
+        }
+        self.con_riconnessione(|a| {
+            a.acceso()?;
+            a_vive(a, id)?;
+            a.db.execute("UPDATE entita SET tipo = ? WHERE id = ?", params![tipo, id])?;
+            a.entita(id)
+        })
+    }
+
     /// L'entità, anche unita: si segue il rimando fino a quella che resta.
     pub fn leggi_entita(&mut self, id: &str) -> Esito<Entita> {
         self.con_riconnessione(|a| {

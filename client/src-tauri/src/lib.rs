@@ -342,6 +342,7 @@ pub fn run() {
             brainet::anteprima_unione,
             brainet::unisci_entita,
             brainet::scegli_foto,
+            brainet::imposta_tipo,
             brainet::elenca_stati,
             brainet::crea_stato,
             brainet::aree_con_stato,

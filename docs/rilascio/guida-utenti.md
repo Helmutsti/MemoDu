@@ -258,7 +258,7 @@ Brainet è un diario: scrivi pensieri brevi nel tempo e li colleghi a persone, o
 **Ritrovare.**
 
 - **Database:** le note dalla più recente; puoi modificarle, e con il tasto destro › «Elimina» vanno nel Cestino. Si può nascondere dalle Impostazioni con «Mostra il Database».
-- **Entità:** ogni persona, oggetto o argomento, con quante volte e quando l'hai nominato. Con il tasto destro: «Unisci a…», per due nomi della stessa cosa, e «Scegli una foto…».
+- **Entità:** ogni persona, oggetto o argomento, con quante volte e quando l'hai nominato. Un clic sul tipo accanto al nome (per esempio «Senza tipo») lo cambia in persona, argomento, evento o oggetto. Con il tasto destro: «Unisci a…», per due nomi della stessa cosa, e «Scegli una foto…».
 - **Calendario:** i giorni del mese, con un pallino per ogni nota scritta.
 
 **Portare una nota di CLOUD in Brainet.** Tasto destro sulla nota › «Importa in Brainet»: «Copia» la lascia anche in CLOUD, «Sposta» la toglie. Nel Calendario compare nel giorno in cui era stata creata.

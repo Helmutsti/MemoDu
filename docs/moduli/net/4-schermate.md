@@ -49,13 +49,14 @@ Link: `https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=` seguito dal
 ---
 
 ## SC-11 – Entità (FL-19)
-**Flussi:** FL-19 · **Componenti:** menu, pannello a comparsa (come «Sposta in»), finestra di conferma
+**Flussi:** FL-19 · **Componenti:** menu, pannello a comparsa (come «Sposta in»), finestra di conferma, pillola del filtro della ricerca (CMP-13) per il tipo
 
-- **Mockup (approvati il 14/10/2026):** [Entità](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=264-10280) · [tasto destro su una riga](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=287-11241) · [Unisci a…](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=287-12290) · [conferma dell'unione](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=287-11538)
+- **Mockup (approvati il 14/10/2026):** [Entità](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=264-10280) · [tasto destro su una riga](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=287-11241) · [Unisci a…](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=287-12290) · [conferma dell'unione](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=287-11538) · [scelta del tipo](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=316-14044) (15/10/2026, RB-122)
 
 | Azione | Come |
 |---|---|
 | Unire | Tasto destro › «Unisci a…»: pannello con la ricerca e le entità per tipo; poi la conferma con quante citazioni e aree si spostano, «Annulla» o «Unisci» (RB-108) |
+| Tipo | Clic sulla pillola del tipo (con la freccia giù, come i filtri della ricerca, CMP-13): menu 8 px sotto con Persona, Argomento, Evento, Oggetto, una linea e «Senza tipo», spunta sul tipo attuale (RB-122, CA-18.31) |
 | Foto | Tasto destro › «Scegli una foto…»: la finestra del sistema per scegliere un'immagine dal disco; un file che non è un'immagine dà l'avviso «Il file scelto non è un'immagine: la foto non cambia.» e la foto resta com'era (CA-18.13, DEC-141) |
 
 ### Stati della schermata

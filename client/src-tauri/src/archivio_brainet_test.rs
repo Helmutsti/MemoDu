@@ -240,6 +240,20 @@ fn foto_ridotta_e_file_non_immagine() {
     ));
 }
 
+// ——— TC-225, CA-18.31 ———
+
+#[test]
+fn cambiare_il_tipo_e_tornare_senza() {
+    let mut p = Prova::accesa();
+    let e = p.a().crea_entita("Giorgio").unwrap();
+    assert_eq!(e.tipo, None);
+    assert_eq!(p.a().imposta_tipo(&e.id, Some("persona")).unwrap().tipo.as_deref(), Some("persona"));
+    // Il menu di @ lo mette tra le persone.
+    assert_eq!(p.a().suggerisci_entita("gior").unwrap()[0].tipo.as_deref(), Some("persona"));
+    assert_eq!(p.a().imposta_tipo(&e.id, None).unwrap().tipo, None);
+    assert!(matches!(p.a().imposta_tipo(&e.id, Some("animale")), Err(Errore::NonValido(_))));
+}
+
 // ——— TC-209, CA-18.15 ———
 
 #[test]

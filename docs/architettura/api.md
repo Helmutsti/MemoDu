@@ -609,6 +609,7 @@ Comandi del nucleo (`client/src-tauri/src/brainet.rs`, regole in `archivio_brain
 | `elenca_entita` | — | `{ entita, nominata, ultimaVolta }[]`, dalla nominata più di recente | — | FL-19 |
 | `anteprima_unione` | `da`, `verso` | `{ citazioni, aree }` | `404`, `400` stessa entità | FL-19, RB-108 |
 | `unisci_entita` | `da`, `verso` | `{ citazioni, aree }` spostate | `404`, `400` stessa entità | FL-19, RB-108 |
+| `imposta_tipo` | `id`, `tipo` (`persona`, `argomento`, `evento`, `oggetto` o null) | Entità | `404`, `400` tipo sconosciuto | RB-122 |
 | `scegli_foto` | `id` | Entità, o null se la finestra si chiude | `404`, `400` non è un'immagine, `403` file non leggibile | RF-18 |
 | `elenca_stati` | — | Stato[] in ordine | — | FL-21 |
 | `crea_stato` | `nome`, `colore` | Stato | `409` nome già usato, `400` nome vuoto o colore non valido | FL-21 |
