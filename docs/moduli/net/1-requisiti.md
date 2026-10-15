@@ -3,7 +3,7 @@
 <!-- Fase 1 della guida, con i criteri di accettazione della Fase 8. Copia il blocco per ogni requisito. -->
 
 ## RF-18 – Brainet, il diario a rete
-**Priorità:** Must (scelta di Manuel Cucca del 14/10/2026: nella versione dopo la 1.2.0) · **Origine:** ID-39, DEC-134 · **Fase:** 8 · **Stato:** In progettazione
+**Priorità:** Must (scelta di Manuel Cucca del 14/10/2026: nella versione dopo la 1.2.0) · **Origine:** ID-39, DEC-134 · **Fase:** Sviluppo · **Stato:** In sviluppo
 
 Come *utente* voglio scrivere un flusso di pensiero nel tempo, collegato a persone, oggetti, eventi e argomenti, per ritrovare tutto quello che ho pensato su ognuno di loro senza dover creare e ordinare file.
 
@@ -53,7 +53,7 @@ Nelle Impostazioni accendo «Usa Brainet», e nella colonna compare la sezione B
 - ~~Priorità di RF-18.~~ Must, nella versione dopo la 1.2.0 (14/10/2026).
 
 ### Criteri di accettazione
-Scritti dall'agente il 15/10/2026 (Fase 8), da approvare da Manuel Cucca.
+Scritti dall'agente il 15/10/2026 (Fase 8), approvati da Manuel Cucca lo stesso giorno.
 
 - **CA-18.1** *Dato* «Usa Brainet» spento, *quando* apro Memodu, *allora* nella colonna non c'è la sezione Brainet e nelle Impostazioni il gruppo Brainet ha solo l'interruttore; *quando* lo accendo, *allora* la sezione compare tra CLOUD e LOCALE con Database, Entità e Calendario, e nelle Impostazioni compaiono «Mostra il Database» e gli stati delle evidenziature.
 - **CA-18.2** *Dato* Brainet acceso, *quando* premo + accanto a BRAINET, scrivo e chiudo il foglio, *allora* la nota è nel Database in cima, con il giorno e l'ora, e nel Calendario oggi ha un pallino in più; un foglio lasciato vuoto non lascia niente (RB-101, RB-102).

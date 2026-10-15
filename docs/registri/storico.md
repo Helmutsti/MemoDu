@@ -618,3 +618,4 @@
 | 15/10/2026 | Manuel Cucca | RF-18: con «Importa in Brainet › Sposta» la nota di CLOUD va nel Cestino | DEC-134 |
 | 15/10/2026 | Manuel Cucca | RF-18: Fase 7 approvata | DEC-134 |
 | 15/10/2026 | Agente IA | RF-18, Fase 8 proposta: CA-18.1 … CA-18.21 e piano di test TC-195 … TC-215 in `moduli/net/8-test.md` | DEC-134 |
+| 15/10/2026 | Manuel Cucca | RF-18: Fase 8 approvata (CA-18.1 … CA-18.21, TC-195 … TC-215); via allo sviluppo | DEC-134 |

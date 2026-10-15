@@ -3,7 +3,7 @@
 <!-- Fase 8 della guida. -->
 
 ## Piano di test
-Scritto dall'agente il 15/10/2026, da approvare da Manuel Cucca. Le prove automatiche del nucleo stanno in `client/src-tauri/src/archivio_brainet_test.rs` (copia di lavoro temporanea), quelle dell'interfaccia accanto ai componenti; le prove a mano si fanno con l'app di sviluppo e, per due computer, con due app in parallelo contro l'API in locale, come per gli account (TC-174 … TC-194). In produzione si ripetono solo TC-210 e TC-213, con il Mac, dopo il rilascio.
+Scritto dall'agente il 15/10/2026, approvato da Manuel Cucca lo stesso giorno, con i criteri CA-18.1 … CA-18.21. Le prove automatiche del nucleo stanno in `client/src-tauri/src/archivio_brainet_test.rs` (copia di lavoro temporanea), quelle dell'interfaccia accanto ai componenti; le prove a mano si fanno con l'app di sviluppo e, per due computer, con due app in parallelo contro l'API in locale, come per gli account (TC-174 … TC-194). In produzione si ripetono solo TC-210 e TC-213, con il Mac, dopo il rilascio.
 
 | Codice | Riferimento | Caso di prova | Ambiente | Set di dati | Esito |
 |---|---|---|---|---|---|
