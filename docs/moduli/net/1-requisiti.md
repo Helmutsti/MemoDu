@@ -3,7 +3,7 @@
 <!-- Fase 1 della guida, con i criteri di accettazione della Fase 8. Copia il blocco per ogni requisito. -->
 
 ## RF-18 – Brainet, il diario a rete
-**Priorità:** Must (scelta di Manuel Cucca del 14/10/2026: nella versione dopo la 1.2.0) · **Origine:** ID-39, DEC-134 · **Fase:** 4 · **Stato:** In progettazione
+**Priorità:** Must (scelta di Manuel Cucca del 14/10/2026: nella versione dopo la 1.2.0) · **Origine:** ID-39, DEC-134 · **Fase:** 8 · **Stato:** In progettazione
 
 Come *utente* voglio scrivere un flusso di pensiero nel tempo, collegato a persone, oggetti, eventi e argomenti, per ritrovare tutto quello che ho pensato su ognuno di loro senza dover creare e ordinare file.
 
@@ -53,7 +53,29 @@ Nelle Impostazioni accendo «Usa Brainet», e nella colonna compare la sezione B
 - ~~Priorità di RF-18.~~ Must, nella versione dopo la 1.2.0 (14/10/2026).
 
 ### Criteri di accettazione
-- [Fase 8]
+Scritti dall'agente il 15/10/2026 (Fase 8), da approvare da Manuel Cucca.
+
+- **CA-18.1** *Dato* «Usa Brainet» spento, *quando* apro Memodu, *allora* nella colonna non c'è la sezione Brainet e nelle Impostazioni il gruppo Brainet ha solo l'interruttore; *quando* lo accendo, *allora* la sezione compare tra CLOUD e LOCALE con Database, Entità e Calendario, e nelle Impostazioni compaiono «Mostra il Database» e gli stati delle evidenziature.
+- **CA-18.2** *Dato* Brainet acceso, *quando* premo + accanto a BRAINET, scrivo e chiudo il foglio, *allora* la nota è nel Database in cima, con il giorno e l'ora, e nel Calendario oggi ha un pallino in più; un foglio lasciato vuoto non lascia niente (RB-101, RB-102).
+- **CA-18.3** *Dato* un foglio Brainet, *quando* scrivo @ e qualche lettera, *allora* si apre il menu con le entità che corrispondono, divise per tipo con il titolo sopra e «Crea «…»» in fondo; frecce e Invio scelgono, Esc chiude; scelta un'entità, le lettere diventano la sua pillola, con la foto se c'è (RB-104).
+- **CA-18.4** *Dato* il menu di @ con un nome che non c'è, *quando* premo «Crea «…»», *allora* nasce l'entità senza tipo, la pillola entra nel testo e continuo a scrivere senza altre finestre (RB-105).
+- **CA-18.5** *Dato* il cursore subito dopo una pillola, *quando* premo Backspace, *allora* la pillola sparisce tutta; le frecce la saltano come un carattere solo (RB-104).
+- **CA-18.6** *Dato* una frase selezionata in un foglio Brainet, *quando* scelgo dal menu uno o più stati ed entità, *allora* la frase resta evidenziata e legata a tutte le voci scelte; se la frase contiene una pillola, l'area è legata anche a quell'entità (RB-107).
+- **CA-18.7** *Dato* un'area, *quando* ci passo sopra con il mouse, *allora* compaiono il riquadro e la linguetta con il pallino del primo stato e i nomi separati da «·»; la freccia apre il menu con le voci dell'area spuntate; togliendo una spunta il legame sparisce, togliendo l'ultima sparisce l'area (RB-109).
+- **CA-18.8** *Dato* una nota con pillole e aree, *quando* aggiungo o cancello parole prima e dentro, *allora* pillole e aree restano sulle stesse parole, anche dopo averla chiusa e riaperta e sull'altro computer (scelta del 15/10/2026).
+- **CA-18.9** *Dato* il Database, *quando* apro una nota e la cambio, *allora* la modifica resta e nel Calendario il giorno non cambia; *quando* uso il tasto destro › Elimina, *allora* la nota va nella parte Brainet del Cestino, da dove si ripristina o si elimina per sempre (RB-103).
+- **CA-18.10** *Dato* «Mostra il Database» spento, *allora* la voce Database non c'è, su tutti i computer dell'account; riaccendendolo torna, con tutte le note (RB-106).
+- **CA-18.11** *Dato* Entità, *allora* vedo tutte le entità con quante volte sono nominate, l'ultima volta e il tipo («Senza tipo» se non ce l'ha); le citazioni e le aree contano tutte e due.
+- **CA-18.12** *Dato* due entità, *quando* faccio tasto destro › Unisci a… e ne scelgo un'altra, *allora* la conferma dice quante citazioni e aree si spostano; con «Unisci» resta solo l'entità scelta, con il suo nome, e tutte le pillole e le aree dell'altra mostrano lei; con «Annulla» non cambia niente (RB-108).
+- **CA-18.13** *Dato* un'entità, *quando* faccio tasto destro › Scegli una foto… e scelgo un'immagine, *allora* la foto compare nelle sue pillole e nella sua riga, anche sull'altro computer; un file che non è un'immagine dà un messaggio e non cambia niente.
+- **CA-18.14** *Dato* il Calendario, *allora* ogni giorno ha un pallino per nota, fino a tre; oggi è evidenziato, i giorni dopo tenui; le frecce cambiano mese; un clic su un giorno non fa niente (RB-113).
+- **CA-18.15** *Dato* l'elenco degli stati, *quando* aggiungo uno stato con nome e colore, *allora* compare nel menu dell'area; un nome già usato è rifiutato; *quando* tolgo uno stato usato, *allora* Memodu propone di cambiarlo con un altro; se lo tolgo, sparisce da tutte le aree, e un'area sparisce solo se era il suo ultimo legame (RB-110).
+- **CA-18.16** *Dato* due computer con lo stesso account, *quando* scrivo, unisco, cambio una foto o uno stato su uno, *allora* entro 30 s l'altro ha tutto uguale; sul server i blocchi di Brainet sono cifrati come quelli delle note (RF-10).
+- **CA-18.17** *Dato* la stessa nota Brainet cambiata su due computer senza rete, *quando* torna la rete, *allora* una versione resta e l'altra va in una copia in conflitto con le sue pillole e aree, come per le note (DEC-06).
+- **CA-18.18** *Dato* un computer con una versione di Memodu senza Brainet, *quando* un altro computer dello stesso account usa Brainet, *allora* il primo continua a sincronizzare le note senza errori.
+- **CA-18.19** *Dato* Brainet acceso, *quando* spengo «Usa Brainet», *allora* la finestra chiede conferma con «Annulla» e «Spegni e cancella tutto»; con «Annulla» non cambia niente; con «Spegni e cancella tutto» note, entità, aree e stati spariscono, la sezione sparisce, e sull'altro computer succede lo stesso; se lì un foglio Brainet era aperto, si chiude con l'avviso «Brainet è stato spento da un altro computer.» (RB-111).
+- **CA-18.20** *Dato* una nota di CLOUD con titolo, tag e cartella, *quando* faccio tasto destro › Importa in Brainet › Copia, *allora* in Brainet c'è una nota con il titolo come prima riga e il testo, nel giorno in cui la nota era stata creata, senza tag né cartella, e la nota resta in CLOUD; con «Sposta» la nota di CLOUD va nel Cestino (RB-112). La voce c'è solo con Brainet acceso.
+- **CA-18.21** *Dato* Brainet, *quando* cerco una parola che c'è solo in una nota Brainet, *allora* la ricerca non la trova: Brainet resta fuori dalla ricerca.
 
 ---
 

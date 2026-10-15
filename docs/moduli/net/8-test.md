@@ -1,0 +1,34 @@
+# Brainet – Test e domande aperte
+
+<!-- Fase 8 della guida. -->
+
+## Piano di test
+Scritto dall'agente il 15/10/2026, da approvare da Manuel Cucca. Le prove automatiche del nucleo stanno in `client/src-tauri/src/archivio_brainet_test.rs` (copia di lavoro temporanea), quelle dell'interfaccia accanto ai componenti; le prove a mano si fanno con l'app di sviluppo e, per due computer, con due app in parallelo contro l'API in locale, come per gli account (TC-174 … TC-194). In produzione si ripetono solo TC-210 e TC-213, con il Mac, dopo il rilascio.
+
+| Codice | Riferimento | Caso di prova | Ambiente | Set di dati | Esito |
+|---|---|---|---|---|---|
+| TC-195 | RF-18 CA-18.1 | Con Brainet spento: niente sezione, nelle Impostazioni solo l'interruttore; acceso: sezione tra CLOUD e LOCALE con Database, Entità e Calendario, e nelle Impostazioni «Mostra il Database» e gli stati | Locale | Copia di lavoro con note di CLOUD | |
+| TC-196 | RF-18 CA-18.2 | +, scrivere e chiudere: la nota è in cima al Database con giorno e ora, e oggi ha un pallino in più; un foglio chiuso vuoto non lascia niente | Locale | Brainet acceso, vuoto | |
+| TC-197 | RF-18 CA-18.3 | Scrivere «@lu»: menu con Luca Bianchi sotto Persone e «Crea «lu»» in fondo; frecce, Invio: la pillola con la foto; Esc chiude senza scegliere | Locale | Entità di prova: Luca Bianchi con foto, Progetto Orto, Serra | |
+| TC-198 | RF-18 CA-18.4 | Scrivere «@giorgio» e Crea: pillola subito, si continua a scrivere; in Entità Giorgio «Senza tipo» | Locale | Come TC-197 | |
+| TC-199 | RF-18 CA-18.5 | Backspace subito dopo una pillola la toglie tutta; le frecce la saltano come un carattere | Locale | Una nota con una pillola | Anche prova automatica dell'editor |
+| TC-200 | RF-18 CA-18.6 | Selezionare una frase con dentro una pillola, scegliere Importante e Serra: frase evidenziata, legata a Importante, Serra e all'entità della pillola (Entità conta l'area) | Locale | Come TC-197 | Anche prova automatica del nucleo (indice ricavato dal testo) |
+| TC-201 | RF-18 CA-18.7 | Mouse sopra l'area: riquadro e linguetta «Importante · Serra · …»; freccia: menu con le voci spuntate; togliere Serra: sparisce dalla linguetta; togliere tutto: l'area sparisce | Locale | Una nota con un'area | |
+| TC-202 | RF-18 CA-18.8 | In una nota con due pillole e un'area, scrivere parole all'inizio, in mezzo e dentro l'area, cancellarne altre: pillole e aree restano sulle parole giuste, anche dopo aver chiuso e riaperto e sull'altro computer | Locale, due app | Una nota con due pillole e un'area | Anche prova automatica del nucleo |
+| TC-203 | RF-18 CA-18.9 | Dal Database cambiare una nota scritta ieri: la modifica resta, nel Calendario resta su ieri; tasto destro › Elimina: va nella parte Brainet del Cestino; Ripristina; poi Elimina per sempre | Locale | Una nota con «nata il» di ieri | |
+| TC-204 | RF-18 CA-18.10 | Spegnere «Mostra il Database»: la voce sparisce, anche sull'altra app dopo la sincronizzazione; riaccenderla: torna con tutte le note | Locale, due app | Brainet con tre note | |
+| TC-205 | RF-18 CA-18.11 | Entità: per ognuna quante volte è nominata, l'ultima volta e il tipo; una citazione e un'area della stessa entità contano due | Locale | Entità di prova con citazioni e aree | Anche prova automatica del nucleo |
+| TC-206 | RF-18 CA-18.12 | «Luca» → Unisci a… → Luca Bianchi: la conferma dice «1 citazione e 2 aree»; Annulla: niente cambia; Unisci: resta Luca Bianchi e le pillole di Luca mostrano Luca Bianchi; sull'altra app uguale | Locale, due app | «Luca» con una citazione e due aree | Anche prova automatica del nucleo |
+| TC-207 | RF-18 CA-18.13 | Scegli una foto… con un JPEG grande: la foto compare ridotta nella riga e nelle pillole, anche sull'altra app; con un file di testo: messaggio, niente cambia | Locale, due app | Un JPEG di 5 MB, un file .txt | |
+| TC-208 | RF-18 CA-18.14 | Calendario di un mese con giorni da 0, 1, 2 e 5 note: pallini 0, 1, 2 e 3; oggi evidenziato, giorni dopo tenui; le frecce cambiano mese; il clic non fa niente | Locale | Note con date in giorni diversi | |
+| TC-209 | RF-18 CA-18.15 | Aggiungere lo stato «Urgente» rosso: compare nel menu; aggiungere di nuovo «urgente»: rifiutato; togliere «Importante» usato in due aree, una con solo quello: proposta di cambiarlo; tolto: sparisce dalle aree, l'area con solo quello sparisce | Locale | Due aree con Importante | Anche prova automatica del nucleo |
+| TC-210 | RF-18 CA-18.16 | Su A scrivere una nota con pillola e area, unire due entità, cambiare una foto e uno stato: entro 30 s B ha tutto uguale; i blocchi `frammento`, `entita`, `stato` sul server sono `xchacha20poly1305` | Locale, due app; poi Produzione con il Mac | Due app con lo stesso account | |
+| TC-211 | RF-18 CA-18.17 | Senza rete, cambiare la stessa nota Brainet su A e su B; rete: una versione resta, l'altra in una copia in conflitto con le sue pillole e aree | Locale, due app | Una nota Brainet | Anche prova automatica (due dispositivi e un server finto) |
+| TC-212 | RF-18 CA-18.18 | Con B sulla 1.2.0 e A con Brainet: B continua a sincronizzare le note di CLOUD senza avvisi d'errore | Locale, due app | B con l'app 1.2.0 | |
+| TC-213 | RF-18 CA-18.19 | Spegnere Brainet su A: conferma; Annulla: niente cambia; Spegni e cancella tutto: tutto sparisce su A; su B con un foglio aperto il foglio si chiude con l'avviso e la sezione sparisce; sul server le ultime versioni sono «eliminato» | Locale, due app; poi Produzione con il Mac | Brainet pieno su due app | |
+| TC-214 | RF-18 CA-18.20 | Nota di CLOUD «Spesa» con tag e cartella, creata il 01/10: Importa › Copia: in Brainet il 01/10, prima riga «Spesa», senza tag né cartella, e la nota resta in CLOUD; Importa › Sposta su un'altra: la nota va nel Cestino di CLOUD; con Brainet spento la voce non c'è | Locale | Note di CLOUD di prova | |
+| TC-215 | RF-18 CA-18.21 | Cercare una parola che c'è solo in una nota Brainet: nessun risultato | Locale | Una nota Brainet con «zafferano» | |
+
+## Domande aperte
+- I modi di «leggere» la knowledge base: da studiare (RF-18, punti aperti).
+- Dove si assegna il tipo a un'entità: non urgente (RF-18, punti aperti).
