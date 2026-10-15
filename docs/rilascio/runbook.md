@@ -42,7 +42,7 @@ Il vecchio `memodu.db` e il file `credenziali` nella stessa cartella vengono dal
 
 ### Server
 - **Vercel**, progetto dell'API (Root Directory `api`): ripubblica da solo a ogni invio su `main`; dopo un cambio delle variabili si rifà il deploy a mano (Deployments › Redeploy).
-- **Variabili (account nel database, DEC-132):** `DATABASE_URL` (messa dall'integrazione con Neon) e `MEMODU_SEGRETO` (32 byte casuali in base64url; senza, il server non parte). Gli account stanno nel database. Le altre sette `MEMODU_*` dell'utente fisso (DEC-121) servono solo alla prima partenza della versione con gli account, che ne fa il primo account (vedi «Passare agli account nel database»); dopo si tolgono.
+- **Variabili (account nel database, DEC-132):** `DATABASE_URL` (messa dall'integrazione con Neon) e `MEMODU_SEGRETO` (32 byte casuali in base64url; senza, il server non parte). Gli account stanno nel database. Per gli allegati di Brainet (DEC-135) anche `MEMODU_R2_ACCOUNT`, `MEMODU_R2_CHIAVE`, `MEMODU_R2_SEGRETO` e `MEMODU_R2_BUCKET` (vedi «Allegati di Brainet su Cloudflare R2»); senza, il resto funziona e gli allegati restano sui computer. Le altre sette `MEMODU_*` dell'utente fisso (DEC-121) servono solo alla prima partenza della versione con gli account, che ne fa il primo account (vedi «Passare agli account nel database»); dopo si tolgono.
 - **Account:** li crea Manuel Cucca dalla cartella del progetto con `npm run account -w @memodu/api`, con `DATABASE_URL` di Neon nell'ambiente (o in `api/.env`): chiede email e password (almeno 12 caratteri, RB-88) e stampa una volta sola la chiave di recupero, che durante la prova conserva lui (DEC-132). `npm run account -w @memodu/api -- --elenco` mostra gli account. Senza `DATABASE_URL` il comando usa il database del server locale, che va fermato prima.
 - **Neon:** il database lo crea e lo aggiorna il server da solo (schema in `api/src/schema.ts`); non ci sono passi a mano.
 
@@ -120,3 +120,26 @@ Dall'app: Impostazioni › Cambia password › «Usa la chiave di recupero»: co
 3. Su ogni computer, dopo l'aggiornamento dell'app, compare una volta «Accedi di nuovo per sincronizzare»: accedi con la stessa email e la stessa password.
 4. Togli da Vercel `MEMODU_EMAIL`, `MEMODU_SALE`, `MEMODU_ARGON2`, `MEMODU_IMPRONTA_ACCESSO`, `MEMODU_IMPRONTA_RECUPERO`, `MEMODU_CHIAVE_PASSWORD` e `MEMODU_CHIAVE_RECUPERO`; resta `MEMODU_SEGRETO`.
 5. Crea gli account delle persone che provano con `npm run account -w @memodu/api` e conserva le loro chiavi di recupero.
+
+### Allegati di Brainet su Cloudflare R2 (DEC-135, una volta sola)
+I file allegati alle note Brainet stanno in un bucket privato di Cloudflare R2; le note restano su Neon. Il server non tocca i file: firma indirizzi di 15 minuti con cui l'app li carica e li scarica, già cifrati. Scritto dall'agente il 15/10/2026; le voci della dashboard di Cloudflare possono avere nomi un po' diversi.
+
+**Prima del rilascio con gli allegati** (l'invio su `main` ripubblica il server):
+1. **Cloudflare, account:** accedi a dash.cloudflare.com (o crea l'account). R2 si attiva da «R2 Object Storage» e chiede una carta, anche se l'uso resta nella fascia gratuita (10 GB di file al mese).
+2. **Il bucket:** R2 Object Storage › Create bucket. Nome `memodu-allegati`; posizione «Automatic» o, se c'è la scelta, Europa occidentale. Accesso pubblico: lascialo spento (è spento di default), niente dominio pubblico.
+3. **La chiave per il server:** R2 Object Storage › Manage API tokens › Create API token. Permessi «Object Read & Write», solo sul bucket `memodu-allegati`, senza scadenza. Alla fine Cloudflare mostra *Access Key ID* e *Secret Access Key*: il segreto si vede una volta sola. Copiali direttamente su Vercel (passo 5), senza incollarli in chat o in file.
+4. **L'Account ID:** nella pagina R2 Object Storage, a destra (è anche la prima parte dell'indirizzo `https://<account>.r2.cloudflarestorage.com`).
+5. **Vercel:** progetto dell'API › Settings › Environment Variables, ambiente **Production**:
+   - `MEMODU_R2_ACCOUNT` = l'Account ID;
+   - `MEMODU_R2_CHIAVE` = l'Access Key ID;
+   - `MEMODU_R2_SEGRETO` = il Secret Access Key, segnato come Sensitive;
+   - `MEMODU_R2_BUCKET` = `memodu-allegati`.
+   Le variabili valgono dal deploy successivo: quello che parte con l'invio su `main` va bene; se le metti dopo, Deployments › Redeploy.
+6. **Niente CORS:** l'app carica e scarica dal nucleo, non da una pagina web: il bucket non ha bisogno di regole CORS.
+
+**Dopo il rilascio:** su un computer con Brainet acceso allega una foto, aspetta un minuto e aprila da un altro computer (TC-222, TC-224 in produzione). In Cloudflare, nel bucket, compare una cartella per account con file dal contenuto illeggibile (cifrato).
+
+**Se gli allegati non partono:** il server risponde `503 Allegati non configurati` quando manca una delle quattro variabili: controllale su Vercel e rifai il deploy. Se Cloudflare rifiuta (errori 403 nei log delle funzioni), la chiave non ha il permesso sul bucket o il nome del bucket è diverso: rifai la chiave del passo 3. I file aspettano sui computer e partono da soli quando il server torna a posto.
+
+**Se la chiave finisce in mani sbagliate:** in Cloudflare revoca il token (Manage API tokens), creane uno nuovo e aggiorna `MEMODU_R2_CHIAVE` e `MEMODU_R2_SEGRETO` su Vercel, poi Redeploy. I file restano cifrati: con la sola chiave di R2 non si leggono.
+
