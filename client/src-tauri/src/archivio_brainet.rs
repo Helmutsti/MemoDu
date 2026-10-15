@@ -1084,10 +1084,14 @@ fn elemento_cestino(id: &str, testo: &str, eliminato: String) -> ElementoCestino
     }
 }
 
+/// Il messaggio quando come foto di un'entità si sceglie un file che non è un'immagine (CA-18.13,
+/// DEC-141).
+pub(crate) const FOTO_NON_IMMAGINE: &str = "Il file scelto non è un'immagine: la foto non cambia.";
+
 /// Riduce un'immagine al lato lungo di 256 px e la salva in JPEG.
 fn riduci_foto(byte: &[u8]) -> Esito<Vec<u8>> {
     let immagine = image::load_from_memory(byte)
-        .map_err(|_| Errore::NonValido("Il file non è un'immagine".into()))?;
+        .map_err(|_| Errore::NonValido(FOTO_NON_IMMAGINE.into()))?;
     let ridotta = if immagine.width().max(immagine.height()) > LATO_FOTO {
         immagine.thumbnail(LATO_FOTO, LATO_FOTO)
     } else {

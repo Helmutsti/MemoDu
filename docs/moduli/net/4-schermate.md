@@ -56,7 +56,7 @@ Link: `https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=` seguito dal
 | Azione | Come |
 |---|---|
 | Unire | Tasto destro › «Unisci a…»: pannello con la ricerca e le entità per tipo; poi la conferma con quante citazioni e aree si spostano, «Annulla» o «Unisci» (RB-108) |
-| Foto | Tasto destro › «Scegli una foto…»: la finestra del sistema per scegliere un'immagine dal disco |
+| Foto | Tasto destro › «Scegli una foto…»: la finestra del sistema per scegliere un'immagine dal disco; un file che non è un'immagine dà l'avviso «Il file scelto non è un'immagine: la foto non cambia.» e la foto resta com'era (CA-18.13, DEC-141) |
 
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |

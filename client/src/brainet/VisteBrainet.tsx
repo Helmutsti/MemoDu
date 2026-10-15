@@ -12,6 +12,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type ReactElement } from "react";
+import { ErroreApi } from "../api";
 import { quando } from "../date";
 import { AreaScorrevole } from "../componenti/AreaScorrevole";
 import { FinestraConferma } from "../componenti/FinestraConferma";
@@ -55,7 +56,8 @@ export function VisteBrainet({
         onAvviso={onAvviso}
       />
     );
-  if (vista === "entita") return <EntitaBrainet versione={versione} esegui={esegui} />;
+  if (vista === "entita")
+    return <EntitaBrainet versione={versione} esegui={esegui} onAvviso={onAvviso} />;
   return <CalendarioBrainet versione={versione} esegui={esegui} />;
 }
 
@@ -241,7 +243,15 @@ function dettagliEntita(v: VoceEntita, adesso = new Date()): string {
   return `${volte(v.nominata)} · ultima volta ${oggi ? "oggi" : `il ${giorno}`}`;
 }
 
-function EntitaBrainet({ versione, esegui }: { versione: number; esegui: Esegui }): ReactElement {
+function EntitaBrainet({
+  versione,
+  esegui,
+  onAvviso,
+}: {
+  versione: number;
+  esegui: Esegui;
+  onAvviso: (testo: string) => void;
+}): ReactElement {
   const [voci, setVoci] = useState<VoceEntita[] | null>(null);
   const [rilette, setRilette] = useState(0);
   const [menu, setMenu] = useState<{ entita: Entita; x: number; y: number } | null>(null);
@@ -291,8 +301,19 @@ function EntitaBrainet({ versione, esegui }: { versione: number; esegui: Esegui 
       tipo: "voce",
       etichetta: "Scegli una foto…",
       icona: ImageIcon,
+      // Un file che non è un'immagine: il suo messaggio, non quello generico (CA-18.13, DEC-141).
       azione: () =>
-        void esegui(() => brainet.scegliFoto(e.id)).then(() => setRilette((n) => n + 1)),
+        void esegui(async () => {
+          try {
+            return await brainet.scegliFoto(e.id);
+          } catch (errore) {
+            if (errore instanceof ErroreApi && errore.stato === 400) {
+              onAvviso(errore.message);
+              return null;
+            }
+            throw errore;
+          }
+        }).then(() => setRilette((n) => n + 1)),
     },
   ];
 

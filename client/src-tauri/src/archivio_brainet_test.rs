@@ -234,7 +234,10 @@ fn foto_ridotta_e_file_non_immagine() {
     let jpeg = base64::engine::general_purpose::STANDARD.decode(con_foto.foto.unwrap()).unwrap();
     let letta = image::load_from_memory(&jpeg).unwrap();
     assert_eq!((letta.width(), letta.height()), (256, 128));
-    assert!(matches!(p.a().imposta_foto(&e.id, Some(b"non sono una foto")), Err(Errore::NonValido(_))));
+    assert!(matches!(
+        p.a().imposta_foto(&e.id, Some(b"non sono una foto")),
+        Err(Errore::NonValido(m)) if m == super::FOTO_NON_IMMAGINE
+    ));
 }
 
 // ——— TC-209, CA-18.15 ———

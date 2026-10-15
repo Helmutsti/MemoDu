@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ElementoCestino } from "@memodu/condiviso";
 import { Cestino } from "../schermate/Cestino";
+import { ErroreApi } from "../api";
 import { brainet } from "./api";
 import { GruppoBrainet } from "./GruppoBrainet";
 import { SezioneBrainet } from "./SezioneBrainet";
@@ -134,6 +135,35 @@ describe("Entità (CA-18.11, CA-18.12)", () => {
     ).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Unisci" }));
     await waitFor(() => expect(brainet.unisciEntita).toHaveBeenCalledWith(LUCA.id, LB.id));
+  });
+});
+
+describe("Entità, Scegli una foto… (CA-18.13)", () => {
+  it("un file che non è un'immagine: il suo messaggio, la foto non cambia (DEC-141)", async () => {
+    vi.mocked(brainet.elencaEntita).mockResolvedValue([
+      { entita: LUCA, nominata: 1, ultimaVolta: new Date().toISOString() },
+    ]);
+    vi.mocked(brainet.scegliFoto).mockRejectedValue(
+      new ErroreApi(400, "Il file scelto non è un'immagine: la foto non cambia."),
+    );
+    const onAvviso = vi.fn();
+    render(
+      <VisteBrainet
+        vista="entita"
+        versione={0}
+        esegui={esegui}
+        onCestino={() => {}}
+        onAvviso={onAvviso}
+      />,
+    );
+    fireEvent.contextMenu(await screen.findByText("Luca"));
+    fireEvent.click(await screen.findByText("Scegli una foto…"));
+    await waitFor(() =>
+      expect(onAvviso).toHaveBeenCalledWith(
+        "Il file scelto non è un'immagine: la foto non cambia.",
+      ),
+    );
+    expect(brainet.scegliFoto).toHaveBeenCalledWith(LUCA.id);
   });
 });
 
