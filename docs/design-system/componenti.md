@@ -1560,5 +1560,5 @@ Un clic apre il menu della foto (CMP-09 Foto allegata, o Allegato per la bolla).
 
 ### Accessibilità
 - **Lettori di schermo:** immagine con il nome del file come testo alternativo.
-- **Contrasti:** il nome `testo-tenue` su `sfondo-campo` 4,9:1 circa in chiaro, sopra 6 in scuro (da misurare quando c'è il codice).
+- **Contrasti:** il nome `testo-tenue` su `sfondo-campo` 4,61:1 in chiaro e 4,64:1 in scuro (almeno 4,5, AA).
 
