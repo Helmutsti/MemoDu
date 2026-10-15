@@ -308,3 +308,18 @@ fn importare_copia_e_sposta() {
     assert!(p.a().elenca_cestino().unwrap().iter().any(|e| e.id == nota.id));
     assert_eq!(p.a().elenca_frammenti(None, 50).unwrap().len(), 2);
 }
+
+#[test]
+fn una_nota_con_la_data_scelta_va_su_quel_giorno_nel_calendario() {
+    let mut p = Prova::accesa();
+    let nota = p
+        .a()
+        .crea(&DatiNuovaNota { titolo: Some("Spesa".into()), contenuto: Some("pane".into()), cartella: None })
+        .unwrap();
+    let dettagli: super::super::DatiDettagli = serde_json::from_str(r#"{"creataScelta":"2026-10-01"}"#).unwrap();
+    p.a().salva_dettagli(&nota.id, &dettagli).unwrap();
+    let f = p.a().importa_in_brainet(&nota.id, false).unwrap();
+    assert!(f.nato_il.parse::<DateTime<Utc>>().is_ok(), "{}", f.nato_il);
+    let giorni = p.a().calendario("2026-10").unwrap();
+    assert_eq!(giorni, vec![GiornoCalendario { giorno: "2026-10-01".into(), note: 1 }]);
+}

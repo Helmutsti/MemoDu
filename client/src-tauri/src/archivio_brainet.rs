@@ -254,6 +254,17 @@ fn riscrivi_area(testo: &str, id: &str, stati: &[String], entita: &[String]) -> 
     fuori
 }
 
+/// «AAAA-MM-GG» come istante: la mezzanotte di quel giorno nel fuso del computer. Un istante
+/// completo resta com'è.
+fn inizio_del_giorno(giorno: &str) -> Option<String> {
+    if giorno.parse::<DateTime<Utc>>().is_ok() {
+        return Some(giorno.to_string());
+    }
+    let mezzanotte = NaiveDate::parse_from_str(giorno, "%Y-%m-%d").ok()?.and_hms_opt(0, 0, 0)?;
+    let locale = mezzanotte.and_local_timezone(Local).earliest()?;
+    Some(locale.with_timezone(&Utc).to_rfc3339_opts(chrono::SecondsFormat::Millis, true))
+}
+
 fn data_locale(istante: &str) -> Option<NaiveDate> {
     istante.parse::<DateTime<Utc>>().ok().map(|i| i.with_timezone(&Local).date_naive())
 }
@@ -810,7 +821,12 @@ impl Archivio {
                 return Err(Errore::NonValido("La nota è vuota".into()));
             }
             controlla_limite(&testo)?;
-            let nato = riga.creata_scelta.clone().unwrap_or_else(|| riga.creata.clone());
+            // La data scelta di una nota di CLOUD è un giorno senza ora: diventa l'inizio di quel
+            // giorno nel fuso del computer, così il Calendario la mette sul giorno giusto.
+            let nato = match riga.creata_scelta.as_deref() {
+                Some(giorno) => inizio_del_giorno(giorno).unwrap_or_else(|| riga.creata.clone()),
+                None => riga.creata.clone(),
+            };
             let id = uuid::Uuid::new_v4().to_string();
             a.db.execute(
                 "INSERT INTO frammenti (id, testo, nato_il, modificato_il, da_nota) VALUES (?, ?, ?, ?, ?)",
