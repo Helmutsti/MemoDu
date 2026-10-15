@@ -232,3 +232,20 @@ fn togli_e_ctrl_z_lo_lasciano_un_file_mai_messo_nel_testo_se_ne_va() {
     assert_eq!(p.a().allegati_da_cancellare().unwrap(), vec![fuori.id]);
 }
 
+#[test]
+fn tolto_altrove_mentre_qui_si_carica_qui_lo_si_cancella_dal_server() {
+    let mut p = Prova::accesa();
+    let a = p.a().allega("Grande.txt", b"un file lungo").unwrap();
+    p.a().crea_frammento(&segno(&a, "documento")).unwrap();
+    // Il blocco dell'allegato è già sul server: l'altro computer lo conosce da lì.
+    for b in p.a().da_inviare().unwrap() {
+        p.a().inviato(&b, 1).unwrap();
+    }
+    let eliminato = json!({ "formato": "chiaro", "tipo": "allegato", "modificato_il": "", "eliminato": true, "campi": {} });
+    p.a().ricevi(&[Ricevuta { id: a.id.clone(), versione: 5, dati: eliminato.to_string() }]).unwrap();
+    // Il caricamento finisce dopo: resta da cancellare, e il filo lo cancella dal server.
+    p.a().allegato_caricato(&a.id).unwrap();
+    assert!(p.a().allegati_da_caricare().unwrap().is_empty());
+    assert_eq!(p.a().allegati_da_cancellare().unwrap(), vec![a.id]);
+}
+

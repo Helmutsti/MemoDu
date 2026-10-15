@@ -477,7 +477,13 @@ impl Archivio {
     }
 
     /// Cancellato su un altro computer: qui spariscono i file; il server lo cancella chi l'ha tolto.
+    /// Se l'ha caricato questo computer, magari finendo dopo la cancellazione, lo cancella anche
+    /// lui dal server: così non resta un file che nessuno usa.
     pub(super) fn allegato_eliminato_altrove(&self, id: &str) -> Esito<()> {
+        self.db.execute(
+            "UPDATE allegati_file SET stato = ? WHERE id = ? AND stato IN (?, ?)",
+            params![DA_CANCELLARE, id, DA_CARICARE, CARICATO],
+        )?;
         self.db.execute("DELETE FROM allegati_file WHERE id = ? AND stato <> ?", params![id, DA_CANCELLARE])?;
         self.togli_file(id);
         Ok(())
