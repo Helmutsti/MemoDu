@@ -670,3 +670,4 @@
 | 15/10/2026 | Agente IA | RF-18, allegati: il computer che ha caricato un allegato tolto altrove lo cancella anche lui dal server; 1 prova nuova, 166 del nucleo passate; app, server di prova e Vite spenti | DEC-135 |
 | 15/10/2026 | Agente IA | Runbook: passi per il bucket di Cloudflare R2 e le quattro variabili su Vercel (allegati di Brainet), da approvare da Manuel Cucca | DEC-135 |
 | 15/10/2026 | Manuel Cucca | Allegati di Brainet: bucket di Cloudflare R2 e le quattro variabili `MEMODU_R2_*` su Vercel create; passi del runbook approvati | DEC-135 |
+| 15/10/2026 | Agente IA | Push di `main` senza tag (scelta di Manuel Cucca): Vercel ha pubblicato il server con gli allegati; `/vivo` 200, `/salute` ok, le richieste degli allegati rispondono (401 senza gettone). La configurazione di R2 si vede al primo allegato vero | DEC-135 |
