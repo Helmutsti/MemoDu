@@ -644,3 +644,4 @@
 | 15/10/2026 | Agente IA | RF-18, allegati: EN-17 Allegato ed EN-18 Uso di un allegato, da approvare | DEC-134 |
 | 15/10/2026 | Manuel Cucca | RF-18, allegati: dati EN-17 ed EN-18 approvati, con le tre proposte; si va ai mockup | DEC-134 |
 | 15/10/2026 | Agente IA | RF-18, allegati: sette mockup nel blocco di Brainet (allegati nel testo, menu del documento, menu della foto con Dimensioni, foto media e grande, @ con Allega un file…, file troppo grande, foto senza rete), da approvare | DEC-134 |
+| 15/10/2026 | Manuel Cucca | RF-18, allegati: mockup approvati con le proposte; aggiungere l'icona della graffetta per «Allega un file…» | DEC-134 |
