@@ -39,6 +39,7 @@ vi.mock("../api", async (originale) => ({
     elencaTag: vi.fn(),
     impostazioni: vi.fn(),
     statoSincronizzazione: vi.fn(),
+    conflittoDaMostrare: vi.fn(),
     statoAccesso: vi.fn(),
     accedi: vi.fn(),
     esci: vi.fn(),
@@ -148,6 +149,7 @@ beforeEach(() => {
     ultimaRiuscita: null,
     problema: null,
   });
+  vi.mocked(api.conflittoDaMostrare).mockResolvedValue(null);
 });
 
 describe("SC-01, primo utilizzo (SF-16)", () => {
@@ -1243,6 +1245,41 @@ describe("ricerca nella colonna (RF-08, DEC-94)", () => {
     await userEvent.click(await riga(/Lavoro/));
     expect(screen.queryByRole("dialog", { name: "Risultati della ricerca" })).toBeNull();
     expect(colonna()).toHaveClass("colonna-aperta");
+  });
+});
+
+describe("copia in conflitto (RB-39)", () => {
+  const TESTO_CONFLITTO =
+    "Una nota è stata modificata su due dispositivi: ci sono tutte e due le versioni.";
+
+  const conCopia = () => {
+    vi.mocked(api.albero).mockResolvedValue(alberoDiProva());
+    vi.mocked(api.leggi).mockImplementation(async (id) =>
+      id === "k"
+        ? nota("k", "Riunione di lunedì (copia in conflitto)", "l'altra versione")
+        : nota("r", "Riunione di lunedì", "testo"),
+    );
+  };
+
+  it("durante l'uso: avviso con Apri l'altra, che apre la copia (CA-10.3)", async () => {
+    conCopia();
+    render(<FinestraPrincipale />);
+    await titoloNota("Riunione di lunedì");
+    act(() => sinc.gestore?.({ tipo: "conflitto", originale: "r", copia: "k", scrivendo: false }));
+    expect(await screen.findByText(TESTO_CONFLITTO)).toBeInTheDocument();
+    await waitFor(() => expect(api.conflittoDaMostrare).toHaveBeenCalledTimes(2));
+    await userEvent.click(screen.getByRole("button", { name: "Apri l'altra" }));
+    expect(await titoloNota("Riunione di lunedì (copia in conflitto)")).toBeInTheDocument();
+    expect(screen.queryByText(TESTO_CONFLITTO)).not.toBeInTheDocument();
+  });
+
+  it("nato alla prima sincronizzazione, prima che la finestra ascolti: l'avviso compare lo stesso (DEC-139)", async () => {
+    conCopia();
+    vi.mocked(api.conflittoDaMostrare).mockResolvedValue("k");
+    render(<FinestraPrincipale />);
+    expect(await screen.findByText(TESTO_CONFLITTO)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Apri l'altra" }));
+    expect(await titoloNota("Riunione di lunedì (copia in conflitto)")).toBeInTheDocument();
   });
 });
 

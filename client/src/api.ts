@@ -140,6 +140,8 @@ export const api = {
   /** Restituisce il nome che vale: vuoto torna il nome del computer (RB-51). */
   cambiaNomeDispositivo: (nome: string) => comando<string>("cambia_nome_dispositivo", { nome }),
   statoSincronizzazione: () => comando<StatoSincronizzazione>("stato_sincronizzazione"),
+  /** La copia in conflitto non ancora mostrata nell'avviso, una volta sola (RB-39, DEC-139). */
+  conflittoDaMostrare: () => comando<string | null>("conflitto_da_mostrare"),
 
   // Accesso (RF-14, DEC-121).
   statoAccesso: () => comando<StatoAccesso>("stato_accesso"),

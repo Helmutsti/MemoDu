@@ -581,6 +581,13 @@ export function FinestraPrincipale(): ReactElement {
       },
       () => undefined,
     );
+    // Lo stesso per un conflitto nato alla prima sincronizzazione (RB-39, DEC-139).
+    api.conflittoDaMostrare().then(
+      (copia) => {
+        if (copia) setAvvisoSinc({ tipo: "conflitto", copia });
+      },
+      () => undefined,
+    );
   }, []);
   useEffect(
     () =>
@@ -603,6 +610,8 @@ export function FinestraPrincipale(): ReactElement {
           }
           case "conflitto":
             setAvvisoSinc({ tipo: "conflitto", copia: evento.copia });
+            // L'avviso è arrivato: il nucleo non deve ripeterlo alla prossima apertura.
+            void api.conflittoDaMostrare().catch(() => undefined);
             if (evento.scrivendo && apertaAttuale.current?.id === evento.originale) {
               void apriNota(evento.copia);
             }

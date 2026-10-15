@@ -1,6 +1,6 @@
 # DEC-80 – Quando parte la sincronizzazione
 
-**Data:** 2026-09-30 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-09-30 · **Stato:** Superata in parte da DEC-137 (il ritmo: ogni 20 s) e da DEC-138 (tentativi senza rete al massimo ogni 30 s) · **Idea di origine:** —
 
 ## Contesto
 RF-10 dice che la sincronizzazione parte periodicamente in background e al ritorno della rete (DEC-02); la frequenza era rinviata alla Fase 7. Finché va tutto bene è invisibile (RB-40).

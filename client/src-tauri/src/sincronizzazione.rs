@@ -29,10 +29,13 @@ use crate::impostazioni::{applica_scorciatoia, ProblemaSinc};
 static IN_CORSO: Mutex<()> = Mutex::new(());
 /// Gettone scaduto o rifiutato: si aspetta un nuovo accesso (RB-87).
 static SCADUTO: AtomicBool = AtomicBool::new(false);
-const INTERVALLO: Duration = Duration::from_secs(30);
+/// Ogni quanto si chiedono le novità: con l'invio 3 s dopo una modifica, una nota arriva entro 30 s
+/// (CA-10.14, DEC-137).
+const INTERVALLO: Duration = Duration::from_secs(20);
 const DOPO_UNA_MODIFICA: Duration = Duration::from_secs(3);
 const PRIMO_RITENTATIVO: Duration = Duration::from_secs(5);
-const ULTIMO_RITENTATIVO: Duration = Duration::from_secs(5 * 60);
+/// Il tetto dei tentativi senza rete: la rete che torna si nota entro 30 s (CA-10.2, DEC-138).
+const ULTIMO_RITENTATIVO: Duration = Duration::from_secs(30);
 const SOGLIA_IRRAGGIUNGIBILE_ORE: i64 = 1;
 const ATTESA_RICHIESTA: Duration = Duration::from_secs(15);
 
@@ -63,6 +66,28 @@ pub enum Evento {
     /// Note, entità, stati o impostazioni di Brainet cambiati per modifiche ricevute; `spento`:
     /// Brainet è stato spento da un altro computer e qui si è cancellato tutto (RB-111).
     Brainet { spento: bool },
+}
+
+/// L'ultima copia in conflitto non ancora vista dalla finestra: un conflitto nato alla prima
+/// sincronizzazione dopo l'avvio arriva prima che la finestra ascolti, e l'avviso andrebbe perso
+/// (RB-39, DEC-139). La finestra la prende appena è pronta, e a ogni avviso che riceve.
+#[derive(Default)]
+pub struct ConflittoDaMostrare(pub Mutex<Option<String>>);
+
+impl ConflittoDaMostrare {
+    pub fn ricorda(&self, copia: &str) {
+        *self.0.lock().unwrap() = Some(copia.to_string());
+    }
+
+    pub fn prendi(&self) -> Option<String> {
+        self.0.lock().unwrap().take()
+    }
+}
+
+/// La copia in conflitto da mostrare nell'avviso, una volta sola.
+#[tauri::command]
+pub fn conflitto_da_mostrare(conflitto: tauri::State<'_, ConflittoDaMostrare>) -> Option<String> {
+    conflitto.prendi()
 }
 
 /// Gettone e chiave dati di questa sincronizzazione.
@@ -298,6 +323,7 @@ fn sincronizza(app: &AppHandle) -> Result<(), Problema> {
         let _ = app.emit("sincronizzazione", Evento::NoteCambiate { note: note_cambiate });
     }
     for c in conflitti {
+        app.state::<ConflittoDaMostrare>().ricorda(&c.copia);
         let _ = app.emit(
             "sincronizzazione",
             Evento::Conflitto { originale: c.originale, copia: c.copia, scrivendo: c.scrivendo },

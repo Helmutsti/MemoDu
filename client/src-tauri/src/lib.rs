@@ -262,6 +262,7 @@ pub fn run() {
         .manage(Mutex::new(Uscita::default()))
         .manage(comandi::Dati::apri())
         .manage(sincronizzazione::Segnale(Mutex::new(segnale)))
+        .manage(sincronizzazione::ConflittoDaMostrare::default())
         .manage(impostazioni::ScorciatoiaAttiva::default())
         .manage(impostazioni::ProblemaSinc::default())
         .manage(accesso::Accesso::new())
@@ -309,6 +310,7 @@ pub fn run() {
             impostazioni::cambia_cestino_in_ricerca,
             impostazioni::cambia_nome_dispositivo,
             impostazioni::stato_sincronizzazione,
+            sincronizzazione::conflitto_da_mostrare,
             locale::cartelle_locali,
             locale::aggiungi_cartella_locale,
             locale::aggiungi_percorsi_locali,

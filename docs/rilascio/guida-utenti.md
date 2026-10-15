@@ -195,7 +195,7 @@ Impostazioni › «Cambia password», nel riquadro dell'account. Scrivi la passw
 Impostazioni › «Dispositivi collegati» mostra i computer collegati al tuo account, con l'ultima sincronizzazione; quello che stai usando è il primo. «Scollega» su un altro computer, poi di nuovo «Scollega» per confermare: quel computer smette di sincronizzarsi alla prima occasione. Le note che ci sono sopra restano lì. Il computer che stai usando si scollega con «Esci».
 
 ### Quando si sincronizza
-Da sola: all'avvio, pochi secondi dopo ogni modifica e ogni 30 secondi. Non devi fare niente.
+Da sola: all'avvio, pochi secondi dopo ogni modifica e ogni 20 secondi. Non devi fare niente.
 
 Senza connessione lavori come sempre: le modifiche restano sul computer e partono quando il server torna raggiungibile.
 

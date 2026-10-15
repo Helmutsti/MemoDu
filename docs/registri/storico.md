@@ -672,3 +672,7 @@
 | 15/10/2026 | Manuel Cucca | Allegati di Brainet: bucket di Cloudflare R2 e le quattro variabili `MEMODU_R2_*` su Vercel create; passi del runbook approvati | DEC-135 |
 | 15/10/2026 | Agente IA | Push di `main` senza tag (scelta di Manuel Cucca): Vercel ha pubblicato il server con gli allegati; `/vivo` 200, `/salute` ok, le richieste degli allegati rispondono (401 senza gettone). La configurazione di R2 si vede al primo allegato vero | DEC-135 |
 | 15/10/2026 | Manuel Cucca | Prove della 1.0 sul Mac fatte (nota rapida, accesso, Locale, sincronizzazione; tre correzioni della sincronizzazione). La 1.0.0 non esce: tronco unico con i tag, il prossimo rilascio dalla testa, da riprovare sul Mac | DEC-136 |
+| 15/10/2026 | Manuel Cucca | Sincronizzazione: le novità si chiedono ogni 20 s invece che ogni 30 s, perché una nota arrivi sempre entro 30 s; architettura e guida per gli utenti allineate | DEC-137 |
+| 15/10/2026 | Manuel Cucca | Sincronizzazione: senza rete i tentativi si diradano fino a 30 s invece che 5 minuti, così la rete che torna si nota entro mezzo minuto; architettura e runbook allineati | DEC-138 |
+| 15/10/2026 | Manuel Cucca | Sincronizzazione: l'avviso della copia in conflitto compare anche quando il conflitto nasce alla prima sincronizzazione dopo l'avvio (RB-39) | DEC-139 |
+| 15/10/2026 | Manuel Cucca | Esiti delle prove sul Mac sul codice della 1.0 (TC-01, TC-02, TC-06, TC-142, TC-135, TC-127, TC-87, TC-88, TC-112, TC-113, TC-114, TC-146) nei piani di test, da riprovare sulla testa | DEC-136 |

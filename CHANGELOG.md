@@ -21,6 +21,11 @@ In coda dopo la 1.1.0 e la 1.0.0: diventerà la 1.2.0, con gli account per più 
 - Dopo l'aggiornamento ogni computer chiede una volta di accedere di nuovo, con la stessa email e la stessa password
 - «Esci» toglie il computer anche dall'elenco dei dispositivi collegati
 
+### Corretto
+- Una nota scritta su un computer arriva sempre sugli altri entro 30 secondi: prima a volte ci metteva qualche secondo in più
+- Quando torna la rete, le modifiche fatte senza rete partono entro mezzo minuto: prima potevano aspettare fino a 5 minuti
+- Se una nota è stata modificata su due computer e la copia nasce appena apri Memodu, compare comunque l'avviso con «Apri l'altra»
+
 Prima, e già pronta: la 1.1.0, con la formattazione Markdown nelle note.
 
 ### Aggiunto

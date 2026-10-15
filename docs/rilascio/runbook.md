@@ -76,7 +76,7 @@ Cosa protegge oggi:
 
 ### «La sincronizzazione non è riuscita: riprovo da sola»
 **Sintomi:** pallino ambra con quel testo, o l'avviso con lo stesso testo.
-**Cosa fare:** si riprova da solo, a intervalli che crescono fino a 5 minuti. Se dura, guarda i log delle funzioni su Vercel: un errore 500 ripetuto è un difetto del server da correggere.
+**Cosa fare:** si riprova da solo, a intervalli che crescono fino a 30 secondi (DEC-138). Se dura, guarda i log delle funzioni su Vercel: un errore 500 ripetuto è un difetto del server da correggere.
 
 ### «Memodu e il server hanno versioni diverse»
 **Sintomi:** pallino rosso con quel testo; risposta 426 del server.
