@@ -5,6 +5,11 @@
 // a questo computer che cosa resta da caricare o da cancellare sul server. I file stanno nella
 // cartella dei dati: `allegati/ID/nome del file` e, per le foto, `allegati/ID-anteprima.jpg`; se
 // ci sono sul disco sono scaricati, se mancano si scaricano quando servono (RB-118).
+// Un allegato si cancella solo sul computer dove è stato tolto (scelta di Manuel Cucca del
+// 15/10/2026): Togli, Elimina per sempre, Svuota il Cestino e un file allegato che non entra nel
+// testo lo mettono in `allegati_da_controllare`; alla chiusura del foglio quelli che nessuna nota
+// usa più se ne vanno. Gli altri computer lo cancellano solo ricevendo il blocco «eliminato»,
+// mai per conto loro: un allegato appena arrivato, prima della nota che lo usa, resta.
 
 use std::collections::HashSet;
 use std::path::{Path, PathBuf};
@@ -33,6 +38,9 @@ pub const SCHEMA_ALLEGATI: &str = "
   CREATE TABLE allegati_file (
     id TEXT PRIMARY KEY,
     stato TEXT NOT NULL
+  );
+  CREATE TABLE allegati_da_controllare (
+    id TEXT PRIMARY KEY
   );
 ";
 
@@ -208,6 +216,7 @@ impl Archivio {
                 .optional()?)
         })?;
         if let Some(id) = gia {
+            self.con_riconnessione(|a| a.da_controllare(&id))?;
             return self.allegato(&id);
         }
         let (anteprima, misure) = if e_foto(tipo) {
@@ -237,7 +246,8 @@ impl Archivio {
                 ],
             )?;
             a.db.execute("INSERT OR REPLACE INTO allegati_file (id, stato) VALUES (?, ?)", params![id, DA_CARICARE])?;
-            Ok(())
+            // Se poi non entra nel testo, alla chiusura del foglio se ne va.
+            a.da_controllare(&id)
         });
         if let Err(e) = scritto {
             self.togli_file(&id);
@@ -361,7 +371,21 @@ impl Archivio {
 
     // ——— Togliere (RB-121) ———
 
-    /// Cancella gli allegati che nessun frammento, nemmeno nel Cestino, usa più: via dal
+    fn da_controllare(&self, id: &str) -> Esito<()> {
+        self.db.execute("INSERT OR IGNORE INTO allegati_da_controllare (id) VALUES (?)", [id])?;
+        Ok(())
+    }
+
+    /// Gli allegati che c'erano in `prima` e non ci sono in `dopo`, tolti su questo computer.
+    pub(super) fn segna_tolti(&self, prima: &str, dopo: &str) -> Esito<()> {
+        let restano: HashSet<&str> = allegati_nel_testo(dopo).collect();
+        for id in allegati_nel_testo(prima).filter(|id| !restano.contains(id)) {
+            self.da_controllare(id)?;
+        }
+        Ok(())
+    }
+
+    /// Cancella gli allegati tolti qui che nessun frammento, nemmeno nel Cestino, usa più: via dal
     /// computer, e (con il blocco «eliminato» e la cancellazione sul server) da tutti gli altri.
     /// Si chiama quando si chiude il foglio, così Ctrl+Z dopo «Togli» rimette l'allegato.
     pub fn pulisci_allegati(&mut self) -> Esito<usize> {
@@ -377,10 +401,18 @@ impl Archivio {
         let testi: Vec<String> =
             self.db.prepare("SELECT testo FROM frammenti")?.query_map([], |r| r.get(0))?.collect::<Result<_, _>>()?;
         let usati: HashSet<&str> = testi.iter().flat_map(|t| allegati_nel_testo(t)).collect();
-        let tutti: Vec<String> =
-            self.db.prepare("SELECT id FROM allegati")?.query_map([], |r| r.get(0))?.collect::<Result<_, _>>()?;
-        let tolti: Vec<String> = tutti.into_iter().filter(|id| !usati.contains(id.as_str())).collect();
+        let segnati: Vec<String> = self
+            .db
+            .prepare("SELECT id FROM allegati_da_controllare")?
+            .query_map([], |r| r.get(0))?
+            .collect::<Result<_, _>>()?;
+        self.db.execute("DELETE FROM allegati_da_controllare", [])?;
+        // Uno rimesso con Ctrl+Z, o usato da un'altra nota, resta.
+        let tolti: Vec<String> = segnati.into_iter().filter(|id| !usati.contains(id.as_str())).collect();
         for id in &tolti {
+            if self.db.query_row("SELECT 1 FROM allegati WHERE id = ?", [id], |_| Ok(())).optional()?.is_none() {
+                continue;
+            }
             self.db.execute("DELETE FROM allegati WHERE id = ?", [id])?;
             self.db.execute("INSERT OR REPLACE INTO allegati_file (id, stato) VALUES (?, ?)", params![id, DA_CANCELLARE])?;
         }
@@ -391,7 +423,7 @@ impl Archivio {
     pub(super) fn cancella_tutti_allegati(&self) -> Esito<()> {
         self.db.execute_batch(&format!(
             "INSERT OR REPLACE INTO allegati_file (id, stato) SELECT id, '{DA_CANCELLARE}' FROM allegati;
-             DELETE FROM allegati;"
+             DELETE FROM allegati; DELETE FROM allegati_da_controllare;"
         ))?;
         let _ = std::fs::remove_dir_all(self.cartella_allegati());
         Ok(())

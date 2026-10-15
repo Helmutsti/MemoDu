@@ -351,9 +351,10 @@ impl Archivio {
     pub fn salva_frammento(&mut self, id: &str, testo: &str) -> Esito<Option<Frammento>> {
         self.con_riconnessione(|a| {
             a.acceso()?;
-            a.frammento(id)?;
+            let prima = a.frammento(id)?.testo;
             if testo_semplice(testo).trim().is_empty() {
                 a.cancella_frammento(id)?;
+                a.segna_tolti(&prima, "")?;
                 return Ok(None);
             }
             controlla_limite(testo)?;
@@ -362,6 +363,9 @@ impl Archivio {
                 params![testo, a.ora(), id],
             )?;
             a.indicizza(id, testo)?;
+            // Gli allegati tolti scrivendo (Togli, Backspace, Taglia) si controllano alla chiusura
+            // del foglio (RB-121).
+            a.segna_tolti(&prima, testo)?;
             Ok(Some(a.frammento(id)?))
         })
     }
@@ -849,6 +853,13 @@ impl Archivio {
     }
 
     pub(super) fn elimina_frammento_per_sempre(&self, id: &str) -> Esito<bool> {
+        let testo: Option<String> = self
+            .db
+            .query_row("SELECT testo FROM frammenti WHERE id = ? AND eliminato_il IS NOT NULL", [id], |r| r.get(0))
+            .optional()?;
+        if let Some(t) = &testo {
+            self.segna_tolti(t, "")?;
+        }
         let n = self.db.execute("DELETE FROM frammenti WHERE id = ? AND eliminato_il IS NOT NULL", [id])?;
         if n > 0 {
             self.togli_indice(id)?;

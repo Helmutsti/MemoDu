@@ -201,3 +201,34 @@ fn il_file_si_cifra_solo_per_il_suo_allegato() {
     assert!(apri_file(&chiave, "id-1-anteprima", &cifrato).is_none());
     assert!(apri_file(&Chiave([1; 32]), "id-1", &cifrato).is_none());
 }
+
+#[test]
+fn un_allegato_arrivato_da_un_altro_computer_non_si_cancella_qui_prima_della_sua_nota() {
+    let mut p = Prova::accesa();
+    let id = uuid::Uuid::new_v4().to_string();
+    let blocco = json!({
+        "formato": "chiaro", "tipo": "allegato", "modificato_il": "", "eliminato": false,
+        "campi": { "nome": "grande.txt", "tipo": "testo", "grandezza": 3, "impronta": "x",
+                   "creato_il": "2026-10-15T10:00:00.000Z" }
+    });
+    p.a().ricevi(&[Ricevuta { id: id.clone(), versione: 1, dati: blocco.to_string() }]).unwrap();
+    // La nota che lo usa non è ancora arrivata: la pulizia non lo tocca.
+    assert_eq!(p.a().pulisci_allegati().unwrap(), 0);
+    assert_eq!(p.stato(&id).as_deref(), Some("remoto"));
+    assert!(p.a().allegati_da_cancellare().unwrap().is_empty());
+}
+
+#[test]
+fn togli_e_ctrl_z_lo_lasciano_un_file_mai_messo_nel_testo_se_ne_va() {
+    let mut p = Prova::accesa();
+    let a = p.a().allega("Preventivo.pdf", &pdf()).unwrap();
+    let f = p.a().crea_frammento(&format!("vedi {}", segno(&a, "documento"))).unwrap();
+    p.a().salva_frammento(&f.id, "vedi").unwrap();
+    p.a().salva_frammento(&f.id, &format!("vedi {}", segno(&a, "documento"))).unwrap();
+    assert_eq!(p.a().pulisci_allegati().unwrap(), 0, "rimesso con Ctrl+Z");
+    // Allegato e poi rimasto fuori dal testo (per esempio il foglio chiuso prima di salvare).
+    let fuori = p.a().allega("Altro.txt", b"testo").unwrap();
+    assert_eq!(p.a().pulisci_allegati().unwrap(), 1);
+    assert_eq!(p.a().allegati_da_cancellare().unwrap(), vec![fuori.id]);
+}
+

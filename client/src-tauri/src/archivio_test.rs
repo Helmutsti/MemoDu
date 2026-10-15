@@ -177,7 +177,7 @@ fn una_copia_di_lavoro_con_lo_schema_2_riceve_le_impostazioni() {
          DROP TRIGGER ricerca_note_tag_UPDATE; DROP TABLE ricerca; DROP TABLE ricerca_righe;
          ALTER TABLE note DROP COLUMN vista;
          DROP TABLE frammenti; DROP TABLE entita; DROP TABLE stati; DROP TABLE brainet_citazioni;
-         DROP TABLE brainet_aree; DROP TABLE brainet_aree_legami; DROP TABLE allegati; DROP TABLE allegati_file;
+         DROP TABLE brainet_aree; DROP TABLE brainet_aree_legami; DROP TABLE allegati; DROP TABLE allegati_file; DROP TABLE allegati_da_controllare;
          PRAGMA user_version = 2;",
     )
     .unwrap();
