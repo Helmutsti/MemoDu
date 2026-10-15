@@ -49,7 +49,7 @@ erDiagram
 | Attributo | Tipo | Obbligatorio | Vincoli | Note |
 |---|---|---|---|---|
 | Identificativo | Codice | Sì | Unico e stabile | Tecnico |
-| Testo | Markdown | Sì | Non vuoto; fino a 4 MB come le note (DEC-106) | Le pillole e le aree stanno in EN-14 ed EN-15, non nel testo (proposta dell'agente) |
+| Testo | Markdown | Sì | Non vuoto; fino a 4 MB come le note (DEC-106) | Pillole e aree sono scritte nel testo con segni nascosti, così si spostano con le parole; EN-14 ed EN-15 sono l'indice ricavato dal testo (scelta di Manuel Cucca del 15/10/2026, Fase 7; prima stavano fuori dal testo) |
 | Nato il | Data e ora | Sì | | Il giorno del Calendario (RB-103); per una nota importata, la data di creazione della nota (RB-112) |
 | Modificato il | Data e ora | Sì | | Non sposta il giorno nel Calendario |
 
@@ -81,7 +81,7 @@ erDiagram
 |---|---|---|---|---|
 | Frammento | EN-12 | Sì | | |
 | Entità | EN-13 | Sì | | |
-| Posizione | Inizio e fine nel testo | Sì | Dentro il testo del frammento | Segue il testo quando lo modifichi |
+| Posizione | Inizio e fine nel testo | Sì | Dentro il testo del frammento | Il segno sta nel testo e si sposta con lui (15/10/2026) |
 
 - **Chi la crea:** l'utente con @; **chi la modifica:** il sistema, quando il testo cambia o le entità si uniscono; **cancellazione:** Backspace subito dopo la pillola (RB-104).
 
@@ -91,7 +91,7 @@ erDiagram
 | Attributo | Tipo | Obbligatorio | Vincoli | Note |
 |---|---|---|---|---|
 | Frammento | EN-12 | Sì | | |
-| Posizione | Inizio e fine nel testo | Sì | | Due aree possono sovrapporsi (FL-18) |
+| Posizione | Inizio e fine nel testo | Sì | | Il segno sta nel testo, con stati ed entità; due aree possono sovrapporsi (FL-18) |
 | Entità | EN-13, da 0 a molte | | Almeno un legame tra entità e stati | Comprende da sola le entità citate dentro l'area (RB-107) |
 | Stati | EN-16, da 0 a molti | | | |
 

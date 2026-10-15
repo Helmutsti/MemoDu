@@ -613,3 +613,5 @@
 | 15/10/2026 | Agente IA | Mockup di Brainet con i componenti della libreria al posto dei pezzi fatti a mano (icone, collegamenti, aree, menu dei suggerimenti e dell'area, Unisci a, righe di Entità, calendario, stati, titoli del Cestino); icone di prova tolte dal file. Nella libreria, da pubblicare: voce «Importa in Brainet» nel menu della nota e menu Nota di Brainet, Entità, Importa in Brainet | DEC-134 |
 | 15/10/2026 | Manuel Cucca | Libreria pubblicata con i menu di Brainet; Fase 5 di RF-18 chiusa | DEC-134 |
 | 15/10/2026 | Agente IA | Menu di Brainet nei mockup (Database, Entità, Importa in Brainet); 21 esportazioni di Brainet rifatte | DEC-134 |
+| 15/10/2026 | Manuel Cucca | RF-18, Fase 7: pillole e aree scritte nel testo con segni nascosti, come il sottolineato; citazioni e aree diventano un indice ricavato dal testo (modo 2) | DEC-134 |
+| 15/10/2026 | Agente IA | RF-18, Fase 7 proposta: copia di lavoro (schema 8), segni `<cita>` e `<area>`, editor con il compartimento Brainet, tre tipi di blocco nuovi, spegnimento, importazione, comandi del nucleo in `api.md` | DEC-134 |

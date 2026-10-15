@@ -108,6 +108,49 @@ Approvata da Manuel Cucca il 09/10/2026. L'editor resta CodeMirror (DEC-131, agg
 
 **Ambienti:** gli stessi di oggi (`architettura/ambienti.md`): locale con un database Postgres di prova e `api/.env`; prova e produzione sono il database Neon e il server su Vercel di oggi (DEC-132). Le prove del server girano su un database effimero.
 
+## Brainet (RF-18, DEC-134; Fase 7 proposta dall'agente il 15/10/2026, da approvare)
+Brainet vive tutto nel client, come le note: copia di lavoro, comandi del nucleo, sincronizzazione a blocchi cifrati. Il server non cambia.
+
+**Pillole e aree dentro il testo (scelta di Manuel Cucca del 15/10/2026).** Il testo di una nota Brainet è Markdown con due segni in forma di tag, come `<u>` per il sottolineato (DEC-28):
+- collegamento (EN-14): `<cita e="ID">Luca Bianchi</cita>`; dentro c'è il nome com'era quando è stato scritto, che serve solo se l'entità non c'è più; la pillola mostra il nome attuale dell'entità;
+- area (EN-15): `<area id="ID" s="ID,ID" e="ID,ID">il preventivo della serra arriva venerdì</area>`, con gli stati (`s`) e le entità (`e`) legati. L'apertura e la chiusura si accoppiano per `id`, così due aree possono sovrapporsi; un'area che contiene un collegamento ne prende l'entità senza scriverla in `e` (RB-107).
+Con il testo si spostano anche pillole e aree, su ogni computer; una nota cambiata su due computer dà una copia in conflitto con le sue pillole e le sue aree (DEC-06). I `<` scritti a mano dall'utente si salvano come `&lt;`, così un testo non diventa mai un segno.
+
+**Modello dati fisico** (schema 8 della copia di lavoro, `client/src-tauri/src/archivio_brainet.rs`):
+
+| Tabella | Colonne | Chiavi, indici, regole |
+|---|---|---|
+| `frammenti` (EN-12) | `id`, `testo` (Markdown con i segni), `nato_il`, `modificato_il`, `eliminato_il`, `da_nota` (la nota importata) | `id` chiave; indice su `nato_il` per il Calendario e il Database; nel Cestino se `eliminato_il` c'è; 4 MB come le note (DEC-106) |
+| `entita` (EN-13) | `id`, `nome`, `chiave_nome`, `tipo` (null, `persona`, `oggetto`, `evento`, `argomento`), `foto` (JPEG), `unita_in`, `creata_il` | `id` chiave; `chiave_nome` è il nome in minuscolo senza accenti, per i suggerimenti di @; un'entità unita resta come rimando (`unita_in`) e non si mostra |
+| `stati` (EN-16) | `id`, `nome`, `colore` (`avviso`, `informazione`, `successo`, `errore`), `ordine` | `id` chiave; `nome` unico senza maiuscole |
+| `brainet_citazioni` | `frammento`, `entita`, `inizio`, `fine` | Indice ricavato dal testo, non si sincronizza: si rifà a ogni salvataggio e a ogni blocco ricevuto di quel frammento |
+| `brainet_aree`, `brainet_aree_legami` | area: `frammento`, `id`, `inizio`, `fine`; legame: `area`, `tipo` (`stato` o `entita`), `id` | Come sopra |
+| `impostazioni` | in più `brainet` (0 o 1) e `mostra_database` (0 o 1) | Nell'elemento «impostazioni» che si sincronizza (RB-52); di default 0 e 1 |
+
+L'indice serve a Entità (quante volte, l'ultima volta), alle unioni e ai conteggi della conferma; segue `unita_in`, così dopo un'unione i testi non si riscrivono. Le date sono istanti in ora universale; il giorno del Calendario è quello del fuso del computer.
+
+**Foto di un'entità.** «Scegli una foto…» apre la finestra del sistema (`tauri-plugin-dialog`, c'è già); il nucleo la riduce a 256 px sul lato lungo e la salva in JPEG (crate `image`), così sta nel blocco dell'entità e viaggia cifrata con lei.
+
+**Editor.** Lo stesso CodeMirror 6 delle note (DEC-27), con un compartimento Brainet sopra la vista Markdown (`client/src/brainet/`):
+- i segni si nascondono come i simboli del Markdown (`anteprima.ts`): il collegamento diventa un widget (CMP-38) ed è un intervallo atomico, che Backspace toglie tutto (RB-104); l'area diventa una decorazione con il fondo (CMP-40);
+- @ apre i suggerimenti con `@codemirror/autocomplete`, che ha già le sezioni con il titolo (CMP-09 Suggerimenti); «Crea» chiama il nucleo e inserisce il collegamento;
+- la selezione apre il menu dell'area (CMP-09 Area), il passaggio del mouse la Linguetta con `hoverTooltip`; scegliere o togliere una voce riscrive solo il segno di apertura dell'area, in una transazione dell'editor;
+- il foglio nuovo, il Database e il Cestino usano lo stesso editor; il Calendario e Entità no.
+
+**Sincronizzazione.** Tre tipi di blocco nuovi, `frammento`, `entita` e `stato`, con gli stessi trigger, la stessa cifratura e le stesse versioni delle note (DEC-75 … DEC-78, DEC-121). Le app che non conoscono Brainet saltano i blocchi di tipo sconosciuto (`archivio_sinc.rs`, già così), quindi le versioni fino alla 1.2.0 non si rompono. Conflitti: il testo di un frammento come le note (copia in conflitto, con lo stesso `nato_il`); gli altri campi, vince l'ultima modifica arrivata al server (DEC-109).
+
+**Spegnere Brainet (RB-111).** Il comando cancella le tabelle di Brainet in una transazione, segna ogni frammento, entità e stato come «eliminato» (DEC-76) e mette `brainet` a 0 nelle impostazioni; tutto parte nella sincronizzazione successiva. Un computer che riceve `brainet` a 0 cancella le sue tabelle di Brainet e manda all'interfaccia l'evento `brainet-spento`: la sezione sparisce, il foglio aperto si chiude senza salvare e compare l'avviso. Le versioni precedenti dei blocchi restano sul server, cifrate, fino a 7 giorni (DEC-77), poi spariscono.
+
+**Importare (RB-112).** Il nucleo crea il frammento con il testo della nota (il titolo, se c'è, come prima riga), `nato_il` uguale alla data di creazione della nota e `da_nota`; tag e cartella si perdono. Con «Sposta» la nota va nel Cestino di CLOUD (proposta dell'agente, da confermare), così l'errore si ripara.
+
+**Cestino.** I frammenti eliminati compaiono nella parte Brainet del Cestino (SC-04); «Ripristina» toglie `eliminato_il`, «Elimina per sempre» e «Svuota cestino» li cancellano e mandano il blocco «eliminato».
+
+**Fuori da Brainet.** La ricerca (RF-08) non guarda Brainet, e le note di Brainet non compaiono in CLOUD.
+
+**Risposta tecnica alle sfighe:** SF-01 «Crea» e «Spegni e cancella tutto» si disattivano dopo il primo clic, «Copia» due volte dà due frammenti (FL-22); SF-22 copia in conflitto per il testo, l'ultima modifica per il resto; SF-24 evento `brainet-spento`; un'entità unita su un altro computer mentre qui la si cita: il collegamento nuovo segue `unita_in` (RB-108).
+
+**Ambienti:** gli stessi di oggi; le prove del nucleo usano una copia di lavoro temporanea (`MEMODU_CARTELLA`).
+
 ## Schema generale
 ```mermaid
 flowchart LR
