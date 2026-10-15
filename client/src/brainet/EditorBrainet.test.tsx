@@ -221,12 +221,12 @@ describe("EditorBrainet (RF-18)", () => {
     act(() => {
       zona.dispatchEvent(
         new CustomEvent("rilascio-file", {
-          detail: { percorsi: ["C:\Documenti\Preventivo.pdf"], x: 0, y: 0 },
+          detail: { percorsi: ["C:/Documenti/Preventivo.pdf"], x: 0, y: 0 },
         }),
       );
     });
     await waitFor(() => expect(ultimo()).toContain(segnoAllegato(PDF.id, "documento", PDF.nome)));
-    expect(brainet.allegaFile).toHaveBeenCalledWith("C:\Documenti\Preventivo.pdf");
+    expect(brainet.allegaFile).toHaveBeenCalledWith("C:/Documenti/Preventivo.pdf");
   });
 
   it("la linguetta nomina anche le entità legate solo all'area (CA-18.7)", async () => {
