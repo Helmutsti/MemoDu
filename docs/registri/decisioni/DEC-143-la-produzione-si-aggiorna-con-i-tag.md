@@ -1,6 +1,6 @@
 # DEC-143 – La produzione si aggiorna con i tag
 
-**Data:** 2026-10-15 · **Stato:** Proposta · **Idea di origine:** —
+**Data:** 2026-10-15 · **Stato:** Superata da DEC-144 · **Idea di origine:** —
 
 ## Contesto
 Il server su Vercel ripubblica in produzione a ogni invio su `main` (runbook, «Server»). Con il tronco unico (DEC-136) su `main` arriva anche il lavoro in corso: il 14/10/2026 un invio ha messo in produzione gli account e la 1.0 non si è più sincronizzata; il 15/10/2026 sono andati in produzione gli allegati di Brainet prima del rilascio. Le app pubblicate e il server devono andare insieme.
