@@ -491,12 +491,16 @@ impl Archivio {
             "frammento" => "frammenti",
             "entita" => "entita",
             "stato" => "stati",
+            "allegato" => "allegati",
             _ => "tag",
         };
         if blocco["eliminato"] == json!(true) {
             self.db.execute(&format!("DELETE FROM {tabella} WHERE id = ?"), [id])?;
             if tipo == "frammento" {
                 self.togli_indice(id)?;
+            }
+            if tipo == "allegato" {
+                self.allegato_eliminato_altrove(id)?;
             }
             return Ok(());
         }

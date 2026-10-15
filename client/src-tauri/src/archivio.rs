@@ -22,7 +22,7 @@ pub const FILE_DATABASE: &str = "copia-di-lavoro.db";
 /// File dell'API quando girava sulla stessa macchina (DEC-46): da lì si copiano le note alla
 /// prima apertura, così non si perde niente.
 pub const FILE_API: &str = "memodu.db";
-const VERSIONE_SCHEMA: i64 = 8;
+const VERSIONE_SCHEMA: i64 = 9;
 const SENZA_TITOLO: &str = "Senza titolo";
 const NUOVA_CARTELLA: &str = "Nuova cartella";
 const LUNGHEZZA_MASSIMA_NOME: usize = 100;
@@ -185,6 +185,9 @@ const TRIGGER_BRAINET: [Trigger; 3] = [
     ("stati", "stato", "NEW.id", "OLD.id"),
 ];
 
+/// Allegati di Brainet (RF-18, DEC-135): un blocco per allegato; lo stato dei file è di qui.
+const TRIGGER_ALLEGATI: [Trigger; 1] = [("allegati", "allegato", "NEW.id", "OLD.id")];
+
 fn schema_trigger(trigger: &[Trigger]) -> String {
     let mut sql = String::new();
     for &(tabella, tipo, nuovo, vecchio) in trigger {
@@ -266,8 +269,10 @@ pub enum Errore {
     BrainetSpento,
     /// Nota, entità o stato di Brainet che non c'è.
     BrainetNonTrovato(String),
-    /// Dato di Brainet non valido: nome vuoto, colore, mese, immagine.
+    /// Dato di Brainet non valido: nome vuoto, colore, mese, immagine, file da allegare.
     NonValido(String),
+    /// Serve il server e non risponde: un allegato da scaricare senza rete (RB-118).
+    SenzaRete,
     Database(rusqlite::Error),
 }
 
@@ -303,6 +308,7 @@ impl Errore {
             Errore::DiscoRifiuta(_) => Some(403),
             Errore::TroppoGrande(_) => Some(413),
             Errore::SpostamentoImpossibile => Some(422),
+            Errore::SenzaRete => Some(503),
             Errore::NonDisponibile(_) => None,
             Errore::Database(_) => Some(500),
         }
@@ -331,6 +337,7 @@ impl Errore {
             Errore::BrainetSpento => "Brainet è spento".into(),
             Errore::BrainetNonTrovato(id) => format!("Niente di Brainet con id {id}"),
             Errore::NonValido(testo) => testo.clone(),
+            Errore::SenzaRete => "Manca la rete: l'allegato non è ancora su questo computer".into(),
             Errore::Database(errore) => errore.to_string(),
         }
     }
@@ -684,6 +691,10 @@ impl Archivio {
             if versione < 8 {
                 tx.execute_batch(brainet::SCHEMA_BRAINET)?;
                 tx.execute_batch(&schema_trigger(&TRIGGER_BRAINET))?;
+            }
+            if versione < 9 {
+                tx.execute_batch(allegati::SCHEMA_ALLEGATI)?;
+                tx.execute_batch(&schema_trigger(&TRIGGER_ALLEGATI))?;
             }
             tx.pragma_update(None, "user_version", VERSIONE_SCHEMA)?;
             tx.commit()?;
@@ -1051,8 +1062,15 @@ impl Archivio {
         })
     }
 
-    /// Cancella per sempre un elemento del cestino (RB-55).
+    /// Cancella per sempre un elemento del cestino (RB-55); gli allegati che nessuno usa più
+    /// vanno con lui (RB-121).
     pub fn elimina_definitivamente(&mut self, id: &str) -> Esito<()> {
+        self.elimina_definitivamente_e_basta(id)?;
+        self.pulisci_allegati()?;
+        Ok(())
+    }
+
+    fn elimina_definitivamente_e_basta(&mut self, id: &str) -> Esito<()> {
         self.con_riconnessione(|a| {
             let note =
                 a.db.execute("DELETE FROM note WHERE id = ? AND eliminata_il IS NOT NULL", [id])?;
@@ -1074,8 +1092,14 @@ impl Archivio {
         })
     }
 
-    /// Svuota il cestino (RB-32).
+    /// Svuota il cestino (RB-32), e con lui gli allegati che nessuno usa più (RB-121).
     pub fn svuota_cestino(&mut self) -> Esito<()> {
+        self.svuota_cestino_e_basta()?;
+        self.pulisci_allegati()?;
+        Ok(())
+    }
+
+    fn svuota_cestino_e_basta(&mut self) -> Esito<()> {
         self.con_riconnessione(|a| {
             a.db.execute("DELETE FROM note WHERE eliminata_il IS NOT NULL", [])?;
             a.svuota_frammenti()?;
@@ -1869,6 +1893,9 @@ pub mod locale;
 
 #[path = "archivio_brainet.rs"]
 pub mod brainet;
+
+#[path = "archivio_allegati.rs"]
+pub mod allegati;
 
 #[cfg(test)]
 #[path = "archivio_test.rs"]

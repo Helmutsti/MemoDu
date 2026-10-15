@@ -631,7 +631,7 @@ Richieste al server con il gettone del dispositivo, come la sincronizzazione; va
 | `GET /allegati/:id/scaricamento` | — | `{ file, anteprima }`: indirizzi `GET` firmati, 15 minuti | `401`, `404` allegato che non c'è o non presente |
 | `DELETE /allegati/:id` | — | `204`, anche se non c'era (SF-20) | `401` |
 
-Comandi del nucleo (`archivio_allegati.rs`, `allegati.rs`): `allega_file(percorso)` e `allega_dati(nome, byte)` (trascinare, incollare, «Allega un file…»: la finestra del sistema) → `{ id, nome, tipo, forma }` o `400`/`413` con il motivo; `leggi_allegato(id)` → `{ nome, tipo, grandezza, anteprima }` (l'anteprima come indirizzo locale, o niente se non è scaricata); `apri_allegato(id)`, `mostra_allegato(id)` (scaricano se serve; `503` senza rete); evento `allegato-pronto` quando un file è scaricato.
+Comandi del nucleo (`archivio_allegati.rs`, `allegati.rs`): `allega_file(percorso)` e `allega_dati(nome, byte)` (trascinare, incollare, «Allega un file…»: la finestra del sistema) → `{ id, nome, tipo, forma }` o `400`/`413` con il motivo; `leggi_allegato(id)` → `{ nome, tipo, grandezza, anteprima }` (l'anteprima come indirizzo `data:`, o niente se non è scaricata: allora si scarica e arriva l'evento); `apri_allegato(id)`, `mostra_allegato(id)` (scaricano se serve; `503` senza rete); `pulisci_allegati()` alla chiusura del foglio (RB-121); evento `allegato-pronto` `{ id }` quando un'anteprima è scaricata. `allega_file` senza percorso apre la finestra del sistema; `allega_dati` riceve i byte come corpo della richiesta e il nome nell'intestazione `memodu-nome`.
 
 ## GET /salute
 Controllo di salute, senza gettone né protocollo. **Output:** `200 { "stato": "ok" }` se l'archivio risponde, altrimenti `503` (DEC-105).

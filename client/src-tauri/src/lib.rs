@@ -14,6 +14,7 @@
 //   conferma (RB-62). Si esce quando tutte hanno risposto.
 
 mod accesso;
+mod allegati;
 mod archivio;
 mod brainet;
 mod cifratura;
@@ -253,6 +254,9 @@ pub fn run() {
     // La sincronizzazione aspetta i segnali in un filo a parte (DEC-80).
     let (segnale, segnali) = std::sync::mpsc::channel();
     let mut segnali = Some(segnali);
+    // Gli allegati di Brainet viaggiano in un filo loro (DEC-135).
+    let (filo_allegati, segnali_allegati) = allegati::FiloAllegati::nuovo();
+    let mut segnali_allegati = Some(segnali_allegati);
     tauri::Builder::default()
         .manage(Mutex::new(Cascata::default()))
         .manage(Mutex::new(Uscita::default()))
@@ -262,6 +266,7 @@ pub fn run() {
         .manage(impostazioni::ProblemaSinc::default())
         .manage(accesso::Accesso::new())
         .manage(locale::Osservatore::default())
+        .manage(filo_allegati)
         .invoke_handler(tauri::generate_handler![
             pronta_a_uscire,
             uscita_annullata,
@@ -340,6 +345,12 @@ pub fn run() {
             brainet::aree_con_stato,
             brainet::togli_stato,
             brainet::importa_in_brainet,
+            allegati::allega_file,
+            allegati::allega_dati,
+            allegati::leggi_allegato,
+            allegati::apri_allegato,
+            allegati::mostra_allegato,
+            allegati::pulisci_allegati,
         ])
         .on_window_event(|finestra, evento| {
             match evento {
@@ -363,6 +374,8 @@ pub fn run() {
         )
         // Finestra di scelta della cartella di Locale (DEC-118), chiamata solo dal nucleo.
         .plugin(tauri_plugin_dialog::init())
+        // «Apri» e «Mostra nella cartella» degli allegati (RB-119), chiamati solo dal nucleo.
+        .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_autostart::init(
             MacosLauncher::LaunchAgent,
             Some(vec![impostazioni::IN_BACKGROUND]),
@@ -387,6 +400,9 @@ pub fn run() {
             let menu = Menu::with_items(app, &[&nota_rapida, &programma, &separatore, &esci])?;
             if let Some(segnali) = segnali.take() {
                 sincronizzazione::avvia(app.handle().clone(), segnali);
+            }
+            if let Some(segnali) = segnali_allegati.take() {
+                allegati::avvia(app.handle().clone(), segnali);
             }
             TrayIconBuilder::with_id("memodu")
                 .icon(icona_area_di_notifica())

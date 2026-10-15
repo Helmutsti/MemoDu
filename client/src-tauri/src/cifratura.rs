@@ -214,6 +214,24 @@ pub fn apri_blocco(chiave: &Chiave, id: &str, ricevuto: &str) -> Option<String> 
     }
 }
 
+/// Un allegato (o la sua anteprima) prima di partire: nonce e file cifrato, con `scopo` (l'id,
+/// o l'id seguito da «-anteprima») come dati aggiunti, così un file non passa per un altro
+/// (DEC-135).
+pub fn chiudi_file(chiave: &Chiave, scopo: &str, byte: &[u8]) -> Vec<u8> {
+    let nonce = rand_nonce();
+    let mut fuori = nonce.to_vec();
+    fuori.extend(cifra(&chiave.0, &nonce, byte, scopo.as_bytes()));
+    fuori
+}
+
+/// Il file in chiaro da uno scaricato; None se non si apre.
+pub fn apri_file(chiave: &Chiave, scopo: &str, cifrato: &[u8]) -> Option<Vec<u8>> {
+    if cifrato.len() < 24 {
+        return None;
+    }
+    decifra(&chiave.0, &cifrato[..24], &cifrato[24..], scopo.as_bytes())
+}
+
 fn rand_nonce() -> [u8; 24] {
     use chacha20poly1305::aead::{AeadCore, OsRng};
     XChaCha20Poly1305::generate_nonce(&mut OsRng).into()

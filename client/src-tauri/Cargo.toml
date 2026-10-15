@@ -50,6 +50,8 @@ base64 = "0.22"
 keyring = { version = "3", features = ["apple-native", "windows-native"] }
 # Foto delle entità di Brainet, ridotte a 256 px in JPEG (RF-18).
 image = { version = "0.25", default-features = false, features = ["jpeg", "png", "webp", "gif", "bmp"] }
+# Allegati di Brainet (RF-18, DEC-135): «Apri» con il programma del computer e «Mostra nella cartella».
+tauri-plugin-opener = "2"
 
 
 # Tema della barra delle applicazioni di Windows, per il colore dell'icona nell'area di notifica.

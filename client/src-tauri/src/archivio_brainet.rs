@@ -6,7 +6,8 @@
 //   area (EN-15):         <area id="ID" s="ID,ID" e="ID,ID">frase</area id="ID">
 // L'apertura e la chiusura di un'area si accoppiano per id, così due aree possono sovrapporsi.
 // Citazioni e aree delle tabelle `brainet_*` sono solo un indice ricavato dal testo: si rifà a
-// ogni scrittura del frammento e non si sincronizza.
+// ogni scrittura del frammento e non si sincronizza. Gli allegati hanno un segno loro
+// (archivio_allegati.rs).
 
 use std::collections::{BTreeMap, HashMap, HashSet};
 use std::sync::LazyLock;
@@ -91,7 +92,7 @@ static AREA_APRE: LazyLock<Regex> = LazyLock::new(|| {
 static AREA_CHIUDE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"</area id="([^"]+)">"#).unwrap());
 /// Un segno scritto a mano dall'utente, o arrivato con una nota importata, non diventa mai un
 /// segno vero: il suo `<` si salva come `&lt;`.
-static FINTO_SEGNO: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<(/?)(cita|area)\b").unwrap());
+static FINTO_SEGNO: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<(/?)(cita|area|allegato)\b").unwrap());
 
 // ——— Forme scambiate con l'interfaccia ———
 
@@ -219,7 +220,7 @@ pub fn testo_semplice(testo: &str) -> String {
     let testo = CITA.replace_all(testo, "$2");
     let testo = AREA_APRE.replace_all(&testo, "");
     let testo = AREA_CHIUDE.replace_all(&testo, "");
-    testo.replace("&lt;", "<")
+    super::allegati::senza_segni_allegato(&testo).replace("&lt;", "<")
 }
 
 /// Toglie il valore di un segno finto da un testo che arriva da fuori (nota importata).
@@ -303,7 +304,7 @@ impl Archivio {
             "DELETE FROM brainet_citazioni; DELETE FROM brainet_aree; DELETE FROM brainet_aree_legami;
              DELETE FROM frammenti; DELETE FROM entita; DELETE FROM stati;",
         )?;
-        Ok(())
+        self.cancella_tutti_allegati()
     }
 
     pub fn imposta_mostra_database(&mut self, si: bool) -> Esito<StatoBrainet> {
@@ -871,7 +872,7 @@ impl Archivio {
 // ——— Sincronizzazione (DEC-75, DEC-76) ———
 
 /// Tipi dei blocchi di Brainet; le app che non li conoscono li saltano.
-pub const TIPI_BLOCCHI: [&str; 3] = ["frammento", "entita", "stato"];
+pub const TIPI_BLOCCHI: [&str; 4] = ["frammento", "entita", "stato", super::allegati::TIPO_BLOCCO];
 
 impl Archivio {
     /// I campi del blocco di un elemento di Brainet; None se non c'è più.
@@ -911,6 +912,7 @@ impl Archivio {
                     },
                 )
                 .optional()?,
+            super::allegati::TIPO_BLOCCO => self.campi_allegato(id)?,
             _ => self
                 .db
                 .query_row("SELECT nome, colore, ordine FROM stati WHERE id = ?", [id], |r| {
@@ -969,6 +971,7 @@ impl Archivio {
                     ],
                 )?;
             }
+            super::allegati::TIPO_BLOCCO => self.applica_allegato(id, c)?,
             _ => {
                 let nome = testo("nome").unwrap_or_default();
                 self.db.execute(

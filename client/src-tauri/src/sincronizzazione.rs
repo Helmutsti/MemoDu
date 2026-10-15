@@ -66,10 +66,10 @@ pub enum Evento {
 }
 
 /// Gettone e chiave dati di questa sincronizzazione.
-struct Credenziali {
-    indirizzo: String,
-    gettone: String,
-    chiave: Chiave,
+pub(crate) struct Credenziali {
+    pub(crate) indirizzo: String,
+    pub(crate) gettone: String,
+    pub(crate) chiave: Chiave,
 }
 
 enum Problema {
@@ -86,7 +86,7 @@ impl From<Errore> for Problema {
     }
 }
 
-fn credenziali(app: &AppHandle) -> Option<Credenziali> {
+pub(crate) fn credenziali(app: &AppHandle) -> Option<Credenziali> {
     let accesso = app.state::<Accesso>();
     let gettone = gettone_valido(&accesso)?;
     let chiave = accesso.con(|s| s.map(|s| Chiave(s.chiave.0)))?;

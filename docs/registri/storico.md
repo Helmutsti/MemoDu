@@ -656,3 +656,4 @@
 | 15/10/2026 | Agente IA | RF-18, allegati: CA-18.22 … CA-18.30 e TC-216 … TC-224, da approvare | DEC-135 |
 | 15/10/2026 | Manuel Cucca | RF-18, allegati: Fase 8 approvata (CA-18.22 … CA-18.30, TC-216 … TC-224); via allo sviluppo | DEC-135 |
 | 15/10/2026 | Agente IA | RF-18, allegati, sviluppo 1 fatto: server con la migrazione 3 (tabella `allegati`), richieste di caricamento, fine, scaricamento e cancellazione, deposito R2 (`aws4fetch`) e deposito finto in locale; 8 prove nuove, 55 prove del server passate | DEC-135 |
+| 15/10/2026 | Agente IA | RF-18, allegati, sviluppo 2 fatto: nucleo con lo schema 9 (allegati e stato dei file), blocco `allegato`, controllo di tipo e grandezza, anteprima delle foto, cifratura dei file, filo di caricamento e scaricamento, comandi, pulizia quando nessuna nota li usa; 10 prove nuove, 162 prove del nucleo passate | DEC-135 |
