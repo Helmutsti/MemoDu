@@ -652,3 +652,5 @@
 | 15/10/2026 | Agente IA | RF-18, allegati: pillole Documento aggiornate nei mockup, 7 esportazioni rifatte | DEC-134 |
 | 15/10/2026 | Manuel Cucca | RF-18, allegati: Neon resta per le note, i file vanno su Cloudflare R2 | DEC-135 |
 | 15/10/2026 | Agente IA | RF-18, allegati: architettura proposta (segno nel testo, tabelle sul dispositivo e sul server, viaggio del file con indirizzi firmati, cancellazione) e richieste nuove in `api.md` | DEC-135 |
+| 15/10/2026 | Manuel Cucca | RF-18, allegati: Fase 7 approvata | DEC-135 |
+| 15/10/2026 | Agente IA | RF-18, allegati: CA-18.22 … CA-18.30 e TC-216 … TC-224, da approvare | DEC-135 |

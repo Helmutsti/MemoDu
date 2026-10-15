@@ -29,6 +29,21 @@ Scritto dall'agente il 15/10/2026, approvato da Manuel Cucca lo stesso giorno, c
 | TC-214 | RF-18 CA-18.20 | Nota di CLOUD «Spesa» con tag e cartella, creata il 01/10: Importa › Copia: in Brainet il 01/10, prima riga «Spesa», senza tag né cartella, e la nota resta in CLOUD; Importa › Sposta su un'altra: la nota va nel Cestino di CLOUD; con Brainet spento la voce non c'è | Locale | Note di CLOUD di prova | |
 | TC-215 | RF-18 CA-18.21 | Cercare una parola che c'è solo in una nota Brainet: nessun risultato | Locale | Una nota Brainet con «zafferano» | |
 
+### Allegati (scritti dall'agente il 15/10/2026, da approvare)
+Il server in locale fa da deposito al posto di R2 (DEC-135); in produzione si ripetono TC-222 e TC-224 dopo aver creato il bucket.
+
+| Codice | Riferimento | Caso di prova | Ambiente | Set di dati | Esito |
+|---|---|---|---|---|---|
+| TC-216 | RF-18 CA-18.22 | Allegare «Preventivo.pdf» trascinandolo, incollandolo e con @ › Allega un file…: tre pillole con l'icona e il nome, nei punti giusti | Locale | Un PDF di 2 MB | |
+| TC-217 | RF-18 CA-18.23 | Allegare un PDF di 26 MB e un .zip: nessuno entra, l'avviso dice il motivo, il testo non cambia | Locale | Un PDF di 26 MB, un .zip | Anche prova automatica del nucleo |
+| TC-218 | RF-18 CA-18.24 | Trascinare una foto dentro una frase: bolla; su una riga vuota: piccola su una riga sua | Locale | Un JPG e un PNG | |
+| TC-219 | RF-18 CA-18.25 | Clic sulla foto piccola › Dimensioni › Media, poi Grande: la foto cambia e la spunta segue; nel menu della bolla e del PDF niente Dimensioni | Locale | Come TC-218 | Anche prova automatica dell'editor |
+| TC-220 | RF-18 CA-18.26 | Apri sul PDF: si apre nel lettore PDF; Mostra nella cartella: Esplora file sul file | Locale | Come TC-216 | Su Windows; sul Mac con il Finder |
+| TC-221 | RF-18 CA-18.27 | Togli sulla foto: sparisce, Ctrl + Z la rimette; Togli di nuovo e chiudere il foglio: il file non c'è più né nella cartella dei dati né nel deposito; con la stessa foto in una nota nel Cestino, il file resta | Locale | Due note con la stessa foto | Anche prova automatica del nucleo |
+| TC-222 | RF-18 CA-18.28 | Su A allegare una foto e un PDF: su B dopo la sincronizzazione compaiono; la foto si scarica e si vede; nel deposito i file sono cifrati (nessun byte del file in chiaro) | Locale, due app; poi Produzione | Due app con lo stesso account | |
+| TC-223 | RF-18 CA-18.29 | Su B senza rete aprire la nota con una foto mai scaricata: riquadro con il nome; Apri: avviso della rete; riattaccare la rete: la foto compare da sola | Locale, due app | Come TC-222 | |
+| TC-224 | RF-18 CA-18.30 | Allegare un file di 25 MB su A e, mentre parte, scrivere altre note: le note arrivano su B prima del file; staccare la rete a metà caricamento e riattaccarla: il file riparte e arriva intero | Locale, due app; poi Produzione | Un file di 25 MB | |
+
 ## Domande aperte
 - I modi di «leggere» la knowledge base: da studiare (RF-18, punti aperti).
 - Dove si assegna il tipo a un'entità: non urgente (RF-18, punti aperti).

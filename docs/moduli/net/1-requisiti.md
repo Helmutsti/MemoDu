@@ -85,6 +85,18 @@ Scritti dall'agente il 15/10/2026 (Fase 8), approvati da Manuel Cucca lo stesso 
 - **CA-18.20** *Dato* una nota di CLOUD con titolo, tag e cartella, *quando* faccio tasto destro › Importa in Brainet › Copia, *allora* in Brainet c'è una nota con il titolo come prima riga e il testo, nel giorno in cui la nota era stata creata, senza tag né cartella, e la nota resta in CLOUD; con «Sposta» la nota di CLOUD va nel Cestino (RB-112). La voce c'è solo con Brainet acceso.
 - **CA-18.21** *Dato* Brainet, *quando* cerco una parola che c'è solo in una nota Brainet, *allora* la ricerca non la trova: Brainet resta fuori dalla ricerca.
 
+Allegati, scritti dall'agente il 15/10/2026 (Fase 8), da approvare da Manuel Cucca.
+
+- **CA-18.22** *Dato* un foglio Brainet, *quando* trascino un PDF nel testo, lo incollo con Ctrl + V o lo scelgo con @ › «Allega un file…», *allora* nel punto giusto compare la pillola con l'icona del tipo e il nome del file (RB-114, RB-116).
+- **CA-18.23** *Dato* un file di 26 MB, o un file .zip, *quando* lo allego, *allora* non entra e un avviso dice perché; il testo non cambia (RB-115).
+- **CA-18.24** *Dato* una foto, *quando* la metto dentro una frase, *allora* è una bolla alta come la riga; *quando* la metto su una riga vuota, *allora* arriva piccola su una riga sua (RB-117).
+- **CA-18.25** *Dato* una foto fuori dal paragrafo, *quando* la clicco e scelgo Dimensioni › Media o Grande, *allora* cambia grandezza e la spunta segue la scelta; il menu di una bolla e di un documento non ha Dimensioni (RB-119, RB-120).
+- **CA-18.26** *Dato* un allegato, *quando* lo clicco e scelgo «Apri», *allora* si apre con il programma del computer; con «Mostra nella cartella» si apre Esplora file o il Finder sul file (RB-119).
+- **CA-18.27** *Dato* un allegato in una nota, *quando* scelgo «Togli», *allora* sparisce dalla nota; Ctrl + Z lo rimette; quando nessuna nota, nemmeno nel Cestino, lo usa più, il file sparisce dal computer, dal server e dagli altri computer (RB-121).
+- **CA-18.28** *Dato* due computer con lo stesso account, *quando* allego una foto e un PDF su uno, *allora* sull'altro le pillole e la foto compaiono dopo la sincronizzazione, e il file si scarica la prima volta che serve; sul server il file è cifrato e il server non ne vede il contenuto (RB-118).
+- **CA-18.29** *Dato* un computer senza rete, *quando* apro una nota con una foto non ancora scaricata, *allora* vedo il riquadro con il nome; tornata la rete, la foto compare da sola; «Apri» senza rete dice che manca la rete (RB-118).
+- **CA-18.30** *Dato* un file di 25 MB, *quando* lo allego e intanto scrivo e sincronizzo altre note, *allora* le note arrivano sull'altro computer senza aspettare il file; un caricamento interrotto riparte da solo (RB-118).
+
 ---
 
 ## Fuori dal modulo

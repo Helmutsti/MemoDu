@@ -152,7 +152,7 @@ L'indice serve a Entità (quante volte, l'ultima volta), alle unioni e ai conteg
 
 **Ambienti:** gli stessi di oggi; le prove del nucleo usano una copia di lavoro temporanea (`MEMODU_CARTELLA`).
 
-## Allegati di Brainet (RF-18, DEC-135; Fase 7 proposta dall'agente il 15/10/2026, da approvare)
+## Allegati di Brainet (RF-18, DEC-135; Fase 7 approvata da Manuel Cucca il 15/10/2026)
 Le note restano su Neon; i file vanno in un bucket di Cloudflare R2, che il dispositivo raggiunge direttamente con indirizzi firmati dal server (scelta di Manuel Cucca del 15/10/2026). Il server non vede mai il contenuto: il file è cifrato prima di partire.
 
 **Nel testo.** Un segno nascosto come le pillole (EN-18): `<allegato id="ID" f="documento|bolla|piccola|media|grande">nome del file</allegato>`. Il segno si sposta con il testo; «Dimensioni» riscrive solo `f`. L'editor di Brainet (solo testo) lo mostra con il Collegamento Documento (CMP-38) o la Foto allegata (CMP-44), come blocco unico.

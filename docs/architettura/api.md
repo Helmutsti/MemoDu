@@ -621,7 +621,7 @@ Comandi del nucleo (`client/src-tauri/src/brainet.rs`, regole in `archivio_brain
 - `togli_stato` toglie lo stato dai segni `<area>` di tutti i frammenti che lo usano, anche nel Cestino (o lo sostituisce), e le aree rimaste senza legami spariscono (RB-110).
 - Evento di sincronizzazione verso l'interfaccia: `{ tipo: "brainet", spento }`, quando arrivano modifiche di Brainet; con `spento: true` Brainet è stato spento da un altro computer e qui si è già cancellato tutto (RB-111).
 
-## Allegati (RF-18, DEC-135; proposta dell'agente del 15/10/2026, da approvare)
+## Allegati (RF-18, DEC-135; approvata da Manuel Cucca il 15/10/2026)
 Richieste al server con il gettone del dispositivo, come la sincronizzazione; valgono solo per gli allegati dell'account.
 
 | Richiesta | Ingresso | Uscita | Errori |
