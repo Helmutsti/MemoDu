@@ -7,7 +7,7 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | Codice | Componente | Tipo | Stato |
 |---|---|---|---|
 | CMP-01 | Pulsante (con la variante Diviso, DEC-34) | base | Disegnato |
-| CMP-02 | Icona | base | 47 icone, 4 dimensioni (cervello e database per Brainet, DEC-134) |
+| CMP-02 | Icona | base | 48 icone, 4 dimensioni (cervello, database e graffetta per Brainet, DEC-134) |
 | CMP-03 | Campo di testo | base | Disegnato |
 | CMP-04 | Interruttore | base | Disegnato |
 | CMP-05 | Tag | base | Disegnato |
@@ -49,6 +49,7 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-41 | Riga dell'entità (SC-11, DEC-134) | composto | Disegnato |
 | CMP-42 | Stati delle evidenziature (SC-06, DEC-134) | composto | Disegnato |
 | CMP-43 | Calendario di Brainet (SC-12, DEC-134; parte interna Giorno con le note) | composto | Disegnato |
+| CMP-44 | Foto allegata (bolla, piccola, media, grande, non scaricata; RF-18) | base | Disegnato |
 
 L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'icona di sistema e non è un componente.
 
@@ -443,6 +444,10 @@ Compare e sparisce con `movimento-durata-breve` (120 ms). Compare dopo 500 ms di
 - **Area** (Brainet, DEC-134, RB-107, RB-109): si apre selezionando una frase e dalla freccia della Linguetta (CMP-40). In cima «Stati» con il Pallino dello stato (CMP-37) come icona, poi le entità per tipo, in fondo «Crea…». Si scelgono più voci: quelle già legate all'area hanno la spunta a destra, come la cartella attuale in Sposta in (CMP-11).
 - **Nota di Brainet** (tasto destro in Database, DEC-134): Elimina (elimina); la nota va nel Cestino, nella parte di Brainet.
 - **Entità** (tasto destro su una riga di Entità, CMP-41): Unisci a… (sposta), Scegli una foto… (immagine) (RB-108).
+- **Allegato** (clic su un documento allegato, RB-119): Apri (mostra), Mostra nella cartella (cartella aperta) · Togli (elimina).
+- **Foto allegata** (clic su una foto fuori dal paragrafo, RB-119, RB-120): come Allegato, con Dimensioni › (immagine) prima del divisore.
+- **Dimensioni** (sottomenu): Piccola, Media, Grande, con la spunta su quella attuale.
+- **Suggerimenti** ha in fondo «Allega un file…» con la graffetta, che apre la finestra del sistema (RB-114).
 - **Importa in Brainet** (sottomenu, RB-112): Copia (copia), Sposta (sposta). Si apre dalla voce «Importa in Brainet» del tipo Nota, che si vede con la proprietà **Importa in Brainet** accesa, cioè quando Brainet è acceso; sta dopo Sposta in…, con l'icona del cervello e la freccia del sottomenu.
 - Contenitore `sfondo-flottante`, `raggio-contenitore` (20), margine `spazio-elenco` (8) su tutti i lati (ruolo elenco, DEC-100), `ombra`, livello 20 (`z-comparsa`). Largo 236 negli esempi; si allarga fino alla voce più lunga.
 - La pillola dell'evidenziazione sta a 8 px dai lati (margine del menu); i divisori stanno dentro lo stesso margine e sono leggeri (`bordo-divisore-tenue`) (DEC-100, prima da lato a lato). Scelta tra sei alternative (divisori rientrati o da lato a lato, pieni o leggeri; margine 8 o 12; pillola, rettangolo con raggio 12 o fascia a tutta larghezza): la pillola resta per coerenza con colonna, pulsanti e tag.
@@ -1425,7 +1430,7 @@ Non si clicca: hover, focus, attivo, disabilitato, errore e caricamento non prev
 **Quando non usarlo:** per i tag delle note (Tag, CMP-05) o per un'area (CMP-40).
 
 ### Varianti e dimensioni
-- **Foto = No · Sì**: con la foto dell'entità se c'è (cerchio `misura-icona`), altrimenti solo il nome. Proprietà **Nome**.
+- **Foto = No · Sì · Documento**: con la foto dell'entità se c'è (cerchio `misura-icona`), altrimenti solo il nome. **Documento** è un documento allegato (EN-17, RB-116): al posto della foto l'icona del tipo (proprietà **Icona**, di default la nota) in `testo-informazione`, poi il nome del file; un clic apre il menu Allegato (CMP-09). Proprietà **Nome**.
 - `sfondo-informazione`, nome in Interfaccia/Dettaglio `testo-informazione`, `raggio-pillola`; `spazio-controllo-piccolo` (8) ai lati (`spazio-2` a sinistra con la foto), `spazio-2` sopra e sotto, `spazio-icona-piccola` (4) tra foto e nome. Sta in linea con il testo e non cambia l'altezza della riga.
 
 ### Stati
@@ -1536,3 +1541,24 @@ Si guarda soltanto (scelta di Manuel Cucca): i giorni non hanno hover, focus né
 ### Accessibilità
 - **Lettori di schermo:** tabella del mese; ogni giorno si legge con quante note ha.
 - **Contrasti:** giorni `testo-primario` 15,00:1; futuri `testo-tenue` 5,48:1 e 7,31:1; pallini 5,54:1 e 7,29:1 su `sfondo-nota`.
+
+## CMP-44 – Foto allegata
+**Tipo:** base · **Usato in:** SC-01 (note Brainet), SC-10 · **Figma:** pagina Componenti base, [Foto allegata](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=383-7676)
+
+**Scopo:** mostrare una foto allegata a una nota Brainet (EN-17, EN-18, RB-117, RB-120).
+**Quando usarlo:** per le foto allegate; per i documenti c'è il Collegamento Documento (CMP-38).
+**Quando non usarlo:** per la foto di un'entità (CMP-38, CMP-41).
+
+### Varianti e dimensioni
+- **Forma = Bolla:** dentro un paragrafo scritto, alta come la riga (24) e larga 36, `raggio-pillola`.
+- **Forma = Piccola · Media · Grande:** su una riga sua, larghe 160, 360 e quanto il testo (720 nell'esempio), `raggio-interno`; l'altezza segue la foto. Arriva piccola; si cambia con Dimensioni (CMP-09).
+- **Forma = Non scaricata:** senza rete, il riquadro piccolo su `sfondo-campo`, con l'icona immagine e il nome (proprietà **Nome**) in Interfaccia/Dettaglio `testo-tenue`, a `spazio-elemento`.
+- Le misure sono la geometria della foto, come il disegno di un'icona; nei mockup il fondo si sostituisce con la foto. Nella nota si vede un'anteprima ridotta.
+
+### Stati
+Un clic apre il menu della foto (CMP-09 Foto allegata, o Allegato per la bolla). Hover e focus: quelli dell'area del testo; disabilitato non previsto. Caricamento ed errore: Non scaricata; un allegato tolto altrove mostra «Allegato non più disponibile».
+
+### Accessibilità
+- **Lettori di schermo:** immagine con il nome del file come testo alternativo.
+- **Contrasti:** il nome `testo-tenue` su `sfondo-campo` 4,9:1 circa in chiaro, sopra 6 in scuro (da misurare quando c'è il codice).
+
