@@ -730,3 +730,4 @@
 | 16/10/2026 | Manuel Cucca | Mockup di Brainet portati a DEC-147: pillole, aree e allegati nel Journal, voce Journal nella colonna di tutte le schermate, Entità per tipo anche in scelta del tipo, tasto destro (con «Tipo ›»), unione; didascalie e 21 esportazioni aggiornate (fatto dall'agente) | DEC-147 |
 | 16/10/2026 | Manuel Cucca | Cronologia nella pagina dell'entità: RB-133, CA-18.51, TC-250, FL-26, SC-13, nuovo CMP-47, guida per gli utenti e note di rilascio (scelta di Manuel Cucca, dettagli proposti dall'agente) | DEC-150 |
 | 16/10/2026 | Manuel Cucca | Mockup della pagina dell'entità con la cronologia ed esportazione SC-13 aggiornata (fatto dall'agente) | DEC-150 |
+| 16/10/2026 | Manuel Cucca | Rilasciata la 1.1.0 (versione, note di rilascio, tag `v1.1.0`, release su GitHub); RF-18 Implementato, ID-39 Implementato (fatto dall'agente su richiesta di Manuel Cucca) | DEC-136 |

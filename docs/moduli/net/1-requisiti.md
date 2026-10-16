@@ -3,7 +3,7 @@
 <!-- Fase 1 della guida, con i criteri di accettazione della Fase 8. Copia il blocco per ogni requisito. -->
 
 ## RF-18 – Brainet, la rete delle note
-**Priorità:** Must · **Origine:** ID-39, DEC-134, DEC-145, DEC-147 · **Fase:** 9 – Rilascio (per DEC-147 le fasi 1 … 8 approvate da Manuel Cucca il 16/10/2026; per DEC-145 lo erano già) · **Stato:** In progettazione (riscritto per DEC-145 e DEC-147 il 16/10/2026; la versione con note proprie è uscita nella 1.0.0, spenta all'inizio, DEC-142)
+**Priorità:** Must · **Origine:** ID-39, DEC-134, DEC-145, DEC-147 · **Fase:** 9 · **Stato:** Implementato (rilasciato nella 1.1.0, 16/10/2026, con DEC-145 … DEC-150; la versione con note proprie era uscita nella 1.0.0, spenta all'inizio, DEC-142)
 
 Come *utente* voglio collegare quello che scrivo nelle mie note a persone, oggetti, eventi e argomenti, per ritrovare tutto quello che ho pensato su ognuno di loro nel tempo, senza dover creare e ordinare file.
 
