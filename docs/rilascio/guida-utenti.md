@@ -246,24 +246,29 @@ Un **file nuovo** si chiama «Senza titolo» e nasce sul disco al primo Ctrl + S
 
 **Se il file cambia fuori da Memodu.** Se un altro programma cambia il file aperto, Memodu te lo dice: «Ricarica» mostra la versione del disco, «Tieni la mia versione» la sovrascrive al prossimo Ctrl + S. Se il file è sparito, «Ricrealo» lo fa rinascere al prossimo Ctrl + S.
 
-## Brainet, il diario a rete
-Brainet è un diario: scrivi pensieri brevi nel tempo e li colleghi a persone, oggetti, eventi e argomenti, per ritrovare poi tutto quello che hai scritto su ognuno. Come le note di CLOUD, va sugli altri tuoi computer ed è cifrato; la ricerca della colonna non lo legge.
+## Brainet, la rete delle note
+Brainet collega quello che scrivi nelle note a persone, oggetti, eventi e argomenti, per ritrovare poi tutto quello che hai scritto su ognuno, giorno per giorno. Non ha note sue: funziona nelle tue note di CLOUD in vista Markdown, che vanno sugli altri tuoi computer e sono cifrate come sempre.
 
-**Accenderlo.** Nelle Impostazioni, gruppo Brainet, accendi «Usa Brainet»: nella colonna compare la sezione BRAINET tra CLOUD e LOCALE, con Database, Entità e Calendario. Finché è spento non si vede niente.
+**Accenderlo.** Nelle Impostazioni, gruppo Brainet, accendi «Usa Brainet»: nella colonna compare la sezione BRAINET tra CLOUD e LOCALE, con Entità e Calendario. Finché è spento non si vede niente.
 
-**Scrivere.** Premi il + accanto a BRAINET: si apre un foglio nuovo. Scrivendo `@` si apre un menu: scegli una persona, un oggetto o un argomento che c'è già, oppure «Crea «…»» per farne uno nuovo, e il nome diventa una pillola. Backspace subito dopo una pillola la toglie tutta. Selezionando una frase, dallo stesso menu la colleghi a uno stato (per esempio «Importante») o a un'entità: la frase resta evidenziata.
+**Scrivere.** In una nota di CLOUD in vista Markdown scrivi `@`: si apre un menu, scegli una persona, un oggetto o un argomento che c'è già, oppure «Crea «…»» per farne uno nuovo, e il nome diventa una pillola. Backspace subito dopo una pillola la toglie tutta, e le frecce la saltano come un carattere solo. Selezionando una frase, dallo stesso menu la colleghi a uno stato (per esempio «Importante») o a un'entità: la frase resta evidenziata. Un clic su una pillola apre la pagina della sua entità.
 
-**Allegare.** Trascina un file nel testo, incollalo, oppure `@` › «Allega un file…». Entrano foto e documenti (JPG, PNG, PDF, Word, Excel, PowerPoint, testo) fino a 25 MB. Con un clic sull'allegato: «Apri», «Mostra nella cartella», «Dimensioni» per le foto e «Togli». Un allegato si scarica su un computer la prima volta che serve; senza rete, al posto di una foto non ancora scaricata vedi un riquadro con il nome.
+**Allegare.** In vista Markdown trascina un file nel testo, incollalo, oppure `@` › «Allega un file…». Entrano foto e documenti (JPG, PNG, PDF, Word, Excel, PowerPoint, testo) fino a 25 MB; trascinando e incollando si allega anche con Brainet spento. Con un clic sull'allegato: «Apri», «Mostra nella cartella», «Dimensioni» per le foto e «Togli». Un allegato si scarica su un computer la prima volta che serve; senza rete, al posto di una foto non ancora scaricata vedi un riquadro con il nome.
+
+**Una nota con Brainet resta in Markdown.** Se una nota ha pillole, frasi evidenziate o allegati, in Info la scelta «Testo» è spenta: «Questa nota usa Brainet: si vede solo in Markdown». Togliendoli torna disponibile. In vista Testo `@` è un carattere come gli altri.
 
 **Ritrovare.**
 
-- **Database:** le note dalla più recente; puoi modificarle, e con il tasto destro › «Elimina» vanno nel Cestino. Si può nascondere dalle Impostazioni con «Mostra il Database».
 - **Entità:** ogni persona, oggetto o argomento, con quante volte e quando l'hai nominato. Un clic sul tipo accanto al nome (per esempio «Senza tipo») lo cambia in persona, argomento, evento o oggetto. Con il tasto destro: «Unisci a…», per due nomi della stessa cosa, e «Scegli una foto…».
-- **Calendario:** i giorni del mese, con un pallino per ogni nota scritta.
+- **La pagina di un'entità:** un clic su una riga di Entità, o su una pillola, apre la sua pagina: i paragrafi delle note che la nominano, per giorno, dal più recente, con il titolo della nota e l'ora. Un clic su un paragrafo apre la nota proprio lì; «Entità» in cima, o Esc, torna all'elenco.
+- **Calendario:** i giorni del mese, con un pallino nei giorni in cui hai scritto una nota con Brainet.
+- **Ricerca:** Ctrl + K trova anche le note con Brainet, cercando il nome di una pillola o le parole di una frase evidenziata.
 
-**Portare una nota di CLOUD in Brainet.** Tasto destro sulla nota › «Importa in Brainet»: «Copia» la lascia anche in CLOUD, «Sposta» la toglie. Nel Calendario compare nel giorno in cui era stata creata.
+Le note nel Cestino non contano in Entità, nella pagina delle entità e nel Calendario.
 
-**Spegnerlo cancella tutto.** Spegnendo «Usa Brainet» Memodu chiede conferma: «Spegni e cancella tutto» cancella note, entità e stati di Brainet su tutti i tuoi computer.
+**Dalla 1.0.0.** Le note che avevi scritto in Brainet diventano note di CLOUD in vista Markdown, senza titolo, nel giorno in cui le avevi scritte, con le loro pillole, frasi evidenziate e allegati; quelle nel Cestino di Brainet vanno nel Cestino. Entità e stati restano. Finché un tuo computer ha ancora la 1.0.0, lì le pillole si vedono come testo: aggiornalo.
+
+**Spegnerlo non cancella niente.** Spegnendo «Usa Brainet» sparisce la sezione e `@` torna un carattere normale; pillole, frasi evidenziate, allegati, entità e stati restano, e riaccendendolo ritrovi tutto.
 
 ## Impostazioni
 Si aprono dalla riga «Impostazioni» in fondo alla colonna e si chiudono con «Chiudi impostazioni» o Ctrl + W. Ogni modifica vale subito.
@@ -275,7 +280,7 @@ Si aprono dalla riga «Impostazioni» in fondo alla colonna e si chiudono con «
   - **Tieni Memodu in primo piano:** la finestra resta sopra gli altri programmi.
   - **Tema:** «Sistema», «Chiaro» o «Scuro».
 - **Ricerca:** «Mostra le note del cestino nei risultati».
-- **Brainet:** «Usa Brainet», «Mostra il Database» e gli stati delle evidenziature (vedi «Brainet, il diario a rete»).
+- **Brainet:** «Usa Brainet» e gli stati delle evidenziature (vedi «Brainet, la rete delle note»).
 
 ## Scorciatoie da tastiera
 | Tasti | Dove | Cosa fa |

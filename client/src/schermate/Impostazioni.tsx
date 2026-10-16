@@ -52,7 +52,7 @@ interface Proprieta {
   versioneAccesso?: number;
   /** Cambia quando la sincronizzazione porta modifiche di Brainet (RF-18). */
   versioneBrainet?: number;
-  /** Brainet acceso, spento o «Mostra il Database» cambiato: la colonna si aggiorna. */
+  /** Brainet acceso o spento: la colonna si aggiorna. */
   onBrainet?: (stato: StatoBrainet) => void;
 }
 

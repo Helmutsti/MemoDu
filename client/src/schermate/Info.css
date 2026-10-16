@@ -89,6 +89,14 @@
 .info-riga-vista .info-riga-testo {
   flex: 1;
 }
+/* Sotto la riga Vista di una nota con Brainet (RB-123, DEC-145): allineata al testo delle righe. */
+.info-spiegazione {
+  min-height: 0;
+  margin: 0;
+  padding-left: calc(var(--spazio-controllo) + var(--misura-icona) + var(--spazio-icona));
+  padding-bottom: var(--spazio-elemento);
+  color: var(--testo-tenue);
+}
 .info-riga-testo {
   overflow: hidden;
   text-overflow: ellipsis;

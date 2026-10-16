@@ -1,5 +1,7 @@
 // Il compartimento Brainet dell'editor (RF-18, architettura «Brainet», «Editor»), sopra la vista
-// Markdown: i segni si nascondono come i simboli del Markdown (anteprima.ts). Il collegamento
+// Markdown delle note di CLOUD (DEC-146): i segni si nascondono come i simboli del Markdown
+// (anteprima.ts), e la scrittura come in Word (scrittura.ts) salta pillole e allegati come un
+// carattere solo. Il collegamento
 // diventa la pillola CMP-38 ed è un intervallo atomico, che Backspace toglie tutto (RB-104);
 // l'area diventa il fondo CMP-40. Un allegato diventa la pillola Documento (CMP-38) o la Foto
 // allegata (CMP-44), come blocco unico. Menu di @, menu dell'area, menu dell'allegato e Linguetta
@@ -25,6 +27,7 @@ import { FileText, Image as IconaImmagine, type LucideIcon } from "lucide-react"
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Icona } from "../componenti/Icona";
+import { atomiciScrittura } from "../editor/scrittura";
 import { eFoto, type TipoAllegato } from "./api";
 import {
   leggiAllegati,
@@ -68,16 +71,22 @@ const areaSopra = StateField.define<string | null>({
 
 class Pillola extends WidgetType {
   constructor(
+    readonly entita: string,
     readonly nome: string,
     readonly foto: string | null,
   ) {
     super();
   }
   eq(altra: Pillola): boolean {
-    return altra.nome === this.nome && altra.foto === this.foto;
+    return altra.entita === this.entita && altra.nome === this.nome && altra.foto === this.foto;
+  }
+  /** Il clic arriva all'editor, che apre la pagina dell'entità (RB-124). */
+  ignoreEvent(): boolean {
+    return false;
   }
   toDOM(): HTMLElement {
     const el = document.createElement("span");
+    el.dataset.entita = this.entita;
     el.className = `bn-collegamento interfaccia-dettaglio${this.foto ? " bn-collegamento-foto" : ""}`;
     if (this.foto) {
       const img = document.createElement("img");
@@ -199,7 +208,9 @@ export function decorazioniBrainet(state: EditorState): {
     tutti.push({
       da: c.da,
       a: c.a,
-      dec: Decoration.replace({ widget: new Pillola(e?.nome ?? c.nome, e?.foto ?? null) }),
+      dec: Decoration.replace({
+        widget: new Pillola(c.entita, e?.nome ?? c.nome, e?.foto ?? null),
+      }),
       atomica: true,
     });
   }
@@ -329,6 +340,22 @@ const areeSenzaLegami = EditorState.transactionFilter.of((tr) => {
   return [tr, { changes: via, sequential: true }];
 });
 
+/** Per la scrittura come in Word: pillole, allegati e `&lt;` sono blocchi, i segni delle aree nascosti. */
+function atomiciBrainet(state: EditorState) {
+  const testo = state.doc.toString();
+  const { citazioni, aree } = leggiSegni(testo);
+  const blocchi = [
+    ...citazioni,
+    ...leggiAllegati(testo),
+    ...[...testo.matchAll(/&lt;(?=\/?(?:cita|area|allegato)\b)/g)].map((m) => ({
+      da: m.index,
+      a: m.index + 4,
+    })),
+  ].map((t) => ({ da: t.da, a: t.a }));
+  const nascosti = aree.flatMap((a) => [a.apre, ...(a.chiude ? [a.chiude] : [])]);
+  return { blocchi, nascosti };
+}
+
 /** Copiando si porta via il testo che si legge, senza segni. */
 const copiaSenzaSegni = EditorView.clipboardOutputFilter.of((testo) => testoSemplice(testo));
 
@@ -344,6 +371,8 @@ export interface Ascolto {
   onAreaSopra: (a: { id: string; x: number; y: number } | null) => void;
   /** Clic su un allegato: il suo segno e dove aprire il menu (RB-119). */
   onAllegato: (a: AllegatoSegno & { x: number; y: number; sopra: number }) => void;
+  /** Clic su una pillola: true se apre la pagina dell'entità (RB-124). */
+  onPillola?: (entita: string) => boolean;
 }
 
 /** File incollati nel testo (RB-114): l'evento sul DOM dell'editor, con il punto in cui entrano. */
@@ -375,6 +404,7 @@ export function estensioneBrainet(ascolto: Ascolto): Extension {
     statoFiltro,
     areeSenzaLegami,
     copiaSenzaSegni,
+    atomiciScrittura.of(atomiciBrainet),
     EditorView.updateListener.of((u) => {
       if (!(u.docChanged || u.selectionSet || u.focusChanged)) return;
       const sel = u.state.selection.main;
@@ -397,6 +427,15 @@ export function estensioneBrainet(ascolto: Ascolto): Extension {
     }),
     EditorView.domEventHandlers({
       mousedown: (e, view) => {
+        const pillola = (e.target as Element).closest?.("[data-entita]");
+        if (pillola && e.button === 0) {
+          const entita = pillola.getAttribute("data-entita")!;
+          if (ascolto.onPillola?.(entita)) {
+            e.preventDefault();
+            return true;
+          }
+          return false;
+        }
         const el = (e.target as Element).closest?.("[data-allegato]");
         if (!el || e.button !== 0) return false;
         const pos = view.posAtDOM(el);

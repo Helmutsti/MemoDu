@@ -35,13 +35,12 @@ function provenienza(e: ElementoCestino): string {
 }
 
 export function dettagli(e: ElementoCestino): string {
-  if (e.tipo === "frammento") return `Nota di Brainet · eliminata il ${data(e.eliminato)}`;
   const tipo = e.tipo === "nota" ? "Nota" : `Cartella con ${note(e.conteggio ?? 0)}`;
   return `${tipo} · ${provenienza(e)} · eliminata il ${data(e.eliminato)}`;
 }
 
 function testoElimina(e: ElementoCestino): string {
-  if (e.tipo === "nota" || e.tipo === "frammento") return "La nota verrà eliminata per sempre.";
+  if (e.tipo === "nota") return "La nota verrà eliminata per sempre.";
   const n = e.conteggio ?? 0;
   if (n === 0) return "La cartella verrà eliminata per sempre.";
   if (n === 1) return "La cartella e la sua nota verranno eliminate per sempre.";
@@ -65,15 +64,7 @@ export function Cestino({ elementi, onRipristina, onElimina, onSvuota }: Proprie
   }
 
   const n = elementi.length;
-  // Con le note di Brainet il Cestino ha due parti, ognuna con il suo titolo (CMP-39, SC-04).
-  const brainet = elementi.filter((e) => e.tipo === "frammento");
-  const cloud = elementi.filter((e) => e.tipo !== "frammento");
-  const parti = brainet.length
-    ? [
-        ...(cloud.length ? [{ titolo: "CLOUD", elementi: cloud }] : []),
-        { titolo: "Brainet", elementi: brainet },
-      ]
-    : [{ titolo: "", elementi }];
+  const parti = [{ titolo: "", elementi }];
   return (
     <section className="cestino" aria-labelledby="cestino-titolo">
       <AreaScorrevole className="cestino-scorrimento">

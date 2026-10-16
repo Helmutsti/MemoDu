@@ -259,6 +259,8 @@ fn una_copia_di_lavoro_con_lo_schema_3_riempie_l_indice() {
          DROP TRIGGER ricerca_note_tag_UPDATE; DROP TABLE ricerca; DROP TABLE ricerca_righe;
          ALTER TABLE impostazioni DROP COLUMN cestino_in_ricerca;
          ALTER TABLE note DROP COLUMN vista;
+         DROP TRIGGER brainet_note_INSERT; DROP TRIGGER brainet_note_UPDATE; DROP TRIGGER brainet_note_DELETE;
+         DROP TRIGGER allegati_note_UPDATE; DROP TRIGGER allegati_note_DELETE; DROP TABLE brainet_da_indicizzare;
          DROP TABLE frammenti; DROP TABLE entita; DROP TABLE stati; DROP TABLE brainet_citazioni;
          DROP TABLE brainet_aree; DROP TABLE brainet_aree_legami; DROP TABLE allegati; DROP TABLE allegati_file; DROP TABLE allegati_da_controllare;
          ALTER TABLE impostazioni DROP COLUMN brainet; ALTER TABLE impostazioni DROP COLUMN mostra_database;
@@ -372,6 +374,8 @@ fn una_copia_di_lavoro_con_il_primo_schema_4_rifa_l_indice() {
            UPDATE ricerca SET titolo = NEW.titolo, contenuto = NEW.contenuto WHERE id = NEW.id;
          END;
          ALTER TABLE note DROP COLUMN vista;
+         DROP TRIGGER brainet_note_INSERT; DROP TRIGGER brainet_note_UPDATE; DROP TRIGGER brainet_note_DELETE;
+         DROP TRIGGER allegati_note_UPDATE; DROP TRIGGER allegati_note_DELETE; DROP TABLE brainet_da_indicizzare;
          DROP TABLE frammenti; DROP TABLE entita; DROP TABLE stati; DROP TABLE brainet_citazioni;
          DROP TABLE brainet_aree; DROP TABLE brainet_aree_legami; DROP TABLE allegati; DROP TABLE allegati_file; DROP TABLE allegati_da_controllare;
          ALTER TABLE impostazioni DROP COLUMN brainet; ALTER TABLE impostazioni DROP COLUMN mostra_database;

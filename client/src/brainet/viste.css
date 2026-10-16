@@ -1,4 +1,4 @@
-/* Viste di Brainet nell'area della nota (SC-10, SC-11, SC-12): come il Cestino (SC-04), titolo
+/* Viste di Brainet nell'area della nota (SC-11, SC-12, SC-13): come il Cestino (SC-04), titolo
    in alto e contenuto largo 720, che scorre con la barra di CMP-25. */
 .vista-brainet {
   display: flex;
@@ -20,26 +20,11 @@
   color: var(--testo-primario);
 }
 
-/* Database: giorno e ora sopra, il testo sotto; un divisore tra le note. */
-.database-elenco,
 .entita-elenco {
   display: flex;
   flex-direction: column;
   padding: 0;
   list-style: none;
-}
-.nota-database {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spazio-icona);
-  padding: var(--spazio-controllo) 0;
-  user-select: text;
-}
-.nota-database + .nota-database {
-  border-top: 1px solid var(--bordo-divisore);
-}
-.nota-database-quando {
-  color: var(--testo-tenue);
 }
 
 /* CMP-41 Riga dell'entità: margini come CMP-18, il tipo con un Tag a destra; divisore tra le righe. */
@@ -185,4 +170,85 @@
 /* «Aggiungi uno stato» (CMP-01 tenue): largo quanto il suo testo, non quanto il riquadro. */
 .aggiungi-stato {
   align-self: flex-start;
+}
+
+/* Una riga di Entità si apre con un clic: la pagina dell'entità (FL-26). */
+.riga-entita-apribile {
+  cursor: pointer;
+}
+.riga-entita-apribile:hover {
+  background: var(--sfondo-hover);
+}
+
+/* CMP-45 Testata dell'entità: «Entità» per tornare, sotto nome, tipo e dettagli (SC-13). */
+.testata-entita {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spazio-blocco);
+  margin-bottom: var(--spazio-gruppo);
+}
+.testata-entita-nome {
+  display: flex;
+  align-items: center;
+  gap: var(--spazio-blocco);
+}
+.vista-brainet-corpo .testata-entita-nome h1 {
+  margin: 0;
+}
+.testata-entita-foto {
+  width: var(--misura-riga);
+  height: var(--misura-riga);
+  border-radius: var(--raggio-pillola);
+  object-fit: cover;
+}
+.testata-entita-dettagli {
+  margin-top: calc(var(--spazio-elemento) - var(--spazio-blocco));
+  color: var(--testo-tenue);
+}
+
+/* I passaggi per giorno: il giorno è un Titolo di sezione (CMP-39), ogni passaggio si apre con un
+   clic; hover dei blocchi su più righe come i risultati della ricerca (CMP-13). */
+.passaggi {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  list-style: none;
+}
+.passaggi .menu-titolo:not(:first-child) {
+  margin-top: var(--spazio-blocco);
+}
+.passaggio {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spazio-elemento);
+  width: 100%;
+  padding: var(--spazio-controllo-piccolo) var(--spazio-controllo);
+  border: 0;
+  border-radius: var(--raggio-interno);
+  background: none;
+  color: var(--testo-primario);
+  text-align: left;
+  cursor: pointer;
+}
+.passaggio:hover {
+  background: var(--sfondo-hover);
+}
+.passaggio:focus-visible {
+  outline: var(--focus-spessore) solid var(--focus-anello);
+  outline-offset: calc(0px - var(--focus-spessore));
+}
+.passaggio-quando {
+  color: var(--testo-tenue);
+}
+.passaggio-testo {
+  margin: 0;
+  white-space: pre-wrap;
+}
+.passaggio-testo .pallino {
+  margin-left: var(--spazio-icona);
+  vertical-align: middle;
+}
+.pagina-entita-vuota {
+  padding-top: 120px;
 }

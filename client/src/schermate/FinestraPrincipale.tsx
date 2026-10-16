@@ -13,8 +13,6 @@
 // impostazioni o dall'avviso dell'accesso scaduto, che non blocca niente (RB-87).
 
 import {
-  Brain,
-  Copy,
   FileText,
   Folder,
   FolderInput,
@@ -247,13 +245,15 @@ export function FinestraPrincipale(): ReactElement {
   const [vista, setVista] = useState<"nota" | "cestino" | "impostazioni" | "file" | "brainet">(
     "nota",
   );
-  // Brainet (RF-18): acceso o spento, la vista aperta, quante volte la sincronizzazione ha
-  // portato modifiche (le viste si rileggono) e il foglio nuovo (uno nuovo a ogni +).
+  // Brainet (RF-18, DEC-145): acceso o spento, la vista aperta e quante volte la sincronizzazione
+  // ha portato modifiche (le viste si rileggono). Da un passaggio della pagina dell'entità la nota
+  // si apre con il cursore sul paragrafo (RB-124).
   const [statoBrainet, setStatoBrainet] = useState<StatoBrainet | null>(null);
-  const [vistaBrainet, setVistaBrainet] = useState<VistaBrainet>("foglio");
+  const [vistaBrainet, setVistaBrainet] = useState<VistaBrainet>("entita");
   const [versioneBrainet, setVersioneBrainet] = useState(0);
-  const [foglioBrainet, setFoglioBrainet] = useState(0);
-  const [avvisoBrainet, setAvvisoBrainet] = useState(false);
+  const [cursoreApertura, setCursoreApertura] = useState<{ id: string; inizio: number } | null>(
+    null,
+  );
   /** Un allegato di Brainet che non entra o non si apre (SF-17, SF-21, SF-37, SF-08). */
   const [avvisoAllegato, setAvvisoAllegato] = useState<string | null>(null);
   /** Il file di Locale aperto al posto della nota (RF-17). */
@@ -630,12 +630,14 @@ export function FinestraPrincipale(): ReactElement {
             break;
           case "brainet":
             setVersioneBrainet((n) => n + 1);
-            void brainet.stato().then(setStatoBrainet, () => undefined);
-            // Spento da un altro computer: la vista si chiude, il testo si perde (RB-111).
-            if (evento.spento) {
-              setVista((v) => (v === "brainet" ? "nota" : v));
-              setAvvisoBrainet(true);
-            }
+            void brainet.stato().then(
+              (s) => {
+                setStatoBrainet(s);
+                // Spento da un altro computer: le viste di Brainet si chiudono (RB-111).
+                if (!s.acceso) setVista((v) => (v === "brainet" ? "nota" : v));
+              },
+              () => undefined,
+            );
             break;
         }
       }),
@@ -985,7 +987,7 @@ export function FinestraPrincipale(): ReactElement {
 
   const ripristina = async (elemento: ElementoCestino) => {
     await esegui(() =>
-      elemento.tipo === "nota" || elemento.tipo === "frammento"
+      elemento.tipo === "nota"
         ? api.ripristina(elemento.id)
         : conNome((s) => api.ripristina(elemento.id, s) as Promise<EsitoCartella>, ""),
     );
@@ -1045,7 +1047,7 @@ export function FinestraPrincipale(): ReactElement {
     void brainet.stato().then(setStatoBrainet, () => setStatoBrainet(null));
   }, []);
 
-  /** Una vista di Brainet al posto della nota, come il cestino (RF-18); il + apre un foglio nuovo. */
+  /** Una vista di Brainet al posto della nota, come il cestino (RF-18). */
   const apriBrainet = async (v: VistaBrainet) => {
     await coda.scarica();
     if (coda.haModifiche) return;
@@ -1053,18 +1055,23 @@ export function FinestraPrincipale(): ReactElement {
       setAperta(null);
       await ricarica().catch(() => setBloccata(true));
     }
-    if (v === "foglio") setFoglioBrainet((n) => n + 1);
     setVistaBrainet(v);
     setVista("brainet");
   };
 
-  /** Importa in Brainet › Copia o Sposta; con Sposta la nota va nel Cestino (RB-112). */
-  const importaInBrainet = async (id: string, sposta: boolean) => {
-    if (sposta && aperta?.id === id) await chiudiVista();
-    await esegui(() => brainet.importa(id, sposta));
-    setVersioneBrainet((n) => n + 1);
-    await ricarica().catch(() => setBloccata(true));
-    if (sposta && vista === "cestino") await ricaricaCestino();
+  // Il cursore del passaggio serve solo all'apertura: poi la nota si riapre senza.
+  useEffect(() => {
+    if (!cursoreApertura || aperta?.id !== cursoreApertura.id) return;
+    const t = setTimeout(() => setCursoreApertura(null), 0);
+    return () => clearTimeout(t);
+  }, [aperta, cursoreApertura]);
+
+  /** Da un passaggio della pagina dell'entità: la nota, con il cursore sul paragrafo (RB-124). */
+  const apriDaPassaggio = async (id: string, inizio: number) => {
+    setCursoreApertura({ id, inizio });
+    // Già aperta: la si rilegge, così il cursore va sul paragrafo.
+    if (id === apertaAttuale.current?.id) setRiletta((n) => n + 1);
+    if (!(await apri(id))) setCursoreApertura(null);
   };
 
   /** Le impostazioni al posto della nota, come il cestino (DEC-91). */
@@ -1278,30 +1285,6 @@ export function FinestraPrincipale(): ReactElement {
           daRiga: true,
         }),
     },
-    // Con Brainet acceso, dopo Sposta in… (CMP-09 Nota, RB-112).
-    ...(statoBrainet?.acceso
-      ? [
-          {
-            tipo: "voce" as const,
-            etichetta: "Importa in Brainet",
-            icona: Brain,
-            sottomenu: [
-              {
-                tipo: "voce" as const,
-                etichetta: "Copia",
-                icona: Copy,
-                azione: () => void importaInBrainet(riga.id, false),
-              },
-              {
-                tipo: "voce" as const,
-                etichetta: "Sposta",
-                icona: FolderInput,
-                azione: () => void importaInBrainet(riga.id, true),
-              },
-            ],
-          },
-        ]
-      : []),
     { tipo: "separatore" },
     {
       tipo: "voce",
@@ -1401,7 +1384,6 @@ export function FinestraPrincipale(): ReactElement {
             brainet={
               statoBrainet?.acceso ? (
                 <SezioneBrainet
-                  mostraDatabase={statoBrainet.mostraDatabase}
                   aperta={vista === "brainet" ? vistaBrainet : null}
                   onApri={(v) => void apriBrainet(v)}
                 />
@@ -1489,13 +1471,6 @@ export function FinestraPrincipale(): ReactElement {
                 onChiudi={() => setSparita(null)}
               />
             ) : (
-              (avvisoBrainet && (
-                <Avviso
-                  tipo="avviso"
-                  testo="Brainet è stato spento da un altro computer."
-                  onChiudi={() => setAvvisoBrainet(false)}
-                />
-              )) ||
               (avvisoAllegato && (
                 <Avviso
                   tipo="avviso"
@@ -1560,12 +1535,13 @@ export function FinestraPrincipale(): ReactElement {
               />
             ) : vista === "brainet" && statoBrainet?.acceso ? (
               <VisteBrainet
-                key={vistaBrainet === "foglio" ? `foglio:${foglioBrainet}` : vistaBrainet}
+                key={vistaBrainet}
                 vista={vistaBrainet}
                 versione={versioneBrainet}
                 esegui={esegui}
-                onCestino={() => void ricarica().catch(() => setBloccata(true))}
                 onAvviso={setAvvisoAllegato}
+                onApri={(v) => void apriBrainet(v)}
+                onApriNota={(id, inizio) => void apriDaPassaggio(id, inizio)}
               />
             ) : vista === "cestino" ? (
               <Cestino
@@ -1601,6 +1577,11 @@ export function FinestraPrincipale(): ReactElement {
                   apriCartelle(catena(percorso));
                   if (statoColonna === "chiusa") apriColonna();
                 }}
+                brainet={statoBrainet?.acceso ?? false}
+                onApriEntita={(id) => void apriBrainet(`entita:${id}`)}
+                onAvviso={setAvvisoAllegato}
+                cursore={cursoreApertura?.id === aperta.id ? cursoreApertura.inizio : undefined}
+                scarica={() => coda.scarica()}
               />
             ) : (
               <div className="area-nota-vuota">

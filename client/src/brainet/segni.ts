@@ -110,6 +110,15 @@ export function segnoChiude(id: string): string {
   return `</area id="${id}">`;
 }
 
+/** Pillole, aree o allegati: la nota resta in vista Markdown (RB-123). */
+export function haSegni(testo: string): boolean {
+  return (
+    leggiAllegati(testo).length > 0 ||
+    leggiSegni(testo).citazioni.length > 0 ||
+    leggiSegni(testo).aree.length > 0
+  );
+}
+
 /** Il testo che si legge, senza segni. */
 export function testoSemplice(testo: string): string {
   return testo

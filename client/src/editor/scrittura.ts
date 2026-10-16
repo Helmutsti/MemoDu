@@ -8,6 +8,8 @@
 // Con la bollicina (DEC-131): il sottolineato `<u>…</u>` vale come gli altri pezzi, il testo
 // scritto con un formato in attesa entra nei suoi simboli (formati.ts) e `-[]` a inizio riga
 // diventa la casella.
+// Brainet (DEC-146): pillole e allegati sono blocchi che il cursore salta e Backspace o Canc tolgono
+// interi; i segni delle aree sono simboli nascosti come gli altri (facet `atomiciScrittura`).
 // Le funzioni lavorano sullo stato, così si provano senza il DOM.
 
 import { insertNewlineAndIndent } from "@codemirror/commands";
@@ -16,6 +18,7 @@ import {
   EditorSelection,
   EditorState,
   type Extension,
+  Facet,
   findClusterBreak,
   type Line,
   Prec,
@@ -38,6 +41,28 @@ interface Formato {
   chiude: Tratto;
 }
 
+/** Pezzi di altre estensioni che la scrittura rispetta: Brainet (DEC-146). */
+export interface AtomiciScrittura {
+  /** Si vedono come un carattere solo: il cursore li salta, Backspace e Canc li tolgono interi. */
+  blocchi: Tratto[];
+  /** Non si vedono: si saltano come i simboli del Markdown. */
+  nascosti: Tratto[];
+}
+
+export const atomiciScrittura = Facet.define<(state: EditorState) => AtomiciScrittura>();
+
+/** I blocchi e i nascosti delle altre estensioni che toccano la riga. */
+function atomici(state: EditorState, line: Line): AtomiciScrittura {
+  const dentro = (t: Tratto) => t.a >= line.from && t.da <= line.to;
+  const fuori: AtomiciScrittura = { blocchi: [], nascosti: [] };
+  for (const f of state.facet(atomiciScrittura)) {
+    const { blocchi, nascosti } = f(state);
+    fuori.blocchi.push(...blocchi.filter(dentro));
+    fuori.nascosti.push(...nascosti.filter(dentro));
+  }
+  return fuori;
+}
+
 /** Simbolo di inizio riga: titolo (`# `), punto (`- `) o casella (`- [ ] `). */
 interface Prefisso extends Tratto {
   titolo: boolean;
@@ -47,9 +72,9 @@ interface Prefisso extends Tratto {
 function riga(
   state: EditorState,
   pos: number,
-): { line: Line; nascosti: Tratto[]; prefisso: Prefisso | null } {
+): { line: Line; nascosti: Tratto[]; blocchi: Tratto[]; prefisso: Prefisso | null } {
   const line = state.doc.lineAt(pos);
-  const nascosti: Tratto[] = [];
+  const { blocchi, nascosti } = atomici(state, line);
   let prefisso: Prefisso | null = null;
   for (const s of calcolaSegni(state, line.from, line.to, false)) {
     if (s.tipo !== "nascosto" && s.tipo !== "punto" && s.tipo !== "casella") continue;
@@ -61,7 +86,7 @@ function riga(
       nascosti.push({ da: s.da, a: s.a });
     }
   }
-  return { line, nascosti, prefisso };
+  return { line, nascosti, blocchi, prefisso };
 }
 
 /** I pezzi formattati che toccano le righe tra `da` e `a`, compreso `<u>…</u>` (DEC-131). */
@@ -83,7 +108,7 @@ function dopoIlPrefisso(state: EditorState, pos: number): number {
 export function passo(state: EditorState, pos: number, avanti: boolean): number {
   let p = pos;
   for (;;) {
-    const { line, nascosti, prefisso } = riga(state, p);
+    const { line, nascosti, blocchi, prefisso } = riga(state, p);
     if (avanti) {
       if (prefisso && p >= prefisso.da && p < prefisso.a) {
         p = prefisso.a;
@@ -94,6 +119,9 @@ export function passo(state: EditorState, pos: number, avanti: boolean): number 
         p = h.a;
         continue;
       }
+      // Una pillola o un allegato è un carattere solo (RB-104).
+      const b = blocchi.find((t) => p >= t.da && p < t.a);
+      if (b) return b.a;
       if (p >= state.doc.length) return pos;
       if (p === line.to) return dopoIlPrefisso(state, p + 1);
       return line.from + findClusterBreak(line.text, p - line.from, true);
@@ -107,6 +135,8 @@ export function passo(state: EditorState, pos: number, avanti: boolean): number 
       p = h.da;
       continue;
     }
+    const b = blocchi.find((t) => p > t.da && p <= t.a);
+    if (b) return b.da;
     if (p <= line.from) return line.from === 0 ? pos : p - 1;
     return line.from + findClusterBreak(line.text, p - line.from, false);
   }
@@ -129,9 +159,9 @@ export function doveScrivere(state: EditorState, pos: number): number {
 
 /** Il cursore non sta mai dentro un simbolo nascosto né davanti al simbolo di inizio riga. */
 function cursoreAPosto(state: EditorState, pos: number): number {
-  const { nascosti, prefisso } = riga(state, pos);
+  const { nascosti, blocchi, prefisso } = riga(state, pos);
   if (prefisso && pos >= prefisso.da && pos < prefisso.a) return prefisso.a;
-  const h = nascosti.find((t) => pos > t.da && pos < t.a);
+  const h = [...nascosti, ...blocchi].find((t) => pos > t.da && pos < t.a);
   return h ? h.a : pos;
 }
 
@@ -161,7 +191,7 @@ export const cancellaIndietro: StateCommand = ({ state, dispatch }) => {
   const sel = state.selection;
   if (sel.ranges.length > 1 || !sel.main.empty) return false;
   const p = sel.main.head;
-  const { line, nascosti, prefisso } = riga(state, p);
+  const { line, nascosti, blocchi, prefisso } = riga(state, p);
   let da: number;
   let a = p;
   if (prefisso && p === prefisso.a) {
@@ -181,7 +211,13 @@ export const cancellaIndietro: StateCommand = ({ state, dispatch }) => {
     }
     if (q === 0) return true;
     a = q;
-    da = q === line.from ? q - 1 : line.from + findClusterBreak(line.text, q - line.from, false);
+    // Subito dopo una pillola o un allegato, Backspace li toglie interi (RB-104).
+    const b = blocchi.find((t) => t.a === q && t.da < q);
+    da = b
+      ? b.da
+      : q === line.from
+        ? q - 1
+        : line.from + findClusterBreak(line.text, q - line.from, false);
   }
   dispatch(
     state.update({
@@ -197,7 +233,7 @@ export const cancellaIndietro: StateCommand = ({ state, dispatch }) => {
 export const cancellaAvanti: StateCommand = ({ state, dispatch }) => {
   const sel = state.selection;
   if (sel.ranges.length > 1 || !sel.main.empty) return false;
-  const { line, nascosti } = riga(state, sel.main.head);
+  const { line, nascosti, blocchi } = riga(state, sel.main.head);
   let q = sel.main.head;
   for (
     let h = nascosti.find((t) => q >= t.da && q < t.a);
@@ -208,7 +244,10 @@ export const cancellaAvanti: StateCommand = ({ state, dispatch }) => {
   }
   if (q >= state.doc.length) return true;
   let a: number;
-  if (q === line.to) {
+  const b = blocchi.find((t) => t.da === q && t.a > q);
+  if (b) {
+    a = b.a;
+  } else if (q === line.to) {
     const dopo = riga(state, q + 1);
     a =
       dopo.prefisso && /^\s*$/.test(state.sliceDoc(dopo.line.from, dopo.prefisso.da))

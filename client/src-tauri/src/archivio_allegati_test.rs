@@ -1,5 +1,5 @@
-// Prove degli allegati nella copia di lavoro (RF-18, DEC-135; TC-216 … TC-224 dal lato del
-// nucleo). Ogni prova lavora in una cartella temporanea sua, cancellata alla fine.
+// Prove degli allegati nella copia di lavoro (RF-18, DEC-135, DEC-146; TC-216 … TC-224 dal lato
+// del nucleo), nelle note di CLOUD. Ogni prova lavora in una cartella temporanea sua, cancellata alla fine.
 
 use std::path::PathBuf;
 
@@ -7,7 +7,7 @@ use serde_json::json;
 
 use super::super::brainet::testo_semplice;
 use super::super::sinc::Ricevuta;
-use super::super::{Archivio, Errore};
+use super::super::{Archivio, DatiNota, DatiNuovaNota, Errore, Nota};
 use super::*;
 use crate::cifratura::{apri_file, chiudi_file, Chiave};
 
@@ -26,6 +26,15 @@ impl Prova {
 
     fn a(&mut self) -> &mut Archivio {
         self.archivio.as_mut().unwrap()
+    }
+
+    /// Una nota di CLOUD con questo testo (DEC-145).
+    fn nota(&mut self, testo: &str) -> Nota {
+        self.a().crea(&DatiNuovaNota { titolo: None, contenuto: Some(testo.into()), cartella: None }).unwrap()
+    }
+
+    fn salva(&mut self, id: &str, testo: &str) {
+        self.a().salva(id, &DatiNota { titolo: None, contenuto: Some(testo.into()) }).unwrap();
     }
 
     fn stato(&mut self, id: &str) -> Option<String> {
@@ -119,14 +128,13 @@ fn una_foto_ha_l_anteprima_ridotta() {
 }
 
 #[test]
-fn nel_testo_semplice_resta_il_nome_e_un_segno_scritto_a_mano_si_disinnesca() {
+fn nel_testo_semplice_resta_il_nome() {
     let mut p = Prova::accesa();
     let a = p.a().allega("Preventivo.pdf", &pdf()).unwrap();
     assert_eq!(testo_semplice(&format!("Vedi {}", segno(&a, "documento"))), "Vedi Preventivo.pdf");
-    // Una nota con solo un allegato non è vuota.
-    let f = p.a().crea_frammento(&segno(&a, "documento")).unwrap();
-    assert_eq!(f.testo, segno(&a, "documento"));
-    assert_eq!(super::super::brainet::disinnesca("<allegato id=\"x\">"), "&lt;allegato id=\"x\">");
+    let n = p.nota(&segno(&a, "documento"));
+    assert_eq!(p.a().leggi(&n.id).unwrap().contenuto, segno(&a, "documento"));
+    assert_eq!(allegati_json(&n.contenuto), format!(r#"["{}"]"#, a.id));
 }
 
 #[test]
@@ -135,11 +143,11 @@ fn togli_cancella_solo_quando_nessuna_nota_lo_usa_piu_anche_nel_cestino() {
     let a = p.a().allega("Spiaggia.png", &png(10, 10)).unwrap();
     // Allegato e non ancora nel testo: pulire adesso lo toglierebbe, ma il foglio pulisce solo
     // quando si chiude, dopo aver salvato.
-    let f = p.a().crea_frammento(&format!("Al mare {}", segno(&a, "bolla"))).unwrap();
-    let g = p.a().crea_frammento(&segno(&a, "grande")).unwrap();
-    p.a().salva_frammento(&f.id, "Al mare").unwrap();
+    let f = p.nota(&format!("Al mare {}", segno(&a, "bolla")));
+    let g = p.nota(&segno(&a, "grande"));
+    p.salva(&f.id, "Al mare");
     assert_eq!(p.a().pulisci_allegati().unwrap(), 0);
-    p.a().elimina_frammento(&g.id).unwrap();
+    p.a().cestina_nota(&g.id).unwrap();
     assert_eq!(p.a().pulisci_allegati().unwrap(), 0, "nel Cestino lo usa ancora");
     let file = p.a().percorso_allegato(&a.id).unwrap();
     p.a().svuota_cestino().unwrap();
@@ -152,15 +160,16 @@ fn togli_cancella_solo_quando_nessuna_nota_lo_usa_piu_anche_nel_cestino() {
 }
 
 #[test]
-fn spegnere_brainet_cancella_tutti_gli_allegati() {
+fn spegnere_brainet_non_tocca_gli_allegati_e_si_allega_anche_da_spento() {
     let mut p = Prova::accesa();
     let a = p.a().allega("Preventivo.pdf", &pdf()).unwrap();
-    p.a().crea_frammento(&segno(&a, "documento")).unwrap();
-    let cartella = p.a().cartella_allegati();
+    p.nota(&segno(&a, "documento"));
     p.a().spegni_brainet().unwrap();
-    assert!(!cartella.exists());
-    assert_eq!(p.a().allegati_da_cancellare().unwrap(), vec![a.id.clone()]);
-    assert!(matches!(p.a().allega("Altro.pdf", &pdf()), Err(Errore::BrainetSpento)));
+    assert!(p.a().percorso_allegato(&a.id).unwrap().exists());
+    assert!(p.a().allegati_da_cancellare().unwrap().is_empty());
+    // Allegare è l'unico modo di allegare in vista Markdown (DEC-145).
+    let b = p.a().allega("Altro.pdf", b"%PDF-1.7 altro").unwrap();
+    assert!(p.a().leggi_allegato(&b.id).is_ok());
 }
 
 #[test]
@@ -222,9 +231,9 @@ fn un_allegato_arrivato_da_un_altro_computer_non_si_cancella_qui_prima_della_sua
 fn togli_e_ctrl_z_lo_lasciano_un_file_mai_messo_nel_testo_se_ne_va() {
     let mut p = Prova::accesa();
     let a = p.a().allega("Preventivo.pdf", &pdf()).unwrap();
-    let f = p.a().crea_frammento(&format!("vedi {}", segno(&a, "documento"))).unwrap();
-    p.a().salva_frammento(&f.id, "vedi").unwrap();
-    p.a().salva_frammento(&f.id, &format!("vedi {}", segno(&a, "documento"))).unwrap();
+    let f = p.nota(&format!("vedi {}", segno(&a, "documento")));
+    p.salva(&f.id, "vedi");
+    p.salva(&f.id, &format!("vedi {}", segno(&a, "documento")));
     assert_eq!(p.a().pulisci_allegati().unwrap(), 0, "rimesso con Ctrl+Z");
     // Allegato e poi rimasto fuori dal testo (per esempio il foglio chiuso prima di salvare).
     let fuori = p.a().allega("Altro.txt", b"testo").unwrap();
@@ -236,7 +245,7 @@ fn togli_e_ctrl_z_lo_lasciano_un_file_mai_messo_nel_testo_se_ne_va() {
 fn tolto_altrove_mentre_qui_si_carica_qui_lo_si_cancella_dal_server() {
     let mut p = Prova::accesa();
     let a = p.a().allega("Grande.txt", b"un file lungo").unwrap();
-    p.a().crea_frammento(&segno(&a, "documento")).unwrap();
+    p.nota(&segno(&a, "documento"));
     // Il blocco dell'allegato è già sul server: l'altro computer lo conosce da lì.
     for b in p.a().da_inviare().unwrap() {
         p.a().inviato(&b, 1).unwrap();

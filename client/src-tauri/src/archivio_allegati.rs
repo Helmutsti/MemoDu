@@ -1,5 +1,6 @@
-// Allegati di Brainet nella copia di lavoro (RF-18, DEC-135; architettura «Allegati di Brainet»).
-// Nel testo di un frammento un allegato è un segno nascosto, come le pillole (EN-18):
+// Allegati di Brainet nella copia di lavoro (RF-18, DEC-135, DEC-146; architettura «Allegati di
+// Brainet»). Nel testo di una nota in vista Markdown un allegato è un segno nascosto, come le
+// pillole (EN-18); si allega anche con Brainet spento, perché è l'unico modo (DEC-145):
 //   <allegato id="ID" f="documento|bolla|piccola|media|grande">nome del file</allegato>
 // La tabella `allegati` (EN-17) si sincronizza come blocco `allegato`; `allegati_file` dice solo
 // a questo computer che cosa resta da caricare o da cancellare sul server. I file stanno nella
@@ -7,8 +8,8 @@
 // ci sono sul disco sono scaricati, se mancano si scaricano quando servono (RB-118).
 // Un allegato si cancella solo sul computer dove è stato tolto (scelta di Manuel Cucca del
 // 15/10/2026): Togli, Elimina per sempre, Svuota il Cestino e un file allegato che non entra nel
-// testo lo mettono in `allegati_da_controllare`; alla chiusura del foglio quelli che nessuna nota
-// usa più se ne vanno. Gli altri computer lo cancellano solo ricevendo il blocco «eliminato»,
+// testo lo mettono in `allegati_da_controllare` (dallo schema 10 un trigger sulle note, fuori
+// dalla sincronizzazione); alla chiusura della nota quelli che nessuna nota usa più se ne vanno. Gli altri computer lo cancellano solo ricevendo il blocco «eliminato»,
 // mai per conto loro: un allegato appena arrivato, prima della nota che lo usa, resta.
 
 use std::collections::HashSet;
@@ -42,6 +43,23 @@ pub const SCHEMA_ALLEGATI: &str = "
   CREATE TABLE allegati_da_controllare (
     id TEXT PRIMARY KEY
   );
+";
+
+/// Schema 10 (DEC-146): un allegato che sparisce dal testo di una nota, o con la nota cancellata
+/// per sempre, si segna da controllare; le modifiche ricevute no, perché gli altri computer non
+/// cancellano mai per conto loro.
+pub const SCHEMA_ALLEGATI_NOTE: &str = "
+  CREATE TRIGGER allegati_note_UPDATE AFTER UPDATE OF contenuto ON note
+  WHEN NOT EXISTS (SELECT 1 FROM sinc_stato WHERE chiave = 'applicando') BEGIN
+    INSERT OR IGNORE INTO allegati_da_controllare (id)
+    SELECT value FROM json_each(allegati_json(OLD.contenuto))
+    WHERE value NOT IN (SELECT value FROM json_each(allegati_json(NEW.contenuto)));
+  END;
+  CREATE TRIGGER allegati_note_DELETE AFTER DELETE ON note
+  WHEN NOT EXISTS (SELECT 1 FROM sinc_stato WHERE chiave = 'applicando') BEGIN
+    INSERT OR IGNORE INTO allegati_da_controllare (id)
+    SELECT value FROM json_each(allegati_json(OLD.contenuto));
+  END;
 ";
 
 /// 25 MB (RB-115).
@@ -114,6 +132,12 @@ pub fn e_foto(tipo: &str) -> bool {
 /// Gli id degli allegati scritti in un testo.
 pub fn allegati_nel_testo(testo: &str) -> impl Iterator<Item = &str> {
     SEGNO.captures_iter(testo).map(|c| c.get(1).unwrap().as_str())
+}
+
+/// Gli id degli allegati di un testo come array JSON, per i trigger (`allegati_json`).
+pub fn allegati_json(testo: &str) -> String {
+    serde_json::to_string(&allegati_nel_testo(testo).collect::<Vec<_>>())
+        .unwrap_or_else(|_| "[]".into())
 }
 
 /// Il testo che si legge al posto del segno: il nome del file.
@@ -198,7 +222,6 @@ impl Archivio {
     /// Controlla il file e lo mette tra gli allegati, da caricare (RB-114, RB-115). Lo stesso file
     /// con lo stesso nome, già allegato, dà l'allegato che c'è (impronta, EN-17).
     pub fn allega(&mut self, nome: &str, byte: &[u8]) -> Esito<Allegato> {
-        self.con_riconnessione(|a| a.acceso_brainet())?;
         let nome = nome.trim();
         if nome.is_empty() || nome.chars().count() > LUNGHEZZA_NOME {
             return Err(Errore::NonValido("Il nome del file non va bene".into()));
@@ -269,27 +292,12 @@ impl Archivio {
             .ok_or_else(|| Errore::BrainetNonTrovato(id.to_string()))
     }
 
-    fn acceso_brainet(&self) -> Esito<()> {
-        let acceso: Option<Option<bool>> = self
-            .db
-            .query_row(
-                "SELECT brainet FROM impostazioni WHERE id = ?",
-                [super::impostazioni::ID],
-                |r| r.get(0),
-            )
-            .optional()?;
-        if acceso.flatten().unwrap_or(false) { Ok(()) } else { Err(Errore::BrainetSpento) }
-    }
-
     // ——— Leggere ———
 
     /// Nome, tipo e grandezza, con l'anteprima se la foto è sul computer.
     pub fn leggi_allegato(&mut self, id: &str) -> Esito<InfoAllegato> {
         use base64::Engine;
-        let (nome, tipo, grandezza, _) = self.con_riconnessione(|a| {
-            a.acceso_brainet()?;
-            a.riga_allegato(id)
-        })?;
+        let (nome, tipo, grandezza, _) = self.con_riconnessione(|a| a.riga_allegato(id))?;
         let anteprima = if e_foto(&tipo) {
             std::fs::read(self.percorso_anteprima(id))
                 .ok()
@@ -376,18 +384,9 @@ impl Archivio {
         Ok(())
     }
 
-    /// Gli allegati che c'erano in `prima` e non ci sono in `dopo`, tolti su questo computer.
-    pub(super) fn segna_tolti(&self, prima: &str, dopo: &str) -> Esito<()> {
-        let restano: HashSet<&str> = allegati_nel_testo(dopo).collect();
-        for id in allegati_nel_testo(prima).filter(|id| !restano.contains(id)) {
-            self.da_controllare(id)?;
-        }
-        Ok(())
-    }
-
-    /// Cancella gli allegati tolti qui che nessun frammento, nemmeno nel Cestino, usa più: via dal
+    /// Cancella gli allegati tolti qui che nessuna nota, nemmeno nel Cestino, usa più: via dal
     /// computer, e (con il blocco «eliminato» e la cancellazione sul server) da tutti gli altri.
-    /// Si chiama quando si chiude il foglio, così Ctrl+Z dopo «Togli» rimette l'allegato.
+    /// Si chiama quando si chiude la nota, così Ctrl+Z dopo «Togli» rimette l'allegato.
     pub fn pulisci_allegati(&mut self) -> Esito<usize> {
         let tolti = self.con_riconnessione(|a| a.togli_allegati_inusati())?;
         for id in &tolti {
@@ -399,7 +398,7 @@ impl Archivio {
     /// Nella transazione di chi chiama; i file li toglie chi chiama, dopo.
     pub(super) fn togli_allegati_inusati(&self) -> Esito<Vec<String>> {
         let testi: Vec<String> =
-            self.db.prepare("SELECT testo FROM frammenti")?.query_map([], |r| r.get(0))?.collect::<Result<_, _>>()?;
+            self.db.prepare("SELECT contenuto FROM note")?.query_map([], |r| r.get(0))?.collect::<Result<_, _>>()?;
         let usati: HashSet<&str> = testi.iter().flat_map(|t| allegati_nel_testo(t)).collect();
         let segnati: Vec<String> = self
             .db
@@ -417,16 +416,6 @@ impl Archivio {
             self.db.execute("INSERT OR REPLACE INTO allegati_file (id, stato) VALUES (?, ?)", params![id, DA_CANCELLARE])?;
         }
         Ok(tolti)
-    }
-
-    /// Spegnendo Brainet tutti gli allegati vanno, anche dal server (RB-111).
-    pub(super) fn cancella_tutti_allegati(&self) -> Esito<()> {
-        self.db.execute_batch(&format!(
-            "INSERT OR REPLACE INTO allegati_file (id, stato) SELECT id, '{DA_CANCELLARE}' FROM allegati;
-             DELETE FROM allegati; DELETE FROM allegati_da_controllare;"
-        ))?;
-        let _ = std::fs::remove_dir_all(self.cartella_allegati());
-        Ok(())
     }
 
     // ——— Sincronizzazione del blocco `allegato` ———

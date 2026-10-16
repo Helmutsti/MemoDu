@@ -279,9 +279,10 @@ interface ProprietaSezione extends Pick<Trascinamento, "data-destinazione"> {
   conteggio?: number;
   aperta: boolean;
   onApriChiudi: () => void;
-  nomeAggiungi: string;
-  /** Il + del titolo; con il pulsante, per aprire un menu sotto di lui (DEC-119). */
-  onAggiungi: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  /** Il + del titolo; con il pulsante, per aprire un menu sotto di lui (DEC-119). Brainet non
+   *  ce l'ha (DEC-145). */
+  nomeAggiungi?: string;
+  onAggiungi?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   sopra?: boolean;
 }
 
@@ -309,16 +310,18 @@ export function RigaSezione({
           <span className="riga-conteggio interfaccia-dettaglio">{conteggio}</span>
         )}
       </button>
-      <Suggerimento testo={nomeAggiungi}>
-        <button
-          type="button"
-          className="riga-aggiungi"
-          aria-label={nomeAggiungi}
-          onClick={onAggiungi}
-        >
-          <Icona di={Plus} />
-        </button>
-      </Suggerimento>
+      {nomeAggiungi && onAggiungi && (
+        <Suggerimento testo={nomeAggiungi}>
+          <button
+            type="button"
+            className="riga-aggiungi"
+            aria-label={nomeAggiungi}
+            onClick={onAggiungi}
+          >
+            <Icona di={Plus} />
+          </button>
+        </Suggerimento>
+      )}
     </div>
   );
 }
@@ -383,7 +386,7 @@ export function RigaImpostazioni({
 }
 
 /**
- * Una voce fissa di una sezione, con la sua icona: Database, Entità e Calendario di Brainet
+ * Una voce fissa di una sezione, con la sua icona: Entità e Calendario di Brainet
  * (RF-18). Selezionata quando la sua vista è aperta, come una nota (DEC-35).
  */
 export function RigaVoce({

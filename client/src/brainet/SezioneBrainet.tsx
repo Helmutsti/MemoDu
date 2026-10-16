@@ -1,45 +1,31 @@
-// La sezione Brainet della colonna (RF-18, SC-01), sotto CLOUD e sopra LOCALE: il + accanto al
-// titolo apre un foglio nuovo (RB-101); sotto Database, Entità e Calendario. Database non c'è
-// con «Mostra il Database» spento (RB-106). Senza Brainet acceso la sezione non c'è.
+// La sezione Brainet della colonna (RF-18, SC-01, DEC-145), sotto CLOUD e sopra LOCALE, senza il +:
+// le note si scrivono in CLOUD. Sotto, Entità e Calendario; la pagina di un'entità tiene
+// selezionata Entità. Senza Brainet acceso la sezione non c'è.
 
-import { Brain, Calendar, Database } from "lucide-react";
+import { Brain, Calendar } from "lucide-react";
 import { useState, type ReactElement } from "react";
 import { RigaSezione, RigaVoce } from "../componenti/RigaColonna";
 
-export type VistaBrainet = "foglio" | "database" | "entita" | "calendario";
+/** «entita», «calendario» o la pagina di un'entità, «entita:ID» (FL-26). */
+export type VistaBrainet = "entita" | "calendario" | `entita:${string}`;
 
 interface Proprieta {
-  mostraDatabase: boolean;
   /** La vista di Brainet aperta, se c'è. */
   aperta: VistaBrainet | null;
   onApri: (vista: VistaBrainet) => void;
 }
 
-export function SezioneBrainet({ mostraDatabase, aperta, onApri }: Proprieta): ReactElement {
+export function SezioneBrainet({ aperta, onApri }: Proprieta): ReactElement {
   const [espansa, setEspansa] = useState(true);
   return (
     <div className="colonna-sezione">
-      <RigaSezione
-        titolo="Brainet"
-        aperta={espansa}
-        onApriChiudi={() => setEspansa((a) => !a)}
-        nomeAggiungi="Nuova nota Brainet"
-        onAggiungi={() => onApri("foglio")}
-      />
+      <RigaSezione titolo="Brainet" aperta={espansa} onApriChiudi={() => setEspansa((a) => !a)} />
       {espansa && (
         <ul role="group" className="colonna-elenco">
-          {mostraDatabase && (
-            <RigaVoce
-              nome="Database"
-              icona={Database}
-              selezionata={aperta === "database"}
-              onApri={() => onApri("database")}
-            />
-          )}
           <RigaVoce
             nome="Entità"
             icona={Brain}
-            selezionata={aperta === "entita"}
+            selezionata={aperta?.startsWith("entita") ?? false}
             onApri={() => onApri("entita")}
           />
           <RigaVoce

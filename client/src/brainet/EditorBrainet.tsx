@@ -1,7 +1,9 @@
-// L'editor di una nota Brainet (RF-18): l'editor delle note in vista Testo, senza il Markdown (scelta di
-// Manuel Cucca del 15/10/2026), con il compartimento Brainet (estensione.ts), il menu di @ (CMP-09 Suggerimenti), il menu dell'area (CMP-09 Area),
-// la Linguetta (CMP-40) e gli allegati (CMP-09 Allegato, Foto allegata, Dimensioni; RB-114 …
-// RB-121). Lo usano il foglio nuovo e il Database.
+// L'editor delle note di CLOUD con Brainet (RF-18, DEC-145, DEC-146): l'editor delle note con il
+// compartimento Brainet (estensione.ts), che mostra sempre pillole, aree e allegati già scritti.
+// In vista Markdown con Brainet acceso (`attivo`) ci sono il menu di @ (CMP-09 Suggerimenti), il
+// menu dell'area (CMP-09 Area), la Linguetta (CMP-40) e il clic sulla pillola (RB-124); in vista
+// Markdown (`allegati`) si allega trascinando o incollando, anche con Brainet spento (RB-114 …
+// RB-121). In vista Testo Brainet non c'è (RB-123).
 
 import type { EditorView } from "@codemirror/view";
 import { listen } from "@tauri-apps/api/event";
@@ -14,10 +16,11 @@ import {
   Plus,
   Trash2,
 } from "lucide-react";
-import { useCallback, useEffect, useState, type ReactElement } from "react";
+import { forwardRef, useCallback, useEffect, useRef, useState, type ReactElement } from "react";
 import { createPortal } from "react-dom";
 import { ErroreApi } from "../api";
-import { Editor } from "../editor/Editor";
+import { Editor, type ManigliaEditor } from "../editor/Editor";
+import type { FormatoDove } from "../editor/formati";
 import { IN_TAURI } from "../finestra";
 import { EVENTO_RILASCIO, ZONA_RILASCIO, type FileRilasciati } from "../locale/rilascio";
 import { Icona } from "../componenti/Icona";
@@ -56,6 +59,18 @@ interface Proprieta {
   focus?: boolean;
   etichetta?: string;
   invito?: string;
+  /** Vista Markdown (DEC-130). */
+  markdown?: boolean;
+  /** Dove mettere il cursore appena si apre. */
+  cursore?: number;
+  /** Il formato dove sta il cursore, per la bollicina (DEC-131). */
+  onFormato?: (formato: FormatoDove | null) => void;
+  /** Menu di @, dell'area e clic sulla pillola: Brainet acceso, in vista Markdown (RB-123). */
+  attivo?: boolean;
+  /** Si allega trascinando, incollando e da @: in vista Markdown, anche con Brainet spento. */
+  allegati?: boolean;
+  /** Clic su una pillola: la pagina della sua entità (RB-124). */
+  onApriEntita?: (id: string) => void;
   /** Un allegato che non entra o non si apre: l'avviso della finestra (SF-17, SF-21, SF-37). */
   onAvviso?: (testo: string) => void;
 }
@@ -132,12 +147,14 @@ function creaAscolto(
   setSelezione: (s: Selezione) => void,
   setLinguetta: (l: Linguetta | ((prima: Linguetta) => Linguetta)) => void,
   setMenuAllegato: (m: MenuAllegato | null) => void,
+  onPillola: (entita: string) => boolean,
 ): Ascolto {
   let timer: number | undefined;
   return {
     onChiocciola: setChiocciola,
     onSelezione: setSelezione,
     onAllegato: setMenuAllegato,
+    onPillola,
     onAreaSopra: (a) => {
       window.clearTimeout(timer);
       if (a) setLinguetta({ ...a, tenuta: false });
@@ -150,14 +167,28 @@ function creaAscolto(
   };
 }
 
-export function EditorBrainet({
-  testo,
-  onModifica,
-  focus = false,
-  etichetta = "Testo della nota Brainet",
-  invito = "Scrivi un pensiero…",
-  onAvviso = () => {},
-}: Proprieta): ReactElement {
+export const EditorBrainet = forwardRef<ManigliaEditor, Proprieta>(function EditorBrainet(
+  {
+    testo,
+    onModifica,
+    focus = false,
+    etichetta,
+    invito,
+    markdown = true,
+    cursore,
+    onFormato,
+    attivo = true,
+    allegati: puoAllegare = true,
+    onApriEntita,
+    onAvviso = () => {},
+  },
+  maniglia,
+): ReactElement {
+  // L'ascolto nasce una volta con l'editor: legge i valori di adesso.
+  const attuali = useRef({ attivo, onApriEntita });
+  useEffect(() => {
+    attuali.current = { attivo, onApriEntita };
+  });
   const [view, setView] = useState<EditorView | null>(null);
   const [testoAttuale, setTestoAttuale] = useState(testo);
   const [entita, setEntita] = useState<Record<string, Entita>>({});
@@ -172,7 +203,14 @@ export function EditorBrainet({
   const [menuAllegato, setMenuAllegato] = useState<MenuAllegato | null>(null);
   const [allegati, setAllegati] = useState<Record<string, VistaAllegato | null>>({});
   const [estensioni] = useState(() =>
-    estensioneBrainet(creaAscolto(setChiocciola, setSelezione, setLinguetta, setMenuAllegato)),
+    estensioneBrainet(
+      creaAscolto(setChiocciola, setSelezione, setLinguetta, setMenuAllegato, (id) => {
+        const { attivo: acceso, onApriEntita: apri } = attuali.current;
+        if (!acceso || !apri) return false;
+        apri(id);
+        return true;
+      }),
+    ),
   );
 
   // Nomi e foto delle entità citate o legate a un'area, dal nucleo: seguono le unioni (RB-108).
@@ -287,6 +325,7 @@ export function EditorBrainet({
   useEffect(() => {
     if (!view) return;
     const suFile = (e: Event) => {
+      if (!puoAllegare) return;
       const { file, da, a } = (e as CustomEvent<FileIncollati>).detail;
       void allega(
         file.map(
@@ -298,6 +337,7 @@ export function EditorBrainet({
     };
     // Trascinati da Esplora file o dal Finder (RB-114): nel punto in cui si lasciano.
     const suTrascinati = (e: Event) => {
+      if (!puoAllegare) return;
       const { percorsi, x, y } = (e as CustomEvent<FileRilasciati>).detail;
       const dove = view.posAtCoords({ x, y }) ?? view.state.doc.length;
       void allega(
@@ -357,7 +397,7 @@ export function EditorBrainet({
   // ——— @ ———
 
   // I suggerimenti seguono le lettere scritte (RB-104); Esc li chiude fino alla prossima @.
-  const domanda = chiocciola && chiocciola.da !== chiusaA ? chiocciola.testo : null;
+  const domanda = attivo && chiocciola && chiocciola.da !== chiusaA ? chiocciola.testo : null;
   useEffect(() => {
     if (domanda === null) return;
     let vivo = true;
@@ -417,7 +457,7 @@ export function EditorBrainet({
 
   // Selezionando con il mouse si apre il menu dell'area (RB-107).
   const suRilascio = () => {
-    if (!selezione) return;
+    if (!selezione || !attivo) return;
     setMenuArea({
       id: null,
       da: selezione.da,
@@ -546,8 +586,13 @@ export function EditorBrainet({
   };
 
   return (
-    <div className="editor-brainet" onMouseUp={suRilascio} {...{ [ZONA_RILASCIO]: "" }}>
+    <div
+      className="editor-brainet"
+      onMouseUp={suRilascio}
+      {...(puoAllegare ? { [ZONA_RILASCIO]: "" } : {})}
+    >
       <Editor
+        ref={maniglia}
         contenuto={testo}
         onModifica={(t) => {
           setTestoAttuale(t);
@@ -557,6 +602,9 @@ export function EditorBrainet({
         focus={focus}
         etichetta={etichetta}
         invito={invito}
+        markdown={markdown}
+        cursore={cursore}
+        onFormato={onFormato}
         estensioni={estensioni}
       />
       {domanda !== null &&
@@ -594,7 +642,8 @@ export function EditorBrainet({
           onChiudi={() => setMenuArea(null)}
         />
       )}
-      {linguetta &&
+      {attivo &&
+        linguetta &&
         nomiLinguetta.length > 0 &&
         !menuArea &&
         createPortal(
@@ -619,4 +668,4 @@ export function EditorBrainet({
         )}
     </div>
   );
-}
+});

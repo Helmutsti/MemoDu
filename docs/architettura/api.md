@@ -588,25 +588,20 @@ Nell'architettura finale si aggiungono il gettone di rinnovo (`POST /accesso/rin
 
 **Sessione:** email, gettone, scadenza e chiave dati in una voce del portachiavi del sistema (servizio «Memodu», voce «sessione»; con `MEMODU_CARTELLA` un servizio per cartella, così le prove non toccano la sessione vera). L'indirizzo del server è `https://memodu-api.vercel.app`, sostituito da `MEMODU_SERVER`. Il gettone si rinnova da solo prima di sincronizzare quando mancano meno di 7 giorni (RB-86). L'evento `sincronizzazione` con `{ "tipo": "accesso-scaduto" }` sostituisce `credenziali-rifiutate`: la sincronizzazione si ferma fino a un nuovo accesso (RB-87). `stato_sincronizzazione.collegata` vale se c'è la sessione. Il file `credenziali` non si legge più.
 
-## Brainet (RF-18, DEC-134; Fase 7 approvata da Manuel Cucca il 15/10/2026)
-Comandi del nucleo (`client/src-tauri/src/brainet.rs`, regole in `archivio_brainet.rs`), chiamati dall'interfaccia come gli altri; nessuna richiesta nuova al server. Gli errori hanno la forma di quelli della copia di lavoro (`stato`, `messaggio`, `motivo`). Con Brainet spento tutti, tranne `brainet_stato` e `accendi_brainet`, rispondono `409` con `motivo: "brainet"`.
+## Brainet (RF-18, DEC-134, DEC-145; comandi rivisti per DEC-146 dall'agente il 16/10/2026, approvati da Manuel Cucca lo stesso giorno)
+Comandi del nucleo (`client/src-tauri/src/brainet.rs`, regole in `archivio_brainet.rs`), chiamati dall'interfaccia come gli altri; nessuna richiesta nuova al server. Gli errori hanno la forma di quelli della copia di lavoro (`stato`, `messaggio`, `motivo`). Con Brainet spento rispondono `409` con `motivo: "brainet"` tutti tranne `brainet_stato`, `accendi_brainet`, `leggi_entita` (per mostrare le pillole già scritte) e `elenca_stati` (per i colori delle aree).
 
 | Comando | Ingresso | Uscita | Errori | Flusso |
 |---|---|---|---|---|
-| `brainet_stato` | — | `{ acceso, mostraDatabase }` | — | FL-20 |
+| `brainet_stato` | — | `{ acceso }` | — | FL-20 |
 | `accendi_brainet` | — | come sopra | — | FL-20 |
-| `spegni_brainet` | — | come sopra | — | FL-20, RB-111 |
-| `mostra_database` | `si` | come sopra | — | FL-20 |
-| `crea_frammento` | `testo` | Frammento | `400` vuota, `413` oltre 4 MB | FL-16 |
-| `salva_frammento` | `id`, `testo` | Frammento, o null se il testo è vuoto e il frammento è stato cancellato (RB-102) | `404`, `413` | FL-16, FL-17, FL-18 |
-| `leggi_frammento` | `id` | Frammento | `404` | FL-16 |
-| `elenca_frammenti` | `primaDi` (il `natoIl` dell'ultimo mostrato, per le pagine da 50) | Frammento[] dal più recente | — | FL-16 |
-| `elimina_frammento` | `id` | Elemento del cestino con `tipo: "frammento"` | `404` | FL-16 |
-| `calendario` | `mese` (AAAA-MM) | `{ giorno, note }[]`, solo i giorni con note, nel fuso del computer | `400` mese non valido | FL-16 |
+| `spegni_brainet` | — | come sopra; non cancella niente | — | FL-20, RB-111 |
+| `calendario` | `mese` (AAAA-MM) | `{ giorno }[]`, i giorni con almeno una nota con pillole o aree, nel fuso del computer | `400` mese non valido | FL-16, RB-113 |
 | `suggerisci_entita` | `testo` | Entità[] per tipo (persona, argomento, evento, oggetto, poi senza tipo), al massimo 5 per tipo | — | FL-17 |
 | `crea_entita` | `nome` | Entità senza tipo; un nome che c'è già dà quella | `400` vuoto o oltre 200 caratteri | FL-17, RB-105 |
 | `leggi_entita` | `id` | Entità, seguendo le unioni | `404` | FL-17 |
-| `elenca_entita` | — | `{ entita, nominata, ultimaVolta }[]`, dalla nominata più di recente | — | FL-19 |
+| `elenca_entita` | — | `{ entita, nominata, ultimaVolta }[]` (`ultimaVolta` è il giorno AAAA-MM-GG della nota), dalla nominata più di recente; solo note fuori dal Cestino | — | FL-19, RB-127 |
+| `passaggi_entita` | `id` | `{ entita, nominata, ultimaVolta, giorni: { giorno, passaggi: { nota, titolo, ora, testo, inizio }[] }[] }`, tutti i passaggi; `ultimaVolta` è un giorno AAAA-MM-GG | `404` | FL-26, RB-124 |
 | `anteprima_unione` | `da`, `verso` | `{ citazioni, aree }` | `404`, `400` stessa entità | FL-19, RB-108 |
 | `unisci_entita` | `da`, `verso` | `{ citazioni, aree }` spostate | `404`, `400` stessa entità | FL-19, RB-108 |
 | `imposta_tipo` | `id`, `tipo` (`persona`, `argomento`, `evento`, `oggetto` o null) | Entità | `404`, `400` tipo sconosciuto | RB-122 |
@@ -615,12 +610,13 @@ Comandi del nucleo (`client/src-tauri/src/brainet.rs`, regole in `archivio_brain
 | `crea_stato` | `nome`, `colore` | Stato | `409` nome già usato, `400` nome vuoto o colore non valido | FL-21 |
 | `aree_con_stato` | `id` | quante aree lo usano | — | FL-21, RB-110 |
 | `togli_stato` | `id`, `sostituto` (facoltativo) | `{ areeCambiate, areeSparite }` | `404`, `400` sostituto non valido | FL-21, RB-110 |
-| `importa_in_brainet` | `nota`, `sposta` | Frammento | `404`, `400` vuota, `413` | FL-22, RB-112 |
 
-- **Frammento:** `{ id, testo, natoIl, modificatoIl }`. **Entità:** `{ id, nome, tipo, foto }` (foto JPEG in base64 o null). **Stato:** `{ id, nome, colore, ordine }`.
-- I frammenti nel Cestino passano dai comandi del Cestino che ci sono (`elenca_cestino`, `ripristina`, `elimina_definitivamente`, `svuota_cestino`), con `tipo: "frammento"`; `ripristina` dà il Frammento.
-- `togli_stato` toglie lo stato dai segni `<area>` di tutti i frammenti che lo usano, anche nel Cestino (o lo sostituisce), e le aree rimaste senza legami spariscono (RB-110).
-- Evento di sincronizzazione verso l'interfaccia: `{ tipo: "brainet", spento }`, quando arrivano modifiche di Brainet; con `spento: true` Brainet è stato spento da un altro computer e qui si è già cancellato tutto (RB-111).
+Tolti con DEC-145: `mostra_database`, `crea_frammento`, `salva_frammento`, `leggi_frammento`, `elenca_frammenti`, `elimina_frammento`, `importa_in_brainet`.
+
+- **Entità:** `{ id, nome, tipo, foto }` (foto JPEG in base64 o null). **Stato:** `{ id, nome, colore, ordine }`. Nel passaggio `testo` è il paragrafo con i segni, `inizio` la sua posizione nella nota (per aprirla con il cursore lì), `ora` l'ora di creazione della nota nel fuso del computer, `titolo` il titolo o le prime parole.
+- `cambia_vista` (note) a `testo` per una nota con dei segni risponde `409` con `motivo: "brainet"` (RB-123); `salva_nota` rifà l'indice di Brainet.
+- `togli_stato` toglie lo stato dai segni `<area>` di tutte le note che lo usano, anche nel Cestino (o lo sostituisce), e le aree rimaste senza legami spariscono (RB-110).
+- Evento di sincronizzazione verso l'interfaccia: `{ tipo: "brainet" }`, quando arrivano modifiche di entità, stati o note con i segni.
 
 ## Allegati (RF-18, DEC-135; approvata da Manuel Cucca il 15/10/2026)
 Richieste al server con il gettone del dispositivo, come la sincronizzazione; valgono solo per gli allegati dell'account.
@@ -632,7 +628,7 @@ Richieste al server con il gettone del dispositivo, come la sincronizzazione; va
 | `GET /allegati/:id/scaricamento` | — | `{ file, anteprima }`: indirizzi `GET` firmati, 15 minuti | `401`, `404` allegato che non c'è o non presente |
 | `DELETE /allegati/:id` | — | `204`, anche se non c'era (SF-20) | `401` |
 
-Comandi del nucleo (`archivio_allegati.rs`, `allegati.rs`): `allega_file(percorso)` e `allega_dati(nome, byte)` (trascinare, incollare, «Allega un file…»: la finestra del sistema) → `{ id, nome, tipo, forma }` o `400`/`413` con il motivo; `leggi_allegato(id)` → `{ nome, tipo, grandezza, anteprima }` (l'anteprima come indirizzo `data:`, o niente se non è scaricata: allora si scarica e arriva l'evento); `apri_allegato(id)`, `mostra_allegato(id)` (scaricano se serve; `503` senza rete); `pulisci_allegati()` alla chiusura del foglio (RB-121); evento `allegato-pronto` `{ id }` quando un'anteprima è scaricata. `allega_file` senza percorso apre la finestra del sistema; `allega_dati` riceve i byte come corpo della richiesta e il nome nell'intestazione `memodu-nome`.
+Comandi del nucleo (`archivio_allegati.rs`, `allegati.rs`): `allega_file(percorso)` e `allega_dati(nome, byte)` (trascinare, incollare, «Allega un file…»: la finestra del sistema) → `{ id, nome, tipo, forma }` o `400`/`413` con il motivo; `leggi_allegato(id)` → `{ nome, tipo, grandezza, anteprima }` (l'anteprima come indirizzo `data:`, o niente se non è scaricata: allora si scarica e arriva l'evento); `apri_allegato(id)`, `mostra_allegato(id)` (scaricano se serve; `503` senza rete); `pulisci_allegati()` alla chiusura della nota (RB-121; DEC-146: legge le note, non i frammenti); evento `allegato-pronto` `{ id }` quando un'anteprima è scaricata. `allega_file` senza percorso apre la finestra del sistema; `allega_dati` riceve i byte come corpo della richiesta e il nome nell'intestazione `memodu-nome`.
 
 ## GET /salute
 Controllo di salute, senza gettone né protocollo. **Output:** `200 { "stato": "ok" }` se l'archivio risponde, altrimenti `503` (DEC-105).

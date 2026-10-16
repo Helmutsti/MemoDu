@@ -162,8 +162,8 @@ export type EventoSincronizzazione =
   | { tipo: "accesso-scaduto" }
   | { tipo: "irraggiungibile" }
   | { tipo: "errore"; protocollo: boolean }
-  /** Modifiche di Brainet ricevute; `spento`: Brainet spento da un altro computer (RB-111). */
-  | { tipo: "brainet"; spento: boolean };
+  /** Modifiche di Brainet ricevute: le viste si rileggono (anche Brainet spento altrove, RB-111). */
+  | { tipo: "brainet" };
 
 /** Ascolta la sincronizzazione del nucleo (solo nell'app). */
 export function allaSincronizzazione(

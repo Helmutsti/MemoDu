@@ -24,3 +24,11 @@
   background: var(--sfondo-pieno);
   color: var(--testo-su-pieno);
 }
+/* Disabilitato su un segmento solo (DEC-145): opacità 40%, non si sceglie. */
+.segmento:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.segmento:disabled:hover {
+  background: none;
+}

@@ -22,7 +22,7 @@ pub const FILE_DATABASE: &str = "copia-di-lavoro.db";
 /// File dell'API quando girava sulla stessa macchina (DEC-46): da lì si copiano le note alla
 /// prima apertura, così non si perde niente.
 pub const FILE_API: &str = "memodu.db";
-const VERSIONE_SCHEMA: i64 = 9;
+const VERSIONE_SCHEMA: i64 = 10;
 const SENZA_TITOLO: &str = "Senza titolo";
 const NUOVA_CARTELLA: &str = "Nuova cartella";
 const LUNGHEZZA_MASSIMA_NOME: usize = 100;
@@ -178,7 +178,8 @@ const TRIGGER: [Trigger; 4] = [
 
 const TRIGGER_IMPOSTAZIONI: [Trigger; 1] = [("impostazioni", "impostazioni", "NEW.id", "OLD.id")];
 
-/// Brainet (RF-18): un blocco per nota, entità e stato; l'indice non si sincronizza.
+/// Brainet (RF-18): un blocco per entità e stato; l'indice non si sincronizza. I trigger dei
+/// frammenti, dello schema 8, si tolgono allo schema 10 (DEC-146).
 const TRIGGER_BRAINET: [Trigger; 3] = [
     ("frammenti", "frammento", "NEW.id", "OLD.id"),
     ("entita", "entita", "NEW.id", "OLD.id"),
@@ -269,6 +270,8 @@ pub enum Errore {
     BrainetSpento,
     /// Nota, entità o stato di Brainet che non c'è.
     BrainetNonTrovato(String),
+    /// Una nota con pillole, aree o allegati resta in vista Markdown (RB-123).
+    NotaConBrainet,
     /// Dato di Brainet non valido: nome vuoto, colore, mese, immagine, file da allegare.
     NonValido(String),
     /// Serve il server e non risponde: un allegato da scaricare senza rete (RB-118).
@@ -304,7 +307,8 @@ impl Errore {
             | Errore::CambiatoFuori
             | Errore::CestinoNonDisponibile
             | Errore::GiaInLocale(_)
-            | Errore::BrainetSpento => Some(409),
+            | Errore::BrainetSpento
+            | Errore::NotaConBrainet => Some(409),
             Errore::DiscoRifiuta(_) => Some(403),
             Errore::TroppoGrande(_) => Some(413),
             Errore::SpostamentoImpossibile => Some(422),
@@ -335,6 +339,7 @@ impl Errore {
             Errore::CestinoNonDisponibile => "Questo disco non ha un Cestino".into(),
             Errore::GiaInLocale(percorso) => format!("«{percorso}» è già in Locale"),
             Errore::BrainetSpento => "Brainet è spento".into(),
+            Errore::NotaConBrainet => "Questa nota usa Brainet: si vede solo in Markdown".into(),
             Errore::BrainetNonTrovato(id) => format!("Niente di Brainet con id {id}"),
             Errore::NonValido(testo) => testo.clone(),
             Errore::SenzaRete => "Manca la rete: l'allegato non è ancora su questo computer".into(),
@@ -365,7 +370,7 @@ impl Serialize for Errore {
             Errore::CambiatoFuori => Some("cambiato"),
             Errore::CestinoNonDisponibile => Some("cestino"),
             Errore::GiaInLocale(_) => Some("elenco"),
-            Errore::BrainetSpento => Some("brainet"),
+            Errore::BrainetSpento | Errore::NotaConBrainet => Some("brainet"),
             _ => None,
         };
         let cestino = match self {
@@ -451,7 +456,7 @@ pub struct EsitoCartella {
 #[derive(Debug, Clone, Serialize, PartialEq)]
 pub struct ElementoCestino {
     pub id: String,
-    /// "nota", "cartella" o "frammento" (Brainet).
+    /// "nota" o "cartella".
     pub tipo: &'static str,
     pub nome: String,
     pub provenienza: String,
@@ -472,8 +477,6 @@ pub struct VoceTag {
 pub enum Ripristinato {
     Nota(Nota),
     Cartella(EsitoCartella),
-    /// Una nota di Brainet (RF-18).
-    Frammento(brainet::Frammento),
 }
 
 // I dati dall'interfaccia non hanno campi in più: un campo sconosciuto è un errore (api.md).
@@ -695,6 +698,12 @@ impl Archivio {
             if versione < 9 {
                 tx.execute_batch(allegati::SCHEMA_ALLEGATI)?;
                 tx.execute_batch(&schema_trigger(&TRIGGER_ALLEGATI))?;
+            }
+            if versione < 10 {
+                // Brainet nelle note di CLOUD (DEC-145, DEC-146).
+                tx.execute_batch(&brainet::schema_brainet_note())?;
+                tx.execute_batch(allegati::SCHEMA_ALLEGATI_NOTE)?;
+                brainet::passa_frammenti_in_note(&tx)?;
             }
             tx.pragma_update(None, "user_version", VERSIONE_SCHEMA)?;
             tx.commit()?;
@@ -1007,9 +1016,6 @@ impl Archivio {
     /// Riporta l'elemento nella radice (RB-28); una cartella con un nome già usato segue RB-31.
     pub fn ripristina(&mut self, id: &str, se_esiste: SeEsiste) -> Esito<Ripristinato> {
         self.con_riconnessione(|a| {
-            if let Some(frammento) = a.ripristina_frammento(id)? {
-                return Ok(frammento);
-            }
             let nota = a
                 .db
                 .query_row(
@@ -1074,7 +1080,7 @@ impl Archivio {
         self.con_riconnessione(|a| {
             let note =
                 a.db.execute("DELETE FROM note WHERE id = ? AND eliminata_il IS NOT NULL", [id])?;
-            if note > 0 || a.elimina_frammento_per_sempre(id)? {
+            if note > 0 {
                 return Ok(());
             }
             let cartella = a
@@ -1102,7 +1108,6 @@ impl Archivio {
     fn svuota_cestino_e_basta(&mut self) -> Esito<()> {
         self.con_riconnessione(|a| {
             a.db.execute("DELETE FROM note WHERE eliminata_il IS NOT NULL", [])?;
-            a.svuota_frammenti()?;
             let cartelle: Vec<String> = a
                 .db
                 .prepare("SELECT id FROM cartelle WHERE eliminata_il IS NOT NULL")?
@@ -1147,7 +1152,10 @@ impl Archivio {
             return Err(Errore::VistaNonValida(vista.to_string()));
         }
         self.con_riconnessione(|a| {
-            a.trova(id)?;
+            let riga = a.trova(id)?;
+            if vista == "testo" && brainet::ha_segni(&riga.contenuto) {
+                return Err(Errore::NotaConBrainet);
+            }
             a.db.execute("UPDATE note SET vista = ? WHERE id = ?", params![vista, id])?;
             a.nota_da_id(id)
         })
@@ -1271,7 +1279,6 @@ impl Archivio {
                 eliminato: c.eliminata_il.unwrap_or_default(),
             });
         }
-        elementi.extend(self.frammenti_nel_cestino()?);
         elementi.sort_by(|a, b| b.eliminato.cmp(&a.eliminato));
         Ok(elementi)
     }
@@ -1675,6 +1682,20 @@ fn connetti(file: &Path, adesso: &Orologio) -> Esito<Connection> {
         let db = unsafe { ctx.get_connection()? };
         percorsi_tag(&db, &nota)
     })?;
+    // Il testo di una nota senza i segni di Brainet, per l'indice di ricerca (RB-126), e gli
+    // allegati che usa, per i trigger che li segnano da controllare (RB-121).
+    db.create_scalar_function(
+        "senza_segni",
+        1,
+        FunctionFlags::SQLITE_UTF8 | FunctionFlags::SQLITE_DETERMINISTIC,
+        |ctx| Ok(brainet::testo_semplice(&ctx.get::<String>(0)?)),
+    )?;
+    db.create_scalar_function(
+        "allegati_json",
+        1,
+        FunctionFlags::SQLITE_UTF8 | FunctionFlags::SQLITE_DETERMINISTIC,
+        |ctx| Ok(allegati::allegati_json(&ctx.get::<String>(0)?)),
+    )?;
     db.create_scalar_function(
         "normalizza",
         1,

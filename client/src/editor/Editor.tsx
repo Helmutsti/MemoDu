@@ -38,6 +38,8 @@ interface Proprieta {
   onModifica: (contenuto: string) => void;
   /** Porta il cursore nel testo appena si apre (nota nuova, FL-09). */
   focus?: boolean;
+  /** Dove mettere il cursore appena si apre, in posizioni del testo (pagina dell'entità, RB-124). */
+  cursore?: number;
   /** Invito nell'area vuota. */
   invito?: string;
   /** Si legge ma non si scrive (file locale in sola lettura, CA-17.15). */
@@ -79,6 +81,7 @@ export const Editor = forwardRef<ManigliaEditor, Proprieta>(function Editor(
     contenuto,
     onModifica,
     focus = false,
+    cursore,
     invito = "Scrivi qui…",
     solaLettura = false,
     etichetta = "Testo della nota",
@@ -150,6 +153,10 @@ export const Editor = forwardRef<ManigliaEditor, Proprieta>(function Editor(
     vista.current = view;
     onVista?.(view);
     avvisaFormato(view);
+    if (cursore !== undefined) {
+      const pos = Math.min(Math.max(cursore, 0), view.state.doc.length);
+      view.dispatch({ selection: { anchor: pos }, scrollIntoView: true });
+    }
     if (focus) view.focus();
     return () => {
       vista.current = null;

@@ -22,6 +22,7 @@ import { Icona } from "../componenti/Icona";
 import { Menu, type VoceMenu } from "../componenti/Menu";
 import { PulsanteIcona } from "../componenti/Pulsante";
 import { SceltaSegmenti } from "../componenti/SceltaSegmenti";
+import { haSegni } from "../brainet/segni";
 import { Tag } from "../componenti/Tag";
 import { VoceAzione } from "../componenti/VoceAzione";
 import { leggiGiorno, scriviGiorno, testoCreata, testoModificata } from "../date";
@@ -94,6 +95,7 @@ export function Info(p: Proprieta): ReactElement {
   /** «+ Tag» premuto: al suo posto il campo per aggiungerne uno. */
   const [aggiungiTag, setAggiungiTag] = useState(false);
   const comparsa = p.tipo === "comparsa";
+  const conBrainet = haSegni(p.nota.contenuto);
   const suChiudi = useRef(p.onChiudi);
   useEffect(() => {
     suChiudi.current = p.onChiudi;
@@ -346,13 +348,19 @@ export function Info(p: Proprieta): ReactElement {
               <SceltaSegmenti
                 nome="Vista"
                 opzioni={[
-                  { valore: "testo", etichetta: "Testo" },
+                  // Una nota con pillole, aree o allegati resta in Markdown (RB-123).
+                  { valore: "testo", etichetta: "Testo", spento: conBrainet },
                   { valore: "markdown", etichetta: "Markdown" },
                 ]}
                 valore={p.nota.vista}
                 onScegli={(vista) => vista !== p.nota.vista && p.onVista(vista)}
               />
             </div>
+            {conBrainet && (
+              <p className="info-riga info-spiegazione interfaccia-dettaglio">
+                Questa nota usa Brainet: si vede solo in Markdown
+              </p>
+            )}
           </div>
 
           <p className="info-riga info-modificata interfaccia-dettaglio">

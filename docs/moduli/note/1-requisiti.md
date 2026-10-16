@@ -98,6 +98,8 @@ Frammento Must A: senza immagini (RF-03) e senza metadati (RF-04).
 
 **Fuori dalla v1 (DEC-125):** si riprende dopo la v1, dalla Fase 6.
 
+> **DEC-145 (16/10/2026):** in vista Markdown si allega con gli allegati di Brainet (RF-18), scelta di Manuel Cucca: «un modo solo, quello di Brainet». Questo requisito va rivisto alla luce di RF-18 quando si riprende.
+
 Come *utente* voglio inserire immagini nelle note per tenere insieme testo e materiali collegati.
 
 Nella prima fase si possono allegare solo immagini, fino a 25 MB ciascuna; gli altri tipi di file sono parcheggiati (ID-14). Si inseriscono trascinando il file nel testo oppure con il pulsante degli allegati, e si mostrano con l'orientamento salvato nel file. Sulle immagini inserite si possono impostare:

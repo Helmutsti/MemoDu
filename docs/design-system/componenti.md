@@ -48,15 +48,16 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-40 | Area evidenziata (parte interna Linguetta, DEC-134) | composto | Disegnato |
 | CMP-41 | Riga dell'entità (SC-11, DEC-134) | composto | Disegnato |
 | CMP-42 | Stati delle evidenziature (SC-06, DEC-134) | composto | Disegnato |
-| CMP-43 | Calendario di Brainet (SC-12, DEC-134; parte interna Giorno con le note) | composto | Disegnato |
+| CMP-43 | Calendario di Brainet (SC-12, DEC-134; parte interna Giorno con le note, un pallino per giorno da DEC-145) | composto | Disegnato |
 | CMP-44 | Foto allegata (bolla, piccola, media, grande, non scaricata; RF-18) | base | Disegnato |
+| CMP-45 | Testata dell'entità (pagina dell'entità, DEC-145) | composto | Disegnato |
 
 L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'icona di sistema e non è un componente.
 
 ### Parti interne
 Nella sezione **Parti interne** della pagina Componenti composti ci sono i pezzi con cui sono costruiti i composti: non si usano da soli, si modificano lì e cambiano ovunque. Bollicina, Cassetto della bollicina, Strumento e Divisore della pillola (CMP-10), Giorno del calendario (CMP-12), Filtro e Risultato della ricerca (CMP-13), Campo nome nell'albero e Cestino di trascinamento (CMP-14), Casella della checklist e Riga dei metadati (CMP-20), Segmento del percorso (CMP-26), Riga del dispositivo (CMP-36), Linguetta (CMP-40), Giorno con le note (CMP-43).
 
-La riga di una nota nel Database di Brainet (SC-10) non è un componente: il suo testo mescola parole e collegamenti (CMP-38) e un'istanza non può contenere un testo così. È una disposizione della schermata: giorno e ora in Interfaccia/Dettaglio `testo-tenue`, sotto a `spazio-icona` il testo in Nota/Corpo con i collegamenti, `spazio-controllo` sopra e sotto, divisore `bordo-divisore` tra le note.
+Il passaggio della pagina dell'entità (SC-13, DEC-145) non è un componente, per lo stesso motivo della riga del Database qui sotto: titolo della nota e ora in Interfaccia/Dettaglio `testo-tenue`, sotto a `spazio-elemento` il paragrafo in Contenuto/Testo con le pillole (CMP-38) e le aree (CMP-40), con l'hover dei blocchi su più righe di CMP-13 (`sfondo-hover`, raggio 12); i giorni sono Titoli di sezione (CMP-39) (proposta dell'agente del 16/10/2026). La riga di una nota nel Database di Brainet (SC-10, tolto da DEC-145) non è un componente: il suo testo mescola parole e collegamenti (CMP-38) e un'istanza non può contenere un testo così. È una disposizione della schermata: giorno e ora in Interfaccia/Dettaglio `testo-tenue`, sotto a `spazio-icona` il testo in Nota/Corpo con i collegamenti, `spazio-controllo` sopra e sotto, divisore `bordo-divisore` tra le note.
 
 ### Stato Focus
 L'anello `focus-anello` degli stati Focus si vede solo mentre ci si muove con la tastiera (Tab e frecce fuori dal testo); un clic lo spegne (DEC-74). L'anello di errore dei campi resta sempre.
@@ -808,6 +809,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 ### Varianti e dimensioni
 - **Nota:** icona `file-text` 24, «Nessuna nota aperta», spiegazione e il pulsante primario «Nuova nota».
 - **Cestino:** icona elimina 24, «Il cestino è vuoto», spiegazione, senza azioni (niente Svuota cestino).
+- **Entità** (DEC-145, [variante](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=395-6692)): icona cervello 24, «Nessuna nota parla ancora di «…».», «Scrivi @ in una nota per citarla.», senza azioni (proposta dell'agente del 16/10/2026).
 - **Colonna:** una riga Interfaccia/Dettaglio in `testo-tenue`: in CLOUD «Nessuna nota. Crea con +», in LOCALE «Nessuna cartella. Aggiungine una con +» (DEC-119).
 - **Blocco:** al posto della finestra quando la copia di lavoro non si apre o non si scrive (SC-07, DEC-67); non più per le credenziali (DEC-121). Icona errore 24 in `icona-errore`, «Memodu non riesce a collegarsi», cosa correggere e il pulsante primario «Riprova».
 - Icona in `icona-tenue`, titolo Interfaccia/Titolo, testo Interfaccia/Messaggio in `testo-tenue`, centrati, largo 320, 8 px di distanza.
@@ -988,7 +990,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
   - **Creazione** (`calendar`): «Creata il 12/09/2026»; il suggerimento della riga dà la data di sistema, «Data di sistema: 12/09/2026 alle 10:14» (RB-21). Se la data è stata cambiata, a destra «Ripristina» in `testo-tenue` (in `testo-primario` passandoci sopra) torna a quella di sistema.
   - **Fine validità** (`calendar`): «Fine validità il …» o, in `testo-tenue`, «Nessuna fine validità»; il suggerimento è «Solo un promemoria: alla scadenza non succede nulla» (RF-04).
   - **Tag** (`tag`): i tag (CMP-05 rimovibili, vanno a capo) e «+ Tag», pillola alta 24 con il bordo tratteggiato; un clic la sostituisce con il campo «Aggiungi un tag» (largo 132), che lasciato vuoto torna «+ Tag».
-  - **Vista** (`eye`, DEC-130): «Vista» e, allineata a destra, la Scelta a segmenti (CMP-28) Testo · Markdown; la riga non è un pulsante e non prende `sfondo-hover`: hover e scelta stanno sui segmenti. Ultima delle righe, nella Comparsa e nella Finestra; non c'è in Info del file (la vista di un file dipende dall'estensione, CA-17.25).
+  - **Vista** (`eye`, DEC-130): «Vista» e, allineata a destra, la Scelta a segmenti (CMP-28) Testo · Markdown; la riga non è un pulsante e non prende `sfondo-hover`: hover e scelta stanno sui segmenti. Ultima delle righe, nella Comparsa e nella Finestra; non c'è in Info del file (la vista di un file dipende dall'estensione, CA-17.25). Per una nota con pillole, aree o allegati il segmento Testo è disabilitato e sotto la riga, allineata al testo, c'è «Questa nota usa Brainet: si vede solo in Markdown» in Interfaccia/Dettaglio `testo-tenue` (RB-123, DEC-145; proposta dell'agente del 16/10/2026).
 - **Riga di data aperta:** con un clic, al posto della frase c'è il campo con la data selezionata (GG/MM/AAAA, senza fondo suo: la pillola resta evidenziata) e sotto la riga il calendario (CMP-12).
 - **«Modificata oggi alle 11:42»** in Interfaccia/Dettaglio e `testo-tenue`, allineata alle righe (pillola con `spazio-controllo` dentro, DEC-100), in sola lettura. Poi il divisore e le voci (CMP-07).
 
@@ -1129,7 +1131,7 @@ Compare e sparisce con `movimento-durata-breve` (120 ms).
 | Hover | `sfondo-hover` sul segmento |
 | Focus | Anello `focus-anello` di 2 px staccato 2 px sul segmento scelto, solo da tastiera |
 | Attivo | Selezionato: `sfondo-pieno` con testo Interfaccia/Controllo attivo in `testo-su-pieno`; il cambio vale subito (RB-06) |
-| Disabilitato | Opacità 40% su tutta la scelta |
+| Disabilitato | Opacità 40% su tutta la scelta; oppure su un segmento solo, che non si sceglie (Testo in Info per una nota con Brainet, DEC-145), con la spiegazione sotto la scelta (proposta dell'agente del 16/10/2026) |
 | Errore · Caricamento | Non previsti |
 
 ### Accessibilità
@@ -1427,7 +1429,7 @@ Non si clicca: hover, focus, attivo, disabilitato, errore e caricamento non prev
 **Tipo:** base · **Usato in:** SC-01 (testo di una nota Brainet), SC-10 (Database) · **Figma:** pagina Componenti base, [Collegamento](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=371-811)
 
 **Scopo:** mostrare nel testo un'entità citata con @ (EN-14, RB-104). Disegnato da Manuel Cucca («MiaPropostaLink»).
-**Quando usarlo:** nel testo delle note Brainet, al posto di «@nome».
+**Quando usarlo:** nel testo delle note in vista Markdown, al posto di «@nome» (DEC-145; prima nelle note Brainet).
 **Quando non usarlo:** per i tag delle note (Tag, CMP-05) o per un'area (CMP-40).
 
 ### Varianti e dimensioni
@@ -1435,7 +1437,7 @@ Non si clicca: hover, focus, attivo, disabilitato, errore e caricamento non prev
 - `sfondo-informazione`, nome in Interfaccia/Dettaglio `testo-informazione`, `raggio-pillola`; `spazio-controllo-piccolo` (8) ai lati (`spazio-2` a sinistra con la foto), `spazio-2` sopra e sotto, `spazio-icona-piccola` (4) tra foto e nome. Sta in linea con il testo e non cambia l'altezza della riga.
 
 ### Stati
-Default. Non si clicca: hover e focus non previsti (cosa fa un clic è da decidere). Backspace subito dopo la toglie tutta.
+Default. Hover: il cursore a mano; un clic apre la pagina dell'entità (SC-13, proposta dell'agente del 16/10/2026, DEC-145); il documento apre il suo menu. Focus non previsto: nel testo la pillola si salta come un carattere. Backspace subito dopo la toglie tutta.
 
 ### Accessibilità
 - **Lettori di schermo:** si legge il nome, come una parola del testo.
@@ -1528,25 +1530,25 @@ Quelli delle righe e dei pulsanti (CMP-18, CMP-01). Vuoto: solo la riga in cima 
 ## CMP-43 – Calendario di Brainet
 **Tipo:** composto (usa CMP-01; parte interna Giorno con le note) · **Usato in:** SC-12 · **Figma:** pagina Componenti composti, [Calendario di Brainet](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=375-5097) · [Giorno con le note](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=373-4961)
 
-**Scopo:** vedere in quali giorni sono nate le note Brainet (RB-103).
+**Scopo:** vedere in quali giorni sono nate note con Brainet (RB-113, DEC-145).
 **Quando usarlo:** nella vista Calendario.
 **Quando non usarlo:** per scegliere una data (Date picker, CMP-12).
 
 ### Varianti e dimensioni
 - In cima il mese in Interfaccia/Controllo attivo tra due pulsanti Solo icona piccolo (frecce), a `spazio-elemento`; sotto, a `spazio-blocco`, i giorni della settimana in Interfaccia/Titolo di sezione `testo-tenue` e le settimane, a `spazio-elemento`. Sette colonne uguali che riempiono la larghezza (nell'esempio 56).
-- **Giorno con le note** (parte interna): il numero in un cerchio `misura-controllo-piccolo`, sotto fino a tre pallini `icona-informazione` a `spazio-2`, uno per nota (tre vuol dire tre o più); `spazio-elemento` attorno e tra i pezzi. **Stato = Default · Oggi · Futuro**, **Note = 0 … 3**, proprietà **Giorno**. Oggi ha il cerchio `sfondo-hover`; i giorni dopo oggi sono in `testo-tenue`.
+- **Giorno con le note** (parte interna): il numero in un cerchio `misura-controllo-piccolo`, sotto un pallino `icona-informazione` a `spazio-2` se quel giorno è nata almeno una nota con pillole o aree (un pallino per giorno, scelta di Manuel Cucca del 16/10/2026; prima fino a tre, uno per nota); `spazio-elemento` attorno e tra i pezzi. **Stato = Default · Oggi · Futuro**, **Note = No · Sì**, proprietà **Giorno**. Oggi ha il cerchio `sfondo-hover`; i giorni dopo oggi sono in `testo-tenue`.
 
 ### Stati
 Si guarda soltanto (scelta di Manuel Cucca): i giorni non hanno hover, focus né clic. Le frecce hanno gli stati del pulsante (CMP-01).
 
 ### Accessibilità
-- **Lettori di schermo:** tabella del mese; ogni giorno si legge con quante note ha.
+- **Lettori di schermo:** tabella del mese; ogni giorno si legge con «con note» o senza.
 - **Contrasti:** giorni `testo-primario` 15,00:1; futuri `testo-tenue` 5,48:1 e 7,31:1; pallini 5,54:1 e 7,29:1 su `sfondo-nota`.
 
 ## CMP-44 – Foto allegata
-**Tipo:** base · **Usato in:** SC-01 (note Brainet), SC-10 · **Figma:** pagina Componenti base, [Foto allegata](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=383-7676)
+**Tipo:** base · **Usato in:** SC-01 (note in vista Markdown, DEC-145) · **Figma:** pagina Componenti base, [Foto allegata](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=383-7676)
 
-**Scopo:** mostrare una foto allegata a una nota Brainet (EN-17, EN-18, RB-117, RB-120).
+**Scopo:** mostrare una foto allegata a una nota (EN-17, EN-18, RB-117, RB-120).
 **Quando usarlo:** per le foto allegate; per i documenti c'è il Collegamento Documento (CMP-38).
 **Quando non usarlo:** per la foto di un'entità (CMP-38, CMP-41).
 
@@ -1563,3 +1565,23 @@ Un clic apre il menu della foto (CMP-09 Foto allegata, o Allegato per la bolla).
 - **Lettori di schermo:** immagine con il nome del file come testo alternativo.
 - **Contrasti:** il nome `testo-tenue` su `sfondo-campo` 4,61:1 in chiaro e 4,64:1 in scuro (almeno 4,5, AA).
 
+## CMP-45 – Testata dell'entità
+**Tipo:** composto (usa CMP-01, CMP-02 e il filtro della ricerca di CMP-13) · **Usato in:** SC-13 · **Figma:** pagina Componenti composti, [Testata dell'entità](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=395-6656)
+
+Proposta dell'agente del 16/10/2026 (DEC-145), disegnata in libreria e approvata da Manuel Cucca con i mockup lo stesso giorno; libreria pubblicata da Manuel Cucca il 16/10/2026.
+
+**Scopo:** in cima alla pagina dell'entità, dire di chi si parla e riportare all'elenco (RB-124).
+**Quando usarlo:** solo nella pagina dell'entità.
+**Quando non usarlo:** nell'elenco delle entità (Riga dell'entità, CMP-41).
+
+### Varianti e dimensioni
+- In alto «Entità», pulsante tenue piccolo con la freccia a sinistra (CMP-01), che torna all'elenco.
+- Sotto, a `spazio-blocco`: la foto (cerchio `misura-riga`, 32) se c'è; il nome in Interfaccia/Titolo di schermata, come il titolo della vista Entità; a destra del nome, a `spazio-blocco` (12), il tipo come pillola del filtro della ricerca, con la freccia giù e il menu Tipo dell'entità (CMP-09, RB-122); sotto il nome, a `spazio-elemento`, «Nominata N volte · l'ultima il gg/mm/aaaa» («Mai nominata» se nessuna nota la nomina) in Interfaccia/Dettaglio `testo-tenue`. Proprietà **Nome**, **Dettagli**, **Mostra foto**.
+
+### Stati
+Quelli del pulsante e della pillola del tipo; la testata in sé non si clicca.
+
+### Accessibilità
+- **Tastiera:** Tab raggiunge «Entità» e la pillola del tipo; Esc torna all'elenco.
+- **Lettori di schermo:** il nome è il titolo della pagina (intestazione di livello 1).
+- **Contrasti:** come CMP-41.

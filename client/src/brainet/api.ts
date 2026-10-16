@@ -1,19 +1,11 @@
 // Comandi di Brainet nel nucleo (architettura/api.md, «Brainet»), con le forme che restituiscono.
+// Dalla DEC-145 Brainet non ha note sue: pillole, aree e allegati stanno nelle note di CLOUD.
 
 import { comando, comandoGrezzo } from "../api";
 import type { ColoreStato } from "../componenti/Menu";
-import type { ElementoCestino } from "@memodu/condiviso";
 
 export interface StatoBrainet {
   acceso: boolean;
-  mostraDatabase: boolean;
-}
-
-export interface Frammento {
-  id: string;
-  testo: string;
-  natoIl: string;
-  modificatoIl: string;
 }
 
 export type TipoEntita = "persona" | "argomento" | "evento" | "oggetto";
@@ -38,9 +30,29 @@ export interface StatoArea {
   ordine: number;
 }
 
+/** Un giorno con almeno una nota con Brainet (RB-113). */
 export interface GiornoCalendario {
   giorno: string;
-  note: number;
+}
+
+/** Un paragrafo che nomina l'entità (RB-124). */
+export interface Passaggio {
+  nota: string;
+  titolo: string;
+  /** HH:MM, vuota per una data scelta senza ora. */
+  ora: string;
+  /** Il paragrafo con i suoi segni. */
+  testo: string;
+  /** Dove comincia nella nota, in caratteri. */
+  inizio: number;
+}
+
+/** La pagina dell'entità (FL-26). */
+export interface PaginaEntita {
+  entita: Entita;
+  nominata: number;
+  ultimaVolta: string | null;
+  giorni: { giorno: string; passaggi: Passaggio[] }[];
 }
 
 export type TipoAllegato = "jpg" | "png" | "pdf" | "word" | "excel" | "powerpoint" | "testo";
@@ -72,19 +84,12 @@ export const brainet = {
   stato: () => comando<StatoBrainet>("brainet_stato"),
   accendi: () => comando<StatoBrainet>("accendi_brainet"),
   spegni: () => comando<StatoBrainet>("spegni_brainet"),
-  mostraDatabase: (si: boolean) => comando<StatoBrainet>("mostra_database", { si }),
-  creaFrammento: (testo: string) => comando<Frammento>("crea_frammento", { testo }),
-  salvaFrammento: (id: string, testo: string) =>
-    comando<Frammento | null>("salva_frammento", { id, testo }),
-  leggiFrammento: (id: string) => comando<Frammento>("leggi_frammento", { id }),
-  elencaFrammenti: (primaDi?: string) =>
-    comando<Frammento[]>("elenca_frammenti", { primaDi: primaDi ?? null }),
-  eliminaFrammento: (id: string) => comando<ElementoCestino>("elimina_frammento", { id }),
   calendario: (mese: string) => comando<GiornoCalendario[]>("calendario", { mese }),
   suggerisciEntita: (testo: string) => comando<Entita[]>("suggerisci_entita", { testo }),
   creaEntita: (nome: string) => comando<Entita>("crea_entita", { nome }),
   leggiEntita: (id: string) => comando<Entita>("leggi_entita", { id }),
   elencaEntita: () => comando<VoceEntita[]>("elenca_entita"),
+  passaggiEntita: (id: string) => comando<PaginaEntita>("passaggi_entita", { id }),
   anteprimaUnione: (da: string, verso: string) =>
     comando<Unione>("anteprima_unione", { da, verso }),
   unisciEntita: (da: string, verso: string) => comando<Unione>("unisci_entita", { da, verso }),
@@ -100,8 +105,6 @@ export const brainet = {
       id,
       sostituto: sostituto ?? null,
     }),
-  importa: (nota: string, sposta: boolean) =>
-    comando<Frammento>("importa_in_brainet", { nota, sposta }),
 
   // Allegati (RF-18, DEC-135): un file grande viaggia come corpo della richiesta, non in JSON.
   /** Senza percorso apre la finestra del sistema; null se si annulla. */

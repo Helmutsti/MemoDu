@@ -5,15 +5,12 @@ use tauri::{AppHandle, State};
 use tauri_plugin_dialog::DialogExt;
 
 use crate::archivio::brainet::{
-    Entita, Frammento, GiornoCalendario, Stato as StatoEvidenziatura, StatoBrainet, StatoTolto, Unione, VoceEntita,
+    Entita, GiornoCalendario, PaginaEntita, Stato as StatoEvidenziatura, StatoBrainet, StatoTolto, Unione, VoceEntita,
 };
-use crate::archivio::{id_valido, ElementoCestino, Errore, Esito};
+use crate::archivio::{id_valido, Errore, Esito};
 use crate::comandi::Dati;
 
 type Stato<'a> = State<'a, Dati>;
-
-/// Note del Database per pagina.
-const PAGINA: usize = 50;
 
 #[tauri::command]
 pub async fn brainet_stato(dati: Stato<'_>) -> Esito<StatoBrainet> {
@@ -28,40 +25,6 @@ pub async fn accendi_brainet(app: AppHandle, dati: Stato<'_>) -> Esito<StatoBrai
 #[tauri::command]
 pub async fn spegni_brainet(app: AppHandle, dati: Stato<'_>) -> Esito<StatoBrainet> {
     dati.modifica(&app, |a| a.spegni_brainet())
-}
-
-#[tauri::command]
-pub async fn mostra_database(app: AppHandle, dati: Stato<'_>, si: bool) -> Esito<StatoBrainet> {
-    dati.modifica(&app, |a| a.imposta_mostra_database(si))
-}
-
-#[tauri::command]
-pub async fn crea_frammento(app: AppHandle, dati: Stato<'_>, testo: String) -> Esito<Frammento> {
-    dati.modifica(&app, |a| a.crea_frammento(&testo))
-}
-
-/// None se il testo era vuoto e il frammento non c'è più (RB-102).
-#[tauri::command]
-pub async fn salva_frammento(app: AppHandle, dati: Stato<'_>, id: String, testo: String) -> Esito<Option<Frammento>> {
-    id_valido(&id)?;
-    dati.modifica(&app, |a| a.salva_frammento(&id, &testo))
-}
-
-#[tauri::command]
-pub async fn leggi_frammento(dati: Stato<'_>, id: String) -> Esito<Frammento> {
-    id_valido(&id)?;
-    dati.con(|a| a.leggi_frammento(&id))
-}
-
-#[tauri::command]
-pub async fn elenca_frammenti(dati: Stato<'_>, prima_di: Option<String>) -> Esito<Vec<Frammento>> {
-    dati.con(|a| a.elenca_frammenti(prima_di.as_deref(), PAGINA))
-}
-
-#[tauri::command]
-pub async fn elimina_frammento(app: AppHandle, dati: Stato<'_>, id: String) -> Esito<ElementoCestino> {
-    id_valido(&id)?;
-    dati.modifica(&app, |a| a.elimina_frammento(&id))
 }
 
 #[tauri::command]
@@ -88,6 +51,13 @@ pub async fn leggi_entita(dati: Stato<'_>, id: String) -> Esito<Entita> {
 #[tauri::command]
 pub async fn elenca_entita(dati: Stato<'_>) -> Esito<Vec<VoceEntita>> {
     dati.con(|a| a.elenca_entita())
+}
+
+/// La pagina dell'entità: i passaggi per giorno (FL-26, RB-124).
+#[tauri::command]
+pub async fn passaggi_entita(dati: Stato<'_>, id: String) -> Esito<PaginaEntita> {
+    id_valido(&id)?;
+    dati.con(|a| a.passaggi_entita(&id))
 }
 
 #[tauri::command]
@@ -151,10 +121,4 @@ pub async fn aree_con_stato(dati: Stato<'_>, id: String) -> Esito<usize> {
 pub async fn togli_stato(app: AppHandle, dati: Stato<'_>, id: String, sostituto: Option<String>) -> Esito<StatoTolto> {
     id_valido(&id)?;
     dati.modifica(&app, |a| a.togli_stato(&id, sostituto.as_deref()))
-}
-
-#[tauri::command]
-pub async fn importa_in_brainet(app: AppHandle, dati: Stato<'_>, nota: String, sposta: bool) -> Esito<Frammento> {
-    id_valido(&nota)?;
-    dati.modifica(&app, |a| a.importa_in_brainet(&nota, sposta))
 }

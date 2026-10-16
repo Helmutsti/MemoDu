@@ -1,7 +1,9 @@
-import { EditorSelection, EditorState } from "@codemirror/state";
+import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
+import { EditorSelection, EditorState, type StateCommand } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import { deleteCharBackward, history, undo } from "@codemirror/commands";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { cancellaAvanti, cancellaIndietro, passo, scritturaComeWord } from "../editor/scrittura";
 import {
   aggiornaAllegati,
   aggiornaArea,
@@ -204,5 +206,57 @@ describe("un'area senza legami sparisce (RB-107, RB-109)", () => {
     expect(view.state.doc.toString()).toBe("con  oggi");
     undo(view);
     expect(view.state.doc.toString()).toBe(testo);
+  });
+});
+
+describe("Brainet nella vista Markdown delle note (DEC-146, CA-18.5, CA-18.8)", () => {
+  const conMarkdown = (testo: string, cursore: number) =>
+    EditorState.create({
+      doc: testo,
+      selection: EditorSelection.cursor(cursore),
+      extensions: [
+        markdown({ base: markdownLanguage, addKeymap: false }),
+        scritturaComeWord,
+        estensioneBrainet({
+          onChiocciola: vi.fn(),
+          onSelezione: vi.fn(),
+          onAreaSopra: vi.fn(),
+          onAllegato: vi.fn(),
+        }),
+      ],
+    });
+  const esegui = (s: EditorState, comando: StateCommand) => {
+    let dopo = s;
+    comando({ state: s, dispatch: (tr) => (dopo = tr.state) });
+    return dopo;
+  };
+
+  it("Backspace subito dopo una pillola, anche in un titolo e in un elenco, la toglie tutta", () => {
+    for (const prima of ["con ", "# con ", "- con "]) {
+      const testo = `${prima}${segnoCita(LUCA)}`;
+      const dopo = esegui(conMarkdown(testo, testo.length), cancellaIndietro);
+      expect(dopo.doc.toString()).toBe(prima);
+    }
+  });
+
+  it("Canc subito prima di una pillola la toglie tutta", () => {
+    const testo = `con ${segnoCita(LUCA)} oggi`;
+    const dopo = esegui(conMarkdown(testo, 4), cancellaAvanti);
+    expect(dopo.doc.toString()).toBe("con  oggi");
+  });
+
+  it("le frecce saltano una pillola come un carattere solo", () => {
+    const testo = `a${segnoCita(LUCA)}b`;
+    const s = conMarkdown(testo, 1);
+    const dopo = passo(s, 1, true);
+    expect(dopo).toBe(1 + segnoCita(LUCA).length);
+    expect(passo(s, dopo, false)).toBe(1);
+  });
+
+  it("i segni di un'area si saltano: Backspace toglie la lettera prima, non il segno", () => {
+    const testo = `${segnoApre("a1", ["s"], [])}frase${segnoChiude("a1")} dopo`;
+    const fine = testo.indexOf(" dopo");
+    const dopo = esegui(conMarkdown(testo, fine), cancellaIndietro);
+    expect(dopo.doc.toString()).toBe(`${segnoApre("a1", ["s"], [])}fras${segnoChiude("a1")} dopo`);
   });
 });

@@ -347,6 +347,18 @@ describe("riga Vista di Info (DEC-130)", () => {
     expect(f.onVista).toHaveBeenCalledWith("markdown");
   });
 
+  it("con Brainet il segmento Testo è spento e c'è la spiegazione (CA-18.37)", async () => {
+    apri({ ...nota, vista: "markdown", contenuto: 'con <cita e="e1">Luca</cita>' });
+    const vista = screen.getByRole("radiogroup", { name: "Vista" });
+    const testo = within(vista).getByRole("radio", { name: "Testo" });
+    expect(testo).toBeDisabled();
+    await userEvent.click(testo);
+    expect(f.onVista).not.toHaveBeenCalled();
+    expect(
+      screen.getByText("Questa nota usa Brainet: si vede solo in Markdown"),
+    ).toBeInTheDocument();
+  });
+
   it("c'è anche nella Comparsa, ultima delle righe prima della modifica", () => {
     apri(nota, "comparsa");
     const vista = screen.getByRole("radiogroup", { name: "Vista" });

@@ -574,15 +574,24 @@ fn brainet_arriva_sull_altro_computer() {
         r#"<area id="a1" s="{}">con <cita e="{}">Luca</cita></area id="a1">"#,
         imp.id, luca.id
     );
-    let f = a.a.crea_frammento(&testo).unwrap();
+    let n =
+        a.a.crea(&DatiNuovaNota {
+            titolo: None,
+            contenuto: Some(testo.clone()),
+            cartella: None,
+        })
+        .unwrap();
     a.sincronizza(&mut s);
     b.sincronizza(&mut s);
     // L'impostazione è arrivata: Brainet è acceso anche su B, con tutto quanto.
     assert!(b.a.brainet_stato().unwrap().acceso);
-    assert_eq!(b.a.leggi_frammento(&f.id).unwrap().testo, testo);
+    assert_eq!(b.a.leggi(&n.id).unwrap().contenuto, testo);
     assert_eq!(b.a.elenca_stati().unwrap()[0].nome, "Importante");
     let voci = b.a.elenca_entita().unwrap();
-    assert_eq!((voci[0].entita.nome.as_str(), voci[0].nominata), ("Luca", 2));
+    assert_eq!(
+        (voci[0].entita.nome.as_str(), voci[0].nominata),
+        ("Luca", 2)
+    );
     // Un'unione fatta su B arriva su A.
     let lb = b.a.crea_entita("Luca Bianchi").unwrap();
     b.a.unisci_entita(&luca.id, &lb.id).unwrap();
@@ -593,52 +602,71 @@ fn brainet_arriva_sull_altro_computer() {
     a.a.imposta_tipo(&lb.id, Some("persona")).unwrap();
     a.sincronizza(&mut s);
     b.sincronizza(&mut s);
-    assert_eq!(b.a.leggi_entita(&lb.id).unwrap().tipo.as_deref(), Some("persona"));
+    assert_eq!(
+        b.a.leggi_entita(&lb.id).unwrap().tipo.as_deref(),
+        Some("persona")
+    );
 }
 
 #[test]
-fn brainet_cambiato_su_due_computer_da_una_copia() {
+fn un_frammento_da_un_computer_con_la_1_0_0_diventa_una_nota() {
     let (mut a, mut b, mut s) = due();
     brainet(&mut a);
-    let f = a.a.crea_frammento("uno").unwrap();
     a.sincronizza(&mut s);
     b.sincronizza(&mut s);
-    a.a.salva_frammento(&f.id, "uno di A").unwrap();
-    b.a.salva_frammento(&f.id, "uno di B").unwrap();
-    a.sincronizza(&mut s);
+    // Il blocco come lo manda la 1.0.0 (CA-18.34, RB-125).
+    let blocco = serde_json::json!({
+        "formato": "chiaro", "tipo": "frammento", "modificato_il": "2026-10-15T09:00:00Z", "eliminato": false,
+        "campi": { "testo": "pensiero di ieri", "nato_il": "2026-10-15T08:00:00.000Z",
+                   "modificato_il": "2026-10-15T09:00:00.000Z", "eliminato_il": null, "da_nota": null }
+    });
+    s.scrivi(&DaInviare {
+        id: "f-vecchio".into(),
+        versione: 0,
+        dati: blocco.to_string(),
+        modificato_il: String::new(),
+    })
+    .unwrap();
     b.sincronizza(&mut s);
+    let n = b.a.leggi("f-vecchio").unwrap();
+    assert_eq!(
+        (n.contenuto.as_str(), n.vista.as_str(), n.titolo.as_str()),
+        ("pensiero di ieri", "markdown", "")
+    );
+    assert_eq!(n.creata, "2026-10-15T08:00:00.000Z");
+    // Da qui viaggia come una nota: A la riceve una volta sola.
     a.sincronizza(&mut s);
-    for d in [&mut a, &mut b] {
-        let mut testi: Vec<String> = d.a.elenca_frammenti(None, 50).unwrap().into_iter().map(|f| f.testo).collect();
-        testi.sort();
-        assert_eq!(testi, ["uno di A", "uno di B"]);
-        assert_eq!(d.a.leggi_frammento(&f.id).unwrap().testo, "uno di A");
-    }
+    assert_eq!(
+        a.a.leggi("f-vecchio").unwrap().contenuto,
+        "pensiero di ieri"
+    );
 }
 
 #[test]
-fn brainet_spento_da_un_altro_computer() {
+fn brainet_spento_da_un_altro_computer_non_cancella_niente() {
     let (mut a, mut b, mut s) = due();
     brainet(&mut a);
-    a.a.crea_frammento("di A").unwrap();
+    let luca = a.a.crea_entita("Luca").unwrap();
+    let testo = format!(r#"<cita e="{}">Luca</cita>"#, luca.id);
+    let n =
+        a.a.crea(&DatiNuovaNota {
+            titolo: None,
+            contenuto: Some(testo.clone()),
+            cartella: None,
+        })
+        .unwrap();
     a.sincronizza(&mut s);
     b.sincronizza(&mut s);
-    // B scrive mentre A spegne, prima di saperlo.
-    b.a.crea_frammento("di B").unwrap();
     a.a.spegni_brainet().unwrap();
     a.sincronizza(&mut s);
     let (ricevute, ultimo) = s.modifiche_dopo(b.visto);
     let esito = b.a.ricevi(&ricevute).unwrap();
     b.visto = ultimo;
-    assert!(esito.brainet_spento);
+    assert!(esito.brainet);
     assert!(!b.a.brainet_stato().unwrap().acceso);
-    b.sincronizza(&mut s);
-    a.sincronizza(&mut s);
-    // Riaccendendo non torna niente, né su A né su B.
-    for d in [&mut a, &mut b] {
-        d.a.accendi_brainet().unwrap();
-        assert!(d.a.elenca_frammenti(None, 50).unwrap().is_empty());
-    }
+    assert_eq!(b.a.leggi(&n.id).unwrap().contenuto, testo);
+    b.a.accendi_brainet().unwrap();
+    assert_eq!(b.a.elenca_entita().unwrap()[0].nominata, 1);
 }
 
 #[test]

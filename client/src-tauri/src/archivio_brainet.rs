@@ -1,15 +1,18 @@
-// Brainet nella copia di lavoro (RF-18, DEC-134; architettura approvata il 15/10/2026).
-// Le note Brainet («frammenti», EN-12) tengono pillole e aree dentro il testo, con due segni
-// in forma di tag, come `<u>` per il sottolineato (DEC-28; scelta di Manuel Cucca del
-// 15/10/2026):
+// Brainet nella copia di lavoro (RF-18, DEC-134, DEC-145, DEC-146).
+// Dalla DEC-145 Brainet non ha note sue: le note di CLOUD in vista Markdown tengono pillole e
+// aree dentro il testo, con due segni in forma di tag, come `<u>` per il sottolineato (DEC-28;
+// scelta di Manuel Cucca del 15/10/2026):
 //   collegamento (EN-14): <cita e="ID">nome</cita>
 //   area (EN-15):         <area id="ID" s="ID,ID" e="ID,ID">frase</area id="ID">
 // L'apertura e la chiusura di un'area si accoppiano per id, così due aree possono sovrapporsi.
-// Citazioni e aree delle tabelle `brainet_*` sono solo un indice ricavato dal testo: si rifà a
-// ogni scrittura del frammento e non si sincronizza. Gli allegati hanno un segno loro
-// (archivio_allegati.rs).
+// Citazioni e aree delle tabelle `brainet_*` sono solo un indice ricavato dal testo, che non si
+// sincronizza: un trigger mette in `brainet_da_indicizzare` ogni nota che ha (o aveva) dei
+// segni, e l'indice di quelle note si rifà prima di ogni lettura di Brainet, da qualunque
+// strada sia arrivata la modifica (scrittura, sincronizzazione, copia in conflitto). Gli
+// allegati hanno un segno loro (archivio_allegati.rs). I frammenti della 1.0.0 diventano note
+// allo schema 10 (RB-125).
 
-use std::collections::{BTreeMap, HashMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::sync::LazyLock;
 
 use chrono::{DateTime, Datelike, Local, NaiveDate, Utc};
@@ -19,7 +22,7 @@ use serde::Serialize;
 use serde_json::{json, Map, Value};
 
 use super::impostazioni::ID as ID_IMPOSTAZIONI;
-use super::{chiave, normalizza, Archivio, ElementoCestino, Errore, Esito, Ripristinato};
+use super::{chiave, normalizza, Archivio, Errore, Esito};
 
 /// Schema 8: le tabelle di Brainet e le due impostazioni (RB-106).
 pub const SCHEMA_BRAINET: &str = "
@@ -73,8 +76,122 @@ pub const SCHEMA_BRAINET: &str = "
   ALTER TABLE impostazioni ADD COLUMN mostra_database INTEGER;
 ";
 
-/// Il testo di un frammento ha lo stesso limite di una nota (DEC-106).
-const LIMITE_TESTO: usize = 4 * 1024 * 1024;
+/// Contiene un segno di Brainet (pillola o area)? Per i trigger dell'indice.
+const HA_SEGNI: &str = "(instr({t}, '<cita ') > 0 OR instr({t}, '<area ') > 0)";
+
+/// Schema 10 (DEC-146): l'indice passa dai frammenti alle note e si rifà da solo; la ricerca
+/// legge il testo senza segni (RB-126). I frammenti diventano note in `passa_frammenti_in_note`.
+pub fn schema_brainet_note() -> String {
+    let nuovo = HA_SEGNI.replace("{t}", "NEW.contenuto");
+    let vecchio = HA_SEGNI.replace("{t}", "OLD.contenuto");
+    format!(
+        "
+  DROP TRIGGER IF EXISTS sinc_frammenti_INSERT;
+  DROP TRIGGER IF EXISTS sinc_frammenti_UPDATE;
+  DROP TRIGGER IF EXISTS sinc_frammenti_DELETE;
+  DELETE FROM brainet_citazioni; DELETE FROM brainet_aree; DELETE FROM brainet_aree_legami;
+  ALTER TABLE brainet_citazioni RENAME COLUMN frammento TO nota;
+  ALTER TABLE brainet_aree RENAME COLUMN frammento TO nota;
+  ALTER TABLE brainet_aree_legami RENAME COLUMN frammento TO nota;
+  CREATE TABLE brainet_da_indicizzare (nota TEXT PRIMARY KEY);
+  CREATE TRIGGER brainet_note_INSERT AFTER INSERT ON note WHEN {nuovo} BEGIN
+    INSERT OR IGNORE INTO brainet_da_indicizzare (nota) VALUES (NEW.id);
+  END;
+  CREATE TRIGGER brainet_note_UPDATE AFTER UPDATE OF contenuto ON note WHEN {nuovo} OR {vecchio} BEGIN
+    INSERT OR IGNORE INTO brainet_da_indicizzare (nota) VALUES (NEW.id);
+  END;
+  CREATE TRIGGER brainet_note_DELETE AFTER DELETE ON note BEGIN
+    DELETE FROM brainet_citazioni WHERE nota = OLD.id;
+    DELETE FROM brainet_aree WHERE nota = OLD.id;
+    DELETE FROM brainet_aree_legami WHERE nota = OLD.id;
+    DELETE FROM brainet_da_indicizzare WHERE nota = OLD.id;
+  END;
+  DROP TRIGGER IF EXISTS ricerca_note_INSERT;
+  DROP TRIGGER IF EXISTS ricerca_note_UPDATE;
+  CREATE TRIGGER ricerca_note_INSERT AFTER INSERT ON note BEGIN
+    INSERT INTO ricerca_righe (id, riga)
+    VALUES (NEW.id, (SELECT ifnull(max(riga), 0) + 1 FROM ricerca_righe));
+    INSERT INTO ricerca (rowid, id, titolo, contenuto, tag)
+    VALUES ((SELECT riga FROM ricerca_righe WHERE id = NEW.id), NEW.id, NEW.titolo,
+            senza_segni(NEW.contenuto), tag_della_nota(NEW.id));
+  END;
+  CREATE TRIGGER ricerca_note_UPDATE AFTER UPDATE OF titolo, contenuto ON note BEGIN
+    UPDATE ricerca SET titolo = NEW.titolo, contenuto = senza_segni(NEW.contenuto)
+    WHERE rowid = (SELECT riga FROM ricerca_righe WHERE id = NEW.id);
+  END;
+"
+    )
+}
+
+/// Dopo `schema_brainet_note`, nella stessa transazione: ogni frammento diventa una nota di
+/// CLOUD con lo stesso id, senza titolo, fuori dalle cartelle, in vista Markdown, con le sue
+/// date; uno nel Cestino va nel Cestino (RB-125). La riga di sincronizzazione diventa quella
+/// di una nota, da inviare; la base si traduce, così la fusione con il server confronta campi
+/// uguali. Poi la ricerca si rifà senza segni e l'indice di Brainet si rifà alla prima lettura.
+pub fn passa_frammenti_in_note(db: &rusqlite::Connection) -> rusqlite::Result<()> {
+    let frammenti: Vec<(String, String, String, String, Option<String>)> = db
+        .prepare("SELECT id, testo, nato_il, modificato_il, eliminato_il FROM frammenti")?
+        .query_map([], |r| {
+            Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?))
+        })?
+        .collect::<Result<_, _>>()?;
+    for (id, testo, nato, modificato, eliminato) in frammenti {
+        db.execute(
+            "INSERT OR IGNORE INTO note (id, titolo, contenuto, cartella, creata, modificata, eliminata_il,
+                                         provenienza, vista)
+             VALUES (?1, '', ?2, NULL, ?3, ?4, ?5, CASE WHEN ?5 IS NULL THEN NULL ELSE '' END, 'markdown')",
+            params![id, testo, nato, modificato, eliminato],
+        )?;
+        let base: Option<Option<String>> = db
+            .query_row("SELECT base FROM sinc_elementi WHERE id = ?", [&id], |r| {
+                r.get(0)
+            })
+            .optional()?;
+        let base = base
+            .flatten()
+            .and_then(|b| serde_json::from_str::<Value>(&b).ok())
+            .map(|b| blocco_da_frammento(&b).to_string());
+        db.execute(
+            "INSERT INTO sinc_elementi (id, tipo, modificato, modificato_il) VALUES (?1, 'nota', 1, adesso_utc())
+             ON CONFLICT(id) DO UPDATE SET tipo = 'nota', base = ?2, modificato = 1, modificato_il = adesso_utc()",
+            params![id, base],
+        )?;
+    }
+    db.execute_batch(
+        "DELETE FROM frammenti;
+         UPDATE ricerca SET contenuto = senza_segni((SELECT contenuto FROM note WHERE note.id = ricerca.id));",
+    )?;
+    let con_segni = HA_SEGNI.replace("{t}", "contenuto");
+    db.execute(&format!("INSERT OR IGNORE INTO brainet_da_indicizzare (nota) SELECT id FROM note WHERE {con_segni}"), [])?;
+    Ok(())
+}
+
+/// Il blocco di un frammento (1.0.0) tradotto in quello di una nota di CLOUD (RB-125): lo
+/// stesso passaggio della migrazione, per i blocchi che arrivano da un computer con la 1.0.0.
+pub fn blocco_da_frammento(blocco: &Value) -> Value {
+    let c = blocco.get("campi").and_then(Value::as_object);
+    let campo = |k: &str| c.and_then(|c| c.get(k)).cloned().unwrap_or(Value::Null);
+    let eliminato = campo("eliminato_il");
+    let mut fuori = blocco.clone();
+    fuori["tipo"] = json!("nota");
+    if blocco["eliminato"] != json!(true) {
+        fuori["campi"] = json!({
+            "titolo": "",
+            "contenuto": campo("testo").as_str().unwrap_or(""),
+            "cartella": null,
+            "creata": campo("nato_il"),
+            "creata_scelta": null,
+            "modificata": campo("modificato_il"),
+            "fine_validita": null,
+            "provenienza": if eliminato.is_null() { Value::Null } else { json!("") },
+            "eliminata_il": eliminato,
+            "vista": "markdown",
+            "tag": [],
+        });
+    }
+    fuori
+}
+
 /// Nome di un'entità (EN-13).
 const LUNGHEZZA_NOME_ENTITA: usize = 200;
 /// Suggerimenti di @ per tipo (CMP-09 Suggerimenti).
@@ -90,26 +207,12 @@ static AREA_APRE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"<area id="([^"]+)"(?: s="([^"]*)")?(?: e="([^"]*)")?>"#).unwrap()
 });
 static AREA_CHIUDE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"</area id="([^"]+)">"#).unwrap());
-/// Un segno scritto a mano dall'utente, o arrivato con una nota importata, non diventa mai un
-/// segno vero: il suo `<` si salva come `&lt;`.
-static FINTO_SEGNO: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<(/?)(cita|area|allegato)\b").unwrap());
-
 // ——— Forme scambiate con l'interfaccia ———
 
 #[derive(Debug, Clone, Serialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct StatoBrainet {
     pub acceso: bool,
-    pub mostra_database: bool,
-}
-
-#[derive(Debug, Clone, Serialize, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub struct Frammento {
-    pub id: String,
-    pub testo: String,
-    pub nato_il: String,
-    pub modificato_il: String,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq)]
@@ -140,9 +243,38 @@ pub struct Stato {
 
 #[derive(Debug, Clone, Serialize, PartialEq)]
 pub struct GiornoCalendario {
-    /// AAAA-MM-GG nel fuso del computer.
+    /// AAAA-MM-GG nel fuso del computer: un giorno con almeno una nota con Brainet (RB-113).
     pub giorno: String,
-    pub note: usize,
+}
+
+/// Un paragrafo che nomina l'entità (RB-124).
+#[derive(Debug, Clone, Serialize, PartialEq)]
+pub struct Passaggio {
+    pub nota: String,
+    /// Il titolo, o le prime parole.
+    pub titolo: String,
+    /// HH:MM della creazione nel fuso del computer; vuota per una data scelta senza ora.
+    pub ora: String,
+    /// Il paragrafo con i suoi segni.
+    pub testo: String,
+    /// Dove comincia il paragrafo nella nota, in caratteri.
+    pub inizio: usize,
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq)]
+pub struct GiornoPassaggi {
+    pub giorno: String,
+    pub passaggi: Vec<Passaggio>,
+}
+
+/// La pagina dell'entità (FL-26).
+#[derive(Debug, Clone, Serialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct PaginaEntita {
+    pub entita: Entita,
+    pub nominata: usize,
+    pub ultima_volta: Option<String>,
+    pub giorni: Vec<GiornoPassaggi>,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq)]
@@ -223,9 +355,11 @@ pub fn testo_semplice(testo: &str) -> String {
     super::allegati::senza_segni_allegato(&testo).replace("&lt;", "<")
 }
 
-/// Toglie il valore di un segno finto da un testo che arriva da fuori (nota importata).
-pub fn disinnesca(testo: &str) -> String {
-    FINTO_SEGNO.replace_all(testo, "&lt;$1$2").into_owned()
+/// Il testo ha pillole, aree o allegati? Allora la nota resta in vista Markdown (RB-123).
+pub fn ha_segni(testo: &str) -> bool {
+    CITA.is_match(testo)
+        || AREA_APRE.is_match(testo)
+        || super::allegati::allegati_nel_testo(testo).next().is_some()
 }
 
 /// Riscrive l'apertura dell'area `id` con stati ed entità nuovi; senza legami (né scritti né
@@ -254,17 +388,6 @@ fn riscrivi_area(testo: &str, id: &str, stati: &[String], entita: &[String]) -> 
     fuori
 }
 
-/// «AAAA-MM-GG» come istante: la mezzanotte di quel giorno nel fuso del computer. Un istante
-/// completo resta com'è.
-fn inizio_del_giorno(giorno: &str) -> Option<String> {
-    if giorno.parse::<DateTime<Utc>>().is_ok() {
-        return Some(giorno.to_string());
-    }
-    let mezzanotte = NaiveDate::parse_from_str(giorno, "%Y-%m-%d").ok()?.and_hms_opt(0, 0, 0)?;
-    let locale = mezzanotte.and_local_timezone(Local).earliest()?;
-    Some(locale.with_timezone(&Utc).to_rfc3339_opts(chrono::SecondsFormat::Millis, true))
-}
-
 fn data_locale(istante: &str) -> Option<NaiveDate> {
     istante.parse::<DateTime<Utc>>().ok().map(|i| i.with_timezone(&Local).date_naive())
 }
@@ -279,14 +402,11 @@ impl Archivio {
     }
 
     fn stato_brainet(&self) -> Esito<StatoBrainet> {
-        let riga: Option<(Option<bool>, Option<bool>)> = self
+        let acceso: Option<Option<bool>> = self
             .db
-            .query_row("SELECT brainet, mostra_database FROM impostazioni WHERE id = ?", [ID_IMPOSTAZIONI], |r| {
-                Ok((r.get(0)?, r.get(1)?))
-            })
+            .query_row("SELECT brainet FROM impostazioni WHERE id = ?", [ID_IMPOSTAZIONI], |r| r.get(0))
             .optional()?;
-        let (acceso, mostra) = riga.unwrap_or((None, None));
-        Ok(StatoBrainet { acceso: acceso.unwrap_or(false), mostra_database: mostra.unwrap_or(true) })
+        Ok(StatoBrainet { acceso: acceso.flatten().unwrap_or(false) })
     }
 
     fn acceso(&self) -> Esito<()> {
@@ -300,28 +420,11 @@ impl Archivio {
         })
     }
 
-    /// Spegnere vuol dire cancellare tutto Brainet (RB-111); gli altri computer lo sanno dalla
-    /// sincronizzazione.
+    /// Spegnere nasconde Brainet e non cancella niente: pillole, aree, allegati, entità e stati
+    /// restano (RB-111, DEC-145); gli altri computer lo sanno dalla sincronizzazione.
     pub fn spegni_brainet(&mut self) -> Esito<StatoBrainet> {
         self.con_riconnessione(|a| {
-            a.cancella_tutto_brainet()?;
             a.imposta_brainet("brainet", false)?;
-            a.stato_brainet()
-        })
-    }
-
-    pub(super) fn cancella_tutto_brainet(&self) -> Esito<()> {
-        self.db.execute_batch(
-            "DELETE FROM brainet_citazioni; DELETE FROM brainet_aree; DELETE FROM brainet_aree_legami;
-             DELETE FROM frammenti; DELETE FROM entita; DELETE FROM stati;",
-        )?;
-        self.cancella_tutti_allegati()
-    }
-
-    pub fn imposta_mostra_database(&mut self, si: bool) -> Esito<StatoBrainet> {
-        self.con_riconnessione(|a| {
-            a.acceso()?;
-            a.imposta_brainet("mostra_database", si)?;
             a.stato_brainet()
         })
     }
@@ -335,121 +438,49 @@ impl Archivio {
         Ok(())
     }
 
-    // ——— Frammenti (FL-16) ———
+    // ——— L'indice (DEC-146) ———
 
-    /// Una nota Brainet nuova; il foglio la crea al primo carattere, così un foglio chiuso
-    /// vuoto non lascia niente (RB-102).
-    pub fn crea_frammento(&mut self, testo: &str) -> Esito<Frammento> {
-        self.con_riconnessione(|a| {
-            a.acceso()?;
-            if testo_semplice(testo).trim().is_empty() {
-                return Err(Errore::NonValido("La nota è vuota".into()));
+    /// Rifà l'indice delle note messe in coda dai trigger: quelle che hanno, o avevano, dei
+    /// segni. Si chiama prima di ogni lettura di Brainet.
+    pub(super) fn aggiorna_indice(&self) -> Esito<()> {
+        let righe: Vec<(String, Option<String>)> = self
+            .db
+            .prepare(
+                "SELECT d.nota, n.contenuto FROM brainet_da_indicizzare d LEFT JOIN note n ON n.id = d.nota",
+            )?
+            .query_map([], |r| Ok((r.get(0)?, r.get(1)?)))?
+            .collect::<Result<_, _>>()?;
+        for (nota, testo) in righe {
+            match testo {
+                Some(t) => self.indicizza(&nota, &t)?,
+                None => self.togli_indice(&nota)?,
             }
-            controlla_limite(testo)?;
-            let id = uuid::Uuid::new_v4().to_string();
-            let adesso = a.ora();
-            a.db.execute(
-                "INSERT INTO frammenti (id, testo, nato_il, modificato_il) VALUES (?, ?, ?, ?)",
-                params![id, testo, adesso, adesso],
-            )?;
-            a.indicizza(&id, testo)?;
-            a.frammento(&id)
-        })
-    }
-
-    /// Salva il testo; il giorno di nascita non cambia (RB-103). Un testo vuoto cancella il
-    /// frammento, come un foglio chiuso vuoto (RB-102).
-    pub fn salva_frammento(&mut self, id: &str, testo: &str) -> Esito<Option<Frammento>> {
-        self.con_riconnessione(|a| {
-            a.acceso()?;
-            let prima = a.frammento(id)?.testo;
-            if testo_semplice(testo).trim().is_empty() {
-                a.cancella_frammento(id)?;
-                a.segna_tolti(&prima, "")?;
-                return Ok(None);
-            }
-            controlla_limite(testo)?;
-            a.db.execute(
-                "UPDATE frammenti SET testo = ?, modificato_il = ? WHERE id = ?",
-                params![testo, a.ora(), id],
-            )?;
-            a.indicizza(id, testo)?;
-            // Gli allegati tolti scrivendo (Togli, Backspace, Taglia) si controllano alla chiusura
-            // del foglio (RB-121).
-            a.segna_tolti(&prima, testo)?;
-            Ok(Some(a.frammento(id)?))
-        })
-    }
-
-    pub fn leggi_frammento(&mut self, id: &str) -> Esito<Frammento> {
-        self.con_riconnessione(|a| {
-            a.acceso()?;
-            a.frammento(id)
-        })
-    }
-
-    /// Dal più recente, a pagine: `prima_di` è il `nato_il` dell'ultimo già mostrato.
-    pub fn elenca_frammenti(&mut self, prima_di: Option<&str>, quanti: usize) -> Esito<Vec<Frammento>> {
-        self.con_riconnessione(|a| {
-            a.acceso()?;
-            let mut stmt = a.db.prepare(
-                "SELECT id, testo, nato_il, modificato_il FROM frammenti
-                 WHERE eliminato_il IS NULL AND (?1 IS NULL OR nato_il < ?1)
-                 ORDER BY nato_il DESC, id DESC LIMIT ?2",
-            )?;
-            let righe = stmt.query_map(params![prima_di, quanti as i64], riga_frammento)?;
-            Ok(righe.collect::<Result<_, _>>()?)
-        })
-    }
-
-    /// Nel Cestino, nella parte di Brainet (CA-18.9).
-    pub fn elimina_frammento(&mut self, id: &str) -> Esito<ElementoCestino> {
-        self.con_riconnessione(|a| {
-            a.acceso()?;
-            let f = a.frammento(id)?;
-            let eliminato = a.ora();
-            a.db.execute("UPDATE frammenti SET eliminato_il = ? WHERE id = ?", params![eliminato, id])?;
-            Ok(elemento_cestino(&f.id, &f.testo, eliminato))
-        })
-    }
-
-    fn frammento(&self, id: &str) -> Esito<Frammento> {
-        self.db
-            .query_row(
-                "SELECT id, testo, nato_il, modificato_il FROM frammenti WHERE id = ? AND eliminato_il IS NULL",
-                [id],
-                riga_frammento,
-            )
-            .optional()?
-            .ok_or_else(|| Errore::BrainetNonTrovato(id.to_string()))
-    }
-
-    fn cancella_frammento(&self, id: &str) -> Esito<()> {
-        self.db.execute("DELETE FROM frammenti WHERE id = ?", [id])?;
-        self.togli_indice(id)
+        }
+        self.db.execute("DELETE FROM brainet_da_indicizzare", [])?;
+        Ok(())
     }
 
     pub(super) fn togli_indice(&self, id: &str) -> Esito<()> {
         for tabella in ["brainet_citazioni", "brainet_aree", "brainet_aree_legami"] {
-            self.db.execute(&format!("DELETE FROM {tabella} WHERE frammento = ?"), [id])?;
+            self.db.execute(&format!("DELETE FROM {tabella} WHERE nota = ?"), [id])?;
         }
         Ok(())
     }
 
-    /// Rifà l'indice di un frammento dal suo testo. Un'area prende anche le entità citate
+    /// Rifà l'indice di una nota dal suo testo. Un'area prende anche le entità citate
     /// dentro di lei (RB-107).
     pub(super) fn indicizza(&self, id: &str, testo: &str) -> Esito<()> {
         self.togli_indice(id)?;
         let (citazioni, aree) = leggi_segni(testo);
         for c in &citazioni {
             self.db.execute(
-                "INSERT INTO brainet_citazioni (frammento, entita, inizio, fine) VALUES (?, ?, ?, ?)",
+                "INSERT INTO brainet_citazioni (nota, entita, inizio, fine) VALUES (?, ?, ?, ?)",
                 params![id, c.entita, c.inizio as i64, c.fine as i64],
             )?;
         }
         for area in &aree {
             self.db.execute(
-                "INSERT OR REPLACE INTO brainet_aree (frammento, id, inizio, fine) VALUES (?, ?, ?, ?)",
+                "INSERT OR REPLACE INTO brainet_aree (nota, id, inizio, fine) VALUES (?, ?, ?, ?)",
                 params![id, area.id, area.inizio as i64, area.fine as i64],
             )?;
             let mut entita: Vec<&String> = area.entita.iter().collect();
@@ -461,7 +492,7 @@ impl Archivio {
             let legami = area.stati.iter().map(|s| ("stato", s)).chain(entita.into_iter().map(|e| ("entita", e)));
             for (tipo, valore) in legami {
                 self.db.execute(
-                    "INSERT INTO brainet_aree_legami (frammento, area, tipo, id) VALUES (?, ?, ?, ?)",
+                    "INSERT INTO brainet_aree_legami (nota, area, tipo, id) VALUES (?, ?, ?, ?)",
                     params![id, area.id, tipo, valore],
                 )?;
             }
@@ -469,28 +500,37 @@ impl Archivio {
         Ok(())
     }
 
-    /// Quante note per giorno nel mese «AAAA-MM» (CA-18.14).
+    /// I giorni del mese «AAAA-MM» in cui è nata almeno una nota con Brainet, fuori dal Cestino:
+    /// un pallino per giorno (RB-113, RB-127).
     pub fn calendario(&mut self, mese: &str) -> Esito<Vec<GiornoCalendario>> {
         let inizio = NaiveDate::parse_from_str(&format!("{mese}-01"), "%Y-%m-%d")
             .map_err(|_| Errore::NonValido(format!("Mese non valido: {mese}")))?;
         self.con_riconnessione(|a| {
             a.acceso()?;
-            let nati: Vec<String> = a
-                .db
-                .prepare("SELECT nato_il FROM frammenti WHERE eliminato_il IS NULL")?
-                .query_map([], |r| r.get(0))?
-                .collect::<Result<_, _>>()?;
-            let mut giorni: BTreeMap<NaiveDate, usize> = BTreeMap::new();
-            for d in nati.iter().filter_map(|n| data_locale(n)) {
-                if d.year() == inizio.year() && d.month() == inizio.month() {
-                    *giorni.entry(d).or_default() += 1;
-                }
-            }
-            Ok(giorni
-                .into_iter()
-                .map(|(g, note)| GiornoCalendario { giorno: g.format("%Y-%m-%d").to_string(), note })
-                .collect())
+            a.aggiorna_indice()?;
+            let giorni: BTreeSet<NaiveDate> = a
+                .date_note_con_brainet()?
+                .into_values()
+                .filter(|d| d.year() == inizio.year() && d.month() == inizio.month())
+                .collect();
+            Ok(giorni.into_iter().map(|g| GiornoCalendario { giorno: g.format("%Y-%m-%d").to_string() }).collect())
         })
+    }
+
+    /// Il giorno di ogni nota con pillole o aree, fuori dal Cestino.
+    fn date_note_con_brainet(&self) -> Esito<HashMap<String, NaiveDate>> {
+        let righe: Vec<(String, String, Option<String>)> = self
+            .db
+            .prepare(
+                "SELECT id, creata, creata_scelta FROM note WHERE eliminata_il IS NULL AND id IN (
+                   SELECT nota FROM brainet_citazioni UNION SELECT nota FROM brainet_aree)",
+            )?
+            .query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))?
+            .collect::<Result<_, _>>()?;
+        Ok(righe
+            .into_iter()
+            .filter_map(|(id, creata, scelta)| giorno_della_nota(&creata, scelta.as_deref()).map(|g| (id, g)))
+            .collect())
     }
 
     // ——— Entità (FL-17, FL-19) ———
@@ -555,6 +595,7 @@ impl Archivio {
     pub fn elenca_entita(&mut self) -> Esito<Vec<VoceEntita>> {
         self.con_riconnessione(|a| {
             a.acceso()?;
+            a.aggiorna_indice()?;
             let conteggi = a.conteggi()?;
             let mut voci: Vec<VoceEntita> = a
                 .entita_vive()?
@@ -573,6 +614,7 @@ impl Archivio {
     pub fn anteprima_unione(&mut self, da: &str, verso: &str) -> Esito<Unione> {
         self.con_riconnessione(|a| {
             a.acceso()?;
+            a.aggiorna_indice()?;
             a.controlla_unione(da, verso)?;
             a.conta_riferimenti(da)
         })
@@ -583,6 +625,7 @@ impl Archivio {
     pub fn unisci_entita(&mut self, da: &str, verso: &str) -> Esito<Unione> {
         self.con_riconnessione(|a| {
             a.acceso()?;
+            a.aggiorna_indice()?;
             a.controlla_unione(da, verso)?;
             let spostate = a.conta_riferimenti(da)?;
             a.db.execute("UPDATE entita SET unita_in = ? WHERE id = ? OR unita_in = ?", params![verso, da, da])?;
@@ -628,10 +671,10 @@ impl Archivio {
         })
     }
 
-    /// L'entità, anche unita: si segue il rimando fino a quella che resta.
+    /// L'entità, anche unita: si segue il rimando fino a quella che resta. Anche con Brainet
+    /// spento, per mostrare le pillole già scritte (RB-111).
     pub fn leggi_entita(&mut self, id: &str) -> Esito<Entita> {
         self.con_riconnessione(|a| {
-            a.acceso()?;
             let vera = a.risolvi_entita(id)?;
             a.entita(&vera)
         })
@@ -667,25 +710,32 @@ impl Archivio {
             .collect::<Result<_, _>>()?)
     }
 
-    /// Per ogni entità che resta: citazioni più aree, e l'ultima nota che la nomina.
-    fn conteggi(&self) -> Esito<HashMap<String, (usize, Option<String>)>> {
-        let rimandi = self.rimandi()?;
-        let righe: Vec<(String, String)> = self
+    /// Le citazioni e le aree delle note fuori dal Cestino (RB-127): (entità, nota).
+    fn riferimenti(&self) -> Esito<Vec<(String, String)>> {
+        Ok(self
             .db
             .prepare(
-                "SELECT x.entita, f.nato_il FROM (
-                   SELECT frammento, entita FROM brainet_citazioni
-                   UNION ALL SELECT frammento, id FROM brainet_aree_legami WHERE tipo = 'entita'
-                 ) x JOIN frammenti f ON f.id = x.frammento WHERE f.eliminato_il IS NULL",
+                "SELECT x.entita, x.nota FROM (
+                   SELECT nota, entita FROM brainet_citazioni
+                   UNION ALL SELECT nota, id FROM brainet_aree_legami WHERE tipo = 'entita'
+                 ) x JOIN note n ON n.id = x.nota WHERE n.eliminata_il IS NULL",
             )?
             .query_map([], |r| Ok((r.get(0)?, r.get(1)?)))?
-            .collect::<Result<_, _>>()?;
+            .collect::<Result<_, _>>()?)
+    }
+
+    /// Per ogni entità che resta: citazioni più aree, e il giorno dell'ultima nota che la nomina.
+    fn conteggi(&self) -> Esito<HashMap<String, (usize, Option<String>)>> {
+        let rimandi = self.rimandi()?;
+        let date = self.date_note_con_brainet()?;
         let mut fuori: HashMap<String, (usize, Option<String>)> = HashMap::new();
-        for (entita, nato) in righe {
+        for (entita, nota) in self.riferimenti()? {
             let voce = fuori.entry(segui(&rimandi, &entita)).or_default();
             voce.0 += 1;
-            if voce.1.as_deref().is_none_or(|u| u < nato.as_str()) {
-                voce.1 = Some(nato);
+            if let Some(giorno) = date.get(&nota).map(|g| g.format("%Y-%m-%d").to_string()) {
+                if voce.1.as_deref().is_none_or(|u| u < giorno.as_str()) {
+                    voce.1 = Some(giorno);
+                }
             }
         }
         Ok(fuori)
@@ -699,23 +749,89 @@ impl Archivio {
         };
         Ok(Unione {
             citazioni: conta(
-                "SELECT c.entita FROM brainet_citazioni c JOIN frammenti f ON f.id = c.frammento
-                 WHERE f.eliminato_il IS NULL",
+                "SELECT c.entita FROM brainet_citazioni c JOIN note n ON n.id = c.nota
+                 WHERE n.eliminata_il IS NULL",
             )?,
             aree: conta(
-                "SELECT l.id FROM brainet_aree_legami l JOIN frammenti f ON f.id = l.frammento
-                 WHERE l.tipo = 'entita' AND f.eliminato_il IS NULL",
+                "SELECT l.id FROM brainet_aree_legami l JOIN note n ON n.id = l.nota
+                 WHERE l.tipo = 'entita' AND n.eliminata_il IS NULL",
             )?,
+        })
+    }
+
+    // ——— La pagina dell'entità (FL-26) ———
+
+    /// I paragrafi delle note fuori dal Cestino che nominano l'entità (o una unita in lei), uno
+    /// per paragrafo, per giorno di creazione della nota dal più recente (RB-124).
+    pub fn passaggi_entita(&mut self, id: &str) -> Esito<PaginaEntita> {
+        self.con_riconnessione(|a| {
+            a.acceso()?;
+            a.aggiorna_indice()?;
+            let vera = a.risolvi_entita(id)?;
+            let entita = a.entita(&vera)?;
+            let rimandi = a.rimandi()?;
+            let (nominata, ultima_volta) = a.conteggi()?.get(&vera).cloned().unwrap_or((0, None));
+            // Per ogni nota, dove cominciano i suoi riferimenti all'entità.
+            let mut punti: HashMap<String, Vec<usize>> = HashMap::new();
+            let righe: Vec<(String, String, i64)> = a
+                .db
+                .prepare(
+                    "SELECT nota, entita, inizio FROM brainet_citazioni
+                     UNION ALL SELECT l.nota, l.id, r.inizio FROM brainet_aree_legami l
+                       JOIN brainet_aree r ON r.nota = l.nota AND r.id = l.area WHERE l.tipo = 'entita'",
+                )?
+                .query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))?
+                .collect::<Result<_, _>>()?;
+            for (nota, e, inizio) in righe {
+                if segui(&rimandi, &e) == vera {
+                    punti.entry(nota).or_default().push(inizio as usize);
+                }
+            }
+            let mut per_giorno: BTreeMap<NaiveDate, Vec<(String, Passaggio)>> = BTreeMap::new();
+            for (nota, mut inizi) in punti {
+                let riga: Option<(String, String, String, Option<String>)> = a
+                    .db
+                    .query_row(
+                        "SELECT titolo, contenuto, creata, creata_scelta FROM note WHERE id = ? AND eliminata_il IS NULL",
+                        [&nota],
+                        |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)),
+                    )
+                    .optional()?;
+                let Some((titolo, contenuto, creata, scelta)) = riga else { continue };
+                let Some(giorno) = giorno_della_nota(&creata, scelta.as_deref()) else { continue };
+                let titolo =
+                    if titolo.trim().is_empty() { super::anteprima(&testo_semplice(&contenuto)) } else { titolo };
+                let ora = if scelta.is_some() { String::new() } else { ora_locale(&creata) };
+                let mut visti = HashSet::new();
+                inizi.sort_unstable();
+                for inizio in inizi {
+                    let (da, testo) = paragrafo(&contenuto, inizio);
+                    if visti.insert(da) {
+                        let p = Passaggio { nota: nota.clone(), titolo: titolo.clone(), ora: ora.clone(), testo, inizio: da };
+                        per_giorno.entry(giorno).or_default().push((creata.clone(), p));
+                    }
+                }
+            }
+            let giorni = per_giorno
+                .into_iter()
+                .rev()
+                .map(|(g, mut lista)| {
+                    lista.sort_by(|x, y| y.0.cmp(&x.0).then_with(|| x.1.inizio.cmp(&y.1.inizio)));
+                    GiornoPassaggi {
+                        giorno: g.format("%Y-%m-%d").to_string(),
+                        passaggi: lista.into_iter().map(|(_, p)| p).collect(),
+                    }
+                })
+                .collect();
+            Ok(PaginaEntita { entita, nominata, ultima_volta, giorni })
         })
     }
 
     // ——— Stati (FL-21) ———
 
+    /// Anche con Brainet spento, per i colori delle aree già scritte (RB-111).
     pub fn elenca_stati(&mut self) -> Esito<Vec<Stato>> {
-        self.con_riconnessione(|a| {
-            a.acceso()?;
-            a.stati()
-        })
+        self.con_riconnessione(|a| a.stati())
     }
 
     fn stati(&self) -> Esito<Vec<Stato>> {
@@ -758,9 +874,10 @@ impl Archivio {
     pub fn aree_con_stato(&mut self, id: &str) -> Esito<usize> {
         self.con_riconnessione(|a| {
             a.acceso()?;
+            a.aggiorna_indice()?;
             Ok(a.db.query_row(
-                "SELECT count(*) FROM brainet_aree_legami l JOIN frammenti f ON f.id = l.frammento
-                 WHERE l.tipo = 'stato' AND l.id = ? AND f.eliminato_il IS NULL",
+                "SELECT count(*) FROM brainet_aree_legami l JOIN note n ON n.id = l.nota
+                 WHERE l.tipo = 'stato' AND l.id = ? AND n.eliminata_il IS NULL",
                 [id],
                 |r| r.get::<_, i64>(0),
             )? as usize)
@@ -772,6 +889,7 @@ impl Archivio {
     pub fn togli_stato(&mut self, id: &str, sostituto: Option<&str>) -> Esito<StatoTolto> {
         self.con_riconnessione(|a| {
             a.acceso()?;
+            a.aggiorna_indice()?;
             let esiste = a.db.query_row("SELECT 1 FROM stati WHERE id = ?", [id], |_| Ok(())).optional()?;
             if esiste.is_none() {
                 return Err(Errore::BrainetNonTrovato(id.to_string()));
@@ -781,16 +899,16 @@ impl Archivio {
                     return Err(Errore::NonValido("Stato sostituto non valido".into()));
                 }
             }
-            let frammenti: Vec<(String, String)> = a
+            let note: Vec<(String, String)> = a
                 .db
                 .prepare(
-                    "SELECT DISTINCT f.id, f.testo FROM frammenti f JOIN brainet_aree_legami l ON l.frammento = f.id
+                    "SELECT DISTINCT n.id, n.contenuto FROM note n JOIN brainet_aree_legami l ON l.nota = n.id
                      WHERE l.tipo = 'stato' AND l.id = ?",
                 )?
                 .query_map([id], |r| Ok((r.get(0)?, r.get(1)?)))?
                 .collect::<Result<_, _>>()?;
             let mut esito = StatoTolto { aree_cambiate: 0, aree_sparite: 0 };
-            for (frammento, mut testo) in frammenti {
+            for (nota, mut testo) in note {
                 let (_, aree) = leggi_segni(&testo);
                 for area in aree.iter().filter(|x| x.stati.iter().any(|s| s == id)) {
                     let mut stati: Vec<String> = area.stati.iter().filter(|s| *s != id).cloned().collect();
@@ -808,135 +926,28 @@ impl Archivio {
                     }
                 }
                 a.db.execute(
-                    "UPDATE frammenti SET testo = ?, modificato_il = ? WHERE id = ?",
-                    params![testo, a.ora(), frammento],
+                    "UPDATE note SET contenuto = ?, modificata = ? WHERE id = ?",
+                    params![testo, a.ora(), nota],
                 )?;
-                a.indicizza(&frammento, &testo)?;
+                a.indicizza(&nota, &testo)?;
             }
             a.db.execute("DELETE FROM stati WHERE id = ?", [id])?;
             Ok(esito)
         })
-    }
-
-    // ——— Importare (FL-22) ———
-
-    /// Copia la nota di CLOUD in Brainet, con il titolo come prima riga, nel giorno in cui era
-    /// nata; tag e cartella si perdono. Con `sposta` la nota va nel Cestino (RB-112).
-    pub fn importa_in_brainet(&mut self, nota: &str, sposta: bool) -> Esito<Frammento> {
-        self.con_riconnessione(|a| {
-            a.acceso()?;
-            let riga = a.trova(nota)?;
-            let testo = match (riga.titolo.trim().is_empty(), riga.contenuto.trim().is_empty()) {
-                (true, _) => riga.contenuto.clone(),
-                (false, true) => riga.titolo.clone(),
-                (false, false) => format!("{}\n\n{}", riga.titolo, riga.contenuto),
-            };
-            let testo = disinnesca(&testo);
-            if testo.trim().is_empty() {
-                return Err(Errore::NonValido("La nota è vuota".into()));
-            }
-            controlla_limite(&testo)?;
-            // La data scelta di una nota di CLOUD è un giorno senza ora: diventa l'inizio di quel
-            // giorno nel fuso del computer, così il Calendario la mette sul giorno giusto.
-            let nato = match riga.creata_scelta.as_deref() {
-                Some(giorno) => inizio_del_giorno(giorno).unwrap_or_else(|| riga.creata.clone()),
-                None => riga.creata.clone(),
-            };
-            let id = uuid::Uuid::new_v4().to_string();
-            a.db.execute(
-                "INSERT INTO frammenti (id, testo, nato_il, modificato_il, da_nota) VALUES (?, ?, ?, ?, ?)",
-                params![id, testo, nato, riga.modificata, nota],
-            )?;
-            a.indicizza(&id, &testo)?;
-            if sposta {
-                let provenienza = a.percorso(riga.cartella.as_deref())?.unwrap_or_default();
-                a.db.execute(
-                    "UPDATE note SET eliminata_il = ?, provenienza = ? WHERE id = ?",
-                    params![a.ora(), provenienza, nota],
-                )?;
-            }
-            a.frammento(&id)
-        })
-    }
-
-    // ——— Cestino (SC-04, parte Brainet) ———
-
-    pub(super) fn frammenti_nel_cestino(&self) -> Esito<Vec<ElementoCestino>> {
-        let righe: Vec<(String, String, String)> = self
-            .db
-            .prepare("SELECT id, testo, eliminato_il FROM frammenti WHERE eliminato_il IS NOT NULL")?
-            .query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))?
-            .collect::<Result<_, _>>()?;
-        Ok(righe.into_iter().map(|(id, testo, eliminato)| elemento_cestino(&id, &testo, eliminato)).collect())
-    }
-
-    /// Some se l'id era un frammento nel Cestino.
-    pub(super) fn ripristina_frammento(&self, id: &str) -> Esito<Option<Ripristinato>> {
-        let n = self.db.execute(
-            "UPDATE frammenti SET eliminato_il = NULL WHERE id = ? AND eliminato_il IS NOT NULL",
-            [id],
-        )?;
-        if n == 0 {
-            return Ok(None);
-        }
-        let f = self.frammento(id)?;
-        Ok(Some(Ripristinato::Frammento(f)))
-    }
-
-    pub(super) fn elimina_frammento_per_sempre(&self, id: &str) -> Esito<bool> {
-        let testo: Option<String> = self
-            .db
-            .query_row("SELECT testo FROM frammenti WHERE id = ? AND eliminato_il IS NOT NULL", [id], |r| r.get(0))
-            .optional()?;
-        if let Some(t) = &testo {
-            self.segna_tolti(t, "")?;
-        }
-        let n = self.db.execute("DELETE FROM frammenti WHERE id = ? AND eliminato_il IS NOT NULL", [id])?;
-        if n > 0 {
-            self.togli_indice(id)?;
-        }
-        Ok(n > 0)
-    }
-
-    pub(super) fn svuota_frammenti(&self) -> Esito<()> {
-        let ids: Vec<String> = self
-            .db
-            .prepare("SELECT id FROM frammenti WHERE eliminato_il IS NOT NULL")?
-            .query_map([], |r| r.get(0))?
-            .collect::<Result<_, _>>()?;
-        for id in ids {
-            self.elimina_frammento_per_sempre(&id)?;
-        }
-        Ok(())
     }
 }
 
 // ——— Sincronizzazione (DEC-75, DEC-76) ———
 
 /// Tipi dei blocchi di Brainet; le app che non li conoscono li saltano.
-pub const TIPI_BLOCCHI: [&str; 4] = ["frammento", "entita", "stato", super::allegati::TIPO_BLOCCO];
+/// Il blocco `frammento` della 1.0.0 non è qui: ricevuto, diventa una nota (RB-125).
+pub const TIPI_BLOCCHI: [&str; 3] = ["entita", "stato", super::allegati::TIPO_BLOCCO];
 
 impl Archivio {
     /// I campi del blocco di un elemento di Brainet; None se non c'è più.
     pub(super) fn campi_brainet(&self, id: &str, tipo: &str) -> Esito<Option<Value>> {
         use base64::Engine;
         let campi = match tipo {
-            "frammento" => self
-                .db
-                .query_row(
-                    "SELECT testo, nato_il, modificato_il, eliminato_il, da_nota FROM frammenti WHERE id = ?",
-                    [id],
-                    |r| {
-                        Ok(json!({
-                            "testo": r.get::<_, String>(0)?,
-                            "nato_il": r.get::<_, String>(1)?,
-                            "modificato_il": r.get::<_, String>(2)?,
-                            "eliminato_il": r.get::<_, Option<String>>(3)?,
-                            "da_nota": r.get::<_, Option<String>>(4)?,
-                        }))
-                    },
-                )
-                .optional()?,
             "entita" => self
                 .db
                 .query_row(
@@ -976,24 +987,6 @@ impl Archivio {
         let testo = |k: &str| c.get(k).and_then(Value::as_str).map(str::to_string);
         let adesso = self.ora();
         match tipo {
-            "frammento" => {
-                let t = testo("testo").unwrap_or_default();
-                self.db.execute(
-                    "INSERT INTO frammenti (id, testo, nato_il, modificato_il, eliminato_il, da_nota)
-                     VALUES (?1, ?2, ?3, ?4, ?5, ?6)
-                     ON CONFLICT(id) DO UPDATE SET testo = ?2, nato_il = ?3, modificato_il = ?4,
-                       eliminato_il = ?5, da_nota = ?6",
-                    params![
-                        id,
-                        t,
-                        testo("nato_il").unwrap_or_else(|| adesso.clone()),
-                        testo("modificato_il").unwrap_or(adesso),
-                        testo("eliminato_il"),
-                        testo("da_nota"),
-                    ],
-                )?;
-                self.indicizza(id, &t)?;
-            }
             "entita" => {
                 let nome = testo("nome").unwrap_or_default();
                 let foto = testo("foto").and_then(|f| base64::engine::general_purpose::STANDARD.decode(f).ok());
@@ -1032,18 +1025,6 @@ impl Archivio {
         Ok(())
     }
 
-    /// Il testo di qui di un frammento cambiato anche altrove va in un frammento nuovo, nato lo
-    /// stesso giorno, con le sue pillole e aree (DEC-06, CA-18.17).
-    pub(super) fn copia_frammento_in_conflitto(&self, originale: &str, testo: &str) -> Esito<String> {
-        let id = uuid::Uuid::new_v4().to_string();
-        self.db.execute(
-            "INSERT INTO frammenti (id, testo, nato_il, modificato_il, da_nota)
-             SELECT ?1, ?2, nato_il, ?3, da_nota FROM frammenti WHERE id = ?4",
-            params![id, testo, self.ora(), originale],
-        )?;
-        self.indicizza(&id, testo)?;
-        Ok(id)
-    }
 }
 
 fn a_vive(a: &Archivio, id: &str) -> Esito<()> {
@@ -1066,17 +1047,6 @@ fn segui(rimandi: &HashMap<String, String>, id: &str) -> String {
     attuale
 }
 
-fn controlla_limite(testo: &str) -> Esito<()> {
-    if testo.len() > LIMITE_TESTO {
-        return Err(Errore::TroppoGrande(testo.len() as u64));
-    }
-    Ok(())
-}
-
-fn riga_frammento(r: &rusqlite::Row) -> rusqlite::Result<Frammento> {
-    Ok(Frammento { id: r.get(0)?, testo: r.get(1)?, nato_il: r.get(2)?, modificato_il: r.get(3)? })
-}
-
 fn riga_entita(r: &rusqlite::Row) -> rusqlite::Result<Entita> {
     use base64::Engine;
     let foto: Option<Vec<u8>> = r.get(3)?;
@@ -1088,15 +1058,37 @@ fn riga_entita(r: &rusqlite::Row) -> rusqlite::Result<Entita> {
     })
 }
 
-fn elemento_cestino(id: &str, testo: &str, eliminato: String) -> ElementoCestino {
-    ElementoCestino {
-        id: id.to_string(),
-        tipo: "frammento",
-        nome: super::anteprima(&testo_semplice(testo)),
-        provenienza: String::new(),
-        eliminato,
-        conteggio: None,
+/// Il giorno di una nota nel fuso del computer: quello scelto in Info, se c'è, altrimenti quello
+/// della creazione (RB-113, RB-124).
+fn giorno_della_nota(creata: &str, scelta: Option<&str>) -> Option<NaiveDate> {
+    match scelta {
+        Some(g) => NaiveDate::parse_from_str(g, "%Y-%m-%d")
+            .ok()
+            .or_else(|| data_locale(g)),
+        None => data_locale(creata),
     }
+}
+
+/// HH:MM di un istante nel fuso del computer.
+fn ora_locale(istante: &str) -> String {
+    istante
+        .parse::<DateTime<Utc>>()
+        .map(|i| i.with_timezone(&Local).format("%H:%M").to_string())
+        .unwrap_or_default()
+}
+
+/// La riga del testo che contiene il carattere `inizio` (un paragrafo, un titolo o una voce di
+/// elenco), con la sua posizione in caratteri (RB-124).
+fn paragrafo(testo: &str, inizio: usize) -> (usize, String) {
+    let mut da = 0;
+    for riga in testo.split('\n') {
+        let lunga = riga.chars().count();
+        if inizio <= da + lunga {
+            return (da, riga.to_string());
+        }
+        da += lunga + 1;
+    }
+    (da, String::new())
 }
 
 /// Il messaggio quando come foto di un'entità si sceglie un file che non è un'immagine (CA-18.13,

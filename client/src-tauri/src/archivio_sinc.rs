@@ -12,7 +12,7 @@ use std::collections::BTreeSet;
 use rusqlite::{params, OptionalExtension};
 use serde_json::{json, Map, Value};
 
-use super::brainet::TIPI_BLOCCHI;
+use super::brainet::{blocco_da_frammento, ha_segni, TIPI_BLOCCHI};
 use super::{chiave, Archivio, ConflittoNato, Esito, SeEsiste};
 
 /// Formato dei blocchi: in chiaro finché la cifratura è spenta (DEC-78).
@@ -41,10 +41,9 @@ pub struct EsitoRicezione {
     /// Note il cui contenuto o posizione è cambiato: l'interfaccia le rilegge.
     pub note: Vec<String>,
     pub altro: bool,
-    /// Note, entità, stati o impostazioni di Brainet cambiati: l'interfaccia li rilegge.
+    /// Entità, stati, impostazioni di Brainet o note con i segni cambiati: l'interfaccia li
+    /// rilegge.
     pub brainet: bool,
-    /// Brainet spento da un altro computer: qui si è cancellato tutto (RB-111).
-    pub brainet_spento: bool,
 }
 
 struct Voce {
@@ -191,10 +190,16 @@ impl Archivio {
         ordinate.sort_by_key(|r| ordine(r));
         let mut spostate = Vec::new();
         for r in ordinate {
-            let remoto: Value = match serde_json::from_str(&r.dati) {
+            let mut remoto: Value = match serde_json::from_str(&r.dati) {
                 Ok(v) => v,
                 Err(_) => continue,
             };
+            // Un frammento da un computer con la 1.0.0 diventa una nota di CLOUD (RB-125).
+            let mut dati = r.dati.clone();
+            if remoto["tipo"] == json!("frammento") {
+                remoto = blocco_da_frammento(&remoto);
+                dati = remoto.to_string();
+            }
             let tipo = remoto["tipo"].as_str().unwrap_or("").to_string();
             if !["nota", "cartella", "tag", "impostazioni"].contains(&tipo.as_str())
                 && !TIPI_BLOCCHI.contains(&tipo.as_str())
@@ -219,12 +224,16 @@ impl Archivio {
                  VALUES (?1, ?2, ?3, ?4, 0, NULL)
                  ON CONFLICT(id) DO UPDATE SET versione = ?3, base = ?4,
                    modificato = CASE WHEN ?5 THEN 0 ELSE modificato END",
-                params![r.id, tipo, r.versione, r.dati, uguale_al_server],
+                params![r.id, tipo, r.versione, dati, uguale_al_server],
             )?;
             if tipo == "nota" {
                 let cambiata = campi(&prima) != campi(&risultato) || prima["eliminato"] != risultato["eliminato"];
                 if cambiata {
                     esito.note.push(r.id.clone());
+                    let con_segni = |b: &Value| campi(b).get("contenuto").and_then(Value::as_str).is_some_and(ha_segni);
+                    if con_segni(&prima) || con_segni(&risultato) {
+                        esito.brainet = true;
+                    }
                 }
                 if campi(&prima).get("cartella") != campi(&risultato).get("cartella") {
                     spostate.push(r.id.clone());
@@ -236,21 +245,11 @@ impl Archivio {
                 if tipo == "impostazioni" {
                     let (p, d) = (campi(&prima), campi(&risultato));
                     let vale = |m: &Map<String, Value>, k: &str| m.get(k).and_then(Value::as_bool);
-                    if vale(&p, "brainet") != vale(&d, "brainet")
-                        || vale(&p, "mostra_database") != vale(&d, "mostra_database")
-                    {
+                    if vale(&p, "brainet") != vale(&d, "brainet") {
                         esito.brainet = true;
-                    }
-                    if vale(&p, "brainet") == Some(true) && vale(&d, "brainet") == Some(false) {
-                        esito.brainet_spento = true;
                     }
                 }
             }
-        }
-        // Brainet spento altrove: si cancella tutto anche qui, segnando le eliminazioni, così
-        // anche quello che era nato qui nel frattempo sparisce dappertutto (RB-111).
-        if esito.brainet_spento {
-            self.cancella_tutto_brainet()?;
         }
         self.sistema_riferimenti()?;
         // RB-30: una nota creata o spostata in una cartella che altrove è finita nel cestino va
@@ -324,13 +323,6 @@ impl Archivio {
                 vr
             } else if vr == vb {
                 vl
-            } else if voce.tipo == "frammento" && k == "testo" {
-                // Come per le note: l'originale prende il testo del server, quello di qui va in
-                // una copia (DEC-06, CA-18.17).
-                if let Some(qui) = vl.and_then(Value::as_str) {
-                    self.copia_frammento_in_conflitto(id, qui)?;
-                }
-                vr
             } else if voce.tipo == "nota" && CAMPI_TESTO.contains(&k.as_str()) {
                 // Il testo cambiato da tutte e due le parti: l'originale prende quello del server,
                 // quello di qui va nella copia in conflitto (DEC-06).
@@ -488,7 +480,6 @@ impl Archivio {
             "nota" => "note",
             "cartella" => "cartelle",
             "impostazioni" => "impostazioni",
-            "frammento" => "frammenti",
             "entita" => "entita",
             "stato" => "stati",
             "allegato" => "allegati",
@@ -496,9 +487,6 @@ impl Archivio {
         };
         if blocco["eliminato"] == json!(true) {
             self.db.execute(&format!("DELETE FROM {tabella} WHERE id = ?"), [id])?;
-            if tipo == "frammento" {
-                self.togli_indice(id)?;
-            }
             if tipo == "allegato" {
                 self.allegato_eliminato_altrove(id)?;
             }

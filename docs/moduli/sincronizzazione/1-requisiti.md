@@ -120,6 +120,8 @@ Come *utente* voglio importare ed esportare le mie note in file markdown standar
 
 Anche se si sviluppa dopo la prima fase, il modo in cui si salvano le note deve renderla possibile fin dall'inizio.
 
+Pillole, aree e allegati di Brainet (DEC-145, scelta di Manuel Cucca del 16/10/2026): la pillola si esporta come `[[nome]]`, l'area come `==frase==` senza gli stati, la foto come `![nome](allegati/nome)` e il documento come `[nome](allegati/nome)`, con i file nella cartella `allegati` accanto alla nota.
+
 **Collegamenti:** FL-00 · EN-00 · SC-00 · RF-04 · RF-10
 
 ### Scenario d'uso

@@ -1,7 +1,6 @@
-// Il gruppo Brainet delle Impostazioni (SC-06, RF-18): «Usa Brainet»; acceso, «Mostra il
-// Database» e gli stati delle evidenziature (CMP-42). Spegnere vuol dire cancellare tutto, su
-// tutti i computer, dopo una conferma (RB-111). Togliendo uno stato usato, Memodu propone di
-// cambiarlo con un altro (RB-110).
+// Il gruppo Brainet delle Impostazioni (SC-06, RF-18): «Usa Brainet»; acceso, gli stati delle
+// evidenziature (CMP-42). Spegnere nasconde Brainet e non cancella niente, senza conferma (RB-111,
+// DEC-145). Togliendo uno stato usato, Memodu propone di cambiarlo con un altro (RB-110).
 
 import { Plus } from "lucide-react";
 import { useEffect, useState, type ReactElement } from "react";
@@ -26,7 +25,7 @@ const NOME_COLORE: Record<ColoreStato, string> = {
 
 interface Proprieta {
   esegui: <T>(chiamata: () => Promise<T>) => Promise<T | undefined>;
-  /** Acceso, spento o «Mostra il Database» cambiato: la colonna si aggiorna. */
+  /** Acceso o spento: la colonna si aggiorna. */
   onCambiato: (stato: StatoBrainet) => void;
   /** Cambia quando la sincronizzazione porta modifiche di Brainet. */
   versione: number;
@@ -35,7 +34,6 @@ interface Proprieta {
 export function GruppoBrainet({ esegui, onCambiato, versione }: Proprieta): ReactElement | null {
   const [stato, setStato] = useState<StatoBrainet | null>(null);
   const [stati, setStati] = useState<StatoArea[]>([]);
-  const [spegni, setSpegni] = useState(false);
   const [nuovo, setNuovo] = useState<{ nome: string; colore: ColoreStato; errore?: string } | null>(
     null,
   );
@@ -105,20 +103,12 @@ export function GruppoBrainet({ esegui, onCambiato, versione }: Proprieta): Reac
       <GruppoImpostazioni titolo="Brainet">
         <RigaInterruttore
           etichetta="Usa Brainet"
-          descrizione="La sezione Brainet nella colonna, per scrivere note collegate a persone, oggetti, eventi e argomenti."
+          descrizione="Collega quello che scrivi nelle note a persone, oggetti, eventi e argomenti, e lo ritrovi in Entità e nel Calendario."
           acceso={stato.acceso}
           onCambia={(si) =>
-            si ? void esegui(() => brainet.accendi()).then(aggiorna) : setSpegni(true)
+            void esegui(() => (si ? brainet.accendi() : brainet.spegni())).then(aggiorna)
           }
         />
-        {stato.acceso && (
-          <RigaInterruttore
-            etichetta="Mostra il Database"
-            descrizione="L'unico posto dove si legge il testo delle note Brainet. Spento, Database sparisce dalla colonna. Vale su tutti i dispositivi."
-            acceso={stato.mostraDatabase}
-            onCambia={(si) => void esegui(() => brainet.mostraDatabase(si)).then(aggiorna)}
-          />
-        )}
       </GruppoImpostazioni>
       {stato.acceso && (
         <section className="gruppo-impostazioni" aria-label="Stati delle evidenziature">
@@ -201,18 +191,6 @@ export function GruppoBrainet({ esegui, onCambiato, versione }: Proprieta): Reac
             )}
           </Riquadro>
         </section>
-      )}
-      {spegni && (
-        <FinestraConferma
-          titolo="Spegnere Brainet?"
-          testo="Le note, le entità, le aree e gli stati di Brainet si cancellano per sempre, su tutti i tuoi computer."
-          azione="Spegni e cancella tutto"
-          onAnnulla={() => setSpegni(false)}
-          onConferma={() => {
-            setSpegni(false);
-            void esegui(() => brainet.spegni()).then(aggiorna);
-          }}
-        />
       )}
       {togli && (
         <FinestraConferma

@@ -9,6 +9,21 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ### Aggiunto
 - Brainet: in Entità un clic sul tipo accanto al nome lo cambia in persona, argomento, evento o oggetto, o lo riporta a «Senza tipo»
+- Brainet: la pagina di un'entità, con un clic su una riga di Entità o su una pillola: i paragrafi delle note che la nominano, giorno per giorno; un clic apre la nota proprio lì
+- Si allegano foto e documenti in tutte le note in vista Markdown, trascinandoli o incollandoli, anche con Brainet spento
+
+### Cambiato
+- Brainet funziona nelle note di CLOUD: in vista Markdown `@`, le pillole, le frasi evidenziate e gli allegati si usano nelle note di sempre, e la colonna tiene solo Entità e Calendario
+- Le note scritte in Brainet diventano note di CLOUD in vista Markdown, nel giorno in cui erano state scritte, con pillole, frasi evidenziate e allegati
+- Il Calendario di Brainet ha un pallino solo per giorno
+- La ricerca trova anche le note con Brainet, per il nome delle pillole e le parole evidenziate
+- Una nota con pillole, frasi evidenziate o allegati resta in vista Markdown: in Info «Testo» è spento
+- Spegnere Brainet non cancella più niente e non chiede conferma
+
+### Tolto
+- Il + accanto a Brainet, il Database e «Mostra il Database»
+- «Importa in Brainet» nel menu delle note
+- La parte di Brainet nel Cestino: le note con Brainet stanno con le altre
 
 ## [1.0.0] – 2026-10-15
 
