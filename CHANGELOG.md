@@ -7,6 +7,8 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+## [1.1.0] – 2026-10-16
+
 ### Aggiunto
 - Brainet: «Sposta in Brainet» nel menu di una nota e in Info. La nota esce dall'albero e dalla ricerca e va nel Journal; lo spostamento è senza ritorno
 - Brainet: il Journal, con tutte le note in Brainet dalla più recente, da leggere e modificare lì
