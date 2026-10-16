@@ -12,6 +12,7 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 - Brainet: il Journal, con tutte le note in Brainet dalla più recente, da leggere e modificare lì
 - Brainet: la pagina di un'entità, con un clic su una riga di Entità o su una pillola: i paragrafi delle note che la nominano, giorno per giorno; un clic apre la nota proprio lì
 - Brainet: in Entità un clic sul tipo accanto al nome lo cambia
+- Brainet: nella pagina di un'entità la cronologia dei mesi, con un pallino dove è citata; un clic su un mese porta lì
 - Brainet: Entità divisa per tipo; le persone si vedono come un cast, con la foto rotonda o le iniziali e il nome sotto, gli eventi con il calendario e gli argomenti con la lampadina; il tipo si cambia anche con il tasto destro
 - Si allegano foto e documenti in tutte le note in vista Markdown, trascinandoli o incollandoli, anche con Brainet spento
 

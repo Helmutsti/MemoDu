@@ -68,6 +68,7 @@ Il server in locale fa da deposito al posto di R2 (DEC-135); in produzione si ri
 | TC-247 | RF-18 RB-131 | Nota del Journal con la data scelta il 09/10/2026: sopra c'è «il 09/10/2026», senza ora, ed è in ordine con quella data | Locale | La nota | Prova automatica dell'interfaccia superata il 16/10/2026 |
 | TC-248 | RF-18 RB-124 | Pagina dell'entità: un paragrafo su due righe si vede intero; una voce di elenco o un titolo da soli | Locale | Nota con paragrafo su più righe, elenco e titolo | Prova automatica del nucleo superata il 16/10/2026 |
 | TC-249 | RF-18 RB-124 | Un'emoji prima della pillola: il clic sul passaggio apre la nota con il cursore all'inizio del paragrafo giusto | Locale | Nota con 😀 prima di @Luca | Prova automatica del nucleo superata il 16/10/2026 (la posizione si conta come l'editor) |
+| TC-250 | RF-18 CA-18.51 | Entità citata il 16/10 (due paragrafi) e l'08/12: cronologia ottobre, novembre, dicembre; pallino medio in ottobre, piccolo in dicembre, nessuno in novembre; clic su ottobre porta al 16/10 | Locale | Le note | Prova automatica dell'interfaccia superata il 16/10/2026; a mano il 16/10/2026 dall'agente: la cronologia di Luca con ottobre 2026 e 3 paragrafi |
 
 ## Domande aperte
 - Altri modi di «leggere» la knowledge base, dopo la pagina dell'entità: da studiare (RF-18, punti aperti).

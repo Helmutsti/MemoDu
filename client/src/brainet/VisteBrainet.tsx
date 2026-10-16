@@ -621,6 +621,107 @@ const DISTANZA_MENU = 8;
 // ——— La pagina dell'entità (SC-13, FL-26) ———
 
 /** «Venerdì 16 ottobre», con l'anno se non è quello di oggi (CMP-39). */
+/** Un mese della cronologia: «2026-10», il nome breve e quanti paragrafi (RB-133). */
+export interface MeseCronologia {
+  mese: string;
+  etichetta: string;
+  nome: string;
+  paragrafi: number;
+  /** Il giorno più recente del mese nell'elenco, dove porta il clic. */
+  giorno: string | null;
+}
+
+/** I mesi dal primo all'ultimo con paragrafi, dal più vecchio; i mesi vuoti in mezzo restano. */
+export function mesiCronologia(
+  giorni: { giorno: string; passaggi: unknown[] }[],
+): MeseCronologia[] {
+  if (!giorni.length) return [];
+  const conti = new Map<string, number>();
+  const primo = new Map<string, string>();
+  for (const g of giorni) {
+    const m = g.giorno.slice(0, 7);
+    conti.set(m, (conti.get(m) ?? 0) + g.passaggi.length);
+    if (!primo.has(m) || g.giorno > primo.get(m)!) primo.set(m, g.giorno);
+  }
+  const ordinati = [...conti.keys()].sort();
+  const [a1, m1] = ordinati[ordinati.length - 1].split("-").map(Number);
+  const mesi: MeseCronologia[] = [];
+  let [a, m] = ordinati[0].split("-").map(Number);
+  while (a < a1 || (a === a1 && m <= m1)) {
+    const chiave = `${a}-${String(m).padStart(2, "0")}`;
+    const d = new Date(a, m - 1, 1);
+    const breve = d.toLocaleDateString("it-IT", { month: "short" }).replace(".", "");
+    mesi.push({
+      mese: chiave,
+      etichetta: `${breve} ${String(a).slice(2)}`,
+      nome: d.toLocaleDateString("it-IT", { month: "long", year: "numeric" }),
+      paragrafi: conti.get(chiave) ?? 0,
+      giorno: primo.get(chiave) ?? null,
+    });
+    if (m === 12) {
+      a += 1;
+      m = 1;
+    } else m += 1;
+  }
+  return mesi;
+}
+
+/** Tre misure del pallino: 1 paragrafo, da 2 a 4, 5 o più (CMP-47). */
+const misuraPallino = (n: number) => (n >= 5 ? "molti" : n >= 2 ? "alcuni" : "uno");
+
+/** CMP-47 Cronologia dell'entità: la striscia dei mesi sotto la testata (RB-133, DEC-150). */
+function Cronologia({
+  giorni,
+}: {
+  giorni: { giorno: string; passaggi: unknown[] }[];
+}): ReactElement {
+  const mesi = mesiCronologia(giorni);
+  return (
+    <ol
+      className="cronologia"
+      aria-label="Cronologia"
+      // Parte dal mese più recente, a destra, se i mesi non ci stanno.
+      ref={(el) => {
+        if (el) el.scrollLeft = el.scrollWidth;
+      }}
+    >
+      {mesi.map((m) => (
+        <li key={m.mese}>
+          {m.giorno ? (
+            <button
+              type="button"
+              className="cronologia-mese"
+              aria-label={`${m.nome}: ${m.paragrafi === 1 ? "1 paragrafo" : `${m.paragrafi} paragrafi`}`}
+              onClick={() =>
+                document
+                  .getElementById(`giorno-${m.giorno}`)
+                  ?.scrollIntoView?.({ block: "start", behavior: "smooth" })
+              }
+            >
+              <span className="cronologia-posto" aria-hidden="true">
+                <span className={`cronologia-pallino cronologia-${misuraPallino(m.paragrafi)}`} />
+              </span>
+              <span className="interfaccia-dettaglio">{m.etichetta}</span>
+            </button>
+          ) : (
+            <span
+              className="cronologia-mese cronologia-mese-vuoto"
+              aria-label={`${m.nome}: nessun paragrafo`}
+            >
+              <span className="cronologia-posto" aria-hidden="true">
+                <span className="cronologia-pallino cronologia-vuoto" />
+              </span>
+              <span className="interfaccia-dettaglio" aria-hidden="true">
+                {m.etichetta}
+              </span>
+            </span>
+          )}
+        </li>
+      ))}
+    </ol>
+  );
+}
+
 function titoloGiorno(giorno: string, adesso = new Date()): string {
   const d = data(giorno);
   const t = d.toLocaleDateString("it-IT", {
@@ -838,6 +939,7 @@ function PaginaEntita({
             </div>
             <span className="testata-entita-dettagli interfaccia-dettaglio">{dettagli}</span>
           </header>
+          {pagina.giorni.length > 0 && <Cronologia giorni={pagina.giorni} />}
           {pagina.giorni.length === 0 ? (
             <div className="pagina-entita-vuota">
               <StatoVuoto
@@ -850,7 +952,11 @@ function PaginaEntita({
             <ul className="passaggi">
               {pagina.giorni.map((g) => (
                 <Fragment key={g.giorno}>
-                  <li className="menu-titolo interfaccia-titolo-sezione" role="presentation">
+                  <li
+                    id={`giorno-${g.giorno}`}
+                    className="menu-titolo interfaccia-titolo-sezione"
+                    role="presentation"
+                  >
                     {titoloGiorno(g.giorno)}
                   </li>
                   {g.passaggi.map((p) => (

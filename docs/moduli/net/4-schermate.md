@@ -82,7 +82,7 @@ Torna con DEC-147 (16/10/2026) al posto del Database: l'elenco delle note in Bra
 ---
 
 ## SC-13 – Pagina dell'entità (FL-26)
-**Flussi:** FL-26 · **Componenti:** CMP-45 Testata dell'entità, CMP-39 Titolo di sezione (i giorni), CMP-38 Collegamento, CMP-40 Area evidenziata, CMP-37 Pallino dello stato, CMP-19 Stato vuoto (Entità); il passaggio è una disposizione della schermata
+**Flussi:** FL-26 · **Componenti:** CMP-45 Testata dell'entità, CMP-47 Cronologia dell'entità, CMP-39 Titolo di sezione (i giorni), CMP-38 Collegamento, CMP-40 Area evidenziata, CMP-37 Pallino dello stato, CMP-19 Stato vuoto (Entità); il passaggio è una disposizione della schermata
 
 Scritta dall'agente il 16/10/2026 (DEC-145, RB-124), approvata da Manuel Cucca lo stesso giorno.
 
@@ -91,6 +91,8 @@ Scritta dall'agente il 16/10/2026 (DEC-145, RB-124), approvata da Manuel Cucca l
 | Azione | Come |
 |---|---|
 | Aprire | Clic su una riga di Entità o su una pillola in una nota |
+| Vedere quando | La cronologia sotto la testata: i mesi con un pallino dove l'entità è citata, più grande se lo è di più (RB-133, DEC-150) |
+| Andare a un mese | Clic su un mese della cronologia: la pagina scorre al suo giorno più recente |
 | Leggere | I passaggi per giorno, dal più recente: titolo della nota (o le prime parole) e ora, sotto il paragrafo con la pillola o l'area evidenziata e i pallini degli stati (RB-124) |
 | Aprire una nota | Clic su un passaggio: la nota si apre con il cursore su quel paragrafo |
 | Cambiare il tipo | Clic sulla pillola del tipo nella testata (RB-122) |
@@ -100,7 +102,7 @@ Scritta dall'agente il 16/10/2026 (DEC-145, RB-124), approvata da Manuel Cucca l
 | Stato | Descrizione | Testo mostrato |
 |---|---|---|
 | Default | Testata e passaggi | «Nominata 3 volte · l'ultima il 16/10/2026» (una volta: «Nominata 1 volta · …») |
-| Vuoto | Nessuna nota di CLOUD fuori dal Cestino la nomina (RB-127) | «Mai nominata» nella testata; «Nessuna nota parla ancora di «Giorgio».» · «Scrivi @ in una nota per citarla.» |
+| Vuoto | Nessuna nota in Brainet fuori dal Cestino la nomina (RB-127); niente cronologia | «Mai nominata» nella testata; «Nessuna nota parla ancora di «Giorgio».» · «Scrivi @ in una nota per citarla.» |
 | Hover | Mouse su un passaggio | Fondo `sfondo-hover`, raggio 12 |
 | Caricamento | Non previsto: i dati sono nella copia di lavoro | — |
 

@@ -136,6 +136,7 @@ Riscritti dall'agente il 16/10/2026 per DEC-145 (Fase 8), approvati da Manuel Cu
 - **CA-18.47** *Dato* una nota di CLOUD in vista Markdown, *quando* scrivo @ o seleziono una frase, *allora* non si apre nessun menu di Brainet; trascinando o incollando un file si allega (RB-123, DEC-147).
 - **CA-18.48** *Dato* un'entità citata in una nota di CLOUD (scritta prima di DEC-147) e in una nota in Brainet, *allora* Entità la conta una volta sola, per la nota in Brainet (RB-127).
 - **CA-18.49** *Dato* entità di tipi diversi, *quando* apro Entità, *allora* le vedo divise per tipo, con il titolo del gruppo, nell'ordine Persone, Argomenti, Eventi, Oggetti, Senza tipo (gruppi vuoti nascosti); le persone come un cast, con la foto rotonda o le iniziali e il nome sotto; gli eventi con l'icona del calendario, gli argomenti con la lampadina (richiesta di Manuel Cucca del 16/10/2026; scritto dall'agente, approvato da Manuel Cucca lo stesso giorno).
+- **CA-18.51** *Dato* un'entità citata in ottobre e in dicembre, *quando* apro la sua pagina, *allora* sotto la testata vedo ottobre, novembre e dicembre, con il pallino in ottobre e in dicembre e non in novembre; *quando* faccio clic su ottobre, *allora* la pagina scorre al giorno più recente di ottobre (RB-133, DEC-150).
 - **CA-18.50** *Dato* una persona nel cast, *quando* ci faccio clic, *allora* si apre la sua pagina; *quando* faccio tasto destro › «Tipo», *allora* posso cambiarne il tipo come dalla pillola (proposta dell'agente, approvata da Manuel Cucca il 16/10/2026).
 
 ---

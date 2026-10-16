@@ -262,7 +262,7 @@ Brainet raccoglie le note che vuoi tenere come pensieri e le collega a persone, 
 **Ritrovare.**
 
 - **Entità:** le persone, gli argomenti, gli eventi e gli oggetti che hai nominato nelle note in Brainet, divisi per tipo. Le persone si vedono come il cast di un film: la foto rotonda, o le iniziali, e il nome sotto. Gli eventi hanno il calendario, gli argomenti la lampadina, e accanto al nome quante volte e quando l'hai nominato. Un clic sul tipo accanto al nome lo cambia; con il tasto destro: «Unisci a…», «Scegli una foto…» e «Tipo».
-- **La pagina di un'entità:** un clic su una riga di Entità, o su una pillola, apre la sua pagina con i paragrafi che la nominano, per giorno, dal più recente. Un clic su un paragrafo apre la nota proprio lì; «Entità» in cima, o Esc, torna all'elenco.
+- **La pagina di un'entità:** un clic su una riga di Entità, o su una pillola, apre la sua pagina con i paragrafi che la nominano, per giorno, dal più recente. Sotto il nome c'è la cronologia: i mesi, con un pallino più grande dove ne hai parlato di più; un clic su un mese porta ai suoi paragrafi. Un clic su un paragrafo apre la nota proprio lì; «Entità» in cima, o Esc, torna all'elenco.
 - **Calendario:** un pallino nei giorni in cui è nata una nota in Brainet.
 
 **Spegnerlo non cancella niente.** Spegnendo «Usa Brainet» sparisce la sezione, con il Journal; le note in Brainet, le entità e gli stati restano, e riaccendendolo ritrovi tutto.

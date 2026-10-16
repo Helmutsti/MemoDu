@@ -334,3 +334,65 @@
 .nota-journal-quando {
   color: var(--testo-tenue);
 }
+
+/* CMP-47 Cronologia dell'entità: i mesi sotto la testata, un pallino dove è citata (RB-133). */
+.cronologia {
+  display: flex;
+  gap: var(--spazio-elemento);
+  margin-top: 0;
+  margin-bottom: var(--spazio-gruppo);
+  padding: 0;
+  overflow-x: auto;
+  list-style: none;
+}
+.cronologia-mese {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spazio-elemento);
+  width: 48px;
+  padding: 6px 0;
+  border: 0;
+  border-radius: var(--raggio-interno);
+  background: none;
+  color: var(--testo-tenue);
+  font: inherit;
+}
+button.cronologia-mese {
+  cursor: pointer;
+}
+button.cronologia-mese:hover {
+  background: var(--sfondo-hover);
+}
+button.cronologia-mese:focus-visible {
+  outline: var(--focus-spessore) solid var(--focus-anello);
+  outline-offset: calc(0px - var(--focus-spessore));
+}
+.cronologia-posto {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+}
+.cronologia-pallino {
+  border-radius: var(--raggio-pillola);
+  background: var(--testo-informazione);
+}
+.cronologia-uno {
+  width: 6px;
+  height: 6px;
+}
+.cronologia-alcuni {
+  width: 10px;
+  height: 10px;
+}
+.cronologia-molti {
+  width: 14px;
+  height: 14px;
+}
+.cronologia-vuoto {
+  width: 4px;
+  height: 4px;
+  background: var(--bordo-divisore);
+}

@@ -52,6 +52,7 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-44 | Foto allegata (bolla, piccola, media, grande, non scaricata; RF-18) | base | Disegnato |
 | CMP-45 | Testata dell'entità (pagina dell'entità, DEC-145) | composto | Disegnato |
 | CMP-46 | Volto dell'entità (le persone in Entità, come un cast) | composto | Disegnato |
+| CMP-47 | Cronologia dell'entità (pagina dell'entità, DEC-150) | composto | Disegnato |
 
 L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'icona di sistema e non è un componente.
 
@@ -1609,3 +1610,23 @@ Richiesta di Manuel Cucca del 16/10/2026: «Le persone devono apparire come i pe
 
 ### Comportamento
 - Clic o Invio: la pagina dell'entità (SC-13). Tasto destro, tasto Menu o Maiusc + F10: «Unisci a…», «Scegli una foto…», «Tipo ›».
+
+## CMP-47 – Cronologia dell'entità
+**Tipo:** composto · **Usato in:** SC-13 · **Figma:** pagina Componenti composti, [Mese della cronologia](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=415-5961)
+
+Scelta di Manuel Cucca del 16/10/2026 (DEC-150: «una timeline con le citazioni», strada A); misure e stati proposti dall'agente.
+
+**Scopo:** vedere a colpo d'occhio quando si è parlato di un'entità e saltare a quel periodo.
+**Quando usarlo:** sotto la testata della pagina dell'entità (CMP-45), se almeno una nota la nomina.
+**Quando non usarlo:** nella pagina vuota; nel Calendario (CMP-43), che è per giorni.
+
+### Varianti e dimensioni
+- Una riga di mesi, a `spazio-elemento` l'uno dall'altro, dal più vecchio a sinistra; `spazio-gruppo` sotto. Se i mesi non ci stanno la riga scorre di lato e parte dal più recente.
+- **Mese della cronologia:** largo 48, `raggio-interno`, 6 sopra e sotto; in alto un posto 16 con il pallino `testo-informazione` di 6, 10 o 14 (Paragrafi = Uno, Alcuni da 2 a 4, Molti 5 o più), o un punto 4 `bordo-divisore` (Paragrafi = Nessuno); sotto, a `spazio-elemento`, il mese breve con l'anno in Interfaccia/Dettaglio `testo-tenue` («ott 26»). Proprietà **Mese**.
+
+### Stati
+- Default; Hover `sfondo-hover`; Focus con l'anello dentro. Un mese senza paragrafi non è un pulsante.
+
+### Comportamento
+- Clic, Invio o spazio su un mese: la pagina scorre al suo giorno più recente nell'elenco. Il lettore di schermo legge «ottobre 2026: 3 paragrafi».
+

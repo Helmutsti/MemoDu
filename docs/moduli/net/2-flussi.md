@@ -261,9 +261,11 @@ flowchart TD
     C --> D[In cima foto, nome, tipo e «Nominata N volte · l'ultima il …»]
     D --> E{Qualche nota la nomina?}
     E -- No --> F[«Nessuna nota parla ancora di «…».»]
-    E -- Sì --> G[I passaggi per giorno, dal più recente: titolo della nota, ora, il paragrafo con la pillola o l'area evidenziata - RB-124]
+    E -- Sì --> K[Sotto la testata la cronologia: i mesi con un pallino dove è citata - RB-133]
+    K --> G[I passaggi per giorno, dal più recente: titolo della nota, ora, il paragrafo con la pillola o l'area evidenziata - RB-124]
     G --> H{Cosa faccio?}
     H -- Clic su un passaggio --> I[Si apre la nota con il cursore su quel paragrafo]
+    H -- Clic su un mese della cronologia --> L[La pagina scorre al primo giorno di quel mese - RB-133]
     H -- «Entità» o Esc --> J[Torno all'elenco delle entità]
 ```
 
@@ -374,3 +376,4 @@ flowchart TD
 | RB-130 | «Sposta in Brainet» (tasto destro sulla nota nella colonna, sotto «Sposta in…», e Info), solo con Brainet acceso, dopo una conferma: «Spostare la nota in Brainet?» · «La nota esce da CLOUD e dalla ricerca e non si riporta indietro. Nel Journal puoi collegarla a persone, oggetti e argomenti.» · «Annulla», «Sposta». Senza ritorno (DEC-147) | FL-28 |
 | RB-131 | Il Journal elenca le note in Brainet fuori dal Cestino, dalla più recente, con il giorno e l'ora sopra ognuna (con la data scelta in Info, quel giorno senza ora, come nella pagina dell'entità e nell'ordine); si modificano lì; tasto destro › «Elimina» le manda nel Cestino, ripristinate tornano nel Journal (DEC-147) | FL-28 |
 | RB-132 | Una nota in Brainet non sta nell'albero di CLOUD né in nessuna cartella (DEC-147) | FL-28 |
+| RB-133 | La pagina dell'entità ha, sotto la testata, la cronologia: i mesi dal primo all'ultimo in cui è citata, dal più vecchio a sinistra; un pallino nei mesi con paragrafi, più grande se sono di più (1, da 2 a 4, 5 o più); un clic su un mese porta al suo giorno più recente nell'elenco; se i mesi non ci stanno la striscia scorre di lato e parte dal più recente (DEC-150) | FL-26 |

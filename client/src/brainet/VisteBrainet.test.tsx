@@ -5,7 +5,7 @@ import { api, ErroreApi } from "../api";
 import { brainet } from "./api";
 import { GruppoBrainet } from "./GruppoBrainet";
 import { SezioneBrainet } from "./SezioneBrainet";
-import { quandoNota, VisteBrainet } from "./VisteBrainet";
+import { mesiCronologia, quandoNota, VisteBrainet } from "./VisteBrainet";
 
 vi.mock("../api", async (originale) => ({
   ...(await originale<typeof import("../api")>()),
@@ -438,5 +438,43 @@ describe("Journal, la data sopra la nota (RB-131)", () => {
   it("con la data scelta: quel giorno, senza ora, come nell'ordine", () => {
     expect(quandoNota({ ...nota, creataScelta: "2026-10-09" }, adesso)).toBe("il 09/10/2026");
     expect(quandoNota({ ...nota, creataScelta: "2026-10-16" }, adesso)).toBe("oggi");
+  });
+});
+
+describe("Cronologia della pagina dell'entità (CA-18.51, RB-133)", () => {
+  const passaggio = { nota: "n", titolo: "Nota", ora: "10:00", testo: "testo", inizio: 0 };
+  const giorni = [
+    { giorno: "2026-12-08", passaggi: [passaggio] },
+    { giorno: "2026-10-16", passaggi: [passaggio, passaggio] },
+    { giorno: "2026-10-02", passaggi: [passaggio] },
+  ];
+  it("i mesi dal primo all'ultimo, con quelli vuoti in mezzo", () => {
+    const mesi = mesiCronologia(giorni);
+    expect(mesi.map((m) => [m.etichetta, m.paragrafi, m.giorno])).toEqual([
+      ["ott 26", 3, "2026-10-16"],
+      ["nov 26", 0, null],
+      ["dic 26", 1, "2026-12-08"],
+    ]);
+  });
+  it("nella pagina: un pulsante per i mesi con paragrafi, il pallino cresce; clic porta al giorno", async () => {
+    vi.mocked(brainet.elencaStati).mockResolvedValue([]);
+    vi.mocked(brainet.passaggiEntita).mockResolvedValue({
+      entita: LB,
+      nominata: 4,
+      ultimaVolta: "2026-12-08",
+      giorni,
+    });
+    const scorri = vi.fn();
+    Element.prototype.scrollIntoView = scorri;
+    const { container } = render(
+      <VisteBrainet vista={`entita:${LB.id}`} versione={0} esegui={esegui} {...viste} />,
+    );
+    const ottobre = await screen.findByRole("button", { name: "ottobre 2026: 3 paragrafi" });
+    expect(screen.getByLabelText("novembre 2026: nessun paragrafo")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "dicembre 2026: 1 paragrafo" })).toBeInTheDocument();
+    expect(ottobre.querySelector(".cronologia-alcuni")).not.toBeNull();
+    fireEvent.click(ottobre);
+    expect(scorri).toHaveBeenCalled();
+    expect(scorri.mock.contexts[0]).toBe(container.querySelector("#giorno-2026-10-16"));
   });
 });
