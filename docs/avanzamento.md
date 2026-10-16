@@ -60,6 +60,24 @@ Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui
 
 Prima: Nessuna. Il 07/10/2026 Manuel Cucca ha confermato in blocco quelle rimaste (sincronizzazione: nella fusione di un conflitto di testo l'originale prende la versione del server e la copia quella del dispositivo; SC-06; RF-08; DEC-71, DEC-76, DEC-77, DEC-93, DEC-96, DEC-119, DEC-120, DEC-121); tolte perché superate i testi provvisori della sincronizzazione e dello stato in SC-06 (DEC-122), le credenziali nel file dell'app e il gettone statico di DEC-79 (DEC-121).
 
+## Domande aperte dall'analisi sull'archivio di memoria (16/10/2026)
+Da ID-40 … ID-49, per Manuel Cucca, una alla volta. Fino ad allora le idee restano *Proposta*.
+
+1. La ricerca deve trovare le note del Journal? Solo dentro il Journal; un'opzione nella ricerca generale; tutto con un'etichetta «Journal» (proposta dell'agente); resta così (ID-41).
+2. Le note normali possono citare le entità? Pillole ovunque e aree solo nel Journal; tutto ovunque; un rimando manuale; no (ID-46).
+3. La qualità sta sull'area o sul singolo legame con un'entità? (ID-45)
+4. Quali stadi di rielaborazione? Grezza, riletta, rielaborata; riletta sì o no con il conteggio; un elenco scelto (ID-44).
+5. Il tipo di scrittura è un campo, un tag `tipo/…`, o non serve? (ID-44)
+6. Quanto immutabili gli episodi? Modificabili sempre; sigillati a mano; sigillati da soli dopo qualche giorno; modificabili con tutta la storia (ID-47).
+7. Si scrive direttamente nel Journal? (ID-42)
+8. Data dell'episodio e data di scrittura separate, o un giorno solo come oggi? (ID-47)
+9. «Ricordo» è un tipo di entità? Proposta dell'agente: no, un ricordo è una nota o un evento; manca forse «luogo».
+10. Quale rilettura guidata per prima? Un anno fa oggi; la più vecchia mai riletta; a caso; a intervalli crescenti; un misto (ID-43).
+11. Gli stati diventano «qualità», con il colore facoltativo? (ID-45)
+12. IA sul computer, in rete con permesso nota per nota, o per ora niente? (ID-49)
+13. Sintesi: riprendere i link tra note (ID-04), solo un rimando a un episodio, o copia dei passaggi senza link? (ID-47)
+14. Fatti sulle persone con validità nel tempo («dal … al …»): più avanti o mai? (ID-47)
+
 ## Domande aperte dall'allineamento (01/10/2026)
 Dubbi rimasti dall'allineamento generale della documentazione, da decidere con Manuel Cucca una alla volta. Fino ad allora i documenti restano come sono.
 
