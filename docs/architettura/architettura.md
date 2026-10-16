@@ -110,7 +110,7 @@ Approvata da Manuel Cucca il 09/10/2026. L'editor resta CodeMirror (DEC-131, agg
 **Ambienti:** gli stessi di oggi (`architettura/ambienti.md`): locale con un database Postgres di prova e `api/.env`; prova e produzione sono il database Neon e il server su Vercel di oggi (DEC-132). Le prove del server girano su un database effimero.
 
 ## Brainet (RF-18, DEC-134, DEC-145; Fase 7 per DEC-146 scritta dall'agente il 16/10/2026, approvata da Manuel Cucca lo stesso giorno)
-Brainet vive tutto nel client, come le note: copia di lavoro, comandi del nucleo, sincronizzazione a blocchi cifrati. Il server non cambia. Dalla DEC-145 non ci sono più note Brainet: pillole, aree e allegati stanno nel testo delle note di CLOUD in vista Markdown (DEC-146).
+Brainet vive tutto nel client, come le note: copia di lavoro, comandi del nucleo, sincronizzazione a blocchi cifrati. Il server non cambia. Le note nascono in CLOUD; con «Sposta in Brainet» la nota prende `brainet` = 1, esce dall'albero e dalla ricerca e va nel Journal, dove si usano pillole e aree (DEC-147; prima, DEC-145, in tutte le note di CLOUD). Gli allegati stanno nel testo di tutte le note in vista Markdown (DEC-146).
 
 **Pillole e aree dentro il testo (scelta di Manuel Cucca del 15/10/2026).** Il testo di una nota è Markdown; i segni di Brainet hanno la forma di tag, come `<u>` per il sottolineato (DEC-28):
 - collegamento (EN-14): `<cita e="ID">Luca Bianchi</cita>`; dentro c'è il nome com'era quando è stato scritto, che serve solo se l'entità non c'è più; la pillola mostra il nome attuale dell'entità;
@@ -122,7 +122,7 @@ Con il testo si spostano anche pillole e aree, su ogni computer; una nota cambia
 
 | Tabella | Colonne | Chiavi, indici, regole |
 |---|---|---|
-| `note` (EN-01) | quelle di sempre; il `contenuto` può avere i segni | Una nota con dei segni non passa a `vista` = `testo` (RB-123) |
+| `note` (EN-01) | quelle di sempre, più `brainet` (null o 1, DEC-147, nello schema 10); il `contenuto` può avere i segni | `brainet` = 1: niente cartella, fuori da albero (`elenco_non_organizzate`) e ricerca (`n.brainet IS NOT 1`), nel Journal; si sincronizza nel blocco della nota come `brainet: true` solo se vale, e ricevuto non torna mai a 0 (RB-130). Una nota con dei segni non passa a `vista` = `testo` (RB-123) |
 | `entita` (EN-13) | `id`, `nome`, `chiave_nome`, `tipo` (null, `persona`, `oggetto`, `evento`, `argomento`), `foto` (JPEG), `unita_in`, `creata_il` | `id` chiave; `chiave_nome` è il nome in minuscolo senza accenti, per i suggerimenti di @; un'entità unita resta come rimando (`unita_in`) e non si mostra |
 | `stati` (EN-16) | `id`, `nome`, `chiave`, `colore` (`avviso`, `informazione`, `successo`, `errore`), `ordine` | `id` chiave; `chiave` (il nome in minuscolo) unica |
 | `brainet_citazioni` | `nota`, `entita`, `inizio`, `fine` | Indice ricavato dal testo, non si sincronizza: si rifà a ogni salvataggio di una nota, a ogni nota ricevuta e alla copia in conflitto |
@@ -130,9 +130,9 @@ Con il testo si spostano anche pillole e aree, su ogni computer; una nota cambia
 | `frammenti` | quelle della 1.0.0 | Vuota dopo il passaggio (RB-125); resta per i blocchi `frammento` che arrivano da un computer con la 1.0.0 |
 | `impostazioni` | in più `brainet` (0 o 1); `mostra_database` resta ma non si usa | Nell'elemento «impostazioni» che si sincronizza (RB-52) |
 
-L'indice serve a Entità (quante volte, l'ultima volta), alla pagina dell'entità, al Calendario, alle unioni e ai conteggi della conferma; conta solo le note fuori dal Cestino (RB-127) e segue `unita_in`, così dopo un'unione i testi non si riscrivono. Le date sono istanti in ora universale; il giorno del Calendario e della pagina dell'entità è quello della creazione della nota (`creata`, o `creata_scelta` se c'è) nel fuso del computer.
+L'indice serve a Entità (quante volte, l'ultima volta), alla pagina dell'entità, alle unioni e ai conteggi della conferma; conta solo le note in Brainet fuori dal Cestino (RB-127, DEC-147); il Calendario guarda i giorni delle note in Brainet e segue `unita_in`, così dopo un'unione i testi non si riscrivono. Le date sono istanti in ora universale; il giorno del Calendario e della pagina dell'entità è quello della creazione della nota (`creata`, o `creata_scelta` se c'è) nel fuso del computer.
 
-**Il passaggio dalla 1.0.0 (RB-125, DEC-146).** Nella migrazione allo schema 10, in una transazione: ogni frammento diventa una riga di `note` con lo stesso `id` (titolo vuoto, nessuna cartella, vista Markdown, `creata` = `nato_il`, `modificata` = `modificato_il`, `eliminata_il` = `eliminato_il`); la riga di sincronizzazione cambia `tipo` da `frammento` a `nota` e resta da inviare; il blocco `frammento` sul server riceve «eliminato» al giro dopo; poi l'indice si rifà. Un blocco `frammento` che arriva più tardi (da un computer con la 1.0.0) fa lo stesso passaggio: se la nota con quell'`id` c'è già, vince la regola dei conflitti delle note.
+**Il passaggio dalla 1.0.0 (RB-125, DEC-146, DEC-147).** Nella migrazione allo schema 10, in una transazione: si aggiunge `note.brainet`; ogni frammento diventa una riga di `note` con lo stesso `id` (titolo vuoto, nessuna cartella, vista Markdown, `brainet` = 1, `creata` = `nato_il`, `modificata` = `modificato_il`, `eliminata_il` = `eliminato_il`); la riga di sincronizzazione cambia `tipo` da `frammento` a `nota` e resta da inviare; il blocco `frammento` sul server riceve «eliminato» al giro dopo; poi l'indice si rifà. Un blocco `frammento` che arriva più tardi (da un computer con la 1.0.0) fa lo stesso passaggio: se la nota con quell'`id` c'è già, vince la regola dei conflitti delle note.
 
 **Foto di un'entità.** «Scegli una foto…» apre la finestra del sistema (`tauri-plugin-dialog`, c'è già); il nucleo la riduce a 256 px sul lato lungo e la salva in JPEG (crate `image`), così sta nel blocco dell'entità e viaggia cifrata con lei.
 
@@ -150,7 +150,7 @@ L'indice serve a Entità (quante volte, l'ultima volta), alla pagina dell'entit�
 
 **Allegati nelle note (DEC-146).** Due trigger sulle note (`allegati_note_UPDATE`, `allegati_note_DELETE`, con la funzione SQL `allegati_json`) segnano da controllare gli allegati spariti dal testo o dalla nota cancellata per sempre, fuori dalla sincronizzazione; la nota che si chiude pulisce dopo l'ultimo salvataggio.
 
-**Ricerca (RB-126).** La funzione SQL `senza_segni(testo)` toglie i segni di Brainet e lascia il nome della pillola, la frase dell'area e il nome dell'allegato; i trigger dell'indice di ricerca (schema 5) la usano al posto del `contenuto` grezzo, e allo schema 10 l'indice si rifà.
+**Ricerca (RB-126).** Le note in Brainet non si cercano (DEC-147). La funzione SQL `senza_segni(testo)` toglie i segni di Brainet e lascia il nome della pillola, la frase dell'area e il nome dell'allegato; i trigger dell'indice di ricerca (schema 5) la usano al posto del `contenuto` grezzo, e allo schema 10 l'indice si rifà.
 
 **Cestino.** Le note con Brainet stanno nel Cestino di CLOUD; la parte di Brainet del Cestino non c'è più.
 

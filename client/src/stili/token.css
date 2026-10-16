@@ -24,8 +24,10 @@
   --ambra-400: #de8f0f;
   --ambra-500: #915c02;
   --ambra-800: #3e2501;
+  --verde-50: #e3fce7;
   --verde-400: #58bc72;
   --verde-500: #047f39;
+  --verde-800: #013514;
   --blu-50: #eef5fe;
   --blu-400: #5ea5ff;
   --blu-500: #1468c2;
@@ -56,7 +58,11 @@
   --testo-errore: var(--rosso-500);
   --icona-errore: var(--rosso-500);
   --sfondo-avviso: var(--ambra-50);
+  --testo-avviso: var(--ambra-500);
   --icona-avviso: var(--ambra-500);
+  /* Il fondo di successo serve alle aree di Brainet con uno stato verde (CMP-40). */
+  --sfondo-successo: var(--verde-50);
+  --testo-successo: var(--verde-500);
   --icona-successo: var(--verde-500);
   --sfondo-informazione: var(--blu-50);
   --icona-informazione: var(--blu-500);
@@ -139,7 +145,10 @@
     --testo-errore: var(--rosso-400);
     --icona-errore: var(--rosso-400);
     --sfondo-avviso: var(--ambra-800);
+    --testo-avviso: var(--ambra-400);
     --icona-avviso: var(--ambra-400);
+    --sfondo-successo: var(--verde-800);
+    --testo-successo: var(--verde-400);
     --icona-successo: var(--verde-400);
     --sfondo-informazione: var(--blu-800);
     --icona-informazione: var(--blu-400);

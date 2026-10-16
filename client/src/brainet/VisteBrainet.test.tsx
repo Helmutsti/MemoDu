@@ -1,11 +1,16 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { ErroreApi } from "../api";
+import { api, ErroreApi } from "../api";
 import { brainet } from "./api";
 import { GruppoBrainet } from "./GruppoBrainet";
 import { SezioneBrainet } from "./SezioneBrainet";
-import { VisteBrainet } from "./VisteBrainet";
+import { quandoNota, VisteBrainet } from "./VisteBrainet";
+
+vi.mock("../api", async (originale) => ({
+  ...(await originale<typeof import("../api")>()),
+  api: { salva: vi.fn(), cestinaNota: vi.fn() },
+}));
 
 vi.mock("./api", async (originale) => {
   const vero = await originale<typeof import("./api")>();
@@ -117,7 +122,7 @@ describe("Entità (CA-18.11, CA-18.12)", () => {
     vi.mocked(brainet.unisciEntita).mockResolvedValue({ citazioni: 1, aree: 2 });
     render(<VisteBrainet vista="entita" versione={0} esegui={esegui} {...viste} />);
     expect(await screen.findByText("nominato 1 volta · ultima volta oggi")).toBeInTheDocument();
-    expect(screen.getByText("Senza tipo")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Tipo di Luca: Senza tipo" })).toBeInTheDocument();
     fireEvent.contextMenu(screen.getByText("Luca"));
     fireEvent.click(await screen.findByText("Unisci a…"));
     await userEvent.type(screen.getByRole("textbox", { name: "Cerca un'entità" }), "bian");
@@ -130,6 +135,76 @@ describe("Entità (CA-18.11, CA-18.12)", () => {
     ).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Unisci" }));
     await waitFor(() => expect(brainet.unisciEntita).toHaveBeenCalledWith(LUCA.id, LB.id));
+  });
+});
+
+describe("Entità divise per tipo (CA-18.49, CA-18.50)", () => {
+  const GIORGIO = {
+    id: "33333333-3333-4333-8333-333333333333",
+    nome: "Giorgio",
+    tipo: "persona" as const,
+    foto: "Zm90bw==",
+  };
+  const CONCERTO = {
+    id: "44444444-4444-4444-8444-444444444444",
+    nome: "Concerto",
+    tipo: "evento" as const,
+    foto: null,
+  };
+  const TRASLOCO = {
+    id: "55555555-5555-4555-8555-555555555555",
+    nome: "Trasloco",
+    tipo: "argomento" as const,
+    foto: null,
+  };
+
+  it("i gruppi nell'ordine di @; le persone come un cast con foto o iniziali", async () => {
+    vi.mocked(brainet.elencaEntita).mockResolvedValue([
+      { entita: LUCA, nominata: 1, ultimaVolta: oggiGiorno() },
+      { entita: CONCERTO, nominata: 2, ultimaVolta: oggiGiorno() },
+      { entita: LB, nominata: 14, ultimaVolta: oggiGiorno() },
+      { entita: TRASLOCO, nominata: 3, ultimaVolta: oggiGiorno() },
+      { entita: GIORGIO, nominata: 5, ultimaVolta: oggiGiorno() },
+    ]);
+    const { container } = render(
+      <VisteBrainet vista="entita" versione={0} esegui={esegui} {...viste} />,
+    );
+    await screen.findByText("Concerto");
+    expect(screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent)).toEqual([
+      "Persone",
+      "Argomenti",
+      "Eventi",
+      "Senza tipo",
+    ]);
+    const cast = screen.getByRole("region", { name: "Persone" });
+    expect(cast.querySelectorAll(".volto-entita")).toHaveLength(2);
+    expect(cast.querySelector(".volto-entita-iniziali")?.textContent).toBe("LB");
+    expect(cast.querySelector(".volto-entita-foto")).toHaveAttribute(
+      "src",
+      "data:image/jpeg;base64,Zm90bw==",
+    );
+    // Nel cast il nome e basta: quante volte sta nel suggerimento del mouse.
+    expect(screen.queryByText("nominato 14 volte · ultima volta oggi")).not.toBeInTheDocument();
+    expect(container.querySelectorAll(".riga-entita-icona")).toHaveLength(2);
+  });
+
+  it("una persona: clic apre la pagina, tasto destro › Tipo cambia il tipo", async () => {
+    vi.mocked(brainet.elencaEntita).mockResolvedValue([
+      { entita: LB, nominata: 14, ultimaVolta: oggiGiorno() },
+    ]);
+    vi.mocked(brainet.impostaTipo).mockResolvedValue({ ...LB, tipo: "argomento" });
+    const onApri = vi.fn();
+    render(<VisteBrainet vista="entita" versione={0} esegui={esegui} {...viste} onApri={onApri} />);
+    fireEvent.click(await screen.findByText("Luca Bianchi"));
+    expect(onApri).toHaveBeenCalledWith(`entita:${LB.id}`);
+    fireEvent.contextMenu(screen.getByText("Luca Bianchi"));
+    fireEvent.click(await screen.findByRole("menuitem", { name: "Tipo" }));
+    expect(await screen.findByRole("menuitemcheckbox", { name: "Persona" })).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+    fireEvent.click(screen.getByRole("menuitemcheckbox", { name: "Argomento" }));
+    await waitFor(() => expect(brainet.impostaTipo).toHaveBeenCalledWith(LB.id, "argomento"));
   });
 });
 
@@ -291,5 +366,77 @@ describe("Calendario (CA-18.33)", () => {
     );
     expect(brainet.calendario).toHaveBeenCalledWith(mese);
     expect(container.querySelector(".giorno-brainet-oggi")).not.toBeNull();
+  });
+});
+
+describe("Journal (RB-131, DEC-147)", () => {
+  const nota = (id: string, contenuto: string, creata: string) => ({
+    id,
+    titolo: "",
+    contenuto,
+    creata,
+    modificata: creata,
+    cartella: "",
+    creataScelta: null,
+    fineValidita: null,
+    tag: [],
+    vista: "markdown" as const,
+    brainet: true,
+  });
+
+  it("le note in Brainet con il giorno e l'ora; tasto destro › Elimina le manda nel Cestino", async () => {
+    vi.mocked(brainet.elencaJournal).mockResolvedValue([
+      nota("n1", "Pranzo con Luca", new Date().toISOString()),
+      nota("n2", "Telefonata di ieri", "2026-10-01T09:00:00Z"),
+    ]);
+    vi.mocked(api.cestinaNota).mockResolvedValue({} as never);
+    const onCestino = vi.fn();
+    const { container } = render(
+      <VisteBrainet
+        vista="journal"
+        versione={0}
+        esegui={esegui}
+        {...viste}
+        onCestino={onCestino}
+      />,
+    );
+    expect(await screen.findByRole("heading", { name: "Journal" })).toBeInTheDocument();
+    await waitFor(() => expect(container.querySelectorAll(".nota-journal")).toHaveLength(2));
+    expect(screen.getByText(/^oggi alle /)).toBeInTheDocument();
+    expect(container.querySelector(".cm-content")?.textContent).toBe("Pranzo con Luca");
+    fireEvent.contextMenu(container.querySelector(".nota-journal")!);
+    fireEvent.click(await screen.findByText("Elimina"));
+    await waitFor(() => expect(api.cestinaNota).toHaveBeenCalledWith("n1"));
+    expect(onCestino).toHaveBeenCalled();
+  });
+
+  it("vuoto: come spostare una nota in Brainet", async () => {
+    vi.mocked(brainet.elencaJournal).mockResolvedValue([]);
+    render(<VisteBrainet vista="journal" versione={0} esegui={esegui} {...viste} />);
+    expect(await screen.findByText("Nessuna nota in Brainet")).toBeInTheDocument();
+  });
+});
+
+describe("Journal, la data sopra la nota (RB-131)", () => {
+  const nota = {
+    id: "n",
+    titolo: "",
+    contenuto: "",
+    creata: "2026-10-16T08:30:00.000Z",
+    modificata: "2026-10-16T08:30:00.000Z",
+    cartella: "",
+    creataScelta: null as string | null,
+    fineValidita: null,
+    tag: [],
+    vista: "markdown" as const,
+    brainet: true,
+  };
+  const adesso = new Date(2026, 9, 16, 12);
+  it("senza data scelta: il giorno e l'ora in cui è nata", () => {
+    expect(quandoNota(nota, adesso)).toMatch(/^oggi alle \d\d:\d\d$/);
+  });
+  it("con la data scelta: quel giorno, senza ora, come nell'ordine", () => {
+    expect(quandoNota({ ...nota, creataScelta: "2026-10-09" }, adesso)).toBe("il 09/10/2026");
+    expect(quandoNota({ ...nota, creataScelta: "2026-10-16" }, adesso)).toBe("oggi");
   });
 });

@@ -7,7 +7,7 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | Codice | Componente | Tipo | Stato |
 |---|---|---|---|
 | CMP-01 | Pulsante (con la variante Diviso, DEC-34) | base | Disegnato |
-| CMP-02 | Icona | base | 48 icone, 4 dimensioni (cervello, database e graffetta per Brainet, DEC-134) |
+| CMP-02 | Icona | base | 51 icone, 4 dimensioni (cervello, database e graffetta per Brainet, DEC-134; lampadina per gli argomenti in Entità, [Lampadina](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=410-6644); libro aperto per il Journal, DEC-147, [Libro aperto](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=402-791)) |
 | CMP-03 | Campo di testo | base | Disegnato |
 | CMP-04 | Interruttore | base | Disegnato |
 | CMP-05 | Tag | base | Disegnato |
@@ -51,6 +51,7 @@ I componenti vivono nel file Figma [Memodu – Design system](https://www.figma.
 | CMP-43 | Calendario di Brainet (SC-12, DEC-134; parte interna Giorno con le note, un pallino per giorno da DEC-145) | composto | Disegnato |
 | CMP-44 | Foto allegata (bolla, piccola, media, grande, non scaricata; RF-18) | base | Disegnato |
 | CMP-45 | Testata dell'entità (pagina dell'entità, DEC-145) | composto | Disegnato |
+| CMP-46 | Volto dell'entità (le persone in Entità, come un cast) | composto | Disegnato |
 
 L'icona nell'area di notifica (Windows) o nella barra dei menu (macOS) è un'icona di sistema e non è un componente.
 
@@ -443,18 +444,18 @@ Compare e sparisce con `movimento-durata-breve` (120 ms). Compare dopo 500 ms di
 - **Aggiungi** (DEC-119): il + del titolo CLOUD; Nuova nota e Nuova cartella, con le loro icone.
 - **Suggerimenti** (Brainet, DEC-134, RB-104): si apre scrivendo @. Le entità divise per tipo, ognuna con il Titolo di sezione (CMP-39) sopra (Persone, Argomenti, Eventi, Oggetti, Senza tipo), senza icone come le altre liste di valori; la prima evidenziata; in fondo, dopo il divisore, «Crea «…»» con il +. Frecce e Invio per scegliere, Esc per chiudere.
 - **Area** (Brainet, DEC-134, RB-107, RB-109): si apre selezionando una frase e dalla freccia della Linguetta (CMP-40). In cima «Stati» con il Pallino dello stato (CMP-37) come icona, poi le entità per tipo, in fondo «Crea…». Si scelgono più voci: quelle già legate all'area hanno la spunta a destra, come la cartella attuale in Sposta in (CMP-11).
-- **Nota di Brainet** (tasto destro in Database, DEC-134): Elimina (elimina); la nota va nel Cestino, nella parte di Brainet.
+- **Nota di Brainet** (tasto destro su una nota del Journal, DEC-147): Elimina (elimina); la nota va nel Cestino e, ripristinata, torna nel Journal.
 - **Entità** (tasto destro su una riga di Entità, CMP-41): Unisci a… (sposta), Scegli una foto… (immagine) (RB-108).
 - **Allegato** (clic su un documento allegato, RB-119): Apri (mostra), Mostra nella cartella (cartella aperta) · Togli (elimina).
 - **Foto allegata** (clic su una foto fuori dal paragrafo, RB-119, RB-120): come Allegato, con Dimensioni › (immagine) prima del divisore.
 - **Dimensioni** (sottomenu): Piccola, Media, Grande, con la spunta su quella attuale.
 - **Tipo dell'entità** (clic sulla pillola del tipo in SC-11, RB-122): Persona, Argomento, Evento, Oggetto, divisore, Senza tipo, con la spunta su quello attuale; si apre 8 px sotto la pillola.
 - **Suggerimenti** ha in fondo «Allega un file…» con la graffetta, che apre la finestra del sistema (RB-114).
-- **Importa in Brainet** (sottomenu, RB-112): Copia (copia), Sposta (sposta). Si apre dalla voce «Importa in Brainet» del tipo Nota, che si vede con la proprietà **Importa in Brainet** accesa, cioè quando Brainet è acceso; sta dopo Sposta in…, con l'icona del cervello e la freccia del sottomenu.
+- **Sposta in Brainet** (DEC-147, RB-130): voce del tipo Nota dopo Sposta in…, con l'icona del cervello e senza sottomenu; nel componente è nascosta e si mostra solo con Brainet acceso, sulle note di CLOUD. Apre la conferma (CMP-16). Il tipo **Importa in Brainet** (sottomenu Copia, Sposta) resta nella libreria ma non si usa più (DEC-145).
 - Contenitore `sfondo-flottante`, `raggio-contenitore` (20), margine `spazio-elenco` (8) su tutti i lati (ruolo elenco, DEC-100), `ombra`, livello 20 (`z-comparsa`). Largo 236 negli esempi; si allarga fino alla voce più lunga.
 - La pillola dell'evidenziazione sta a 8 px dai lati (margine del menu); i divisori stanno dentro lo stesso margine e sono leggeri (`bordo-divisore-tenue`) (DEC-100, prima da lato a lato). Scelta tra sei alternative (divisori rientrati o da lato a lato, pieni o leggeri; margine 8 o 12; pillola, rettangolo con raggio 12 o fascia a tutta larghezza): la pillola resta per coerenza con colonna, pulsanti e tag.
 - **Icone:** tutte le voci dei menu di azioni (nota, cartella, testo, inserimento) hanno la loro icona, così i testi restano allineati ed Elimina si riconosce anche dal cestino, non solo dal rosso. Le liste di valori (suggerimenti dei tag, filtri) restano senza: sono nomi o periodi, non azioni; fa eccezione Crea il tag con il +. Scelta tra cinque alternative (nessuna icona, icone su tutte, solo Elimina a sinistra, a destra o con spazio riservato); il confronto resta nella pagina Prove.
-- **Nota** (tasto destro su una nota della colonna, anche non aperta): Info (informazione, apre CMP-24 come finestra al centro), Sposta in… (sposta) · Elimina (elimina) (DEC-96). Il menu `···` della nota aperta non c'è più: le sue voci stanno in Info, sotto il titolo del percorso (DEC-96). Il Cestino non è nel menu: si apre dalla riga in fondo alla colonna (DEC-40).
+- **Nota** (tasto destro su una nota della colonna, anche non aperta): Info (informazione, apre CMP-24 come finestra al centro), Sposta in… (sposta), Sposta in Brainet (cervello, solo con Brainet acceso, DEC-147) · Elimina (elimina) (DEC-96). Il menu `···` della nota aperta non c'è più: le sue voci stanno in Info, sotto il titolo del percorso (DEC-96). Il Cestino non è nel menu: si apre dalla riga in fondo alla colonna (DEC-40).
 - **Cartella** (tasto destro): Nuova nota qui (nota), Nuova sottocartella (cartella), Rinomina (rinomina) · Elimina (elimina).
 - **Testo** (tasto destro): Taglia, Copia, Incolla · Grassetto, Corsivo, Sottolineato, Barrato, con le scorciatoie · Titolo ›, Elenco › (elenco puntato); ogni voce con l'icona del suo nome.
 - **Inserimento** (`/` su una riga vuota): Titolo, Sottotitolo, Elenco puntato, Elenco numerato, Checklist · Immagine, ognuna con la sua icona.
@@ -980,7 +981,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 **Quando non usarlo:** per azioni non reversibili senza conferma (finestra di conferma, CMP-16) o per scegliere la cartella (Sposta in, CMP-11, che si apre dalla riga della cartella).
 
 ### Varianti e dimensioni
-- **Comparsa:** sotto il titolo del percorso, centrata su di lui, 8 sotto; livello 20, senza velo, come i menu. In fondo, dopo un divisore, «Chiudi nota» (Ctrl + W) ed «Elimina» (voce distruttiva).
+- **Comparsa:** sotto il titolo del percorso, centrata su di lui, 8 sotto; livello 20, senza velo, come i menu. In fondo, dopo un divisore, «Chiudi nota» (Ctrl + W), «Sposta in Brainet» (icona cervello, solo con Brainet acceso e per una nota di CLOUD, DEC-147; nel componente è una voce nascosta, anche nella Finestra) ed «Elimina» (voce distruttiva).
 - **Info del file** (componente a parte nella sezione, DEC-123): con un clic sul nome di un file di Locale nel percorso, come la Comparsa (posizione, livello, spazi, larghezza) ma solo con il campo del nome (rinomina, RB-82), il divisore e le voci «Chiudi file» (Ctrl + W) e, solo per un file aggiunto da solo all'elenco, «Togli da Locale» con l'icona togli da locale (voce normale, non distruttiva: sul disco non cambia niente, RB-76). Varianti Voci = Chiudi e Togli, Solo Chiudi (file dentro una cartella aggiunta, o file nuovo mai salvato: il nome lo prende al primo Ctrl + S, RB-81). Niente cartella, date, tag o «Modificata» (RF-17).
 - **Finestra:** al centro, livello 30 (`z-overlay`) con il velo; le finestre di conferma stanno sopra, a 40. In testa «Info» (Interfaccia/Titolo) e la ✕ (CMP-01 solo icona). In fondo solo «Elimina»: la nota non è aperta, non c'è niente da chiudere.
 - Larga 360; `sfondo-flottante`, `raggio-contenitore`, `ombra`. Ruolo **pannello** (DEC-100): margine `spazio-pannello` (16) su tutti i lati; `spazio-blocco` (16) tra i blocchi (titolo, righe, «Modificata», divisore, voci); `spazio-elemento` (4) tra le righe. Righe, «Modificata», intestazione, campo del titolo e voci sono pillole con `spazio-controllo` (12) dentro: pillole a 16 dal bordo, icone e testi a 28. La ✕ dell'intestazione sta sul bordo della pillola, a 16.
@@ -1464,13 +1465,13 @@ Non si clicca: hover e focus non previsti.
 **Tipo:** composto (usa CMP-37 e CMP-02; parte interna Linguetta) · **Usato in:** SC-01 (testo di una nota Brainet) · **Figma:** pagina Componenti composti, [Area evidenziata](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=373-4979) · [Linguetta](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=373-4906)
 
 **Scopo:** mostrare una frase legata a stati ed entità (EN-15, RB-107), come con un evidenziatore, e cambiarne i legami (RB-109).
-**Quando usarlo:** nel testo delle note Brainet.
+**Quando usarlo:** nel testo delle note in vista Markdown (DEC-145).
 **Quando non usarlo:** per una sola entità citata (Collegamento, CMP-38) o per la selezione normale del testo.
 
 ### Varianti e dimensioni
 - **Stato = Selezione:** la frase selezionata mentre il menu dell'area (CMP-09 Area) è aperto, `evidenziazione-selezione`.
-- **Stato = Evidenziata:** l'area creata, `sfondo-informazione`.
-- **Stato = Mouse sopra:** l'area diventa un riquadro e sopra, senza spostare il testo, compare la **Linguetta** (idea di Manuel Cucca, «ideamia»): stesso fondo, il Pallino del primo stato, gli stati e le entità separati da «·» in Interfaccia/Dettaglio `testo-informazione`, la freccia giù (`icona-informazione`) che apre il menu dell'area con le voci spuntate. La linguetta ha `spazio-icona-piccola` ai lati e tra i pezzi, `spazio-2` sopra e sotto, `raggio-casella` sopra; l'angolo dell'area sotto la linguetta è dritto.
+- **Stato = Evidenziata:** l'area creata, con il fondo del colore del suo primo stato: `sfondo-avviso`, `sfondo-successo`, `sfondo-errore` o `sfondo-informazione`; senza stati `sfondo-informazione` (scelta di Manuel Cucca del 16/10/2026 durante le prove a mano: «non si distingue da un'entità»; prima sempre `sfondo-informazione`). Proprietà **Colore** = Avviso · Informazione · Successo · Errore.
+- **Stato = Mouse sopra:** l'area diventa un riquadro e sopra, senza spostare il testo, compare la **Linguetta** (idea di Manuel Cucca, «ideamia»): stesso fondo dell'area, il Pallino del primo stato, gli stati e le entità separati da «·» in Interfaccia/Dettaglio `testo-<colore>`, la freccia giù (`icona-<colore>`) che apre il menu dell'area con le voci spuntate. La linguetta ha `spazio-icona-piccola` ai lati e tra i pezzi, `spazio-2` sopra e sotto, `raggio-casella` sopra; l'angolo dell'area sotto la linguetta è dritto.
 - Testo in Nota/Corpo `testo-primario`; l'area ha `spazio-2` ai lati e `raggio-casella`. Proprietà **Testo**; Linguetta: **Legami**, **Mostra pallino**, **Colore**.
 
 ### Stati
@@ -1484,7 +1485,7 @@ Non si clicca: hover e focus non previsti.
 
 ### Accessibilità
 - **Lettori di schermo:** la frase si legge come testo; i legami si annunciano come descrizione («Importante, Serra, Preventivi»).
-- **Contrasti:** testo su `sfondo-informazione` 15,00:1 in chiaro, 12,95:1 in scuro; su `evidenziazione-selezione` 12,46:1 e 9,89:1; testo e freccia della linguetta 5,05:1 e 5,63:1.
+- **Contrasti:** testo su `sfondo-informazione` 15,00:1 in chiaro, 12,95:1 in scuro; su `sfondo-avviso` 14,95:1 e 12,99:1; su `sfondo-successo` 15,18:1 e 12,56:1; su `sfondo-errore` 14,88:1 e 13,51:1; su `evidenziazione-selezione` 12,46:1 e 9,89:1. Testo e freccia della linguetta: informazione 5,05:1 e 5,63:1, avviso 5,10:1 e 5,47:1, successo 4,72:1 e 5,82:1, errore 5,48:1 e 5,44:1 (tutti almeno 4,5, AA).
 
 ## CMP-41 – Riga dell'entità
 **Tipo:** composto (usa il filtro della ricerca di CMP-13) · **Usato in:** SC-11 · **Figma:** pagina Componenti composti, [Riga dell'entità](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=373-5031)
@@ -1495,7 +1496,8 @@ Non si clicca: hover e focus non previsti.
 
 ### Varianti e dimensioni
 - La foto (cerchio `misura-controllo-piccolo`) se c'è, nome in Interfaccia/Controllo, sotto quante volte è nominata e quando in Interfaccia/Dettaglio `testo-tenue` a `spazio-elemento`; a destra il tipo come pillola del filtro della ricerca (parte di CMP-13), con la freccia giù: un clic apre il menu Tipo dell'entità (CMP-09, RB-122). Margini come CMP-18: `spazio-controllo` ai lati, `spazio-controllo-piccolo` sopra e sotto, `spazio-blocco` tra i pezzi, `raggio-interno`. Proprietà **Nome**, **Dettagli**, **Mostra foto**; la pillola del tipo si cambia dall'istanza esposta.
-- Tasto destro: menu con «Unisci a…» e «Scegli una foto…».
+- **Icona del tipo** (16/10/2026, richiesta di Manuel Cucca): se la foto non c'è, a sinistra un cerchio `misura-riga` (32) `sfondo-campo` con l'icona 16 `testo-tenue`: Calendario per gli Eventi, Lampadina per gli Argomenti; Oggetti e Senza tipo senza icona (proposta dell'agente). Proprietà **Mostra icona** e **Icona**. Le persone non usano la riga: stanno nel Volto dell'entità (CMP-46).
+- Tasto destro: menu con «Unisci a…», «Scegli una foto…» e «Tipo ›» con il menu Tipo dell'entità come sottomenu (proposta dell'agente del 16/10/2026).
 
 ### Stati
 | Stato | Descrizione |
@@ -1585,3 +1587,25 @@ Quelli del pulsante e della pillola del tipo; la testata in sé non si clicca.
 - **Tastiera:** Tab raggiunge «Entità» e la pillola del tipo; Esc torna all'elenco.
 - **Lettori di schermo:** il nome è il titolo della pagina (intestazione di livello 1).
 - **Contrasti:** come CMP-41.
+
+## CMP-46 – Volto dell'entità
+**Tipo:** composto (usa CMP-02 per nessuna icona, testo e cerchio) · **Usato in:** SC-11 · **Figma:** pagina Componenti composti, [Volto dell'entità](https://www.figma.com/design/ulmeeMyPHDFR0lSR9NquuE?node-id=411-5929)
+
+Richiesta di Manuel Cucca del 16/10/2026: «Le persone devono apparire come i personaggi del cast di un film con foto rotonda e nome sotto. se la foto manca allora le iniziali». Misure, iniziali e stati sono proposte dell'agente, approvate da Manuel Cucca il 16/10/2026.
+
+**Scopo:** riconoscere le persone a colpo d'occhio nella vista Entità.
+**Quando usarlo:** per le entità di tipo Persona in Entità (SC-11).
+**Quando non usarlo:** per gli altri tipi (Riga dell'entità, CMP-41) e nella pagina dell'entità (Testata, CMP-45).
+
+### Varianti e dimensioni
+- Cerchio 64 con la foto, riempita e ritagliata; se manca, le iniziali (la prima lettera delle prime due parole del nome, maiuscole) in Nota/Sottotitolo `testo-tenue` su `sfondo-campo`.
+- Sotto, a `spazio-elenco` (8), il nome in Interfaccia/Controllo `testo-primario`, centrato, largo 80, al massimo due righe con i puntini.
+- Largo 96, margine `spazio-elenco`, `raggio-interno`. Le persone stanno in una griglia sotto il titolo di sezione «Persone», a `spazio-elenco` l'una dall'altra.
+- Quante volte e quando è nominata non si scrivono: compaiono come suggerimento passando con il mouse.
+- Proprietà **Nome**, **Iniziali**; varianti **Foto** = Sì, No.
+
+### Stati
+- Default; Hover `sfondo-hover`; Focus con l'anello come le righe (`focus-anello`, `focus-spessore`).
+
+### Comportamento
+- Clic o Invio: la pagina dell'entità (SC-13). Tasto destro, tasto Menu o Maiusc + F10: «Unisci a…», «Scegli una foto…», «Tipo ›».

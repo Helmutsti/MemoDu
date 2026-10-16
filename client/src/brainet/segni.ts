@@ -83,6 +83,14 @@ export function leggiSegni(testo: string): { citazioni: Citazione[]; aree: AreaS
   return { citazioni, aree };
 }
 
+/** Le chiusure di aree che non hanno più l'apertura (cancellata insieme a un pezzo di testo). */
+export function chiusureOrfane(testo: string): Tratto[] {
+  const aperte = new Set(leggiSegni(testo).aree.map((a) => a.id));
+  return [...testo.matchAll(AREA_CHIUDE)]
+    .filter((m) => !aperte.has(m[1]))
+    .map((m) => ({ da: m.index, a: m.index + m[0].length }));
+}
+
 /** Le entità di un'area: quelle scritte nel segno più quelle citate dentro (RB-107). */
 export function entitaDellArea(
   area: AreaSegno,

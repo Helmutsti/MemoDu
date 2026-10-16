@@ -113,7 +113,8 @@ impl Archivio {
         modificata: Option<&Periodo>,
         cestino: bool,
     ) -> Esito<Vec<Risultato>> {
-        let mut condizioni = Vec::new();
+        // Le note in Brainet non si cercano (RB-126, DEC-147).
+        let mut condizioni = vec!["n.brainet IS NOT 1".to_string()];
         let mut valori: Vec<String> = Vec::new();
         let lunghe: Vec<&String> =
             parole.iter().filter(|p| p.chars().count() >= LETTERE_INDICE).collect();
@@ -188,7 +189,9 @@ impl Archivio {
             // Prima le note con una parola nel titolo o nei tag (RB-34).
             let in_evidenza = normalizza(&format!("{}\n{}", riga.titolo, percorsi_tag));
             let gruppo = if parole.iter().any(|p| in_evidenza.contains(p.as_str())) { 0 } else { 1 };
-            let (estratto, evidenza) = match estratto(&riga.contenuto, parole) {
+            // La frase si legge senza i segni di Brainet (RB-126).
+            let leggibile = super::brainet::testo_semplice(&riga.contenuto);
+            let (estratto, evidenza) = match estratto(&leggibile, parole) {
                 Some((testo, evidenza)) => (testo, Some(evidenza)),
                 None => (anteprima(&riga.contenuto), None),
             };

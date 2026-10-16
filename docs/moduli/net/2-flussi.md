@@ -1,15 +1,15 @@
-# Brainet – Flussi
+| RB-127 | Entità, pagina dell'entità e Calendario contano solo le note in Brainet fuori dal Cestino (DEC-147, deduzione dell'agente) | FL-16, FL-26 |
 
-<!-- Fase 2 della guida. I diagrammi si scrivono in Mermaid. Scritti dall'agente il 14/10/2026 dalle scelte di Manuel Cucca in `1-requisiti.md`; approvati da Manuel Cucca il 14/10/2026, con le proposte dell'agente. Rivisti dall'agente il 16/10/2026 per DEC-145 (Brainet dentro le note di CLOUD): FL-16, FL-20, FL-26, FL-27 e le regole RB-123 … RB-128 approvati da Manuel Cucca il 16/10/2026. -->
+<!-- Fase 2 della guida. I diagrammi si scrivono in Mermaid. Scritti dall'agente il 14/10/2026 dalle scelte di Manuel Cucca in `1-requisiti.md`; approvati da Manuel Cucca il 14/10/2026, con le proposte dell'agente. Rivisti dall'agente il 16/10/2026 per DEC-145 (Brainet dentro le note di CLOUD): FL-16, FL-20, FL-26, FL-27 e le regole RB-123 … RB-128 approvati da Manuel Cucca il 16/10/2026. Rivisti di nuovo il 16/10/2026 per DEC-147: FL-16, FL-28 e le regole RB-130 … RB-132, approvati da Manuel Cucca il 16/10/2026 («ok tutto vai avanti»). -->
 
 ## FL-16 – Scrivere con Brainet in una nota
 **Requisito:** RF-18 · **Attori:** Utente, Sistema
 
 ```mermaid
 flowchart TD
-    A[Apro o creo una nota di CLOUD, come sempre] --> B{La nota è in vista Markdown e Brainet è acceso?}
-    B -- No --> C[Si scrive come sempre: @ è un carattere e la selezione non apre menu - RB-123]
-    B -- Sì --> D[Scrivo; la nota si salva da sola come sempre]
+    A[Apro una nota dal Journal, o una nota in Brainet da un passaggio] --> B{Brainet è acceso?}
+    B -- No --> C[Il Journal non c'è: la nota non si apre - RB-111]
+    B -- Sì --> D[Scrivo; la nota si salva da sola come le altre]
     D --> E{Scrivo @?}
     E -- Sì --> F[FL-17 Citare un'entità]
     F --> D
@@ -19,24 +19,21 @@ flowchart TD
     D --> I{Trascino o incollo un file?}
     I -- Sì --> J[FL-23 Allegare un file]
     J --> D
-    D --> K[Le entità contano la nota; il Calendario ha il pallino nel giorno in cui la nota è nata - RB-113, RB-127]
 ```
 
 ### Percorsi alternativi
+- **In una nota di CLOUD:** `@` è un carattere e la selezione non apre menu; gli allegati sì (RB-123, DEC-147).
 - **Senza rete:** si scrive come sempre; la nota parte quando la rete torna (RF-10).
-- **Passare a Testo:** con pillole, aree o allegati la scelta «Testo» in Info è spenta, con la riga «Questa nota usa Brainet: si vede solo in Markdown» (RB-123).
-- **Brainet spento:** pillole, aree e allegati già scritti si vedono; non se ne creano di nuovi con @ o con la selezione (RB-111).
 
 ### Sfighe gestite
 | Sfiga | Rilevamento | Comunicazione | Via d'uscita |
 |---|---|---|---|
-| SF-22 Modifica simultanea | La stessa nota modificata su due computer | Come le note (RB-39) | Una copia in conflitto, con le sue pillole e aree (DEC-06) |
-| SF-06 Input strani | Un segno di Brainet scritto a mano o incollato da fuori (`<cita …>`) | Nessuna | Resta testo normale, non diventa un segno vero (come in 1.0.0) |
+| SF-22 Modifica simultanea | La stessa nota modificata su due computer | Come le note (RB-39) | Una copia in conflitto, con le sue pillole e aree (DEC-06); la copia resta in Brainet |
+| SF-06 Input strani | Un segno di Brainet scritto a mano o incollato da fuori (`<cita …>`) | Nessuna | Resta testo normale, non diventa un segno vero |
 | SF-05 Cambio idea | Cancello una frase con una pillola o un'area | Nessuna | Ctrl + Z la rimette, con la pillola o l'area |
 
 ### Sfighe considerate e scartate
 - SF-17 Troppo: vale il limite delle note (DEC-106).
-- Le altre sfighe non riguardano la scrittura.
 
 ---
 
@@ -91,7 +88,8 @@ flowchart TD
 
 ### Percorsi alternativi
 - **Un'area con una pillola dentro:** prende da sola anche l'entità citata (RB-107).
-- **Aree sovrapposte:** due aree diverse sulla stessa frase restano tutte e due (proposta dell'agente).
+- **Aree sovrapposte:** due aree diverse sulla stessa frase restano tutte e due (proposta dell'agente). Riselezionando esattamente la frase di un'area si riapre il suo menu, invece di crearne un'altra uguale sopra (prove a mano del 16/10/2026, RB-129).
+- **Testo dell'area cancellato:** un'area rimasta senza testo, o a metà perché il testo cancellato si è portato via la sua apertura o la sua chiusura, sparisce (RB-129).
 
 ### Sfighe gestite
 | Sfiga | Rilevamento | Comunicazione | Via d'uscita |
@@ -307,6 +305,34 @@ flowchart TD
 
 ---
 
+## FL-28 – Spostare una nota in Brainet
+**Requisito:** RF-18 · **Attori:** Utente, Sistema
+
+```mermaid
+flowchart TD
+    A{Da dove?} -- Tasto destro sulla nota nella colonna --> B[«Sposta in Brainet», sotto «Sposta in…» - RB-130]
+    A -- Info --> B
+    B --> C[Conferma: «Spostare la nota in Brainet?» · Annulla o Sposta - RB-130]
+    C -- Annulla --> D[Non cambia niente]
+    C -- Sposta --> E[La nota esce dalla cartella e dall'albero di CLOUD; la ricerca non la trova più - RB-132]
+    E --> F[Si apre il Journal con la nota in cima - RB-131]
+```
+
+### Percorsi alternativi
+- **Brainet spento:** la voce non c'è (RB-130).
+- **Una nota già in Brainet:** non si riporta in CLOUD (RB-130).
+- **Eliminata dal Journal:** va nel Cestino; ripristinata torna nel Journal (RB-131).
+
+### Sfighe gestite
+| Sfiga | Rilevamento | Comunicazione | Via d'uscita |
+|---|---|---|---|
+| SF-05 Cambio idea | «Sposta» senza volerlo | La conferma dice che non si torna indietro | «Annulla» |
+| SF-01 Doppio invio | Doppio clic su «Sposta» | Nessuna | Uno spostamento solo |
+| SF-22 Modifica simultanea | La nota cambiata su un altro computer mentre la si sposta | Come le note | Lo spostamento e il testo si fondono campo per campo (DEC-76) |
+| SF-08 Rete che cade | Spostata senza rete | Nessuna | Vale subito qui; sugli altri computer al primo contatto |
+
+---
+
 ## Punti da decidere nei flussi
 - ~~Cosa fa un clic su un giorno del Calendario.~~ Niente: il Calendario si guarda soltanto (scelta di Manuel Cucca del 14/10/2026, RB-113).
 - ~~Come si annulla un'unione sbagliata (FL-19).~~ Prima di unire una finestra chiede conferma, con quante citazioni e aree si spostano; poi non si annulla (scelta di Manuel Cucca del 14/10/2026, RB-108).
@@ -339,8 +365,12 @@ flowchart TD
 | RB-121 | «Togli» toglie l'allegato dalla nota; il file sparisce dal server e dagli altri computer quando nessuna nota lo usa più, anche nel Cestino | FL-24 |
 | RB-122 | Il tipo di un'entità si cambia in Entità con un clic sulla sua pillola del tipo: Persona, Argomento, Evento, Oggetto o «Senza tipo», spuntato quello attuale; il cambio si sincronizza come il resto | SC-11 |
 | RB-123 | Brainet vive nelle note di CLOUD in vista Markdown; in vista Testo @ è un carattere e la selezione non apre menu. Una nota con pillole, aree o allegati non passa a Testo: in Info la scelta è spenta con la riga «Questa nota usa Brainet: si vede solo in Markdown» (DEC-145) | FL-16 |
-| RB-124 | La pagina dell'entità mostra i paragrafi delle note che la citano o la legano con un'area, uno per paragrafo, raggruppati per giorno di creazione della nota dal più recente, con il titolo della nota e l'ora; un clic apre la nota sul paragrafo (proposta dell'agente, DEC-145) | FL-26 |
+| RB-124 | La pagina dell'entità mostra i paragrafi delle note che la citano o la legano con un'area (il testo tra due righe vuote; un titolo o una voce di elenco è una riga sola, DEC-146), uno per paragrafo, raggruppati per giorno di creazione della nota dal più recente, con il titolo della nota e l'ora; un clic apre la nota sul paragrafo (proposta dell'agente, DEC-145) | FL-26 |
 | RB-125 | Al passaggio dalla 1.0.0 ogni nota Brainet diventa una nota di CLOUD in vista Markdown, senza titolo, fuori dalle cartelle, con le sue date e i suoi segni; quelle nel Cestino vanno nel Cestino; lo stesso per le note Brainet che arrivano da un computer con la 1.0.0 (DEC-145) | FL-27 |
 | RB-126 | La ricerca legge il testo delle note senza i segni di Brainet: trova il nome della pillola e la frase dell'area, non i codici (DEC-145) | FL-16 |
 | RB-127 | Entità, pagina dell'entità e Calendario contano solo le note di CLOUD fuori dal Cestino (proposta dell'agente, DEC-145) | FL-16, FL-26 |
 | RB-128 | Esportando, la pillola diventa `[[nome]]`, l'area `==frase==` senza gli stati, la foto `![nome](allegati/nome)` e il documento `[nome](allegati/nome)` (DEC-145, RF-13) | — |
+| RB-129 | Un'area senza testo o rimasta a metà (cancellata l'apertura o la chiusura) sparisce nella stessa modifica; riselezionando la frase di un'area si apre il suo menu, non nasce un'area uguale (prove a mano del 16/10/2026, correzione dell'agente) | FL-18 |
+| RB-130 | «Sposta in Brainet» (tasto destro sulla nota nella colonna, sotto «Sposta in…», e Info), solo con Brainet acceso, dopo una conferma: «Spostare la nota in Brainet?» · «La nota esce da CLOUD e dalla ricerca e non si riporta indietro. Nel Journal puoi collegarla a persone, oggetti e argomenti.» · «Annulla», «Sposta». Senza ritorno (DEC-147) | FL-28 |
+| RB-131 | Il Journal elenca le note in Brainet fuori dal Cestino, dalla più recente, con il giorno e l'ora sopra ognuna (con la data scelta in Info, quel giorno senza ora, come nella pagina dell'entità e nell'ordine); si modificano lì; tasto destro › «Elimina» le manda nel Cestino, ripristinate tornano nel Journal (DEC-147) | FL-28 |
+| RB-132 | Una nota in Brainet non sta nell'albero di CLOUD né in nessuna cartella (DEC-147) | FL-28 |

@@ -79,13 +79,14 @@ pub const SCHEMA_BRAINET: &str = "
 /// Contiene un segno di Brainet (pillola o area)? Per i trigger dell'indice.
 const HA_SEGNI: &str = "(instr({t}, '<cita ') > 0 OR instr({t}, '<area ') > 0)";
 
-/// Schema 10 (DEC-146): l'indice passa dai frammenti alle note e si rifà da solo; la ricerca
-/// legge il testo senza segni (RB-126). I frammenti diventano note in `passa_frammenti_in_note`.
+/// Schema 10 (DEC-146, DEC-147): la nota sa se sta in Brainet (`brainet`); l'indice passa dai
+/// frammenti alle note e si rifà da solo; la ricerca legge il testo senza segni (RB-126). I frammenti diventano note in `passa_frammenti_in_note`.
 pub fn schema_brainet_note() -> String {
     let nuovo = HA_SEGNI.replace("{t}", "NEW.contenuto");
     let vecchio = HA_SEGNI.replace("{t}", "OLD.contenuto");
     format!(
         "
+  ALTER TABLE note ADD COLUMN brainet INTEGER;
   DROP TRIGGER IF EXISTS sinc_frammenti_INSERT;
   DROP TRIGGER IF EXISTS sinc_frammenti_UPDATE;
   DROP TRIGGER IF EXISTS sinc_frammenti_DELETE;
@@ -123,9 +124,9 @@ pub fn schema_brainet_note() -> String {
     )
 }
 
-/// Dopo `schema_brainet_note`, nella stessa transazione: ogni frammento diventa una nota di
-/// CLOUD con lo stesso id, senza titolo, fuori dalle cartelle, in vista Markdown, con le sue
-/// date; uno nel Cestino va nel Cestino (RB-125). La riga di sincronizzazione diventa quella
+/// Dopo `schema_brainet_note`, nella stessa transazione: ogni frammento diventa una nota in
+/// Brainet con lo stesso id, senza titolo, fuori dalle cartelle, in vista Markdown, con le sue
+/// date; uno nel Cestino va nel Cestino (RB-125, DEC-147). La riga di sincronizzazione diventa quella
 /// di una nota, da inviare; la base si traduce, così la fusione con il server confronta campi
 /// uguali. Poi la ricerca si rifà senza segni e l'indice di Brainet si rifà alla prima lettura.
 pub fn passa_frammenti_in_note(db: &rusqlite::Connection) -> rusqlite::Result<()> {
@@ -138,8 +139,8 @@ pub fn passa_frammenti_in_note(db: &rusqlite::Connection) -> rusqlite::Result<()
     for (id, testo, nato, modificato, eliminato) in frammenti {
         db.execute(
             "INSERT OR IGNORE INTO note (id, titolo, contenuto, cartella, creata, modificata, eliminata_il,
-                                         provenienza, vista)
-             VALUES (?1, '', ?2, NULL, ?3, ?4, ?5, CASE WHEN ?5 IS NULL THEN NULL ELSE '' END, 'markdown')",
+                                         provenienza, vista, brainet)
+             VALUES (?1, '', ?2, NULL, ?3, ?4, ?5, CASE WHEN ?5 IS NULL THEN NULL ELSE '' END, 'markdown', 1)",
             params![id, testo, nato, modificato, eliminato],
         )?;
         let base: Option<Option<String>> = db
@@ -186,6 +187,7 @@ pub fn blocco_da_frammento(blocco: &Value) -> Value {
             "provenienza": if eliminato.is_null() { Value::Null } else { json!("") },
             "eliminata_il": eliminato,
             "vista": "markdown",
+            "brainet": true,
             "tag": [],
         });
     }
@@ -257,7 +259,8 @@ pub struct Passaggio {
     pub ora: String,
     /// Il paragrafo con i suoi segni.
     pub testo: String,
-    /// Dove comincia il paragrafo nella nota, in caratteri.
+    /// Dove comincia il paragrafo nella nota, come la conta l'editor (unità UTF-16 di
+    /// JavaScript): con un'emoji prima, i caratteri non bastano.
     pub inizio: usize,
 }
 
@@ -438,6 +441,38 @@ impl Archivio {
         Ok(())
     }
 
+    // ——— Spostare in Brainet e il Journal (DEC-147) ———
+
+    /// «Sposta in Brainet»: la nota esce dalla cartella, dall'albero e dalla ricerca, e resta in
+    /// vista Markdown; senza ritorno (RB-130, RB-132).
+    pub fn sposta_in_brainet(&mut self, id: &str) -> Esito<super::Nota> {
+        self.con_riconnessione(|a| {
+            a.acceso()?;
+            a.trova(id)?;
+            a.db.execute(
+                "UPDATE note SET brainet = 1, cartella = NULL, vista = 'markdown' WHERE id = ?",
+                [id],
+            )?;
+            a.nota_da_id(id)
+        })
+    }
+
+    /// Le note in Brainet fuori dal Cestino, dalla più recente (RB-131).
+    pub fn elenca_journal(&mut self) -> Esito<Vec<super::Nota>> {
+        self.con_riconnessione(|a| {
+            a.acceso()?;
+            let ids: Vec<String> = a
+                .db
+                .prepare(
+                    "SELECT id FROM note WHERE brainet = 1 AND eliminata_il IS NULL
+                     ORDER BY coalesce(creata_scelta, creata) DESC, creata DESC",
+                )?
+                .query_map([], |r| r.get(0))?
+                .collect::<Result<_, _>>()?;
+            ids.iter().map(|id| a.nota_da_id(id)).collect()
+        })
+    }
+
     // ——— L'indice (DEC-146) ———
 
     /// Rifà l'indice delle note messe in coda dai trigger: quelle che hanno, o avevano, dei
@@ -500,7 +535,7 @@ impl Archivio {
         Ok(())
     }
 
-    /// I giorni del mese «AAAA-MM» in cui è nata almeno una nota con Brainet, fuori dal Cestino:
+    /// I giorni del mese «AAAA-MM» in cui è nata almeno una nota in Brainet, fuori dal Cestino:
     /// un pallino per giorno (RB-113, RB-127).
     pub fn calendario(&mut self, mese: &str) -> Esito<Vec<GiornoCalendario>> {
         let inizio = NaiveDate::parse_from_str(&format!("{mese}-01"), "%Y-%m-%d")
@@ -517,13 +552,12 @@ impl Archivio {
         })
     }
 
-    /// Il giorno di ogni nota con pillole o aree, fuori dal Cestino.
+    /// Il giorno di ogni nota in Brainet, fuori dal Cestino (DEC-147).
     fn date_note_con_brainet(&self) -> Esito<HashMap<String, NaiveDate>> {
         let righe: Vec<(String, String, Option<String>)> = self
             .db
             .prepare(
-                "SELECT id, creata, creata_scelta FROM note WHERE eliminata_il IS NULL AND id IN (
-                   SELECT nota FROM brainet_citazioni UNION SELECT nota FROM brainet_aree)",
+                "SELECT id, creata, creata_scelta FROM note WHERE eliminata_il IS NULL AND brainet = 1",
             )?
             .query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))?
             .collect::<Result<_, _>>()?;
@@ -710,7 +744,7 @@ impl Archivio {
             .collect::<Result<_, _>>()?)
     }
 
-    /// Le citazioni e le aree delle note fuori dal Cestino (RB-127): (entità, nota).
+    /// Le citazioni e le aree delle note in Brainet fuori dal Cestino (RB-127): (entità, nota).
     fn riferimenti(&self) -> Esito<Vec<(String, String)>> {
         Ok(self
             .db
@@ -718,7 +752,7 @@ impl Archivio {
                 "SELECT x.entita, x.nota FROM (
                    SELECT nota, entita FROM brainet_citazioni
                    UNION ALL SELECT nota, id FROM brainet_aree_legami WHERE tipo = 'entita'
-                 ) x JOIN note n ON n.id = x.nota WHERE n.eliminata_il IS NULL",
+                 ) x JOIN note n ON n.id = x.nota WHERE n.eliminata_il IS NULL AND n.brainet = 1",
             )?
             .query_map([], |r| Ok((r.get(0)?, r.get(1)?)))?
             .collect::<Result<_, _>>()?)
@@ -750,11 +784,11 @@ impl Archivio {
         Ok(Unione {
             citazioni: conta(
                 "SELECT c.entita FROM brainet_citazioni c JOIN note n ON n.id = c.nota
-                 WHERE n.eliminata_il IS NULL",
+                 WHERE n.eliminata_il IS NULL AND n.brainet = 1",
             )?,
             aree: conta(
                 "SELECT l.id FROM brainet_aree_legami l JOIN note n ON n.id = l.nota
-                 WHERE l.tipo = 'entita' AND n.eliminata_il IS NULL",
+                 WHERE l.tipo = 'entita' AND n.eliminata_il IS NULL AND n.brainet = 1",
             )?,
         })
     }
@@ -792,7 +826,8 @@ impl Archivio {
                 let riga: Option<(String, String, String, Option<String>)> = a
                     .db
                     .query_row(
-                        "SELECT titolo, contenuto, creata, creata_scelta FROM note WHERE id = ? AND eliminata_il IS NULL",
+                        "SELECT titolo, contenuto, creata, creata_scelta FROM note
+                         WHERE id = ? AND eliminata_il IS NULL AND brainet = 1",
                         [&nota],
                         |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)),
                     )
@@ -807,7 +842,8 @@ impl Archivio {
                 for inizio in inizi {
                     let (da, testo) = paragrafo(&contenuto, inizio);
                     if visti.insert(da) {
-                        let p = Passaggio { nota: nota.clone(), titolo: titolo.clone(), ora: ora.clone(), testo, inizio: da };
+                        let inizio = utf16(&contenuto, da);
+                        let p = Passaggio { nota: nota.clone(), titolo: titolo.clone(), ora: ora.clone(), testo, inizio };
                         per_giorno.entry(giorno).or_default().push((creata.clone(), p));
                     }
                 }
@@ -877,7 +913,7 @@ impl Archivio {
             a.aggiorna_indice()?;
             Ok(a.db.query_row(
                 "SELECT count(*) FROM brainet_aree_legami l JOIN note n ON n.id = l.nota
-                 WHERE l.tipo = 'stato' AND l.id = ? AND n.eliminata_il IS NULL",
+                 WHERE l.tipo = 'stato' AND l.id = ? AND n.eliminata_il IS NULL AND n.brainet = 1",
                 [id],
                 |r| r.get::<_, i64>(0),
             )? as usize)
@@ -1077,18 +1113,44 @@ fn ora_locale(istante: &str) -> String {
         .unwrap_or_default()
 }
 
-/// La riga del testo che contiene il carattere `inizio` (un paragrafo, un titolo o una voce di
-/// elenco), con la sua posizione in caratteri (RB-124).
+/// Il paragrafo che contiene il carattere `inizio`, con la sua posizione in caratteri (RB-124,
+/// DEC-146): il testo tra due righe vuote; un titolo o una voce di elenco è una riga sola.
 fn paragrafo(testo: &str, inizio: usize) -> (usize, String) {
+    let righe: Vec<&str> = testo.split('\n').collect();
+    let mut inizi = Vec::with_capacity(righe.len());
     let mut da = 0;
-    for riga in testo.split('\n') {
-        let lunga = riga.chars().count();
-        if inizio <= da + lunga {
-            return (da, riga.to_string());
-        }
-        da += lunga + 1;
+    for riga in &righe {
+        inizi.push(da);
+        da += riga.chars().count() + 1;
     }
-    (da, String::new())
+    let i = inizi.iter().rposition(|&d| d <= inizio).unwrap_or(0);
+    let da_sola = |r: &str| r.trim().is_empty() || riga_a_se(r);
+    if da_sola(righe[i]) {
+        return (inizi[i], righe[i].to_string());
+    }
+    let mut su = i;
+    while su > 0 && !da_sola(righe[su - 1]) {
+        su -= 1;
+    }
+    let mut giu = i;
+    while giu + 1 < righe.len() && !da_sola(righe[giu + 1]) {
+        giu += 1;
+    }
+    (inizi[su], righe[su..=giu].join("\n"))
+}
+
+/// Un titolo, una voce di elenco (anche numerata o da spuntare) o una citazione: una riga a sé.
+fn riga_a_se(riga: &str) -> bool {
+    let t = riga.trim_start();
+    let numerata = t.find(['.', ')']).is_some_and(|n| {
+        n > 0 && t[..n].chars().all(|c| c.is_ascii_digit()) && t[n + 1..].starts_with(' ')
+    });
+    t.starts_with('#') || t.starts_with("- ") || t.starts_with("* ") || t.starts_with("+ ") || t.starts_with('>') || numerata
+}
+
+/// Quante unità UTF-16 occupano i primi `caratteri` caratteri: le posizioni dell'editor.
+fn utf16(testo: &str, caratteri: usize) -> usize {
+    testo.chars().take(caratteri).map(char::len_utf16).sum()
 }
 
 /// Il messaggio quando come foto di un'entità si sceglie un file che non è un'immagine (CA-18.13,

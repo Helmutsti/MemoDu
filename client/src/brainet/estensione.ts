@@ -30,6 +30,7 @@ import { Icona } from "../componenti/Icona";
 import { atomiciScrittura } from "../editor/scrittura";
 import { eFoto, type TipoAllegato } from "./api";
 import {
+  chiusureOrfane,
   leggiAllegati,
   leggiSegni,
   segniFinti,
@@ -58,6 +59,23 @@ const entitaNote = StateField.define<Record<string, VistaEntita>>({
     return valore;
   },
 });
+
+/** I colori degli stati: l'area prende quello del suo primo stato (CMP-40, scelta di Manuel Cucca
+ *  del 16/10/2026); senza stati resta azzurra. */
+export const aggiornaColoriStati = StateEffect.define<Record<string, string>>();
+const coloriStati = StateField.define<Record<string, string>>({
+  create: () => ({}),
+  update: (valore, tr) => {
+    for (const e of tr.effects) if (e.is(aggiornaColoriStati)) valore = e.value;
+    return valore;
+  },
+});
+
+/** Il colore di un'area: quello del suo primo stato che si conosce, se no «informazione». */
+export function coloreArea(stati: string[], colori: Record<string, string>): string {
+  for (const s of stati) if (colori[s]) return colori[s];
+  return "informazione";
+}
 
 /** L'area con il mouse sopra (Stato = Mouse sopra di CMP-40). */
 export const segnaAreaSopra = StateEffect.define<string | null>();
@@ -202,6 +220,7 @@ export function decorazioniBrainet(state: EditorState): {
   const nomi = state.field(entitaNote, false) ?? {};
   const allegati = state.field(allegatiNoti, false) ?? {};
   const sopra = state.field(areaSopra, false) ?? null;
+  const colori = state.field(coloriStati, false) ?? {};
   const tutti: { da: number; a: number; dec: Decoration; atomica: boolean }[] = [];
   for (const c of citazioni) {
     const e = nomi[c.entita];
@@ -228,7 +247,8 @@ export function decorazioniBrainet(state: EditorState): {
     const fine = area.chiude?.da ?? testo.length;
     tutti.push({ da: area.apre.da, a: area.apre.a, dec: Decoration.replace({}), atomica: true });
     if (fine > area.apre.a) {
-      const classe = `bn-area${sopra === area.id ? " bn-area-sopra" : ""}`;
+      const colore = coloreArea(area.stati, colori);
+      const classe = `bn-area bn-area-${colore}${sopra === area.id ? " bn-area-sopra" : ""}`;
       tutti.push({
         da: area.apre.a,
         a: fine,
@@ -320,21 +340,25 @@ const statoFiltro = EditorState.transactionFilter.of((tr) => {
 /**
  * Un'area è sempre legata a qualcosa (RB-107): se un cambio del testo le toglie l'ultimo legame
  * (per esempio Backspace sulla sua sola pillola), l'area sparisce e resta la frase (RB-109).
- * Nella stessa transazione, così Ctrl+Z rimette tutto insieme.
+ * Sparisce anche un'area rimasta senza testo, o a metà perché un pezzo di testo cancellato si è
+ * portato via la sua apertura o la sua chiusura: altrimenti i suoi segni, invisibili, non si
+ * toglierebbero più (prove a mano del 16/10/2026). Nella stessa transazione, così Ctrl+Z rimette
+ * tutto insieme.
  */
 const areeSenzaLegami = EditorState.transactionFilter.of((tr) => {
   if (!tr.docChanged) return tr;
   const testo = tr.newDoc.toString();
   const { citazioni, aree } = leggiSegni(testo);
   const vuote = aree.filter((a) => {
-    const fine = a.chiude?.da ?? testo.length;
+    if (!a.chiude || a.chiude.da <= a.apre.a) return true;
+    const fine = a.chiude.da;
     return (
       !a.stati.length && !a.entita.length && !citazioni.some((c) => c.da >= a.apre.a && c.a <= fine)
     );
   });
-  if (!vuote.length) return tr;
-  const via = vuote
-    .flatMap((a) => [a.apre, ...(a.chiude ? [a.chiude] : [])])
+  const orfane = chiusureOrfane(testo);
+  if (!vuote.length && !orfane.length) return tr;
+  const via = [...vuote.flatMap((a) => [a.apre, ...(a.chiude ? [a.chiude] : [])]), ...orfane]
     .sort((x, y) => x.da - y.da)
     .map((t) => ({ from: t.da, to: t.a }));
   return [tr, { changes: via, sequential: true }];
@@ -383,7 +407,14 @@ export interface FileIncollati {
   a: number;
 }
 
-const CHIOCCIOLA = /(?:^|\s)@([^\s@<>]{0,40})$/;
+/**
+ * @ e il nome che si sta scrivendo: fino a tre parole, separate da uno spazio, senza punteggiatura
+ * («Luca Bianchi»); alla quarta parola o a un segno di punteggiatura il menu si chiude, così non
+ * resta aperto mentre si continua la frase.
+ */
+const CHIOCCIOLA = /(?:^|\s)@((?:[^\s@<>.,;:!?()"«»]+ ?){0,3})$/;
+/** Il nome più lungo che il menu segue. */
+const LUNGHEZZA_DOMANDA = 40;
 /** Tra il testo e il menu che si apre sotto (spazio-elemento, come in CMP-09). */
 const DISTANZA = 4;
 
@@ -398,6 +429,7 @@ export function estensioneBrainet(ascolto: Ascolto): Extension {
   return [
     entitaNote,
     allegatiNoti,
+    coloriStati,
     areaSopra,
     pluginBrainet,
     EditorView.atomicRanges.of((view) => view.plugin(pluginBrainet)?.atomiche ?? Decoration.none),
@@ -413,7 +445,7 @@ export function estensioneBrainet(ascolto: Ascolto): Extension {
         const riga = u.state.doc.lineAt(sel.head);
         const prima = riga.text.slice(0, sel.head - riga.from);
         const m = CHIOCCIOLA.exec(prima);
-        if (m) {
+        if (m && m[1].length <= LUNGHEZZA_DOMANDA) {
           const da = sel.head - m[1].length - 1;
           const r = coordinate(u.view, da);
           a.onChiocciola({ da, testo: m[1], x: r.left, y: r.bottom + DISTANZA, sopra: r.top });

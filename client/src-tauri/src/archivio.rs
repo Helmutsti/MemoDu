@@ -410,6 +410,8 @@ pub struct Nota {
     pub tag: Vec<String>,
     /// "testo" o "markdown" (DEC-130); una nota senza vista vale "testo" (RB-91).
     pub vista: String,
+    /// Spostata in Brainet: fuori dall'albero e dalla ricerca, nel Journal (DEC-147).
+    pub brainet: bool,
 }
 
 /// Una riga dell'elenco, ordinato per ultima modifica (RB-60).
@@ -534,6 +536,7 @@ struct RigaNota {
     eliminata_il: Option<String>,
     provenienza: Option<String>,
     vista: Option<String>,
+    brainet: Option<bool>,
 }
 
 impl RigaNota {
@@ -550,6 +553,7 @@ impl RigaNota {
             eliminata_il: riga.get("eliminata_il")?,
             provenienza: riga.get("provenienza")?,
             vista: riga.get("vista")?,
+            brainet: riga.get("brainet")?,
         })
     }
 }
@@ -1239,7 +1243,9 @@ impl Archivio {
 
     fn elenco_non_organizzate(&self) -> Esito<Vec<VoceElenco>> {
         let righe = self.righe_note(
-            "SELECT * FROM note WHERE cartella IS NULL AND eliminata_il IS NULL ORDER BY modificata DESC",
+            // Le note in Brainet non stanno nell'albero (RB-132).
+            "SELECT * FROM note WHERE cartella IS NULL AND eliminata_il IS NULL AND brainet IS NOT 1
+             ORDER BY modificata DESC",
             &[],
         )?;
         Ok(righe.iter().map(voce).collect())
@@ -1329,6 +1335,7 @@ impl Archivio {
             creata_scelta: riga.creata_scelta,
             fine_validita: riga.fine_validita,
             vista: riga.vista.unwrap_or_else(|| "testo".to_string()),
+            brainet: riga.brainet.unwrap_or(false),
         })
     }
 
@@ -1789,7 +1796,9 @@ static GIORNO: LazyLock<Regex> =
 /// Prime parole del contenuto senza simboli markdown, al massimo 80 caratteri (RB-15): come
 /// `anteprima` in condiviso, che l'interfaccia usa per la nota aperta.
 pub fn anteprima(contenuto: &str) -> String {
-    let testo = SOTTOLINEATO.replace_all(contenuto, "");
+    // Una pillola si legge con il suo nome, un'area con la sua frase (DEC-145).
+    let contenuto = brainet::testo_semplice(contenuto);
+    let testo = SOTTOLINEATO.replace_all(&contenuto, "");
     let testo = INIZIO_RIGA.replace_all(&testo, "");
     let testo = ENFASI.replace_all(&testo, "");
     let testo = SPAZI.replace_all(&testo, " ");

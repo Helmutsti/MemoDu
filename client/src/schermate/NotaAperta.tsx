@@ -93,7 +93,8 @@ export function NotaAperta({
                 focus={nuova || inizio !== undefined}
                 cursore={inizio}
                 markdown={markdown}
-                attivo={brainet && markdown}
+                // Pillole e aree solo nelle note in Brainet (DEC-147).
+                attivo={brainet && markdown && nota.brainet === true}
                 allegati={markdown}
                 onModifica={(contenuto) => onModifica({ contenuto })}
                 onFormato={setFormato}

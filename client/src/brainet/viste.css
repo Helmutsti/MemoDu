@@ -20,6 +20,7 @@
   color: var(--testo-primario);
 }
 
+.journal-elenco,
 .entita-elenco {
   display: flex;
   flex-direction: column;
@@ -180,6 +181,73 @@
   background: var(--sfondo-hover);
 }
 
+/* SC-11 divisa per tipo: un titolo di sezione per gruppo, nell'ordine di @ (Persone … Senza tipo). */
+.entita-gruppo + .entita-gruppo {
+  margin-top: var(--spazio-gruppo);
+}
+.riga-entita-icona {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--misura-riga);
+  height: var(--misura-riga);
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-campo);
+  color: var(--testo-tenue);
+}
+
+/* CMP-46 Volto dell'entità: le persone come il cast di un film, foto tonda o iniziali, nome sotto. */
+.entita-cast {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 96px);
+  gap: var(--spazio-elenco);
+  padding: 0;
+  list-style: none;
+}
+.volto-entita {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spazio-elenco);
+  padding: var(--spazio-elenco);
+  border-radius: var(--raggio-interno);
+  outline: none;
+  cursor: pointer;
+}
+.volto-entita:hover {
+  background: var(--sfondo-hover);
+}
+.volto-entita:focus-visible {
+  box-shadow: 0 0 0 var(--focus-spessore) var(--focus-anello);
+}
+.volto-entita-foto,
+.volto-entita-iniziali {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--raggio-pillola);
+}
+.volto-entita-foto {
+  object-fit: cover;
+}
+.volto-entita-iniziali {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sfondo-campo);
+  color: var(--testo-tenue);
+}
+.volto-entita-nome {
+  display: -webkit-box;
+  overflow: hidden;
+  width: 80px;
+  color: var(--testo-primario);
+  text-align: center;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
 /* CMP-45 Testata dell'entità: «Entità» per tornare, sotto nome, tipo e dettagli (SC-13). */
 .testata-entita {
   display: flex;
@@ -251,4 +319,18 @@
 }
 .pagina-entita-vuota {
   padding-top: 120px;
+}
+
+/* Journal (SC-10, DEC-147): il giorno e l'ora sopra, il testo sotto; un divisore tra le note. */
+.nota-journal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spazio-icona);
+  padding: var(--spazio-controllo) 0;
+}
+.nota-journal + .nota-journal {
+  border-top: 1px solid var(--bordo-divisore);
+}
+.nota-journal-quando {
+  color: var(--testo-tenue);
 }

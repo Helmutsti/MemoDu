@@ -378,7 +378,7 @@ impl Archivio {
                 .db
                 .query_row(
                     "SELECT titolo, contenuto, cartella, creata, creata_scelta, modificata,
-                            fine_validita, eliminata_il, provenienza, vista FROM note WHERE id = ?",
+                            fine_validita, eliminata_il, provenienza, vista, brainet FROM note WHERE id = ?",
                     [id],
                     |r| {
                         Ok((json!({
@@ -391,14 +391,18 @@ impl Archivio {
                             "fine_validita": r.get::<_, Option<String>>(6)?,
                             "eliminata_il": r.get::<_, Option<String>>(7)?,
                             "provenienza": r.get::<_, Option<String>>(8)?,
-                        }), r.get::<_, Option<String>>(9)?))
+                        }), r.get::<_, Option<String>>(9)?, r.get::<_, Option<bool>>(10)?))
                     },
                 )
                 .optional()?
-                .map(|(mut c, vista)| -> Esito<Value> {
+                .map(|(mut c, vista, brainet)| -> Esito<Value> {
                     // Solo se c'è: le note senza vista restano senza anche sul server (RB-91).
                     if let Some(vista) = vista {
                         c["vista"] = json!(vista);
+                    }
+                    // Solo per le note in Brainet (DEC-147): le altre restano come prima.
+                    if brainet == Some(true) {
+                        c["brainet"] = json!(true);
                     }
                     let mut tag: Vec<String> = self
                         .db
@@ -499,11 +503,12 @@ impl Archivio {
                 let adesso = self.ora();
                 self.db.execute(
                     "INSERT INTO note (id, titolo, contenuto, cartella, creata, creata_scelta, modificata,
-                                       fine_validita, eliminata_il, provenienza, vista)
-                     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)
+                                       fine_validita, eliminata_il, provenienza, vista, brainet)
+                     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)
                      ON CONFLICT(id) DO UPDATE SET titolo = ?2, contenuto = ?3, cartella = ?4,
                        creata = ?5, creata_scelta = ?6, modificata = ?7, fine_validita = ?8,
-                       eliminata_il = ?9, provenienza = ?10, vista = coalesce(?11, vista)",
+                       eliminata_il = ?9, provenienza = ?10, vista = coalesce(?11, vista),
+                       brainet = coalesce(?12, brainet)",
                     params![
                         id,
                         testo("titolo").unwrap_or_default(),
@@ -517,6 +522,8 @@ impl Archivio {
                         testo("provenienza"),
                         // Senza vista nel blocco resta quella che c'è (RB-92).
                         testo("vista"),
+                        // Spostata in Brainet non torna indietro (RB-130).
+                        c.get("brainet").and_then(Value::as_bool).filter(|b| *b),
                     ],
                 )?;
                 self.db.execute("DELETE FROM note_tag WHERE nota = ?", [id])?;
@@ -658,8 +665,8 @@ impl Archivio {
             format!("{titolo} (copia in conflitto)")
         };
         self.db.execute(
-            "INSERT INTO note (id, titolo, contenuto, cartella, creata, modificata, vista)
-             SELECT ?1, ?2, ?3, cartella, ?4, ?4, vista FROM note WHERE id = ?5",
+            "INSERT INTO note (id, titolo, contenuto, cartella, creata, modificata, vista, brainet)
+             SELECT ?1, ?2, ?3, cartella, ?4, ?4, vista, brainet FROM note WHERE id = ?5",
             params![id, titolo, contenuto, adesso, originale],
         )?;
         self.db.execute(

@@ -38,6 +38,8 @@ import {
 import {
   aggiornaAllegati,
   aggiornaArea,
+  aggiornaColoriStati,
+  coloreArea,
   aggiornaEntita,
   cambiaForma,
   creaArea,
@@ -102,6 +104,8 @@ const LUNGHEZZA_NOME = 200;
 /** Il mouse passa dall'area alla Linguetta senza farla sparire. */
 const RITARDO_LINGUETTA = 250;
 
+/** 25 MB, come nel nucleo (RB-115). */
+const LIMITE_ALLEGATO = 25 * 1024 * 1024;
 export const AVVISO_GRANDE = "Il file supera 25 MB: non si può allegare.";
 export const AVVISO_TIPO =
   "Si allegano solo foto e documenti (JPG, PNG, PDF, Word, Excel, PowerPoint, testo).";
@@ -254,6 +258,12 @@ export const EditorBrainet = forwardRef<ManigliaEditor, Proprieta>(function Edit
   useEffect(() => {
     void brainet.elencaStati().then(setStati, () => setStati([]));
   }, []);
+  // L'area prende il colore del suo primo stato (CMP-40).
+  useEffect(() => {
+    view?.dispatch({
+      effects: aggiornaColoriStati.of(Object.fromEntries(stati.map((s) => [s.id, s.colore]))),
+    });
+  }, [view, stati]);
 
   // ——— Allegati ———
 
@@ -328,9 +338,11 @@ export const EditorBrainet = forwardRef<ManigliaEditor, Proprieta>(function Edit
       if (!puoAllegare) return;
       const { file, da, a } = (e as CustomEvent<FileIncollati>).detail;
       void allega(
-        file.map(
-          (f) => async () => brainet.allegaDati(f.name, new Uint8Array(await f.arrayBuffer())),
-        ),
+        file.map((f) => async () => {
+          // Troppo grande: l'avviso subito, senza leggere il file (RB-115, SF-17).
+          if (f.size > LIMITE_ALLEGATO) throw new ErroreApi(413, AVVISO_GRANDE);
+          return brainet.allegaDati(f.name, new Uint8Array(await f.arrayBuffer()));
+        }),
         da,
         a,
       );
@@ -396,7 +408,11 @@ export const EditorBrainet = forwardRef<ManigliaEditor, Proprieta>(function Edit
 
   // ——— @ ———
 
-  // I suggerimenti seguono le lettere scritte (RB-104); Esc li chiude fino alla prossima @.
+  // I suggerimenti seguono le lettere scritte (RB-104); Esc li chiude fino alla prossima @: quando
+  // quella @ non c'è più (scelta, cancellata, cursore altrove) una @ nello stesso punto riapre.
+  useEffect(() => {
+    if (chiocciola === null) setChiusaA(null);
+  }, [chiocciola]);
   const domanda = attivo && chiocciola && chiocciola.da !== chiusaA ? chiocciola.testo : null;
   useEffect(() => {
     if (domanda === null) return;
@@ -458,8 +474,17 @@ export const EditorBrainet = forwardRef<ManigliaEditor, Proprieta>(function Edit
   // Selezionando con il mouse si apre il menu dell'area (RB-107).
   const suRilascio = () => {
     if (!selezione || !attivo) return;
+    // La frase di un'area che c'è già riapre il suo menu, invece di farne un'altra uguale sopra.
+    const uguale = leggiSegni(testoAttuale).aree.find(
+      (a) =>
+        a.chiude !== null &&
+        a.apre.da <= selezione.da &&
+        selezione.da <= a.apre.a &&
+        a.chiude.da <= selezione.a &&
+        selezione.a <= a.chiude.a,
+    );
     setMenuArea({
-      id: null,
+      id: uguale?.id ?? null,
       da: selezione.da,
       a: selezione.a,
       frase: testoSemplice(testoAttuale.slice(selezione.da, selezione.a)),
@@ -648,7 +673,10 @@ export const EditorBrainet = forwardRef<ManigliaEditor, Proprieta>(function Edit
         !menuArea &&
         createPortal(
           <div
-            className="bn-linguetta interfaccia-dettaglio"
+            className={`bn-linguetta bn-linguetta-${coloreArea(
+              legamiLinguetta?.stati ?? [],
+              Object.fromEntries(stati.map((s) => [s.id, s.colore])),
+            )} interfaccia-dettaglio`}
             style={{ left: linguetta.x, top: linguetta.y }}
             onMouseEnter={() => setLinguetta((prima) => prima && { ...prima, tenuta: true })}
             onMouseLeave={() => setLinguetta(null)}

@@ -3,34 +3,45 @@
 <!-- Fase 1 della guida, con i criteri di accettazione della Fase 8. Copia il blocco per ogni requisito. -->
 
 ## RF-18 – Brainet, la rete delle note
-**Priorità:** Must · **Origine:** ID-39, DEC-134, DEC-145 · **Fase:** Sviluppo (fasi 1 … 8 riscritte dall'agente il 16/10/2026 e approvate da Manuel Cucca lo stesso giorno, con DEC-146) · **Stato:** In sviluppo (riscritto per DEC-145 il 16/10/2026; la versione con note proprie è uscita nella 1.0.0, spenta all'inizio, DEC-142)
+**Priorità:** Must · **Origine:** ID-39, DEC-134, DEC-145, DEC-147 · **Fase:** 9 – Rilascio (per DEC-147 le fasi 1 … 8 approvate da Manuel Cucca il 16/10/2026; per DEC-145 lo erano già) · **Stato:** In progettazione (riscritto per DEC-145 e DEC-147 il 16/10/2026; la versione con note proprie è uscita nella 1.0.0, spenta all'inizio, DEC-142)
 
 Come *utente* voglio collegare quello che scrivo nelle mie note a persone, oggetti, eventi e argomenti, per ritrovare tutto quello che ho pensato su ognuno di loro nel tempo, senza dover creare e ordinare file.
 
-Brainet non ha note sue: funziona dentro le note di CLOUD e nella colonna mostra le viste per leggerle (DEC-145, scelta di Manuel Cucca del 16/10/2026: «voglio che brainet funzioni su tutte le note cloud […] mettiamo tutto il mondo brainet nell'editor md. e poi lasciamo le visualizzazioni nella sidebar»). Prima, dal 14/10/2026, Brainet era un diario con note proprie, sul modello di Reflect o Mem (DEC-134).
+Ogni nota nasce in CLOUD come nota Markdown; con «Sposta in Brainet» esce dall'albero e dalla ricerca e passa nel **Journal**, dove si collega a persone, oggetti, eventi e argomenti (DEC-147, scelte di Manuel Cucca del 16/10/2026). Prima, la mattina del 16/10/2026, Brainet funzionava in tutte le note di CLOUD (DEC-145); dal 14/10/2026 era un diario con note proprie, sul modello di Reflect o Mem (DEC-134).
 
 ### Dove si scrive
-- **Nelle note di CLOUD in vista Markdown** (DEC-145). In vista Testo Brainet non c'è: `@` è un carattere normale e la selezione non apre il menu delle aree.
-- **Una nota con pillole, aree o allegati resta in Markdown:** in Info la scelta «Testo» è spenta, con la riga «Questa nota usa Brainet: si vede solo in Markdown»; togliendo tutte le pillole, le aree e gli allegati torna disponibile (proposta dell'agente, approvata da Manuel Cucca il 16/10/2026).
-- Proposte dell'agente: nella nota rapida Brainet non c'è, e arriva quando la nota si apre nel programma completo; nei file di Locale non c'è.
+- **Nelle note in Brainet**, cioè quelle spostate con «Sposta in Brainet»: lì `@`, le pillole e le aree (DEC-147: «pillole e aree non sono disponibili finché non viene fatta la conversione»). Una nota in Brainet è sempre in vista Markdown.
+- **Nelle note di CLOUD** niente `@` né aree; gli allegati sì, in vista Markdown, come in ogni nota Markdown (DEC-147).
+- **Una nota con pillole, aree o allegati resta in Markdown:** in Info la scelta «Testo» è spenta, con la riga «Questa nota usa Brainet: si vede solo in Markdown» (proposta dell'agente, approvata da Manuel Cucca il 16/10/2026).
+- Nella nota rapida e nei file di Locale Brainet non c'è (proposte dell'agente, approvate).
+
+### Sposta in Brainet
+- «**Sposta in Brainet**» nel menu del tasto destro sulla nota nella colonna, sotto «Sposta in…», e in Info; c'è solo con Brainet acceso (proposte dell'agente, approvate da Manuel Cucca il 16/10/2026).
+- Prima una conferma: «Spostare la nota in Brainet?» · «La nota esce da CLOUD e dalla ricerca e non si riporta indietro. Nel Journal puoi collegarla a persone, oggetti e argomenti.» · «Annulla», «Sposta».
+- Spostata, la nota esce dalla sua cartella e dall'albero di CLOUD, la ricerca non la trova più, e si apre il Journal con la nota in cima.
+- **Senza ritorno:** una nota in Brainet non torna in CLOUD (scelta di Manuel Cucca: «una nota in brainet non si sposta più in cloud»).
+
+### Il Journal
+- Sotto BRAINET la voce **Journal**: l'elenco di tutte le note in Brainet, dalla più recente, con sopra ognuna il giorno e l'ora; ogni nota si legge e si modifica lì, con `@`, pillole, aree e allegati (scelte di Manuel Cucca del 16/10/2026: «rimettiamo una voce journal dove mostriamo tutte le note in una lista per essere modificate»; forma: proposte dell'agente, approvate).
+- Tasto destro su una nota › «Elimina»: va nel Cestino; ripristinata torna nel Journal.
 
 ### La colonna e le Impostazioni
-- Nella colonna la sezione **Brainet**, sotto CLOUD e sopra Locale, senza il +; sotto, in quest'ordine, **Entità** (icona del cervello) e **Calendario** (DEC-145; il + e il Database sono spariti il 16/10/2026, scelta di Manuel Cucca: «sparisce»).
-- **Impostazioni:** un gruppo Brainet con l'interruttore «Usa Brainet»; finché è spento non si vede nient'altro, né nelle impostazioni né nella colonna. Acceso, sotto compaiono gli «Stati delle evidenziature» (scelte di Manuel Cucca del 14/10/2026; «Mostra il Database» sparito il 16/10/2026).
-- **Spegnere Brainet non cancella niente** e non chiede conferma: sparisce la sezione, `@` e la selezione non aprono i menu di Brainet; pillole, aree e allegati restano nelle note e si vedono; entità e stati restano; riaccendendo torna tutto. Vale per tutti i computer dell'account (proposta dell'agente, approvata da Manuel Cucca il 16/10/2026).
+- Nella colonna la sezione **Brainet**, sotto CLOUD e sopra Locale, senza il +; sotto, in quest'ordine, **Journal**, **Entità** (icona del cervello) e **Calendario** (DEC-145, DEC-147).
+- **Impostazioni:** un gruppo Brainet con l'interruttore «Usa Brainet»; finché è spento non si vede nient'altro, né nelle impostazioni né nella colonna. Acceso, sotto compaiono gli «Stati delle evidenziature» (scelte di Manuel Cucca del 14/10/2026).
+- **Spegnere Brainet non cancella niente** e non chiede conferma: sparisce la sezione, con il Journal; entità, stati e note in Brainet restano, e riaccendendo torna tutto. Vale per tutti i computer dell'account (proposta dell'agente, approvata da Manuel Cucca il 16/10/2026). Deduzione dell'agente, da confermare: da spento le note in Brainet non si vedono da nessuna parte.
 
 ### Collegamenti, aree e stati
-- **Come nasce un collegamento:** scrivendo `@` si apre il menu dei suggerimenti e funziona come i destinatari di Gmail: si filtra scrivendo, si sceglie un'entità che esiste o se ne crea una nuova, e diventa una pillola (scelta di Manuel Cucca del 14/10/2026). Il menu ha un titolo sopra ogni sezione: Persone, Argomenti, Eventi, Oggetti, Senza tipo; «Crea «…»» e «Allega un file…» in fondo; frecce e Invio per scegliere, Esc per chiudere, Backspace subito dopo una pillola la toglie tutta.
+- **Come nasce un collegamento:** scrivendo `@` si apre il menu dei suggerimenti e funziona come i destinatari di Gmail: si filtra scrivendo, si sceglie un'entità che esiste o se ne crea una nuova, e diventa una pillola (scelta di Manuel Cucca del 14/10/2026). Dopo @ il nome può avere fino a tre parole («Luca Bianchi»); alla quarta parola o a un segno di punteggiatura il menu si chiude (proposta dell'agente del 16/10/2026, durante le prove a mano, confermata da Manuel Cucca lo stesso giorno). Il menu ha un titolo sopra ogni sezione: Persone, Argomenti, Eventi, Oggetti, Senza tipo; «Crea «…»» e «Allega un file…» in fondo; frecce e Invio per scegliere, Esc per chiudere, Backspace subito dopo una pillola la toglie tutta.
 - **Un'entità nuova:** «Crea «…»» fa nascere subito la pillola, senza tipo; il tipo si assegna dopo in Entità (scelte di Manuel Cucca del 14 e 15/10/2026).
 - **I collegamenti** sono pillole con i colori di informazione del design system e il nome; con la foto dell'entità, se c'è, tonda a sinistra (Manuel Cucca, 14/10/2026). Proposta dell'agente: un clic su una pillola apre la pagina della sua entità.
-- **Aree:** parti del testo evidenziate, come con un evidenziatore, e associate a una o più entità e a uno o più stati. Si creano selezionando la frase e scegliendo dal menu, che ha in cima la sezione «Stati» con il pallino del colore (scelte di Manuel Cucca del 14/10/2026).
+- **Aree:** parti del testo evidenziate, come con un evidenziatore, e associate a una o più entità e a uno o più stati. L'area ha il fondo del colore del suo primo stato, e senza stati resta azzurra, così non si confonde con la pillola (scelta di Manuel Cucca del 16/10/2026, durante le prove a mano). Si creano selezionando la frase e scegliendo dal menu, che ha in cima la sezione «Stati» con il pallino del colore (scelte di Manuel Cucca del 14/10/2026).
   - le entità nominate con una pillola non hanno un'area: compaiono nella nota come citazione; un'area che contiene una pillola prende da sola anche l'entità citata;
   - gli stati non sono entità: un elenco breve, nelle Impostazioni, ognuno con uno dei quattro colori di stato del design system (avviso, informazione, successo, errore);
   - passando sopra un'area compaiono il riquadro e la linguetta con il pallino del primo stato e i nomi separati da «·»; la freccia apre lo stesso menu con le voci già scelte spuntate; togliendo tutte le voci l'area sparisce e la frase torna testo normale (idea e scelte di Manuel Cucca del 14/10/2026).
 - **Togliere uno stato:** Memodu propone di cambiarlo con un altro; se lo togli sparisce da tutte le aree, e un'area sparisce solo se era il suo ultimo legame (scelte di Manuel Cucca del 14/10/2026).
 
 ### Le entità
-- **Entità** nella colonna: l'elenco di persone, oggetti, eventi, argomenti e di quelle senza tipo, con quante volte sono nominate (citazioni e aree), l'ultima volta e il tipo. Contano solo le note di CLOUD fuori dal Cestino (proposta dell'agente).
+- **Entità** nella colonna: l'elenco di persone, oggetti, eventi, argomenti e di quelle senza tipo, con quante volte sono nominate (citazioni e aree), l'ultima volta e il tipo. Contano solo le note in Brainet fuori dal Cestino, perché solo lì ci sono pillole e aree (DEC-147, deduzione dell'agente).
 - **Il tipo** si cambia con un clic sulla pillola del tipo della riga: Persona, Argomento, Evento, Oggetto e, dopo una linea, «Senza tipo», con la spunta sul tipo attuale (scelte di Manuel Cucca del 15/10/2026).
 - **Unire due entità:** tasto destro su una riga › «Unisci a…»: scegli l'altra entità; resta il nome dell'entità scelta e le citazioni e le aree passano a lei, anche nel testo delle note (scelta di Manuel Cucca del 14/10/2026).
 - **La foto:** tasto destro › «Scegli una foto…», un'immagine dal disco.
@@ -39,14 +50,14 @@ Brainet non ha note sue: funziona dentro le note di CLOUD e nella colonna mostra
 La prima vista per leggere la knowledge base (proposta dell'agente del 16/10/2026, accettata da Manuel Cucca: «andiamo avanti fino allo sviluppo»): risponde a «ritrovare tutto quello che ho pensato su ognuno di loro» e fa vedere come il pensiero su una cosa cambia giorno dopo giorno. Proposte dell'agente con i mockup:
 - si apre con un clic su una riga di Entità, o su una pillola in una nota;
 - in cima la foto, il nome, la pillola del tipo e «Nominata N volte · l'ultima il …»;
-- sotto, i **passaggi**: ogni paragrafo di una nota di CLOUD che cita l'entità con una pillola o la lega con un'area, con la pillola o l'area evidenziata e i pallini degli stati dell'area;
+- sotto, i **passaggi**: ogni paragrafo di una nota in Brainet che cita l'entità con una pillola o la lega con un'area, con la pillola o l'area evidenziata e i pallini degli stati dell'area;
 - i passaggi sono raggruppati per giorno, dal più recente; il giorno è quello di creazione della nota, come nel Calendario; sopra ogni passaggio il titolo della nota (o le prime parole) e l'ora;
 - i passaggi si leggono soltanto; un clic su un passaggio apre la nota, con il cursore su quel paragrafo;
 - per tornare all'elenco, «Entità» in cima alla pagina o Esc;
 - un'entità che nessuna nota nomina più: «Nessuna nota parla ancora di «…».».
 
 ### Il Calendario
-I mesi con **un pallino solo per ogni giorno** in cui è stata creata almeno una nota di CLOUD con una pillola o un'area, non uno per nota (scelta di Manuel Cucca del 16/10/2026); conta il giorno di creazione. Oggi è evidenziato, i giorni dopo tenui, le frecce cambiano mese; un clic su un giorno per ora non fa niente (proposte dell'agente, approvate).
+I mesi con **un pallino solo per ogni giorno** in cui è nata almeno una nota in Brainet (DEC-147, proposta dell'agente approvata da Manuel Cucca il 16/10/2026; prima: una nota di CLOUD con pillole o aree), non uno per nota (scelta di Manuel Cucca del 16/10/2026); conta il giorno di creazione. Oggi è evidenziato, i giorni dopo tenui, le frecce cambiano mese; un clic su un giorno per ora non fa niente (proposte dell'agente, approvate).
 
 ### Allegati
 In vista Markdown si allega solo con gli allegati di Brainet, che prendono il posto di RF-03 (DEC-145, scelta di Manuel Cucca: «va bene»). Deduzione dell'agente, confermata da Manuel Cucca il 16/10/2026: si allega anche con Brainet spento, trascinando o incollando il file, perché è l'unico modo di allegare; «Allega un file…» sta nel menu di `@`, quindi solo con Brainet acceso.
@@ -57,24 +68,24 @@ In vista Markdown si allega solo con gli allegati di Brainet, che prendono il po
 - Un allegato si scarica sul computer la prima volta che serve; senza rete una foto non ancora scaricata mostra un riquadro vuoto con il nome.
 
 ### Ricerca, sincronizzazione, esportazione
-- **Ricerca:** la ricerca della colonna legge tutte le note, anche quelle con pillole e aree, e trova il nome della pillola come testo; per ora nessun filtro per entità (proposta dell'agente, approvata da Manuel Cucca il 16/10/2026).
+- **Ricerca:** la ricerca della colonna non trova le note in Brainet (DEC-147, scelta di Manuel Cucca: «la ricerca non mostra le note»). Nelle note di CLOUD i segni non entrano nell'indice.
 - **Sincronizzazione:** le note con pillole, aree e allegati si sincronizzano come le altre note; entità, stati e allegati si sincronizzano e si cifrano come le note, con lo stesso account (RF-10).
 - **Esportazione** (RF-13): la pillola diventa `[[nome]]`, l'area `==frase==` (gli stati si perdono), la foto `![nome](allegati/nome)` e il documento `[nome](allegati/nome)`, con i file nella cartella `allegati` accanto alla nota (proposta dell'agente, approvata da Manuel Cucca il 16/10/2026).
 
 ### Il passaggio dalla 1.0.0
-- All'aggiornamento ogni nota Brainet diventa una nota di CLOUD in vista Markdown, senza titolo e fuori dalle cartelle, con pillole, aree e allegati, con le date in cui era stata scritta; quelle nel Cestino di Brainet vanno nel Cestino di CLOUD; entità e stati restano (scelta di Manuel Cucca del 16/10/2026: «migra tutto su md»; dove vanno quelle senza cartella e quelle nel Cestino è proposta dell'agente).
+- Le note Brainet già scritte non contano (Manuel Cucca, 16/10/2026: «ignoriamo le note già scritte»): all'aggiornamento diventano note in Brainet, nel Journal, con le loro date, pillole, aree e allegati; quelle nel Cestino di Brainet vanno nel Cestino; entità e stati restano (scelta dell'agente, la strada più semplice che non perde niente).
 - Una nota Brainet che arriva da un computer ancora con la 1.0.0 fa lo stesso passaggio appena arriva (proposta dell'agente).
 
 ### Scenario d'uso
-Scritto dall'agente il 16/10/2026 per DEC-145, approvato da Manuel Cucca lo stesso giorno.
+Scritto dall'agente il 16/10/2026 per DEC-147, approvato da Manuel Cucca lo stesso giorno («ok tutto vai avanti»).
 
-Nelle Impostazioni accendo «Usa Brainet», e nella colonna compare la sezione Brainet tra CLOUD e LOCALE, con Entità e Calendario. Dopo una telefonata creo una nota in CLOUD con Ctrl + N, come sempre. Scrivo «Chiamata con @lu», dal menu scelgo Luca Bianchi e il nome diventa una pillola. Continuo: «il preventivo della serra arriva venerdì». Seleziono la frase e, dal menu che compare, scelgo lo stato «Importante» e l'oggetto Serra: la frase resta evidenziata. Trascino nella nota il PDF del preventivo e compare la sua pillola. Una settimana dopo, in un'altra nota, scrivo che il preventivo è arrivato e la lego di nuovo a Serra. Apro Entità, faccio clic su Serra e vedo i due passaggi, uno sotto l'altro con il loro giorno: com'era la cosa una settimana fa e com'è oggi. Faccio clic sul primo e si apre la nota della telefonata. La sera, nel Calendario, i due giorni hanno il loro pallino. Cercando «serra» con Ctrl + K trovo tutte e due le note.
+Dopo una telefonata creo una nota in CLOUD con Ctrl + N, come sempre, e scrivo i miei appunti; trascino dentro il PDF del preventivo. La sera decido che quella nota è un pensiero da ricordare: tasto destro sulla nota nella colonna › «Sposta in Brainet», confermo. La nota sparisce dall'albero di CLOUD e si apre il Journal con la nota in cima. Lì scrivo «@Luca Bianchi» e scelgo la pillola; seleziono «il preventivo della serra arriva venerdì» e lo segno Importante e Serra. Una settimana dopo sposto in Brainet un'altra nota sulla serra. Apro Entità, faccio clic su Serra e vedo i due passaggi, uno sotto l'altro con il loro giorno. Cercando «serra» con Ctrl + K le note in Brainet non compaiono: le ritrovo nel Journal e nella pagina di Serra.
 
 ### Punti aperti
 - Altri modi di leggere la knowledge base, dopo la pagina dell'entità: la rete dei collegamenti, un giorno del Calendario, le aree per stato (Manuel Cucca, 14/10/2026: «da studiare»).
 
 ### Criteri di accettazione
-Riscritti dall'agente il 16/10/2026 per DEC-145 (Fase 8), approvati da Manuel Cucca lo stesso giorno. Restano con il loro codice i criteri della 1.0.0 che valgono ancora, con il contesto aggiornato (una nota di CLOUD in vista Markdown al posto del foglio Brainet); quelli tolti sono segnati; i nuovi partono da CA-18.32.
+Riscritti dall'agente il 16/10/2026 per DEC-145 (Fase 8), approvati da Manuel Cucca lo stesso giorno. Restano con il loro codice i criteri della 1.0.0 che valgono ancora, con il contesto aggiornato (una nota di CLOUD in vista Markdown al posto del foglio Brainet); quelli tolti sono segnati; i nuovi partono da CA-18.32; per DEC-147 CA-18.44 … CA-18.48 (scritti dall'agente il 16/10/2026, approvati da Manuel Cucca lo stesso giorno); per l'aspetto per tipo CA-18.49, CA-18.50.
 
 - **CA-18.1** Tolto (DEC-145): sostituito da CA-18.32.
 - **CA-18.2** Tolto (DEC-145): il + accanto a Brainet non c'è più.
@@ -108,17 +119,24 @@ Riscritti dall'agente il 16/10/2026 per DEC-145 (Fase 8), approvati da Manuel Cu
 - **CA-18.30** *Dato* un file di 25 MB, *quando* lo allego e intanto scrivo e sincronizzo altre note, *allora* le note arrivano sull'altro computer senza aspettare il file; un caricamento interrotto riparte da solo (RB-118).
 - **CA-18.31** *Dato* un'entità «Senza tipo» in Entità, *quando* clicco la sua pillola del tipo, *allora* si apre l'elenco Persona, Argomento, Evento, Oggetto, «Senza tipo» con la spunta su «Senza tipo»; *quando* scelgo Persona, *allora* la riga mostra «Persona», nel menu di @ sta tra le Persone e sull'altro computer è uguale; scegliendo «Senza tipo» torna senza tipo (RB-122).
 - **CA-18.32** *Dato* «Usa Brainet» spento, *quando* apro Memodu, *allora* nella colonna non c'è la sezione Brainet e nelle Impostazioni il gruppo Brainet ha solo l'interruttore; *quando* lo accendo, *allora* la sezione compare tra CLOUD e LOCALE, senza +, con Entità e Calendario, e nelle Impostazioni compaiono gli stati delle evidenziature, senza «Mostra il Database» (RB-106).
-- **CA-18.33** *Dato* il Calendario e due note con pillole create oggi e una nota senza pillole né aree creata ieri, *allora* oggi ha un pallino solo e ieri nessuno; una nota con pillole messa nel Cestino non conta; oggi è evidenziato, i giorni dopo tenui, le frecce cambiano mese, un clic su un giorno non fa niente (RB-113, RB-127).
+- **CA-18.33** *Dato* il Calendario, una nota in Brainet creata oggi, una nota rimasta in CLOUD creata ieri e una nota in Brainet nel Cestino creata l'altro ieri, *allora* oggi ha un pallino solo e gli altri giorni nessuno; oggi è evidenziato, i giorni dopo tenui, le frecce cambiano mese, un clic su un giorno non fa niente (RB-113, RB-127, DEC-147).
 - **CA-18.34** *Dato* un computer con la 1.0.0 e uno aggiornato con lo stesso account, *quando* sul primo scrivo una nota Brainet, *allora* sul secondo arriva come nota di CLOUD in vista Markdown, senza titolo, nel giorno in cui è stata scritta, con pillole e aree; il primo continua a sincronizzare senza errori (RB-125, SF-33).
 - **CA-18.35** *Dato* Brainet acceso e una nota con pillole, aree e un allegato, *quando* spengo «Usa Brainet», *allora* non compare nessuna conferma, la sezione sparisce, nella nota pillole, aree e allegato si vedono ancora e @ e la selezione non aprono menu; sull'altro computer succede lo stesso; *quando* lo riaccendo, *allora* ritrovo entità e stati com'erano (RB-111).
-- **CA-18.36** *Dato* una nota con la pillola «Luca Bianchi» e l'area «il preventivo della serra», *quando* cerco «luca» o «preventivo» con Ctrl + K, *allora* la ricerca trova la nota; *quando* cerco «cita» o un pezzo di un codice, *allora* non la trova per i segni (RB-126).
+- **CA-18.36** *Dato* una nota in Brainet con la parola «cantina» e una nota di CLOUD con «preventivo», *quando* cerco con Ctrl + K, *allora* «preventivo» trova la nota di CLOUD con la frase senza codice, «cantina» non trova niente (RB-126, DEC-147).
 - **CA-18.37** *Dato* una nota con una pillola, *quando* apro Info, *allora* il segmento «Testo» è spento e sotto la riga Vista c'è «Questa nota usa Brainet: si vede solo in Markdown»; *quando* tolgo la pillola, *allora* il segmento torna disponibile; una nota senza segni passa a Testo come prima (RB-123).
 - **CA-18.38** *Dato* una nota in vista Testo, *quando* scrivo @ o seleziono una frase, *allora* non si apre nessun menu di Brainet e @ resta un carattere (RB-123).
 - **CA-18.39** *Dato* l'entità Serra citata in due note create in giorni diversi e legata a un'area in una terza, *quando* faccio clic su Serra in Entità, *allora* si apre la sua pagina con la testata (nome, tipo, «Nominata 3 volte · l'ultima il …») e i tre passaggi raggruppati per giorno dal più recente, ognuno con il titolo della nota (o le prime parole) e l'ora, la pillola o l'area evidenziata e i pallini degli stati; due pillole nello stesso paragrafo danno un passaggio solo (RB-124).
 - **CA-18.40** *Dato* la pagina di un'entità, *quando* faccio clic su un passaggio, *allora* si apre la nota con il cursore all'inizio di quel paragrafo; *quando* premo «Entità» o Esc, *allora* torno all'elenco (RB-124).
 - **CA-18.41** *Dato* un'entità che nessuna nota fuori dal Cestino nomina, *quando* apro la sua pagina, *allora* vedo «Mai nominata», «Nessuna nota parla ancora di «…».» e «Scrivi @ in una nota per citarla.» (RB-127).
 - **CA-18.42** *Dato* una pillola in una nota, *quando* ci faccio clic, *allora* si apre la pagina della sua entità.
-- **CA-18.43** *Dato* una copia di lavoro della 1.0.0 con tre note Brainet, una nel Cestino, con pillole, aree e un allegato, *quando* apro la versione nuova, *allora* in CLOUD ci sono due note nuove senza titolo in vista Markdown, con le date delle note Brainet, pillole, aree e allegato, e la terza è nel Cestino di CLOUD; entità e stati sono quelli di prima; sull'altro computer arrivano le stesse note, una volta sola (RB-125).
+- **CA-18.43** *Dato* una copia di lavoro della 1.0.0 con tre note Brainet (una nel Cestino) con pillole, aree e un allegato, *quando* apro la versione nuova, *allora* due note sono nel Journal, non nell'albero, con date, pillole, aree e allegato, e la terza è nel Cestino; entità e stati sono quelli di prima (RB-125, DEC-147).
+- **CA-18.44** *Dato* una nota di CLOUD in una cartella e Brainet acceso, *quando* faccio tasto destro › «Sposta in Brainet» (o Info › «Sposta in Brainet») e confermo con «Sposta», *allora* la nota sparisce dall'albero e dalla cartella, si apre il Journal con la nota in cima, e la ricerca non la trova più; con «Annulla» non cambia niente (RB-130, RB-132).
+- **CA-18.45** *Dato* Brainet spento, *allora* nel menu della nota e in Info «Sposta in Brainet» non c'è (RB-130).
+- **CA-18.46** *Dato* il Journal con due note, *allora* la più recente è in cima, con il giorno e l'ora sopra; scrivendo in una nota la modifica si salva da sola; tasto destro › «Elimina» la manda nel Cestino, e ripristinata torna nel Journal (RB-131).
+- **CA-18.47** *Dato* una nota di CLOUD in vista Markdown, *quando* scrivo @ o seleziono una frase, *allora* non si apre nessun menu di Brainet; trascinando o incollando un file si allega (RB-123, DEC-147).
+- **CA-18.48** *Dato* un'entità citata in una nota di CLOUD (scritta prima di DEC-147) e in una nota in Brainet, *allora* Entità la conta una volta sola, per la nota in Brainet (RB-127).
+- **CA-18.49** *Dato* entità di tipi diversi, *quando* apro Entità, *allora* le vedo divise per tipo, con il titolo del gruppo, nell'ordine Persone, Argomenti, Eventi, Oggetti, Senza tipo (gruppi vuoti nascosti); le persone come un cast, con la foto rotonda o le iniziali e il nome sotto; gli eventi con l'icona del calendario, gli argomenti con la lampadina (richiesta di Manuel Cucca del 16/10/2026; scritto dall'agente, approvato da Manuel Cucca lo stesso giorno).
+- **CA-18.50** *Dato* una persona nel cast, *quando* ci faccio clic, *allora* si apre la sua pagina; *quando* faccio tasto destro › «Tipo», *allora* posso cambiarne il tipo come dalla pillola (proposta dell'agente, approvata da Manuel Cucca il 16/10/2026).
 
 ---
 

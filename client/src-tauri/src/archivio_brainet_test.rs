@@ -56,8 +56,14 @@ impl Prova {
         p
     }
 
-    /// Una nota di CLOUD con questo testo.
+    /// Una nota in Brainet con questo testo (DEC-147): nata in CLOUD, poi spostata.
     fn nota(&mut self, testo: &str) -> Nota {
+        let n = self.nota_cloud(testo);
+        self.a().sposta_in_brainet(&n.id).unwrap()
+    }
+
+    /// Una nota di CLOUD, rimasta in CLOUD (DEC-147).
+    fn nota_cloud(&mut self, testo: &str) -> Nota {
         self.a()
             .crea(&DatiNuovaNota {
                 titolo: None,
@@ -354,8 +360,8 @@ fn calendario_un_pallino_per_giorno_senza_cestino() {
     // Il 14: una nota con la pillola, che poi va nel Cestino.
     let cestinata = p.nota(&cita(&luca));
     p.passa_giorni(1);
-    // Il 15: una nota senza Brainet.
-    p.nota("niente pillole");
+    // Il 15: una nota rimasta in CLOUD (DEC-147).
+    p.nota_cloud("rimasta in CLOUD");
     p.passa_giorni(1);
     // Il 16: due note con la pillola.
     p.nota(&cita(&luca));
@@ -407,10 +413,13 @@ fn spegnere_non_cancella_niente() {
 // ——— TC-230, CA-18.36 ———
 
 #[test]
-fn la_ricerca_trova_le_parole_e_non_i_segni() {
+fn la_ricerca_non_trova_le_note_in_brainet_e_nelle_altre_non_legge_i_segni() {
     let mut p = Prova::accesa();
     let luca = p.a().crea_entita("Luca Bianchi").unwrap();
-    let n = p.nota(&format!(
+    // In Brainet: la ricerca non la trova (RB-126, DEC-147).
+    let in_brainet = p.nota("il preventivo della cantina");
+    // Una nota di CLOUD con dei segni (scritta prima di DEC-147): si cerca senza i segni.
+    let n = p.nota_cloud(&format!(
         "Chiamata con {}: {}",
         cita(&luca),
         area("a1", &[], &[], "il preventivo della serra")
@@ -428,6 +437,11 @@ fn la_ricerca_trova_le_parole_e_non_i_segni() {
     assert!(cerca(&mut p, "luca"));
     assert!(cerca(&mut p, "preventivo"));
     assert!(!cerca(&mut p, "cita"));
+    let trovati = p
+        .a()
+        .cerca(&Richiesta { testo: "cantina".into(), ..Default::default() })
+        .unwrap();
+    assert!(trovati.iter().all(|r| r.id != in_brainet.id));
     assert!(!cerca(&mut p, &luca.id[..8]));
 }
 
@@ -453,9 +467,10 @@ fn la_pagina_dell_entita_per_giorno_un_passaggio_per_paragrafo() {
     let mut p = Prova::accesa();
     let serra = p.a().crea_entita("Serra").unwrap();
     let imp = p.a().crea_stato("Importante", "avviso").unwrap();
-    // Il 14 alle 10: una nota con due pillole nello stesso paragrafo e una in un altro.
+    // Il 14 alle 10: una nota con due pillole nello stesso paragrafo e una in un altro, dopo una
+    // riga vuota (DEC-146).
     let prima = p.nota(&format!(
-        "La {} e la {} grande\nMisurare la {}",
+        "La {} e la {} grande\n\nMisurare la {}",
         cita(&serra),
         cita(&serra),
         cita(&serra)
@@ -484,7 +499,7 @@ fn la_pagina_dell_entita_per_giorno_un_passaggio_per_paragrafo() {
     assert!(del_14[1].testo.starts_with("Misurare"));
     assert_eq!(
         del_14[1].inizio,
-        prima.contenuto.split('\n').next().unwrap().chars().count() + 1
+        prima.contenuto.split('\n').next().unwrap().encode_utf16().count() + 2
     );
 }
 
@@ -576,16 +591,30 @@ fn il_blocco_di_un_frammento_diventa_quello_di_una_nota() {
 }
 
 #[test]
-fn paragrafo_prende_la_riga() {
+fn paragrafo_prende_il_testo_tra_due_righe_vuote() {
+    // Un paragrafo su più righe si prende intero (DEC-146).
     assert_eq!(
-        paragrafo("uno\ndue tre\nquattro", 5),
-        (4, "due tre".to_string())
+        paragrafo("uno\n\ndue tre\nquattro\n\ncinque", 9),
+        (5, "due tre\nquattro".to_string())
     );
     assert_eq!(paragrafo("uno", 0), (0, "uno".to_string()));
+    // Le voci di elenco e i titoli sono una riga sola.
+    let testo = "# Spesa\n- pane\n- latte\n1. uova\nnota sotto";
+    assert_eq!(paragrafo(testo, 10), (8, "- pane".to_string()));
+    assert_eq!(paragrafo(testo, 0), (0, "# Spesa".to_string()));
+    assert_eq!(paragrafo(testo, 24), (23, "1. uova".to_string()));
+    assert_eq!(paragrafo(testo, 33), (31, "nota sotto".to_string()));
 }
 
 #[test]
-fn una_copia_di_lavoro_della_1_0_0_si_apre_con_le_note_brainet_in_cloud() {
+fn la_posizione_del_passaggio_si_conta_come_l_editor() {
+    // Un'emoji vale un carattere per il nucleo e due unità per JavaScript.
+    assert_eq!(utf16("😀 ciao", 2), 3);
+    assert_eq!(utf16("ciao", 4), 4);
+}
+
+#[test]
+fn una_copia_di_lavoro_della_1_0_0_si_apre_con_le_note_brainet_nel_journal() {
     let mut p = Prova::accesa();
     let luca = p.a().crea_entita("Luca").unwrap();
     let file = p.cartella.join(super::super::FILE_DATABASE);
@@ -598,6 +627,7 @@ fn una_copia_di_lavoro_della_1_0_0_si_apre_con_le_note_brainet_in_cloud() {
          ALTER TABLE brainet_citazioni RENAME COLUMN nota TO frammento;
          ALTER TABLE brainet_aree RENAME COLUMN nota TO frammento;
          ALTER TABLE brainet_aree_legami RENAME COLUMN nota TO frammento;
+         ALTER TABLE note DROP COLUMN brainet;
          PRAGMA user_version = 9;",
     )
     .unwrap();
@@ -609,6 +639,10 @@ fn una_copia_di_lavoro_della_1_0_0_si_apre_con_le_note_brainet_in_cloud() {
     drop(db);
     p.riapri();
     assert_eq!(p.a().leggi("f1").unwrap().contenuto, cita(&luca));
+    // Nel Journal, non nell'albero (RB-125, DEC-147).
+    assert!(p.a().leggi("f1").unwrap().brainet);
+    assert_eq!(p.a().elenca_journal().unwrap()[0].id, "f1");
+    assert!(p.a().elenca().unwrap().iter().all(|v| v.id != "f1"));
     assert_eq!(nominata(&mut p, &luca.id), 1);
     assert_eq!(
         p.a().calendario("2026-10").unwrap(),
@@ -616,4 +650,64 @@ fn una_copia_di_lavoro_della_1_0_0_si_apre_con_le_note_brainet_in_cloud() {
             giorno: "2026-10-10".into()
         }]
     );
+}
+
+#[test]
+fn il_nome_di_una_nota_senza_titolo_e_la_frase_della_ricerca_non_hanno_i_segni() {
+    let mut p = Prova::accesa();
+    let luca = p.a().crea_entita("Luca Bianchi").unwrap();
+    p.nota_cloud(&format!("Chiamata con {} {}", cita(&luca), area("a1", &[], &[&luca.id], "sul preventivo")));
+    let elenco = p.a().elenca().unwrap();
+    assert_eq!(elenco[0].anteprima, "Chiamata con Luca Bianchi sul preventivo");
+    let trovati = p.a().cerca(&Richiesta { testo: "preventivo".into(), ..Default::default() }).unwrap();
+    assert!(!trovati[0].estratto.contains('<'), "{}", trovati[0].estratto);
+}
+
+// ——— TC-240 … TC-242, DEC-147 ———
+
+#[test]
+fn spostata_in_brainet_la_nota_esce_dall_albero_e_va_nel_journal() {
+    let mut p = Prova::accesa();
+    let n = p
+        .a()
+        .crea(&DatiNuovaNota { titolo: Some("Spesa".into()), contenuto: Some("pane".into()), cartella: None })
+        .unwrap();
+    let spostata = p.a().sposta_in_brainet(&n.id).unwrap();
+    assert!(spostata.brainet);
+    assert_eq!((spostata.cartella.as_str(), spostata.vista.as_str()), ("", "markdown"));
+    assert!(p.a().elenca().unwrap().iter().all(|v| v.id != n.id));
+    assert_eq!(p.a().elenca_journal().unwrap().iter().map(|x| x.id.clone()).collect::<Vec<_>>(), [n.id.clone()]);
+    // Nel Cestino e ripristinata torna nel Journal (RB-131).
+    p.a().cestina_nota(&n.id).unwrap();
+    assert!(p.a().elenca_journal().unwrap().is_empty());
+    p.a().ripristina(&n.id, super::super::SeEsiste::Chiedi).unwrap();
+    assert_eq!(p.a().elenca_journal().unwrap().len(), 1);
+    assert!(p.a().elenca().unwrap().iter().all(|v| v.id != n.id));
+}
+
+#[test]
+fn spostare_in_brainet_con_brainet_spento_non_si_puo() {
+    let mut p = Prova::nuova();
+    let n = p.nota_cloud("pane");
+    assert!(matches!(p.a().sposta_in_brainet(&n.id), Err(Errore::BrainetSpento)));
+}
+
+#[test]
+fn le_note_di_cloud_non_contano_in_entita() {
+    let mut p = Prova::accesa();
+    let luca = p.a().crea_entita("Luca").unwrap();
+    p.nota_cloud(&cita(&luca));
+    assert_eq!(nominata(&mut p, &luca.id), 0);
+    p.nota(&cita(&luca));
+    assert_eq!(nominata(&mut p, &luca.id), 1);
+}
+
+#[test]
+fn il_journal_e_dalla_piu_recente() {
+    let mut p = Prova::accesa();
+    let prima = p.nota("prima");
+    p.passa_giorni(1);
+    let dopo = p.nota("dopo");
+    let ids: Vec<String> = p.a().elenca_journal().unwrap().into_iter().map(|n| n.id).collect();
+    assert_eq!(ids, [dopo.id, prima.id]);
 }

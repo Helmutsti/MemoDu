@@ -1,6 +1,6 @@
 # Brainet – Schermate
 
-<!-- Fasi 4 e 6 della guida. Per Brainet la Fase 4 in bianco e nero è saltata: si va direttamente ai mockup, fatti con i componenti della libreria (scelta di Manuel Cucca del 14/10/2026). Mockup nel file Mockup, blocco «FL-16 … FL-27 · Brainet (DEC-134, DEC-145)», in ordine di flusso. Rivisto dall'agente il 16/10/2026 per DEC-145 (Brainet dentro le note di CLOUD): schermate superate cancellate da Figma e segnate «rimosso», nuove SC-13 e Info con Testo spento, approvate da Manuel Cucca il 16/10/2026. Approvati da Manuel Cucca il 14/10/2026, con le proposte dell'agente (codici SC-10, SC-11, SC-12, testi delle conferme, parte Brainet del Cestino, icone e spunta nei menu); esportazioni in `immagini/`, una per mockup, con il nome della schermata. -->
+<!-- Fasi 4 e 6 della guida. Per Brainet la Fase 4 in bianco e nero è saltata: si va direttamente ai mockup, fatti con i componenti della libreria (scelta di Manuel Cucca del 14/10/2026). Mockup nel file Mockup, pagina «8 · Brainet», un blocco per flusso con le schermate numerate come passi (DEC-149). Rivisto dall'agente il 16/10/2026 per DEC-145 (Brainet dentro le note di CLOUD): schermate superate cancellate da Figma e segnate «rimosso», nuove SC-13 e Info con Testo spento, approvate da Manuel Cucca il 16/10/2026. Approvati da Manuel Cucca il 14/10/2026, con le proposte dell'agente (codici SC-10, SC-11, SC-12, testi delle conferme, parte Brainet del Cestino, icone e spunta nei menu); esportazioni in `immagini/`, una per mockup, con il nome della schermata. -->
 
 Brainet vive nella finestra principale: una sezione della colonna e le note di CLOUD in vista Markdown (SC-01), tre viste nell'area della nota (SC-11 Entità, SC-13 Pagina dell'entità, SC-12 Calendario), una riga di Info (SC-03) e un gruppo delle Impostazioni (SC-06). SC-10 Database e la parte di Brainet del Cestino (SC-04) sono tolte (DEC-145).
 
@@ -30,13 +30,31 @@ Link: `https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=` seguito dal
 
 ---
 
-## SC-10 – Database (FL-16)
-Tolto il 16/10/2026 (DEC-145): le note si leggono in CLOUD. Mockup: Database (rimosso) · tasto destro su una nota (rimosso).
+## SC-10 – Journal (FL-16, FL-28)
+**Flussi:** FL-16, FL-28 · **Componenti:** riga della colonna (voce Journal, icona libro aperto di CMP-02), testo della nota (CMP-20) con Brainet, menu (CMP-09), finestra di conferma (CMP-16), stato vuoto (CMP-19)
+
+Torna con DEC-147 (16/10/2026) al posto del Database: l'elenco delle note in Brainet (RB-131); si chiama Journal (DEC-148). Scritta dall'agente, approvata con i mockup da Manuel Cucca il 16/10/2026 («ok tutto vai avanti»).
+
+- **Mockup (fatti dall'agente il 16/10/2026, approvati da Manuel Cucca lo stesso giorno):** [Journal](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=331-13468) · [tasto destro su una nota di CLOUD con «Sposta in Brainet»](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=330-13224) · [conferma](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=330-13421) · [Info con «Sposta in Brainet»](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=331-13663); esportazioni `SC-10-journal-mockup.png`, `SC-01-brainet-sposta-in-brainet-menu-mockup.png`, `SC-01-brainet-sposta-in-brainet-conferma-mockup.png`, `SC-03-info-sposta-in-brainet-mockup.png`. Nel menu e in Info la voce è aggiunta a un'istanza staccata: il file dei mockup non ha ancora la versione nuova di Menu e Info della libreria (da aggiornare in Figma con «Aggiorna» delle librerie).
+
+| Azione | Come |
+|---|---|
+| Leggere e modificare | Le note in Brainet dalla più recente, con giorno e ora sopra; si modificano lì, con @, pillole, aree e allegati |
+| Eliminare | Tasto destro › «Elimina»: la nota va nel Cestino; ripristinata torna qui |
+| Spostare qui una nota | Dalla colonna o da Info: «Sposta in Brainet», con la conferma (RB-130) |
+
+### Stati della schermata
+| Stato | Descrizione | Testo mostrato |
+|---|---|---|
+| Vuoto | Nessuna nota in Brainet | «Nessuna nota in Brainet» · «Sposta una nota qui dal suo menu: tasto destro › «Sposta in Brainet».» |
+| Conferma | Prima di spostare | «Spostare la nota in Brainet?» · «La nota esce da CLOUD e dalla ricerca e non si riporta indietro. Nel Journal puoi collegarla a persone, oggetti e argomenti.» · «Annulla», «Sposta» |
 
 ---
 
 ## SC-11 – Entità (FL-19)
-**Flussi:** FL-19 · **Componenti:** menu, pannello a comparsa (come «Sposta in»), finestra di conferma, pillola del filtro della ricerca (CMP-13) per il tipo
+**Flussi:** FL-19 · **Componenti:** Riga dell'entità (CMP-41, con l'icona del tipo), Volto dell'entità (CMP-46), Titolo di sezione (CMP-39), menu, pannello a comparsa (come «Sposta in»), finestra di conferma, pillola del filtro della ricerca (CMP-13) per il tipo
+
+**Divisa per tipo** (richiesta di Manuel Cucca del 16/10/2026: «Le persone devono apparire come i personaggi del cast di un film con foto rotonda e nome sotto. se la foto manca allora le iniziali. Gli eventi/date con un icona di un calendario. I concetti/idee/pensieri/argomenti con una lampadina»): un gruppo per tipo con il titolo di sezione, nell'ordine di @ (Persone, Argomenti, Eventi, Oggetti, Senza tipo), i gruppi vuoti non si vedono. Le persone in una griglia di Volti (CMP-46); gli altri tipi in righe (CMP-41), con l'icona del calendario per gli eventi e la lampadina per gli argomenti al posto della foto che manca. Proposte dell'agente, approvate da Manuel Cucca il 16/10/2026: ordine dei gruppi, Oggetti e Senza tipo senza icona, nel cast niente pillola del tipo né «nominato…» (il tipo si cambia con tasto destro › «Tipo ›», il resto è nel suggerimento del mouse). Mockup [Entità](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=264-10280) ridisegnato dall'agente il 16/10/2026 con i componenti nuovi e approvato (esportazione `SC-11-entita-mockup.png`); anche le altre schermate di Entità (tipo, tasto destro con «Tipo ›», unione) hanno l'elenco per tipo.
 
 - **Mockup (approvati il 14/10/2026):** [Entità](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=264-10280) · [tasto destro su una riga](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=287-11241) · [Unisci a…](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=287-12290) · [conferma dell'unione](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=287-11538) · [scelta del tipo](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=316-14044) (15/10/2026, RB-122)
 

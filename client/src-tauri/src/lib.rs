@@ -334,6 +334,8 @@ pub fn run() {
             brainet::leggi_entita,
             brainet::elenca_entita,
             brainet::passaggi_entita,
+            brainet::sposta_in_brainet,
+            brainet::elenca_journal,
             brainet::anteprima_unione,
             brainet::unisci_entita,
             brainet::scegli_foto,

@@ -8,22 +8,31 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 ## [Non rilasciato]
 
 ### Aggiunto
-- Brainet: in Entità un clic sul tipo accanto al nome lo cambia in persona, argomento, evento o oggetto, o lo riporta a «Senza tipo»
+- Brainet: «Sposta in Brainet» nel menu di una nota e in Info. La nota esce dall'albero e dalla ricerca e va nel Journal; lo spostamento è senza ritorno
+- Brainet: il Journal, con tutte le note in Brainet dalla più recente, da leggere e modificare lì
 - Brainet: la pagina di un'entità, con un clic su una riga di Entità o su una pillola: i paragrafi delle note che la nominano, giorno per giorno; un clic apre la nota proprio lì
+- Brainet: in Entità un clic sul tipo accanto al nome lo cambia
+- Brainet: Entità divisa per tipo; le persone si vedono come un cast, con la foto rotonda o le iniziali e il nome sotto, gli eventi con il calendario e gli argomenti con la lampadina; il tipo si cambia anche con il tasto destro
 - Si allegano foto e documenti in tutte le note in vista Markdown, trascinandoli o incollandoli, anche con Brainet spento
 
 ### Cambiato
-- Brainet funziona nelle note di CLOUD: in vista Markdown `@`, le pillole, le frasi evidenziate e gli allegati si usano nelle note di sempre, e la colonna tiene solo Entità e Calendario
-- Le note scritte in Brainet diventano note di CLOUD in vista Markdown, nel giorno in cui erano state scritte, con pillole, frasi evidenziate e allegati
+- Le note nascono tutte in CLOUD: il + accanto a Brainet non c'è più, e le note si portano in Brainet con «Sposta in Brainet»
+- Le note scritte in Brainet con la versione precedente si ritrovano nel Journal
+- Dopo `@` il nome può avere fino a tre parole, per esempio «Luca Bianchi»
+- Una frase evidenziata prende il colore del suo stato, così non si confonde con una pillola
 - Il Calendario di Brainet ha un pallino solo per giorno
-- La ricerca trova anche le note con Brainet, per il nome delle pillole e le parole evidenziate
-- Una nota con pillole, frasi evidenziate o allegati resta in vista Markdown: in Info «Testo» è spento
 - Spegnere Brainet non cancella più niente e non chiede conferma
 
+### Corretto
+- Tornando a una nota dal Cestino, dalle Impostazioni o da Brainet si vede sempre l'ultimo testo scritto
+- Un allegato oltre 25 MB viene rifiutato subito, senza aspettare
+- Il nome di una nota senza titolo e la frase nei risultati della ricerca non mostrano più codice
+- Brainet: nel Journal, sopra una nota con la data scelta in Info, si vede quella data
+- Brainet: la pagina di un'entità mostra il paragrafo intero, non solo la riga, e il clic apre la nota nel punto giusto anche con un'emoji prima
+
 ### Tolto
-- Il + accanto a Brainet, il Database e «Mostra il Database»
-- «Importa in Brainet» nel menu delle note
-- La parte di Brainet nel Cestino: le note con Brainet stanno con le altre
+- «Mostra il Database» nelle Impostazioni
+- La parte di Brainet nel Cestino: le note in Brainet stanno con le altre
 
 ## [1.0.0] – 2026-10-15
 

@@ -153,11 +153,16 @@ export const Editor = forwardRef<ManigliaEditor, Proprieta>(function Editor(
     vista.current = view;
     onVista?.(view);
     avvisaFormato(view);
+    if (focus) view.focus();
+    // Dopo il fuoco: nella finestra del Mac prendere il fuoco riporta il cursore all'inizio.
     if (cursore !== undefined) {
       const pos = Math.min(Math.max(cursore, 0), view.state.doc.length);
       view.dispatch({ selection: { anchor: pos }, scrollIntoView: true });
+      requestAnimationFrame(() => {
+        if (vista.current === view)
+          view.dispatch({ selection: { anchor: pos }, scrollIntoView: true });
+      });
     }
-    if (focus) view.focus();
     return () => {
       vista.current = null;
       onVista?.(null);

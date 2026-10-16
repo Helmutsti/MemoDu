@@ -1,18 +1,36 @@
-// Le viste di Brainet nell'area della nota (RF-18, DEC-145): Entità (SC-11), la pagina di
-// un'entità (SC-13) e il Calendario (SC-12). Le note si scrivono in CLOUD. Si aggiornano quando
+// Le viste di Brainet nell'area della nota (RF-18, DEC-145, DEC-147): il Journal (SC-10),
+// Entità (SC-11), la pagina di un'entità (SC-13) e il Calendario (SC-12). Le note nascono in CLOUD
+// e arrivano nel Journal con «Sposta in Brainet». Si aggiornano quando
 // la sincronizzazione porta modifiche di Brainet (`versione` cambia).
 
 import {
+  BookOpen,
   Brain,
+  Calendar,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
   FileText,
   FolderInput,
   Image as ImageIcon,
+  Lightbulb,
+  Tag,
+  Trash2,
+  type LucideIcon,
 } from "lucide-react";
-import { Fragment, useEffect, useState, type ReactElement, type ReactNode } from "react";
-import { ErroreApi } from "../api";
+import {
+  Fragment,
+  useEffect,
+  useState,
+  type KeyboardEvent as EventoTastiera,
+  type MouseEvent as EventoMouse,
+  type ReactElement,
+  type ReactNode,
+} from "react";
+import type { Nota } from "@memodu/condiviso";
+import { api, ErroreApi } from "../api";
+import { quando, scriviGiorno } from "../date";
+import { CodaSalvataggio } from "../salvataggio";
 import { AreaScorrevole } from "../componenti/AreaScorrevole";
 import { FinestraConferma } from "../componenti/FinestraConferma";
 import { Icona } from "../componenti/Icona";
@@ -29,6 +47,9 @@ import {
   type TipoEntita,
   type VoceEntita,
 } from "./api";
+import { EditorBrainet } from "./EditorBrainet";
+import { coloreArea } from "./estensione";
+import { pulisciDopo } from "./salvataggio";
 import type { VistaBrainet } from "./SezioneBrainet";
 import "../componenti/Ricerca.css";
 import "./brainet.css";
@@ -46,6 +67,8 @@ interface Proprieta {
   onApri: (vista: VistaBrainet) => void;
   /** Clic su un passaggio: la nota, con il cursore all'inizio del paragrafo (RB-124). */
   onApriNota: (id: string, inizio: number) => void;
+  /** Una nota del Journal è andata nel Cestino: la colonna aggiorna il numero. */
+  onCestino?: () => void;
 }
 
 export function VisteBrainet({
@@ -55,7 +78,18 @@ export function VisteBrainet({
   onAvviso,
   onApri,
   onApriNota,
+  onCestino = () => {},
 }: Proprieta): ReactElement {
+  if (vista === "journal")
+    return (
+      <Journal
+        versione={versione}
+        esegui={esegui}
+        onAvviso={onAvviso}
+        onApriEntita={(id) => onApri(`entita:${id}`)}
+        onCestino={onCestino}
+      />
+    );
   if (vista.startsWith("entita:"))
     return (
       <PaginaEntita
@@ -79,6 +113,147 @@ export function VisteBrainet({
 }
 
 type Esegui = Proprieta["esegui"];
+
+// ——— Journal (SC-10, RB-131, DEC-147) ———
+
+/** Sopra la nota del Journal: la data scelta in Info, se c'è, senza ora come nella pagina
+ * dell'entità; se no il giorno e l'ora in cui è nata (RB-131). È la stessa data dell'ordine. */
+export function quandoNota(nota: Nota, adesso = new Date()): string {
+  if (!nota.creataScelta) return quando(nota.creata, adesso);
+  const due = (n: number) => String(n).padStart(2, "0");
+  const oggi = `${adesso.getFullYear()}-${due(adesso.getMonth() + 1)}-${due(adesso.getDate())}`;
+  return nota.creataScelta === oggi ? "oggi" : `il ${scriviGiorno(nota.creataScelta)}`;
+}
+
+/** Una nota del Journal: il giorno e l'ora sopra, il testo che si modifica lì. */
+function NotaDelJournal({
+  nota,
+  esegui,
+  onMenu,
+  onAvviso,
+  onApriEntita,
+}: {
+  nota: Nota;
+  esegui: Esegui;
+  onMenu: (x: number, y: number) => void;
+  onAvviso: (testo: string) => void;
+  onApriEntita: (id: string) => void;
+}): ReactElement {
+  // Ogni nota si salva da sola, come quella aperta (RB-06); chiudendo il Journal si scrive
+  // quello che aspetta e poi si puliscono gli allegati tolti (RB-121).
+  const [coda] = useState(
+    () =>
+      new CodaSalvataggio(
+        api.salva,
+        () => {},
+        // Come nel resto della finestra: l'avviso o SC-07 (RB-61).
+        (e) => void esegui(() => Promise.reject(e)),
+      ),
+  );
+  useEffect(() => () => pulisciDopo(coda.scarica()), [coda]);
+  return (
+    <li
+      className="nota-journal"
+      onContextMenu={(e) => {
+        e.preventDefault();
+        onMenu(e.clientX, e.clientY);
+      }}
+    >
+      <span className="nota-journal-quando interfaccia-dettaglio">{quandoNota(nota)}</span>
+      <EditorBrainet
+        testo={nota.contenuto}
+        onModifica={(contenuto) => coda.modifica(nota.id, { contenuto })}
+        onAvviso={onAvviso}
+        onApriEntita={onApriEntita}
+      />
+    </li>
+  );
+}
+
+function Journal({
+  versione,
+  esegui,
+  onAvviso,
+  onApriEntita,
+  onCestino,
+}: {
+  versione: number;
+  esegui: Esegui;
+  onAvviso: (testo: string) => void;
+  onApriEntita: (id: string) => void;
+  onCestino: () => void;
+}): ReactElement {
+  const [note, setNote] = useState<Nota[] | null>(null);
+  const [menu, setMenu] = useState<{ id: string; x: number; y: number } | null>(null);
+  const [rilette, setRilette] = useState(0);
+  useEffect(() => {
+    let vivo = true;
+    void esegui(() => brainet.elencaJournal()).then((n) => {
+      if (vivo && n) setNote(n);
+    });
+    return () => {
+      vivo = false;
+    };
+  }, [esegui, versione, rilette]);
+
+  if (note === null) return <div className="area-nota-vuota" />;
+  if (note.length === 0) {
+    return (
+      <div className="area-nota-vuota">
+        <StatoVuoto
+          icona={BookOpen}
+          titolo="Nessuna nota in Brainet"
+          testo="Sposta una nota qui dal suo menu: tasto destro › «Sposta in Brainet»."
+        />
+      </div>
+    );
+  }
+  const voci = (id: string): VoceMenu[] => [
+    {
+      tipo: "voce",
+      etichetta: "Elimina",
+      icona: Trash2,
+      errore: true,
+      azione: () =>
+        void esegui(() => api.cestinaNota(id)).then(() => {
+          onCestino();
+          setRilette((n) => n + 1);
+        }),
+    },
+  ];
+  return (
+    <section className="vista-brainet" aria-labelledby="journal-titolo">
+      <AreaScorrevole className="vista-brainet-scorrimento">
+        <div className="vista-brainet-corpo">
+          <h1 id="journal-titolo" className="interfaccia-titolo-schermata">
+            Journal
+          </h1>
+          <ul className="journal-elenco">
+            {note.map((n) => (
+              <NotaDelJournal
+                key={`${n.id}:${versione}`}
+                nota={n}
+                esegui={esegui}
+                onMenu={(x, y) => setMenu({ id: n.id, x, y })}
+                onAvviso={onAvviso}
+                onApriEntita={onApriEntita}
+              />
+            ))}
+          </ul>
+        </div>
+      </AreaScorrevole>
+      {menu && (
+        <Menu
+          voci={voci(menu.id)}
+          etichetta="Nota in Brainet"
+          x={menu.x}
+          y={menu.y}
+          onChiudi={() => setMenu(null)}
+        />
+      )}
+    </section>
+  );
+}
 
 // ——— Entità (SC-11) ———
 
@@ -177,7 +352,32 @@ function EntitaBrainet({
           }
         }).then(() => setRilette((n) => n + 1)),
     },
+    // Il tipo anche da qui: le persone nel cast non hanno la pillola (CMP-46).
+    { tipo: "voce", etichetta: "Tipo", icona: Tag, sottomenu: vociTipo(e) },
   ];
+
+  // Riga o volto: un clic apre la pagina dell'entità (FL-26), la pillola del tipo no; tasto destro
+  // o il tasto Menu aprono il menu dell'entità.
+  const apribile = (e: Entita) => ({
+    onClick: (ev: EventoMouse<HTMLLIElement>) => {
+      if ((ev.target as Element).closest("button")) return;
+      onApriEntita(e.id);
+    },
+    onContextMenu: (ev: EventoMouse<HTMLLIElement>) => {
+      ev.preventDefault();
+      setMenu({ entita: e, x: ev.clientX, y: ev.clientY });
+    },
+    onKeyDown: (ev: EventoTastiera<HTMLLIElement>) => {
+      if (ev.key === "Enter" && ev.target === ev.currentTarget) {
+        ev.preventDefault();
+        onApriEntita(e.id);
+      } else if (ev.key === "ContextMenu" || (ev.shiftKey && ev.key === "F10")) {
+        ev.preventDefault();
+        const r = ev.currentTarget.getBoundingClientRect();
+        setMenu({ entita: e, x: r.left, y: r.bottom });
+      }
+    },
+  });
 
   // Clic sul tipo: i tipi nell'ordine di @, «Senza tipo» in fondo, spuntato quello attuale (RB-122).
   const vociTipo = (e: Entita): VoceMenu[] => {
@@ -233,66 +433,100 @@ function EntitaBrainet({
           <h1 id="entita-titolo" className="interfaccia-titolo-schermata">
             Entità
           </h1>
-          <ul className="entita-elenco">
-            {voci.map((v) => (
-              <li
-                key={v.entita.id}
-                className="riga-entita riga-entita-apribile"
-                tabIndex={0}
-                // Un clic sulla riga apre la pagina dell'entità (FL-26); la pillola del tipo no.
-                onClick={(ev) => {
-                  if ((ev.target as Element).closest("button")) return;
-                  onApriEntita(v.entita.id);
-                }}
-                onContextMenu={(ev) => {
-                  ev.preventDefault();
-                  setMenu({ entita: v.entita, x: ev.clientX, y: ev.clientY });
-                }}
-                onKeyDown={(ev) => {
-                  if (ev.key === "Enter" && ev.target === ev.currentTarget) {
-                    ev.preventDefault();
-                    onApriEntita(v.entita.id);
-                  } else if (ev.key === "ContextMenu" || (ev.shiftKey && ev.key === "F10")) {
-                    ev.preventDefault();
-                    const r = ev.currentTarget.getBoundingClientRect();
-                    setMenu({ entita: v.entita, x: r.left, y: r.bottom });
-                  }
-                }}
-              >
-                {v.entita.foto && (
-                  <img
-                    className="riga-entita-foto"
-                    src={`data:image/jpeg;base64,${v.entita.foto}`}
-                    alt=""
-                  />
+          {[...TIPI_IN_ORDINE, null].map((tipo) => {
+            const gruppo = voci.filter((v) => v.entita.tipo === tipo);
+            if (!gruppo.length) return null;
+            const titolo = TITOLO_TIPO[tipo ?? "nessuno"];
+            return (
+              <section key={tipo ?? "nessuno"} className="entita-gruppo" aria-label={titolo}>
+                <h2 className="menu-titolo interfaccia-titolo-sezione">{titolo}</h2>
+                {tipo === "persona" ? (
+                  // Le persone come il cast di un film: foto tonda o iniziali, il nome sotto (CMP-46).
+                  <ul className="entita-cast">
+                    {gruppo.map((v) => (
+                      <li
+                        key={v.entita.id}
+                        className="volto-entita"
+                        tabIndex={0}
+                        title={dettagliEntita(v)}
+                        {...apribile(v.entita)}
+                      >
+                        {v.entita.foto ? (
+                          <img
+                            className="volto-entita-foto"
+                            src={`data:image/jpeg;base64,${v.entita.foto}`}
+                            alt=""
+                          />
+                        ) : (
+                          <span
+                            className="volto-entita-iniziali nota-sottotitolo"
+                            aria-hidden="true"
+                          >
+                            {iniziali(v.entita.nome)}
+                          </span>
+                        )}
+                        <span className="volto-entita-nome interfaccia-controllo">
+                          {v.entita.nome}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <ul className="entita-elenco">
+                    {gruppo.map((v) => {
+                      const icona = ICONA_TIPO[v.entita.tipo ?? "nessuno"];
+                      return (
+                        <li
+                          key={v.entita.id}
+                          className="riga-entita riga-entita-apribile"
+                          tabIndex={0}
+                          {...apribile(v.entita)}
+                        >
+                          {v.entita.foto ? (
+                            <img
+                              className="riga-entita-foto"
+                              src={`data:image/jpeg;base64,${v.entita.foto}`}
+                              alt=""
+                            />
+                          ) : (
+                            icona && (
+                              <span className="riga-entita-icona" aria-hidden="true">
+                                <Icona di={icona} misura={16} />
+                              </span>
+                            )
+                          )}
+                          <span className="riga-entita-testi">
+                            <span className="interfaccia-controllo">{v.entita.nome}</span>
+                            <span className="riga-entita-dettagli interfaccia-dettaglio">
+                              {dettagliEntita(v)}
+                            </span>
+                          </span>
+                          <button
+                            type="button"
+                            className="filtro-ricerca interfaccia-controllo"
+                            aria-haspopup="menu"
+                            aria-expanded={sceltaTipo?.entita.id === v.entita.id}
+                            aria-label={`Tipo di ${v.entita.nome}: ${TITOLO_TIPO_SINGOLARE[v.entita.tipo ?? "nessuno"]}`}
+                            onClick={(ev) =>
+                              setSceltaTipo({
+                                entita: v.entita,
+                                ancora: ev.currentTarget.getBoundingClientRect(),
+                              })
+                            }
+                          >
+                            {TITOLO_TIPO_SINGOLARE[v.entita.tipo ?? "nessuno"]}
+                            <span className="filtro-ricerca-freccia" aria-hidden="true">
+                              <Icona di={ChevronDown} misura={12} />
+                            </span>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
                 )}
-                <span className="riga-entita-testi">
-                  <span className="interfaccia-controllo">{v.entita.nome}</span>
-                  <span className="riga-entita-dettagli interfaccia-dettaglio">
-                    {dettagliEntita(v)}
-                  </span>
-                </span>
-                <button
-                  type="button"
-                  className="filtro-ricerca interfaccia-controllo"
-                  aria-haspopup="menu"
-                  aria-expanded={sceltaTipo?.entita.id === v.entita.id}
-                  aria-label={`Tipo di ${v.entita.nome}: ${TITOLO_TIPO_SINGOLARE[v.entita.tipo ?? "nessuno"]}`}
-                  onClick={(ev) =>
-                    setSceltaTipo({
-                      entita: v.entita,
-                      ancora: ev.currentTarget.getBoundingClientRect(),
-                    })
-                  }
-                >
-                  {TITOLO_TIPO_SINGOLARE[v.entita.tipo ?? "nessuno"]}
-                  <span className="filtro-ricerca-freccia" aria-hidden="true">
-                    <Icona di={ChevronDown} misura={12} />
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
+              </section>
+            );
+          })}
         </div>
       </AreaScorrevole>
       {menu && (
@@ -363,6 +597,24 @@ const TITOLO_TIPO_SINGOLARE: Record<keyof typeof TITOLO_TIPO, string> = {
 
 /** L'ordine dei tipi nel menu di @ (CMP-09 Suggerimenti), anche per «Unisci a…» e il tipo. */
 const TIPI_IN_ORDINE: TipoEntita[] = ["persona", "argomento", "evento", "oggetto"];
+/** L'icona della riga per tipo: calendario per gli eventi, lampadina per gli argomenti (SC-11). */
+const ICONA_TIPO: Record<TipoEntita | "nessuno", LucideIcon | null> = {
+  persona: null,
+  argomento: Lightbulb,
+  evento: Calendar,
+  oggetto: null,
+  nessuno: null,
+};
+
+/** «Luca Bianchi» → «LB», «Giorgio» → «G»: al posto della foto che manca (CMP-46). */
+export function iniziali(nome: string): string {
+  const parole = nome.trim().split(/\s+/).filter(Boolean);
+  return parole
+    .slice(0, 2)
+    .map((p) => Array.from(p)[0] ?? "")
+    .join("")
+    .toLocaleUpperCase("it-IT");
+}
 /** Tra la pillola del tipo e il suo menu, come per i filtri della ricerca (CMP-13). */
 const DISTANZA_MENU = 8;
 
@@ -402,6 +654,7 @@ function Paragrafo({
 }): ReactElement {
   const pezzi: ReactNode[] = [];
   const aperte = new Map<string, string[]>();
+  const colori = Object.fromEntries(stati.map((s) => [s.id, s.colore]));
   let ultimo = 0;
   const testoPiano = (fino: number) => {
     if (fino <= ultimo) return;
@@ -409,7 +662,11 @@ function Paragrafo({
     if (t)
       pezzi.push(
         aperte.size ? (
-          <mark key={pezzi.length} className="bn-area">
+          // L'area prende il colore del primo stato della prima area aperta (CMP-40).
+          <mark
+            key={pezzi.length}
+            className={`bn-area bn-area-${coloreArea([...aperte.values()][0] ?? [], colori)}`}
+          >
             {t}
           </mark>
         ) : (

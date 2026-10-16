@@ -94,13 +94,20 @@ describe("EditorBrainet (RF-18)", () => {
   it("@ apre i suggerimenti per tipo; Invio sceglie e il nome diventa una pillola (CA-18.3)", async () => {
     const { container, view, ultimo } = apri();
     scrivi(view, "Chiamata con @lu");
-    expect(await screen.findByText("Persone")).toBeInTheDocument();
-    expect(screen.getByText("Luca Bianchi")).toBeInTheDocument();
+    // Con tutte le prove insieme il computer è carico: si aspetta un po' di più.
+    const attesa = { timeout: 3000 };
+    expect(await screen.findByText("Persone", {}, attesa)).toBeInTheDocument();
+    expect(await screen.findByText("Luca Bianchi", {}, attesa)).toBeInTheDocument();
     fireEvent.keyDown(window, { key: "Enter" });
-    await waitFor(() =>
-      expect(container.querySelector(".bn-collegamento")?.textContent).toBe("Luca Bianchi"),
+    await waitFor(
+      () => expect(container.querySelector(".bn-collegamento")?.textContent).toBe("Luca Bianchi"),
+      attesa,
     );
-    expect(ultimo()).toBe(`Chiamata con <cita e="${LUCA.id}">Luca Bianchi</cita> `);
+    // Il testo salvato può arrivare un attimo dopo la pillola sullo schermo.
+    await waitFor(
+      () => expect(ultimo()).toBe(`Chiamata con <cita e="${LUCA.id}">Luca Bianchi</cita> `),
+      attesa,
+    );
   });
 
   it("Backspace e frecce della tastiera trattano la pillola come un carattere solo (CA-18.5)", () => {
@@ -126,6 +133,71 @@ describe("EditorBrainet (RF-18)", () => {
     await waitFor(() =>
       expect(ultimo()).toContain('<cita e="44444444-4444-4444-8444-444444444444">Mario</cita>'),
     );
+  });
+
+  it("il nome dopo @ può avere spazi: «Crea «Luca Rossi»»; alla quarta parola il menu si chiude", async () => {
+    const { view, ultimo } = apri();
+    scrivi(view, "pranzo con @Luca Rossi");
+    fireEvent.click(await screen.findByText("Crea «Luca Rossi»"));
+    await waitFor(() =>
+      expect(ultimo()).toContain(
+        '<cita e="44444444-4444-4444-8444-444444444444">Luca Rossi</cita>',
+      ),
+    );
+    scrivi(view, "e @uno due tre quattro");
+    await waitFor(() => expect(screen.queryByRole("menu")).toBeNull());
+  });
+
+  it("dopo una pillola il menu di @ si riapre", async () => {
+    const { view } = apri();
+    scrivi(view, "con @Mario");
+    fireEvent.click(await screen.findByText("Crea «Mario»"));
+    await waitFor(() => expect(screen.queryByRole("menu")).toBeNull());
+    scrivi(view, "e @gio");
+    expect(await screen.findByText("Giorgio")).toBeInTheDocument();
+  });
+
+  it("cancellata una pillola, una @ nello stesso punto riapre il menu", async () => {
+    const { container, view } = apri();
+    scrivi(view, "con @lu");
+    fireEvent.keyDown(window, { key: "Enter" });
+    await waitFor(() => expect(container.querySelector(".bn-collegamento")).not.toBeNull());
+    const cm = container.querySelector(".cm-content") as HTMLElement;
+    fireEvent.keyDown(cm, { key: "Backspace", code: "Backspace", keyCode: 8 });
+    fireEvent.keyDown(cm, { key: "Backspace", code: "Backspace", keyCode: 8 });
+    await waitFor(() => expect(container.querySelector(".bn-collegamento")).toBeNull());
+    scrivi(view, "@lu");
+    expect(await screen.findByText("Luca Bianchi")).toBeInTheDocument();
+  });
+
+  it("riselezionando la frase di un'area si riapre il suo menu, senza un'area nuova sopra", async () => {
+    const testo = `il ${segnoApre("a1", [IMPORTANTE.id], [])}preventivo${segnoChiude("a1")} arriva`;
+    const { container, view } = apri(testo);
+    const da = testo.indexOf("preventivo");
+    act(() => {
+      view.focus();
+      view.dispatch({ selection: { anchor: da, head: da + "preventivo".length } });
+    });
+    fireEvent.mouseUp(container.querySelector(".editor-brainet")!);
+    const importante = await screen.findByRole("menuitemcheckbox", { name: "Importante" });
+    expect(importante).toHaveAttribute("aria-checked", "true");
+  });
+
+  it("in una nota di CLOUD (non attivo) @ non apre il menu e la pillola non apre l'entità (DEC-147)", async () => {
+    const onApriEntita = vi.fn();
+    const { container } = render(
+      <EditorBrainet
+        testo=""
+        onModifica={() => {}}
+        attivo={false}
+        onApriEntita={onApriEntita}
+        focus
+      />,
+    );
+    const view = EditorView.findFromDOM(container.querySelector(".cm-editor") as HTMLElement)!;
+    scrivi(view, "con @lu");
+    await new Promise((r) => setTimeout(r, 50));
+    expect(screen.queryByRole("menu")).toBeNull();
   });
 
   it("Esc chiude il menu di @ senza scegliere", async () => {

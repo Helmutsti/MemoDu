@@ -56,7 +56,7 @@ Quando lavori con una persona su una fase della guida:
 ## Disegni
 Wireframe, componenti e mockup si disegnano nello strumento di design; nel repository vanno il link al frame, un'esportazione in `docs/moduli/<modulo>/immagini/` e tutte le decisioni. Nessuna decisione vive solo nello strumento di design: vedi "Disegni" nella guida.
 
-Nei file Figma dei wireframe e dei mockup le schermate stanno in una pagina sola, in un blocco (sezione) per flusso, uno sotto l'altro in ordine di flusso, con l'ultimo lavoro in fondo; dentro il blocco le schermate stanno affiancate, ognuna con la sua didascalia sopra. Le proposte già decise e le schermate superate si cancellano, e nei documenti il loro collegamento si segna «rimosso» (scelta di Manuel Cucca del 14/10/2026).
+Nel file Figma dei mockup le schermate stanno in una pagina per area dell'app; dentro la pagina un blocco (sezione) per flusso, uno sotto l'altro; dentro il blocco le schermate stanno affiancate nell'ordine dei passi del flusso, ognuna con il nome «N · cosa succede» e la didascalia sopra che dice cosa fa la persona e cosa vede (DEC-149, scelta di Manuel Cucca del 16/10/2026). Il file dei wireframe resta in una pagina sola, un blocco per flusso. Le proposte già decise e le schermate superate si cancellano, e nei documenti il loro collegamento si segna «rimosso» (scelta di Manuel Cucca del 14/10/2026).
 
 ## Regole sui registri
 - Nei registri si aggiunge, non si cancella.

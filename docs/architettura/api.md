@@ -601,6 +601,8 @@ Comandi del nucleo (`client/src-tauri/src/brainet.rs`, regole in `archivio_brain
 | `crea_entita` | `nome` | Entità senza tipo; un nome che c'è già dà quella | `400` vuoto o oltre 200 caratteri | FL-17, RB-105 |
 | `leggi_entita` | `id` | Entità, seguendo le unioni | `404` | FL-17 |
 | `elenca_entita` | — | `{ entita, nominata, ultimaVolta }[]` (`ultimaVolta` è il giorno AAAA-MM-GG della nota), dalla nominata più di recente; solo note fuori dal Cestino | — | FL-19, RB-127 |
+| `sposta_in_brainet` | `id` | Nota con `brainet: true`, senza cartella, in vista Markdown | `404`, `409` Brainet spento | FL-28, RB-130 |
+| `elenca_journal` | — | Nota[] in Brainet fuori dal Cestino, dalla più recente | `409` Brainet spento | FL-28, RB-131 |
 | `passaggi_entita` | `id` | `{ entita, nominata, ultimaVolta, giorni: { giorno, passaggi: { nota, titolo, ora, testo, inizio }[] }[] }`, tutti i passaggi; `ultimaVolta` è un giorno AAAA-MM-GG | `404` | FL-26, RB-124 |
 | `anteprima_unione` | `da`, `verso` | `{ citazioni, aree }` | `404`, `400` stessa entità | FL-19, RB-108 |
 | `unisci_entita` | `da`, `verso` | `{ citazioni, aree }` spostate | `404`, `400` stessa entità | FL-19, RB-108 |
@@ -614,6 +616,7 @@ Comandi del nucleo (`client/src-tauri/src/brainet.rs`, regole in `archivio_brain
 Tolti con DEC-145: `mostra_database`, `crea_frammento`, `salva_frammento`, `leggi_frammento`, `elenca_frammenti`, `elimina_frammento`, `importa_in_brainet`.
 
 - **Entità:** `{ id, nome, tipo, foto }` (foto JPEG in base64 o null). **Stato:** `{ id, nome, colore, ordine }`. Nel passaggio `testo` è il paragrafo con i segni, `inizio` la sua posizione nella nota (per aprirla con il cursore lì), `ora` l'ora di creazione della nota nel fuso del computer, `titolo` il titolo o le prime parole.
+- La Nota ha in più `brainet` (true solo per le note in Brainet, DEC-147); `elenca`, `albero` e `cerca` non le restituiscono.
 - `cambia_vista` (note) a `testo` per una nota con dei segni risponde `409` con `motivo: "brainet"` (RB-123); `salva_nota` rifà l'indice di Brainet.
 - `togli_stato` toglie lo stato dai segni `<area>` di tutte le note che lo usano, anche nel Cestino (o lo sostituisce), e le aree rimaste senza legami spariscono (RB-110).
 - Evento di sincronizzazione verso l'interfaccia: `{ tipo: "brainet" }`, quando arrivano modifiche di entità, stati o note con i segni.

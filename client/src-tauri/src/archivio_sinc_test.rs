@@ -581,6 +581,7 @@ fn brainet_arriva_sull_altro_computer() {
             cartella: None,
         })
         .unwrap();
+    let n = a.a.sposta_in_brainet(&n.id).unwrap();
     a.sincronizza(&mut s);
     b.sincronizza(&mut s);
     // L'impostazione è arrivata: Brainet è acceso anche su B, con tutto quanto.
@@ -655,6 +656,7 @@ fn brainet_spento_da_un_altro_computer_non_cancella_niente() {
             cartella: None,
         })
         .unwrap();
+    let n = a.a.sposta_in_brainet(&n.id).unwrap();
     a.sincronizza(&mut s);
     b.sincronizza(&mut s);
     a.a.spegni_brainet().unwrap();

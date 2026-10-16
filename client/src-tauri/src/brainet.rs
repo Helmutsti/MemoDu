@@ -7,7 +7,7 @@ use tauri_plugin_dialog::DialogExt;
 use crate::archivio::brainet::{
     Entita, GiornoCalendario, PaginaEntita, Stato as StatoEvidenziatura, StatoBrainet, StatoTolto, Unione, VoceEntita,
 };
-use crate::archivio::{id_valido, Errore, Esito};
+use crate::archivio::{id_valido, Errore, Esito, Nota};
 use crate::comandi::Dati;
 
 type Stato<'a> = State<'a, Dati>;
@@ -51,6 +51,19 @@ pub async fn leggi_entita(dati: Stato<'_>, id: String) -> Esito<Entita> {
 #[tauri::command]
 pub async fn elenca_entita(dati: Stato<'_>) -> Esito<Vec<VoceEntita>> {
     dati.con(|a| a.elenca_entita())
+}
+
+/// «Sposta in Brainet»: la nota esce dall'albero e dalla ricerca, senza ritorno (RB-130).
+#[tauri::command]
+pub async fn sposta_in_brainet(app: AppHandle, dati: Stato<'_>, id: String) -> Esito<Nota> {
+    id_valido(&id)?;
+    dati.modifica(&app, |a| a.sposta_in_brainet(&id))
+}
+
+/// Le note in Brainet, dalla più recente (RB-131).
+#[tauri::command]
+pub async fn elenca_journal(dati: Stato<'_>) -> Esito<Vec<Nota>> {
+    dati.con(|a| a.elenca_journal())
 }
 
 /// La pagina dell'entità: i passaggi per giorno (FL-26, RB-124).

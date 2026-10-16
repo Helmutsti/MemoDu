@@ -60,7 +60,7 @@ erDiagram
 ## EN-12 – Frammento
 Tolto il 16/10/2026 (DEC-145): pillole, aree e allegati stanno nel testo delle note di CLOUD (EN-01, nel modulo note), in vista Markdown. I frammenti della 1.0.0 diventano note di CLOUD al passaggio (RB-125): il testo resta com'è, «Nato il» diventa la data di creazione della nota, «Modificato il» quella di modifica, e un frammento nel Cestino va nel Cestino di CLOUD.
 
-- **Nella nota (EN-01):** il testo in Markdown con i segni di Brainet; EN-14, EN-15 ed EN-18 sono l'indice ricavato dal testo, che non si sincronizza (come per i frammenti, scelta di Manuel Cucca del 15/10/2026). La data di creazione della nota è il giorno del Calendario e della pagina dell'entità (RB-113, RB-124).
+- **Nella nota (EN-01):** il campo **In Brainet** (sì o no, DEC-147): sì dopo «Sposta in Brainet», senza ritorno; una nota in Brainet non sta in nessuna cartella né nell'albero e la ricerca non la trova (RB-130 … RB-132); i frammenti della 1.0.0 diventano note in Brainet (RB-125). Il testo in Markdown con i segni di Brainet; EN-14, EN-15 ed EN-18 sono l'indice ricavato dal testo, che non si sincronizza (come per i frammenti, scelta di Manuel Cucca del 15/10/2026). La data di creazione della nota è il giorno del Calendario e della pagina dell'entità (RB-113, RB-124).
 
 ## EN-13 – Entità
 **Descrizione:** una persona, un oggetto, un evento, un argomento, o una cosa ancora senza tipo, citata nelle note o legata alle aree (RB-104, RB-105).

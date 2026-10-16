@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { cancellaAvanti, cancellaIndietro, passo, scritturaComeWord } from "../editor/scrittura";
 import {
   aggiornaAllegati,
+  aggiornaColoriStati,
   aggiornaArea,
   aggiornaEntita,
   cambiaForma,
@@ -258,5 +259,45 @@ describe("Brainet nella vista Markdown delle note (DEC-146, CA-18.5, CA-18.8)", 
     const fine = testo.indexOf(" dopo");
     const dopo = esegui(conMarkdown(testo, fine), cancellaIndietro);
     expect(dopo.doc.toString()).toBe(`${segnoApre("a1", ["s"], [])}fras${segnoChiude("a1")} dopo`);
+  });
+});
+
+describe("il colore dell'area (CMP-40, scelta del 16/10/2026)", () => {
+  it("prende il colore del primo stato; senza stati resta azzurra", () => {
+    const testo = `${segnoApre("a1", ["s1"], [])}con stato${segnoChiude("a1")} e ${segnoApre("a2", [], ["e1"])}senza${segnoChiude("a2")}`;
+    const { view } = apri(testo);
+    view.dispatch({ effects: aggiornaColoriStati.of({ s1: "avviso" }) });
+    const aree = [...view.contentDOM.querySelectorAll(".bn-area")].map((el) => el.className);
+    expect(aree[0]).toContain("bn-area-avviso");
+    expect(aree[aree.length - 1]).toContain("bn-area-informazione");
+  });
+});
+
+describe("aree che non si possono più togliere (prove a mano del 16/10/2026)", () => {
+  it("un'area svuotata del suo testo sparisce", () => {
+    const testo = `prima ${segnoApre("a1", ["s"], [])}x${segnoChiude("a1")} dopo`;
+    const { view } = apri(testo);
+    const x = testo.indexOf("x");
+    view.dispatch({ changes: { from: x, to: x + 1 }, userEvent: "delete" });
+    expect(view.state.doc.toString()).toBe("prima  dopo");
+  });
+
+  it("cancellando un pezzo che prende solo l'inizio di un'area, sparisce anche la sua chiusura", () => {
+    const testo = `uno ${segnoApre("a1", ["s"], [])}due tre${segnoChiude("a1")} quattro`;
+    const { view } = apri(testo);
+    const tre = testo.indexOf(" tre");
+    view.dispatch({ changes: { from: 2, to: tre }, userEvent: "delete" });
+    expect(view.state.doc.toString()).toBe("un tre quattro");
+  });
+
+  it("cancellando un pezzo che prende solo la fine di un'area, sparisce anche la sua apertura", () => {
+    const testo = `uno ${segnoApre("a1", ["s"], [])}due tre${segnoChiude("a1")} quattro`;
+    const { view } = apri(testo);
+    const tre = testo.indexOf("tre");
+    view.dispatch({
+      changes: { from: tre, to: testo.indexOf(" quattro") + 3 },
+      userEvent: "delete",
+    });
+    expect(view.state.doc.toString()).toBe("uno due attro");
   });
 });

@@ -22,6 +22,8 @@ export interface Nota {
   tag: string[];
   /** Come si mostra il testo (DEC-130); una nota scritta prima della 1.1.0 vale "testo" (RB-91). */
   vista: Vista;
+  /** Spostata in Brainet: fuori dall'albero e dalla ricerca, nel Journal (DEC-147). */
+  brainet?: boolean;
 }
 
 /** Vista della nota: il testo salvato è sempre Markdown, cambia solo come si mostra (DEC-130). */

@@ -11,7 +11,17 @@
 // Suggerimenti, calendario e menu si aprono sopra Info; la conferma di eliminazione di un tag
 // sopra tutto (livello 40).
 
-import { Calendar, CircleAlert, Eye, Folder, Plus, Tag as TagIcona, Trash2, X } from "lucide-react";
+import {
+  Brain,
+  Calendar,
+  CircleAlert,
+  Eye,
+  Folder,
+  Plus,
+  Tag as TagIcona,
+  Trash2,
+  X,
+} from "lucide-react";
 import { useEffect, useId, useRef, useState, type ReactElement } from "react";
 import { createPortal } from "react-dom";
 import type { DatiDettagli, Nota, Vista, VoceTag } from "@memodu/condiviso";
@@ -52,6 +62,8 @@ interface Proprieta {
   spostaInAperto?: boolean;
   /** Solo nella Comparsa: la nota è aperta. */
   onChiudiNota?: () => void;
+  /** «Sposta in Brainet», solo con Brainet acceso e per una nota di CLOUD (RB-130, DEC-147). */
+  onSpostaInBrainet?: () => void;
   onElimina: () => void;
   onChiudi: () => void;
 }
@@ -375,6 +387,13 @@ export function Info(p: Proprieta): ReactElement {
                 icona={X}
                 scorciatoia={`${SU_MAC ? "⌘" : "Ctrl"} + W`}
                 onClick={p.onChiudiNota}
+              />
+            )}
+            {p.onSpostaInBrainet && (
+              <VoceAzione
+                etichetta="Sposta in Brainet"
+                icona={Brain}
+                onClick={p.onSpostaInBrainet}
               />
             )}
             <VoceAzione etichetta="Elimina" icona={Trash2} errore onClick={p.onElimina} />

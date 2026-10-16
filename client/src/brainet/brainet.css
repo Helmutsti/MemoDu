@@ -31,7 +31,6 @@
 .bn-area-sopra {
   border-top-left-radius: 0;
 }
-
 /* Linguetta (CMP-40): sopra l'inizio dell'area, stesso fondo; livello delle comparse. */
 .bn-linguetta {
   position: fixed;
@@ -114,4 +113,38 @@
 }
 .bn-foto-non-scaricata .bn-allegato-icona {
   color: var(--icona-tenue);
+}
+
+/* Il colore dell'area è quello del suo primo stato; senza stati resta azzurra (scelta di Manuel
+   Cucca del 16/10/2026, così l'area non si confonde con la pillola). La linguetta ha lo stesso
+   fondo. In fondo al file, così vince sulle regole di base di area e linguetta. */
+.bn-area-avviso,
+.bn-linguetta-avviso {
+  background: var(--sfondo-avviso);
+}
+.bn-area-successo,
+.bn-linguetta-successo {
+  background: var(--sfondo-successo);
+}
+.bn-area-errore,
+.bn-linguetta-errore {
+  background: var(--sfondo-errore);
+}
+.bn-linguetta-avviso {
+  color: var(--testo-avviso);
+}
+.bn-linguetta-successo {
+  color: var(--testo-successo);
+}
+.bn-linguetta-errore {
+  color: var(--testo-errore);
+}
+.bn-linguetta-avviso .bn-linguetta-freccia {
+  color: var(--icona-avviso);
+}
+.bn-linguetta-successo .bn-linguetta-freccia {
+  color: var(--icona-successo);
+}
+.bn-linguetta-errore .bn-linguetta-freccia {
+  color: var(--icona-errore);
 }

@@ -13,6 +13,7 @@
 // impostazioni o dall'avviso dell'accesso scaduto, che non blocca niente (RB-87).
 
 import {
+  Brain,
   FileText,
   Folder,
   FolderInput,
@@ -254,6 +255,8 @@ export function FinestraPrincipale(): ReactElement {
   const [cursoreApertura, setCursoreApertura] = useState<{ id: string; inizio: number } | null>(
     null,
   );
+  /** La nota per cui si chiede conferma di «Sposta in Brainet» (RB-130, DEC-147). */
+  const [daSpostareInBrainet, setDaSpostareInBrainet] = useState<string | null>(null);
   /** Un allegato di Brainet che non entra o non si apre (SF-17, SF-21, SF-37, SF-08). */
   const [avvisoAllegato, setAvvisoAllegato] = useState<string | null>(null);
   /** Il file di Locale aperto al posto della nota (RF-17). */
@@ -340,6 +343,8 @@ export function FinestraPrincipale(): ReactElement {
     elemento?: string;
   } | null>(null);
   const apertaAttuale = useRef<Nota | null>(null);
+  /** La vista dell'area della nota, per `apri`, che è una callback stabile. */
+  const vistaAttuale = useRef<string>("nota");
   const suErroreSalvataggio = useRef<(errore: unknown) => void>(() => setBloccata(true));
 
   // Dopo ogni salvataggio la colonna si aggiorna: titolo e ordine (RB-60, RB-65).
@@ -361,6 +366,9 @@ export function FinestraPrincipale(): ReactElement {
   useEffect(() => {
     apertaAttuale.current = aperta;
   }, [aperta]);
+  useEffect(() => {
+    vistaAttuale.current = vista;
+  }, [vista]);
 
   const ricarica = useCallback(async () => {
     const nuovo = await api.albero();
@@ -482,8 +490,16 @@ export function FinestraPrincipale(): ReactElement {
     async (id: string): Promise<boolean> => {
       await coda.scarica();
       if (coda.haModifiche) return false;
-      // La nota è già aperta: se l'area mostra il cestino, si torna alla nota.
+      // La nota è già aperta: se l'area mostra il cestino, si torna alla nota. Se la nota non era
+      // in vista (cestino, impostazioni, Brainet) si rilegge: la copia in memoria è quella
+      // dell'apertura, senza quello che si è scritto dopo (trovato nelle prove a mano del 16/10/2026).
       if (id === apertaAttuale.current?.id) {
+        if (vistaAttuale.current !== "nota") {
+          const nota = await esegui(() => api.leggi(id));
+          if (!nota) return false;
+          setAperta(nota);
+          setRiletta((n) => n + 1);
+        }
         setVista("nota");
         return true;
       }
@@ -1061,16 +1077,29 @@ export function FinestraPrincipale(): ReactElement {
 
   // Il cursore del passaggio serve solo all'apertura: poi la nota si riapre senza.
   useEffect(() => {
-    if (!cursoreApertura || aperta?.id !== cursoreApertura.id) return;
+    if (!cursoreApertura || vista !== "nota" || aperta?.id !== cursoreApertura.id) return;
     const t = setTimeout(() => setCursoreApertura(null), 0);
     return () => clearTimeout(t);
-  }, [aperta, cursoreApertura]);
+  }, [aperta, cursoreApertura, vista]);
+
+  /** «Sposta in Brainet», confermato: la nota esce dall'albero e si apre il Journal (RB-130). */
+  const spostaInBrainet = async (id: string) => {
+    if (apertaAttuale.current?.id === id) {
+      await coda.scarica();
+      if (coda.haModifiche) return;
+    }
+    const spostata = await esegui(() => brainet.spostaInBrainet(id));
+    if (!spostata) return;
+    if (apertaAttuale.current?.id === id) setAperta(null);
+    await ricarica().catch(() => setBloccata(true));
+    setVersioneBrainet((n) => n + 1);
+    setVistaBrainet("journal");
+    setVista("brainet");
+  };
 
   /** Da un passaggio della pagina dell'entità: la nota, con il cursore sul paragrafo (RB-124). */
   const apriDaPassaggio = async (id: string, inizio: number) => {
     setCursoreApertura({ id, inizio });
-    // Già aperta: la si rilegge, così il cursore va sul paragrafo.
-    if (id === apertaAttuale.current?.id) setRiletta((n) => n + 1);
     if (!(await apri(id))) setCursoreApertura(null);
   };
 
@@ -1285,6 +1314,17 @@ export function FinestraPrincipale(): ReactElement {
           daRiga: true,
         }),
     },
+    // Con Brainet acceso, dopo «Sposta in…» (RB-130, DEC-147).
+    ...(statoBrainet?.acceso
+      ? [
+          {
+            tipo: "voce" as const,
+            etichetta: "Sposta in Brainet",
+            icona: Brain,
+            azione: () => setDaSpostareInBrainet(riga.id),
+          },
+        ]
+      : []),
     { tipo: "separatore" },
     {
       tipo: "voce",
@@ -1542,6 +1582,7 @@ export function FinestraPrincipale(): ReactElement {
                 onAvviso={setAvvisoAllegato}
                 onApri={(v) => void apriBrainet(v)}
                 onApriNota={(id, inizio) => void apriDaPassaggio(id, inizio)}
+                onCestino={() => void ricarica().catch(() => setBloccata(true))}
               />
             ) : vista === "cestino" ? (
               <Cestino
@@ -1669,12 +1710,34 @@ export function FinestraPrincipale(): ReactElement {
           }
           spostaInAperto={spostaIn?.daInfo}
           onChiudiNota={info.tipo === "comparsa" ? () => void chiudiNota() : undefined}
+          onSpostaInBrainet={
+            statoBrainet?.acceso && !info.nota.brainet
+              ? () => {
+                  const id = info.nota.id;
+                  setInfo(null);
+                  setDaSpostareInBrainet(id);
+                }
+              : undefined
+          }
           onElimina={() => {
             const id = info.nota.id;
             setInfo(null);
             void cestinaNota(id);
           }}
           onChiudi={chiudiInfo}
+        />
+      )}
+      {daSpostareInBrainet && (
+        <FinestraConferma
+          titolo="Spostare la nota in Brainet?"
+          testo="La nota esce da CLOUD e dalla ricerca e non si riporta indietro. Nel Journal puoi collegarla a persone, oggetti e argomenti."
+          azione="Sposta"
+          onAnnulla={() => setDaSpostareInBrainet(null)}
+          onConferma={() => {
+            const id = daSpostareInBrainet;
+            setDaSpostareInBrainet(null);
+            void spostaInBrainet(id);
+          }}
         />
       )}
       {conflitto && (

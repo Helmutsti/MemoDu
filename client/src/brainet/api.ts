@@ -3,6 +3,7 @@
 
 import { comando, comandoGrezzo } from "../api";
 import type { ColoreStato } from "../componenti/Menu";
+import type { Nota } from "@memodu/condiviso";
 
 export interface StatoBrainet {
   acceso: boolean;
@@ -89,6 +90,10 @@ export const brainet = {
   creaEntita: (nome: string) => comando<Entita>("crea_entita", { nome }),
   leggiEntita: (id: string) => comando<Entita>("leggi_entita", { id }),
   elencaEntita: () => comando<VoceEntita[]>("elenca_entita"),
+  /** «Sposta in Brainet»: senza ritorno (RB-130, DEC-147). */
+  spostaInBrainet: (id: string) => comando<Nota>("sposta_in_brainet", { id }),
+  /** Le note in Brainet, dalla più recente (RB-131). */
+  elencaJournal: () => comando<Nota[]>("elenca_journal"),
   passaggiEntita: (id: string) => comando<PaginaEntita>("passaggi_entita", { id }),
   anteprimaUnione: (da: string, verso: string) =>
     comando<Unione>("anteprima_unione", { da, verso }),

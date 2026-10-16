@@ -1,6 +1,6 @@
 # DEC-145 – Brainet diventa una lente sulle note di CLOUD
 
-**Data:** 2026-10-16 · **Stato:** Accettata · **Idea di origine:** ID-39
+**Data:** 2026-10-16 · **Stato:** Superata in parte da DEC-147 · **Idea di origine:** ID-39
 
 ## Contesto
 Brainet (RF-18, DEC-134) doveva essere un diario che si evolve nel tempo, non un archivio di note. Nella 1.0.0 è diventato quasi uguale alle note di CLOUD: il + apre un foglio nuovo, il Database è l'elenco dei fogli, e la lettura della knowledge base è rimasta da studiare («per ora si progetta l'input»). Manuel Cucca, 16/10/2026: «è praticamente uguale alle normali note che scrivo ogni giorno. e se brainet diventasse un semplice tool di visualizzazione?».

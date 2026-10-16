@@ -247,28 +247,25 @@ Un **file nuovo** si chiama «Senza titolo» e nasce sul disco al primo Ctrl + S
 **Se il file cambia fuori da Memodu.** Se un altro programma cambia il file aperto, Memodu te lo dice: «Ricarica» mostra la versione del disco, «Tieni la mia versione» la sovrascrive al prossimo Ctrl + S. Se il file è sparito, «Ricrealo» lo fa rinascere al prossimo Ctrl + S.
 
 ## Brainet, la rete delle note
-Brainet collega quello che scrivi nelle note a persone, oggetti, eventi e argomenti, per ritrovare poi tutto quello che hai scritto su ognuno, giorno per giorno. Non ha note sue: funziona nelle tue note di CLOUD in vista Markdown, che vanno sugli altri tuoi computer e sono cifrate come sempre.
+Brainet raccoglie le note che vuoi tenere come pensieri e le collega a persone, oggetti, eventi e argomenti, per ritrovare poi tutto quello che hai scritto su ognuno, giorno per giorno. Ogni nota nasce in CLOUD; quando la sposti in Brainet esce dall'albero e dalla ricerca e passa nel Journal. Le note in Brainet vanno sugli altri tuoi computer e sono cifrate come le altre.
 
-**Accenderlo.** Nelle Impostazioni, gruppo Brainet, accendi «Usa Brainet»: nella colonna compare la sezione BRAINET tra CLOUD e LOCALE, con Entità e Calendario. Finché è spento non si vede niente.
+**Accenderlo.** Nelle Impostazioni, gruppo Brainet, accendi «Usa Brainet»: nella colonna compare la sezione BRAINET tra CLOUD e LOCALE, con Journal, Entità e Calendario. Finché è spento non si vede niente.
 
-**Scrivere.** In una nota di CLOUD in vista Markdown scrivi `@`: si apre un menu, scegli una persona, un oggetto o un argomento che c'è già, oppure «Crea «…»» per farne uno nuovo, e il nome diventa una pillola. Backspace subito dopo una pillola la toglie tutta, e le frecce la saltano come un carattere solo. Selezionando una frase, dallo stesso menu la colleghi a uno stato (per esempio «Importante») o a un'entità: la frase resta evidenziata. Un clic su una pillola apre la pagina della sua entità.
+**Spostare una nota in Brainet.** Tasto destro sulla nota nella colonna › «Sposta in Brainet», oppure Info › «Sposta in Brainet». Memodu chiede conferma, perché lo spostamento è senza ritorno: la nota non torna in CLOUD. Spostata, esce dalla sua cartella e dalla ricerca e si apre il Journal con la nota in cima.
 
-**Allegare.** In vista Markdown trascina un file nel testo, incollalo, oppure `@` › «Allega un file…». Entrano foto e documenti (JPG, PNG, PDF, Word, Excel, PowerPoint, testo) fino a 25 MB; trascinando e incollando si allega anche con Brainet spento. Con un clic sull'allegato: «Apri», «Mostra nella cartella», «Dimensioni» per le foto e «Togli». Un allegato si scarica su un computer la prima volta che serve; senza rete, al posto di una foto non ancora scaricata vedi un riquadro con il nome.
+**Il Journal.** Tutte le note in Brainet, dalla più recente, con il giorno e l'ora; ognuna si modifica lì. Con il tasto destro › «Elimina» una nota va nel Cestino; ripristinata torna nel Journal.
 
-**Una nota con Brainet resta in Markdown.** Se una nota ha pillole, frasi evidenziate o allegati, in Info la scelta «Testo» è spenta: «Questa nota usa Brainet: si vede solo in Markdown». Togliendoli torna disponibile. In vista Testo `@` è un carattere come gli altri.
+**Collegare.** Nelle note in Brainet scrivi `@`: si apre un menu, scegli una persona, un oggetto o un argomento che c'è già, oppure «Crea «…»» per farne uno nuovo, e il nome diventa una pillola. Il nome può avere fino a tre parole, per esempio `@Luca Bianchi`. Backspace subito dopo una pillola la toglie tutta. Selezionando una frase, dallo stesso menu la colleghi a uno stato (per esempio «Importante») o a un'entità: la frase resta evidenziata del colore del suo stato. Un clic su una pillola apre la pagina della sua entità. Nelle note di CLOUD `@` è un carattere come gli altri.
+
+**Allegare.** In tutte le note in vista Markdown trascina un file nel testo o incollalo; nelle note in Brainet anche `@` › «Allega un file…». Entrano foto e documenti (JPG, PNG, PDF, Word, Excel, PowerPoint, testo) fino a 25 MB. Con un clic sull'allegato: «Apri», «Mostra nella cartella», «Dimensioni» per le foto e «Togli». Un allegato si scarica su un computer la prima volta che serve; senza rete, al posto di una foto non ancora scaricata vedi un riquadro con il nome.
 
 **Ritrovare.**
 
-- **Entità:** ogni persona, oggetto o argomento, con quante volte e quando l'hai nominato. Un clic sul tipo accanto al nome (per esempio «Senza tipo») lo cambia in persona, argomento, evento o oggetto. Con il tasto destro: «Unisci a…», per due nomi della stessa cosa, e «Scegli una foto…».
-- **La pagina di un'entità:** un clic su una riga di Entità, o su una pillola, apre la sua pagina: i paragrafi delle note che la nominano, per giorno, dal più recente, con il titolo della nota e l'ora. Un clic su un paragrafo apre la nota proprio lì; «Entità» in cima, o Esc, torna all'elenco.
-- **Calendario:** i giorni del mese, con un pallino nei giorni in cui hai scritto una nota con Brainet.
-- **Ricerca:** Ctrl + K trova anche le note con Brainet, cercando il nome di una pillola o le parole di una frase evidenziata.
+- **Entità:** le persone, gli argomenti, gli eventi e gli oggetti che hai nominato nelle note in Brainet, divisi per tipo. Le persone si vedono come il cast di un film: la foto rotonda, o le iniziali, e il nome sotto. Gli eventi hanno il calendario, gli argomenti la lampadina, e accanto al nome quante volte e quando l'hai nominato. Un clic sul tipo accanto al nome lo cambia; con il tasto destro: «Unisci a…», «Scegli una foto…» e «Tipo».
+- **La pagina di un'entità:** un clic su una riga di Entità, o su una pillola, apre la sua pagina con i paragrafi che la nominano, per giorno, dal più recente. Un clic su un paragrafo apre la nota proprio lì; «Entità» in cima, o Esc, torna all'elenco.
+- **Calendario:** un pallino nei giorni in cui è nata una nota in Brainet.
 
-Le note nel Cestino non contano in Entità, nella pagina delle entità e nel Calendario.
-
-**Dalla 1.0.0.** Le note che avevi scritto in Brainet diventano note di CLOUD in vista Markdown, senza titolo, nel giorno in cui le avevi scritte, con le loro pillole, frasi evidenziate e allegati; quelle nel Cestino di Brainet vanno nel Cestino. Entità e stati restano. Finché un tuo computer ha ancora la 1.0.0, lì le pillole si vedono come testo: aggiornalo.
-
-**Spegnerlo non cancella niente.** Spegnendo «Usa Brainet» sparisce la sezione e `@` torna un carattere normale; pillole, frasi evidenziate, allegati, entità e stati restano, e riaccendendolo ritrovi tutto.
+**Spegnerlo non cancella niente.** Spegnendo «Usa Brainet» sparisce la sezione, con il Journal; le note in Brainet, le entità e gli stati restano, e riaccendendolo ritrovi tutto.
 
 ## Impostazioni
 Si aprono dalla riga «Impostazioni» in fondo alla colonna e si chiudono con «Chiudi impostazioni» o Ctrl + W. Ogni modifica vale subito.

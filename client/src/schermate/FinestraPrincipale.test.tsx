@@ -198,6 +198,23 @@ describe("SC-01, non organizzate", () => {
     ]);
   });
 
+  it("tornando alla stessa nota dal Cestino la si rilegge, con l'ultimo testo salvato", async () => {
+    vi.mocked(api.albero).mockResolvedValue(albero([voce("a", "Lista della spesa")]));
+    vi.mocked(api.leggi).mockResolvedValue(nota("a", "Lista della spesa", "testo di prima"));
+    const { container } = render(<FinestraPrincipale />);
+    expect(await titoloNota("Lista della spesa")).toBeInTheDocument();
+    await waitFor(() =>
+      expect(container.querySelector(".cm-content")?.textContent).toBe("testo di prima"),
+    );
+    // Nel frattempo il testo è cambiato (scritto e salvato prima di aprire il Cestino).
+    vi.mocked(api.leggi).mockResolvedValue(nota("a", "Lista della spesa", "testo salvato dopo"));
+    await userEvent.click(screen.getByRole("button", { name: /^Cestino/ }));
+    await userEvent.click(await riga("Lista della spesa"));
+    await waitFor(() =>
+      expect(container.querySelector(".cm-content")?.textContent).toBe("testo salvato dopo"),
+    );
+  });
+
   it("apre la nota più recente all'avvio e un'altra al clic", async () => {
     vi.mocked(api.albero).mockResolvedValue(
       albero([
