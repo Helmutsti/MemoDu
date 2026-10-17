@@ -732,3 +732,4 @@
 | 16/10/2026 | Manuel Cucca | Mockup della pagina dell'entità con la cronologia ed esportazione SC-13 aggiornata (fatto dall'agente) | DEC-150 |
 | 16/10/2026 | Manuel Cucca | Rilasciata la 1.1.0 (versione, note di rilascio, tag `v1.1.0`, release su GitHub); RF-18 Implementato, ID-39 Implementato (fatto dall'agente su richiesta di Manuel Cucca) | DEC-136 |
 | 17/10/2026 | Manuel Cucca | Icona di macOS: la M del tema nel riquadro di Apple, versione chiara e scura scelte da macOS anche con il programma chiuso; il Dock non si cambia più durante l'esecuzione (SC-01 icone macOS, TC-06; scelta di Manuel Cucca tra quattro proposte dell'agente in Figma) | DEC-151 |
+| 17/10/2026 | Manuel Cucca | Icona di macOS: il catalogo `Assets.car` si salva già compilato e il rilascio non usa più `actool`, che sul Mac di GitHub si fermava (fatto dall'agente) | DEC-152 |
