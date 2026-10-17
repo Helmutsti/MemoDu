@@ -1,6 +1,6 @@
 # DEC-108 – Icone macOS nella barra dei menu e nel Dock
 
-**Data:** 2026-10-04 · **Stato:** Proposta · **Idea di origine:** —
+**Data:** 2026-10-04 · **Stato:** Superata da DEC-151 · **Idea di origine:** —
 
 ## Contesto
 Manuel Cucca richiede il logo M chiaro in scuro e scuro in chiaro sia nella barra dei menu sia nel Dock. DEC-73 prevede il template nella barra; DEC-103 lasciava invariato il Dock su macOS. Il codice sostituisce l'immagine della barra dopo averla marcata come template, perdendo il flag.

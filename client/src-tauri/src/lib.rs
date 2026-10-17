@@ -23,9 +23,6 @@ mod impostazioni;
 mod locale;
 mod sincronizzazione;
 
-#[cfg(target_os = "macos")]
-mod icone_macos;
-
 use std::collections::HashSet;
 use std::sync::Mutex;
 
@@ -67,7 +64,7 @@ fn icona_finestra() -> Image<'static> {
 }
 
 /// Le icone nel colore della barra: area di notifica e finestre aperte. Su macOS le finestre
-/// non hanno un'icona propria.
+/// non hanno un'icona propria e il Dock mostra quella fissa del pacchetto (DEC-151).
 fn aggiorna_icone(app: &AppHandle) {
     if let Some(icona) = app.tray_by_id("memodu") {
         #[cfg(target_os = "macos")]
@@ -81,12 +78,6 @@ fn aggiorna_icone(app: &AppHandle) {
     if cfg!(windows) {
         for finestra in app.webview_windows().values() {
             let _ = finestra.set_icon(icona_finestra());
-        }
-    }
-    #[cfg(target_os = "macos")]
-    if let Some(finestra) = app.get_webview_window("main") {
-        if let Ok(tema) = finestra.theme() {
-            icone_macos::aggiorna_dock(tema);
         }
     }
 }

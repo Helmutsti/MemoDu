@@ -151,4 +151,4 @@ Il testo ha una larghezza massima di lettura anche su schermi larghi: oltre una 
 
 ## Icone macOS · precisazione del 04/10/2026
 
-Manuel Cucca richiede la M chiara in scuro e scura in chiaro sia nella barra dei menu sia nel Dock. La barra conserva la modalità template a ogni aggiornamento; il Dock usa i due loghi già forniti, in `icons/finestra`, durante l’esecuzione. Implementazione proposta in DEC-108.
+La barra dei menu mostra la M come modello, che il sistema colora da solo, e la conserva a ogni aggiornamento (DEC-73, DEC-108). Il Dock e il Finder mostrano sempre l'icona del pacchetto, con il programma aperto e chiuso: la M del tema nel riquadro arrotondato di Apple, scelta da macOS secondo il tema; in chiaro M `#1F1F1F` su bianco, in scuro M `#EDEDED` su `#1F1F1F` (DEC-151, scelta di Manuel Cucca del 17/10/2026).

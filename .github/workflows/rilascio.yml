@@ -61,6 +61,15 @@ jobs:
           npm test
           cargo test --manifest-path client/src-tauri/Cargo.toml
 
+      # L'icona di macOS con le versioni chiara e scura (DEC-151) si compila solo con Xcode 26
+      # o più recente; senza, Tauri mette solo icon.icns, la versione chiara.
+      - name: Xcode 26 per l'icona di macOS
+        if: runner.os == 'macOS'
+        run: |
+          xcode=$(ls -d /Applications/Xcode_2[6-9]*.app 2>/dev/null | sort -V | tail -1)
+          if [ -n "$xcode" ]; then sudo xcode-select -s "$xcode"; fi
+          xcrun actool --version
+
       - name: Compila e allega alla release
         uses: tauri-apps/tauri-action@v0
         env:

@@ -7,6 +7,12 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+### Corretto
+- Brainet: nella pagina di un'entità le frasi evidenziate non hanno più il testo nero con il tema scuro
+- Brainet: le pillole con la foto stanno alla stessa altezza di quelle senza
+- Brainet: scorrendo il testo l'etichetta sopra una frase evidenziata non resta più ferma fuori posto
+- Mac: l'icona del programma è la M nel suo riquadro, chiara o scura secondo il tema, la stessa con il programma aperto e chiuso; da chiuso non sembra più installato male
+
 ## [1.1.0] – 2026-10-16
 
 ### Aggiunto
