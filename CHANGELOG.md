@@ -7,6 +7,11 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+## [1.1.2] – 2026-10-17
+
+### Corretto
+- Mac: esce l'installatore per Mac, che mancava nella 1.1.1, con la nuova icona
+
 ## [1.1.1] – 2026-10-17
 
 ### Corretto
