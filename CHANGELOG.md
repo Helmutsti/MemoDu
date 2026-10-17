@@ -7,6 +7,8 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+## [1.1.3] – 2026-10-17
+
 ### Modificato
 - Mac: la M dell'icona del programma è un po' più grande
 
