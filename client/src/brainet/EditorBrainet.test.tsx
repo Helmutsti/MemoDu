@@ -311,4 +311,16 @@ describe("EditorBrainet (RF-18)", () => {
       ),
     );
   });
+
+  it("scorrendo il testo la linguetta sparisce subito e torna al prossimo movimento", async () => {
+    const testo = `il ${segnoApre("a1", [IMPORTANTE.id], [])}preventivo${segnoChiude("a1")}`;
+    const { container } = apri(testo);
+    fireEvent.mouseMove(container.querySelector(".bn-area")!);
+    await waitFor(() => expect(document.querySelector(".bn-linguetta")).not.toBeNull());
+    // Con il mouse sopra l'area si ridisegna: si prende quella di adesso.
+    fireEvent.wheel(container.querySelector(".bn-area")!);
+    await waitFor(() => expect(document.querySelector(".bn-linguetta")).toBeNull());
+    fireEvent.mouseMove(container.querySelector(".bn-area")!);
+    await waitFor(() => expect(document.querySelector(".bn-linguetta")).not.toBeNull());
+  });
 });

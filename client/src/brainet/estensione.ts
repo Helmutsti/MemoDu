@@ -391,8 +391,8 @@ export interface Ascolto {
   ) => void;
   /** Frase selezionata per un'area nuova, oppure null. */
   onSelezione: (s: { da: number; a: number; x: number; y: number; sopra: number } | null) => void;
-  /** L'area sotto il mouse, con il rettangolo dove inizia, oppure null. */
-  onAreaSopra: (a: { id: string; x: number; y: number } | null) => void;
+  /** L'area sotto il mouse, con il rettangolo dove inizia, oppure null (subito: senza attesa). */
+  onAreaSopra: (a: { id: string; x: number; y: number } | null, subito?: boolean) => void;
   /** Clic su un allegato: il suo segno e dove aprire il menu (RB-119). */
   onAllegato: (a: AllegatoSegno & { x: number; y: number; sopra: number }) => void;
   /** Clic su una pillola: true se apre la pagina dell'entità (RB-124). */
@@ -501,6 +501,15 @@ export function estensioneBrainet(ascolto: Ascolto): Extension {
         const primo = view.contentDOM.querySelector(`[data-area="${CSS.escape(id)}"]`);
         const r = primo?.getBoundingClientRect();
         ascolto.onAreaSopra(r ? { id, x: r.left, y: r.top } : null);
+        return false;
+      },
+      // La linguetta ha la posizione di quando è comparsa: scorrendo il testo la si toglie, e
+      // il prossimo movimento del mouse la rimette sopra l'area dove sta adesso.
+      wheel: (_e, view) => {
+        if (ultimaArea === null) return false;
+        ultimaArea = null;
+        view.dispatch({ effects: segnaAreaSopra.of(null) });
+        ascolto.onAreaSopra(null, true);
         return false;
       },
       mouseleave: (_e, view) => {

@@ -159,9 +159,10 @@ function creaAscolto(
     onSelezione: setSelezione,
     onAllegato: setMenuAllegato,
     onPillola,
-    onAreaSopra: (a) => {
+    onAreaSopra: (a, subito) => {
       window.clearTimeout(timer);
       if (a) setLinguetta({ ...a, tenuta: false });
+      else if (subito) setLinguetta(null);
       else
         timer = window.setTimeout(
           () => setLinguetta((prima) => (prima?.tenuta ? prima : null)),

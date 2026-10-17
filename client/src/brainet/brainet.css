@@ -1,8 +1,10 @@
 /* Brainet nell'editor (RF-18). CMP-38 Collegamento: la pillola di un'entità, in linea con il
    testo; con la foto, a sinistra resta solo spazio-2. Poggia sul fondo del testo della riga, così
-   il suo centro cade su quello delle lettere, con o senza icona e foto. */
+   il suo centro cade su quello delle lettere, con o senza icona e foto: la riga interna è alta
+   come un'icona, così con la foto non cresce e non si alza rispetto alle altre. */
 .bn-collegamento {
   display: inline-flex;
+  line-height: var(--misura-icona);
   align-items: center;
   gap: var(--spazio-icona-piccola);
   padding: var(--spazio-2) var(--spazio-controllo-piccolo);
@@ -22,11 +24,13 @@
 }
 
 /* CMP-40 Area evidenziata: come con un evidenziatore; con il mouse sopra diventa un riquadro e
-   sopra compare la Linguetta, che non sposta il testo. */
+   sopra compare la Linguetta, che non sposta il testo. Nei riepiloghi è un <mark>, che di suo
+   avrebbe il testo nero: il colore resta quello del testo intorno. */
 .bn-area {
   padding: 0 var(--spazio-2);
   border-radius: var(--raggio-casella);
   background: var(--sfondo-informazione);
+  color: inherit;
 }
 .bn-area-sopra {
   border-top-left-radius: 0;
