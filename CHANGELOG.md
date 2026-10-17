@@ -7,6 +7,8 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+## [1.1.1] – 2026-10-17
+
 ### Corretto
 - Brainet: nella pagina di un'entità le frasi evidenziate non hanno più il testo nero con il tema scuro
 - Brainet: le pillole con la foto stanno alla stessa altezza di quelle senza
