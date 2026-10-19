@@ -184,6 +184,7 @@ export default function Note() {
       </ScrollView>
       <FondoColonna
         cestino={cestino}
+        onCestino={() => router.push("/cestino")}
         onImpostazioni={() => router.push("/impostazioni")}
         marginiInBasso={margini.bottom}
       />

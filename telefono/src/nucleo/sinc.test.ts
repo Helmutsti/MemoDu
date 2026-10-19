@@ -187,4 +187,100 @@ describe("nucleo del telefono con il server (DEC-156)", () => {
     await sinc(telefono);
     expect(await pg.righe("SELECT id FROM versioni WHERE id = $1", [id])).toEqual([]);
   });
+
+  it("cestino: ripristina nella radice; una cartella con un nome già usato chiede, poi prende «(2)» (RB-28, RB-31)", async () => {
+    const t = await dispositivo();
+    const db = (t.a as unknown as { db: Db }).db;
+    const cartella = async (id: string, nome: string, madre: string | null = null) =>
+      db.esegui(
+        "INSERT INTO elementi (id, tipo, campi) VALUES (?, 'cartella', ?)",
+        id,
+        JSON.stringify({ nome, madre, eliminata_il: null, provenienza: null }),
+      );
+    await cartella("c1", "Lavoro");
+    const n = await t.a.creaNota("c1");
+    await t.a.salvaNota(n, "Budget", "x");
+    await t.a.cestinaNota(n);
+    expect((await t.a.elementiCestino())[0]).toMatchObject({
+      id: n,
+      tipo: "nota",
+      nome: "Budget",
+      provenienza: "Lavoro",
+    });
+    expect(await t.a.ripristina(n)).toBeNull();
+    expect(await t.a.nota(n)).toMatchObject({ cartella: null, eliminata_il: null });
+    // Una cartella nel cestino e un'altra con lo stesso nome nella radice.
+    await db.esegui(
+      "UPDATE elementi SET campi = ? WHERE id = 'c1'",
+      JSON.stringify({
+        nome: "Lavoro",
+        madre: null,
+        eliminata_il: "2026-10-19T08:00:00.000Z",
+        provenienza: "",
+      }),
+    );
+    await cartella("c2", "lavoro");
+    expect(await t.a.ripristina("c1")).toEqual({ conflitto: "Lavoro" });
+    expect(await t.a.ripristina("c1", "numero")).toBeNull();
+    expect((await t.a.cartelle()).find((c) => c.id === "c1")).toMatchObject({
+      nome: "Lavoro (2)",
+      eliminata_il: null,
+    });
+  });
+
+  it("cestino: eliminare per sempre una cartella toglie il suo contenuto, anche dall'altro dispositivo (RB-55, RB-32)", async () => {
+    const telefono = await dispositivo();
+    const computer = await dispositivo();
+    const db = (telefono.a as unknown as { db: Db }).db;
+    const ora = "2026-10-19T08:00:00.000Z";
+    const [C1, C2, C3] = ["c1", "c2", "c3"].map((x) => `00000000-0000-4000-8000-0000000000${x}`);
+    const metti = async (
+      id: string,
+      nome: string,
+      madre: string | null,
+      eliminata: string | null,
+    ) => {
+      await db.esegui(
+        "INSERT OR REPLACE INTO elementi VALUES (?, 'cartella', ?)",
+        id,
+        JSON.stringify({
+          nome,
+          madre,
+          eliminata_il: eliminata,
+          provenienza: eliminata ? "" : null,
+        }),
+      );
+      await db.esegui(
+        `INSERT INTO sinc_elementi (id, tipo, modificato, modificato_il) VALUES (?, 'cartella', 1, ?)
+         ON CONFLICT(id) DO UPDATE SET modificato = 1, modificato_il = excluded.modificato_il`,
+        id,
+        new Date().toISOString(),
+      );
+    };
+    // Prima il contenuto, poi «Vecchia» va nel cestino con quello che ha dentro.
+    await metti(C1, "Vecchia", null, null);
+    await metti(C2, "Dentro", C1, null);
+    await metti(C3, "Già nel cestino", C1, ora);
+    const n = await telefono.a.creaNota(C2);
+    await telefono.a.salvaNota(n, "Dentro la cartella", "x");
+    await sinc(telefono);
+    await sinc(computer);
+    await metti(C1, "Vecchia", null, ora);
+    await sinc(telefono);
+    await sinc(computer);
+    const cestino = await computer.a.elementiCestino();
+    expect(cestino.map((e) => e.nome).sort()).toEqual(["Già nel cestino", "Vecchia"]);
+    expect(cestino.find((e) => e.nome === "Vecchia")?.conteggio).toBe(1);
+    await telefono.a.eliminaDefinitivamente(C1);
+    expect((await telefono.a.elementiCestino()).map((e) => e.nome)).toEqual(["Già nel cestino"]);
+    expect(await telefono.a.nota(n)).toBeNull();
+    await sinc(telefono);
+    await sinc(computer);
+    expect(await computer.a.nota(n)).toBeNull();
+    expect((await computer.a.cartelle()).map((x) => x.nome)).toEqual(["Già nel cestino"]);
+    await computer.a.svuotaCestino();
+    await sinc(computer);
+    await sinc(telefono);
+    expect(await telefono.a.elementiCestino()).toEqual([]);
+  });
 });

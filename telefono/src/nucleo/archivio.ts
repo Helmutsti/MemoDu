@@ -38,6 +38,18 @@ export interface Cartella {
   eliminata_il: string | null;
 }
 
+export interface ElementoCestino {
+  id: string;
+  tipo: "nota" | "cartella";
+  /** Il titolo della nota (o le prime parole), il nome della cartella. */
+  nome: string;
+  /** Il percorso da cui viene, «Lavoro/Clienti»; vuoto dalla radice. */
+  provenienza: string;
+  eliminato: string;
+  /** Per le cartelle, le note che contiene. */
+  conteggio: number | null;
+}
+
 export interface DaInviare {
   id: string;
   versione: number;
@@ -281,6 +293,196 @@ export class Archivio {
       "SELECT campi FROM elementi WHERE tipo IN ('nota', 'cartella')",
     );
     return righe.filter((r) => (JSON.parse(r.campi) as Campi).eliminata_il).length;
+  }
+
+  // ——— Cestino (RF-15, SC-04), con le regole del computer ———
+
+  /** Cartelle con i campi, comprese quelle nel cestino. */
+  private async tutteLeCartelle(): Promise<Map<string, Campi>> {
+    const righe = await this.db.tutte<{ id: string; campi: string }>(
+      "SELECT id, campi FROM elementi WHERE tipo = 'cartella'",
+    );
+    return new Map(righe.map((r) => [r.id, JSON.parse(r.campi) as Campi]));
+  }
+
+  /** La cartella e le sottocartelle fuori dal cestino, come sottoalbero del computer. */
+  private sottoalbero(id: string, cartelle: Map<string, Campi>): string[] {
+    const ids = [id];
+    for (let i = 0; i < ids.length; i++)
+      for (const [figlia, c] of cartelle)
+        if (c.madre === ids[i] && !c.eliminata_il && !ids.includes(figlia)) ids.push(figlia);
+    return ids;
+  }
+
+  /** Note fuori dal cestino nella cartella e nelle sottocartelle (RB-56). */
+  private async contaNote(id: string, cartelle: Map<string, Campi>): Promise<number> {
+    const ids = new Set(this.sottoalbero(id, cartelle));
+    const note = await this.db.tutte<{ campi: string }>(
+      "SELECT campi FROM elementi WHERE tipo = 'nota'",
+    );
+    return note
+      .map((r) => JSON.parse(r.campi) as Campi)
+      .filter((c) => !c.eliminata_il && ids.has(c.cartella as string)).length;
+  }
+
+  /** Gli elementi del cestino, l'eliminato più di recente in cima (SC-04). */
+  async elementiCestino(): Promise<ElementoCestino[]> {
+    const cartelle = await this.tutteLeCartelle();
+    const note = await this.db.tutte<{ id: string; campi: string }>(
+      "SELECT id, campi FROM elementi WHERE tipo = 'nota'",
+    );
+    const elementi: ElementoCestino[] = [];
+    for (const r of note) {
+      const c = JSON.parse(r.campi) as Campi;
+      if (!c.eliminata_il) continue;
+      const titolo =
+        String(c.titolo ?? "").trim() ||
+        String(c.contenuto ?? "")
+          .trim()
+          .split(/\s+/)
+          .slice(0, 6)
+          .join(" ");
+      elementi.push({
+        id: r.id,
+        tipo: "nota",
+        nome: titolo,
+        provenienza: String(c.provenienza ?? ""),
+        eliminato: String(c.eliminata_il),
+        conteggio: null,
+      });
+    }
+    for (const [id, c] of cartelle) {
+      if (!c.eliminata_il) continue;
+      elementi.push({
+        id,
+        tipo: "cartella",
+        nome: String(c.nome ?? ""),
+        provenienza: String(c.provenienza ?? ""),
+        eliminato: String(c.eliminata_il),
+        conteggio: await this.contaNote(id, cartelle),
+      });
+    }
+    return elementi.sort((a, b) => b.eliminato.localeCompare(a.eliminato));
+  }
+
+  /**
+   * Riporta l'elemento nella radice (RB-28). Una cartella con il nome di un'altra già nella radice
+   * segue RB-31: senza scelta risponde con il conflitto; con «numero» prende «Nome (2)».
+   */
+  async ripristina(
+    id: string,
+    scelta?: "numero" | "unisci",
+  ): Promise<{ conflitto: string } | null> {
+    return this.db.transazione(async () => {
+      const e = await this.campi(id);
+      if (!e || !e.campi.eliminata_il) return null;
+      if (e.tipo === "nota") {
+        await this.scrivi(id, "nota", {
+          ...e.campi,
+          cartella: null,
+          eliminata_il: null,
+          provenienza: null,
+        });
+        return null;
+      }
+      const cartelle = await this.tutteLeCartelle();
+      const nomi = new Set(
+        [...cartelle]
+          .filter(([i, c]) => i !== id && !c.madre && !c.eliminata_il)
+          .map(([, c]) => String(c.nome).toLowerCase()),
+      );
+      let nome = String(e.campi.nome ?? "");
+      if (nomi.has(nome.toLowerCase())) {
+        if (!scelta) return { conflitto: nome };
+        if (scelta === "unisci") {
+          const arrivo = [...cartelle].find(
+            ([i, c]) =>
+              i !== id &&
+              !c.madre &&
+              !c.eliminata_il &&
+              String(c.nome).toLowerCase() === nome.toLowerCase(),
+          )![0];
+          await this.unisci(id, arrivo, cartelle);
+          return null;
+        }
+        let n = 2;
+        while (nomi.has(`${nome} (${n})`.toLowerCase())) n++;
+        nome = `${nome} (${n})`;
+      }
+      await this.scrivi(id, "cartella", {
+        ...e.campi,
+        nome,
+        madre: null,
+        eliminata_il: null,
+        provenienza: null,
+      });
+      return null;
+    });
+  }
+
+  /**
+   * Unisce una cartella in un'altra con lo stesso nome (RB-31): note e sottocartelle passano
+   * all'arrivo; una sottocartella con un nome già usato lì prende un numero; la cartella di
+   * partenza sparisce.
+   */
+  private async unisci(id: string, arrivo: string, cartelle: Map<string, Campi>): Promise<void> {
+    const note = await this.db.tutte<{ id: string; campi: string }>(
+      "SELECT id, campi FROM elementi WHERE tipo = 'nota'",
+    );
+    for (const r of note) {
+      const c = JSON.parse(r.campi) as Campi;
+      if (c.cartella === id && !c.eliminata_il)
+        await this.scrivi(r.id, "nota", { ...c, cartella: arrivo });
+    }
+    const nomi = new Set(
+      [...cartelle]
+        .filter(([, c]) => c.madre === arrivo && !c.eliminata_il)
+        .map(([, c]) => String(c.nome).toLowerCase()),
+    );
+    for (const [figlia, c] of cartelle) {
+      if (c.madre !== id || c.eliminata_il) continue;
+      let nome = String(c.nome);
+      if (nomi.has(nome.toLowerCase())) {
+        let n = 2;
+        while (nomi.has(`${nome} (${n})`.toLowerCase())) n++;
+        nome = `${nome} (${n})`;
+      }
+      nomi.add(nome.toLowerCase());
+      await this.scrivi(figlia, "cartella", { ...c, nome, madre: arrivo });
+    }
+    await this.cancella(id, "cartella");
+  }
+
+  /** Cancella per sempre un elemento del cestino (RB-55): una cartella con quello che contiene. */
+  async eliminaDefinitivamente(id: string): Promise<void> {
+    await this.db.transazione(() => this.eliminaPerSempre(id));
+  }
+
+  private async eliminaPerSempre(id: string): Promise<void> {
+    const e = await this.campi(id);
+    if (!e || !e.campi.eliminata_il) return;
+    if (e.tipo === "nota") return this.cancella(id, "nota");
+    const cartelle = await this.tutteLeCartelle();
+    const ids = this.sottoalbero(id, cartelle);
+    // Le sottocartelle già nel cestino restano nel cestino, nella radice.
+    for (const [figlia, c] of cartelle)
+      if (figlia !== id && c.eliminata_il && ids.includes(c.madre as string))
+        await this.scrivi(figlia, "cartella", { ...c, madre: null });
+    const note = await this.db.tutte<{ id: string; campi: string }>(
+      "SELECT id, campi FROM elementi WHERE tipo = 'nota'",
+    );
+    for (const r of note) {
+      const c = JSON.parse(r.campi) as Campi;
+      if (!c.eliminata_il && ids.includes(c.cartella as string)) await this.cancella(r.id, "nota");
+    }
+    for (const i of ids) await this.cancella(i, "cartella");
+  }
+
+  /** Svuota il cestino (RB-32). */
+  async svuotaCestino(): Promise<void> {
+    await this.db.transazione(async () => {
+      for (const e of await this.elementiCestino()) await this.eliminaPerSempre(e.id);
+    });
   }
 
   // ——— Stato della sincronizzazione ———

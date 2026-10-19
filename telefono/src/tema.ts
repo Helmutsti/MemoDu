@@ -44,6 +44,8 @@ const chiaro = {
   ombraFlottante: "rgba(0,0,0,0.12)",
   /** ombra-flottante come opacità del nero, per le ombre native. */
   ombraOpacita: 0.12,
+  /** velo: nero al 30% (sotto i fogli e le conferme). */
+  velo: "rgba(0,0,0,0.30)",
 };
 
 const scuro: typeof chiaro = {
@@ -65,6 +67,7 @@ const scuro: typeof chiaro = {
   iconaErrore: "#FE6F69",
   ombraFlottante: "rgba(0,0,0,0.40)",
   ombraOpacita: 0.4,
+  velo: "rgba(0,0,0,0.50)",
 };
 
 export type Colori = typeof chiaro;

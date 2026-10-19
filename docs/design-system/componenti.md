@@ -1707,4 +1707,6 @@ Solo nell'app per iPhone. Pagina **Componenti telefono** del file Design system,
 
 Sul telefono le cartelle e i riquadri si aprono e si chiudono con un movimento: le righe che compaiono entrano in dissolvenza in `movimento-durata-media` (200 ms), quelle che spariscono escono in `movimento-durata-breve` (120 ms) e le righe sotto scendono o salgono morbide; con «Riduci movimento» di iOS niente animazione (regola 10; richiesta di Manuel Cucca del 19/10/2026, durate proposte dall'agente). All'apertura dell'app le righe ci sono già, senza animazione.
 
+**Cestino sul telefono (SC-04, CMP-17):** la riga del computer, alla scala del telefono, mostra solo icona, nome e dettagli: Ripristina ed Elimina definitivamente accanto non ci starebbero. Le due azioni stanno nel foglio dal basso (CMP-51) che si apre toccando l'elemento, e facendo scorrere la riga (CMP-52); le conferme sono CMP-56 con i testi del computer, compresa quella di RB-31 con «Aggiungi un numero» e «Unisci» (proposta dell'agente del 19/10/2026, da confermare).
+
 La barra dei formati sopra la tastiera è CMP-10 Bollicina del formato, aperta, con accanto la pillola «Fine» che chiude la tastiera.
