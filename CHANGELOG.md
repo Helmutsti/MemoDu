@@ -7,6 +7,8 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+## [1.2.0] – 2026-10-19
+
 ### Modificato
 - La colonna a sinistra è più ordinata: Cloud e Locale stanno in riquadri bianchi, che si chiudono con la freccia e da chiusi dicono cosa contengono («42 note», «2 cartelle»)
 - Brainet è in cima alla colonna, sotto la ricerca, con tre tessere: Journal, Entità e Calendario
