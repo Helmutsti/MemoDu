@@ -741,3 +741,4 @@
 | 19/10/2026 | Manuel Cucca | Nuovo modulo telefono (app per iPhone in React Native), Fase 1 aperta con le scelte già fatte e le domande aperte | DEC-156 |
 | 19/10/2026 | Manuel Cucca | Scala del telefono: ogni misura del design system × 17/13, righe toccabili almeno a 44, carattere Inter (tokens.md, sezione Telefono) | DEC-157 |
 | 19/10/2026 | Manuel Cucca | Componenti del telefono CMP-50 … CMP-57 e stili di testo «Telefono/…» nella libreria (proposte dell'agente, da confermare) | DEC-156, DEC-157 |
+| 19/10/2026 | Manuel Cucca | App per iPhone: nucleo in TypeScript (accesso, chiavi, cifratura e sincronizzazione con le regole e i byte del computer, provato contro il server), schermata di accesso; il server accetta i dispositivi di tipo «ios» (schema 4, api.md) | DEC-156 |

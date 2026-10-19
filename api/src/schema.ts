@@ -105,6 +105,11 @@ const MIGRAZIONI: Migrazione[] = [
      creato_il timestamptz NOT NULL,
      PRIMARY KEY (utente, id)
    );`,
+
+  // 4 – L'app per iPhone (DEC-156): i dispositivi possono essere anche di tipo «ios».
+  `ALTER TABLE dispositivi DROP CONSTRAINT dispositivi_tipo_check;
+   ALTER TABLE dispositivi ADD CONSTRAINT dispositivi_tipo_check
+     CHECK (tipo IN ('windows', 'macos', 'ios'));`,
 ];
 
 export const VERSIONE_SCHEMA = MIGRAZIONI.length;

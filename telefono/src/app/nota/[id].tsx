@@ -5,12 +5,11 @@
 // vuota sparisce (RB-10). Editor: il campo di testo nativo di iOS (proposta dell'agente, DEC-156).
 
 import { Stack, useLocalSearchParams } from "expo-router";
-import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useRef, useState } from "react";
 import { Keyboard, StyleSheet, TextInput, type TextInputInstance } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { BarraFormati, type Voce } from "@/componenti/BarraFormati";
-import { eliminaSeVuota, leggiNota, nomeCartella, salvaNota } from "@/dati/archivio";
+import { useNegozio } from "@/dati/negozio";
 import {
   applicaRiga,
   applicaTesto,
@@ -25,7 +24,7 @@ const CARATTERE = new Set<Voce>(["grassetto", "corsivo", "barrato", "sottolineat
 
 export default function NotaAperta() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const db = useSQLiteContext();
+  const { archivio, modificato } = useNegozio();
   const c = useColori();
   const [titolo, setTitolo] = useState("");
   const [corpo, setCorpo] = useState("");
@@ -41,22 +40,25 @@ export default function NotaAperta() {
   useEffect(() => {
     let vivo = true;
     void (async () => {
-      const n = await leggiNota(db, id);
+      if (!archivio) return;
+      const n = await archivio.nota(id);
       if (!vivo || !n) return;
       setTitolo(n.titolo);
       setCorpo(n.contenuto);
       ultimo.current = { titolo: n.titolo, corpo: n.contenuto };
-      setCartella(await nomeCartella(db, n.cartella));
+      setCartella(await archivio.nomeCartella(n.cartella));
       setPronta(true);
     })();
     return () => {
       vivo = false;
     };
-  }, [db, id]);
+  }, [archivio, id]);
 
   const salvaOra = async () => {
     clearTimeout(timer.current);
-    await salvaNota(db, id, ultimo.current.titolo, ultimo.current.corpo);
+    if (!archivio) return;
+    await archivio.salvaNota(id, ultimo.current.titolo, ultimo.current.corpo);
+    modificato();
   };
   const cambia = (ti: string, co: string) => {
     ultimo.current = { titolo: ti, corpo: co };
@@ -69,9 +71,12 @@ export default function NotaAperta() {
   allaChiusura.current = salvaOra;
   useEffect(
     () => () => {
-      void allaChiusura.current().then(() => eliminaSeVuota(db, id));
+      void allaChiusura.current().then(async () => {
+        await archivio?.eliminaSeVuota(id);
+        modificato();
+      });
     },
-    [db, id],
+    [archivio, id, modificato],
   );
 
   const formato = (v: Voce) => {

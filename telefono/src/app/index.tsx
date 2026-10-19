@@ -6,15 +6,15 @@
 // Cestino e Impostazioni arrivano dopo.
 
 import { Plus } from "lucide-react-native";
-import { router, Stack, useFocusEffect } from "expo-router";
-import { useSQLiteContext } from "expo-sqlite";
-import { useCallback, useMemo, useState, type ReactNode } from "react";
+import { router, Stack } from "expo-router";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ricerca } from "@/componenti/Ricerca";
 import { Riquadro } from "@/componenti/Riquadro";
 import { RigaCartella, RigaNota } from "@/componenti/Righe";
-import { cestinaNota, creaNota, leggiTutto, type Cartella, type Nota } from "@/dati/archivio";
+import { useNegozio } from "@/dati/negozio";
+import type { Cartella, Nota } from "@/nucleo/archivio";
 import { misura, raggio, spazio, t, testo, useColori } from "@/tema";
 
 const alfabetico = (a: string, b: string) => a.localeCompare(b, "it", { sensitivity: "base" });
@@ -22,7 +22,7 @@ const titoloDi = (n: Nota) =>
   n.titolo.trim() || n.contenuto.trim().split(/\s+/).slice(0, 6).join(" ");
 
 export default function Note() {
-  const db = useSQLiteContext();
+  const { archivio, versione, modificato } = useNegozio();
   const c = useColori();
   const margini = useSafeAreaInsets();
   const [dati, setDati] = useState<{ note: Nota[]; cartelle: Cartella[] }>({
@@ -33,26 +33,46 @@ export default function Note() {
   const [cloudAperta, setCloudAperta] = useState(true);
   const [aperte, setAperte] = useState<Set<string>>(new Set());
 
-  const carica = useCallback(async () => setDati(await leggiTutto(db)), [db]);
-  useFocusEffect(
-    useCallback(() => {
-      void carica();
-    }, [carica]),
-  );
+  // Rilegge a ogni cambio della copia di lavoro: modifiche qui e note arrivate dagli altri dispositivi.
+  useEffect(() => {
+    if (!archivio) return;
+    let vivo = true;
+    void (async () => {
+      const [note, tutte] = await Promise.all([archivio.note(), archivio.cartelle()]);
+      // Le cartelle nel cestino non si vedono, e nemmeno quello che contengono.
+      const viste = tutte.filter((x) => !x.eliminata_il);
+      const ids = new Set(viste.map((x) => x.id));
+      const visibile = (id: string | null): boolean => {
+        for (let passi = 0; id && passi < 100; passi++) {
+          if (!ids.has(id)) return false;
+          id = viste.find((x) => x.id === id)?.madre ?? null;
+        }
+        return true;
+      };
+      const cartelle = viste.filter((x) => visibile(x.id));
+      if (vivo) setDati({ note: note.filter((n) => visibile(n.cartella)), cartelle });
+    })();
+    return () => {
+      vivo = false;
+    };
+  }, [archivio, versione]);
 
   // Il numero di una cartella conta anche le sottocartelle (RB-56).
   const conta = useMemo(() => {
     const di = (id: string): number =>
       dati.note.filter((n) => n.cartella === id).length +
-      dati.cartelle.filter((x) => x.padre === id).reduce((tot, x) => tot + di(x.id), 0);
+      dati.cartelle.filter((x) => x.madre === id).reduce((tot, x) => tot + di(x.id), 0);
     return new Map(dati.cartelle.map((x) => [x.id, di(x.id)]));
   }, [dati]);
 
   const apri = (id: string) => router.push({ pathname: "/nota/[id]", params: { id } });
-  const nuova = async (cartella: string | null = null) => apri(await creaNota(db, cartella));
+  const nuova = async (cartella: string | null = null) => {
+    if (!archivio) return;
+    apri(await archivio.creaNota(cartella));
+  };
   const elimina = async (id: string) => {
-    await cestinaNota(db, id);
-    await carica();
+    await archivio?.cestinaNota(id);
+    modificato();
   };
   const apriChiudi = (id: string) =>
     setAperte((s) => {
@@ -82,7 +102,7 @@ export default function Note() {
           : alfabetico(titoloDi(a), titoloDi(b)),
       );
     const cartelle = dati.cartelle
-      .filter((x) => x.padre === padre)
+      .filter((x) => x.madre === padre)
       .sort((a, b) => alfabetico(a.nome, b.nome));
     return [
       ...note.map((n) => rigaNota(n, padre === null ? undefined : livello - 1)),

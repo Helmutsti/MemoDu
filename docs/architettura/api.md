@@ -519,7 +519,7 @@ Sostituisce, alla consegna, l'accesso dell'utente fisso descritto più sotto. Le
 Come oggi: `{ "email" }` → `{ "sale", "argon2" }`, cercati nella tabella degli account; per un'email sconosciuta il sale finto calcolato da `MEMODU_SEGRETO`.
 
 ### POST /accesso
-**Input:** `{ "email", "prova", "tipo": "windows" | "macos" }`. **Output:** `{ "gettone", "dispositivo": "<uuid>", "chiave": "<chiave dati avvolta con la password>" }`. Crea la riga del dispositivo. **Errori:** 401 `Credenziali non valide` (SF-07, senza dire se è sbagliata l'email o la prova); 400 con la prova malformata.
+**Input:** `{ "email", "prova", "tipo": "windows" | "macos" | "ios" }` (`ios` dall'app per iPhone, DEC-156; schema 4). **Output:** `{ "gettone", "dispositivo": "<uuid>", "chiave": "<chiave dati avvolta con la password>" }`. Crea la riga del dispositivo. **Errori:** 401 `Credenziali non valide` (SF-07, senza dire se è sbagliata l'email o la prova); 400 con la prova malformata.
 
 ### POST /accesso/recupero/chiave
 **Input:** `{ "email", "prova_recupero" }`. **Output:** `{ "chiave_recupero": "<chiave dati avvolta con la chiave di recupero>", "sale", "argon2" }`: serve all'app per aprire la chiave dati e riavvolgerla con la password nuova (FL-14). **Errori:** 401.

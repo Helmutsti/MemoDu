@@ -1692,7 +1692,7 @@ Scelta di Manuel Cucca del 16/10/2026 (DEC-150: «una timeline con le citazioni�
 ---
 
 ## Componenti del telefono (DEC-156, DEC-157)
-Solo nell'app per iPhone. Pagina **Componenti telefono** del file Design system, alla scala del telefono (ogni misura × 17/13, stili di testo «Telefono/…»; icone a 20, la misura più vicina). Proposte dell'agente del 19/10/2026, da confermare. Sul telefono gli stati legati al mouse (Hover, Focus da tastiera, ··· al passaggio) diventano il tocco premuto, la riga che scorre e la pressione lunga.
+Solo nell'app per iPhone. Pagina **Componenti telefono** del file Design system, alla scala del telefono (ogni misura × 17/13, stili di testo «Telefono/…»; icone a 20, la misura più vicina). Proposte dell'agente del 19/10/2026, approvate da Manuel Cucca lo stesso giorno. Sul telefono gli stati legati al mouse (Hover, Focus da tastiera, ··· al passaggio) diventano il tocco premuto, la riga che scorre e la pressione lunga.
 
 | Codice | Nome | Cosa fa |
 |---|---|---|

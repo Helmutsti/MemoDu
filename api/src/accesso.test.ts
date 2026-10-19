@@ -153,6 +153,18 @@ describe("account e accesso (DEC-132, DEC-133)", () => {
     expect((await modifiche(a.gettone)).statusCode).toBe(200);
   });
 
+  it("anche l'app per iPhone accede, con il tipo «ios» (DEC-156)", async () => {
+    const a = await accedi(PASSWORD, "ios");
+    expect(a.gettone).toMatch(/^[A-Za-z0-9_-]{43}$/);
+    expect((await modifiche(a.gettone)).statusCode).toBe(200);
+    const altro = await richiesta("POST", "/accesso", {
+      email: "manuel@esempio.it",
+      prova: provaDi(PASSWORD),
+      tipo: "android",
+    });
+    expect(altro.statusCode).toBe(400);
+  });
+
   it("un'email sconosciuta riceve un sale finto ma sempre uguale", async () => {
     const a = await accesso.parametri("nessuno@esempio.it");
     expect(a).toEqual(await accesso.parametri("nessuno@esempio.it"));

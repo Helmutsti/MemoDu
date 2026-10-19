@@ -79,7 +79,7 @@ const ugualiHex = (a: string, b: string) => {
 };
 const normalizza = (email: string) => email.trim().toLowerCase();
 
-export type Tipo = "windows" | "macos";
+export type Tipo = "windows" | "macos" | "ios";
 
 /** Chi fa la richiesta: l'account e il dispositivo del gettone. */
 export interface Autorizzazione {

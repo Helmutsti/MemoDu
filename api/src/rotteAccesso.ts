@@ -9,7 +9,7 @@ import { PROTOCOLLO } from "./sincronizzazione.js";
 const email = { type: "string", minLength: 3, maxLength: 320 } as const;
 const prova = { type: "string", pattern: "^[A-Za-z0-9_-]{43}$" } as const;
 const chiave = { type: "string", pattern: "^[A-Za-z0-9_-]{96}$" } as const;
-const tipo = { type: "string", enum: ["windows", "macos"] } as const;
+const tipo = { type: "string", enum: ["windows", "macos", "ios"] } as const;
 const intero = (minimo: number, massimo: number) =>
   ({ type: "integer", minimum: minimo, maximum: massimo }) as const;
 const oggetto = (proprieta: Record<string, object>, facoltative: string[] = []) => ({

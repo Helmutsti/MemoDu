@@ -38,6 +38,8 @@ const chiaro = {
   iconaTenue: grigio[500],
   iconaSuPieno: grigio[0],
   bordoDivisoreTenue: "rgba(0,0,0,0.06)",
+  testoErrore: "#BE232A",
+  iconaErrore: "#BE232A",
   ombraFlottante: "rgba(0,0,0,0.12)",
   /** ombra-flottante come opacità del nero, per le ombre native. */
   ombraOpacita: 0.12,
@@ -57,6 +59,8 @@ const scuro: typeof chiaro = {
   iconaTenue: grigio[400],
   iconaSuPieno: grigio[950],
   bordoDivisoreTenue: "rgba(255,255,255,0.05)",
+  testoErrore: "#FE6F69",
+  iconaErrore: "#FE6F69",
   ombraFlottante: "rgba(0,0,0,0.40)",
   ombraOpacita: 0.4,
 };
