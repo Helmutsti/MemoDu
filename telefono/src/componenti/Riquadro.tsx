@@ -1,13 +1,13 @@
 // CMP-14 Albero delle cartelle a riquadro (DEC-154) con l'intestazione CMP-06 Sezione dentro,
 // alla scala del telefono (DEC-157): sfondo-nota, raggio-contenitore, spazio-elemento in cima e
-// spazio-elenco ai lati e in fondo; spazio-elemento tra le righe. Intestazione: freccia 16 in
-// icona-tenue, nome in Interfaccia/Titolo, da chiuso il riassunto in Interfaccia/Dettaglio
-// (DEC-155), il + in testo-primario a destra.
+// spazio-elenco ai lati e in fondo; spazio-elemento tra le righe. Intestazione come sul computer:
+// freccia 12 e nome in Interfaccia/Titolo di sezione (maiuscolo) in testo-tenue, da chiuso il
+// riassunto in Interfaccia/Dettaglio (DEC-155), il + in testo-primario a destra.
 
 import { ChevronDown, ChevronRight, Plus } from "lucide-react-native";
 import { Children, type ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { misura, raggio, spazio, testo, useColori } from "@/tema";
+import { misura, raggio, spazio, t, testo, useColori } from "@/tema";
 
 interface Proprieta {
   titolo: string;
@@ -49,8 +49,8 @@ export function Riquadro({
         style={({ pressed }) => [stili.intestazione, pressed && { backgroundColor: c.sfondoHover }]}
       >
         <View style={stili.titolo}>
-          <Freccia size={misura.icona} color={c.iconaTenue} strokeWidth={misura.tratto} />
-          <Text style={[testo.titolo, { color: c.testoPrimario }]}>{titolo}</Text>
+          <Freccia size={t(12)} color={c.testoTenue} strokeWidth={misura.tratto} />
+          <Text style={[testo.titoloSezione, { color: c.testoTenue }]}>{titolo}</Text>
           {!aperto && riassunto ? (
             <Text style={[testo.dettaglio, { color: c.testoTenue }]} numberOfLines={1}>
               {riassunto}

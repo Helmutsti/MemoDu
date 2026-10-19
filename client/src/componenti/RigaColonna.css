@@ -41,15 +41,18 @@
   color: var(--testo-tenue);
 }
 
-/* Intestazione dentro il riquadro della sezione (DEC-154): freccia 16 in icona tenue, nome in
-   Interfaccia/Titolo e testo primario, da chiusa il riassunto in testo tenue (DEC-155), + a destra.
-   A sinistra spazio-controllo come le righe; a destra finisce con il +, spazio-controllo-piccolo. */
+/* Intestazione dentro il riquadro della sezione (DEC-154): freccia 12, nome in Interfaccia/Titolo
+   di sezione (maiuscolo, semi grassetto) e riassunto da chiusa (DEC-155) in testo tenue, che con il
+   mouse sopra passa a testo-primario (regola 7); + a destra. A sinistra spazio-controllo come le
+   righe; a destra finisce con il +, spazio-controllo-piccolo. */
 .riga-sezione {
   gap: var(--spazio-elemento);
   padding: 0 var(--spazio-controllo-piccolo) 0 var(--spazio-controllo);
+  color: var(--testo-tenue);
 }
 .riga-sezione:hover {
   background: var(--sfondo-hover);
+  color: var(--testo-primario);
 }
 .riga-sezione-titolo {
   display: flex;
@@ -62,7 +65,7 @@
   padding: 0;
   border: none;
   background: none;
-  color: var(--testo-primario);
+  color: inherit;
   cursor: pointer;
 }
 .riga-sezione-nome {
@@ -71,7 +74,7 @@
 .riga-riassunto {
   min-width: 0;
   overflow: hidden;
-  color: var(--testo-tenue);
+  color: inherit;
   white-space: nowrap;
   text-overflow: ellipsis;
 }

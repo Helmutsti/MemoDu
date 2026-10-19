@@ -121,6 +121,13 @@ export const testo = {
   etichetta: riga("Inter_500Medium", 11),
   dettaglio: riga("Inter_400Regular", 11),
   titoloSchermata: riga("Inter_600SemiBold", 19),
+  /** Interfaccia/Titolo di sezione: maiuscolo, semi grassetto, spaziatura 6%. */
+  titoloSezione: {
+    fontFamily: "Inter_600SemiBold",
+    fontSize: t(11),
+    textTransform: "uppercase",
+    letterSpacing: t(11) * 0.06,
+  } as TextStyle,
   messaggio: paragrafo("Inter_400Regular", 13, 1.4),
   notaTitolo: paragrafo("Inter_700Bold", 30, 1.2),
   notaSottotitolo: paragrafo("Inter_600SemiBold", 19, 1.35),

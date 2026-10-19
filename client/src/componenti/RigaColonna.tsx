@@ -315,8 +315,8 @@ interface ProprietaSezione extends Pick<Trascinamento, "data-destinazione"> {
 }
 
 /**
- * Intestazione dentro il riquadro di una sezione (CMP-06 Sezione, DEC-154): freccia 16, nome in
- * Interfaccia/Titolo, da chiusa il riassunto (DEC-155), il + a destra.
+ * Intestazione dentro il riquadro di una sezione (CMP-06 Sezione, DEC-154): freccia 12, nome in
+ * Interfaccia/Titolo di sezione (maiuscolo, testo tenue), da chiusa il riassunto (DEC-155), il +.
  */
 export function RigaSezione({
   titolo,
@@ -336,10 +336,8 @@ export function RigaSezione({
         aria-expanded={aperta}
         onClick={onApriChiudi}
       >
-        <span className="riga-icona">
-          <Icona di={aperta ? ChevronDown : ChevronRight} />
-        </span>
-        <span className="riga-sezione-nome interfaccia-titolo">{titolo}</span>
+        <Icona di={aperta ? ChevronDown : ChevronRight} misura={12} />
+        <span className="riga-sezione-nome interfaccia-titolo-sezione">{titolo}</span>
         {!aperta && riassunto && (
           <span className="riga-riassunto interfaccia-dettaglio">{riassunto}</span>
         )}
