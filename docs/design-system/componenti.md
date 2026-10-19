@@ -1705,4 +1705,6 @@ Solo nell'app per iPhone. Pagina **Componenti telefono** del file Design system,
 | CMP-56 | Conferma | La finestra di conferma del computer (CMP-16) come foglio dal basso, con i pulsanti larghi: l'azione piena sopra, Annulla sotto; stessi testi di CMP-16 |
 | CMP-57 | Avviso | L'avviso del computer (CMP-15) scende in alto sotto il bordo del telefono; sparisce da solo o scorrendolo verso l'alto |
 
+Sul telefono le cartelle e i riquadri si aprono e si chiudono con un movimento: le righe che compaiono entrano in dissolvenza in `movimento-durata-media` (200 ms), quelle che spariscono escono in `movimento-durata-breve` (120 ms) e le righe sotto scendono o salgono morbide; con «Riduci movimento» di iOS niente animazione (regola 10; richiesta di Manuel Cucca del 19/10/2026, durate proposte dall'agente). All'apertura dell'app le righe ci sono già, senza animazione.
+
 La barra dei formati sopra la tastiera è CMP-10 Bollicina del formato, aperta, con accanto la pillola «Fine» che chiude la tastiera.

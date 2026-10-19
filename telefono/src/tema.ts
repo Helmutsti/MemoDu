@@ -134,5 +134,11 @@ export const testo = {
   notaCorpo: paragrafo("Inter_400Regular", 15, 1.6),
 };
 
+/**
+ * Movimento (regola 10): le durate non si scalano. Con «Riduci movimento» di iOS le animazioni
+ * non partono (Reanimated segue l'impostazione del sistema).
+ */
+export const movimento = { durataBreve: 120, durataMedia: 200 };
+
 /** opacita-disabilitato (40%). */
 export const opacitaDisabilitato = 0.4;

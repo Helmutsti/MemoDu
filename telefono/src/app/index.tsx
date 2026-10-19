@@ -9,10 +9,12 @@
 import { router, Stack } from "expo-router";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { LayoutAnimationConfig } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BarraTessere, FondoColonna } from "@/componenti/Colonna";
 import { Ricerca } from "@/componenti/Ricerca";
 import { Riquadro } from "@/componenti/Riquadro";
+import { Comparsa } from "@/componenti/Comparsa";
 import { RigaCartella, RigaNota } from "@/componenti/Righe";
 import { useNegozio } from "@/dati/negozio";
 import type { Cartella, Nota } from "@/nucleo/archivio";
@@ -115,16 +117,19 @@ export default function Note() {
       .filter((x) => x.madre === padre)
       .sort((a, b) => alfabetico(a.nome, b.nome));
     return [
-      ...note.map((n) => rigaNota(n, padre === null ? undefined : livello - 1)),
+      ...note.map((n) => (
+        <Comparsa key={n.id}>{rigaNota(n, padre === null ? undefined : livello - 1)}</Comparsa>
+      )),
       ...cartelle.flatMap((x) => [
-        <RigaCartella
-          key={x.id}
-          nome={x.nome}
-          conteggio={conta.get(x.id) ?? 0}
-          aperta={aperte.has(x.id)}
-          livello={livello}
-          onPress={() => apriChiudi(x.id)}
-        />,
+        <Comparsa key={x.id}>
+          <RigaCartella
+            nome={x.nome}
+            conteggio={conta.get(x.id) ?? 0}
+            aperta={aperte.has(x.id)}
+            livello={livello}
+            onPress={() => apriChiudi(x.id)}
+          />
+        </Comparsa>,
         ...(aperte.has(x.id) ? albero(x.id, livello + 1) : []),
       ]),
     ];
@@ -145,31 +150,34 @@ export default function Note() {
         keyboardShouldPersistTaps="handled"
       >
         <Ricerca valore={cerca} onCambia={setCerca} />
-        {q ? (
-          <View style={[stili.risultati, { backgroundColor: c.sfondoNota }]}>
-            {trovate.length ? (
-              trovate.map((n) => rigaNota(n))
-            ) : (
-              <Text style={[testo.messaggio, stili.vuoto, { color: c.testoTenue }]}>
-                Nessuna nota trovata
-              </Text>
-            )}
-          </View>
-        ) : (
-          <>
-            {brainet ? <BarraTessere /> : null}
-            <Riquadro
-              titolo="Cloud"
-              aperto={cloudAperta}
-              riassunto={quante === 0 ? undefined : quante === 1 ? "1 nota" : `${quante} note`}
-              onApriChiudi={() => setCloudAperta((a) => !a)}
-              onAggiungi={() => void nuova()}
-              nomeAggiungi="Nuova nota"
-            >
-              {albero(null, 0)}
-            </Riquadro>
-          </>
-        )}
+        {/* All'apertura dell'app le righe ci sono già: si animano solo aprendo e chiudendo. */}
+        <LayoutAnimationConfig skipEntering>
+          {q ? (
+            <View style={[stili.risultati, { backgroundColor: c.sfondoNota }]}>
+              {trovate.length ? (
+                trovate.map((n) => rigaNota(n))
+              ) : (
+                <Text style={[testo.messaggio, stili.vuoto, { color: c.testoTenue }]}>
+                  Nessuna nota trovata
+                </Text>
+              )}
+            </View>
+          ) : (
+            <>
+              {brainet ? <BarraTessere /> : null}
+              <Riquadro
+                titolo="Cloud"
+                aperto={cloudAperta}
+                riassunto={quante === 0 ? undefined : quante === 1 ? "1 nota" : `${quante} note`}
+                onApriChiudi={() => setCloudAperta((a) => !a)}
+                onAggiungi={() => void nuova()}
+                nomeAggiungi="Nuova nota"
+              >
+                {albero(null, 0)}
+              </Riquadro>
+            </>
+          )}
+        </LayoutAnimationConfig>
       </ScrollView>
       <FondoColonna
         cestino={cestino}

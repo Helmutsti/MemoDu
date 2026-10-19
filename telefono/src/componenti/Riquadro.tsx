@@ -7,6 +7,8 @@
 import { ChevronDown, ChevronRight, Plus } from "lucide-react-native";
 import { Children, type ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import Animated from "react-native-reanimated";
+import { Comparsa, transizione } from "@/componenti/Comparsa";
 import { misura, raggio, spazio, t, testo, useColori } from "@/tema";
 
 interface Proprieta {
@@ -32,7 +34,8 @@ export function Riquadro({
   const Freccia = aperto ? ChevronDown : ChevronRight;
   const righe = Children.toArray(children);
   return (
-    <View
+    <Animated.View
+      layout={transizione}
       style={[
         stili.riquadro,
         {
@@ -68,8 +71,12 @@ export function Riquadro({
           </Pressable>
         ) : null}
       </Pressable>
-      {aperto ? <View style={stili.righe}>{righe}</View> : null}
-    </View>
+      {aperto ? (
+        <Comparsa>
+          <View style={stili.righe}>{righe}</View>
+        </Comparsa>
+      ) : null}
+    </Animated.View>
   );
 }
 
