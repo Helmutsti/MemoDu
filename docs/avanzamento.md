@@ -55,6 +55,10 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 | Testi definitivi di messaggi e avvisi | Tutti i flussi, EN-08 | Fase 6 | Flussi, colonna "Comunicazione" |
 | Come si salvano dimensione, allineamento, ritaglio e rotazione delle immagini senza rompere l'esportazione | RF-03, RF-13 | Fase 7 di RF-03 | `moduli/note/8-test.md` |
 
+## App per iPhone · 19/10/2026
+
+DEC-156 (Proposta, scelta di Manuel Cucca): l'app per iPhone in React Native; il prototipo web su Vercel non si usa più. Modulo `telefono` aperto, Fase 1: requisiti da scrivere, domande aperte in `moduli/telefono/8-test.md` (perimetro della prima versione, nucleo Rust o TypeScript, editor della nota, scala del telefono nel design system).
+
 ## Colonna a riquadri · 19/10/2026
 
 DEC-154, DEC-155: libreria aggiornata dall'agente (CMP-06 intestazione e «Hover con azioni», CMP-14 a riquadro, CMP-30, nuovi CMP-48 e CMP-49), da ripubblicare da Manuel Cucca; dopo, nei mockup la barra delle tessere al posto della sezione Brainet e Locale in riquadro. Codice fatto, prove automatiche superate; le prove a mano TC-251 … TC-253 sull'app restano da fare (il terminale non ha il permesso di registrare lo schermo). La pagina «Proposta · Colonna a riquadri» del file dei mockup si cancella dopo l'allineamento.

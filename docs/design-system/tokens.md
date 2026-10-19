@@ -127,6 +127,9 @@ Desktop-first (vedi `moduli/interfaccia/4-schermate.md`). Solo Windows e macOS (
 
 Il breakpoint stretto (sotto 1024 px, con la colonna come drawer) serviva solo al web ed è rinviato con ID-19.
 
+## Telefono (DEC-157)
+Sul telefono (DEC-156) ogni misura dei token e degli stili di testo si moltiplica per 17/13 (circa 1,31) e si arrotonda all'intero: testi, spazi, raggi e icone. Esempi: Interfaccia/Controllo 13 → 17, Interfaccia/Dettaglio ed Etichetta 11 → 14, Nota/Corpo 15 → 20, Nota/Sottotitolo 19 → 25, Nota/Titolo 30 → 39; `spazio-controllo` 12 → 16, `raggio-contenitore` 20 → 26, `misura-icona` 16 → 21. Le righe toccabili restano almeno a 44. Nel codice: `telefono/src/tema.ts`.
+
 ## Tipografia
 Un solo carattere: **Inter**.
 

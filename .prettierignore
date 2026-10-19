@@ -2,3 +2,7 @@ docs
 client/src-tauri
 *.md
 package-lock.json
+telefono/.expo
+telefono/ios
+prototipi
+telefono/expo-env.d.ts

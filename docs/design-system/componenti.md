@@ -1688,3 +1688,21 @@ Scelta di Manuel Cucca del 16/10/2026 (DEC-150: «una timeline con le citazioni�
 ### Esempi
 - ✅ Corretto: con Brainet acceso, le tre tessere tra la ricerca e CLOUD.
 - ❌ Scorretto: la barra con Brainet spento.
+
+---
+
+## Componenti del telefono (DEC-156, DEC-157)
+Solo nell'app per iPhone. Pagina **Componenti telefono** del file Design system, alla scala del telefono (ogni misura × 17/13, stili di testo «Telefono/…»; icone a 20, la misura più vicina). Proposte dell'agente del 19/10/2026, da confermare. Sul telefono gli stati legati al mouse (Hover, Focus da tastiera, ··· al passaggio) diventano il tocco premuto, la riga che scorre e la pressione lunga.
+
+| Codice | Nome | Cosa fa |
+|---|---|---|
+| CMP-50 | Barra della nota | In cima alla nota: «‹ cartella» torna alla lista (anche con il gesto dal bordo sinistro), Info a destra apre il foglio dal basso; scorrendo, il titolo compare piccolo al centro in testo-tenue |
+| CMP-51 | Foglio dal basso | Sale sopra il velo per Info, Sposta in… e le conferme; si chiude con la ×, trascinando la maniglia in giù o toccando il velo. Raggio 26 in alto, sfondo-flottante, ombra-flottante |
+| CMP-52 | Azioni della riga scorsa | Facendo scorrere una nota a sinistra: Sposta (sfondo-campo) ed Elimina (sfondo-pieno), pillole alte 44; Elimina manda nel Cestino senza conferma (ID-55); da ferme non si vedono |
+| CMP-53 | Menu della pressione lunga | Il tasto destro del computer (CMP-09): tenendo premuta una riga, la riga si solleva e compaiono le stesse voci, alte 44 |
+| CMP-54 | Barra in basso | «Nuova nota» con il tondo pieno a sinistra, Cestino con il numero a destra; sparisce mentre si cerca |
+| CMP-55 | Testata della schermata | Titolo grande in Telefono/Nota titolo e un tondo d'azione a destra (Impostazioni nella prima schermata, ··· nelle altre); nelle schermate interne sopra c'è «‹ Memodu» |
+| CMP-56 | Conferma | La finestra di conferma del computer (CMP-16) come foglio dal basso, con i pulsanti larghi: l'azione piena sopra, Annulla sotto; stessi testi di CMP-16 |
+| CMP-57 | Avviso | L'avviso del computer (CMP-15) scende in alto sotto il bordo del telefono; sparisce da solo o scorrendolo verso l'alto |
+
+La barra dei formati sopra la tastiera è CMP-10 Bollicina del formato, aperta, con accanto la pillola «Fine» che chiude la tastiera.

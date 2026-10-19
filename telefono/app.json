@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "name": "Memodu",
+    "slug": "memodu-telefono",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.mcucca.memodu",
+      "appleTeamId": "5NM7586UUV"
+    },
+    "plugins": ["expo-router", "expo-status-bar", "expo-sqlite", "expo-font"],
+    "scheme": "memodu",
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

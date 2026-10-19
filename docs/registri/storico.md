@@ -738,3 +738,6 @@
 | 19/10/2026 | Manuel Cucca | Spostare una nota in Brainet anche trascinandola sulla tessera Journal della colonna, con la stessa conferma (FL-28, RB-130; scelta di Manuel Cucca su proposta dell'agente) | DEC-154 |
 | 19/10/2026 | Manuel Cucca | Riquadro chiuso della colonna con il riassunto accanto al nome («42 note», «2 cartelle»); da aperto resta senza numero (CMP-06; scelta di Manuel Cucca su proposta dell'agente) | DEC-155 |
 | 19/10/2026 | Manuel Cucca | Colonna a riquadri: barra di tre tessere di Brainet sotto la ricerca, CLOUD e Locale in riquadri con l'intestazione dentro, Cestino in un riquadro e Impostazioni in un tondo (SC-01, CMP-06, CMP-14, CMP-30, nuovi CMP-48 e CMP-49; CA-11.9 … CA-11.11, TC-251 … TC-253; scelta di Manuel Cucca, fatto dall'agente) | DEC-154 |
+| 19/10/2026 | Manuel Cucca | Nuovo modulo telefono (app per iPhone in React Native), Fase 1 aperta con le scelte già fatte e le domande aperte | DEC-156 |
+| 19/10/2026 | Manuel Cucca | Scala del telefono: ogni misura del design system × 17/13, righe toccabili almeno a 44, carattere Inter (tokens.md, sezione Telefono) | DEC-157 |
+| 19/10/2026 | Manuel Cucca | Componenti del telefono CMP-50 … CMP-57 e stili di testo «Telefono/…» nella libreria (proposte dell'agente, da confermare) | DEC-156, DEC-157 |
