@@ -47,6 +47,8 @@ interface Negozio {
   senzaCloud: boolean;
   pronto: boolean;
   problema: Problema | null;
+  /** L'ultima sincronizzazione riuscita, per il riquadro dell'account. */
+  ultimaRiuscita: string | null;
   accedi: (
     email: string,
     password: string,
@@ -73,6 +75,7 @@ export function NegozioProvider({ children }: { children: ReactNode }) {
   const [pronto, setPronto] = useState(false);
   const [versione, setVersione] = useState(0);
   const [problema, setProblema] = useState<Problema | null>(null);
+  const [ultimaRiuscita, setUltimaRiuscita] = useState<string | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const ritentativo = useRef(PRIMO_RITENTATIVO_MS);
   const inCorso = useRef(false);
@@ -85,6 +88,7 @@ export function NegozioProvider({ children }: { children: ReactNode }) {
       const a = await Archivio.apri(await apriDb("memodu.db"), undefined, () => randomUUID());
       const s = sessioneDaTesto(await SecureStore.getItemAsync(VOCE_SESSIONE));
       setSenzaCloud((await a.statoSinc("senza_cloud")) === "1");
+      setUltimaRiuscita(await a.statoSinc("ultima_riuscita"));
       setArchivio(a);
       setSessione(s);
       setPronto(true);
@@ -106,6 +110,7 @@ export function NegozioProvider({ children }: { children: ReactNode }) {
     try {
       const esito = await sincronizza(a, s);
       setProblema(null);
+      setUltimaRiuscita(await a.statoSinc("ultima_riuscita"));
       ritentativo.current = PRIMO_RITENTATIVO_MS;
       if (esito.cambiato) setVersione((v) => v + 1);
       programma(INTERVALLO_MS);
@@ -184,6 +189,7 @@ export function NegozioProvider({ children }: { children: ReactNode }) {
       senzaCloud,
       pronto,
       problema,
+      ultimaRiuscita,
       accedi,
       esci,
       usaSenzaCloud,
@@ -196,6 +202,7 @@ export function NegozioProvider({ children }: { children: ReactNode }) {
       senzaCloud,
       pronto,
       problema,
+      ultimaRiuscita,
       accedi,
       esci,
       usaSenzaCloud,

@@ -742,3 +742,4 @@
 | 19/10/2026 | Manuel Cucca | Scala del telefono: ogni misura del design system × 17/13, righe toccabili almeno a 44, carattere Inter (tokens.md, sezione Telefono) | DEC-157 |
 | 19/10/2026 | Manuel Cucca | Componenti del telefono CMP-50 … CMP-57 e stili di testo «Telefono/…» nella libreria (proposte dell'agente, da confermare) | DEC-156, DEC-157 |
 | 19/10/2026 | Manuel Cucca | App per iPhone: nucleo in TypeScript (accesso, chiavi, cifratura e sincronizzazione con le regole e i byte del computer, provato contro il server), schermata di accesso; il server accetta i dispositivi di tipo «ios» (schema 4, api.md) | DEC-156 |
+| 19/10/2026 | Manuel Cucca | Telefono: la prima schermata è la colonna del computer (ricerca, tessere di Brainet, Cloud, Cestino e Impostazioni in fondo), mockup nella pagina «Telefono» del file dei mockup; Impostazioni con il riquadro dell'account; i testi di una riga senza interlinea fissa, che li scentrava (DEC-157) | DEC-154, DEC-156 |

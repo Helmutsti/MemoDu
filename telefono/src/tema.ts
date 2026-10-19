@@ -98,22 +98,34 @@ export const misura = {
   tratto: 1.5,
 };
 
-/** Stili di testo del design system (Interfaccia/…, Nota/…) alla scala del telefono. */
-const stile = (famiglia: string, misuraPc: number, interlinea: number): TextStyle => ({
+/**
+ * Stili di testo del design system (Interfaccia/…, Nota/…) alla scala del telefono. I testi di una
+ * riga (controlli, titoli, etichette, dettagli) non hanno interlinea fissa: su iOS, con Inter,
+ * un'interlinea più alta del carattere spinge il testo verso il basso e lo scentra nelle pillole.
+ * L'interlinea resta solo nei testi che vanno a capo (messaggi e nota).
+ */
+const riga = (famiglia: string, misuraPc: number): TextStyle => ({
+  fontFamily: famiglia,
+  fontSize: t(misuraPc),
+});
+const paragrafo = (famiglia: string, misuraPc: number, interlinea: number): TextStyle => ({
   fontFamily: famiglia,
   fontSize: t(misuraPc),
   lineHeight: Math.round(t(misuraPc) * interlinea),
 });
 
 export const testo = {
-  controllo: stile("Inter_400Regular", 13, 1.4),
-  controlloAttivo: stile("Inter_500Medium", 13, 1.4),
-  titolo: stile("Inter_500Medium", 13, 1.4),
-  messaggio: stile("Inter_400Regular", 13, 1.4),
-  etichetta: stile("Inter_500Medium", 11, 1.3),
-  dettaglio: stile("Inter_400Regular", 11, 1.3),
-  titoloSchermata: stile("Inter_600SemiBold", 19, 1.35),
-  notaTitolo: stile("Inter_700Bold", 30, 1.2),
-  notaSottotitolo: stile("Inter_600SemiBold", 19, 1.35),
-  notaCorpo: stile("Inter_400Regular", 15, 1.6),
+  controllo: riga("Inter_400Regular", 13),
+  controlloAttivo: riga("Inter_500Medium", 13),
+  titolo: riga("Inter_500Medium", 13),
+  etichetta: riga("Inter_500Medium", 11),
+  dettaglio: riga("Inter_400Regular", 11),
+  titoloSchermata: riga("Inter_600SemiBold", 19),
+  messaggio: paragrafo("Inter_400Regular", 13, 1.4),
+  notaTitolo: paragrafo("Inter_700Bold", 30, 1.2),
+  notaSottotitolo: paragrafo("Inter_600SemiBold", 19, 1.35),
+  notaCorpo: paragrafo("Inter_400Regular", 15, 1.6),
 };
+
+/** opacita-disabilitato (40%). */
+export const opacitaDisabilitato = 0.4;

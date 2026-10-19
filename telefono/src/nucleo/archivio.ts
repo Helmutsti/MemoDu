@@ -56,6 +56,8 @@ export interface Conflitto {
   copia: string;
 }
 
+/** L'elemento delle impostazioni, uguale su tutti i dispositivi (DEC-91, RB-52). */
+export const ID_IMPOSTAZIONI = "00000000-0000-4000-8000-000000000001";
 const TIPI = ["nota", "cartella", "tag", "impostazioni", "entita", "stato", "allegato"];
 const CAMPI_TESTO = ["titolo", "contenuto"];
 /** Campi che una versione vecchia non conosce: se mancano non sono un cambio (RB-92). */
@@ -266,6 +268,12 @@ export class Archivio {
       if (String(e.campi.titolo ?? "").trim() || String(e.campi.contenuto ?? "").trim()) return;
       await this.cancella(id, "nota");
     });
+  }
+
+  /** Brainet acceso, dalle impostazioni che viaggiano con la sincronizzazione (DEC-91, RB-106). */
+  async brainetAcceso(): Promise<boolean> {
+    const e = await this.campi(ID_IMPOSTAZIONI);
+    return e?.campi.brainet === true;
   }
 
   async quantiNelCestino(): Promise<number> {
