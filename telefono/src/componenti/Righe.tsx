@@ -42,10 +42,19 @@ export function RigaCartella({
       ]}
     >
       <Icona size={misura.icona} color={c.iconaTenue} strokeWidth={misura.tratto} />
-      <Text style={[testo.controllo, stili.nome, { color: c.testoPrimario }]} numberOfLines={1}>
+      <Text
+        allowFontScaling={false}
+        style={[testo.controllo, stili.nome, { color: c.testoPrimario }]}
+        numberOfLines={1}
+      >
         {nome}
       </Text>
-      <Text style={[testo.dettaglio, stili.conteggio, { color: c.testoTenue }]}>{conteggio}</Text>
+      <Text
+        allowFontScaling={false}
+        style={[testo.dettaglio, stili.conteggio, { color: c.testoTenue }]}
+      >
+        {conteggio}
+      </Text>
     </Pressable>
   );
 }
@@ -96,6 +105,7 @@ export function RigaNota({
         ]}
       >
         <Text
+          allowFontScaling={false}
           style={[testo.controllo, stili.nome, { color: vuota ? c.testoTenue : c.testoPrimario }]}
           numberOfLines={1}
         >
@@ -128,7 +138,9 @@ function AzioneElimina({
         ]}
       >
         <Trash2 size={misura.icona} color={c.iconaSuPieno} strokeWidth={misura.tratto} />
-        <Text style={[testo.etichetta, { color: c.testoSuPieno }]}>Elimina</Text>
+        <Text allowFontScaling={false} style={[testo.etichetta, { color: c.testoSuPieno }]}>
+          Elimina
+        </Text>
       </Pressable>
     </Animated.View>
   );

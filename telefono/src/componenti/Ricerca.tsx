@@ -13,6 +13,7 @@ export function Ricerca({ valore, onCambia }: { valore: string; onCambia: (v: st
     <View style={[stili.campo, { backgroundColor: c.sfondoCampo }]}>
       <Search size={misura.icona} color={c.iconaTenue} strokeWidth={misura.tratto} />
       <TextInput
+        allowFontScaling={false}
         value={valore}
         onChangeText={onCambia}
         placeholder="Cerca nelle note"

@@ -51,7 +51,6 @@ export async function accedi(
   password: string,
   f: Chiamata = fetch,
   indirizzo = INDIRIZZO,
-  onProgress?: (frazione: number) => void,
 ): Promise<Sessione> {
   const e = email.trim().toLowerCase();
   let p;
@@ -64,7 +63,7 @@ export async function accedi(
   const { sale, argon2 } = p.json as { sale: string; argon2: ParametriArgon2 };
   const saleByte = daB64(sale);
   if (!saleByte) throw "errore" satisfies ErroreAccesso;
-  const { prova, cassaforte } = await daPassword(password, saleByte, argon2, onProgress);
+  const { prova, cassaforte } = await daPassword(password, saleByte, argon2);
   let r;
   try {
     r = await chiama(

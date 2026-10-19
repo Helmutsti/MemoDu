@@ -107,6 +107,7 @@ export default function NotaAperta() {
         keyboardShouldPersistTaps="handled"
       >
         <TextInput
+          allowFontScaling={false}
           value={titolo}
           onChangeText={(ti) => {
             setTitolo(ti);
@@ -122,6 +123,7 @@ export default function NotaAperta() {
           autoFocus={pronta && !titolo && !corpo}
         />
         <TextInput
+          allowFontScaling={false}
           ref={corpoRef}
           value={corpo}
           onChangeText={(co) => {

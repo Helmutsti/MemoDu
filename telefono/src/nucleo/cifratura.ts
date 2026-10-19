@@ -6,9 +6,9 @@
 
 import { xchacha20poly1305 } from "@noble/ciphers/chacha.js";
 import { utf8ToBytes } from "@noble/ciphers/utils.js";
-import { argon2idAsync } from "@noble/hashes/argon2.js";
 import { hkdf } from "@noble/hashes/hkdf.js";
 import { sha256 } from "@noble/hashes/sha2.js";
+import { argon2id } from "./argon2";
 import { casuali } from "./casuali";
 
 export const FORMATO_CIFRATO = "xchacha20poly1305";
@@ -102,16 +102,8 @@ export async function daPassword(
   password: string,
   sale: Uint8Array,
   p: ParametriArgon2 = ARGON2,
-  onProgress?: (frazione: number) => void,
 ): Promise<{ prova: Uint8Array; cassaforte: Uint8Array }> {
-  const base = await argon2idAsync(utf8.encode(password.normalize("NFC")), sale, {
-    m: p.memoria,
-    t: p.passaggi,
-    p: p.fili,
-    dkLen: 32,
-    asyncTick: 10,
-    onProgress,
-  });
+  const base = await argon2id(utf8.encode(password.normalize("NFC")), sale, p);
   const prova = ricava(base, SCOPO.prova);
   const cassaforte = ricava(base, SCOPO.cassaforte);
   base.fill(0);

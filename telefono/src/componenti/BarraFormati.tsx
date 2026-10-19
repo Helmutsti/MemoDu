@@ -113,7 +113,9 @@ export function BarraFormati({
           { backgroundColor: pressed ? c.sfondoHover : c.sfondoFlottante },
         ]}
       >
-        <Text style={[testo.titolo, { color: c.testoPrimario }]}>Fine</Text>
+        <Text allowFontScaling={false} style={[testo.titolo, { color: c.testoPrimario }]}>
+          Fine
+        </Text>
       </Pressable>
     </KeyboardStickyView>
   );

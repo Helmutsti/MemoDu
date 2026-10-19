@@ -6,9 +6,10 @@
 import { router } from "expo-router";
 import { CircleAlert } from "lucide-react-native";
 import { useState } from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Pulsante } from "@/componenti/Pulsante";
 import { useNegozio } from "@/dati/negozio";
 import { misura, raggio, spazio, t, testo, useColori } from "@/tema";
 
@@ -28,8 +29,11 @@ function Campo({
   const c = useColori();
   return (
     <View style={stili.campo}>
-      <Text style={[testo.etichetta, { color: c.testoTenue }]}>{etichetta}</Text>
+      <Text allowFontScaling={false} style={[testo.etichetta, { color: c.testoTenue }]}>
+        {etichetta}
+      </Text>
       <TextInput
+        allowFontScaling={false}
         value={valore}
         onChangeText={onCambia}
         secureTextEntry={password}
@@ -47,50 +51,6 @@ function Campo({
         ]}
       />
     </View>
-  );
-}
-
-function Pulsante({
-  testo: etichetta,
-  pieno,
-  inCorso,
-  onPress,
-  disabilitato,
-}: {
-  testo: string;
-  pieno?: boolean;
-  inCorso?: boolean;
-  onPress: () => void;
-  disabilitato?: boolean;
-}) {
-  const c = useColori();
-  return (
-    <Pressable
-      onPress={onPress}
-      disabled={disabilitato || inCorso}
-      accessibilityRole="button"
-      style={({ pressed }) => [
-        stili.pulsante,
-        {
-          backgroundColor: pieno
-            ? pressed
-              ? c.sfondoPremuto
-              : c.sfondoPieno
-            : pressed
-              ? c.sfondoPremuto
-              : c.sfondoCampo,
-        },
-        disabilitato && { opacity: 0.4 },
-      ]}
-    >
-      {inCorso ? (
-        <ActivityIndicator color={pieno ? c.testoSuPieno : c.testoPrimario} />
-      ) : (
-        <Text style={[testo.titolo, { color: pieno ? c.testoSuPieno : c.testoPrimario }]}>
-          {etichetta}
-        </Text>
-      )}
-    </Pressable>
   );
 }
 
@@ -121,10 +81,16 @@ export default function Accesso() {
       keyboardShouldPersistTaps="handled"
       bottomOffset={spazio.gruppo}
     >
-      <Text style={[testo.titoloSchermata, { color: c.testoPrimario }]} accessibilityRole="header">
+      <Text
+        allowFontScaling={false}
+        style={[testo.titoloSchermata, { color: c.testoPrimario }]}
+        accessibilityRole="header"
+      >
         Accedi a Memodu
       </Text>
-      <Text style={[testo.messaggio, { color: c.testoTenue }]}>Accedi alla tua installazione.</Text>
+      <Text allowFontScaling={false} style={[testo.messaggio, { color: c.testoTenue }]}>
+        Accedi alla tua installazione.
+      </Text>
       <View style={stili.campi}>
         <Campo etichetta="Email" valore={email} onCambia={setEmail} invalido={credenzialiErrate} />
         <Campo
@@ -138,21 +104,26 @@ export default function Accesso() {
       {errore ? (
         <View style={stili.errore} accessibilityLiveRegion="polite">
           <CircleAlert size={misura.icona} color={c.iconaErrore} strokeWidth={misura.tratto} />
-          <Text style={[testo.messaggio, stili.testoErrore, { color: c.testoErrore }]}>
+          <Text
+            allowFontScaling={false}
+            style={[testo.messaggio, stili.testoErrore, { color: c.testoErrore }]}
+          >
             {errore}
           </Text>
         </View>
       ) : null}
       <View style={stili.pulsanti}>
         <Pulsante
-          testo="Accedi"
-          pieno
+          etichetta="Accedi"
+          tipo="primario"
+          largo
           inCorso={inCorso}
           onPress={() => void vai()}
           disabilitato={!email.trim() || !password}
         />
         <Pulsante
-          testo="Non voglio usare il cloud"
+          etichetta="Non voglio usare il cloud"
+          largo
           disabilitato={inCorso}
           onPress={() => {
             void usaSenzaCloud().then(() => router.replace("/"));

@@ -30,7 +30,11 @@ function Tessera({
       ]}
     >
       <Icona size={misura.icona} color={c.testoPrimario} strokeWidth={misura.tratto} />
-      <Text style={[testo.etichetta, { color: c.testoPrimario }]} numberOfLines={1}>
+      <Text
+        allowFontScaling={false}
+        style={[testo.etichetta, { color: c.testoPrimario }]}
+        numberOfLines={1}
+      >
         {nome}
       </Text>
     </Pressable>
@@ -89,8 +93,18 @@ export function FondoColonna({
           style={({ pressed }) => [stili.riga, pressed && { backgroundColor: c.sfondoHover }]}
         >
           <Trash2 size={misura.icona} color={c.iconaTenue} strokeWidth={misura.tratto} />
-          <Text style={[testo.controllo, stili.nome, { color: c.testoPrimario }]}>Cestino</Text>
-          <Text style={[testo.dettaglio, stili.conteggio, { color: c.testoTenue }]}>{cestino}</Text>
+          <Text
+            allowFontScaling={false}
+            style={[testo.controllo, stili.nome, { color: c.testoPrimario }]}
+          >
+            Cestino
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={[testo.dettaglio, stili.conteggio, { color: c.testoTenue }]}
+          >
+            {cestino}
+          </Text>
         </Pressable>
       </View>
       <View style={[stili.riquadro, { backgroundColor: c.sfondoNota }]}>

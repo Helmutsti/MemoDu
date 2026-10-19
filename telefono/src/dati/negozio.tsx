@@ -150,7 +150,7 @@ export function NegozioProvider({ children }: { children: ReactNode }) {
   const accedi = useCallback(
     async (email: string, password: string, onProgress?: (f: number) => void) => {
       try {
-        const s = await accediAlServer(email, password, fetch, undefined, onProgress);
+        const s = await accediAlServer(email, password, fetch);
         await SecureStore.setItemAsync(VOCE_SESSIONE, sessioneInTesto(s));
         void mandaNome(s, "iPhone");
         setSessione(s);

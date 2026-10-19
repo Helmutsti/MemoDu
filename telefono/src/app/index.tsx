@@ -157,7 +157,10 @@ export default function Note() {
               {trovate.length ? (
                 trovate.map((n) => rigaNota(n))
               ) : (
-                <Text style={[testo.messaggio, stili.vuoto, { color: c.testoTenue }]}>
+                <Text
+                  allowFontScaling={false}
+                  style={[testo.messaggio, stili.vuoto, { color: c.testoTenue }]}
+                >
                   Nessuna nota trovata
                 </Text>
               )}

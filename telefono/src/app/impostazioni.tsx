@@ -7,7 +7,8 @@
 import { router, Stack } from "expo-router";
 import { User } from "lucide-react-native";
 import { useState } from "react";
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pulsante } from "@/componenti/Pulsante";
 import { orario, quando } from "@/dati/date";
 import { useNegozio } from "@/dati/negozio";
 import type { Problema } from "@/nucleo/sinc";
@@ -48,41 +49,6 @@ const COLORE_TONO: Record<Tono, { chiaro: string; scuro: string }> = {
   attesa: { chiaro: "#696969", scuro: "#A3A3A3" },
 };
 
-function Pulsante({
-  etichetta,
-  pieno,
-  inCorso,
-  onPress,
-  c,
-}: {
-  etichetta: string;
-  pieno?: boolean;
-  inCorso?: boolean;
-  onPress: () => void;
-  c: Colori;
-}) {
-  return (
-    <Pressable
-      onPress={onPress}
-      disabled={inCorso}
-      accessibilityRole="button"
-      style={({ pressed }) => [
-        stili.pulsante,
-        { backgroundColor: pieno ? c.sfondoPieno : pressed ? c.sfondoPremuto : c.sfondoCampo },
-        pressed && pieno && { opacity: 0.8 },
-      ]}
-    >
-      {inCorso ? (
-        <ActivityIndicator color={pieno ? c.testoSuPieno : c.testoPrimario} />
-      ) : (
-        <Text style={[testo.titolo, { color: pieno ? c.testoSuPieno : c.testoPrimario }]}>
-          {etichetta}
-        </Text>
-      )}
-    </Pressable>
-  );
-}
-
 export default function Impostazioni() {
   const c = useColori();
   const scuro = c.sfondoNota !== "#FFFFFF";
@@ -110,7 +76,10 @@ export default function Impostazioni() {
               style={[stili.iniziale, { backgroundColor: c.sfondoPieno }]}
               accessibilityElementsHidden
             >
-              <Text style={[testo.titoloSchermata, { color: c.testoSuPieno }]}>
+              <Text
+                allowFontScaling={false}
+                style={[testo.titoloSchermata, { color: c.testoSuPieno }]}
+              >
                 {sessione.email.charAt(0).toUpperCase()}
               </Text>
             </View>
@@ -123,39 +92,46 @@ export default function Impostazioni() {
             </View>
           )}
           <View style={stili.testi}>
-            <Text style={[testo.titolo, { color: c.testoPrimario }]} numberOfLines={1}>
+            <Text
+              allowFontScaling={false}
+              style={[testo.titolo, { color: c.testoPrimario }]}
+              numberOfLines={1}
+            >
               {sessione ? sessione.email : "Non hai fatto l'accesso"}
             </Text>
             {sessione ? (
               <View style={stili.stato}>
                 <View style={[stili.pallino, { backgroundColor: pallino }]} />
-                <Text style={[testo.dettaglio, stili.testoStato, { color: c.testoTenue }]}>
+                <Text
+                  allowFontScaling={false}
+                  style={[testo.dettaglio, stili.testoStato, { color: c.testoTenue }]}
+                >
                   {stato.testo}
                 </Text>
               </View>
             ) : (
-              <Text style={[testo.dettaglio, { color: c.testoTenue }]}>
+              <Text allowFontScaling={false} style={[testo.dettaglio, { color: c.testoTenue }]}>
                 Le note restano su questo telefono.
               </Text>
             )}
           </View>
+          {/* Come nel box del computer: il pulsante a destra, nella stessa riga. */}
+          {sessione && problema !== "rifiutate" ? (
+            <Pulsante
+              etichetta="Esci"
+              inCorso={uscendo}
+              onPress={() => {
+                setUscendo(true);
+                void esci().then(() => {
+                  setUscendo(false);
+                  router.replace("/accesso");
+                });
+              }}
+            />
+          ) : (
+            <Pulsante etichetta="Accedi" tipo="primario" onPress={() => router.push("/accesso")} />
+          )}
         </View>
-        {sessione && problema !== "rifiutate" ? (
-          <Pulsante
-            etichetta="Esci"
-            inCorso={uscendo}
-            c={c}
-            onPress={() => {
-              setUscendo(true);
-              void esci().then(() => {
-                setUscendo(false);
-                router.replace("/accesso");
-              });
-            }}
-          />
-        ) : (
-          <Pulsante etichetta="Accedi" pieno c={c} onPress={() => router.push("/accesso")} />
-        )}
       </View>
     </ScrollView>
   );

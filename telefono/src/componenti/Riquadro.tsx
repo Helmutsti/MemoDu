@@ -53,9 +53,15 @@ export function Riquadro({
       >
         <View style={stili.titolo}>
           <Freccia size={t(12)} color={c.testoTenue} strokeWidth={misura.tratto} />
-          <Text style={[testo.titoloSezione, { color: c.testoTenue }]}>{titolo}</Text>
+          <Text allowFontScaling={false} style={[testo.titoloSezione, { color: c.testoTenue }]}>
+            {titolo}
+          </Text>
           {!aperto && riassunto ? (
-            <Text style={[testo.dettaglio, { color: c.testoTenue }]} numberOfLines={1}>
+            <Text
+              allowFontScaling={false}
+              style={[testo.dettaglio, { color: c.testoTenue }]}
+              numberOfLines={1}
+            >
               {riassunto}
             </Text>
           ) : null}
