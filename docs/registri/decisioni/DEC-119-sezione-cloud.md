@@ -1,6 +1,6 @@
 # DEC-119 – Una sola sezione CLOUD con le note non organizzate nella radice
 
-**Data:** 2026-10-04 · **Stato:** Accettata · **Idea di origine:** —
+**Data:** 2026-10-04 · **Stato:** Superata in parte da DEC-155 (il riassunto accanto al nome del riquadro chiuso) · **Idea di origine:** —
 
 ## Contesto
 La colonna aveva due sezioni per le note: Non organizzate (le note nella radice, per ultima modifica, RB-60) e Cartelle (l'albero, con le sottocartelle prima delle note, RB-65). Con Locale (RF-17) la colonna ha una terza sezione con i file del disco. Manuel Cucca vuole una sola sezione per le note, chiamata CLOUD, accanto a LOCALE.

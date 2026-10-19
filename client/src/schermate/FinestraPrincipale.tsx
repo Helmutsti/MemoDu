@@ -1135,6 +1135,11 @@ export function FinestraPrincipale(): ReactElement {
     const t = trascinato;
     setTrascinato(null);
     if (!t) return;
+    // Sulla tessera Journal: la stessa conferma di «Sposta in Brainet» (FL-28, DEC-154).
+    if (destinazione.tipo === "journal") {
+      if (t.tipo === "nota") setDaSpostareInBrainet(t.id);
+      return;
+    }
     if (destinazione.tipo === "cestino") {
       if (t.tipo === "nota") await cestinaNota(t.id);
       else await cestinaCartella(t.percorso);
@@ -1422,12 +1427,15 @@ export function FinestraPrincipale(): ReactElement {
             onApriImpostazioni={() => void apriImpostazioni()}
             onChiudiVista={() => void chiudiVista()}
             brainet={
-              statoBrainet?.acceso ? (
-                <SezioneBrainet
-                  aperta={vista === "brainet" ? vistaBrainet : null}
-                  onApri={(v) => void apriBrainet(v)}
-                />
-              ) : undefined
+              statoBrainet?.acceso
+                ? (journal) => (
+                    <SezioneBrainet
+                      aperta={vista === "brainet" ? vistaBrainet : null}
+                      onApri={(v) => void apriBrainet(v)}
+                      journal={journal}
+                    />
+                  )
+                : undefined
             }
             locale={
               <SezioneLocale

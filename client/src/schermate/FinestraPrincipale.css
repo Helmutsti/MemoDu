@@ -117,12 +117,31 @@
   padding-left: min(var(--spazio-pannello), calc(var(--larghezza-colonna) / 2));
 }
 
-/* Le due sezioni, una sotto l'altra, con spazio-gruppo tra loro (CMP-14). */
+/* Le sezioni, una sotto l'altra, ognuna in un riquadro (DEC-154): spazio-blocco tra loro. */
 .colonna-contenuto {
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: var(--spazio-gruppo);
+  gap: var(--spazio-blocco);
+  margin-top: var(--spazio-blocco);
+}
+
+/* La barra delle tessere di Brainet, tra la ricerca e CLOUD (CMP-49). */
+.colonna-dentro > .barra-tessere {
+  margin-top: var(--spazio-blocco);
+}
+
+/* Riquadro della sezione (CMP-14, DEC-154): sfondo-nota sulla colonna, raggio-contenitore, con
+   spazio-elenco ai lati e in fondo; l'intestazione è la prima riga. */
+.colonna-sezione {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spazio-elemento) var(--spazio-elenco) var(--spazio-elenco);
+  border-radius: var(--raggio-contenitore);
+  background: var(--sfondo-nota);
+}
+.colonna-sezione:not(:has(.colonna-elenco, .stato-vuoto-colonna)) {
+  padding-bottom: var(--spazio-elemento);
 }
 
 /* CMP-30 Fondo della colonna: Cestino e Impostazioni (DEC-40, DEC-91) restano sul fondo mentre
@@ -132,13 +151,28 @@
 .colonna-fondo {
   --lato-colonna: min(var(--spazio-pannello), calc(var(--larghezza-colonna) / 2));
   display: flex;
-  flex-direction: column;
-  gap: var(--spazio-elemento);
+  align-items: center;
+  gap: var(--spazio-icona);
   position: sticky;
   bottom: 0;
   margin: 0 calc(-1 * var(--lato-colonna));
   padding: var(--spazio-pannello) var(--lato-colonna);
   background: var(--sfondo-colonna);
+}
+/* Nel fondo il Cestino in un riquadro largo e Impostazioni in un tondo (DEC-154). */
+.colonna-riquadro {
+  display: flex;
+  flex: none;
+  padding: var(--spazio-elemento);
+  border-radius: var(--raggio-contenitore);
+  background: var(--sfondo-nota);
+}
+.colonna-riquadro-cestino {
+  flex: 1;
+  min-width: 0;
+}
+.colonna-riquadro-cestino > * {
+  flex: 1;
 }
 .colonna-fondo-sopra-contenuto {
   box-shadow: var(--ombra-sopra);

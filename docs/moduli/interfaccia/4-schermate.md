@@ -32,18 +32,19 @@ La finestra è sempre la stessa: cambia solo cosa c'è dentro l'area della nota.
 |---|---|---|
 | 1 | Area della nota (centro-destra) | La nota aperta: SC-03. È la zona più grande e la prima che si nota: aprire e scrivere viene prima di tutto (RNF-01) |
 | 2 | Colonna sinistra, in cima | Ricerca (FL-06), sotto la riga della puntina; Ctrl + K (⌘ + K) la raggiunge anche con la colonna chiusa (DEC-94, RB-71) |
-| 3 | Colonna sinistra, sezione **CLOUD** (DEC-119) | Nella radice prima le note non organizzate (RF-05), una riga ciascuna con il solo titolo, la modificata più di recente in cima (RB-60): sono quelle appena scritte, ed è da qui che si trascinano nell'albero. Sotto, l'albero delle cartelle (FL-05). Aprendo una cartella compaiono prima le sue note e poi le sottocartelle, in ordine alfabetico (RB-64, RB-65, DEC-119). Il **+** accanto al titolo apre il menu Aggiungi con Nuova nota e Nuova cartella (FL-09, CMP-09) |
-| 4 | Colonna sinistra, sezione **LOCALE** | Le cartelle del disco aggiunte a Locale (RF-17, DEC-115); il **+** accanto al titolo aggiunge una cartella |
+| 2b | Colonna sinistra, sotto la ricerca | Con Brainet acceso, la barra di tre tessere Journal, Entità e Calendario (CMP-49, DEC-154): la tessera della vista aperta è piena; su Journal si trascina una nota per spostarla in Brainet (FL-28) |
+| 3 | Colonna sinistra, riquadro **CLOUD** (DEC-119, DEC-154) | Nella radice prima le note non organizzate (RF-05), una riga ciascuna con il solo titolo, la modificata più di recente in cima (RB-60): sono quelle appena scritte, ed è da qui che si trascinano nell'albero. Sotto, l'albero delle cartelle (FL-05). Aprendo una cartella compaiono prima le sue note e poi le sottocartelle, in ordine alfabetico (RB-64, RB-65, DEC-119). Il **+** accanto al titolo apre il menu Aggiungi con Nuova nota e Nuova cartella (FL-09, CMP-09) |
+| 4 | Colonna sinistra, riquadro **Locale** | Le cartelle del disco aggiunte a Locale (RF-17, DEC-115); il **+** accanto al titolo aggiunge una cartella |
 
 Nessuna barra superiore: con la colonna fissata, colonna e area della nota occupano tutta l'altezza della finestra, divise da una sola linea verticale; in cima alla colonna una riga di 32 px per la puntina (e «← |» quando è aperta sopra il foglio) (DEC-55). Nessun pulsante Nuova nota in evidenza: si crea dal + di CLOUD, dalla scorciatoia o dal tasto destro su una cartella.
 
-La colonna sinistra ha due sezioni impilate senza separatore, CLOUD e LOCALE: in CLOUD le cartelle iniziano subito sotto l'ultima nota non organizzata e la colonna scorre tutta insieme.
+La colonna sinistra ha due riquadri bianchi impilati sulla colonna grigia, CLOUD e Locale, con l'intestazione dentro (freccia, nome, +) e `spazio-blocco` tra loro (DEC-154): in CLOUD le cartelle iniziano subito sotto l'ultima nota non organizzata e la colonna scorre tutta insieme. Con il mouse sopra una nota, una cartella o un file compare ··· che apre il menu del tasto destro (CMP-06).
 
-**Le due sezioni si chiudono** con un clic sul titolo (▾ aperta, ▸ chiusa). Accanto a ogni cartella c'è il numero di note che contiene, sottocartelle comprese (RB-56, ID-15): in grigio piccolo, allineato a destra; accanto al titolo CLOUD non c'è (DEC-119).
+**I due riquadri si chiudono** con un clic sull'intestazione (▾ aperto, ▸ chiuso); chiusi, accanto al nome dicono cosa contengono, «42 note» o «2 cartelle» (DEC-155). Accanto a ogni cartella c'è il numero di note che contiene, sottocartelle comprese (RB-56, ID-15): in grigio piccolo, allineato a destra; accanto al nome di CLOUD aperto non c'è (DEC-119).
 
 Le **non organizzate stanno sopra le cartelle**: sono la posta in arrivo della scrittura veloce (RB-01), quindi la lista che si guarda più spesso, e il trascinamento verso l'albero va dall'alto verso il basso.
 
-**Il Cestino è una riga fissa in fondo alla colonna sinistra** (DEC-40, che supera la scelta di tenerlo fuori dalla colonna), con l'icona e il numero di elementi: cliccandola il cestino (SC-04) si apre al posto della nota. Durante il trascinamento la riga lascia il posto al cestino di trascinamento.
+**Il Cestino è una riga fissa in fondo alla colonna sinistra** (DEC-40, che supera la scelta di tenerlo fuori dalla colonna), in un riquadro bianco con l'icona e il numero di elementi, e accanto Impostazioni in un tondo con la sola icona (DEC-154): cliccandola il cestino (SC-04) si apre al posto della nota. Durante il trascinamento la riga lascia il posto al cestino di trascinamento.
 
 ### Info della nota (livello 20, DEC-96)
 Un clic sul titolo nel percorso (CMP-26) apre Info (CMP-24, tipo Comparsa) sotto il titolo, senza velo: è l'unico punto per tutto ciò che riguarda la nota aperta. Il menu `···` in alto a destra non c'è più.

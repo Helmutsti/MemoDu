@@ -6,6 +6,10 @@
 // In fondo la riga Cestino, che durante il trascinamento diventa la zona di rilascio (DEC-40), e
 // sotto la riga Impostazioni (DEC-91). In cima, sotto la riga della puntina, la ricerca (DEC-94).
 // Dopo Cartelle la sezione Locale, con i file del disco (RF-17).
+// Colonna a riquadri (DEC-154): sotto la ricerca la barra delle tessere di Brainet, poi CLOUD e
+// Locale in riquadri con l'intestazione dentro; chiusi dicono cosa contengono (DEC-155). In fondo
+// il Cestino in un riquadro e Impostazioni come tondo. Una nota trascinata sulla tessera Journal
+// chiede di spostarla in Brainet (FL-28).
 
 import {
   useEffect,
@@ -17,6 +21,7 @@ import {
   type ReactNode,
 } from "react";
 import type { Albero, Cartella, Percorso, VoceElenco } from "@memodu/condiviso";
+import type { RilascioJournal } from "../brainet/SezioneBrainet";
 import {
   CampoNomeCartella,
   CestinoTrascinamento,
@@ -32,13 +37,20 @@ import { FileText, Folder } from "lucide-react";
 import { avviaTrascinamento } from "../componenti/trascina";
 import { AreaScorrevole } from "../componenti/AreaScorrevole";
 
+/** «1 nota», «42 note»: il riassunto di CLOUD chiusa (DEC-155). */
+export const riassuntoNote = (n: number): string | undefined =>
+  n === 0 ? undefined : n === 1 ? "1 nota" : `${n} note`;
+
 /** Cosa si sta trascinando. */
 export type Trascinato =
   { tipo: "nota"; id: string; cartella: Percorso } | { tipo: "cartella"; percorso: Percorso };
 
-/** Dove si rilascia: una cartella, la radice (titolo della sezione) o il cestino. */
+/** Dove si rilascia: una cartella, la radice (titolo della sezione), il cestino o il Journal. */
 export type Destinazione =
-  { tipo: "cartella"; percorso: Percorso } | { tipo: "radice" } | { tipo: "cestino" };
+  | { tipo: "cartella"; percorso: Percorso }
+  | { tipo: "radice" }
+  | { tipo: "cestino" }
+  | { tipo: "journal" };
 
 /** Campo del nome aperto nell'albero (CMP-14). */
 export type Campo =
@@ -78,8 +90,9 @@ interface Proprieta {
   ricerca?: ReactNode;
   /** Larghezza scelta trascinando la maniglia (DEC-62). */
   larghezza: number;
-  /** Sotto CLOUD: la sezione Brainet, con Brainet acceso (RF-18). */
-  brainet?: ReactNode;
+  /** Sotto la ricerca: la barra delle tessere di Brainet, con Brainet acceso (RF-18, DEC-154).
+   *  Riceve il Journal come destinazione del trascinamento. */
+  brainet?: (journal: RilascioJournal) => ReactNode;
   /** Sotto Cartelle: la sezione Locale (RF-17). */
   locale?: ReactNode;
 }
@@ -90,7 +103,7 @@ const ordine = (a: string, b: string) => a.localeCompare(b, "it", { sensitivity:
 const chiave = (d: Destinazione) => (d.tipo === "cartella" ? `c:${d.percorso}` : d.tipo);
 /** La destinazione della colonna da `data-destinazione`; null per le altre (Locale). */
 const daChiave = (k: string | null): Destinazione | null =>
-  k === "radice" || k === "cestino"
+  k === "radice" || k === "cestino" || k === "journal"
     ? { tipo: k }
     : k?.startsWith("c:")
       ? { tipo: "cartella", percorso: k.slice(2) }
@@ -99,6 +112,8 @@ const daChiave = (k: string | null): Destinazione | null =>
 /** Una destinazione può ricevere ciò che si trascina? Mai una cartella dentro sé stessa (RB-24). */
 export function accetta(t: Trascinato, d: Destinazione): boolean {
   if (d.tipo === "cestino") return true;
+  // In Brainet si sposta una nota alla volta, mai una cartella (RB-130).
+  if (d.tipo === "journal") return t.tipo === "nota";
   if (t.tipo === "nota") {
     return d.tipo === "radice" ? t.cartella !== "" : !stesso(d.percorso, t.cartella);
   }
@@ -275,6 +290,12 @@ export function Colonna(p: Proprieta): ReactElement {
   const radice: Destinazione = { tipo: "radice" };
   const vuota =
     nonOrganizzate.note.length === 0 && cartelle.length === 0 && p.campo?.tipo !== "nuova";
+  // Il numero di una cartella conta anche le sottocartelle (RB-56).
+  const noteCloud = nonOrganizzate.conteggio + cartelle.reduce((n, c) => n + c.conteggio, 0);
+  const journal: RilascioJournal =
+    p.trascinato?.tipo === "nota"
+      ? { sopra: sopra === "journal", ...destinazione({ tipo: "journal" }) }
+      : { sopra: false };
 
   return (
     <nav
@@ -289,6 +310,7 @@ export function Colonna(p: Proprieta): ReactElement {
             {p.testata}
           </div>
           {p.ricerca}
+          {p.brainet?.(journal)}
           <div
             ref={contenuto}
             className="colonna-contenuto"
@@ -299,6 +321,7 @@ export function Colonna(p: Proprieta): ReactElement {
             <div className="colonna-sezione">
               <RigaSezione
                 titolo="Cloud"
+                riassunto={riassuntoNote(noteCloud)}
                 aperta={cloudAperta}
                 onApriChiudi={() => setCloudAperta((a) => !a)}
                 nomeAggiungi="Aggiungi"
@@ -344,31 +367,34 @@ export function Colonna(p: Proprieta): ReactElement {
                 />
               )}
             </div>
-            {p.brainet}
             {p.locale}
           </div>
           <div
             ref={fondo}
             className={`colonna-fondo ${contenutoSotto ? "colonna-fondo-sopra-contenuto" : ""}`}
           >
-            {p.trascinato ? (
-              <CestinoTrascinamento
-                sopra={sopra === "cestino"}
-                {...destinazione({ tipo: "cestino" })}
-              />
-            ) : (
-              <RigaCestino
-                conteggio={p.albero.cestino}
-                selezionata={p.cestinoAperto}
-                onApri={p.onApriCestino}
+            <div className="colonna-riquadro colonna-riquadro-cestino">
+              {p.trascinato ? (
+                <CestinoTrascinamento
+                  sopra={sopra === "cestino"}
+                  {...destinazione({ tipo: "cestino" })}
+                />
+              ) : (
+                <RigaCestino
+                  conteggio={p.albero.cestino}
+                  selezionata={p.cestinoAperto}
+                  onApri={p.onApriCestino}
+                  onChiudi={p.onChiudiVista}
+                />
+              )}
+            </div>
+            <div className="colonna-riquadro">
+              <RigaImpostazioni
+                selezionata={p.impostazioniAperte}
+                onApri={p.onApriImpostazioni}
                 onChiudi={p.onChiudiVista}
               />
-            )}
-            <RigaImpostazioni
-              selezionata={p.impostazioniAperte}
-              onApri={p.onApriImpostazioni}
-              onChiudi={p.onChiudiVista}
-            />
+            </div>
           </div>
         </div>
       </AreaScorrevole>

@@ -314,6 +314,7 @@ flowchart TD
 flowchart TD
     A{Da dove?} -- Tasto destro sulla nota nella colonna --> B[«Sposta in Brainet», sotto «Sposta in…» - RB-130]
     A -- Info --> B
+    A -- Nota trascinata sulla tessera Journal della colonna - DEC-154 --> C
     B --> C[Conferma: «Spostare la nota in Brainet?» · Annulla o Sposta - RB-130]
     C -- Annulla --> D[Non cambia niente]
     C -- Sposta --> E[La nota esce dalla cartella e dall'albero di CLOUD; la ricerca non la trova più - RB-132]
@@ -321,7 +322,8 @@ flowchart TD
 ```
 
 ### Percorsi alternativi
-- **Brainet spento:** la voce non c'è (RB-130).
+- **Brainet spento:** la voce non c'è, e non c'è la tessera Journal su cui trascinare (RB-130).
+- **Trascinata sulla tessera Journal:** mentre la nota passa sopra, la tessera si accende e compare «Rilascia: va in Brainet»; lasciata, chiede la stessa conferma (DEC-154, scelta di Manuel Cucca del 19/10/2026). Con Esc o lasciata altrove non cambia niente.
 - **Una nota già in Brainet:** non si riporta in CLOUD (RB-130).
 - **Eliminata dal Journal:** va nel Cestino; ripristinata torna nel Journal (RB-131).
 
@@ -373,7 +375,7 @@ flowchart TD
 | RB-127 | Entità, pagina dell'entità e Calendario contano solo le note di CLOUD fuori dal Cestino (proposta dell'agente, DEC-145) | FL-16, FL-26 |
 | RB-128 | Esportando, la pillola diventa `[[nome]]`, l'area `==frase==` senza gli stati, la foto `![nome](allegati/nome)` e il documento `[nome](allegati/nome)` (DEC-145, RF-13) | — |
 | RB-129 | Un'area senza testo o rimasta a metà (cancellata l'apertura o la chiusura) sparisce nella stessa modifica; riselezionando la frase di un'area si apre il suo menu, non nasce un'area uguale (prove a mano del 16/10/2026, correzione dell'agente) | FL-18 |
-| RB-130 | «Sposta in Brainet» (tasto destro sulla nota nella colonna, sotto «Sposta in…», e Info), solo con Brainet acceso, dopo una conferma: «Spostare la nota in Brainet?» · «La nota esce da CLOUD e dalla ricerca e non si riporta indietro. Nel Journal puoi collegarla a persone, oggetti e argomenti.» · «Annulla», «Sposta». Senza ritorno (DEC-147) | FL-28 |
+| RB-130 | «Sposta in Brainet» (tasto destro sulla nota nella colonna, sotto «Sposta in…», Info, o la nota trascinata sulla tessera Journal della colonna, DEC-154), solo con Brainet acceso, dopo una conferma: «Spostare la nota in Brainet?» · «La nota esce da CLOUD e dalla ricerca e non si riporta indietro. Nel Journal puoi collegarla a persone, oggetti e argomenti.» · «Annulla», «Sposta». Senza ritorno (DEC-147) | FL-28 |
 | RB-131 | Il Journal elenca le note in Brainet fuori dal Cestino, dalla più recente, con il giorno e l'ora sopra ognuna (con la data scelta in Info, quel giorno senza ora, come nella pagina dell'entità e nell'ordine); si modificano lì; tasto destro › «Elimina» le manda nel Cestino, ripristinate tornano nel Journal (DEC-147) | FL-28 |
 | RB-132 | Una nota in Brainet non sta nell'albero di CLOUD né in nessuna cartella (DEC-147) | FL-28 |
 | RB-133 | La pagina dell'entità ha, sotto la testata, la cronologia: i mesi dal primo all'ultimo in cui è citata, dal più vecchio a sinistra; un pallino nei mesi con paragrafi, più grande se sono di più (1, da 2 a 4, 5 o più); un clic su un mese porta al suo giorno più recente nell'elenco; se i mesi non ci stanno la striscia scorre di lato e parte dal più recente (DEC-150) | FL-26 |

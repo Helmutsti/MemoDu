@@ -7,6 +7,15 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+### Modificato
+- La colonna a sinistra è più ordinata: Cloud e Locale stanno in riquadri bianchi, che si chiudono con la freccia e da chiusi dicono cosa contengono («42 note», «2 cartelle»)
+- Brainet è in cima alla colonna, sotto la ricerca, con tre tessere: Journal, Entità e Calendario
+- In fondo il Cestino ha il suo riquadro e le Impostazioni sono un tondo con l'ingranaggio
+
+### Aggiunto
+- Passando con il mouse su una nota, una cartella o un file compaiono i tre puntini ···, che aprono lo stesso menu del tasto destro
+- Si può trascinare una nota sulla tessera Journal per spostarla in Brainet, con la stessa conferma di sempre
+
 ## [1.1.3] – 2026-10-17
 
 ### Modificato

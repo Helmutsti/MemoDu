@@ -1,48 +1,89 @@
-// La sezione Brainet della colonna (RF-18, SC-01, DEC-145, DEC-147), sotto CLOUD e sopra LOCALE,
-// senza il +: le note nascono in CLOUD e ci arrivano con «Sposta in Brainet». Sotto, Journal,
-// Entità e Calendario; la pagina di un'entità tiene selezionata Entità. Senza Brainet acceso la
-// sezione non c'è.
+// Brainet nella colonna (RF-18, SC-01, DEC-154): sotto la ricerca, una barra di tre tessere,
+// Journal, Entità e Calendario (CMP-49, fatta di tessere CMP-48). La tessera della vista aperta è
+// piena; la pagina di un'entità tiene piena Entità. Mentre si trascina una nota, il Journal la
+// riceve: la tessera si accende e, rilasciata, chiede la conferma di «Sposta in Brainet» (FL-28).
+// Senza Brainet acceso la barra non c'è.
 
-import { BookOpen, Brain, Calendar } from "lucide-react";
-import { useState, type ReactElement } from "react";
-import { RigaSezione, RigaVoce } from "../componenti/RigaColonna";
+import { BookOpen, Brain, Calendar, type LucideIcon } from "lucide-react";
+import type { ReactElement } from "react";
+import { Icona } from "../componenti/Icona";
+import "./SezioneBrainet.css";
 
 /** «journal», «entita», «calendario» o la pagina di un'entità, «entita:ID» (FL-26). */
 export type VistaBrainet = "journal" | "entita" | "calendario" | `entita:${string}`;
+
+/** Il Journal come destinazione del trascinamento, dalla colonna. */
+export interface RilascioJournal {
+  /** Una nota ci passa sopra. */
+  sopra: boolean;
+  /** Presente mentre si trascina una nota: rende la tessera una destinazione. */
+  "data-destinazione"?: string;
+}
 
 interface Proprieta {
   /** La vista di Brainet aperta, se c'è. */
   aperta: VistaBrainet | null;
   onApri: (vista: VistaBrainet) => void;
+  journal?: RilascioJournal;
 }
 
-export function SezioneBrainet({ aperta, onApri }: Proprieta): ReactElement {
-  const [espansa, setEspansa] = useState(true);
+function Tessera({
+  nome,
+  icona,
+  selezionata,
+  onApri,
+  rilascio,
+}: {
+  nome: string;
+  icona: LucideIcon;
+  selezionata: boolean;
+  onApri: () => void;
+  rilascio?: RilascioJournal;
+}): ReactElement {
+  const { sopra = false, ...destinazione } = rilascio ?? {};
   return (
-    <div className="colonna-sezione">
-      <RigaSezione titolo="Brainet" aperta={espansa} onApriChiudi={() => setEspansa((a) => !a)} />
-      {espansa && (
-        <ul role="group" className="colonna-elenco">
-          <RigaVoce
-            nome="Journal"
-            icona={BookOpen}
-            selezionata={aperta === "journal"}
-            onApri={() => onApri("journal")}
-          />
-          <RigaVoce
-            nome="Entità"
-            icona={Brain}
-            selezionata={aperta?.startsWith("entita") ?? false}
-            onApri={() => onApri("entita")}
-          />
-          <RigaVoce
-            nome="Calendario"
-            icona={Calendar}
-            selezionata={aperta === "calendario"}
-            onApri={() => onApri("calendario")}
-          />
-        </ul>
+    <li className="tessera-posto">
+      <button
+        type="button"
+        className={`tessera interfaccia-etichetta ${selezionata ? "tessera-selezionata" : ""} ${sopra ? "tessera-sopra" : ""}`}
+        aria-current={selezionata ? "page" : undefined}
+        onClick={onApri}
+        {...destinazione}
+      >
+        <Icona di={icona} misura={20} />
+        {nome}
+      </button>
+      {sopra && (
+        <span className="tessera-suggerimento interfaccia-dettaglio" role="status">
+          Rilascia: va in Brainet
+        </span>
       )}
-    </div>
+    </li>
+  );
+}
+
+export function SezioneBrainet({ aperta, onApri, journal }: Proprieta): ReactElement {
+  return (
+    <ul className="barra-tessere" aria-label="Brainet">
+      <Tessera
+        nome="Journal"
+        icona={BookOpen}
+        selezionata={aperta === "journal"}
+        onApri={() => onApri("journal")}
+        rilascio={journal}
+      />
+      <Tessera
+        nome="Entità"
+        icona={Brain}
+        selezionata={aperta?.startsWith("entita") ?? false}
+        onApri={() => onApri("entita")}
+      />
+      <Tessera
+        nome="Calendario"
+        icona={Calendar}
+        selezionata={aperta === "calendario"}
+        onApri={() => onApri("calendario")}
+      />
+    </ul>
   );
 }

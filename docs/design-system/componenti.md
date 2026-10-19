@@ -332,7 +332,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 ### Varianti e dimensioni
 - **Nota:** solo il titolo, in `testo-primario`, margine 12. Una nota senza titolo mostra "Nota vuota" in `testo-tenue` (RB-15).
 - **Cartella chiusa / aperta:** icona della cartella chiusa (`folder`) o aperta (`folder-open`), 16 px in `icona-tenue`, al posto della freccia (DEC-99), nome e, a destra, il numero di note che contiene, sottocartelle comprese (Interfaccia/Dettaglio in `testo-tenue`; primario in hover; RB-56, ID-15). Le note restano senza icona: la cartella basta a dividerle (DEC-99).
-- **Sezione aperta / chiusa:** freccia di 12 px, titolo in Interfaccia/Titolo di sezione (maiuscolo Semi Bold, spaziatura 6%) in `testo-tenue`, e il + per creare (in CLOUD apre il menu Aggiungi con Nuova nota e Nuova cartella, in LOCALE Aggiungi cartella). Accanto al titolo della sezione non c'è il numero di note (DEC-119).
+- **Sezione aperta / chiusa:** freccia di 12 px, titolo in Interfaccia/Titolo di sezione (maiuscolo Semi Bold, spaziatura 6%) in `testo-tenue`, e il + per creare (in CLOUD apre il menu Aggiungi con Nuova nota e Nuova cartella, in LOCALE Aggiungi cartella). Accanto al titolo della sezione aperta non c'è il numero di note (DEC-119); chiusa, dopo il nome compare un riassunto di cosa contiene, in Interfaccia/Dettaglio `testo-tenue` («42 note», «2 cartelle», DEC-155).
 - Alta 32 (`misura-riga`), pillola con `spazio-controllo` (12) ai lati (`spazio-controllo-piccolo`, 8, a destra nei titoli di sezione, che finiscono con il +), `spazio-icona` (8) tra icona (o freccia) e testo (DEC-100). Il testo troppo lungo finisce con i puntini.
 - **Tra una riga e l'altra**, e tra il titolo della sezione e la prima riga: `spazio-elemento` (4), così le pillole dell'hover e della selezione non si toccano.
 - **Rientro:** `spazio-rientro` (24) per ogni livello (DEC-100).
@@ -346,6 +346,7 @@ Ogni componente si verifica su tutte le superfici in cui può comparire, in chia
 |---|---|
 | Default | Senza sfondo, sulla colonna |
 | Hover | `sfondo-hover`; tutto il testo passa a `testo-primario`, anche l'etichetta della sezione e il numero (regola 7) |
+| Hover con azioni | Solo nota, cartella e file, cioè le righe che hanno un menu col tasto destro: al passaggio del mouse, a destra compare ··· (Icona/Altro, 16, `testo-primario`) al posto del numero o del pallino. Un clic apre lo stesso menu del tasto destro (CMP-09), sotto i puntini; il clic sulla riga resta quello di sempre. Scelta di Manuel Cucca del 19/10/2026 (DEC-154); in Figma da disegnare |
 | Focus | Anello `focus-anello` di 2 px staccato 2 px |
 | Attivo | Selezionata: la nota aperta nella colonna; `sfondo-hover` come l'hover, con testo Interfaccia/Controllo attivo in `testo-primario`: la distingue dall'hover il peso del testo (DEC-35) |
 | Trascinamento sopra | Solo cartella: mentre si trascina una nota o una cartella, quella che la riceverebbe ha `sfondo-hover` e un contorno di 1,5 in `icona-tenue` |
@@ -646,6 +647,7 @@ Scegliere un giorno scrive la data nel campo, salva (RB-06) e chiude il calendar
 **Quando non usarlo:** per scegliere una cartella in un pannello (Sposta in, CMP-11, che usa le voci di menu).
 
 ### Varianti e dimensioni
+- **Riquadro (DEC-154):** ogni sezione (CLOUD, Locale) è un riquadro `sfondo-nota` con `raggio-contenitore`, `spazio-elenco` (8) ai lati e in fondo e `spazio-elemento` (4) in cima; l'intestazione (CMP-06 Sezione) è la prima riga dentro il riquadro; tra i riquadri `spazio-blocco` (16). Prima: righe CMP-06 su `sfondo-colonna` (sotto).
 - Righe CMP-06 su `sfondo-colonna`, larghe 256, dentro la colonna larga `misura-colonna` (288) con `spazio-pannello` (16) ai lati e in cima (ruolo pannello, DEC-100), `spazio-blocco` (16) tra la ricerca e l'albero; `spazio-elemento` (4) tra le righe, `spazio-gruppo` (24) tra le sezioni. Titoli di sezione in maiuscolo grassetto: scelta 6 tra sette alternative (spazio, maiuscolo, grassetto, linea), confronto nella pagina Prove. Una sola sezione **CLOUD** (DEC-119, al posto di Non organizzate e Cartelle): nella radice prima le note non organizzate, per ultima modifica (la nota aperta è selezionata, RB-60), poi le cartelle con il numero di note accanto (RB-56); il titolo non ha numero e il suo + apre il menu Aggiungi (CMP-09: Nuova nota, Nuova cartella). `spazio-rientro` (24) per livello. Una cartella aperta mostra prima le sue note come righe Nota, poi le sottocartelle, tutte in ordine alfabetico (RB-64, RB-65). Il titolo di una nota si allinea al nome delle sottocartelle sorelle: 12 + 24 per livello + 24 (icona e distanza), cioè 60 al primo livello dal bordo della riga (DEC-100). Sotto Cartelle la sezione **Locale** (RF-17): titolo di sezione senza numero, con il + che aggiunge una cartella; le cartelle dell'elenco e dentro sottocartelle e file (CMP-06 File, File non salvato, File nuovo, Cartella non trovata), con le stesse regole di rientro. Vuota: una riga «Nessuna cartella. Aggiungine una con +» come Stato vuoto della colonna (CMP-19). Nella libreria il componente non ha ancora la sezione: si aggiunge con i mockup (Fase 6).
 - **Nuova cartella:** il campo nome compare sul posto, con l'icona della cartella chiusa (DEC-99), su `sfondo-campo` con l'anello di focus e il nome "Nuova cartella" già selezionato (RB-48). Invio conferma, Esc annulla.
 - **Trascinamento:** la cartella che riceverebbe è evidenziata (CMP-06, trascinamento sopra) e in fondo alla colonna compare il **cestino di trascinamento** (`sfondo-campo`, icona elimina, "Trascina qui per eliminare").
@@ -1188,7 +1190,7 @@ Compare e sparisce con `movimento-durata-breve` (120 ms).
 **Quando non usarlo:** per altre azioni della colonna, che stanno nelle sezioni (CMP-06).
 
 ### Varianti e dimensioni
-- Largo quanto la colonna, su `sfondo-colonna`, fermo sul fondo mentre la colonna scorre. Ruolo pannello (DEC-100): `spazio-pannello` (16) su tutti i lati, così sopra Cestino c'è lo stesso spazio che sotto Impostazioni; `spazio-elemento` (4) tra le due righe.
+- Largo quanto la colonna, su `sfondo-colonna`, fermo sul fondo mentre la colonna scorre. Ruolo pannello (DEC-100): `spazio-pannello` (16) su tutti i lati. Cestino e Impostazioni affiancati con `spazio-icona` (8) tra loro (DEC-154): il Cestino in un riquadro `sfondo-nota`, `raggio-contenitore`, `spazio-elemento` (4) di margine, che prende tutta la larghezza; Impostazioni in un riquadro uguale con la sola icona, il nome nel suggerimento (CMP-08) e per i lettori di schermo.
 - **Contenuto sotto = No:** nessuna ombra, quando tutto il contenuto sta sopra di lui.
 - **Contenuto sotto = Sì:** quando note e cartelle gli scorrono sotto, l'ombra verso l'alto `ombra-sopra` (0 −4 12, colore `ombra-flottante`) lo stacca dal contenuto.
 - Durante il trascinamento la riga Cestino diventa il cestino di trascinamento (CMP-14).
@@ -1630,3 +1632,59 @@ Scelta di Manuel Cucca del 16/10/2026 (DEC-150: «una timeline con le citazioni�
 ### Comportamento
 - Clic, Invio o spazio su un mese: la pagina scorre al suo giorno più recente nell'elenco. Il lettore di schermo legge «ottobre 2026: 3 paragrafi».
 
+---
+
+## CMP-48 – Tessera della colonna
+**Tipo:** base · **Usato in:** SC-01 (CMP-49) · **Figma:** pagina Componenti base, sezione CMP-48 Tessera della colonna
+
+**Scopo:** aprire una vista di Brainet dalla colonna con un colpo d'occhio (DEC-154).
+**Quando usarlo:** solo nella barra delle tessere di Brainet (CMP-49).
+**Quando non usarlo:** per note, cartelle e file, che restano righe (CMP-06).
+
+### Varianti e dimensioni
+- Icona 20 e, sotto, il nome in Interfaccia/Etichetta, centrati; `spazio-elemento` (4) tra icona e nome. Alta 58, larga quanto la sua parte della barra; `raggio-interno` (12); sfondo `sfondo-nota` sulla colonna. Proprietà: Nome, Icona.
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Default | `sfondo-nota`, icona e nome in `testo-primario` |
+| Hover | `sfondo-hover` |
+| Focus | Anello `focus-anello` di 2 px staccato 2 px |
+| Selezionata | La vista aperta: `sfondo-pieno`, icona e nome in `testo-su-pieno` |
+| Trascinamento sopra | Solo Journal, mentre ci passa una nota: `sfondo-hover` e contorno di 1,5 in `icona-tenue`, come la cartella che riceve (CMP-06); sotto, «Rilascia: va in Brainet» come un suggerimento (FL-28) |
+| Disabilitato · Errore · Caricamento | Non previsti |
+
+### Accessibilità
+- **Tastiera:** pulsante raggiungibile con Tab, Invio o Spazio apre la vista.
+- **Lettori di schermo:** il nome della tessera; la vista aperta è «pagina corrente».
+- **Contrasti:** testo primario su `sfondo-nota` e `sfondo-hover` ≥ 12,49:1; su pieno come il pulsante primario.
+
+### Esempi
+- ✅ Corretto: Journal pieno mentre il Journal è aperto.
+- ❌ Scorretto: una tessera per una cartella di CLOUD.
+
+---
+
+## CMP-49 – Barra delle tessere di Brainet
+**Tipo:** composto (usa CMP-48) · **Usato in:** SC-01 · **Figma:** pagina Componenti composti, sezione CMP-49 Barra delle tessere di Brainet
+
+**Scopo:** Brainet nella colonna, sotto la ricerca e sopra CLOUD (DEC-154).
+**Quando usarlo:** una sola volta, con Brainet acceso; spento, la barra non c'è (RB-106).
+**Quando non usarlo:** per altre sezioni della colonna, che sono riquadri (CMP-14).
+
+### Varianti e dimensioni
+- Tre tessere affiancate, Journal, Entità, Calendario, larghe uguali, con `spazio-icona` (8) tra loro; `spazio-blocco` (16) sopra e sotto. «Scrivi» si aggiungerà come quarta tessera, piena, con ID-50 (scelta di Manuel Cucca del 19/10/2026). La pagina di un'entità tiene piena Entità.
+
+### Stati
+| Stato | Descrizione |
+|---|---|
+| Default · Hover · Focus · Attivo · Trascinamento sopra | Li gestiscono le tessere (CMP-48) |
+| Disabilitato · Errore · Caricamento | Non previsti |
+
+### Accessibilità
+- **Tastiera e lettori di schermo:** un elenco «Brainet» di tre pulsanti; Tab passa dall'uno all'altro.
+- **Contrasti:** come CMP-48.
+
+### Esempi
+- ✅ Corretto: con Brainet acceso, le tre tessere tra la ricerca e CLOUD.
+- ❌ Scorretto: la barra con Brainet spento.

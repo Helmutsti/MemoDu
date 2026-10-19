@@ -3,11 +3,13 @@
 // (regola 7). Selezionata: come l'hover (DEC-35). Nell'albero (CMP-14) il rientro allarga il
 // margine: spazio-rientro (24) per livello, e il titolo di una nota si allinea al nome delle
 // sottocartelle sorelle (icona 16 + spazio-icona 8). La cartella ha l'icona chiusa o aperta al
-// posto della freccia (DEC-99); i titoli di sezione tengono la freccia.
+// posto della freccia (DEC-99); i titoli di sezione tengono la freccia. Con il mouse sopra, note,
+// cartelle e file mostrano ··· al posto del numero: apre il menu del tasto destro (DEC-154).
 
 import {
   ChevronDown,
   ChevronRight,
+  Ellipsis,
   Folder,
   FolderOpen,
   Plus,
@@ -16,14 +18,7 @@ import {
   X,
   type LucideIcon,
 } from "lucide-react";
-import {
-  useEffect,
-  useRef,
-  type PointerEvent,
-  type MouseEvent,
-  type ReactElement,
-  type CSSProperties,
-} from "react";
+import { useEffect, useRef, type PointerEvent, type ReactElement, type CSSProperties } from "react";
 import { Icona } from "./Icona";
 import { Suggerimento } from "./Suggerimento";
 import "./RigaColonna.css";
@@ -35,6 +30,36 @@ import "./RigaColonna.css";
 export interface Trascinamento {
   onPointerDown?: (e: PointerEvent<HTMLElement>) => void;
   "data-destinazione"?: string;
+}
+
+/** Dove aprire il menu: il punto del clic destro o l'angolo sotto i puntini. */
+export interface PuntoMenu {
+  clientX: number;
+  clientY: number;
+}
+
+/**
+ * ··· a destra della riga, solo con il mouse sopra (CMP-06 Hover con azioni, DEC-154): apre lo
+ * stesso menu del tasto destro sotto i puntini. Dentro il pulsante della riga non può esserci un
+ * altro pulsante: è un elemento che si usa con il mouse; da tastiera resta il menu della riga.
+ */
+function AzioniRiga({ onMenu }: { onMenu: (punto: PuntoMenu) => void }): ReactElement {
+  return (
+    <span
+      className="riga-azioni"
+      aria-hidden="true"
+      data-azioni=""
+      onPointerDown={(e) => e.stopPropagation()}
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const r = e.currentTarget.getBoundingClientRect();
+        onMenu({ clientX: r.left, clientY: r.bottom + 4 });
+      }}
+    >
+      <Icona di={Ellipsis} />
+    </span>
+  );
 }
 
 /** Margine sinistro di una cartella al livello `livello` (0 = primo livello). */
@@ -51,7 +76,7 @@ interface ProprietaNota extends Trascinamento {
   selezionata: boolean;
   onApri: () => void;
   /** Tasto destro: il menu della nota (Sposta in…, Elimina). */
-  onMenu: (e: MouseEvent) => void;
+  onMenu: (e: PuntoMenu) => void;
   /** Livello della cartella che la contiene (0 = primo livello); assente tra le non organizzate. */
   livelloCartella?: number;
 }
@@ -84,7 +109,7 @@ export function RigaNota({
         aria-level={livelloCartella === undefined ? 1 : livelloCartella + 2}
         aria-selected={selezionata}
         aria-current={selezionata ? "true" : undefined}
-        className={`riga riga-nota ${selezionata ? "riga-selezionata interfaccia-controllo-attivo" : "interfaccia-controllo"} ${vuota ? "riga-vuota" : ""}`}
+        className={`riga riga-nota riga-con-azioni ${selezionata ? "riga-selezionata interfaccia-controllo-attivo" : "interfaccia-controllo"} ${vuota ? "riga-vuota" : ""}`}
         style={stile}
         onClick={onApri}
         onContextMenu={(e) => {
@@ -94,6 +119,7 @@ export function RigaNota({
         {...trascinamento}
       >
         <span className="riga-nome">{vuota ? "Nota vuota" : titolo}</span>
+        <AzioniRiga onMenu={onMenu} />
       </button>
     </li>
   );
@@ -112,7 +138,7 @@ interface ProprietaFile extends Trascinamento {
   /** Un file da solo di Locale che non c'è più: «non trovata» a destra (DEC-120). */
   stato?: string;
   onApri: () => void;
-  onMenu: (e: MouseEvent) => void;
+  onMenu: (e: PuntoMenu) => void;
 }
 
 /** Riga di un file di Locale (CMP-06 File, RF-17): come una nota, il nome con l'estensione. */
@@ -138,7 +164,7 @@ export function RigaFile({
         aria-level={livelloCartella + 2}
         aria-selected={selezionata}
         aria-current={selezionata ? "true" : undefined}
-        className={`riga riga-nota ${selezionata ? "riga-selezionata interfaccia-controllo-attivo" : "interfaccia-controllo"} ${nuovo || stato ? "riga-vuota" : ""}`}
+        className={`riga riga-nota riga-con-azioni ${selezionata ? "riga-selezionata interfaccia-controllo-attivo" : "interfaccia-controllo"} ${nuovo || stato ? "riga-vuota" : ""}`}
         style={{
           paddingLeft: `calc(var(--spazio-controllo) + ${livelloCartella + 2} * var(--spazio-rientro))`,
         }}
@@ -152,6 +178,7 @@ export function RigaFile({
         <span className="riga-nome">{nome}</span>
         {sospeso && <span className="riga-non-salvato" role="img" aria-label="non salvato" />}
         {stato && <span className="riga-conteggio interfaccia-dettaglio">{stato}</span>}
+        <AzioniRiga onMenu={onMenu} />
       </button>
     </li>
   );
@@ -169,7 +196,7 @@ interface ProprietaCartella extends Trascinamento {
   /** Mentre si trascina sopra una nota o una cartella che la cartella può ricevere. */
   sopra: boolean;
   onApriChiudi: () => void;
-  onMenu: (e: MouseEvent) => void;
+  onMenu: (e: PuntoMenu) => void;
 }
 
 export function RigaCartella({
@@ -192,7 +219,7 @@ export function RigaCartella({
       data-cartella={percorso}
       aria-level={livello + 1}
       aria-expanded={stato ? undefined : aperta}
-      className={`riga riga-cartella interfaccia-controllo ${sopra ? "riga-sopra" : ""} ${stato ? "riga-cartella-assente" : ""}`}
+      className={`riga riga-cartella riga-con-azioni interfaccia-controllo ${sopra ? "riga-sopra" : ""} ${stato ? "riga-cartella-assente" : ""}`}
       style={rientroCartella(livello)}
       onClick={onApriChiudi}
       onContextMenu={(e) => {
@@ -208,6 +235,7 @@ export function RigaCartella({
       {(conteggio !== undefined || stato) && (
         <span className="riga-conteggio interfaccia-dettaglio">{stato ?? conteggio}</span>
       )}
+      <AzioniRiga onMenu={onMenu} />
     </button>
   );
 }
@@ -275,8 +303,8 @@ export function CampoNomeCartella({
 
 interface ProprietaSezione extends Pick<Trascinamento, "data-destinazione"> {
   titolo: string;
-  /** Assente per la sezione Cartelle, dove il numero non si mostra (CMP-06). */
-  conteggio?: number;
+  /** Da chiusa, accanto al nome: cosa c'è dentro, «42 note» o «2 cartelle» (DEC-155). */
+  riassunto?: string;
   aperta: boolean;
   onApriChiudi: () => void;
   /** Il + del titolo; con il pulsante, per aprire un menu sotto di lui (DEC-119). Brainet non
@@ -286,9 +314,13 @@ interface ProprietaSezione extends Pick<Trascinamento, "data-destinazione"> {
   sopra?: boolean;
 }
 
+/**
+ * Intestazione dentro il riquadro di una sezione (CMP-06 Sezione, DEC-154): freccia 16, nome in
+ * Interfaccia/Titolo, da chiusa il riassunto (DEC-155), il + a destra.
+ */
 export function RigaSezione({
   titolo,
-  conteggio,
+  riassunto,
   aperta,
   onApriChiudi,
   nomeAggiungi,
@@ -304,10 +336,12 @@ export function RigaSezione({
         aria-expanded={aperta}
         onClick={onApriChiudi}
       >
-        <Icona di={aperta ? ChevronDown : ChevronRight} misura={12} />
-        <span className="riga-nome interfaccia-titolo-sezione">{titolo}</span>
-        {conteggio !== undefined && (
-          <span className="riga-conteggio interfaccia-dettaglio">{conteggio}</span>
+        <span className="riga-icona">
+          <Icona di={aperta ? ChevronDown : ChevronRight} />
+        </span>
+        <span className="riga-sezione-nome interfaccia-titolo">{titolo}</span>
+        {!aperta && riassunto && (
+          <span className="riga-riassunto interfaccia-dettaglio">{riassunto}</span>
         )}
       </button>
       {nomeAggiungi && onAggiungi && (
@@ -370,18 +404,22 @@ export function RigaImpostazioni({
   onApri: () => void;
   onChiudi: () => void;
 }): ReactElement {
+  // Nel fondo a riquadri è un tondo con la sola icona (DEC-154): il nome nel suggerimento.
+  const nome = selezionata ? "Chiudi impostazioni" : "Impostazioni";
   return (
-    <button
-      type="button"
-      className={`riga riga-cartella riga-cestino ${selezionata ? "riga-selezionata interfaccia-controllo-attivo" : "interfaccia-controllo"}`}
-      aria-current={selezionata ? "page" : undefined}
-      onClick={selezionata ? onChiudi : onApri}
-    >
-      <span className="riga-icona">
-        <Icona di={selezionata ? X : Settings} />
-      </span>
-      <span className="riga-nome">{selezionata ? "Chiudi impostazioni" : "Impostazioni"}</span>
-    </button>
+    <Suggerimento testo={nome}>
+      <button
+        type="button"
+        className={`riga riga-cartella riga-cestino riga-solo-icona ${selezionata ? "riga-selezionata" : ""}`}
+        aria-label={nome}
+        aria-current={selezionata ? "page" : undefined}
+        onClick={selezionata ? onChiudi : onApri}
+      >
+        <span className="riga-icona">
+          <Icona di={selezionata ? X : Settings} />
+        </span>
+      </button>
+    </Suggerimento>
   );
 }
 

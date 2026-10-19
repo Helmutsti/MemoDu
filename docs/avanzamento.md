@@ -55,11 +55,17 @@ Tutto ciò che è stato rimandato, con la fase in cui va risolto.
 | Testi definitivi di messaggi e avvisi | Tutti i flussi, EN-08 | Fase 6 | Flussi, colonna "Comunicazione" |
 | Come si salvano dimensione, allineamento, ritaglio e rotazione delle immagini senza rompere l'esportazione | RF-03, RF-13 | Fase 7 di RF-03 | `moduli/note/8-test.md` |
 
+## Colonna a riquadri · 19/10/2026
+
+DEC-154, DEC-155: libreria aggiornata dall'agente (CMP-06 intestazione e «Hover con azioni», CMP-14 a riquadro, CMP-30, nuovi CMP-48 e CMP-49), da ripubblicare da Manuel Cucca; dopo, nei mockup la barra delle tessere al posto della sezione Brainet e Locale in riquadro. Codice fatto, prove automatiche superate; le prove a mano TC-251 … TC-253 sull'app restano da fare (il terminale non ha il permesso di registrare lo schermo). La pagina «Proposta · Colonna a riquadri» del file dei mockup si cancella dopo l'allineamento.
+
 ## Deduzioni da confermare
 Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui non valgono come regole.
 
 - ID-50 «Scrivi» in Brainet: la pagina nuova lasciata vuota sparisce, come una nota vuota in CLOUD (RB-10). Proposta dell'agente del 17/10/2026.
 - ID-52 Eliminare un'entità: «Elimina…» col tasto destro sulla riga in Entità; le aree restano evidenziate senza quell'entità. Proposte dell'agente del 17/10/2026.
+- DEC-155 Riassunto nel riquadro chiuso: Cloud conta le sue note fuori dal Cestino, cartelle comprese («42 note»); Locale conta le cartelle aggiunte («2 cartelle»); riquadro vuoto senza riassunto. Proposta dell'agente del 19/10/2026.
+- DEC-154 Colonna a riquadri: sulla tessera Journal si possono trascinare solo note di CLOUD: cartelle e file di Locale non la accendono; Proposta dell'agente del 19/10/2026.
 
 Prima: Nessuna. Il 07/10/2026 Manuel Cucca ha confermato in blocco quelle rimaste (sincronizzazione: nella fusione di un conflitto di testo l'originale prende la versione del server e la copia quella del dispositivo; SC-06; RF-08; DEC-71, DEC-76, DEC-77, DEC-93, DEC-96, DEC-119, DEC-120, DEC-121); tolte perché superate i testi provvisori della sincronizzazione e dello stato in SC-06 (DEC-122), le credenziali nel file dell'app e il gettone statico di DEC-79 (DEC-121).
 

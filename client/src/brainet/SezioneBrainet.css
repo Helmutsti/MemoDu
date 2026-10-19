@@ -1,0 +1,62 @@
+/* CMP-49 Barra delle tessere di Brainet: tre tessere CMP-48 affiancate, spazio-icona tra loro. */
+.barra-tessere {
+  display: flex;
+  gap: var(--spazio-icona);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tessera-posto {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+/* CMP-48 Tessera: icona 20 e nome in Interfaccia/Etichetta, su sfondo-nota con raggio-interno.
+   Hover sfondo-hover; Selezionata piena; Trascinamento sopra come la cartella che riceve. */
+.tessera {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spazio-elemento);
+  width: 100%;
+  height: 58px;
+  padding: 0 var(--spazio-elemento);
+  border: none;
+  border-radius: var(--raggio-interno);
+  background: var(--sfondo-nota);
+  color: var(--testo-primario);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tessera:hover {
+  background: var(--sfondo-hover);
+}
+.tessera-selezionata,
+.tessera-selezionata:hover {
+  background: var(--sfondo-pieno);
+  color: var(--testo-su-pieno);
+}
+.tessera-sopra,
+.tessera-sopra:hover {
+  background: var(--sfondo-hover);
+  color: var(--testo-primario);
+  box-shadow: inset 0 0 0 1.5px var(--icona-tenue);
+}
+
+/* «Rilascia: va in Brainet»: come il suggerimento (CMP-08), sotto la tessera. */
+.tessera-suggerimento {
+  position: absolute;
+  top: calc(100% + var(--spazio-elemento));
+  left: 0;
+  z-index: var(--z-fisso);
+  padding: var(--spazio-elemento) var(--spazio-controllo-piccolo);
+  border-radius: var(--raggio-pillola);
+  background: var(--sfondo-pieno);
+  color: var(--testo-su-pieno);
+  white-space: nowrap;
+  pointer-events: none;
+}

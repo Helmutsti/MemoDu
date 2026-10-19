@@ -41,16 +41,15 @@
   color: var(--testo-tenue);
 }
 
-/* Titolo di sezione: freccia 12, titolo e numero in testo tenue, + a destra. Come ogni riga ha
-   spazio-controllo a sinistra; a destra finisce con il +, e ha spazio-controllo-piccolo. */
+/* Intestazione dentro il riquadro della sezione (DEC-154): freccia 16 in icona tenue, nome in
+   Interfaccia/Titolo e testo primario, da chiusa il riassunto in testo tenue (DEC-155), + a destra.
+   A sinistra spazio-controllo come le righe; a destra finisce con il +, spazio-controllo-piccolo. */
 .riga-sezione {
   gap: var(--spazio-elemento);
   padding: 0 var(--spazio-controllo-piccolo) 0 var(--spazio-controllo);
-  color: var(--testo-tenue);
 }
 .riga-sezione:hover {
   background: var(--sfondo-hover);
-  color: var(--testo-primario);
 }
 .riga-sezione-titolo {
   display: flex;
@@ -63,7 +62,18 @@
   padding: 0;
   border: none;
   background: none;
+  color: var(--testo-primario);
   cursor: pointer;
+}
+.riga-sezione-nome {
+  flex: none;
+}
+.riga-riassunto {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--testo-tenue);
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .riga-conteggio {
   padding-right: var(--spazio-elemento);
@@ -161,4 +171,29 @@
 .riga-cartella-assente,
 .riga-cartella-assente .riga-conteggio {
   color: var(--testo-tenue);
+}
+
+/* ··· con il mouse sopra (CMP-06 Hover con azioni, DEC-154): prende il posto del numero o del
+   pallino e apre il menu del tasto destro. */
+.riga-azioni {
+  display: none;
+  flex: none;
+  color: var(--testo-primario);
+}
+.riga-con-azioni:hover .riga-azioni {
+  display: inline-flex;
+}
+.riga-con-azioni:hover .riga-conteggio,
+.riga-con-azioni:hover .riga-non-salvato {
+  display: none;
+}
+
+/* Impostazioni nel fondo: tondo con la sola icona (DEC-154). */
+.riga-solo-icona {
+  justify-content: center;
+  width: var(--misura-riga);
+  padding: 0;
+}
+.riga-solo-icona:hover {
+  background: var(--sfondo-hover);
 }

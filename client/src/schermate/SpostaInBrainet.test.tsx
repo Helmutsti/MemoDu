@@ -131,6 +131,25 @@ describe("Sposta in Brainet (RB-130, DEC-147)", () => {
     expect(brainet.spostaInBrainet).not.toHaveBeenCalled();
   });
 
+  it("trascinando la nota sulla tessera Journal: la tessera si accende e chiede la stessa conferma (FL-28, DEC-154)", async () => {
+    render(<FinestraPrincipale />);
+    const sorgente = await screen.findByRole("treeitem", { name: "Spesa" });
+    const journal = await screen.findByRole("button", { name: "Journal" });
+    let bersaglio: Element | null = null;
+    document.elementFromPoint = () => bersaglio;
+    fireEvent.pointerDown(sorgente, { button: 0, clientX: 10, clientY: 10 });
+    fireEvent.pointerMove(document, { clientX: 30, clientY: 30 });
+    bersaglio = journal;
+    fireEvent.pointerMove(document, { clientX: 40, clientY: 40 });
+    await waitFor(() => expect(journal).toHaveClass("tessera-sopra"));
+    expect(screen.getByText("Rilascia: va in Brainet")).toBeInTheDocument();
+    fireEvent.pointerUp(document, { clientX: 40, clientY: 40 });
+    const finestra = await screen.findByRole("alertdialog");
+    expect(within(finestra).getByText("Spostare la nota in Brainet?")).toBeInTheDocument();
+    await userEvent.click(within(finestra).getByRole("button", { name: "Annulla" }));
+    expect(brainet.spostaInBrainet).not.toHaveBeenCalled();
+  });
+
   it("con Brainet spento la voce non c'è", async () => {
     vi.mocked(brainet.stato).mockResolvedValue({ acceso: false });
     render(<FinestraPrincipale />);

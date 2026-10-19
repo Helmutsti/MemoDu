@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { api, ErroreApi } from "../api";
@@ -37,23 +37,35 @@ beforeEach(() => {
   vi.mocked(brainet.suggerisciEntita).mockResolvedValue([]);
 });
 
-describe("sezione Brainet della colonna (CA-18.32)", () => {
-  it("Entità e Calendario, senza + e senza Database; la pagina di un'entità tiene Entità", () => {
+describe("tessere di Brainet nella colonna (CA-18.32, DEC-154)", () => {
+  it("Journal, Entità e Calendario, senza + e senza Database; la pagina di un'entità tiene Entità", () => {
     const onApri = vi.fn();
     const { rerender } = render(<SezioneBrainet aperta="entita" onApri={onApri} />);
-    expect(screen.getByRole("treeitem", { name: "Entità" })).toHaveAttribute(
-      "aria-current",
-      "page",
-    );
+    const tessere = within(screen.getByRole("list", { name: "Brainet" })).getAllByRole("button");
+    expect(tessere.map((t) => t.textContent)).toEqual(["Journal", "Entità", "Calendario"]);
+    expect(screen.getByRole("button", { name: "Entità" })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("button", { name: "Entità" })).toHaveClass("tessera-selezionata");
     expect(screen.queryByRole("button", { name: /Nuova nota/ })).toBeNull();
-    expect(screen.queryByRole("treeitem", { name: "Database" })).toBeNull();
-    fireEvent.click(screen.getByRole("treeitem", { name: "Calendario" }));
+    expect(screen.queryByRole("button", { name: "Database" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Calendario" }));
     expect(onApri).toHaveBeenCalledWith("calendario");
     rerender(<SezioneBrainet aperta={`entita:${LUCA.id}`} onApri={onApri} />);
-    expect(screen.getByRole("treeitem", { name: "Entità" })).toHaveAttribute(
-      "aria-current",
-      "page",
+    expect(screen.getByRole("button", { name: "Entità" })).toHaveAttribute("aria-current", "page");
+  });
+
+  it("solo il Journal riceve una nota trascinata (FL-28)", () => {
+    render(
+      <SezioneBrainet
+        aperta={null}
+        onApri={vi.fn()}
+        journal={{ sopra: false, "data-destinazione": "journal" }}
+      />,
     );
+    expect(screen.getByRole("button", { name: "Journal" })).toHaveAttribute(
+      "data-destinazione",
+      "journal",
+    );
+    expect(screen.getByRole("button", { name: "Entità" })).not.toHaveAttribute("data-destinazione");
   });
 });
 

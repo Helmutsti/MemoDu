@@ -5,6 +5,7 @@ import type { Albero, Cartella, ElementoCestino, Nota, VoceElenco } from "@memod
 import { api, ErroreApi } from "../api";
 import type { EventoSincronizzazione } from "../finestra";
 import { FinestraPrincipale } from "./FinestraPrincipale";
+import { accetta } from "./Colonna";
 
 // Il gestore degli eventi della sincronizzazione, per mandarne uno nelle prove.
 const sinc = vi.hoisted(() => ({ gestore: null as null | ((e: EventoSincronizzazione) => void) }));
@@ -322,7 +323,10 @@ describe("SC-01, cartelle (RF-05)", () => {
     expect(lavoro.querySelector("svg.lucide-folder")).not.toBeInTheDocument();
     // Anche la cartella senza sottocartelle né note ha l'icona; le note no.
     expect((await riga(/Personale/)).querySelector("svg.lucide-folder")).toBeInTheDocument();
-    expect((await riga("Budget 2026")).querySelector("svg")).not.toBeInTheDocument();
+    // Le note no: c'è solo ··· per il passaggio del mouse (DEC-154).
+    expect(
+      (await riga("Budget 2026")).querySelector("svg:not(.lucide-ellipsis)"),
+    ).not.toBeInTheDocument();
     // I titoli di sezione tengono la freccia.
     const cartelle = screen.getByRole("button", { name: /^Cloud/, expanded: true });
     expect(cartelle.querySelector("svg.lucide-chevron-down")).toBeInTheDocument();
@@ -462,6 +466,35 @@ describe("SC-01, cartelle (RF-05)", () => {
     expect(clienti).not.toHaveClass("riga-sopra");
     lavoro.rilascia(clienti);
     expect(api.spostaCartella).not.toHaveBeenCalled();
+  });
+
+  it("con il mouse sopra, ··· apre lo stesso menu del tasto destro (CMP-06, DEC-154)", async () => {
+    render(<FinestraPrincipale />);
+    const r = await riga("Riunione di lunedì");
+    const azioni = r.querySelector<HTMLElement>("[data-azioni]");
+    expect(azioni).not.toBeNull();
+    const letture = vi.mocked(api.leggi).mock.calls.length;
+    await userEvent.click(azioni!);
+    expect(await screen.findByRole("menuitem", { name: "Sposta in…" })).toBeInTheDocument();
+    // Il clic sui puntini non apre la nota.
+    expect(vi.mocked(api.leggi).mock.calls.length).toBe(letture);
+    const lavoro = await riga(/Lavoro/);
+    await userEvent.click(lavoro.querySelector<HTMLElement>("[data-azioni]")!);
+    expect(await screen.findByRole("menuitem", { name: "Nuova nota qui" })).toBeInTheDocument();
+  });
+
+  it("chiusa, CLOUD dice quante note contiene; aperta no (DEC-155)", async () => {
+    render(<FinestraPrincipale />);
+    const cloud = await screen.findByRole("button", { name: /^Cloud/, expanded: true });
+    expect(cloud).toHaveTextContent(/^Cloud$/);
+    await userEvent.click(cloud);
+    const chiusa = screen.getByRole("button", { name: /^Cloud/, expanded: false });
+    expect(chiusa.textContent).toMatch(/^Cloud\d+ note$/);
+  });
+
+  it("sulla tessera Journal si trascina solo una nota, mai una cartella (DEC-154)", () => {
+    expect(accetta({ tipo: "nota", id: "r", cartella: "" }, { tipo: "journal" })).toBe(true);
+    expect(accetta({ tipo: "cartella", percorso: "Lavoro" }, { tipo: "journal" })).toBe(false);
   });
 
   it("trascinando, la pillola la disegna l'app e sparisce al rilascio (DEC-120)", async () => {
