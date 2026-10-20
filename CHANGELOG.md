@@ -7,6 +7,8 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+## [1.2.1] – 2026-10-20
+
 ### Corretto
 - In Dispositivi collegati un iPhone compare come «iPhone» e non più come PC Windows
 - Attivando un elenco o una casella su una riga vuota il cursore va dopo il punto, pronto per scrivere
