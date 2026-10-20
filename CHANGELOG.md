@@ -7,6 +7,9 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+### Corretto
+- Attivando un elenco sulla riga subito sotto un paragrafo il punto, la casella o il numero compaiono subito, senza aspettare di scrivere, e la riga sopra non diventa un titolo
+
 ## [1.2.1] – 2026-10-20
 
 ### Corretto

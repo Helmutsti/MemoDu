@@ -94,6 +94,9 @@ export function calcolaSegni(
           classe: CLASSE_TITOLO[nome],
         });
       } else if (nome === "HeaderMark") {
+        // La sottolineatura dei titoli «setext» non si usa: un trattino sotto un paragrafo è
+        // una voce d'elenco ancora vuota, e resta in vista (sotto).
+        if (nodo.node.parent?.name.startsWith("SetextHeading")) return;
         simbolo(nodo.from, conSpazio(nodo.to));
       } else if (CLASSE_FORMATO[nome]) {
         segni.push({ tipo: "tratto", da: nodo.from, a: nodo.to, classe: CLASSE_FORMATO[nome] });
@@ -141,7 +144,49 @@ export function calcolaSegni(
       }
     },
   });
+  vociVuote(state, da, a, segni, suRigaAttiva);
   return segni;
+}
+
+/** Una voce d'elenco ancora vuota: il segno e lo spazio, senza testo dopo. */
+const VOCE_VUOTA = /^(\s*)(?:([-*+]) \[([ xX])\] |([-*+]) |(\d+[.)]) )$/;
+
+/**
+ * Le voci d'elenco ancora vuote subito sotto un paragrafo: per il Markdown non sono ancora un
+ * elenco (un trattino da solo sotto il testo è la sottolineatura di un titolo, «1.» non
+ * interrompe un paragrafo), ma chi scrive ha appena scelto l'elenco: il punto, la casella o il
+ * numero si vedono subito, e il testo che segue fa diventare la riga una voce vera.
+ */
+function vociVuote(
+  state: EditorState,
+  da: number,
+  a: number,
+  segni: Segno[],
+  suRigaAttiva: (pos: number) => boolean,
+) {
+  const giaSegnate = new Set(
+    segni.filter((x) => x.tipo === "punto" || x.tipo === "casella").map((x) => x.da),
+  );
+  for (let n = state.doc.lineAt(da).number; n <= state.doc.lineAt(a).number; n++) {
+    const riga = state.doc.line(n);
+    if (n === 1) continue;
+    const m = VOCE_VUOTA.exec(riga.text);
+    if (!m || !state.doc.line(n - 1).text.trim()) continue;
+    const inizio = riga.from + m[1].length;
+    if (giaSegnate.has(inizio) || segni.some((x) => x.tipo === "tratto" && x.da === inizio))
+      continue;
+    if (m[2]) {
+      if (suRigaAttiva(inizio))
+        segni.push({ tipo: "tratto", da: inizio, a: riga.to, classe: "md-simbolo" });
+      else segni.push({ tipo: "casella", da: inizio, a: riga.to, spuntata: m[3] !== " " });
+    } else if (m[4]) {
+      if (suRigaAttiva(inizio))
+        segni.push({ tipo: "tratto", da: inizio, a: riga.to, classe: "md-simbolo" });
+      else segni.push({ tipo: "punto", da: inizio, a: riga.to });
+    } else {
+      segni.push({ tipo: "tratto", da: inizio, a: inizio + m[5].length, classe: "md-segno" });
+    }
+  }
 }
 
 class Punto extends WidgetType {

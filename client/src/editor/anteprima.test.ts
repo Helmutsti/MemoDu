@@ -82,4 +82,19 @@ describe("anteprima dal vivo (RF-02, CA-02.2)", () => {
     const segni = calcolaSegni(stato(pericoloso));
     expect(segni.filter((s) => s.tipo !== "riga")).toEqual([]);
   });
+
+  it("sotto un paragrafo una voce vuota mostra già il punto, la casella o il numero (CMP-20)", () => {
+    const fuori = (doc: string) => calcolaSegni(stato(doc + "\nfine", 0));
+    const punto = fuori("Prima riga\n- ");
+    expect(punto.filter((s) => s.tipo === "punto").map((s) => s.da)).toEqual([11]);
+    expect(punto.some((s) => s.tipo === "riga" && /titolo/.test(s.classe))).toBe(false);
+    expect(di("Prima riga\n- ", punto, "nascosto")).toEqual([]);
+    expect(fuori("Prima riga\n- [ ] ").filter((s) => s.tipo === "casella")).toHaveLength(1);
+    const numero = fuori("Prima riga\n1. ");
+    expect(
+      numero.find((s) => s.tipo === "tratto" && s.classe === "md-segno" && s.da === 11),
+    ).toBeDefined();
+    // Un trattino senza spazio sotto il testo resta la sottolineatura di un titolo.
+    expect(fuori("Prima riga\n-").some((s) => s.tipo === "punto")).toBe(false);
+  });
 });
