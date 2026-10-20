@@ -10,7 +10,15 @@ import { daPglite, type Database } from "../../../api/src/database.js";
 import { aggiornaSchema } from "../../../api/src/schema.js";
 import { creaServer } from "../../../api/src/servizio.js";
 import { ArchivioSincronizzazione } from "../../../api/src/sincronizzazione.js";
-import { accedi, type Sessione } from "./accesso";
+import {
+  accedi,
+  cambiaPassword,
+  elencaDispositivi,
+  mandaNome,
+  scollegaDispositivo,
+  type Sessione,
+} from "./accesso";
+import { scriviRecupero } from "./cifratura";
 import { Archivio } from "./archivio";
 import type { Db, Valore } from "./db";
 import { sincronizza } from "./sinc";
@@ -330,5 +338,61 @@ describe("nucleo del telefono con il server (DEC-156)", () => {
       ["Nuova cartella", true],
     ]);
     expect(await altro.a.nota(n)).toMatchObject({ cartella: prima, titolo: "Dentro" });
+  });
+
+  it("cambia la password con quella attuale e poi con la chiave di recupero, che ne dà una nuova (SC-08, RB-98, RB-99)", async () => {
+    const t = await dispositivo();
+    const nuova = "un'altra frase lunga";
+    await expect(
+      cambiaPassword(t.s, { attuale: "sbagliata" }, nuova, false, chiama, INDIRIZZO),
+    ).rejects.toEqual({ tipo: "verifica" });
+    await expect(
+      cambiaPassword(t.s, { attuale: PASSWORD }, "corta", false, chiama, INDIRIZZO),
+    ).rejects.toMatchObject({ tipo: "password" });
+    expect(
+      await cambiaPassword(t.s, { attuale: PASSWORD }, nuova, false, chiama, INDIRIZZO),
+    ).toEqual({ chiave: null });
+    await expect(accedi("manuel@esempio.it", PASSWORD, chiama, INDIRIZZO)).rejects.toBe(
+      "credenziali",
+    );
+    const dopo = await accedi("manuel@esempio.it", nuova, chiama, INDIRIZZO);
+    expect(dopo.chiave).toEqual(t.s.chiave);
+    const terza = "la terza frase lunga";
+    const esito = await cambiaPassword(
+      t.s,
+      { chiaveRecupero: scriviRecupero(recupero) },
+      terza,
+      false,
+      chiama,
+      INDIRIZZO,
+    );
+    expect(esito.chiave).toMatch(/^[A-Z0-9-]+$/);
+    await expect(
+      cambiaPassword(
+        t.s,
+        { chiaveRecupero: scriviRecupero(recupero) },
+        nuova,
+        false,
+        chiama,
+        INDIRIZZO,
+      ),
+    ).rejects.toEqual({ tipo: "verifica" });
+    expect((await accedi("manuel@esempio.it", terza, chiama, INDIRIZZO)).chiave).toEqual(
+      t.s.chiave,
+    );
+    // La password nuova usa i parametri veri di Argon2id (64 MiB): qui va più lenta.
+  }, 120_000);
+
+  it("dispositivi collegati: questo per primo con il suo nome, l'altro si scollega (SC-09, RB-100)", async () => {
+    const t = await dispositivo();
+    await mandaNome(t.s, "iPhone", chiama, INDIRIZZO);
+    const altro = await dispositivo();
+    const elenco = await elencaDispositivi(t.s, chiama, INDIRIZZO);
+    expect(elenco.map((d) => [d.nome, d.tipo, d.questo])).toEqual([
+      ["iPhone", "ios", true],
+      [null, "ios", false],
+    ]);
+    await scollegaDispositivo(t.s, altro.s.dispositivo, chiama, INDIRIZZO);
+    expect(await elencaDispositivi(t.s, chiama, INDIRIZZO)).toHaveLength(1);
   });
 });

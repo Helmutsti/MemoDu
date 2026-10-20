@@ -7,11 +7,23 @@
 import { router } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
 import type { ReactNode } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { misura, raggio, spazio, useColori } from "@/tema";
+import { misura, opacitaDisabilitato, raggio, spazio, testo, useColori } from "@/tema";
 
-export function BarraInCima({ sfondo, destra }: { sfondo?: string; destra?: ReactNode }) {
+export function BarraInCima({
+  sfondo,
+  titolo,
+  indietro = true,
+  destra,
+}: {
+  sfondo?: string;
+  /** Il titolo della schermata accanto al tondo, in Titolo di schermata (SC-06, SC-08, SC-09). */
+  titolo?: string;
+  /** Spento dove non si può tornare indietro (la chiave di recupero nuova, RB-99). */
+  indietro?: boolean;
+  destra?: ReactNode;
+}) {
   const c = useColori();
   const margini = useSafeAreaInsets();
   return (
@@ -23,16 +35,29 @@ export function BarraInCima({ sfondo, destra }: { sfondo?: string; destra?: Reac
     >
       <Pressable
         onPress={() => router.back()}
+        disabled={!indietro}
         accessibilityRole="button"
         accessibilityLabel="Indietro"
+        accessibilityState={{ disabled: !indietro }}
         hitSlop={spazio.elemento}
         style={({ pressed }) => [
           stili.tondo,
           { backgroundColor: pressed ? c.sfondoPremuto : c.sfondoCampo },
+          !indietro && { opacity: opacitaDisabilitato },
         ]}
       >
         <ChevronLeft size={misura.icona} color={c.testoPrimario} strokeWidth={misura.tratto} />
       </Pressable>
+      {titolo ? (
+        <Text
+          allowFontScaling={false}
+          numberOfLines={1}
+          accessibilityRole="header"
+          style={[testo.titoloSchermata, stili.titolo, { color: c.testoPrimario }]}
+        >
+          {titolo}
+        </Text>
+      ) : null}
       <View style={stili.destra}>{destra}</View>
     </View>
   );
@@ -52,5 +77,6 @@ const stili = StyleSheet.create({
     justifyContent: "center",
     borderRadius: raggio.pillola,
   },
+  titolo: { flexShrink: 1, marginLeft: spazio.controllo },
   destra: { flex: 1, flexDirection: "row", justifyContent: "flex-end", gap: spazio.icona },
 });

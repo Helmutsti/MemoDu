@@ -16,7 +16,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { AppState } from "react-native";
+import { AppState, Appearance } from "react-native";
 import {
   accedi as accediAlServer,
   esci as esciDalServer,
@@ -54,7 +54,19 @@ interface Negozio {
   usaSenzaCloud: () => Promise<void>;
   /** Da chiamare dopo ogni modifica: la sincronizzazione parte poco dopo. */
   modificato: () => void;
+  /** Il nome di questo dispositivo tra quelli dell'account (RB-51): di default «iPhone». */
+  nomeDispositivo: string;
+  cambiaNome: (nome: string) => Promise<void>;
+  /** Tema di questo telefono, non sincronizzato (SC-06): Sistema, Chiaro o Scuro. */
+  tema: Tema;
+  impostaTema: (tema: Tema) => Promise<void>;
 }
+
+export type Tema = "sistema" | "chiaro" | "scuro";
+const VOCE_NOME = "nome-dispositivo";
+const VOCE_TEMA = "tema";
+const NOME_PREDEFINITO = "iPhone";
+const aspetto = (t: Tema) => (t === "chiaro" ? "light" : t === "scuro" ? "dark" : "unspecified");
 
 const Contesto = createContext<Negozio | null>(null);
 
@@ -72,6 +84,23 @@ export function NegozioProvider({ children }: { children: ReactNode }) {
   const [versione, setVersione] = useState(0);
   const [problema, setProblema] = useState<Problema | null>(null);
   const [ultimaRiuscita, setUltimaRiuscita] = useState<string | null>(null);
+  const [nomeDispositivo, setNomeDispositivo] = useState(NOME_PREDEFINITO);
+  const [tema, setTema] = useState<Tema>("sistema");
+
+  // Nome e tema stanno solo su questo telefono, nel portachiavi come la sessione.
+  useEffect(() => {
+    void (async () => {
+      const [nome, t] = await Promise.all([
+        SecureStore.getItemAsync(VOCE_NOME),
+        SecureStore.getItemAsync(VOCE_TEMA),
+      ]);
+      if (nome) setNomeDispositivo(nome);
+      if (t === "chiaro" || t === "scuro") {
+        setTema(t);
+        Appearance.setColorScheme(aspetto(t));
+      }
+    })();
+  }, []);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const ritentativo = useRef(PRIMO_RITENTATIVO_MS);
   const inCorso = useRef(false);
@@ -147,7 +176,7 @@ export function NegozioProvider({ children }: { children: ReactNode }) {
     try {
       const s = await accediAlServer(email, password, fetch);
       await SecureStore.setItemAsync(VOCE_SESSIONE, sessioneInTesto(s));
-      void mandaNome(s, "iPhone");
+      void mandaNome(s, (await SecureStore.getItemAsync(VOCE_NOME)) ?? NOME_PREDEFINITO);
       setSessione(s);
       return null;
     } catch (e) {
@@ -169,6 +198,21 @@ export function NegozioProvider({ children }: { children: ReactNode }) {
     setSessione(null);
   }, []);
 
+  const cambiaNome = useCallback(async (nome: string) => {
+    const pulito = nome.trim();
+    if (!pulito) return;
+    await SecureStore.setItemAsync(VOCE_NOME, pulito);
+    setNomeDispositivo(pulito);
+    const s = stato.current.sessione;
+    if (s) await mandaNome(s, pulito);
+  }, []);
+
+  const impostaTema = useCallback(async (t: Tema) => {
+    await SecureStore.setItemAsync(VOCE_TEMA, t);
+    setTema(t);
+    Appearance.setColorScheme(aspetto(t));
+  }, []);
+
   const usaSenzaCloud = useCallback(async () => {
     await stato.current.archivio?.impostaStatoSinc("senza_cloud", "1");
     setSenzaCloud(true);
@@ -187,8 +231,16 @@ export function NegozioProvider({ children }: { children: ReactNode }) {
       esci,
       usaSenzaCloud,
       modificato,
+      nomeDispositivo,
+      cambiaNome,
+      tema,
+      impostaTema,
     }),
     [
+      nomeDispositivo,
+      cambiaNome,
+      tema,
+      impostaTema,
       archivio,
       versione,
       sessione,

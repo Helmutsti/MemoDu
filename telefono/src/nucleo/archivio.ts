@@ -301,6 +301,22 @@ export class Archivio {
     return e?.campi.brainet === true;
   }
 
+  /** «Mostra le note del cestino nei risultati»: sincronizzata, accesa di default (RB-29, DEC-94). */
+  async cestinoInRicerca(): Promise<boolean> {
+    const e = await this.campi(ID_IMPOSTAZIONI);
+    return e?.campi.cestino_in_ricerca !== false;
+  }
+
+  async impostaCestinoInRicerca(acceso: boolean): Promise<void> {
+    await this.db.transazione(async () => {
+      const e = await this.campi(ID_IMPOSTAZIONI);
+      await this.scrivi(ID_IMPOSTAZIONI, "impostazioni", {
+        ...(e?.campi ?? {}),
+        cestino_in_ricerca: acceso,
+      });
+    });
+  }
+
   async quantiNelCestino(): Promise<number> {
     const righe = await this.db.tutte<{ campi: string }>(
       "SELECT campi FROM elementi WHERE tipo IN ('nota', 'cartella')",

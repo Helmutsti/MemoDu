@@ -764,3 +764,5 @@
 | 20/10/2026 | Manuel Cucca | Telefono: nella nota le righe vuote tra i blocchi sono alte metà riga | DEC-162 |
 | 20/10/2026 | Manuel Cucca | Note: attivando un formato di riga il cursore va dopo il segno; rientro delle voci senza text-indent | DEC-130 |
 | 20/10/2026 | Manuel Cucca | Telefono: menu della pressione lunga su note, cartelle e CLOUD; Sposta in…; nuova cartella, rinomina e cestino delle cartelle con le regole del computer; la barra dei formati solo con la tastiera aperta | DEC-156 |
+| 20/10/2026 | Manuel Cucca | Telefono: Impostazioni complete (nome del dispositivo, Cambia password, Dispositivi collegati, tema, note del cestino nei risultati) con le regole del computer | DEC-156, DEC-166 |
+| 20/10/2026 | Manuel Cucca | Dispositivi collegati: un iPhone si chiama «iPhone» (iOS); la conferma dice «Le note su quel dispositivo restano…» | DEC-156 |

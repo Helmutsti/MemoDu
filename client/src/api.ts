@@ -230,7 +230,7 @@ export interface DispositivoCollegato {
   id: string;
   /** Il nome scelto, aperto con la chiave dati; null se non è ancora arrivato. */
   nome: string | null;
-  tipo: "windows" | "macos";
+  tipo: "windows" | "macos" | "ios";
   ultimaSincronizzazione: string | null;
   questo: boolean;
 }

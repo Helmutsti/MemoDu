@@ -205,6 +205,25 @@ describe("CMP-36 Dispositivi collegati (CA-16.1 … CA-16.4)", () => {
     expect(screen.queryByText("MacBook dell'ufficio")).not.toBeInTheDocument();
   });
 
+  it("un iPhone senza nome si chiama «iPhone», tipo iOS (DEC-156)", async () => {
+    render(
+      <DispositiviCollegati
+        onElenca={async () => [
+          ...elenco,
+          { id: "c", nome: null, tipo: "ios", ultimaSincronizzazione: null, questo: false },
+        ]}
+        onScollega={async () => undefined}
+        onChiudi={() => undefined}
+      />,
+    );
+    expect(await screen.findByText("iPhone")).toBeInTheDocument();
+    expect(screen.getByText("iOS · non ancora sincronizzato")).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Scollega iPhone" }));
+    expect(
+      screen.getByText("Le note su quel dispositivo restano, ma non si sincronizzano più."),
+    ).toBeInTheDocument();
+  });
+
   it("senza server il messaggio al posto dell'elenco", async () => {
     render(
       <DispositiviCollegati

@@ -1,3 +1,4 @@
+import { problemaPassword as problemaCondiviso } from "@memodu/condiviso";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import type { FastifyInstance } from "fastify";
 import { Accesso, utenteFissoDaAmbiente } from "./accesso.js";
@@ -75,6 +76,16 @@ describe("chiavi dell'utente (DEC-121)", () => {
     expect(problemaPassword("zzzzzzzzzzzzzz")).toContain("più usate");
     expect(problemaPassword("àèìòù àèìòù xy")).toBeNull();
     expect(problemaPassword(PASSWORD)).toBeNull();
+    // Il telefono usa la copia del pacchetto condiviso: deve dire le stesse cose.
+    for (const p of [
+      "corta12345",
+      "Password1234",
+      "zzzzzzzzzzzzzz",
+      "àèìòù àèìòù xy",
+      PASSWORD,
+      "memodumemodu",
+    ])
+      expect(problemaCondiviso(p)).toBe(problemaPassword(p));
   });
 
   it("l'utente fisso si rilegge dalle variabili d'ambiente, per la migrazione", () => {

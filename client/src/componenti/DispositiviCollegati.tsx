@@ -22,8 +22,10 @@ interface Proprieta {
 }
 
 /** Il nome da mostrare: quello scelto, o il tipo se il dispositivo non l'ha ancora mandato. */
-const nomeDi = (d: DispositivoCollegato) => d.nome ?? (d.tipo === "macos" ? "Mac" : "PC Windows");
-const tipoDi = (d: DispositivoCollegato) => (d.tipo === "macos" ? "macOS" : "Windows");
+const nomeDi = (d: DispositivoCollegato) =>
+  d.nome ?? (d.tipo === "ios" ? "iPhone" : d.tipo === "macos" ? "Mac" : "PC Windows");
+const tipoDi = (d: DispositivoCollegato) =>
+  d.tipo === "ios" ? "iOS" : d.tipo === "macos" ? "macOS" : "Windows";
 
 function dettaglio(d: DispositivoCollegato): string {
   if (d.questo) return `${tipoDi(d)} · questo dispositivo`;
@@ -82,7 +84,7 @@ export function DispositiviCollegati({ onElenca, onScollega, onChiudi }: Proprie
                   <span className="dispositivo-testi">
                     <span className="dispositivo-nome interfaccia-controllo">{`Scollegare «${nomeDi(d)}»?`}</span>
                     <span className="dispositivo-dettaglio interfaccia-dettaglio">
-                      Le note su quel computer restano, ma non si sincronizzano più.
+                      Le note su quel dispositivo restano, ma non si sincronizzano più.
                     </span>
                   </span>
                   <span className="dispositivo-azioni">

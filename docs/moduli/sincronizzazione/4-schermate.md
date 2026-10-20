@@ -105,7 +105,7 @@ Finestra sopra le impostazioni velate (livello 40), aperta da «Dispositivi coll
 | Vuoto | Solo questo dispositivo: una riga | — |
 | Caricamento | L'elenco arriva dal server | — |
 | Errore | Server irraggiungibile: messaggio in linea al posto dell'elenco | «Server non raggiungibile. Riprova tra poco.» |
-| Conferma | La riga del dispositivo diventa la domanda | «Scollegare «MacBook dell'ufficio»?», «Le note su quel computer restano, ma non si sincronizzano più.» |
+| Conferma | La riga del dispositivo diventa la domanda | «Scollegare «MacBook dell'ufficio»?», «Le note su quel dispositivo restano, ma non si sincronizzano più.» (vale anche per i telefoni, scelta di Manuel Cucca del 20/10/2026) |
 | Successo | La riga sparisce | — |
 
 ---
