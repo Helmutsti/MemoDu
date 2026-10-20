@@ -5,7 +5,8 @@
 // frase con la parola evidenziata in testo-primario Medium, cartella e data; una nota nel cestino
 // attenuata, con «nel cestino». Senza risultati «Nessuna nota trovata» e il suggerimento. I filtri
 // si scelgono nel foglio dal basso (CMP-51): i tag con la spunta, più d'uno, e «Togli il filtro»;
-// le date con i periodi del computer («Scegli le date…» con il calendario arriva dopo).
+// le date con i periodi del computer e, sotto un filo, «Scegli le date…» con il calendario, che
+// sceglie un giorno solo (DEC-126).
 
 import { Check, ChevronDown, Search } from "lucide-react-native";
 import { useMemo, useState } from "react";
@@ -20,6 +21,7 @@ import {
   type Periodo,
 } from "../../../client/src/ricerca";
 import { Foglio } from "@/componenti/Foglio";
+import { FoglioData, giornoDiOggi } from "@/componenti/FoglioData";
 import type { RisultatoRicerca } from "@/nucleo/ricerca";
 import { misura, opacitaDisabilitato, raggio, spazio, t, testo, useColori } from "@/tema";
 
@@ -101,6 +103,7 @@ export function FiltriRicerca({
 }) {
   const c = useColori();
   const [foglio, setFoglio] = useState<"tag" | "creata" | "modificata" | null>(null);
+  const [calendario, setCalendario] = useState<"creata" | "modificata" | null>(null);
   const [cercaTag, setCercaTag] = useState("");
   const tagVisti = useMemo(() => {
     const f = cercaTag.trim().toLowerCase();
@@ -201,8 +204,41 @@ export function FiltriRicerca({
               onPress={() => scegliPeriodo(p.valore)}
             />
           ))}
+          <View style={[stili.filo, { backgroundColor: c.bordoDivisoreTenue }]} />
+          <Voce
+            etichetta="Scegli le date…"
+            scelta={typeof periodo === "object" && periodo !== null}
+            onPress={() => {
+              const quale = foglio === "creata" ? "creata" : "modificata";
+              setFoglio(null);
+              // Il calendario sale quando il foglio dei periodi è sceso.
+              setTimeout(() => setCalendario(quale), 350);
+            }}
+          />
         </View>
       </Foglio>
+      <FoglioData
+        visibile={calendario !== null}
+        titolo={calendario === "creata" ? "Creazione" : "Modifica"}
+        scelto={(() => {
+          const p = calendario ? filtri[calendario] : null;
+          return p && typeof p === "object" ? p.giorno : null;
+        })()}
+        voci={[
+          {
+            etichetta: "Oggi",
+            onPress: () => {
+              if (calendario) onFiltri({ ...filtri, [calendario]: { giorno: giornoDiOggi() } });
+              setCalendario(null);
+            },
+          },
+        ]}
+        onScegli={(giorno) => {
+          if (calendario) onFiltri({ ...filtri, [calendario]: { giorno } });
+          setCalendario(null);
+        }}
+        onChiudi={() => setCalendario(null)}
+      />
     </>
   );
 }

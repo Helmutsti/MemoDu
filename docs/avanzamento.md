@@ -64,6 +64,7 @@ DEC-156 (Proposta, scelta di Manuel Cucca): l'app per iPhone in React Native; il
 DEC-154, DEC-155: libreria aggiornata dall'agente (CMP-06 intestazione e «Hover con azioni», CMP-14 a riquadro, CMP-30, nuovi CMP-48 e CMP-49), da ripubblicare da Manuel Cucca; dopo, nei mockup la barra delle tessere al posto della sezione Brainet e Locale in riquadro. Codice fatto, prove automatiche superate; le prove a mano TC-251 … TC-253 sull'app restano da fare (il terminale non ha il permesso di registrare lo schermo). La pagina «Proposta · Colonna a riquadri» del file dei mockup si cancella dopo l'allineamento.
 
 ## Deduzioni da confermare
+- Telefono, foglio «Tag»: tenendo premuto un tag si apre «Elimina tag…» con la conferma del computer (RB-19). Proposta dell'agente del 21/10/2026.
 Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui non valgono come regole.
 
 - ID-52 Eliminare un'entità: «Elimina…» col tasto destro sulla riga in Entità; le aree restano evidenziate senza quell'entità. Proposte dell'agente del 17/10/2026.

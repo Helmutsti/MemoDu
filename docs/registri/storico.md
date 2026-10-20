@@ -778,3 +778,4 @@
 | 20/10/2026 | Manuel Cucca | Brainet: «Scrivi» sopra Journal apre una pagina nuova già in Brainet, con giorno e ora sopra e senza titolo; vuota sparisce. Accettata ID-50; mockup del computer e del telefono | DEC-168, ID-50 |
 | 20/10/2026 | Manuel Cucca | Telefono, Brainet passo 3: allegati con la graffetta (Foto, File) e incollando una foto; tocco su un allegato: Apri, Dimensioni, Togli. Mockup del telefono; proposta delle librerie | DEC-169 |
 | 21/10/2026 | Manuel Cucca | Accettata la libreria dei file sul telefono, `expo-file-system` | DEC-169 |
+| 21/10/2026 | Manuel Cucca | Telefono: Info modificabile, con il calendario del computer per le date (Oggi, Ripristina, Nessuna fine validità), il foglio «Tag» con le spunte e «Scegli le date…» nei filtri; mockup del telefono | RF-04, RF-06, DEC-126 |

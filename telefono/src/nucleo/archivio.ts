@@ -371,6 +371,112 @@ export class Archivio {
     return new Map([...tag.keys()].map((id) => [id, percorso(id)]));
   }
 
+  /** Tutti i tag, anche senza note (RB-49), con quante note fuori dal cestino usano il tag o un suo sotto-tag (RB-19). */
+  async tuttiITag(): Promise<{ id: string; percorso: string; note: number }[]> {
+    const percorsi = await this.percorsiTag();
+    const tag = await this.blocchiTag();
+    const note = (await this.note()).filter((n) => !n.eliminata_il);
+    const voci = [...percorsi].map(([id, percorso]) => {
+      const ramo = new Set(this.ramoTag(id, tag));
+      return { id, percorso, note: note.filter((n) => n.tag.some((t) => ramo.has(t))).length };
+    });
+    return voci.sort((x, y) => ordineTesto(x.percorso, y.percorso));
+  }
+
+  private async blocchiTag(): Promise<Map<string, Campi>> {
+    const righe = await this.db.tutte<{ id: string; campi: string }>(
+      "SELECT id, campi FROM elementi WHERE tipo = 'tag'",
+    );
+    return new Map(righe.map((r) => [r.id, JSON.parse(r.campi) as Campi]));
+  }
+
+  /** Il tag e tutti i suoi sotto-tag. */
+  private ramoTag(id: string, tag: Map<string, Campi>): string[] {
+    const ramo = [id];
+    for (let i = 0; i < ramo.length; i++)
+      for (const [figlio, c] of tag)
+        if (c.padre === ramo[i] && !ramo.includes(figlio)) ramo.push(figlio);
+    return ramo;
+  }
+
+  /** Date della nota (RB-20, RB-21): null toglie la data scelta. */
+  async impostaDate(
+    id: string,
+    cambi: { creata_scelta?: string | null; fine_validita?: string | null },
+  ): Promise<void> {
+    for (const g of [cambi.creata_scelta, cambi.fine_validita])
+      if (g && !giornoValido(g)) throw new Error(`Data non valida: ${g}`);
+    await this.db.transazione(async () => {
+      const e = await this.campi(id);
+      if (!e || e.tipo !== "nota") return;
+      await this.scrivi(id, "nota", { ...e.campi, ...cambi, modificata: this.adesso() });
+    });
+  }
+
+  /** Aggiunge un tag alla nota; se non esiste nasce con i livelli che mancano (RB-17, RB-18, RB-22). */
+  async aggiungiTag(id: string, nome: string): Promise<void> {
+    const livelli = livelliTag(nome);
+    if (!livelli.length) return;
+    await this.db.transazione(async () => {
+      const e = await this.campi(id);
+      if (!e || e.tipo !== "nota") return;
+      const tag = await this.blocchiTag();
+      let padre: string | null = null;
+      for (const livello of livelli) {
+        const trovato = [...tag].find(
+          ([, c]) =>
+            (c.padre ?? null) === padre && String(c.nome).toLowerCase() === livello.toLowerCase(),
+        );
+        if (trovato) padre = trovato[0];
+        else {
+          const nuovo = this.nuovoId();
+          const campi = { nome: livello, padre };
+          await this.scrivi(nuovo, "tag", campi);
+          tag.set(nuovo, campi);
+          padre = nuovo;
+        }
+      }
+      const attuali = Array.isArray(e.campi.tag) ? (e.campi.tag as string[]) : [];
+      if (!padre || attuali.includes(padre)) return;
+      await this.scrivi(id, "nota", {
+        ...e.campi,
+        tag: [...attuali, padre],
+        modificata: this.adesso(),
+      });
+    });
+  }
+
+  /** Toglie un tag dalla nota; il tag resta tra i suggerimenti (RB-49). */
+  async togliTag(id: string, tag: string): Promise<void> {
+    await this.db.transazione(async () => {
+      const e = await this.campi(id);
+      const attuali = Array.isArray(e?.campi.tag) ? (e!.campi.tag as string[]) : [];
+      if (!e || !attuali.includes(tag)) return;
+      await this.scrivi(id, "nota", {
+        ...e.campi,
+        tag: attuali.filter((t) => t !== tag),
+        modificata: this.adesso(),
+      });
+    });
+  }
+
+  /** Elimina un tag e i suoi sotto-tag da tutte le note, senza toccare altro (RB-19). */
+  async eliminaTag(tag: string): Promise<void> {
+    await this.db.transazione(async () => {
+      const ramo = new Set(this.ramoTag(tag, await this.blocchiTag()));
+      const note = await this.db.tutte<{ id: string; campi: string }>(
+        "SELECT id, campi FROM elementi WHERE tipo = 'nota'",
+      );
+      for (const r of note) {
+        const c = JSON.parse(r.campi) as Campi;
+        const attuali = Array.isArray(c.tag) ? (c.tag as string[]) : [];
+        if (attuali.some((t) => ramo.has(t)))
+          await this.scrivi(r.id, "nota", { ...c, tag: attuali.filter((t) => !ramo.has(t)) });
+      }
+      for (const t of ramo) await this.cancella(t, "tag");
+    });
+  }
+
   // ——— Brainet da leggere (RF-18, passo 1) ———
 
   /** Note (tutte), entità e stati di Brainet, dai blocchi sincronizzati. */
@@ -1430,4 +1536,26 @@ function unisciInsiemi(base: unknown, locale: unknown, remoto: unknown): string[
   for (const t of l) if (!b.has(t)) tutti.add(t);
   for (const t of r) if (!b.has(t)) tutti.add(t);
   return [...tutti].sort();
+}
+
+/** Livelli di un tag (RB-18, RB-22): separati da «/», senza spazi doppi né ai lati; i «/» vuoti si tolgono. */
+export function livelliTag(nome: string): string[] {
+  return nome
+    .split("/")
+    .map((l) => l.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+}
+
+/** Un giorno AAAA-MM-GG che esiste davvero (DEC-28, RB-20). */
+export function giornoValido(g: string): boolean {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(g);
+  if (!m) return false;
+  const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
+  return d.getUTCFullYear() === +m[1] && d.getUTCMonth() === +m[2] - 1 && d.getUTCDate() === +m[3];
+}
+
+/** Ordine alfabetico senza accenti né maiuscole, come sul computer. */
+export function ordineTesto(a: string, b: string): number {
+  const base = (t: string) => t.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+  return base(a) < base(b) ? -1 : base(a) > base(b) ? 1 : 0;
 }

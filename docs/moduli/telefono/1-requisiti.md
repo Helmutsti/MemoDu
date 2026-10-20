@@ -19,7 +19,12 @@ Memodu sull'iPhone, in React Native (DEC-156): le stesse note del computer, sinc
 Proposta dell'agente, approvata da Manuel Cucca il 19/10/2026 («vai avanti»):
 - **Subito, fatto:** accesso con email e password come sul computer; note sincronizzate e cifrate, che restano sul telefono anche senza rete; la lista a riquadri; aprire e scrivere una nota con la barra dei formati sopra la tastiera; nuova nota; ricerca; Elimina facendo scorrere la riga.
 - **Subito dopo, fatto il 20/10/2026:** Info (da leggere, con Sposta in… dalla cartella), Sposta in…, cartelle con la pressione lunga, Cestino, Impostazioni (account, nome del dispositivo, Cambia password, Dispositivi collegati, tema, ricerca), ricerca con i filtri.
-- **Da fare:** Info modificabile (date e tag) con il calendario, anche per «Scegli le date…» nei filtri.
+- **Info modificabile (scelte di Manuel Cucca del 21/10/2026):**
+  - le righe del computer, ognuna con il suo tocco: la cartella apre Sposta in…, una data apre il foglio con il calendario del computer (CMP-12), i tag il foglio «Tag»; ogni modifica vale subito (RB-06);
+  - data di creazione: il mese con le frecce, oggi evidenziato, il giorno scelto pieno; un tocco su un giorno lo sceglie e chiude il foglio; in fondo «Oggi» e «Ripristina» con la data di sistema, che torna a quella (RB-21); in Info, se è stata cambiata, «Ripristina» anche a destra della riga;
+  - fine validità: lo stesso foglio, in fondo «Oggi» e «Nessuna fine validità», che la toglie (RB-20);
+  - tag: «Cerca o crea un tag» e tutti i tag con la spunta su quelli della nota; un tocco mette o toglie; un nome nuovo dà «Crea il tag «…»» (RB-17, RB-18, RB-22); tenendo premuto un tag «Elimina tag…» con la conferma del computer (RB-19; proposta dell'agente, da confermare);
+  - «Scegli le date…» nei filtri Creazione e Modifica apre lo stesso calendario e sceglie un giorno solo (DEC-126).
 - **Brainet, passo 1, fatto il 20/10/2026:** Journal, Entità, pagina dell'entità e Calendario da leggere; nelle note pillole e aree si vedono e una pillola apre la sua entità.
 - **Brainet, passo 2, fatto il 20/10/2026:** @ con i suggerimenti, aree dalla selezione, Sposta in Brainet, tipo, unione e foto delle entità.
 - **«Scrivi» in Brainet (DEC-168), dal 20/10/2026:** prima riga del riquadro Brainet; apre una pagina nuova con giorno e ora sopra, come sul computer.

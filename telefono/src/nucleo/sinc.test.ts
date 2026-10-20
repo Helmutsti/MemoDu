@@ -463,4 +463,41 @@ describe("nucleo del telefono con il server (DEC-156)", () => {
       brainet: true,
     });
   });
+
+  it("Info dal telefono: date scelte e ripristinate, tag con i livelli, tolti ed eliminati, e l'altro dispositivo li riceve (RB-17 … RB-22)", async () => {
+    const t = await dispositivo();
+    const n = await t.a.creaNota(null);
+    const altra = await t.a.creaNota(null);
+    await t.a.impostaDate(n, { creata_scelta: "2026-10-01", fine_validita: "2026-10-31" });
+    await expect(t.a.impostaDate(n, { fine_validita: "2026-02-30" })).rejects.toThrow();
+    await t.a.aggiungiTag(n, " Lavoro //  Clienti/ ");
+    await t.a.aggiungiTag(n, "lavoro/clienti");
+    await t.a.aggiungiTag(altra, "LAVORO");
+    const voci = await t.a.tuttiITag();
+    expect(voci.map((v) => [v.percorso, v.note])).toEqual([
+      ["Lavoro", 2],
+      ["Lavoro/Clienti", 1],
+    ]);
+    expect((await t.a.nota(n))?.tag).toHaveLength(1);
+    await t.a.togliTag(altra, voci[0].id);
+    expect((await t.a.nota(altra))?.tag).toEqual([]);
+    await sinc(t);
+    const pc = await dispositivo();
+    await sinc(pc);
+    expect(await pc.a.nota(n)).toMatchObject({
+      creata_scelta: "2026-10-01",
+      fine_validita: "2026-10-31",
+    });
+    expect((await pc.a.tuttiITag()).map((v) => v.percorso)).toEqual(["Lavoro", "Lavoro/Clienti"]);
+    // Ripristina: la data scelta se ne va; eliminare «Lavoro» porta via anche «Clienti».
+    await t.a.impostaDate(n, { creata_scelta: null });
+    const prima = (await t.a.nota(n))!.modificata;
+    await t.a.eliminaTag(voci[0].id);
+    expect(await t.a.tuttiITag()).toEqual([]);
+    expect(await t.a.nota(n)).toMatchObject({ tag: [], creata_scelta: null, modificata: prima });
+    await sinc(t);
+    await sinc(pc);
+    expect(await pc.a.tuttiITag()).toEqual([]);
+    expect((await pc.a.nota(n))?.tag).toEqual([]);
+  });
 });
