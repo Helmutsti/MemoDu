@@ -32,3 +32,16 @@ export function scriviGiorno(valore: string): string {
 
 /** Il giorno di un istante, GG/MM/AAAA. */
 export const giornoDi = (istante: string) => giorno(new Date(istante));
+
+/**
+ * Sopra una nota in Brainet, come sul computer (RB-131): «oggi alle 18:40», «il 09/10/2026 alle
+ * 17:02»; con un giorno scelto in Info, quel giorno senza ora.
+ */
+export function quandoNota(
+  n: { creata: string; creata_scelta: string | null },
+  adesso = new Date(),
+): string {
+  if (!n.creata_scelta) return quando(n.creata, adesso);
+  const oggi = `${adesso.getFullYear()}-${due(adesso.getMonth() + 1)}-${due(adesso.getDate())}`;
+  return n.creata_scelta === oggi ? "oggi" : `il ${scriviGiorno(n.creata_scelta)}`;
+}

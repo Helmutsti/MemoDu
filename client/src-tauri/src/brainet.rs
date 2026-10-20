@@ -53,6 +53,12 @@ pub async fn elenca_entita(dati: Stato<'_>) -> Esito<Vec<VoceEntita>> {
     dati.con(|a| a.elenca_entita())
 }
 
+/// «Scrivi»: una pagina nuova in Brainet (RB-134, DEC-168).
+#[tauri::command]
+pub async fn crea_nota_brainet(app: AppHandle, dati: Stato<'_>) -> Esito<Nota> {
+    dati.modifica(&app, |a| a.crea_nota_brainet())
+}
+
 /// «Sposta in Brainet»: la nota esce dall'albero e dalla ricerca, senza ritorno (RB-130).
 #[tauri::command]
 pub async fn sposta_in_brainet(app: AppHandle, dati: Stato<'_>, id: String) -> Esito<Nota> {

@@ -16,6 +16,7 @@ import { Conferma } from "@/componenti/Foglio";
 import { InfoNota } from "@/componenti/InfoNota";
 import { SpostaIn } from "@/componenti/SpostaIn";
 import { useDatiBrainet } from "@/dati/brainet";
+import { quandoNota } from "@/dati/date";
 import { useNegozio } from "@/dati/negozio";
 import { segui } from "@/nucleo/brainet";
 import EditorNota, {
@@ -41,9 +42,13 @@ export default function NotaAperta() {
   const { id, cursore } = useLocalSearchParams<{ id: string; cursore?: string }>();
   const { archivio, modificato } = useNegozio();
   const c = useColori();
-  const [nota, setNota] = useState<{ titolo: string; contenuto: string; brainet: boolean } | null>(
-    null,
-  );
+  const [nota, setNota] = useState<{
+    titolo: string;
+    contenuto: string;
+    brainet: boolean;
+    creata: string;
+    creata_scelta: string | null;
+  } | null>(null);
   const [scrive, setScrive] = useState(false);
   // Le pillole e le aree della nota con i nomi e i colori di adesso (RB-111).
   const dati = useDatiBrainet();
@@ -101,6 +106,8 @@ export default function NotaAperta() {
         titolo: n.titolo,
         contenuto: n.contenuto,
         brainet: campi.note.find((x) => x.id === id)?.brainet ?? false,
+        creata: n.creata,
+        creata_scelta: n.creata_scelta,
       });
     })();
     return () => {
@@ -195,6 +202,8 @@ export default function NotaAperta() {
           titolo={nota.titolo}
           contenuto={nota.contenuto}
           nuova={!nota.titolo && !nota.contenuto}
+          // Una pagina di Brainet senza titolo è di «Scrivi»: il giorno e l'ora al posto del titolo.
+          quando={nota.brainet && !nota.titolo ? quandoNota(nota) : undefined}
           cursore={cursore ? Number(cursore) : undefined}
           entita={brainet.entita}
           coloriStati={brainet.colori}

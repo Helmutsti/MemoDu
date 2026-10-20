@@ -22,6 +22,7 @@ Proposta dell'agente, approvata da Manuel Cucca il 19/10/2026 («vai avanti»):
 - **Da fare:** Info modificabile (date e tag) con il calendario, anche per «Scegli le date…» nei filtri.
 - **Brainet, passo 1, fatto il 20/10/2026:** Journal, Entità, pagina dell'entità e Calendario da leggere; nelle note pillole e aree si vedono e una pillola apre la sua entità.
 - **Brainet, passo 2, fatto il 20/10/2026:** @ con i suggerimenti, aree dalla selezione, Sposta in Brainet, tipo, unione e foto delle entità.
+- **«Scrivi» in Brainet (DEC-168), dal 20/10/2026:** prima riga del riquadro Brainet; apre una pagina nuova con giorno e ora sopra, come sul computer.
 - **Più avanti:** Brainet passo 3 (allegati).
 
 ## Scelte tecniche

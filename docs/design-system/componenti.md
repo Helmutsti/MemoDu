@@ -1673,7 +1673,7 @@ Scelta di Manuel Cucca del 16/10/2026 (DEC-150: «una timeline con le citazioni�
 **Quando non usarlo:** per altre sezioni della colonna, che sono riquadri (CMP-14).
 
 ### Varianti e dimensioni
-- Tre tessere affiancate, Journal, Entità, Calendario, larghe uguali, con `spazio-icona` (8) tra loro; `spazio-blocco` (16) sopra e sotto. «Scrivi» si aggiungerà come quarta tessera, piena, con ID-50 (scelta di Manuel Cucca del 19/10/2026). La pagina di un'entità tiene piena Entità.
+- Tre tessere affiancate, Journal, Entità, Calendario, larghe uguali, con `spazio-icona` (8) tra loro; `spazio-blocco` (16) sopra e sotto. Quarta tessera, prima delle altre: «Scrivi», piena, con la matita (ID-50, DEC-168; scelta di Manuel Cucca del 19/10/2026): apre una pagina nuova in Brainet, ed è accesa finché la pagina è aperta. La pagina di un'entità tiene piena Entità.
 
 ### Stati
 | Stato | Descrizione |
@@ -1682,7 +1682,7 @@ Scelta di Manuel Cucca del 16/10/2026 (DEC-150: «una timeline con le citazioni�
 | Disabilitato · Errore · Caricamento | Non previsti |
 
 ### Accessibilità
-- **Tastiera e lettori di schermo:** un elenco «Brainet» di tre pulsanti; Tab passa dall'uno all'altro.
+- **Tastiera e lettori di schermo:** un elenco «Brainet» di quattro pulsanti, «Scrivi» per primo; Tab passa dall'uno all'altro.
 - **Contrasti:** come CMP-48.
 
 ### Esempi
@@ -1707,7 +1707,7 @@ Solo nell'app per iPhone. Pagina **Componenti telefono** del file Design system,
 
 Sul telefono le cartelle e i riquadri si aprono e si chiudono a tendina: il contenuto scende tutto insieme da sotto la riga che lo apre, scoperto da un bordo che si allunga, e le righe sotto scendono con lui, in `movimento-durata-media` (200 ms); alla chiusura risale in `movimento-durata-breve` (120 ms). Con «Riduci movimento» di iOS niente animazione (regola 10; richiesta di Manuel Cucca del 19/10/2026, durate proposte dall'agente; tendina al posto della comparsa scelta da Manuel Cucca il 20/10/2026). All'apertura dell'app le righe ci sono già, senza animazione.
 
-**Prima colonna del telefono (DEC-160):** in cima a destra il tondo di Impostazioni; poi il riquadro Cloud con il Cestino come ultima riga, sotto un filo; sotto Cloud il riquadro Brainet con Journal, Entità e Calendario come righe (solo con Brainet acceso); in fondo la Barra in basso (CMP-54). Sul telefono non ci sono la barra delle tessere (CMP-49) né il Fondo della colonna (CMP-30).
+**Prima colonna del telefono (DEC-160):** in cima a destra il tondo di Impostazioni; poi il riquadro Cloud con il Cestino come ultima riga, sotto un filo; sotto Cloud il riquadro Brainet con Scrivi (matita, DEC-168), Journal, Entità e Calendario come righe (solo con Brainet acceso); in fondo la Barra in basso (CMP-54). Sul telefono non ci sono la barra delle tessere (CMP-49) né il Fondo della colonna (CMP-30).
 
 **Cestino sul telefono (SC-04, CMP-17):** la riga del computer, alla scala del telefono, mostra solo icona, nome e dettagli: Ripristina ed Elimina definitivamente accanto non ci starebbero. Le due azioni stanno nel foglio dal basso (CMP-51) che si apre toccando l'elemento, e facendo scorrere la riga (CMP-52); le conferme sono CMP-56 con i testi del computer, compresa quella di RB-31 con «Aggiungi un numero» e «Unisci» (proposta dell'agente del 19/10/2026, da confermare).
 

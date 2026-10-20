@@ -443,4 +443,24 @@ describe("nucleo del telefono con il server (DEC-156)", () => {
     expect(d.entita.get(doppio.id)?.unitaIn).toBe(luca.id);
     expect(d.note.find((x) => x.id === n)).toMatchObject({ brainet: true });
   });
+
+  it("«Scrivi»: la pagina nasce in Brainet, fuori da Cloud, e vuota sparisce (RB-134)", async () => {
+    const t = await dispositivo();
+    const vuota = await t.a.creaNota(null, true);
+    expect((await t.a.note()).map((x) => x.id)).not.toContain(vuota);
+    expect((await t.a.datiBrainet()).note.find((x) => x.id === vuota)).toMatchObject({
+      brainet: true,
+    });
+    await t.a.eliminaSeVuota(vuota);
+    expect(await t.a.nota(vuota)).toBeNull();
+    const scritta = await t.a.creaNota(null, true);
+    await t.a.salvaNota(scritta, "", "Oggi al mare");
+    await t.a.eliminaSeVuota(scritta);
+    await sinc(t);
+    const altro = await dispositivo();
+    await sinc(altro);
+    expect((await altro.a.datiBrainet()).note.find((x) => x.id === scritta)).toMatchObject({
+      brainet: true,
+    });
+  });
 });

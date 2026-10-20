@@ -7,7 +7,7 @@
 
 Come *utente* voglio collegare quello che scrivo nelle mie note a persone, oggetti, eventi e argomenti, per ritrovare tutto quello che ho pensato su ognuno di loro nel tempo, senza dover creare e ordinare file.
 
-Ogni nota nasce in CLOUD come nota Markdown; con «Sposta in Brainet» esce dall'albero e dalla ricerca e passa nel **Journal**, dove si collega a persone, oggetti, eventi e argomenti (DEC-147, scelte di Manuel Cucca del 16/10/2026). Prima, la mattina del 16/10/2026, Brainet funzionava in tutte le note di CLOUD (DEC-145); dal 14/10/2026 era un diario con note proprie, sul modello di Reflect o Mem (DEC-134).
+Ogni nota nasce in CLOUD come nota Markdown; con «Sposta in Brainet» esce dall'albero e dalla ricerca e passa nel **Journal**, dove si collega a persone, oggetti, eventi e argomenti (DEC-147, scelte di Manuel Cucca del 16/10/2026). Una pagina si può anche scrivere direttamente in Brainet con «Scrivi» (DEC-168, 20/10/2026). Prima, la mattina del 16/10/2026, Brainet funzionava in tutte le note di CLOUD (DEC-145); dal 14/10/2026 era un diario con note proprie, sul modello di Reflect o Mem (DEC-134).
 
 ### Dove si scrive
 - **Nelle note in Brainet**, cioè quelle spostate con «Sposta in Brainet»: lì `@`, le pillole e le aree (DEC-147: «pillole e aree non sono disponibili finché non viene fatta la conversione»). Una nota in Brainet è sempre in vista Markdown.
@@ -20,6 +20,14 @@ Ogni nota nasce in CLOUD come nota Markdown; con «Sposta in Brainet» esce dall
 - Prima una conferma: «Spostare la nota in Brainet?» · «La nota esce da CLOUD e dalla ricerca e non si riporta indietro. Nel Journal puoi collegarla a persone, oggetti e argomenti.» · «Annulla», «Sposta».
 - Spostata, la nota esce dalla sua cartella e dall'albero di CLOUD, la ricerca non la trova più, e si apre il Journal con la nota in cima.
 - **Senza ritorno:** una nota in Brainet non torna in CLOUD (scelta di Manuel Cucca: «una nota in brainet non si sposta più in cloud»).
+
+### Scrivi
+Scelte di Manuel Cucca del 17 e del 20/10/2026 (ID-50, DEC-168).
+- Sopra Journal la voce **Scrivi**, con la matita: sul computer la quarta tessera della barra di Brainet, sul telefono la prima riga del riquadro Brainet. C'è solo con Brainet acceso.
+- Ogni volta apre una **pagina nuova e vuota**, già in Brainet, senza mostrare le note di prima: in cima il giorno e l'ora in tenue, come nel Journal, sotto il cursore nel testo con l'invito «Scrivi qui». Niente titolo.
+- Si scrive come nelle altre note in Brainet, con `@`, pillole, aree e allegati; si salva da sola.
+- **Lasciata vuota sparisce**, come una nota vuota in CLOUD (RB-10), senza passare dal Cestino.
+- Scritta, la pagina sta nel Journal con le altre, dalla più recente, e nel Calendario conta il suo giorno.
 
 ### Il Journal
 - Sotto BRAINET la voce **Journal**: l'elenco di tutte le note in Brainet, dalla più recente, con sopra ognuna il giorno e l'ora; ogni nota si legge e si modifica lì, con `@`, pillole, aree e allegati (scelte di Manuel Cucca del 16/10/2026: «rimettiamo una voce journal dove mostriamo tutte le note in una lista per essere modificate»; forma: proposte dell'agente, approvate).
@@ -136,6 +144,9 @@ Riscritti dall'agente il 16/10/2026 per DEC-145 (Fase 8), approvati da Manuel Cu
 - **CA-18.47** *Dato* una nota di CLOUD in vista Markdown, *quando* scrivo @ o seleziono una frase, *allora* non si apre nessun menu di Brainet; trascinando o incollando un file si allega (RB-123, DEC-147).
 - **CA-18.48** *Dato* un'entità citata in una nota di CLOUD (scritta prima di DEC-147) e in una nota in Brainet, *allora* Entità la conta una volta sola, per la nota in Brainet (RB-127).
 - **CA-18.49** *Dato* entità di tipi diversi, *quando* apro Entità, *allora* le vedo divise per tipo, con il titolo del gruppo, nell'ordine Persone, Argomenti, Eventi, Oggetti, Senza tipo (gruppi vuoti nascosti); le persone come un cast, con la foto rotonda o le iniziali e il nome sotto; gli eventi con l'icona del calendario, gli argomenti con la lampadina (richiesta di Manuel Cucca del 16/10/2026; scritto dall'agente, approvato da Manuel Cucca lo stesso giorno).
+- **CA-18.52** *Dato* Brainet acceso, *quando* faccio clic su «Scrivi» (sul telefono tocco la riga), *allora* si apre una pagina vuota con il giorno e l'ora sopra e il cursore nel testo, senza titolo; *quando* scrivo e torno al Journal, *allora* la pagina è in cima (RB-134).
+- **CA-18.53** *Dato* una pagina aperta con «Scrivi», *quando* la lascio senza scrivere niente, *allora* non compare nel Journal, nel Calendario né nel Cestino (RB-134).
+- **CA-18.54** *Dato* Brainet spento, *allora* «Scrivi» non c'è, né sul computer né sul telefono (RB-134).
 - **CA-18.51** *Dato* un'entità citata in ottobre e in dicembre, *quando* apro la sua pagina, *allora* sotto la testata vedo ottobre, novembre e dicembre, con il pallino in ottobre e in dicembre e non in novembre; *quando* faccio clic su ottobre, *allora* la pagina scorre al giorno più recente di ottobre (RB-133, DEC-150).
 - **CA-18.50** *Dato* una persona nel cast, *quando* ci faccio clic, *allora* si apre la sua pagina; *quando* faccio tasto destro › «Tipo», *allora* posso cambiarne il tipo come dalla pillola (proposta dell'agente, approvata da Manuel Cucca il 16/10/2026).
 

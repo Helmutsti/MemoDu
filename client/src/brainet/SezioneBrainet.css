@@ -1,4 +1,4 @@
-/* CMP-49 Barra delle tessere di Brainet: tre tessere CMP-48 affiancate, spazio-icona tra loro. */
+/* CMP-49 Barra delle tessere di Brainet: quattro tessere CMP-48 affiancate, spazio-icona tra loro. */
 .barra-tessere {
   display: flex;
   gap: var(--spazio-icona);

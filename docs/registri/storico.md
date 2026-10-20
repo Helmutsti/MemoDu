@@ -774,3 +774,5 @@
 | 20/10/2026 | Manuel Cucca | Telefono: Brainet da leggere (passo 1): Journal, Entità, pagina dell'entità, Calendario; nelle note pillole e aree come sul computer | DEC-156, DEC-162 |
 | 20/10/2026 | Manuel Cucca | Telefono: Brainet da scrivere (passo 2): @ con i suggerimenti, aree con stati ed entità, Sposta in Brainet, tipo, unione e foto delle entità | DEC-156, DEC-167 |
 | 20/10/2026 | Manuel Cucca | Editor: una voce d'elenco vuota sotto un paragrafo mostra subito il punto, la casella o il numero, e la riga sopra non diventa un titolo | DEC-130, DEC-165 |
+| 20/10/2026 | Manuel Cucca | Accettata la foto delle entità sul telefono con expo-image-picker ed expo-image-manipulator | DEC-167 |
+| 20/10/2026 | Manuel Cucca | Brainet: «Scrivi» sopra Journal apre una pagina nuova già in Brainet, con giorno e ora sopra e senza titolo; vuota sparisce. Accettata ID-50; mockup del computer e del telefono | DEC-168, ID-50 |

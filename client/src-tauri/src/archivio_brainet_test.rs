@@ -685,6 +685,34 @@ fn spostata_in_brainet_la_nota_esce_dall_albero_e_va_nel_journal() {
     assert!(p.a().elenca().unwrap().iter().all(|v| v.id != n.id));
 }
 
+// ——— TC-254 … TC-256, DEC-168 ———
+
+#[test]
+fn scrivi_crea_una_pagina_gia_in_brainet_che_vuota_sparisce() {
+    let mut p = Prova::accesa();
+    let pagina = p.a().crea_nota_brainet().unwrap();
+    assert!(pagina.brainet);
+    assert_eq!((pagina.titolo.as_str(), pagina.contenuto.as_str()), ("", ""));
+    assert!(p.a().elenca().unwrap().iter().all(|v| v.id != pagina.id));
+    assert_eq!(p.a().elenca_journal().unwrap().len(), 1);
+    // Lasciata vuota sparisce, senza Cestino (RB-134).
+    p.a().elimina_se_vuota(&pagina.id).unwrap();
+    assert!(p.a().elenca_journal().unwrap().is_empty());
+    assert!(p.a().elenca_cestino().unwrap().is_empty());
+    // Scritta resta, in cima al Journal.
+    let scritta = p.a().crea_nota_brainet().unwrap();
+    p.a().salva(&scritta.id, &super::super::DatiNota { titolo: None, contenuto: Some("Oggi".into()) }).unwrap();
+    assert!(matches!(p.a().elimina_se_vuota(&scritta.id), Err(Errore::NotaNonVuota)));
+    assert_eq!(p.a().elenca_journal().unwrap()[0].id, scritta.id);
+}
+
+#[test]
+fn scrivi_con_brainet_spento_non_si_puo() {
+    let mut p = Prova::nuova();
+    assert!(matches!(p.a().crea_nota_brainet(), Err(Errore::BrainetSpento)));
+    assert!(p.a().elenca().unwrap().is_empty());
+}
+
 #[test]
 fn spostare_in_brainet_con_brainet_spento_non_si_puo() {
     let mut p = Prova::nuova();

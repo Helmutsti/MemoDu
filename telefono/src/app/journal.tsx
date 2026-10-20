@@ -9,19 +9,10 @@ import { Fragment } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { BarraInCima } from "@/componenti/BarraInCima";
 import { ParagrafoBrainet } from "@/componenti/Brainet";
-import { quando } from "@/dati/date";
 import { useDatiBrainet } from "@/dati/brainet";
-import { journal, type NotaBrainet } from "@/nucleo/brainet";
+import { journal } from "@/nucleo/brainet";
 import { misura, raggio, spazio, testo, useColori } from "@/tema";
-import { scriviGiorno } from "@/dati/date";
-
-/** «oggi alle 18:40», «il 09/10/2026 alle 17:02»; con un giorno scelto senza ora. */
-function quandoNota(n: NotaBrainet, adesso = new Date()): string {
-  if (!n.creata_scelta) return quando(n.creata, adesso);
-  const due = (x: number) => String(x).padStart(2, "0");
-  const oggi = `${adesso.getFullYear()}-${due(adesso.getMonth() + 1)}-${due(adesso.getDate())}`;
-  return n.creata_scelta === oggi ? "oggi" : `il ${scriviGiorno(n.creata_scelta)}`;
-}
+import { quandoNota } from "@/dati/date";
 
 export default function Journal() {
   const c = useColori();

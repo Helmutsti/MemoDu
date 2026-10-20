@@ -37,11 +37,14 @@ Torna con DEC-147 (16/10/2026) al posto del Database: l'elenco delle note in Bra
 
 - **Mockup (fatti dall'agente il 16/10/2026, approvati da Manuel Cucca lo stesso giorno):** [Journal](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=331-13468) · [tasto destro su una nota di CLOUD con «Sposta in Brainet»](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=330-13224) · [conferma](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=330-13421) · [Info con «Sposta in Brainet»](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=331-13663); esportazioni `SC-10-journal-mockup.png`, `SC-01-brainet-sposta-in-brainet-menu-mockup.png`, `SC-01-brainet-sposta-in-brainet-conferma-mockup.png`, `SC-03-info-sposta-in-brainet-mockup.png`. Nel menu e in Info la voce è aggiunta a un'istanza staccata: il file dei mockup non ha ancora la versione nuova di Menu e Info della libreria (da aggiornare in Figma con «Aggiorna» delle librerie).
 
+- **Mockup di «Scrivi» (fatti dall'agente il 20/10/2026 con le scelte di Manuel Cucca):** [pagina nuova e Journal sul computer](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=448-5400) · [riga Scrivi sul telefono](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=448-5773) · [pagina nuova sul telefono](https://www.figma.com/design/18288YdcRf5vtWCtEefQYJ?node-id=448-5822). Nei mockup del computer la colonna è ancora quella di prima delle tessere (DEC-154).
+
 | Azione | Come |
 |---|---|
 | Leggere e modificare | Le note in Brainet dalla più recente, con giorno e ora sopra; si modificano lì, con @, pillole, aree e allegati |
 | Eliminare | Tasto destro › «Elimina»: la nota va nel Cestino; ripristinata torna qui |
 | Spostare qui una nota | Dalla colonna o da Info: «Sposta in Brainet», con la conferma (RB-130) |
+| Scrivere una pagina nuova | «Scrivi», sopra Journal: una pagina vuota con giorno e ora sopra, niente titolo; scritta, arriva qui in cima (RB-134, DEC-168) |
 
 ### Stati della schermata
 | Stato | Descrizione | Testo mostrato |

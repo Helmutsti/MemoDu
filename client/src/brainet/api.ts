@@ -92,6 +92,8 @@ export const brainet = {
   elencaEntita: () => comando<VoceEntita[]>("elenca_entita"),
   /** «Sposta in Brainet»: senza ritorno (RB-130, DEC-147). */
   spostaInBrainet: (id: string) => comando<Nota>("sposta_in_brainet", { id }),
+  /** «Scrivi»: una pagina nuova e vuota, già in Brainet (RB-134, DEC-168). */
+  creaNotaBrainet: () => comando<Nota>("crea_nota_brainet"),
   /** Le note in Brainet, dalla più recente (RB-131). */
   elencaJournal: () => comando<Nota[]>("elenca_journal"),
   passaggiEntita: (id: string) => comando<PaginaEntita>("passaggi_entita", { id }),

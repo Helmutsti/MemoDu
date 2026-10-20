@@ -326,6 +326,7 @@ pub fn run() {
             brainet::elenca_entita,
             brainet::passaggi_entita,
             brainet::sposta_in_brainet,
+            brainet::crea_nota_brainet,
             brainet::elenca_journal,
             brainet::anteprima_unione,
             brainet::unisci_entita,

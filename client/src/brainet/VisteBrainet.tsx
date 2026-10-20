@@ -1,6 +1,6 @@
 // Le viste di Brainet nell'area della nota (RF-18, DEC-145, DEC-147): il Journal (SC-10),
-// Entità (SC-11), la pagina di un'entità (SC-13) e il Calendario (SC-12). Le note nascono in CLOUD
-// e arrivano nel Journal con «Sposta in Brainet». Si aggiornano quando
+// Entità (SC-11), la pagina di un'entità (SC-13) e il Calendario (SC-12). Le note arrivano nel
+// Journal con «Sposta in Brainet», o nascono lì con «Scrivi» (DEC-168), nella pagina nuova. Si aggiornano quando
 // la sincronizzazione porta modifiche di Brainet (`versione` cambia).
 
 import {
@@ -90,6 +90,15 @@ export function VisteBrainet({
         onCestino={onCestino}
       />
     );
+  if (vista.startsWith("scrivi:"))
+    return (
+      <PaginaNuova
+        id={vista.slice("scrivi:".length)}
+        esegui={esegui}
+        onAvviso={onAvviso}
+        onApriEntita={(id) => onApri(`entita:${id}`)}
+      />
+    );
   if (vista.startsWith("entita:"))
     return (
       <PaginaEntita
@@ -167,6 +176,72 @@ function NotaDelJournal({
         onApriEntita={onApriEntita}
       />
     </li>
+  );
+}
+
+// ——— Scrivi (FL-29, RB-134, DEC-168) ———
+
+/** La pagina nuova di «Scrivi»: il giorno e l'ora sopra, il cursore nel testo, niente titolo.
+ * Lasciata vuota sparisce, come una nota vuota in CLOUD (RB-10). */
+function PaginaNuova({
+  id,
+  esegui,
+  onAvviso,
+  onApriEntita,
+}: {
+  id: string;
+  esegui: Esegui;
+  onAvviso: (testo: string) => void;
+  onApriEntita: (id: string) => void;
+}): ReactElement {
+  const [nota, setNota] = useState<Nota | null>(null);
+  const [coda] = useState(
+    () =>
+      new CodaSalvataggio(
+        api.salva,
+        () => {},
+        (e) => void esegui(() => Promise.reject(e)),
+      ),
+  );
+  useEffect(() => {
+    let vivo = true;
+    void esegui(() => api.leggi(id)).then((n) => {
+      if (vivo && n) setNota(n);
+    });
+    return () => {
+      vivo = false;
+    };
+  }, [esegui, id]);
+  // Chiudendo la pagina si scrive quello che aspetta; vuota se ne va (409 se c'è del testo).
+  useEffect(
+    () => () =>
+      pulisciDopo(
+        coda
+          .scarica()
+          .then(() => api.eliminaSeVuota(id))
+          .catch(() => undefined),
+      ),
+    [coda, id],
+  );
+  if (!nota) return <div className="area-nota-vuota" />;
+  return (
+    <section className="vista-brainet" aria-label="Pagina nuova in Brainet">
+      <AreaScorrevole className="vista-brainet-scorrimento">
+        <div className="vista-brainet-corpo">
+          <div className="nota-journal">
+            <span className="nota-journal-quando interfaccia-dettaglio">{quandoNota(nota)}</span>
+            <EditorBrainet
+              testo={nota.contenuto}
+              focus
+              invito="Scrivi qui"
+              onModifica={(contenuto) => coda.modifica(id, { contenuto })}
+              onAvviso={onAvviso}
+              onApriEntita={onApriEntita}
+            />
+          </div>
+        </div>
+      </AreaScorrevole>
+    </section>
   );
 }
 

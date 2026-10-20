@@ -9,7 +9,7 @@ import { mesiCronologia, quandoNota, VisteBrainet } from "./VisteBrainet";
 
 vi.mock("../api", async (originale) => ({
   ...(await originale<typeof import("../api")>()),
-  api: { salva: vi.fn(), cestinaNota: vi.fn() },
+  api: { salva: vi.fn(), cestinaNota: vi.fn(), leggi: vi.fn(), eliminaSeVuota: vi.fn() },
 }));
 
 vi.mock("./api", async (originale) => {
@@ -40,16 +40,16 @@ beforeEach(() => {
 describe("tessere di Brainet nella colonna (CA-18.32, DEC-154)", () => {
   it("Journal, Entità e Calendario, senza + e senza Database; la pagina di un'entità tiene Entità", () => {
     const onApri = vi.fn();
-    const { rerender } = render(<SezioneBrainet aperta="entita" onApri={onApri} />);
+    const { rerender } = render(<SezioneBrainet aperta="entita" onApri={onApri} onScrivi={vi.fn()} />);
     const tessere = within(screen.getByRole("list", { name: "Brainet" })).getAllByRole("button");
-    expect(tessere.map((t) => t.textContent)).toEqual(["Journal", "Entità", "Calendario"]);
+    expect(tessere.map((t) => t.textContent)).toEqual(["Scrivi", "Journal", "Entità", "Calendario"]);
     expect(screen.getByRole("button", { name: "Entità" })).toHaveAttribute("aria-current", "page");
     expect(screen.getByRole("button", { name: "Entità" })).toHaveClass("tessera-selezionata");
     expect(screen.queryByRole("button", { name: /Nuova nota/ })).toBeNull();
     expect(screen.queryByRole("button", { name: "Database" })).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Calendario" }));
     expect(onApri).toHaveBeenCalledWith("calendario");
-    rerender(<SezioneBrainet aperta={`entita:${LUCA.id}`} onApri={onApri} />);
+    rerender(<SezioneBrainet aperta={`entita:${LUCA.id}`} onApri={onApri} onScrivi={vi.fn()} />);
     expect(screen.getByRole("button", { name: "Entità" })).toHaveAttribute("aria-current", "page");
   });
 
@@ -58,6 +58,7 @@ describe("tessere di Brainet nella colonna (CA-18.32, DEC-154)", () => {
       <SezioneBrainet
         aperta={null}
         onApri={vi.fn()}
+        onScrivi={vi.fn()}
         journal={{ sopra: false, "data-destinazione": "journal" }}
       />,
     );
@@ -66,6 +67,45 @@ describe("tessere di Brainet nella colonna (CA-18.32, DEC-154)", () => {
       "journal",
     );
     expect(screen.getByRole("button", { name: "Entità" })).not.toHaveAttribute("data-destinazione");
+  });
+});
+
+describe("Scrivi (CA-18.52, CA-18.53, DEC-168)", () => {
+  it("la tessera Scrivi chiede una pagina nuova ed è piena mentre è aperta", () => {
+    const onScrivi = vi.fn();
+    const { rerender } = render(
+      <SezioneBrainet aperta={null} onApri={vi.fn()} onScrivi={onScrivi} />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Scrivi" }));
+    expect(onScrivi).toHaveBeenCalled();
+    rerender(<SezioneBrainet aperta="scrivi:p" onApri={vi.fn()} onScrivi={onScrivi} />);
+    expect(screen.getByRole("button", { name: "Scrivi" })).toHaveAttribute("aria-current", "page");
+  });
+
+  it("la pagina nuova ha il giorno e l'ora sopra, niente titolo, e vuota se ne va chiudendola", async () => {
+    vi.mocked(api.leggi).mockResolvedValue({
+      id: "p",
+      titolo: "",
+      contenuto: "",
+      creata: new Date().toISOString(),
+      creataScelta: null,
+    } as never);
+    vi.mocked(api.eliminaSeVuota).mockResolvedValue(undefined);
+    vi.mocked(brainet.pulisciAllegati).mockResolvedValue(0);
+    const { unmount } = render(
+      <VisteBrainet
+        vista="scrivi:p"
+        versione={0}
+        esegui={esegui}
+        onAvviso={vi.fn()}
+        onApri={vi.fn()}
+        onApriNota={vi.fn()}
+      />,
+    );
+    expect(await screen.findByText(/^oggi alle /)).toBeInTheDocument();
+    expect(screen.queryByRole("textbox", { name: /Titolo/ })).toBeNull();
+    unmount();
+    await waitFor(() => expect(api.eliminaSeVuota).toHaveBeenCalledWith("p"));
   });
 });
 

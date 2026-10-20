@@ -1,6 +1,6 @@
 # DEC-147 – «Sposta in Brainet» e Journaling
 
-**Data:** 2026-10-16 · **Stato:** Superata in parte da DEC-148 · **Idea di origine:** ID-39
+**Data:** 2026-10-16 · **Stato:** Superata in parte da DEC-148 e da DEC-168 · **Idea di origine:** ID-39
 
 ## Contesto
 Con DEC-145 Brainet funziona dentro tutte le note di CLOUD in vista Markdown. Nelle prove a mano del 16/10/2026 Manuel Cucca ha visto le note passate dalla 1.0.0 nell'albero di CLOUD: «Non voglio vedere queste note di questo tipo nel tree. voglio reinserire il "sposta nel brainet". tutto parte come nota md ma può essere spostato nel brainet. l'unica cosa che succede è che non viene più mostrata nel tree di file e la ricerca non mostra le note, rimettiamo una voce journaling dove mostriamo tutte le note in una lista per essere modificate».

@@ -21,6 +21,15 @@ body {
   box-sizing: border-box;
 }
 
+/* Sopra la pagina di «Scrivi» il giorno e l'ora, come nel Journal (RB-134): Interfaccia/Dettaglio
+   alla scala del telefono, in tenue, vicino al testo. */
+.nota .nota-quando {
+  margin-bottom: -9px;
+  color: var(--testo-tenue);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
 .nota .titolo {
   display: block;
   width: 100%;

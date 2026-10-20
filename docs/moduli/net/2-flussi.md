@@ -337,6 +337,30 @@ flowchart TD
 
 ---
 
+## FL-29 – Scrivere una pagina nuova in Brainet
+**Requisito:** RF-18 · **Attori:** Utente, Sistema
+
+```mermaid
+flowchart TD
+    A[Clic su «Scrivi» - sul telefono tocco sulla riga - RB-134] --> B[Pagina nuova in Brainet: giorno e ora sopra, cursore nel testo, niente titolo]
+    B --> C{Scrivo qualcosa?}
+    C -- Sì --> D[Si salva da sola; nel Journal in cima, nel Calendario il suo giorno - RB-131]
+    C -- No, la lascio --> E[La pagina sparisce, senza Cestino - RB-134]
+```
+
+### Percorsi alternativi
+- **Brainet spento:** «Scrivi» non c'è (RB-134).
+- **Scritta e poi svuotata:** lasciata vuota sparisce come una pagina nuova (RB-134, RB-10).
+
+### Sfighe gestite
+| Sfiga | Rilevamento | Comunicazione | Via d'uscita |
+|---|---|---|---|
+| SF-01 Doppio invio | Doppio clic su «Scrivi» | Nessuna | Una pagina sola; una seconda vuota sparisce lasciandola |
+| SF-08 Rete che cade | Scritta senza rete | Nessuna | Vale subito qui; sugli altri dispositivi al primo contatto |
+| SF-37 Il disco rifiuta l'operazione | La pagina non si crea | Avviso come per Nuova nota | Si riprova |
+
+---
+
 ## Punti da decidere nei flussi
 - ~~Cosa fa un clic su un giorno del Calendario.~~ Niente: il Calendario si guarda soltanto (scelta di Manuel Cucca del 14/10/2026, RB-113).
 - ~~Come si annulla un'unione sbagliata (FL-19).~~ Prima di unire una finestra chiede conferma, con quante citazioni e aree si spostano; poi non si annulla (scelta di Manuel Cucca del 14/10/2026, RB-108).
@@ -379,3 +403,4 @@ flowchart TD
 | RB-131 | Il Journal elenca le note in Brainet fuori dal Cestino, dalla più recente, con il giorno e l'ora sopra ognuna (con la data scelta in Info, quel giorno senza ora, come nella pagina dell'entità e nell'ordine); si modificano lì; tasto destro › «Elimina» le manda nel Cestino, ripristinate tornano nel Journal (DEC-147) | FL-28 |
 | RB-132 | Una nota in Brainet non sta nell'albero di CLOUD né in nessuna cartella (DEC-147) | FL-28 |
 | RB-133 | La pagina dell'entità ha, sotto la testata, la cronologia: i mesi dal primo all'ultimo in cui è citata, dal più vecchio a sinistra; un pallino nei mesi con paragrafi, più grande se sono di più (1, da 2 a 4, 5 o più); un clic su un mese porta al suo giorno più recente nell'elenco; se i mesi non ci stanno la striscia scorre di lato e parte dal più recente (DEC-150) | FL-26 |
+| RB-134 | «Scrivi», sopra Journal e solo con Brainet acceso, apre ogni volta una pagina nuova già in Brainet, con il giorno e l'ora sopra e senza titolo; lasciata vuota sparisce senza passare dal Cestino, come una nota vuota in CLOUD (RB-10) (DEC-168) | FL-29 |

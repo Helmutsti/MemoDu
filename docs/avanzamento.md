@@ -64,10 +64,8 @@ DEC-156 (Proposta, scelta di Manuel Cucca): l'app per iPhone in React Native; il
 DEC-154, DEC-155: libreria aggiornata dall'agente (CMP-06 intestazione e «Hover con azioni», CMP-14 a riquadro, CMP-30, nuovi CMP-48 e CMP-49), da ripubblicare da Manuel Cucca; dopo, nei mockup la barra delle tessere al posto della sezione Brainet e Locale in riquadro. Codice fatto, prove automatiche superate; le prove a mano TC-251 … TC-253 sull'app restano da fare (il terminale non ha il permesso di registrare lo schermo). La pagina «Proposta · Colonna a riquadri» del file dei mockup si cancella dopo l'allineamento.
 
 ## Deduzioni da confermare
-- DEC-167 foto delle entità sul telefono con expo-image-picker ed expo-image-manipulator (proposta dell'agente del 20/10/2026, da accettare). @ nella nota e la foto si provano solo sul telefono vero: nel simulatore l'editor non prende il fuoco della tastiera.
 Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui non valgono come regole.
 
-- ID-50 «Scrivi» in Brainet: la pagina nuova lasciata vuota sparisce, come una nota vuota in CLOUD (RB-10). Proposta dell'agente del 17/10/2026.
 - ID-52 Eliminare un'entità: «Elimina…» col tasto destro sulla riga in Entità; le aree restano evidenziate senza quell'entità. Proposte dell'agente del 17/10/2026.
 - DEC-154 Colonna a riquadri: sulla tessera Journal si possono trascinare solo note di CLOUD: cartelle e file di Locale non la accendono; Proposta dell'agente del 19/10/2026.
 

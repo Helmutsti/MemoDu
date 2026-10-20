@@ -457,6 +457,17 @@ impl Archivio {
         })
     }
 
+    /// «Scrivi»: una pagina nuova e vuota, già in Brainet, senza passare da CLOUD (RB-134,
+    /// DEC-168). Lasciata vuota sparisce come le altre note (`elimina_se_vuota`).
+    pub fn crea_nota_brainet(&mut self) -> Esito<super::Nota> {
+        self.con_riconnessione(|a| a.acceso())?;
+        let nota = self.crea(&super::DatiNuovaNota::default())?;
+        self.con_riconnessione(|a| {
+            a.db.execute("UPDATE note SET brainet = 1 WHERE id = ?", [&nota.id])?;
+            a.nota_da_id(&nota.id)
+        })
+    }
+
     /// Le note in Brainet fuori dal Cestino, dalla più recente (RB-131).
     pub fn elenca_journal(&mut self) -> Esito<Vec<super::Nota>> {
         self.con_riconnessione(|a| {

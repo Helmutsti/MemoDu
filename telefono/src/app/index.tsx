@@ -1,10 +1,10 @@
 // Prima schermata (ID-54, DEC-154, DEC-160): la colonna a riquadri al posto della colonna del
 // computer, con i componenti del design system alla scala del telefono (DEC-157). In cima, a
 // destra, il tondo di Impostazioni, che serve di rado; poi Cloud in un riquadro (CMP-14) con il
-// Cestino come ultima riga, e sotto il riquadro di Brainet con Journal, Entità e Calendario. In
-// fondo, alla portata del pollice, la ricerca e la penna di Nuova nota. Nella radice di Cloud
-// prima le note per ultima modifica, poi le cartelle; dentro una cartella prima le note, poi le
-// sottocartelle, in ordine alfabetico (RB-60, RB-64, RB-65). Le cartelle si aprono a tendina.
+// Cestino come ultima riga, e sotto il riquadro di Brainet con Scrivi, Journal, Entità e
+// Calendario. In fondo, alla portata del pollice, la ricerca e la penna di Nuova nota. Nella
+// radice di Cloud prima le note per ultima modifica, poi le cartelle; dentro una cartella prima
+// le note, poi le sottocartelle, in ordine alfabetico (RB-60, RB-64, RB-65). Le cartelle si aprono a tendina.
 import { router, Stack } from "expo-router";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
@@ -443,6 +443,12 @@ export default function Note() {
                 aperto={brainetAperta}
                 onApriChiudi={() => setBrainetAperta((a) => !a)}
               >
+                <RigaVoce
+                  key="scrivi"
+                  nome="Scrivi"
+                  icona={Pencil}
+                  onPress={() => void archivio?.creaNota(null, true).then(apri)}
+                />
                 <RigaVoce
                   key="journal"
                   nome="Journal"

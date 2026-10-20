@@ -1,6 +1,6 @@
 # DEC-167 – Foto delle entità sul telefono
 
-**Data:** 2026-10-20 · **Stato:** Proposta · **Idea di origine:** —
+**Data:** 2026-10-20 · **Stato:** Accettata · **Idea di origine:** —
 
 ## Contesto
 Con il passo 2 di Brainet sul telefono, «Scegli una foto…» mette la foto a un'entità come sul computer (CA-18.13): un'immagine ridotta a 256 px di lato, in JPEG, che viaggia nel blocco dell'entità. Il telefono deve far scegliere una foto e ridurla.

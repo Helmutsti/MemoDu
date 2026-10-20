@@ -62,6 +62,7 @@ export default function EditorNota({
   titolo,
   contenuto,
   nuova,
+  quando,
   cursore,
   entita,
   coloriStati,
@@ -76,6 +77,8 @@ export default function EditorNota({
   contenuto: string;
   /** Nota appena creata: il cursore va nel titolo. */
   nuova: boolean;
+  /** Pagina di «Scrivi» (RB-134): il giorno e l'ora al posto del titolo, il cursore nel testo. */
+  quando?: string;
   /** Dove mettere il cursore nel testo all'apertura (pagina dell'entità, RB-124). */
   cursore?: number;
   /** Nomi e foto delle entità, per le pillole (CMP-38). */
@@ -250,34 +253,38 @@ export default function EditorNota({
         if (!e.currentTarget.contains(e.relatedTarget as Node | null)) void onScrive(false);
       }}
     >
-      <textarea
-        ref={(el) => {
-          campo.current = el;
-          adatta(el);
-        }}
-        className="nota-titolo titolo"
-        rows={1}
-        value={testoTitolo}
-        placeholder="Titolo"
-        aria-label="Titolo della nota"
-        autoFocus={nuova}
-        onChange={(e) => {
-          setTestoTitolo(e.target.value);
-          adatta(e.target);
-          cambia(e.target.value, ultimo.current.contenuto);
-        }}
-        onKeyDown={(e) => {
-          // Invio nel titolo passa al testo, come sul computer.
-          if (e.key !== "Enter") return;
-          e.preventDefault();
-          vista.current?.focus();
-        }}
-      />
+      {quando !== undefined ? (
+        <span className="nota-quando">{quando}</span>
+      ) : (
+        <textarea
+          ref={(el) => {
+            campo.current = el;
+            adatta(el);
+          }}
+          className="nota-titolo titolo"
+          rows={1}
+          value={testoTitolo}
+          placeholder="Titolo"
+          aria-label="Titolo della nota"
+          autoFocus={nuova}
+          onChange={(e) => {
+            setTestoTitolo(e.target.value);
+            adatta(e.target);
+            cambia(e.target.value, ultimo.current.contenuto);
+          }}
+          onKeyDown={(e) => {
+            // Invio nel titolo passa al testo, come sul computer.
+            if (e.key !== "Enter") return;
+            e.preventDefault();
+            vista.current?.focus();
+          }}
+        />
+      )}
       <Editor
         ref={editor}
         contenuto={contenuto}
         cursore={cursore}
-        focus={cursore !== undefined}
+        focus={cursore !== undefined || (quando !== undefined && nuova)}
         markdown
         invito="Scrivi qui"
         onModifica={(co) => cambia(ultimo.current.titolo, co)}

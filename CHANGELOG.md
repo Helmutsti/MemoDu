@@ -7,6 +7,9 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+### Aggiunto
+- In Brainet la voce «Scrivi», prima di Journal: apre una pagina nuova di diario, già in Brainet, con il giorno e l'ora in cima e senza titolo. Lasciata vuota, sparisce da sola
+
 ### Corretto
 - Attivando un elenco sulla riga subito sotto un paragrafo il punto, la casella o il numero compaiono subito, senza aspettare di scrivere, e la riga sopra non diventa un titolo
 

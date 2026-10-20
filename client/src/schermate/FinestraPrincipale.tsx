@@ -1075,6 +1075,12 @@ export function FinestraPrincipale(): ReactElement {
     setVista("brainet");
   };
 
+  /** «Scrivi»: una pagina nuova in Brainet al posto della nota (RB-134, DEC-168). */
+  const scriviInBrainet = async () => {
+    const pagina = await esegui(() => brainet.creaNotaBrainet());
+    if (pagina) await apriBrainet(`scrivi:${pagina.id}`);
+  };
+
   // Il cursore del passaggio serve solo all'apertura: poi la nota si riapre senza.
   useEffect(() => {
     if (!cursoreApertura || vista !== "nota" || aperta?.id !== cursoreApertura.id) return;
@@ -1432,6 +1438,7 @@ export function FinestraPrincipale(): ReactElement {
                     <SezioneBrainet
                       aperta={vista === "brainet" ? vistaBrainet : null}
                       onApri={(v) => void apriBrainet(v)}
+                      onScrivi={() => void scriviInBrainet()}
                       journal={journal}
                     />
                   )

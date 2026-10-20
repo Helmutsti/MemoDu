@@ -233,8 +233,11 @@ export class Archivio {
     return e?.tipo === "cartella" ? String(e.campi.nome ?? "Cloud") : "Cloud";
   }
 
-  /** Una nota nuova, vuota, nella radice o in una cartella, in vista Markdown (DEC-130). */
-  async creaNota(cartella: string | null): Promise<string> {
+  /**
+   * Una nota nuova, vuota, nella radice o in una cartella, in vista Markdown (DEC-130); con
+   * `brainet` la pagina nuova di «Scrivi», già in Brainet (RB-134, DEC-168).
+   */
+  async creaNota(cartella: string | null, brainet = false): Promise<string> {
     const id = this.nuovoId();
     const ora = this.adesso();
     await this.db.transazione(() =>
@@ -250,6 +253,7 @@ export class Archivio {
         provenienza: null,
         vista: "markdown",
         tag: [],
+        ...(brainet ? { brainet: true } : {}),
       }),
     );
     return id;

@@ -1,16 +1,22 @@
-// Brainet nella colonna (RF-18, SC-01, DEC-154): sotto la ricerca, una barra di tre tessere,
-// Journal, Entità e Calendario (CMP-49, fatta di tessere CMP-48). La tessera della vista aperta è
+// Brainet nella colonna (RF-18, SC-01, DEC-154): sotto la ricerca, una barra di quattro tessere,
+// Scrivi (DEC-168), Journal, Entità e Calendario (CMP-49, fatta di tessere CMP-48). La tessera della vista aperta è
 // piena; la pagina di un'entità tiene piena Entità. Mentre si trascina una nota, il Journal la
 // riceve: la tessera si accende e, rilasciata, chiede la conferma di «Sposta in Brainet» (FL-28).
 // Senza Brainet acceso la barra non c'è.
 
-import { BookOpen, Brain, Calendar, type LucideIcon } from "lucide-react";
+import { BookOpen, Brain, Calendar, Pencil, type LucideIcon } from "lucide-react";
 import type { ReactElement } from "react";
 import { Icona } from "../componenti/Icona";
 import "./SezioneBrainet.css";
 
-/** «journal», «entita», «calendario» o la pagina di un'entità, «entita:ID» (FL-26). */
-export type VistaBrainet = "journal" | "entita" | "calendario" | `entita:${string}`;
+/** «journal», «entita», «calendario», la pagina di un'entità, «entita:ID» (FL-26), o la pagina
+ * nuova di «Scrivi», «scrivi:ID» (FL-29). */
+export type VistaBrainet =
+  | "journal"
+  | "entita"
+  | "calendario"
+  | `entita:${string}`
+  | `scrivi:${string}`;
 
 /** Il Journal come destinazione del trascinamento, dalla colonna. */
 export interface RilascioJournal {
@@ -24,6 +30,8 @@ interface Proprieta {
   /** La vista di Brainet aperta, se c'è. */
   aperta: VistaBrainet | null;
   onApri: (vista: VistaBrainet) => void;
+  /** «Scrivi»: una pagina nuova in Brainet (RB-134). */
+  onScrivi: () => void;
   journal?: RilascioJournal;
 }
 
@@ -62,9 +70,15 @@ function Tessera({
   );
 }
 
-export function SezioneBrainet({ aperta, onApri, journal }: Proprieta): ReactElement {
+export function SezioneBrainet({ aperta, onApri, onScrivi, journal }: Proprieta): ReactElement {
   return (
     <ul className="barra-tessere" aria-label="Brainet">
+      <Tessera
+        nome="Scrivi"
+        icona={Pencil}
+        selezionata={aperta?.startsWith("scrivi:") ?? false}
+        onApri={onScrivi}
+      />
       <Tessera
         nome="Journal"
         icona={BookOpen}
