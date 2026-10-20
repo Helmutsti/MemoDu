@@ -44,6 +44,12 @@ describe("formati di riga (pillola, menu /, tasto destro)", () => {
     expect(esegui(impostaRiga("puntato"), "- [x] voce", 7).doc.toString()).toBe("- voce");
   });
 
+  it("su una riga vuota il cursore va dopo il segno, non resta davanti", () => {
+    expect(esegui(impostaRiga("puntato"), "", 0).selection.main.head).toBe(2);
+    expect(esegui(impostaRiga("checklist"), "a\n\n", 3).selection.main.head).toBe(9);
+    expect(esegui(impostaRiga("titolo"), "testo", 0).selection.main.head).toBe(2);
+  });
+
   it("numera le righe selezionate", () => {
     expect(esegui(impostaRiga("numerato"), "uno\ndue\ntre", 0, 11).doc.toString()).toBe(
       "1. uno\n2. due\n3. tre",

@@ -66,11 +66,40 @@
   text-decoration: none;
 }
 
-/* Segni degli elenchi in una colonna di 16 px. */
+/* Segni degli elenchi in una colonna di 16 px: il punto è un cerchio di 5 px in testo-tenue,
+   centrato sulla riga, uguale con ogni carattere (il «•» di Inter variabile esce più piccolo). */
 .editor .md-punto {
   display: inline-block;
+  position: relative;
   width: var(--misura-icona);
-  color: var(--testo-tenue);
+  color: transparent;
+}
+.editor .md-punto::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  margin-top: -2.5px;
+  border-radius: var(--raggio-pillola);
+  background: var(--testo-tenue);
+}
+
+/* Una voce che va a capo continua allineata al testo, dopo il segno, come nel disegno: la riga
+   rientra della colonna del segno e il segno torna indietro con un margine negativo. Niente
+   text-indent: CodeMirror non ne tiene conto e metterebbe il cursore sopra il segno. */
+.editor .cm-line:has(> .md-punto) {
+  padding-left: var(--misura-icona);
+}
+.editor .cm-line:has(> .md-punto) > .md-punto {
+  margin-left: calc(-1 * var(--misura-icona));
+}
+.editor .cm-line:has(> .md-casella) {
+  padding-left: calc(var(--misura-icona) + var(--spazio-icona));
+}
+.editor .cm-line:has(> .md-casella) > .md-casella {
+  margin-left: calc(-1 * (var(--misura-icona) + var(--spazio-icona)));
 }
 
 /* Casella della checklist: tonda, 16 px, contorno 1,5 in icona-tenue; spuntata piena. */

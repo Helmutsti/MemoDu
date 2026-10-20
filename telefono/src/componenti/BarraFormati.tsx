@@ -2,11 +2,13 @@
 // telefono (DEC-157): il cassetto è una pillola flottante con spazio-elemento di margine e tra
 // gli strumenti (tondi alti 32, icona 16), divisori sottili tra i gruppi: riga (Testo normale,
 // Titolo, Sottotitolo, Elenco puntato, Elenco numerato, Casella) e carattere (Grassetto, Corsivo,
-// Barrato, Sottolineato). Scorre di lato se non ci sta. Accanto, in una pillola a parte, «Fine»
-// chiude la tastiera (sul telefono non c'è Esc): manca nel design system.
+// Barrato, Sottolineato). Scorre di lato se non ci sta. Accanto, un tondo con la freccia giù chiude
+// la tastiera (sul telefono non c'è Esc), alto come il cassetto (scelta di Manuel Cucca del
+// 20/10/2026, proposta A).
 
 import {
   Bold,
+  ChevronDown,
   Heading1,
   Heading2,
   Italic,
@@ -19,10 +21,10 @@ import {
   type LucideIcon,
 } from "lucide-react-native";
 import { Fragment } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { KeyboardStickyView } from "react-native-keyboard-controller";
 import type { FormatoRiga, FormatoTesto } from "../../../client/src/editor/formati";
-import { misura, raggio, spazio, t, testo, useColori } from "@/tema";
+import { misura, raggio, spazio, t, useColori } from "@/tema";
 
 export type Voce = FormatoRiga | "testo" | FormatoTesto;
 
@@ -106,16 +108,14 @@ export function BarraFormati({
       <Pressable
         onPress={onFine}
         accessibilityRole="button"
+        accessibilityLabel="Chiudi la tastiera"
         style={({ pressed }) => [
-          stili.pillola,
-          stili.fine,
+          stili.chiudi,
           ombra,
           { backgroundColor: pressed ? c.sfondoHover : c.sfondoFlottante },
         ]}
       >
-        <Text allowFontScaling={false} style={[testo.titolo, { color: c.testoPrimario }]}>
-          Fine
-        </Text>
+        <ChevronDown size={misura.icona} color={c.testoPrimario} strokeWidth={misura.tratto} />
       </Pressable>
     </KeyboardStickyView>
   );
@@ -144,5 +144,12 @@ const stili = StyleSheet.create({
     borderRadius: raggio.pillola,
   },
   divisore: { width: 1, height: STRUMENTO - spazio.icona * 2, marginHorizontal: spazio.elemento },
-  fine: { justifyContent: "center", paddingHorizontal: spazio.controllo },
+  // Tondo alto come il cassetto: lo strumento più il margine sopra e sotto.
+  chiudi: {
+    width: STRUMENTO + spazio.elemento * 2,
+    height: STRUMENTO + spazio.elemento * 2,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: raggio.pillola,
+  },
 });

@@ -845,7 +845,7 @@ Nessuno proprio: il pulsante ha i suoi (CMP-01).
 - **Vista Testo** (DEC-64, DEC-130): titolo, riga dei metadati e un solo paragrafo in Nota/Corpo, dove `#`, `-`, `**` e le tabulazioni si vedono come caratteri, senza formattazione. In Figma è la variante `Tipo=Testo puro`. È la vista delle note scritte prima della 1.1.0 e dei file `.txt` di Locale (RB-91).
 - **Vista Markdown** (`Tipo=Con testo` in Figma, DEC-130): la vista delle note nuove e dei file `.md` di Locale. Titolo (Nota/Titolo), riga dei metadati, corpo (Nota/Corpo), sottotitolo (Nota/Sottotitolo), checklist, elenco puntato, elenco numerato; `spazio-blocco` (16) tra i blocchi, `spazio-elemento` (4) tra le voci, `spazio-gruppo` (24) tra intestazione e testo. Il testo occupa tutta la larghezza del foglio, con `spazio-gruppo` (24) ai lati (DEC-107; prima la larghezza di lettura 640 di DEC-58).
 - **Simboli markdown:** non si vedono mai, nemmeno sulla riga del cursore (DEC-58).
-- **Elenchi:** segni (•, 1.) in `testo-tenue`, in una colonna di 16 px.
+- **Elenchi:** segni (•, 1.) in `testo-tenue`, in una colonna di 16 px; il punto è un cerchio di 5 px centrato sulla riga. Una voce che va a capo continua allineata al testo, dopo il segno o la casella (richiesta di Manuel Cucca del 20/10/2026, per uguagliare il disegno).
 - **Checklist:** casella tonda di 16, coerente con le pillole: vuota con contorno `icona-tenue` 1,5; spuntata `sfondo-pieno` con spunta `icona-su-pieno`; la voce spuntata va in `testo-tenue` barrato.
 - **Selezione:** `evidenziazione-selezione` dietro il testo.
 - **Nota nuova:** inviti «Titolo» e «Scrivi qualcosa…» in `testo-tenue`, con il cursore nel corpo.
@@ -1711,6 +1711,8 @@ Sul telefono le cartelle e i riquadri si aprono e si chiudono a tendina: il cont
 
 **Cestino sul telefono (SC-04, CMP-17):** la riga del computer, alla scala del telefono, mostra solo icona, nome e dettagli: Ripristina ed Elimina definitivamente accanto non ci starebbero. Le due azioni stanno nel foglio dal basso (CMP-51) che si apre toccando l'elemento, e facendo scorrere la riga (CMP-52); le conferme sono CMP-56 con i testi del computer, compresa quella di RB-31 con «Aggiungi un numero» e «Unisci» (proposta dell'agente del 19/10/2026, da confermare).
 
+**Righe vuote nella nota sul telefono (CMP-20):** una riga vuota tra due blocchi (paragrafi, titoli, elenchi) è alta metà riga, 12 px, come in Note di Apple (richiesta di Manuel Cucca del 20/10/2026: «c'è ancora troppo spazio»; misura proposta dall'agente). Sul computer la riga vuota resta intera.
+
 **Info sul telefono (CMP-24):** il tondo Info a destra in cima alla nota apre il foglio dal basso (CMP-51) «Info» con le righe del computer: cartella («Non organizzata» o «Lavoro › Clienti»), «Creata il …», fine validità, i tag, «Modificata …» e, sotto un filo, «Elimina» in `testo-errore`, che manda la nota nel Cestino. Per ora le righe si leggono soltanto; Sposta in…, calendario e tag dal telefono arrivano dopo (proposta dell'agente del 20/10/2026, da confermare).
 
-La barra dei formati sopra la tastiera è CMP-10 Bollicina del formato, aperta, con accanto la pillola «Fine» che chiude la tastiera.
+La barra dei formati sopra la tastiera è CMP-10 Bollicina del formato, aperta, con accanto un tondo alto come il cassetto, su `sfondo-flottante`, con la freccia giù (Icona/Freccia giù) che chiude la tastiera (proposta A, scelta di Manuel Cucca del 20/10/2026).

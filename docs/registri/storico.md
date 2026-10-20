@@ -759,3 +759,7 @@
 | 20/10/2026 | Manuel Cucca | Telefono: Info in cima alla nota, nel foglio dal basso, con cartella, date, tag, ultima modifica ed Elimina | DEC-156 |
 | 20/10/2026 | Manuel Cucca | Note: i caratteri scritti o incollati restano quelli che sono (asterischi, trattini bassi, tilde…), il formato si mette solo con la bollicina; gli elenchi nascono ancora scrivendo | DEC-165 |
 | 20/10/2026 | Manuel Cucca | Note: lo spazio in fondo a un pezzo formattato resta fuori dai simboli e la parola dopo continua nel formato (CA-02.16) | DEC-165 |
+| 20/10/2026 | Manuel Cucca | Telefono: la freccia giù al posto di «Fine» per chiudere la tastiera | DEC-156 |
+| 20/10/2026 | Manuel Cucca | Note: punto degli elenchi di 5 px e voci che vanno a capo allineate al testo, come nel disegno (CMP-20) | DEC-162 |
+| 20/10/2026 | Manuel Cucca | Telefono: nella nota le righe vuote tra i blocchi sono alte metà riga | DEC-162 |
+| 20/10/2026 | Manuel Cucca | Note: attivando un formato di riga il cursore va dopo il segno; rientro delle voci senza text-indent | DEC-130 |

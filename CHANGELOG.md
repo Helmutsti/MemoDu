@@ -8,6 +8,8 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 ## [Non rilasciato]
 
 ### Corretto
+- Attivando un elenco o una casella su una riga vuota il cursore va dopo il punto, pronto per scrivere
+- Negli elenchi una voce lunga che va a capo resta allineata al testo, e il punto ha la misura giusta
 - Uno spazio scritto dopo una parola in grassetto, corsivo o barrata non fa più comparire gli asterischi
 
 ### Modificato

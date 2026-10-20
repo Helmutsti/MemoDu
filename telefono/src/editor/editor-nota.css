@@ -65,3 +65,9 @@ body {
   font-weight: 400;
   line-height: 1.6;
 }
+
+/* Le righe vuote tra i blocchi sono alte metà riga (12 px), come in Note di Apple: tra paragrafi,
+   titoli ed elenchi lo spazio resta, ma non è più grande di una riga intera. */
+.nota .editor .cm-line:has(> br:only-child) {
+  line-height: 12px;
+}

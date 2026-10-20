@@ -79,7 +79,17 @@ export function impostaRiga(formato: FormatoRiga | "testo"): StateCommand {
           : PREFISSO[formato as FormatoRiga];
       return { from: riga.from, to: riga.from + esistente.length, insert: nuovo };
     });
-    dispatch(state.update({ changes, scrollIntoView: true, userEvent: "input.format" }));
+    // Il cursore all'inizio della riga va dopo il segno appena messo, non resta davanti (sopra il
+    // punto): si continua a scrivere nella voce.
+    const insieme = state.changes(changes);
+    dispatch(
+      state.update({
+        changes: insieme,
+        selection: state.selection.map(insieme, 1),
+        scrollIntoView: true,
+        userEvent: "input.format",
+      }),
+    );
     return true;
   };
 }
