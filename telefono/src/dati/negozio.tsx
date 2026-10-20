@@ -3,6 +3,7 @@
 // secondi e quando l'app torna in primo piano; senza rete si riprova a intervalli che crescono
 // fino a 30 secondi (DEC-138). Con l'accesso rifiutato si ferma fino a un nuovo accesso (RB-87).
 // Senza accesso, se si è scelto «Non voglio usare il cloud», si lavora solo sul telefono (DEC-84).
+// Dopo ogni sincronizzazione riuscita viaggiano i file degli allegati (RB-118, DEC-169).
 
 import { randomUUID } from "expo-crypto";
 import * as SecureStore from "expo-secure-store";
@@ -25,7 +26,9 @@ import {
   sessioneInTesto,
   type Sessione,
 } from "@/nucleo/accesso";
+import { discoExpo, riduciFotoExpo } from "@/dati/allegati";
 import { Archivio } from "@/nucleo/archivio";
+import { giroAllegati } from "@/nucleo/filoAllegati";
 import { apriDb } from "@/nucleo/db-expo";
 import { ErroreSinc, sincronizza, type Problema } from "@/nucleo/sinc";
 
@@ -60,6 +63,10 @@ interface Negozio {
   /** Tema di questo telefono, non sincronizzato (SC-06): Sistema, Chiaro o Scuro. */
   tema: Tema;
   impostaTema: (tema: Tema) => Promise<void>;
+  /** Una foto non ancora sul telefono: la sua anteprima si scarica al prossimo giro (RB-118). */
+  chiediAnteprima: (id: string) => void;
+  /** Cresce quando arrivano anteprime: le note rileggono i loro allegati. */
+  anteprimePronte: number;
 }
 
 export type Tema = "sistema" | "chiaro" | "scuro";
@@ -86,6 +93,8 @@ export function NegozioProvider({ children }: { children: ReactNode }) {
   const [ultimaRiuscita, setUltimaRiuscita] = useState<string | null>(null);
   const [nomeDispositivo, setNomeDispositivo] = useState(NOME_PREDEFINITO);
   const [tema, setTema] = useState<Tema>("sistema");
+  const [anteprimePronte, setAnteprimePronte] = useState(0);
+  const anteprime = useRef(new Set<string>());
 
   // Nome e tema stanno solo su questo telefono, nel portachiavi come la sessione.
   useEffect(() => {
@@ -111,6 +120,7 @@ export function NegozioProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     void (async () => {
       const a = await Archivio.apri(await apriDb("memodu.db"), undefined, () => randomUUID());
+      a.usaFile(discoExpo, riduciFotoExpo);
       const s = sessioneDaTesto(await SecureStore.getItemAsync(VOCE_SESSIONE));
       setSenzaCloud((await a.statoSinc("senza_cloud")) === "1");
       setUltimaRiuscita(await a.statoSinc("ultima_riuscita"));
@@ -138,6 +148,7 @@ export function NegozioProvider({ children }: { children: ReactNode }) {
       setUltimaRiuscita(await a.statoSinc("ultima_riuscita"));
       ritentativo.current = PRIMO_RITENTATIVO_MS;
       if (esito.cambiato) setVersione((v) => v + 1);
+      if ((await giroAllegati(a, s, anteprime.current)).length) setAnteprimePronte((n) => n + 1);
       programma(INTERVALLO_MS);
     } catch (e) {
       const p = e instanceof ErroreSinc ? e.problema : "errore";
@@ -213,6 +224,15 @@ export function NegozioProvider({ children }: { children: ReactNode }) {
     Appearance.setColorScheme(aspetto(t));
   }, []);
 
+  const chiediAnteprima = useCallback(
+    (id: string) => {
+      if (anteprime.current.has(id)) return;
+      anteprime.current.add(id);
+      if (stato.current.sessione) programma(DOPO_UNA_MODIFICA_MS);
+    },
+    [programma],
+  );
+
   const usaSenzaCloud = useCallback(async () => {
     await stato.current.archivio?.impostaStatoSinc("senza_cloud", "1");
     setSenzaCloud(true);
@@ -235,8 +255,12 @@ export function NegozioProvider({ children }: { children: ReactNode }) {
       cambiaNome,
       tema,
       impostaTema,
+      chiediAnteprima,
+      anteprimePronte,
     }),
     [
+      chiediAnteprima,
+      anteprimePronte,
       nomeDispositivo,
       cambiaNome,
       tema,

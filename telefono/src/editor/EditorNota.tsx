@@ -3,7 +3,9 @@
 // CMP-20 Testo della nota sul telefono (DEC-162): lo stesso editor del computer (CodeMirror con
 // la vista Markdown di DEC-130: simboli nascosti, scrittura come in Word), dentro un componente
 // DOM di Expo. Sopra il testo il titolo della nota. Misure alla scala del telefono (DEC-161) in
-// editor-nota.css; colori dai token del computer, chiaro e scuro come il sistema.
+// editor-nota.css; colori dai token del computer, chiaro e scuro come il sistema. Gli allegati
+// (passo 3 di Brainet, DEC-169) si vedono come sul computer: il telefono dice tipo e anteprima,
+// l'editor dice quali allegati ha il testo, un tocco su uno e le foto incollate.
 
 import "@fontsource-variable/inter";
 import "../../../client/src/stili/token.css";
@@ -13,16 +15,29 @@ import { useDOMImperativeHandle, type DOMImperativeFactory } from "expo/dom";
 import { useEffect, useRef, useState, type Ref } from "react";
 import type { EditorView } from "@codemirror/view";
 import type { VoceFormato } from "../../../client/src/componenti/Bollicina";
+import type { TipoAllegato } from "../../../client/src/brainet/api";
 import {
+  aggiornaAllegati,
   aggiornaArea,
   aggiornaColoriStati,
   aggiornaEntita,
+  cambiaForma,
   creaArea,
   estensioneBrainet,
+  EVENTO_FILE,
+  inserisciAllegato,
   inserisciCitazione,
+  togliAllegato,
+  type FileIncollati,
+  type VistaAllegato,
   type VistaEntita,
 } from "../../../client/src/brainet/estensione";
-import { leggiSegni, legamiArea } from "../../../client/src/brainet/segni";
+import {
+  leggiAllegati,
+  leggiSegni,
+  legamiArea,
+  type FormaAllegato,
+} from "../../../client/src/brainet/segni";
 import { Editor, type ManigliaEditor } from "../../../client/src/editor/Editor";
 import type { FormatoDove } from "../../../client/src/editor/formati";
 
@@ -34,6 +49,28 @@ export interface ManigliaEditorNota extends DOMImperativeFactory {
   cita: (id: unknown, nome: unknown) => void;
   /** Accende o spegne uno stato o un'entità dell'area dove si sta (RB-107, RB-109). */
   alterna: (tipo: unknown, id: unknown) => void;
+  /** Mette un allegato appena entrato dove sta il cursore (RB-117): id, nome e tipo. */
+  allega: (id: unknown, nome: unknown, tipo: unknown) => void;
+  /** Dimensioni › Piccola, Media, Grande (RB-120). */
+  forma: (id: unknown, forma: unknown) => void;
+  /** «Togli» (RB-121). */
+  togli: (id: unknown) => void;
+}
+
+/** Un file incollato, per il telefono: il nome, la grandezza e i byte in base64. */
+export interface FileDaAllegare {
+  nome: string;
+  grandezza: number;
+  base64: string;
+}
+
+/** I byte di un file incollato in base64, a pezzi per non fermare la pagina. */
+async function inBase64(f: File): Promise<string> {
+  const byte = new Uint8Array(await f.arrayBuffer());
+  let s = "";
+  for (let i = 0; i < byte.length; i += 0x8000)
+    s += String.fromCharCode(...byte.subarray(i, i + 0x8000));
+  return btoa(s);
 }
 
 /**
@@ -66,6 +103,10 @@ export default function EditorNota({
   cursore,
   entita,
   coloriStati,
+  allegati,
+  onAllegati,
+  onAllegato,
+  onIncolla,
   onCambia,
   onPillola,
   onFormato,
@@ -85,6 +126,14 @@ export default function EditorNota({
   entita: Record<string, VistaEntita>;
   /** I colori degli stati, per le aree (CMP-40). */
   coloriStati: Record<string, string>;
+  /** Tipo e anteprima degli allegati del testo, dal telefono; null: tolto altrove (SF-20). */
+  allegati: Record<string, VistaAllegato | null>;
+  /** Gli allegati che il testo usa, quando cambiano: il telefono li legge. */
+  onAllegati: (ids: string[]) => Promise<void>;
+  /** Un tocco su un allegato apre il suo foglio (RB-119). */
+  onAllegato: (a: { id: string; nome: string; forma: FormaAllegato }) => Promise<void>;
+  /** File incollati (RB-114): il telefono li allega e poi li mette con `allega`. */
+  onIncolla: (file: FileDaAllegare[]) => Promise<void>;
   /** Un tocco su una pillola apre la pagina dell'entità (RB-124). */
   onPillola: (entita: string) => Promise<void>;
   onCambia: (titolo: string, contenuto: string) => Promise<void>;
@@ -103,6 +152,21 @@ export default function EditorNota({
   suPillola.current = onPillola;
   const suBrainet = useRef(onBrainet);
   suBrainet.current = onBrainet;
+  const suAllegato = useRef(onAllegato);
+  suAllegato.current = onAllegato;
+  const suAllegati = useRef(onAllegati);
+  suAllegati.current = onAllegati;
+  const suIncolla = useRef(onIncolla);
+  suIncolla.current = onIncolla;
+  /** Dice al telefono quali allegati ha il testo, solo quando cambiano. */
+  const allegatiDetti = useRef<string | null>(null);
+  const diAllegati = (testo: string) => {
+    const ids = [...new Set(leggiAllegati(testo).map((s) => s.id))];
+    const chiave = ids.join(",");
+    if (chiave === allegatiDetti.current) return;
+    allegatiDetti.current = chiave;
+    void suAllegati.current(ids);
+  };
   /** Dove comincia «@lettere», e la frase selezionata per un'area nuova. */
   const chiocciola = useRef<number | null>(null);
   const selezione = useRef<{ da: number; a: number } | null>(null);
@@ -157,7 +221,7 @@ export default function EditorNota({
         avvisa(chiocciola.current === null ? null : "");
       },
       onAreaSopra: () => undefined,
-      onAllegato: () => undefined,
+      onAllegato: (a) => void suAllegato.current({ id: a.id, nome: a.nome, forma: a.forma }),
       onPillola: (id) => {
         void suPillola.current(id);
         return true;
@@ -169,6 +233,22 @@ export default function EditorNota({
       effects: [aggiornaEntita.of(entita), aggiornaColoriStati.of(coloriStati)],
     });
   }, [entita, coloriStati]);
+  useEffect(() => {
+    vista.current?.dispatch({ effects: aggiornaAllegati.of(allegati) });
+  }, [allegati]);
+  useEffect(() => diAllegati(contenuto), []);
+  // File incollati: passano al telefono, che li allega (RB-114, RB-115).
+  const [incollati] = useState(() => (e: Event) => {
+    const { file } = (e as CustomEvent<FileIncollati>).detail;
+    void Promise.all(
+      file.map(async (f) => ({
+        nome: f.name || "foto.png",
+        grandezza: f.size,
+        // Troppo grande: il telefono avvisa senza leggere il file (SF-17).
+        base64: f.size > 25 * 1024 * 1024 ? "" : await inBase64(f),
+      })),
+    ).then((tutti) => suIncolla.current(tutti));
+  });
 
   useDOMImperativeHandle(
     ref as Ref<ManigliaEditorNota>,
@@ -212,6 +292,26 @@ export default function EditorNota({
           if (!aggiornaArea(v, areaQui.current, stati, entita)) areaQui.current = null;
         }
         avvisa(null);
+      },
+      allega: (id: unknown, nome: unknown, tipo: unknown) => {
+        const v = vista.current;
+        if (!v) return;
+        const { from, to } = v.state.selection.main;
+        inserisciAllegato(v, from, to, {
+          id: String(id),
+          nome: String(nome),
+          tipo: String(tipo) as TipoAllegato,
+        });
+      },
+      forma: (id: unknown, forma: unknown) => {
+        const v = vista.current;
+        const s = v && leggiAllegati(v.state.doc.toString()).find((x) => x.id === id);
+        if (v && s) cambiaForma(v, s, String(forma) as FormaAllegato);
+      },
+      togli: (id: unknown) => {
+        const v = vista.current;
+        const s = v && leggiAllegati(v.state.doc.toString()).find((x) => x.id === id);
+        if (v && s) togliAllegato(v, s);
       },
     }),
     [],
@@ -287,13 +387,22 @@ export default function EditorNota({
         focus={cursore !== undefined || (quando !== undefined && nuova)}
         markdown
         invito="Scrivi qui"
-        onModifica={(co) => cambia(ultimo.current.titolo, co)}
+        onModifica={(co) => {
+          cambia(ultimo.current.titolo, co);
+          diAllegati(co);
+        }}
         onFormato={(f) => void onFormato(f ? { riga: f.riga, caratteri: [...f.caratteri] } : null)}
         estensioni={brainet}
         onVista={(v) => {
+          vista.current?.dom.removeEventListener(EVENTO_FILE, incollati);
           vista.current = v;
+          v?.dom.addEventListener(EVENTO_FILE, incollati);
           v?.dispatch({
-            effects: [aggiornaEntita.of(entita), aggiornaColoriStati.of(coloriStati)],
+            effects: [
+              aggiornaEntita.of(entita),
+              aggiornaColoriStati.of(coloriStati),
+              aggiornaAllegati.of(allegati),
+            ],
           });
         }}
       />

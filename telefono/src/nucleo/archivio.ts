@@ -8,6 +8,29 @@
 // resto va alla modifica di qui (DEC-109); tra cestino e modifica vince l'azione di qui (RB-36);
 // una nota in una cartella mandata nel cestino altrove va tra le non organizzate (RB-30).
 
+import {
+  AllegatoRifiutato,
+  allegatiNelTesto,
+  AVVISO_GRANDE,
+  AVVISO_TIPO,
+  CARICATO,
+  DA_CANCELLARE,
+  DA_CARICARE,
+  eFoto,
+  impronta,
+  inBase64,
+  LIMITE_BYTE,
+  nomeValido,
+  percorsoAnteprima,
+  percorsoFile,
+  REMOTO,
+  tipoDelFile,
+  type Allegato,
+  type Disco,
+  type InfoAllegato,
+  type RiduciFoto,
+  type TipoAllegato,
+} from "./allegati";
 import { conNome, type Entita, type NotaBrainet, type Stato, type TipoEntita } from "./brainet";
 import type { Db } from "./db";
 import { cerca, type NotaDaCercare, type RichiestaRicerca, type RisultatoRicerca } from "./ricerca";
@@ -107,6 +130,9 @@ export const testoBlocco = (b: Blocco) => JSON.stringify(ordinato(b));
 export class Archivio {
   /** I conflitti nati dall'ultima volta, per l'interfaccia. */
   private conflitti: Conflitto[] = [];
+  /** I file degli allegati e la riduzione delle foto (DEC-169): nell'app expo, nelle prove in memoria. */
+  private disco: Disco | null = null;
+  private riduciFoto: RiduciFoto | null = null;
 
   constructor(
     private db: Db,
@@ -135,6 +161,13 @@ export class Archivio {
         chiave TEXT PRIMARY KEY NOT NULL,
         valore TEXT NOT NULL
       );
+      CREATE TABLE IF NOT EXISTS allegati_file (
+        id TEXT PRIMARY KEY NOT NULL,
+        stato TEXT NOT NULL
+      );
+      CREATE TABLE IF NOT EXISTS allegati_da_controllare (
+        id TEXT PRIMARY KEY NOT NULL
+      );
     `);
     return new Archivio(db, adesso, nuovoId);
   }
@@ -162,6 +195,12 @@ export class Archivio {
 
   /** Elimina per sempre: sul server va un blocco «eliminato». */
   private async cancella(id: string, tipo: string): Promise<void> {
+    // Gli allegati di una nota che se ne va si controllano alla pulizia (RB-121).
+    if (tipo === "nota") {
+      const e = await this.campi(id);
+      for (const a of allegatiNelTesto(String(e?.campi.contenuto ?? "")))
+        await this.daControllare(a);
+    }
     await this.db.esegui("DELETE FROM elementi WHERE id = ?", id);
     await this.segna(id, tipo);
   }
@@ -264,6 +303,10 @@ export class Archivio {
       const e = await this.campi(id);
       if (!e) return;
       if (e.campi.titolo === titolo && e.campi.contenuto === contenuto) return;
+      // Un allegato che esce dal testo si controlla alla pulizia (RB-121), come i trigger del computer.
+      const ora = new Set(allegatiNelTesto(contenuto));
+      for (const a of allegatiNelTesto(String(e.campi.contenuto ?? "")))
+        if (!ora.has(a)) await this.daControllare(a);
       await this.scrivi(id, "nota", { ...e.campi, titolo, contenuto, modificata: this.adesso() });
     });
   }
@@ -975,6 +1018,15 @@ export class Archivio {
           cambiato = true;
         if (remoto.tipo === "nota" && !uguali(prima.campi.cartella, risultato.campi.cartella))
           spostate.push(r.id);
+        if (remoto.tipo === "allegato") {
+          if (risultato.eliminato) await this.allegatoEliminatoAltrove(r.id);
+          else
+            await this.db.esegui(
+              "INSERT OR IGNORE INTO allegati_file (id, stato) VALUES (?, ?)",
+              r.id,
+              REMOTO,
+            );
+        }
       }
       if (await this.sistemaRiferimenti()) cambiato = true;
       // RB-30: solo le note modificate qui o spostate da questa ricezione, come sul computer.
@@ -1100,6 +1152,228 @@ export class Archivio {
       tag: Array.isArray(fusi.tag) ? fusi.tag : [],
     });
     return id;
+  }
+
+  // ——— Allegati (RF-18, RB-114 … RB-121, DEC-169) ———
+
+  usaFile(disco: Disco, riduciFoto: RiduciFoto): void {
+    this.disco = disco;
+    this.riduciFoto = riduciFoto;
+  }
+
+  private file(): Disco {
+    if (!this.disco) throw new Error("Allegati senza disco");
+    return this.disco;
+  }
+
+  private async daControllare(id: string): Promise<void> {
+    await this.db.esegui("INSERT OR IGNORE INTO allegati_da_controllare (id) VALUES (?)", id);
+  }
+
+  private async bloccoAllegato(id: string): Promise<Campi | null> {
+    const e = await this.campi(id);
+    return e?.tipo === "allegato" ? e.campi : null;
+  }
+
+  /**
+   * Controlla il file e lo mette tra gli allegati, da caricare (RB-114, RB-115). Lo stesso file con
+   * lo stesso nome, già allegato, dà l'allegato che c'è (impronta, EN-17).
+   */
+  async allega(nome: string, byte: Uint8Array): Promise<Allegato> {
+    const n = nome.trim();
+    if (!nomeValido(n)) throw new AllegatoRifiutato(AVVISO_TIPO);
+    if (byte.length > LIMITE_BYTE) throw new AllegatoRifiutato(AVVISO_GRANDE);
+    const tipo = tipoDelFile(n, byte);
+    if (!tipo) throw new AllegatoRifiutato(AVVISO_TIPO);
+    const firma = impronta(byte);
+    const righe = await this.db.tutte<{ id: string; campi: string }>(
+      "SELECT id, campi FROM elementi WHERE tipo = 'allegato'",
+    );
+    const gia = righe.find((r) => {
+      const c = JSON.parse(r.campi) as Campi;
+      return c.impronta === firma && c.nome === n;
+    });
+    if (gia) {
+      await this.db.transazione(() => this.daControllare(gia.id));
+      return { id: gia.id, nome: n, tipo, forma: eFoto(tipo) ? "piccola" : "documento" };
+    }
+    let misure: { larghezza: number; altezza: number } | null = null;
+    let anteprima: Uint8Array | null = null;
+    if (eFoto(tipo)) {
+      if (!this.riduciFoto) throw new Error("Allegati senza riduzione delle foto");
+      try {
+        const r = await this.riduciFoto(byte, tipo as "jpg" | "png");
+        anteprima = r.jpeg;
+        misure = { larghezza: r.larghezza, altezza: r.altezza };
+      } catch {
+        throw new AllegatoRifiutato(AVVISO_TIPO);
+      }
+    }
+    const id = this.nuovoId();
+    const disco = this.file();
+    await disco.scrivi(percorsoFile(id, n), byte);
+    if (anteprima) await disco.scrivi(percorsoAnteprima(id), anteprima);
+    try {
+      await this.db.transazione(async () => {
+        await this.scrivi(id, "allegato", {
+          nome: n,
+          tipo,
+          grandezza: byte.length,
+          impronta: firma,
+          larghezza: misure?.larghezza ?? null,
+          altezza: misure?.altezza ?? null,
+          creato_il: this.adesso(),
+        });
+        await this.db.esegui(
+          "INSERT OR REPLACE INTO allegati_file (id, stato) VALUES (?, ?)",
+          id,
+          DA_CARICARE,
+        );
+        // Se poi non entra nel testo, alla pulizia se ne va.
+        await this.daControllare(id);
+      });
+    } catch (e) {
+      await this.togliFile(id);
+      throw e;
+    }
+    return { id, nome: n, tipo, forma: eFoto(tipo) ? "piccola" : "documento" };
+  }
+
+  /** Nome, tipo, grandezza e anteprima se la foto è sul telefono; null se non c'è più (SF-20). */
+  async leggiAllegato(id: string): Promise<InfoAllegato | null> {
+    const c = await this.bloccoAllegato(id);
+    if (!c) return null;
+    const tipo = String(c.tipo ?? "testo") as TipoAllegato;
+    let anteprima: string | null = null;
+    if (eFoto(tipo)) {
+      const byte = await this.file().leggi(percorsoAnteprima(id));
+      if (byte) anteprima = `data:image/jpeg;base64,${inBase64(byte)}`;
+    }
+    return { nome: String(c.nome ?? ""), tipo, grandezza: Number(c.grandezza ?? 0), anteprima };
+  }
+
+  /** Il percorso del file com'è (o sarà) sul telefono; null se l'allegato non c'è. */
+  async percorsoAllegato(id: string): Promise<string | null> {
+    const c = await this.bloccoAllegato(id);
+    return c ? percorsoFile(id, String(c.nome ?? "")) : null;
+  }
+
+  async allegatoScaricato(id: string): Promise<boolean> {
+    const p = await this.percorsoAllegato(id);
+    return p !== null && (await this.file().esiste(p));
+  }
+
+  /** Mette sul telefono un file scaricato, solo se è proprio quello (impronta). */
+  async salvaScaricato(id: string, byte: Uint8Array): Promise<string> {
+    const c = await this.bloccoAllegato(id);
+    if (!c || impronta(byte) !== c.impronta)
+      throw new Error("Il file scaricato non è quello allegato");
+    const p = percorsoFile(id, String(c.nome ?? ""));
+    await this.file().scrivi(p, byte);
+    return p;
+  }
+
+  async salvaAnteprimaScaricata(id: string, byte: Uint8Array): Promise<void> {
+    if (!(await this.bloccoAllegato(id))) return;
+    await this.file().scrivi(percorsoAnteprima(id), byte);
+  }
+
+  async allegatiConStato(stato: string): Promise<string[]> {
+    const r = await this.db.tutte<{ id: string }>(
+      "SELECT id FROM allegati_file WHERE stato = ? ORDER BY id",
+      stato,
+    );
+    return r.map((x) => x.id);
+  }
+
+  /** Il file e l'anteprima da caricare, così come sono sul telefono. */
+  async fileDaCaricare(id: string): Promise<{ file: Uint8Array; anteprima: Uint8Array | null }> {
+    const p = await this.percorsoAllegato(id);
+    const file = p ? await this.file().leggi(p) : null;
+    if (!file) throw new Error("Allegato senza file");
+    return { file, anteprima: await this.file().leggi(percorsoAnteprima(id)) };
+  }
+
+  async allegatoCaricato(id: string): Promise<void> {
+    await this.db.esegui(
+      "UPDATE allegati_file SET stato = ? WHERE id = ? AND stato = ?",
+      CARICATO,
+      id,
+      DA_CARICARE,
+    );
+  }
+
+  async allegatoCancellato(id: string): Promise<void> {
+    await this.db.esegui("DELETE FROM allegati_file WHERE id = ? AND stato = ?", id, DA_CANCELLARE);
+  }
+
+  private async togliFile(id: string): Promise<void> {
+    if (!this.disco) return;
+    await this.disco.togli(`allegati/${id}`);
+    await this.disco.togli(percorsoAnteprima(id));
+  }
+
+  /**
+   * Cancella gli allegati tolti qui che nessuna nota, nemmeno nel Cestino, usa più: via dal
+   * telefono e, con il blocco «eliminato» e la cancellazione sul server, da tutti gli altri
+   * (RB-121). Si chiama quando si chiude la nota.
+   */
+  async pulisciAllegati(): Promise<number> {
+    const tolti = await this.db.transazione(async () => {
+      const note = await this.db.tutte<{ campi: string }>(
+        "SELECT campi FROM elementi WHERE tipo = 'nota'",
+      );
+      const usati = new Set(
+        note.flatMap((r) =>
+          allegatiNelTesto(String((JSON.parse(r.campi) as Campi).contenuto ?? "")),
+        ),
+      );
+      const segnati = await this.db.tutte<{ id: string }>("SELECT id FROM allegati_da_controllare");
+      await this.db.esegui("DELETE FROM allegati_da_controllare");
+      const via: string[] = [];
+      for (const { id } of segnati) {
+        if (usati.has(id) || !(await this.bloccoAllegato(id))) continue;
+        await this.cancella(id, "allegato");
+        await this.db.esegui(
+          "INSERT OR REPLACE INTO allegati_file (id, stato) VALUES (?, ?)",
+          id,
+          DA_CANCELLARE,
+        );
+        via.push(id);
+      }
+      return via;
+    });
+    for (const id of tolti) await this.togliFile(id);
+    return tolti.length;
+  }
+
+  /**
+   * Cancellato su un altro dispositivo: qui spariscono i file; il server lo cancella chi l'ha
+   * tolto. Se l'ha caricato questo telefono lo cancella anche lui, così non resta un file orfano.
+   */
+  private async allegatoEliminatoAltrove(id: string): Promise<void> {
+    await this.db.esegui(
+      "UPDATE allegati_file SET stato = ? WHERE id = ? AND stato IN (?, ?)",
+      DA_CANCELLARE,
+      id,
+      DA_CARICARE,
+      CARICATO,
+    );
+    await this.db.esegui(
+      "DELETE FROM allegati_file WHERE id = ? AND stato <> ?",
+      id,
+      DA_CANCELLARE,
+    );
+    this.fileDaTogliere.push(id);
+  }
+
+  /** I file degli allegati cancellati altrove, tolti dopo la ricezione. */
+  private fileDaTogliere: string[] = [];
+
+  async togliFileRicevuti(): Promise<void> {
+    const ids = this.fileDaTogliere;
+    this.fileDaTogliere = [];
+    for (const id of ids) await this.togliFile(id);
   }
 
   /** Riferimenti a cartelle che non ci sono più (eliminate per sempre altrove): la nota va nella radice. */

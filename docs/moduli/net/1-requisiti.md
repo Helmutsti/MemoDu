@@ -74,6 +74,7 @@ In vista Markdown si allega solo con gli allegati di Brainet, che prendono il po
 - Un documento si mostra come la pillola di una persona, con l'icona del tipo di file e il nome. Una foto dentro un paragrafo scritto è una bolla; su una riga sua arriva piccola e si ingrandisce con «Dimensioni» › Piccola, Media, Grande.
 - Un clic su un allegato apre il menu: «Apri» (con il programma del computer), «Mostra nella cartella», «Dimensioni» (solo per le foto fuori dal paragrafo) e «Togli». Il file sparisce dal server e dagli altri computer quando nessuna nota lo usa più, anche nel Cestino.
 - Un allegato si scarica sul computer la prima volta che serve; senza rete una foto non ancora scaricata mostra un riquadro vuoto con il nome.
+- **Sul telefono** (scelte di Manuel Cucca del 20/10/2026, DEC-169): si allega con la graffetta nella barra sopra la tastiera, «Foto» o «File», e incollando una foto; un tocco su un allegato apre il foglio con «Apri» (anteprima di iOS), «Dimensioni» (solo per le foto su una riga loro) e «Togli».
 
 ### Ricerca, sincronizzazione, esportazione
 - **Ricerca:** la ricerca della colonna non trova le note in Brainet (DEC-147, scelta di Manuel Cucca: «la ricerca non mostra le note»). Nelle note di CLOUD i segni non entrano nell'indice.
@@ -147,6 +148,9 @@ Riscritti dall'agente il 16/10/2026 per DEC-145 (Fase 8), approvati da Manuel Cu
 - **CA-18.52** *Dato* Brainet acceso, *quando* faccio clic su «Scrivi» (sul telefono tocco la riga), *allora* si apre una pagina vuota con il giorno e l'ora sopra e il cursore nel testo, senza titolo; *quando* scrivo e torno al Journal, *allora* la pagina è in cima (RB-134).
 - **CA-18.53** *Dato* una pagina aperta con «Scrivi», *quando* la lascio senza scrivere niente, *allora* non compare nel Journal, nel Calendario né nel Cestino (RB-134).
 - **CA-18.54** *Dato* Brainet spento, *allora* «Scrivi» non c'è, né sul computer né sul telefono (RB-134).
+- **CA-18.55** *Dato* una nota aperta sul telefono con la tastiera, *quando* tocco la graffetta e scelgo «Foto» e una foto, *allora* la foto entra nel punto del cursore, piccola su una riga sua o bolla dentro una frase; con «File» e un PDF entra la pillola del documento; anche con Brainet spento (RB-114, DEC-169).
+- **CA-18.56** *Dato* un allegato nella nota sul telefono, *quando* lo tocco, *allora* si apre il foglio con il nome del file e «Apri», «Togli» e, per una foto su una riga sua, «Dimensioni»; «Apri» mostra il file con l'anteprima di iOS, anche se va prima scaricato; «Togli» lo toglie dalla nota (RB-119, RB-121).
+- **CA-18.57** *Dato* una foto copiata, *quando* la incollo in una nota sul telefono, *allora* entra come allegato; un file oltre 25 MB o di un tipo non ammesso non entra e l'avviso dice perché (RB-115).
 - **CA-18.51** *Dato* un'entità citata in ottobre e in dicembre, *quando* apro la sua pagina, *allora* sotto la testata vedo ottobre, novembre e dicembre, con il pallino in ottobre e in dicembre e non in novembre; *quando* faccio clic su ottobre, *allora* la pagina scorre al giorno più recente di ottobre (RB-133, DEC-150).
 - **CA-18.50** *Dato* una persona nel cast, *quando* ci faccio clic, *allora* si apre la sua pagina; *quando* faccio tasto destro › «Tipo», *allora* posso cambiarne il tipo come dalla pillola (proposta dell'agente, approvata da Manuel Cucca il 16/10/2026).
 

@@ -23,7 +23,11 @@ Proposta dell'agente, approvata da Manuel Cucca il 19/10/2026 («vai avanti»):
 - **Brainet, passo 1, fatto il 20/10/2026:** Journal, Entità, pagina dell'entità e Calendario da leggere; nelle note pillole e aree si vedono e una pillola apre la sua entità.
 - **Brainet, passo 2, fatto il 20/10/2026:** @ con i suggerimenti, aree dalla selezione, Sposta in Brainet, tipo, unione e foto delle entità.
 - **«Scrivi» in Brainet (DEC-168), dal 20/10/2026:** prima riga del riquadro Brainet; apre una pagina nuova con giorno e ora sopra, come sul computer.
-- **Più avanti:** Brainet passo 3 (allegati).
+- **Brainet, passo 3: allegati (scelte di Manuel Cucca del 20/10/2026, DEC-169):**
+  - nella barra sopra la tastiera la graffetta, dopo i formati, anche con Brainet spento: apre il foglio «Allega» con «Foto» (le foto del telefono) e «File» (l'app File); in più si può incollare una foto;
+  - gli allegati si vedono come sul computer: pillola del documento, bolla o foto piccola, media, grande; senza rete una foto non ancora scaricata è un riquadro con il nome;
+  - un tocco su un allegato apre il foglio con il nome del file: «Apri» (il file a tutto schermo con l'anteprima di iOS), «Dimensioni» (solo per le foto su una riga loro: Piccola, Media, Grande) e «Togli»; niente condivisione né «Mostra nella cartella»;
+  - limiti, tipi e avvisi come sul computer (RB-115), con l'avviso del telefono (CMP-57).
 
 ## Scelte tecniche
 - Base: Expo SDK 58, nella cartella `telefono/`, fuori dal workspace npm (React Native vuole la sua versione di React); Metro legge anche `client/src` e `condiviso/src` (DEC-162).
@@ -32,6 +36,7 @@ Proposta dell'agente, approvata da Manuel Cucca il 19/10/2026 («vai avanti»):
 - Righe da far scorrere e pressione lunga con Gesture Handler; tastiera e barra dei formati con Keyboard Controller; animazioni con Reanimated.
 - Icone: Lucide, come sul computer.
 - Appunti con `expo-clipboard` (DEC-166); foto delle entità con `expo-image-picker` ed `expo-image-manipulator` (DEC-167).
+- Allegati: file nella cartella dell'app, scelta dall'app File e anteprima di iOS con `expo-file-system` (DEC-169).
 
 ## Piano per portare l'intera app (richiesta di Manuel Cucca del 19/10/2026)
 Proposta dell'agente, in quest'ordine:

@@ -12,11 +12,7 @@ import "./SezioneBrainet.css";
 /** «journal», «entita», «calendario», la pagina di un'entità, «entita:ID» (FL-26), o la pagina
  * nuova di «Scrivi», «scrivi:ID» (FL-29). */
 export type VistaBrainet =
-  | "journal"
-  | "entita"
-  | "calendario"
-  | `entita:${string}`
-  | `scrivi:${string}`;
+  "journal" | "entita" | "calendario" | `entita:${string}` | `scrivi:${string}`;
 
 /** Il Journal come destinazione del trascinamento, dalla colonna. */
 export interface RilascioJournal {

@@ -40,9 +40,16 @@ beforeEach(() => {
 describe("tessere di Brainet nella colonna (CA-18.32, DEC-154)", () => {
   it("Journal, Entità e Calendario, senza + e senza Database; la pagina di un'entità tiene Entità", () => {
     const onApri = vi.fn();
-    const { rerender } = render(<SezioneBrainet aperta="entita" onApri={onApri} onScrivi={vi.fn()} />);
+    const { rerender } = render(
+      <SezioneBrainet aperta="entita" onApri={onApri} onScrivi={vi.fn()} />,
+    );
     const tessere = within(screen.getByRole("list", { name: "Brainet" })).getAllByRole("button");
-    expect(tessere.map((t) => t.textContent)).toEqual(["Scrivi", "Journal", "Entità", "Calendario"]);
+    expect(tessere.map((t) => t.textContent)).toEqual([
+      "Scrivi",
+      "Journal",
+      "Entità",
+      "Calendario",
+    ]);
     expect(screen.getByRole("button", { name: "Entità" })).toHaveAttribute("aria-current", "page");
     expect(screen.getByRole("button", { name: "Entità" })).toHaveClass("tessera-selezionata");
     expect(screen.queryByRole("button", { name: /Nuova nota/ })).toBeNull();

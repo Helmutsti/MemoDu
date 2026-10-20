@@ -2,32 +2,59 @@
 // alla lista (CMP-50, proposta C), anche con il gesto dal bordo, e a destra Info (CMP-24) nel
 // foglio dal basso; sotto il titolo e il testo nell'editor del computer (DEC-162), in vista
 // Markdown con i simboli nascosti, come sul computer. Mentre scrivi, sopra la tastiera la bollicina dei formati aperta (CMP-10) e «Fine».
-// Si salva da sola; una nota lasciata vuota sparisce (RB-10).
+// Si salva da sola; una nota lasciata vuota sparisce (RB-10). Gli allegati (DEC-169): la
+// graffetta nella barra apre «Allega» con Foto e File, una foto incollata entra da sola, un tocco
+// su un allegato apre il suo foglio; lasciando la nota se ne vanno quelli tolti (RB-121).
 
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { Info } from "lucide-react-native";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useKeyboardState } from "react-native-keyboard-controller";
 import { BarraFormati, type Voce } from "@/componenti/BarraFormati";
+import {
+  AvvisoInAlto,
+  FoglioAllega,
+  FoglioAllegato,
+  type AllegatoToccato,
+} from "@/componenti/Allegati";
 import { BarraInCima } from "@/componenti/BarraInCima";
 import { FoglioArea, SuggerimentiChiocciola } from "@/componenti/BrainetNota";
 import { Conferma } from "@/componenti/Foglio";
 import { InfoNota } from "@/componenti/InfoNota";
 import { SpostaIn } from "@/componenti/SpostaIn";
+import {
+  anteprimaDiIos,
+  scegliFileDaAllegare,
+  scegliFotoDaAllegare,
+  type FileScelto,
+} from "@/dati/allegati";
 import { useDatiBrainet } from "@/dati/brainet";
 import { quandoNota } from "@/dati/date";
 import { useNegozio } from "@/dati/negozio";
 import { segui } from "@/nucleo/brainet";
+import {
+  AllegatoRifiutato,
+  AVVISO_GRANDE,
+  AVVISO_LEGGERE,
+  daBase64,
+  eFoto,
+} from "@/nucleo/allegati";
+import { fileSulTelefono } from "@/nucleo/filoAllegati";
 import EditorNota, {
   type BrainetQui,
+  type FileDaAllegare,
   type FormatoInJson,
   type ManigliaEditorNota,
 } from "@/editor/EditorNota";
+import type { TipoAllegato } from "@/nucleo/allegati";
 import type { Cartella, Nota } from "@/nucleo/archivio";
 import { misura, raggio, spazio, useColori } from "@/tema";
 
 const RITARDO_SALVATAGGIO_MS = 500;
+/** Il tempo perché un foglio si chiuda prima di aprire le foto, File o l'anteprima di iOS. */
+const DOPO_IL_FOGLIO_MS = 350;
+const dopoIlFoglio = () => new Promise((r) => setTimeout(r, DOPO_IL_FOGLIO_MS));
 
 /** Le voci da accendere nella bollicina per il formato dove sta il cursore (CA-02.4). */
 function vociAccese(f: FormatoInJson | null): Set<Voce> {
@@ -40,7 +67,7 @@ function vociAccese(f: FormatoInJson | null): Set<Voce> {
 export default function NotaAperta() {
   /** `cursore`: dove mettere il cursore all'apertura, dalla pagina dell'entità (RB-124). */
   const { id, cursore } = useLocalSearchParams<{ id: string; cursore?: string }>();
-  const { archivio, modificato } = useNegozio();
+  const { archivio, modificato, sessione, chiediAnteprima, anteprimePronte } = useNegozio();
   const c = useColori();
   const [nota, setNota] = useState<{
     titolo: string;
@@ -91,6 +118,75 @@ export default function NotaAperta() {
     modificato();
   };
   const editor = useRef<ManigliaEditorNota>(null);
+  // Allegati (passo 3 di Brainet): quelli del testo, letti dal nucleo, il foglio e l'avviso.
+  const [idsAllegati, setIdsAllegati] = useState<string[]>([]);
+  const [allegati, setAllegati] = useState<
+    Record<string, { tipo: TipoAllegato; anteprima: string | null } | null>
+  >({});
+  const [foglioAllega, setFoglioAllega] = useState(false);
+  const [toccato, setToccato] = useState<AllegatoToccato | null>(null);
+  const [avviso, setAvviso] = useState<string | null>(null);
+  const togliAvviso = useCallback(() => setAvviso(null), []);
+  useEffect(() => {
+    if (!archivio || !idsAllegati.length) return;
+    let vivo = true;
+    void Promise.all(
+      idsAllegati.map(async (x) => {
+        const i = await archivio.leggiAllegato(x);
+        // Una foto non ancora sul telefono: l'anteprima si scarica (RB-118).
+        if (i && eFoto(i.tipo) && !i.anteprima) chiediAnteprima(x);
+        return [x, i ? { tipo: i.tipo, anteprima: i.anteprima } : null] as const;
+      }),
+    ).then((letti) => {
+      if (vivo) setAllegati(Object.fromEntries(letti));
+    });
+    return () => {
+      vivo = false;
+    };
+  }, [archivio, idsAllegati, anteprimePronte, chiediAnteprima]);
+  const allega = async (scelti: FileScelto[]) => {
+    if (!archivio) return;
+    let rifiuto: string | null = null;
+    for (const f of scelti) {
+      try {
+        const a = await archivio.allega(f.nome, f.byte);
+        setAllegati((p) => ({ ...p, [a.id]: p[a.id] ?? { tipo: a.tipo, anteprima: null } }));
+        editor.current?.allega(a.id, a.nome, a.tipo);
+      } catch (e) {
+        rifiuto ??= e instanceof AllegatoRifiutato ? e.message : AVVISO_LEGGERE;
+      }
+    }
+    if (rifiuto) setAvviso(rifiuto);
+    modificato();
+  };
+  const scegli = async (da: () => Promise<FileScelto | null>) => {
+    setFoglioAllega(false);
+    await dopoIlFoglio();
+    try {
+      const f = await da();
+      if (f) await allega([f]);
+    } catch {
+      setAvviso(AVVISO_LEGGERE);
+    }
+  };
+  const incollati = async (file: FileDaAllegare[]) => {
+    const grandi = file.filter((f) => !f.base64);
+    await allega(
+      file.filter((f) => f.base64).map((f) => ({ nome: f.nome, byte: daBase64(f.base64) })),
+    );
+    if (grandi.length) setAvviso(AVVISO_GRANDE);
+  };
+  const apriAllegato = async (a: AllegatoToccato) => {
+    setToccato(null);
+    if (!archivio) return;
+    try {
+      const percorso = await fileSulTelefono(archivio, sessione, a.id);
+      await dopoIlFoglio();
+      await anteprimaDiIos(percorso, a.nome);
+    } catch (e) {
+      setAvviso(e instanceof Error ? e.message : AVVISO_LEGGERE);
+    }
+  };
   const ultimo = useRef({ titolo: "", corpo: "" });
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -134,6 +230,8 @@ export default function NotaAperta() {
     () => () => {
       void allaChiusura.current().then(async () => {
         await archivio?.eliminaSeVuota(id);
+        // Gli allegati tolti che nessuna nota usa più se ne vanno (RB-121).
+        await archivio?.pulisciAllegati();
         modificato();
       });
     },
@@ -214,6 +312,10 @@ export default function NotaAperta() {
           onFormato={async (f) => setFormato(f)}
           onScrive={async (s) => setScrive(s)}
           onBrainet={async (q) => setQui(q)}
+          allegati={allegati}
+          onAllegati={async (ids) => setIdsAllegati(ids)}
+          onAllegato={async (a) => setToccato(a)}
+          onIncolla={incollati}
           dom={{
             style: { flex: 1, backgroundColor: c.sfondoNota },
             hideKeyboardAccessoryView: true,
@@ -227,6 +329,7 @@ export default function NotaAperta() {
         attivi={vociAccese(formato)}
         onFormato={(v) => editor.current?.applica(v)}
         onFine={() => editor.current?.chiudiTastiera()}
+        onAllega={() => setFoglioAllega(true)}
         brainet={acceso ? { attivo: qui.area !== null, onPress: () => setFoglioArea(true) } : null}
         sopra={
           acceso && dati && qui.chiocciola !== null ? (
@@ -266,6 +369,26 @@ export default function NotaAperta() {
         }}
         onAnnulla={() => setVersoBrainet(false)}
       />
+      <FoglioAllega
+        visibile={foglioAllega}
+        onFoto={() => void scegli(scegliFotoDaAllegare)}
+        onFile={() => void scegli(scegliFileDaAllegare)}
+        onChiudi={() => setFoglioAllega(false)}
+      />
+      <FoglioAllegato
+        allegato={toccato}
+        onApri={() => toccato && void apriAllegato(toccato)}
+        onForma={(f) => {
+          if (toccato) editor.current?.forma(toccato.id, f);
+          setToccato(null);
+        }}
+        onTogli={() => {
+          if (toccato) editor.current?.togli(toccato.id);
+          setToccato(null);
+        }}
+        onChiudi={() => setToccato(null)}
+      />
+      <AvvisoInAlto testo={avviso} onFine={togliAvviso} />
       {info ? (
         <InfoNota
           visibile

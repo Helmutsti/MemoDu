@@ -4,7 +4,7 @@
 // Titolo, Sottotitolo, Elenco puntato, Elenco numerato, Casella) e carattere (Grassetto, Corsivo,
 // Barrato, Sottolineato). Scorre di lato se non ci sta. Accanto, un tondo con la freccia giù chiude
 // la tastiera (sul telefono non c'è Esc), alto come il cassetto (scelta di Manuel Cucca del
-// 20/10/2026, proposta A).
+// 20/10/2026, proposta A). Dopo i formati la graffetta apre «Allega» (DEC-169).
 
 import {
   Bold,
@@ -16,6 +16,7 @@ import {
   List,
   ListChecks,
   ListOrdered,
+  Paperclip,
   Strikethrough,
   Type,
   Underline,
@@ -53,6 +54,7 @@ export function BarraFormati({
   onFine,
   sopra,
   brainet,
+  onAllega,
 }: {
   visibile: boolean;
   /** Le voci accese dove sta il cursore (CA-02.4). */
@@ -63,6 +65,8 @@ export function BarraFormati({
   sopra?: React.ReactNode;
   /** Il tondo di Brainet in testa al cassetto: acceso su una frase selezionata o in un'area. */
   brainet?: { attivo: boolean; onPress: () => void } | null;
+  /** La graffetta, dopo i formati: apre il foglio «Allega» (RB-114). */
+  onAllega?: () => void;
 }) {
   const c = useColori();
   const ombra = {
@@ -137,6 +141,26 @@ export function BarraFormati({
                   ))}
                 </Fragment>
               ))}
+              {onAllega ? (
+                <>
+                  <View style={[stili.divisore, { backgroundColor: c.bordoDivisoreTenue }]} />
+                  <Pressable
+                    onPress={onAllega}
+                    accessibilityRole="button"
+                    accessibilityLabel="Allega"
+                    style={({ pressed }) => [
+                      stili.strumento,
+                      pressed && { backgroundColor: c.sfondoHover },
+                    ]}
+                  >
+                    <Paperclip
+                      size={misura.icona}
+                      color={c.testoPrimario}
+                      strokeWidth={misura.tratto}
+                    />
+                  </Pressable>
+                </>
+              ) : null}
             </View>
           </ScrollView>
         </View>
