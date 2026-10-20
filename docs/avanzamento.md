@@ -68,7 +68,8 @@ Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui
 
 - ID-50 «Scrivi» in Brainet: la pagina nuova lasciata vuota sparisce, come una nota vuota in CLOUD (RB-10). Proposta dell'agente del 17/10/2026.
 - ID-52 Eliminare un'entità: «Elimina…» col tasto destro sulla riga in Entità; le aree restano evidenziate senza quell'entità. Proposte dell'agente del 17/10/2026.
-- DEC-166 `expo-clipboard` per «Copia» della chiave di recupero sul telefono (proposta dell'agente del 20/10/2026, da accettare). Le schermate con l'accesso fatto (Cambia password, Dispositivi collegati) sono provate contro il server in memoria, non ancora a mano sul telefono. «Mostra le note del cestino nei risultati» si salva e si sincronizza, ma la ricerca del telefono non la usa ancora: arriva con la ricerca con i filtri.
+- DEC-166 `expo-clipboard` per «Copia» della chiave di recupero sul telefono (proposta dell'agente del 20/10/2026, da accettare). Le schermate con l'accesso fatto (Cambia password, Dispositivi collegati) sono provate contro il server in memoria, non ancora a mano sul telefono. La ricerca del telefono rispetta «Mostra le note del cestino nei risultati».
+- Ricerca sul telefono: «Scegli le date…» con il calendario arriva dopo; una nota nel cestino toccata tra i risultati apre il foglio «La nota è nel cestino.» con Ripristina (proposta dell'agente approvata il 20/10/2026).
 - Info sul telefono: righe solo da leggere per ora; Elimina senza conferma, come nella riga che scorre (proposta dell'agente del 20/10/2026).
 - DEC-162 Editor del computer sul telefono in un componente DOM di Expo (proposta dell'agente del 20/10/2026, da accettare); le prove a mano della scrittura sul telefono restano da fare.
 - DEC-160 Colonna del telefono: ricerca e penna in basso alte 40 alla scala del telefono (46 con DEC-161); righe di Brainet disabilitate finché le schermate di Brainet non arrivano sul telefono. Proposta dell'agente del 20/10/2026.

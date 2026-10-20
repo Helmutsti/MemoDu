@@ -395,4 +395,32 @@ describe("nucleo del telefono con il server (DEC-156)", () => {
     await scollegaDispositivo(t.s, altro.s.dispositivo, chiama, INDIRIZZO);
     expect(await elencaDispositivi(t.s, chiama, INDIRIZZO)).toHaveLength(1);
   });
+
+  it("Info mostra i tag con il loro percorso, non con l'id; la ricerca li trova per nome (RF-06, RF-08)", async () => {
+    const t = await dispositivo();
+    const db = (t.a as unknown as { db: Db }).db;
+    const tag = (id: string, nome: string, padre: string | null = null) =>
+      db.esegui(
+        "INSERT INTO elementi (id, tipo, campi) VALUES (?, 'tag', ?)",
+        id,
+        JSON.stringify({ nome, padre }),
+      );
+    await tag("t1", "lavoro");
+    await tag("t2", "clienti", "t1");
+    const n = await t.a.creaNota(null);
+    await t.a.salvaNota(n, "Budget", "x");
+    const e = await db.prima<{ campi: string }>("SELECT campi FROM elementi WHERE id = ?", n);
+    await db.esegui(
+      "UPDATE elementi SET campi = ? WHERE id = ?",
+      JSON.stringify({ ...JSON.parse(e!.campi), tag: ["t2"] }),
+      n,
+    );
+    expect((await t.a.notaPerInfo(n))?.nota.tag).toEqual(["lavoro/clienti"]);
+    const cerca = (testo: string, filtro: string[] = []) =>
+      t.a
+        .cerca({ testo, tag: filtro, creata: null, modificata: null })
+        .then((r) => r.map((x) => x.id));
+    expect(await cerca("clienti")).toEqual([n]);
+    expect(await cerca("", ["lavoro"])).toEqual([n]);
+  });
 });

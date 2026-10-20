@@ -14,7 +14,7 @@ Memodu sull'iPhone, in React Native (DEC-156): le stesse note del computer, sinc
 ## Perimetro della prima versione
 Proposta dell'agente, approvata da Manuel Cucca il 19/10/2026 («vai avanti»):
 - **Subito:** accesso con email e password come sul computer; note sincronizzate e cifrate, che restano sul telefono anche senza rete; la lista a riquadri; aprire e scrivere una nota con la barra dei formati sopra la tastiera; nuova nota; ricerca; Elimina facendo scorrere la riga.
-- **Subito dopo:** Info dal basso (date, tag, cartella), Sposta in…, Cestino, Impostazioni. Fatti il 20/10/2026: Info (da leggere, con Sposta in… dalla cartella), Sposta in…, cartelle con la pressione lunga, Cestino, Impostazioni (account, nome del dispositivo, Cambia password, Dispositivi collegati, tema, ricerca).
+- **Subito dopo:** Info dal basso (date, tag, cartella), Sposta in…, Cestino, Impostazioni. Fatti il 20/10/2026: Info (da leggere, con Sposta in… dalla cartella), Sposta in…, cartelle con la pressione lunga, Cestino, Impostazioni (account, nome del dispositivo, Cambia password, Dispositivi collegati, tema, ricerca), ricerca con i filtri.
 - **Più avanti:** Brainet (Journal, Entità, Calendario): nella prima versione le tessere non ci sono.
 
 ## Scelte dell'agente, da confermare

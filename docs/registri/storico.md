@@ -767,3 +767,5 @@
 | 20/10/2026 | Manuel Cucca | Telefono: Impostazioni complete (nome del dispositivo, Cambia password, Dispositivi collegati, tema, note del cestino nei risultati) con le regole del computer | DEC-156, DEC-166 |
 | 20/10/2026 | Manuel Cucca | Dispositivi collegati: un iPhone si chiama «iPhone» (iOS); la conferma dice «Le note su quel dispositivo restano…» | DEC-156 |
 | 20/10/2026 | Manuel Cucca | Telefono: facendo scorrere una riga, quella già aperta si chiude (CMP-52) | DEC-156 |
+| 20/10/2026 | Manuel Cucca | Telefono: ricerca con le regole del computer (titolo, testo e tag, pertinenza, frase trovata), filtri Tag, Creazione e Modifica, note del cestino segnate e da ripristinare; Info mostra i nomi dei tag | DEC-156 |
+| 20/10/2026 | Manuel Cucca | Telefono: i filtri della ricerca stanno in basso sopra la ricerca; mentre si cerca la penna se ne va con una transizione | DEC-156 |

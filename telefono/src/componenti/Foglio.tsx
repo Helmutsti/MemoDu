@@ -118,7 +118,7 @@ export function Conferma({
 }: {
   visibile: boolean;
   titolo: string;
-  testo: string;
+  testo?: string;
   azione: string;
   /** Una seconda azione, come «Unisci» di RB-31. */
   altra?: { etichetta: string; onPress: () => void };
@@ -128,9 +128,11 @@ export function Conferma({
   const c = useColori();
   return (
     <Foglio visibile={visibile} titolo={titolo} onChiudi={onAnnulla}>
-      <Text allowFontScaling={false} style={[testo.messaggio, { color: c.testoTenue }]}>
-        {messaggio}
-      </Text>
+      {messaggio ? (
+        <Text allowFontScaling={false} style={[testo.messaggio, { color: c.testoTenue }]}>
+          {messaggio}
+        </Text>
+      ) : null}
       <View style={stili.pulsanti}>
         <Pulsante etichetta={azione} tipo="primario" largo onPress={onConferma} />
         {altra ? <Pulsante etichetta={altra.etichetta} largo onPress={altra.onPress} /> : null}

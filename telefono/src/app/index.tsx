@@ -19,10 +19,10 @@ import {
   Settings,
   Trash2,
 } from "lucide-react-native";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Keyboard, Pressable, StyleSheet, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ALTEZZA_BARRA, BarraInFondo } from "@/componenti/BarraInFondo";
+import { ALTEZZA_BARRA, ALTEZZA_FILTRI, BarraInFondo } from "@/componenti/BarraInFondo";
 import { Riquadro } from "@/componenti/Riquadro";
 import { Conferma } from "@/componenti/Foglio";
 import { InfoNota } from "@/componenti/InfoNota";
@@ -35,7 +35,15 @@ import {
   chiudiAlTocco,
   type Rettangolo,
 } from "@/componenti/Righe";
+import {
+  FiltriRicerca,
+  NESSUN_FILTRO,
+  RisultatiRicerca,
+  type Filtri,
+} from "@/componenti/RisultatiRicerca";
 import { SpostaIn } from "@/componenti/SpostaIn";
+import { intervallo, PAUSA_RICERCA_MS } from "../../../client/src/ricerca";
+import type { RisultatoRicerca } from "@/nucleo/ricerca";
 import { Tendina } from "@/componenti/Tendina";
 import { useNegozio } from "@/dati/negozio";
 import type { Cartella, Nota } from "@/nucleo/archivio";
@@ -54,6 +62,12 @@ export default function Note() {
     cartelle: [],
   });
   const [cerca, setCerca] = useState("");
+  const [cercando, setCercando] = useState(false);
+  const [filtri, setFiltri] = useState<Filtri>(NESSUN_FILTRO);
+  const [risultati, setRisultati] = useState<RisultatoRicerca[] | null>(null);
+  const [tuttiTag, setTuttiTag] = useState<string[]>([]);
+  /** Un risultato nel cestino toccato: si chiede se ripristinarlo (RB-29, RB-28). */
+  const [nelCestino, setNelCestino] = useState<RisultatoRicerca | null>(null);
   const [cloudAperta, setCloudAperta] = useState(true);
   const [brainetAperta, setBrainetAperta] = useState(true);
   const [aperte, setAperte] = useState<Set<string>>(new Set());
@@ -165,8 +179,8 @@ export default function Note() {
     modificato();
   };
   const apriInfo = async (id: string) => {
-    const n = await archivio?.nota(id);
-    if (archivio && n) setInfo({ nota: n, cartella: await archivio.percorso(n.cartella) });
+    const i = await archivio?.notaPerInfo(id);
+    if (i) setInfo(i);
   };
   const spostaIn = async (cartella: string | null) => {
     const nota = sposta;
@@ -284,10 +298,75 @@ export default function Note() {
     ];
   };
 
-  const q = cerca.trim().toLowerCase();
-  const trovate = q
-    ? dati.note.filter((n) => `${n.titolo} ${n.contenuto}`.toLowerCase().includes(q))
-    : [];
+  // ——— Ricerca (RF-08, CMP-13) ———
+  const filtriAttivi = filtri.tag.length > 0 || !!filtri.creata || !!filtri.modificata;
+  const inRicerca = cercando || cerca.trim() !== "" || filtriAttivi;
+  // Dopo una breve pausa dall'ultimo tasto (RB-33); i risultati restano quelli finché la
+  // ricerca non cambia (RB-45).
+  useEffect(() => {
+    if (!archivio || !inRicerca) return;
+    if (!cerca.trim() && !filtriAttivi) {
+      setRisultati(null);
+      return;
+    }
+    const pausa = setTimeout(async () => {
+      const r = await archivio.cerca({
+        testo: cerca,
+        tag: filtri.tag,
+        creata: filtri.creata ? intervallo(filtri.creata) : null,
+        modificata: filtri.modificata ? intervallo(filtri.modificata) : null,
+      });
+      setRisultati(r);
+    }, PAUSA_RICERCA_MS);
+    return () => clearTimeout(pausa);
+  }, [archivio, cerca, filtri, inRicerca]);
+  useEffect(() => {
+    if (inRicerca)
+      void archivio?.percorsiTag().then((m) => setTuttiTag([...new Set(m.values())].sort()));
+  }, [archivio, inRicerca]);
+
+  /** Aperto un risultato, la ricerca si svuota (CA-08.10). */
+  const lasciaRicerca = () => {
+    setCerca("");
+    setFiltri(NESSUN_FILTRO);
+    setRisultati(null);
+    Keyboard.dismiss();
+  };
+  const apriRisultato = (r: RisultatoRicerca) => {
+    if (r.nelCestino) return setNelCestino(r);
+    lasciaRicerca();
+    apri(r.id);
+  };
+  /** Ripristina la nota, o la cartella nel cestino che la contiene (RB-28, RB-31), poi la apre. */
+  const ripristinaRisultato = async (r: RisultatoRicerca) => {
+    setNelCestino(null);
+    if (!archivio) return;
+    const n = await archivio.nota(r.id);
+    let elemento: string | null = n?.eliminata_il ? r.id : null;
+    if (!elemento && n) {
+      const tutte = await archivio.cartelle();
+      for (let id = n.cartella, passi = 0; id && passi < 100; passi++) {
+        const x = tutte.find((k) => k.id === id);
+        if (x?.eliminata_il) elemento = x.id;
+        id = x?.madre ?? null;
+      }
+    }
+    if (!elemento) return;
+    const el = elemento;
+    const fatto = () => {
+      modificato();
+      lasciaRicerca();
+      apri(r.id);
+    };
+    const esito = await archivio.ripristina(el);
+    if (esito)
+      setConflitto({
+        nome: esito.conflitto,
+        dove: null,
+        risolvi: (scelta) => archivio.ripristina(el, scelta).then(fatto),
+      });
+    else fatto();
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: c.sfondoColonna }} onTouchStart={chiudiAlTocco}>
@@ -298,7 +377,8 @@ export default function Note() {
           stili.contenuto,
           {
             paddingTop: margini.top + spazio.elemento,
-            paddingBottom: spazio.pannello + ALTEZZA_BARRA + spazio.gruppo,
+            paddingBottom:
+              spazio.pannello + ALTEZZA_BARRA + spazio.gruppo + (inRicerca ? ALTEZZA_FILTRI : 0),
           },
         ]}
         keyboardDismissMode="on-drag"
@@ -318,19 +398,12 @@ export default function Note() {
             <Settings size={misura.icona} color={c.testoPrimario} strokeWidth={misura.tratto} />
           </Pressable>
         </View>
-        {q ? (
-          <View style={[stili.risultati, { backgroundColor: c.sfondoNota }]}>
-            {trovate.length ? (
-              trovate.map((n) => rigaNota(n))
-            ) : (
-              <Text
-                allowFontScaling={false}
-                style={[testo.messaggio, stili.vuoto, { color: c.testoTenue }]}
-              >
-                Nessuna nota trovata
-              </Text>
-            )}
-          </View>
+        {inRicerca ? (
+          <RisultatiRicerca
+            risultati={risultati}
+            cercato={risultati !== null}
+            onApri={apriRisultato}
+          />
         ) : (
           <>
             <Riquadro
@@ -397,6 +470,13 @@ export default function Note() {
           onChiudi={() => setInfo(null)}
         />
       ) : null}
+      <Conferma
+        visibile={nelCestino !== null}
+        titolo="La nota è nel cestino."
+        azione="Ripristina"
+        onConferma={() => nelCestino && void ripristinaRisultato(nelCestino)}
+        onAnnulla={() => setNelCestino(null)}
+      />
       {conflitto ? (
         <Conferma
           visibile
@@ -425,7 +505,15 @@ export default function Note() {
       ) : null}
       {/* Mentre si scrive il nome di una cartella la barra non sale sopra la tastiera. */}
       {campo ? null : (
-        <BarraInFondo cerca={cerca} onCerca={setCerca} onNuova={() => void nuova()} />
+        <BarraInFondo
+          cerca={cerca}
+          onCerca={setCerca}
+          onNuova={() => void nuova()}
+          onFocus={() => setCercando(true)}
+          onBlur={() => setCercando(false)}
+          cercando={inRicerca}
+          filtri={<FiltriRicerca filtri={filtri} tuttiTag={tuttiTag} onFiltri={setFiltri} />}
+        />
       )}
     </View>
   );
@@ -475,6 +563,4 @@ const stili = StyleSheet.create({
     borderRadius: raggio.pillola,
   },
   divisore: { height: 1, marginHorizontal: spazio.controllo, marginVertical: spazio.elemento },
-  risultati: { borderRadius: raggio.contenitore, padding: spazio.elenco },
-  vuoto: { padding: spazio.controllo },
 });

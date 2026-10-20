@@ -88,8 +88,8 @@ export default function NotaAperta() {
     if (!archivio) return;
     editor.current?.chiudiTastiera();
     await salvaOra();
-    const n = await archivio.nota(id);
-    if (n) setInfo({ nota: n, cartella: await archivio.percorso(n.cartella) });
+    const i = await archivio.notaPerInfo(id);
+    if (i) setInfo(i);
   };
   // Da Info, la riga della cartella apre Sposta in… (FL-05).
   const apriSposta = async () => {

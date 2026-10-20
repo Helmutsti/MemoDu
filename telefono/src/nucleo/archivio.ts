@@ -9,6 +9,7 @@
 // una nota in una cartella mandata nel cestino altrove va tra le non organizzate (RB-30).
 
 import type { Db } from "./db";
+import { cerca, type NotaDaCercare, type RichiestaRicerca, type RisultatoRicerca } from "./ricerca";
 
 export type Campi = Record<string, unknown>;
 
@@ -299,6 +300,69 @@ export class Archivio {
   async brainetAcceso(): Promise<boolean> {
     const e = await this.campi(ID_IMPOSTAZIONI);
     return e?.campi.brainet === true;
+  }
+
+  // ——— Ricerca (RF-08) e tag ———
+
+  /** I percorsi dei tag per id: «lavoro/clienti», dai nomi e dai padri dei blocchi (RF-06). */
+  async percorsiTag(): Promise<Map<string, string>> {
+    const righe = await this.db.tutte<{ id: string; campi: string }>(
+      "SELECT id, campi FROM elementi WHERE tipo = 'tag'",
+    );
+    const tag = new Map(righe.map((r) => [r.id, JSON.parse(r.campi) as Campi]));
+    const percorso = (id: string): string => {
+      const nomi: string[] = [];
+      for (let t = tag.get(id), passi = 0; t && passi <= tag.size; passi++) {
+        nomi.unshift(String(t.nome ?? ""));
+        t = t.padre ? tag.get(String(t.padre)) : undefined;
+      }
+      return nomi.join("/");
+    };
+    return new Map([...tag.keys()].map((id) => [id, percorso(id)]));
+  }
+
+  /** La nota per Info (CMP-24): i tag con il loro percorso al posto dell'id, in ordine. */
+  async notaPerInfo(id: string): Promise<{ nota: Nota; cartella: string } | null> {
+    const n = await this.nota(id);
+    if (!n) return null;
+    const percorsi = await this.percorsiTag();
+    const tag = n.tag
+      .map((t) => percorsi.get(t))
+      .filter((t): t is string => !!t)
+      .sort();
+    return { nota: { ...n, tag }, cartella: await this.percorso(n.cartella) };
+  }
+
+  /** Cerca nelle note di questo telefono, con la preferenza del cestino (RF-08, RB-29). */
+  async cerca(richiesta: RichiestaRicerca): Promise<RisultatoRicerca[]> {
+    const righe = await this.db.tutte<{ id: string; campi: string }>(
+      "SELECT id, campi FROM elementi WHERE tipo = 'nota'",
+    );
+    const note: NotaDaCercare[] = righe.map((r) => {
+      const c = JSON.parse(r.campi) as Campi;
+      return {
+        ...this.daNota(r.id, c),
+        provenienza: (c.provenienza as string | null) ?? null,
+        brainet: c.brainet === true,
+      };
+    });
+    const cartelle = new Map(
+      [...(await this.tutteLeCartelle())].map(([id, c]) => [
+        id,
+        {
+          nome: String(c.nome ?? ""),
+          madre: (c.madre as string | null) ?? null,
+          eliminata: !!c.eliminata_il,
+        },
+      ]),
+    );
+    return cerca(
+      richiesta,
+      note,
+      cartelle,
+      await this.percorsiTag(),
+      await this.cestinoInRicerca(),
+    );
   }
 
   /** «Mostra le note del cestino nei risultati»: sincronizzata, accesa di default (RB-29, DEC-94). */

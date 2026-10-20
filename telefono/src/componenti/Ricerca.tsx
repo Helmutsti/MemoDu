@@ -12,9 +12,13 @@ export function Ricerca({
   onCambia,
   alta,
   sfondo,
+  onFocus,
+  onBlur,
 }: {
   valore: string;
   onCambia: (v: string) => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
   /** In fondo alla colonna la ricerca è alta come la penna accanto. */
   alta?: number;
   sfondo?: string;
@@ -33,6 +37,8 @@ export function Ricerca({
         allowFontScaling={false}
         value={valore}
         onChangeText={onCambia}
+        onFocus={onFocus}
+        onBlur={onBlur}
         placeholder="Cerca nelle note"
         placeholderTextColor={c.testoTenue}
         style={[testo.controllo, stili.testo, { color: c.testoPrimario }]}
