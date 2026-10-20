@@ -1,6 +1,7 @@
 // SC-10 Journal sul telefono (RF-18, DEC-147), dalla riga Journal del riquadro Brainet: le note
 // in Brainet fuori dal Cestino, dalla più recente, con giorno e ora sopra e il testo con pillole
-// e aree; un tocco apre la nota, che si scrive come le altre. Vuoto: i testi del computer.
+// e aree; un tocco apre la nota, che si scrive come le altre. Vuoto: i testi del computer, con
+// «tienila premuta» al posto del tasto destro.
 
 import { router, Stack } from "expo-router";
 import { BookOpen } from "lucide-react-native";
@@ -41,7 +42,7 @@ export default function Journal() {
               allowFontScaling={false}
               style={[testo.messaggio, stili.centro, { color: c.testoTenue }]}
             >
-              Sposta una nota qui dal suo menu: tasto destro › «Sposta in Brainet».
+              Sposta una nota qui dal suo menu: tienila premuta › «Sposta in Brainet».
             </Text>
           </View>
         ) : note.length ? (

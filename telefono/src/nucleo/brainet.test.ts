@@ -3,7 +3,10 @@
 
 import { describe, expect, it } from "vitest";
 import {
+  conNome,
   elencoEntita,
+  riferimentiDi,
+  suggerisci,
   giorniDelCalendario,
   journal,
   paginaEntita,
@@ -81,5 +84,16 @@ describe("Brainet sul telefono (RF-18)", () => {
   it("il Calendario: i giorni del mese con una nota in Brainet, anche quello scelto (RB-113)", () => {
     expect([...giorniDelCalendario("2026-10", note)].sort()).toEqual(["2026-10-09", "2026-10-16"]);
     expect([...giorniDelCalendario("2026-09", note)]).toEqual(["2026-09-30"]);
+  });
+
+  it("i suggerimenti di @: il nome che contiene il testo, per tipo, senza tipo per ultime (RB-104)", () => {
+    expect(suggerisci("lu", entita).map((e) => e.id)).toEqual(["luca"]);
+    expect(suggerisci("", entita).map((e) => e.id)).toEqual(["luca", "serra", "mai"]);
+    expect(conNome("SERRA ", entita)?.id).toBe("serra");
+  });
+
+  it("quanti riferimenti passano unendo: le citazioni e le aree, anche quelle citate dentro (RB-108)", () => {
+    expect(riferimentiDi("serra", note, entita)).toEqual({ citazioni: 2, aree: 1 });
+    expect(riferimentiDi("luca", note, entita)).toEqual({ citazioni: 2, aree: 0 });
   });
 });

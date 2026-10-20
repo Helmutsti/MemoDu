@@ -8,6 +8,7 @@
 
 import {
   Bold,
+  Brain,
   ChevronDown,
   Heading1,
   Heading2,
@@ -24,7 +25,7 @@ import { Fragment } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { KeyboardStickyView } from "react-native-keyboard-controller";
 import type { FormatoRiga, FormatoTesto } from "../../../client/src/editor/formati";
-import { misura, raggio, spazio, t, useColori } from "@/tema";
+import { misura, opacitaDisabilitato, raggio, spazio, t, useColori } from "@/tema";
 
 export type Voce = FormatoRiga | "testo" | FormatoTesto;
 
@@ -50,12 +51,18 @@ export function BarraFormati({
   attivi,
   onFormato,
   onFine,
+  sopra,
+  brainet,
 }: {
   visibile: boolean;
   /** Le voci accese dove sta il cursore (CA-02.4). */
   attivi: Set<Voce>;
   onFormato: (v: Voce) => void;
   onFine: () => void;
+  /** Sopra la barra: i suggerimenti di @ (Brainet, passo 2). */
+  sopra?: React.ReactNode;
+  /** Il tondo di Brainet in testa al cassetto: acceso su una frase selezionata o in un'area. */
+  brainet?: { attivo: boolean; onPress: () => void } | null;
 }) {
   const c = useColori();
   const ombra = {
@@ -70,54 +77,82 @@ export function BarraFormati({
       style={[stili.posto, !visibile && stili.nascosta]}
       pointerEvents={visibile ? "box-none" : "none"}
     >
-      <View style={[stili.pillola, stili.cassetto, ombra, { backgroundColor: c.sfondoFlottante }]}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyboardShouldPersistTaps="always"
+      {sopra}
+      <View style={stili.riga}>
+        <View
+          style={[stili.pillola, stili.cassetto, ombra, { backgroundColor: c.sfondoFlottante }]}
         >
-          <View style={stili.strumenti}>
-            {GRUPPI.map((g, i) => (
-              <Fragment key={i}>
-                {i > 0 ? (
-                  <View style={[stili.divisore, { backgroundColor: c.bordoDivisoreTenue }]} />
-                ) : null}
-                {g.map(({ voce, nome, icona: Icona }) => (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyboardShouldPersistTaps="always"
+          >
+            <View style={stili.strumenti}>
+              {brainet ? (
+                <>
                   <Pressable
-                    key={voce}
-                    onPress={() => onFormato(voce)}
+                    onPress={brainet.onPress}
+                    disabled={!brainet.attivo}
                     accessibilityRole="button"
-                    accessibilityLabel={nome}
-                    accessibilityState={{ selected: attivi.has(voce) }}
+                    accessibilityLabel="Area"
+                    accessibilityState={{ disabled: !brainet.attivo }}
                     style={({ pressed }) => [
                       stili.strumento,
-                      (pressed || attivi.has(voce)) && { backgroundColor: c.sfondoHover },
+                      pressed && { backgroundColor: c.sfondoHover },
+                      !brainet.attivo && { opacity: opacitaDisabilitato },
                     ]}
                   >
-                    <Icona
+                    <Brain
                       size={misura.icona}
                       color={c.testoPrimario}
                       strokeWidth={misura.tratto}
                     />
                   </Pressable>
-                ))}
-              </Fragment>
-            ))}
-          </View>
-        </ScrollView>
+                  <View style={[stili.divisore, { backgroundColor: c.bordoDivisoreTenue }]} />
+                </>
+              ) : null}
+              {GRUPPI.map((g, i) => (
+                <Fragment key={i}>
+                  {i > 0 ? (
+                    <View style={[stili.divisore, { backgroundColor: c.bordoDivisoreTenue }]} />
+                  ) : null}
+                  {g.map(({ voce, nome, icona: Icona }) => (
+                    <Pressable
+                      key={voce}
+                      onPress={() => onFormato(voce)}
+                      accessibilityRole="button"
+                      accessibilityLabel={nome}
+                      accessibilityState={{ selected: attivi.has(voce) }}
+                      style={({ pressed }) => [
+                        stili.strumento,
+                        (pressed || attivi.has(voce)) && { backgroundColor: c.sfondoHover },
+                      ]}
+                    >
+                      <Icona
+                        size={misura.icona}
+                        color={c.testoPrimario}
+                        strokeWidth={misura.tratto}
+                      />
+                    </Pressable>
+                  ))}
+                </Fragment>
+              ))}
+            </View>
+          </ScrollView>
+        </View>
+        <Pressable
+          onPress={onFine}
+          accessibilityRole="button"
+          accessibilityLabel="Chiudi la tastiera"
+          style={({ pressed }) => [
+            stili.chiudi,
+            ombra,
+            { backgroundColor: pressed ? c.sfondoHover : c.sfondoFlottante },
+          ]}
+        >
+          <ChevronDown size={misura.icona} color={c.testoPrimario} strokeWidth={misura.tratto} />
+        </Pressable>
       </View>
-      <Pressable
-        onPress={onFine}
-        accessibilityRole="button"
-        accessibilityLabel="Chiudi la tastiera"
-        style={({ pressed }) => [
-          stili.chiudi,
-          ombra,
-          { backgroundColor: pressed ? c.sfondoHover : c.sfondoFlottante },
-        ]}
-      >
-        <ChevronDown size={misura.icona} color={c.testoPrimario} strokeWidth={misura.tratto} />
-      </Pressable>
     </KeyboardStickyView>
   );
 }
@@ -130,9 +165,9 @@ const stili = StyleSheet.create({
     left: spazio.icona,
     right: spazio.icona,
     bottom: 0,
-    flexDirection: "row",
     gap: spazio.icona,
   },
+  riga: { flexDirection: "row", gap: spazio.icona },
   nascosta: { opacity: 0 },
   pillola: { borderRadius: raggio.pillola, padding: spazio.elemento },
   cassetto: { flex: 1, overflow: "visible" },

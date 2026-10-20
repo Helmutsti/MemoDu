@@ -11,12 +11,18 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { useKeyboardState } from "react-native-keyboard-controller";
 import { BarraFormati, type Voce } from "@/componenti/BarraFormati";
 import { BarraInCima } from "@/componenti/BarraInCima";
+import { FoglioArea, SuggerimentiChiocciola } from "@/componenti/BrainetNota";
+import { Conferma } from "@/componenti/Foglio";
 import { InfoNota } from "@/componenti/InfoNota";
 import { SpostaIn } from "@/componenti/SpostaIn";
 import { useDatiBrainet } from "@/dati/brainet";
 import { useNegozio } from "@/dati/negozio";
 import { segui } from "@/nucleo/brainet";
-import EditorNota, { type FormatoInJson, type ManigliaEditorNota } from "@/editor/EditorNota";
+import EditorNota, {
+  type BrainetQui,
+  type FormatoInJson,
+  type ManigliaEditorNota,
+} from "@/editor/EditorNota";
 import type { Cartella, Nota } from "@/nucleo/archivio";
 import { misura, raggio, spazio, useColori } from "@/tema";
 
@@ -35,7 +41,9 @@ export default function NotaAperta() {
   const { id, cursore } = useLocalSearchParams<{ id: string; cursore?: string }>();
   const { archivio, modificato } = useNegozio();
   const c = useColori();
-  const [nota, setNota] = useState<{ titolo: string; contenuto: string } | null>(null);
+  const [nota, setNota] = useState<{ titolo: string; contenuto: string; brainet: boolean } | null>(
+    null,
+  );
   const [scrive, setScrive] = useState(false);
   // Le pillole e le aree della nota con i nomi e i colori di adesso (RB-111).
   const dati = useDatiBrainet();
@@ -57,6 +65,26 @@ export default function NotaAperta() {
   const [info, setInfo] = useState<{ nota: Nota; cartella: string } | null>(null);
   const [sposta, setSposta] = useState<{ nota: Nota; cartelle: Cartella[] } | null>(null);
   const [formato, setFormato] = useState<FormatoInJson | null>(null);
+  // Brainet da scrivere (passo 2): @ e l'area dove si sta, con Brainet acceso (RB-111).
+  const [qui, setQui] = useState<BrainetQui>({ chiocciola: null, area: null });
+  const [acceso, setAcceso] = useState(false);
+  const [foglioArea, setFoglioArea] = useState(false);
+  const [versoBrainet, setVersoBrainet] = useState(false);
+  useEffect(() => {
+    void archivio?.brainetAcceso().then(setAcceso);
+  }, [archivio]);
+  const creaECita = async (nome: string) => {
+    const e = await archivio?.creaEntita(nome);
+    if (!e) return;
+    editor.current?.cita(e.id, e.nome);
+    modificato();
+  };
+  const creaELega = async (nome: string) => {
+    const e = await archivio?.creaEntita(nome);
+    if (!e) return;
+    editor.current?.alterna("entita", e.id);
+    modificato();
+  };
   const editor = useRef<ManigliaEditorNota>(null);
   const ultimo = useRef({ titolo: "", corpo: "" });
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -68,7 +96,12 @@ export default function NotaAperta() {
       const n = await archivio.nota(id);
       if (!vivo || !n) return;
       ultimo.current = { titolo: n.titolo, corpo: n.contenuto };
-      setNota({ titolo: n.titolo, contenuto: n.contenuto });
+      const campi = await archivio.datiBrainet();
+      setNota({
+        titolo: n.titolo,
+        contenuto: n.contenuto,
+        brainet: campi.note.find((x) => x.id === id)?.brainet ?? false,
+      });
     })();
     return () => {
       vivo = false;
@@ -171,6 +204,7 @@ export default function NotaAperta() {
           onCambia={cambia}
           onFormato={async (f) => setFormato(f)}
           onScrive={async (s) => setScrive(s)}
+          onBrainet={async (q) => setQui(q)}
           dom={{
             style: { flex: 1, backgroundColor: c.sfondoNota },
             hideKeyboardAccessoryView: true,
@@ -184,6 +218,44 @@ export default function NotaAperta() {
         attivi={vociAccese(formato)}
         onFormato={(v) => editor.current?.applica(v)}
         onFine={() => editor.current?.chiudiTastiera()}
+        brainet={acceso ? { attivo: qui.area !== null, onPress: () => setFoglioArea(true) } : null}
+        sopra={
+          acceso && dati && qui.chiocciola !== null ? (
+            <SuggerimentiChiocciola
+              domanda={qui.chiocciola}
+              entita={dati.entita}
+              onScegli={(e) => editor.current?.cita(e.id, e.nome)}
+              onCrea={(nome) => void creaECita(nome)}
+            />
+          ) : null
+        }
+      />
+      {acceso && dati && qui.area ? (
+        <FoglioArea
+          visibile={foglioArea}
+          area={qui.area}
+          entita={dati.entita}
+          stati={dati.stati}
+          onAlterna={(tipo, x) => editor.current?.alterna(tipo, x)}
+          onCrea={(nome) => void creaELega(nome)}
+          onChiudi={() => setFoglioArea(false)}
+        />
+      ) : null}
+      <Conferma
+        visibile={versoBrainet}
+        titolo="Spostare la nota in Brainet?"
+        testo="La nota esce da CLOUD e dalla ricerca e non si riporta indietro. Nel Journal puoi collegarla a persone, oggetti e argomenti."
+        azione="Sposta"
+        onConferma={() => {
+          setVersoBrainet(false);
+          void salvaOra()
+            .then(() => archivio?.spostaInBrainet(id))
+            .then(() => {
+              modificato();
+              router.replace("/journal");
+            });
+        }}
+        onAnnulla={() => setVersoBrainet(false)}
       />
       {info ? (
         <InfoNota
@@ -191,6 +263,14 @@ export default function NotaAperta() {
           nota={info.nota}
           cartella={info.cartella}
           onSposta={() => void apriSposta()}
+          onSpostaInBrainet={
+            acceso && !nota?.brainet
+              ? () => {
+                  setInfo(null);
+                  setVersoBrainet(true);
+                }
+              : undefined
+          }
           onElimina={() => void elimina()}
           onChiudi={() => setInfo(null)}
         />

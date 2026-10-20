@@ -2,16 +2,41 @@
 // nell'ordine di @ (Persone, Argomenti, Eventi, Oggetti, Senza tipo), i gruppi vuoti non si
 // vedono; le persone come volti (CMP-46), gli altri in righe (CMP-41) con la lampadina per gli
 // argomenti e il calendario per gli eventi, e «nominato 3 volte · ultima volta oggi». Un tocco
-// apre la pagina dell'entità. Cambiare tipo, unire e scegliere la foto arrivano dopo (passo 2).
+// apre la pagina dell'entità. Tenendola premuta: «Unisci a…» e «Scegli una foto…» (passo 2).
 
 import { router, Stack } from "expo-router";
-import { Brain, Calendar, ChevronRight, Lightbulb, type LucideIcon } from "lucide-react-native";
-import { Fragment } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Brain,
+  Calendar,
+  ChevronRight,
+  Image as ImageIcon,
+  Lightbulb,
+  Merge,
+  type LucideIcon,
+} from "lucide-react-native";
+import { Fragment, useState } from "react";
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+  type GestureResponderEvent,
+} from "react-native";
+import { FoglioUnisci, scegliFoto } from "@/componenti/AzioniEntita";
+import { MenuRiga } from "@/componenti/MenuRiga";
+import type { Rettangolo } from "@/componenti/Righe";
+import { useNegozio } from "@/dati/negozio";
 import { BarraInCima } from "@/componenti/BarraInCima";
 import { dettagliEntita, TITOLO_TIPO, Volto } from "@/componenti/Brainet";
 import { useDatiBrainet } from "@/dati/brainet";
-import { elencoEntita, type TipoEntita, type VoceEntita } from "@/nucleo/brainet";
+import {
+  elencoEntita,
+  type Entita as EntitaBrainet,
+  type TipoEntita,
+  type VoceEntita,
+} from "@/nucleo/brainet";
 import { misura, raggio, spazio, t, testo, useColori } from "@/tema";
 
 const TIPI: (TipoEntita | "nessuno")[] = ["persona", "argomento", "evento", "oggetto", "nessuno"];
@@ -22,6 +47,26 @@ const apri = (id: string) => router.push({ pathname: "/entita/[id]", params: { i
 export default function Entita() {
   const c = useColori();
   const dati = useDatiBrainet();
+  const { archivio, modificato } = useNegozio();
+  const schermo = useWindowDimensions();
+  const [menu, setMenu] = useState<{ ancora: Rettangolo; entita: EntitaBrainet } | null>(null);
+  const [unisci, setUnisci] = useState<EntitaBrainet | null>(null);
+  /** Tenendo premuta un'entità, il suo menu accanto al dito (CMP-53). */
+  const tieni = (e: EntitaBrainet) => (ev: GestureResponderEvent) =>
+    setMenu({
+      entita: e,
+      ancora: {
+        x: spazio.pannello,
+        y: ev.nativeEvent.pageY - misura.riga / 2,
+        larghezza: schermo.width - spazio.pannello * 2,
+        altezza: misura.riga,
+      },
+    });
+  const foto = async (e: EntitaBrainet) => {
+    const scelta = await scegliFoto();
+    if (scelta) await archivio?.impostaFoto(e.id, scelta);
+    modificato();
+  };
   const voci = dati ? elencoEntita(dati.note, dati.entita) : [];
   const perTipo = (tipo: TipoEntita | "nessuno") =>
     voci.filter((v) => (v.entita.tipo ?? "nessuno") === tipo);
@@ -41,6 +86,7 @@ export default function Entita() {
         {i > 0 ? <View style={[stili.filo, { backgroundColor: c.bordoDivisoreTenue }]} /> : null}
         <Pressable
           onPress={() => apri(v.entita.id)}
+          onLongPress={tieni(v.entita)}
           accessibilityRole="button"
           style={({ pressed }) => [stili.riga, pressed && { backgroundColor: c.sfondoHover }]}
         >
@@ -90,6 +136,7 @@ export default function Entita() {
                     <Pressable
                       key={v.entita.id}
                       onPress={() => apri(v.entita.id)}
+                      onLongPress={tieni(v.entita)}
                       accessibilityRole="button"
                       accessibilityLabel={`${v.entita.nome}, ${dettagliEntita(v)}`}
                       style={({ pressed }) => [
@@ -117,6 +164,40 @@ export default function Entita() {
           );
         })}
       </ScrollView>
+      <MenuRiga
+        ancora={menu?.ancora ?? null}
+        riga={
+          menu ? (
+            <Text
+              allowFontScaling={false}
+              style={[testo.controllo, stili.sollevata, { color: c.testoPrimario }]}
+            >
+              {menu.entita.nome}
+            </Text>
+          ) : null
+        }
+        voci={
+          menu
+            ? [
+                { etichetta: "Unisci a…", icona: Merge, onPress: () => setUnisci(menu.entita) },
+                {
+                  etichetta: "Scegli una foto…",
+                  icona: ImageIcon,
+                  onPress: () => void foto(menu.entita),
+                },
+              ]
+            : []
+        }
+        onChiudi={() => setMenu(null)}
+      />
+      {dati ? (
+        <FoglioUnisci
+          da={unisci}
+          entita={dati.entita}
+          note={dati.note}
+          onChiudi={() => setUnisci(null)}
+        />
+      ) : null}
     </View>
   );
 }
@@ -152,5 +233,6 @@ const stili = StyleSheet.create({
     borderRadius: raggio.pillola,
   },
   testi: { flex: 1, gap: 2 },
+  sollevata: { paddingHorizontal: spazio.controllo },
   vuoto: { alignItems: "center", gap: spazio.icona, paddingTop: spazio.finestra * 2 },
 });

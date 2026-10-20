@@ -12,7 +12,21 @@
       "appleTeamId": "5NM7586UUV",
       "icon": "../client/src-tauri/icons/macos/Memodu.icon"
     },
-    "plugins": ["expo-router", "expo-status-bar", "expo-sqlite", "expo-font", "expo-secure-store"],
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      "expo-sqlite",
+      "expo-font",
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Memodu usa le tue foto solo per la foto di un'entità di Brainet, quando la scegli tu.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ]
+    ],
     "scheme": "memodu",
     "experiments": {
       "typedRoutes": true

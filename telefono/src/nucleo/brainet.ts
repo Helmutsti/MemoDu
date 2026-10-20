@@ -262,3 +262,52 @@ export function giorniDelCalendario(mese: string, note: NotaBrainet[]): Set<stri
       .filter((g): g is string => !!g && g.startsWith(`${mese}-`)),
   );
 }
+
+const TIPI_IN_ORDINE: (TipoEntita | null)[] = ["persona", "argomento", "evento", "oggetto", null];
+/** Suggerimenti di @ per tipo (CMP-09 Suggerimenti). */
+const SUGGERIMENTI_PER_TIPO = 5;
+
+const normalizza = (t: string) => t.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+
+/**
+ * Le entità che restano il cui nome contiene `testo`, al massimo cinque per tipo nell'ordine di
+ * @, quelle senza tipo per ultime (RB-104).
+ */
+export function suggerisci(testo: string, entita: Map<string, Entita>): Entita[] {
+  const cerca = normalizza(testo.trim());
+  const vive = [...entita.values()].filter((e) => !e.unitaIn && normalizza(e.nome).includes(cerca));
+  return TIPI_IN_ORDINE.flatMap((tipo) =>
+    vive
+      .filter((e) => (e.tipo ?? null) === tipo)
+      .sort((a, b) => normalizza(a.nome).localeCompare(normalizza(b.nome)))
+      .slice(0, SUGGERIMENTI_PER_TIPO),
+  );
+}
+
+/** L'entità viva con lo stesso nome, senza maiuscole e accenti (RB-105). */
+export function conNome(nome: string, entita: Map<string, Entita>): Entita | undefined {
+  const chiave = normalizza(nome.trim());
+  return [...entita.values()].find((e) => !e.unitaIn && normalizza(e.nome) === chiave);
+}
+
+/** Quante citazioni e aree passerebbero da un'entità a un'altra unendole (RB-108). */
+export function riferimentiDi(
+  id: string,
+  note: NotaBrainet[],
+  entita: Map<string, Entita>,
+): { citazioni: number; aree: number } {
+  let citazioni = 0;
+  let aree = 0;
+  for (const n of vive(note)) {
+    const { citazioni: c, aree: a } = leggiSegni(n.contenuto);
+    citazioni += c.filter((x) => segui(entita, x.entita) === id).length;
+    for (const area of a) {
+      const legate = [...area.entita];
+      for (const x of c)
+        if (x.inizio >= area.inizio && x.fine <= area.fine && !legate.includes(x.entita))
+          legate.push(x.entita);
+      aree += legate.filter((e) => segui(entita, e) === id).length;
+    }
+  }
+  return { citazioni, aree };
+}

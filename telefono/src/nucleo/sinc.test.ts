@@ -423,4 +423,24 @@ describe("nucleo del telefono con il server (DEC-156)", () => {
     expect(await cerca("clienti")).toEqual([n]);
     expect(await cerca("", ["lavoro"])).toEqual([n]);
   });
+
+  it("Brainet: entità nuova senza doppioni, tipo, unione, Sposta in Brainet, e tutto arriva all'altro dispositivo (RB-105, RB-108, RB-122, RB-130)", async () => {
+    const t = await dispositivo();
+    const luca = (await t.a.creaEntita("Luca Bianchi"))!;
+    expect((await t.a.creaEntita(" luca bianchi"))!.id).toBe(luca.id);
+    const doppio = (await t.a.creaEntita("Luca"))!;
+    await t.a.impostaTipo(luca.id, "persona");
+    await t.a.unisciEntita(doppio.id, luca.id);
+    const n = await t.a.creaNota(null);
+    await t.a.salvaNota(n, "Chiamata", `Con <cita e="${doppio.id}">Luca</cita>.`);
+    await t.a.spostaInBrainet(n);
+    expect((await t.a.note()).map((x) => x.id)).not.toContain(n);
+    await sinc(t);
+    const altro = await dispositivo();
+    await sinc(altro);
+    const d = await altro.a.datiBrainet();
+    expect(d.entita.get(luca.id)).toMatchObject({ nome: "Luca Bianchi", tipo: "persona" });
+    expect(d.entita.get(doppio.id)?.unitaIn).toBe(luca.id);
+    expect(d.note.find((x) => x.id === n)).toMatchObject({ brainet: true });
+  });
 });

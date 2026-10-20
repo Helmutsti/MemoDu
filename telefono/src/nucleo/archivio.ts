@@ -8,7 +8,7 @@
 // resto va alla modifica di qui (DEC-109); tra cestino e modifica vince l'azione di qui (RB-36);
 // una nota in una cartella mandata nel cestino altrove va tra le non organizzate (RB-30).
 
-import type { Entita, NotaBrainet, Stato } from "./brainet";
+import { conNome, type Entita, type NotaBrainet, type Stato, type TipoEntita } from "./brainet";
 import type { Db } from "./db";
 import { cerca, type NotaDaCercare, type RichiestaRicerca, type RisultatoRicerca } from "./ricerca";
 
@@ -38,6 +38,8 @@ export interface Nota {
 }
 
 const NUOVA_CARTELLA = "Nuova cartella";
+/** Il nome più lungo di un'entità, come sul computer. */
+const LUNGHEZZA_NOME_ENTITA = 200;
 
 /** Il nome di una cartella: i caratteri vietati diventano «-», senza spazi ai lati (RB-63). */
 export function nomeCartella(nome: string): string {
@@ -357,6 +359,81 @@ export class Archivio {
     }
     stati.sort((a, b) => a.ordine - b.ordine || a.nome.localeCompare(b.nome));
     return { note, entita, stati };
+  }
+
+  // ——— Brainet da scrivere (RF-18, passo 2) ———
+
+  private async entitaDaBlocchi(): Promise<Map<string, Entita>> {
+    return (await this.datiBrainet()).entita;
+  }
+
+  /** Un'entità nuova, senza tipo (RB-105); con il nome di una che c'è già, quella. */
+  async creaEntita(nome: string): Promise<Entita | null> {
+    const pulito = nome.trim().slice(0, LUNGHEZZA_NOME_ENTITA);
+    if (!pulito) return null;
+    return this.db.transazione(async () => {
+      const esistente = conNome(pulito, await this.entitaDaBlocchi());
+      if (esistente) return esistente;
+      const id = this.nuovoId();
+      await this.scrivi(id, "entita", {
+        nome: pulito,
+        tipo: null,
+        foto: null,
+        unita_in: null,
+        creata_il: this.adesso(),
+      });
+      return { id, nome: pulito, tipo: null, foto: null, unitaIn: null };
+    });
+  }
+
+  private async cambiaEntita(id: string, cambi: Campi): Promise<void> {
+    await this.db.transazione(async () => {
+      const e = await this.campi(id);
+      if (!e || e.tipo !== "entita") return;
+      await this.scrivi(id, "entita", { ...e.campi, ...cambi });
+    });
+  }
+
+  /** Il tipo dell'entità; null è «Senza tipo» (RB-122). */
+  async impostaTipo(id: string, tipo: TipoEntita | null): Promise<void> {
+    await this.cambiaEntita(id, { tipo });
+  }
+
+  /** La foto dell'entità, JPEG in base64 già ridotto; null la toglie (CA-18.13). */
+  async impostaFoto(id: string, foto: string | null): Promise<void> {
+    await this.cambiaEntita(id, { foto });
+  }
+
+  /**
+   * Unisce `da` in `verso` (RB-108): `da`, e le entità già unite in lei, rimandano a `verso`, che
+   * tiene il suo nome. Non si annulla.
+   */
+  async unisciEntita(da: string, verso: string): Promise<void> {
+    if (da === verso) return;
+    await this.db.transazione(async () => {
+      for (const [id, e] of await this.entitaDaBlocchi()) {
+        if (id !== da && e.unitaIn !== da) continue;
+        const c = await this.campi(id);
+        if (c) await this.scrivi(id, "entita", { ...c.campi, unita_in: verso });
+      }
+    });
+  }
+
+  /**
+   * «Sposta in Brainet» (RB-130, DEC-147): la nota esce dalla cartella, dall'albero e dalla
+   * ricerca, e resta in vista Markdown; senza ritorno.
+   */
+  async spostaInBrainet(id: string): Promise<void> {
+    await this.db.transazione(async () => {
+      const e = await this.campi(id);
+      if (!e || e.tipo !== "nota") return;
+      await this.scrivi(id, "nota", {
+        ...e.campi,
+        brainet: true,
+        cartella: null,
+        vista: "markdown",
+      });
+    });
   }
 
   /** La nota per Info (CMP-24): i tag con il loro percorso al posto dell'id, in ordine. */

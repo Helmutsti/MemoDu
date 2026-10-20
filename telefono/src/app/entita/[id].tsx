@@ -2,25 +2,30 @@
 // l'ultima il 16/10/2026», la cronologia dei mesi (CMP-47: un pallino più grande se il mese ha
 // più paragrafi; si scorre di lato e un tocco porta al giorno più recente del mese) e i
 // passaggi per giorno (titolo della nota e ora, sotto il paragrafo con pillole e aree). Un
-// tocco su un passaggio apre la nota con il cursore su quel paragrafo. Il tipo si vede, ma si
-// cambia con il passo 2.
+// tocco su un passaggio apre la nota con il cursore su quel paragrafo. La pillola del tipo apre
+// il foglio del tipo (RB-122); tenendo premuto il nome, «Unisci a…» e «Scegli una foto…».
 
 import { router, Stack, useLocalSearchParams } from "expo-router";
-import { Brain } from "lucide-react-native";
-import { Fragment, useRef } from "react";
+import { Brain, ChevronDown, Image as ImageIcon, Merge } from "lucide-react-native";
+import { Fragment, useRef, useState } from "react";
 import {
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
   View,
+  useWindowDimensions,
   type ScrollViewInstance,
 } from "react-native";
+import { FoglioTipo, FoglioUnisci, scegliFoto } from "@/componenti/AzioniEntita";
+import { MenuRiga } from "@/componenti/MenuRiga";
+import type { Rettangolo } from "@/componenti/Righe";
+import { useNegozio } from "@/dati/negozio";
 import { BarraInCima } from "@/componenti/BarraInCima";
 import { data, ParagrafoBrainet, titoloGiorno, TITOLO_TIPO_SINGOLARE } from "@/componenti/Brainet";
 import { anteprima } from "../../../../condiviso/src/anteprima";
 import { useDatiBrainet } from "@/dati/brainet";
-import { paginaEntita, type NotaBrainet } from "@/nucleo/brainet";
+import { paginaEntita, type Entita as EntitaBrainet, type NotaBrainet } from "@/nucleo/brainet";
 import { misura, raggio, spazio, t, testo, useColori } from "@/tema";
 
 /** Un mese della cronologia: «2026-10», il nome breve e quanti paragrafi (RB-133). */
@@ -76,6 +81,11 @@ export default function PaginaEntita() {
   const dati = useDatiBrainet();
   const pagina = dati ? paginaEntita(id, dati.note, dati.entita, titoloNota) : null;
   const scorrimento = useRef<ScrollViewInstance>(null);
+  const { archivio, modificato } = useNegozio();
+  const schermo = useWindowDimensions();
+  const [tipo, setTipo] = useState<EntitaBrainet | null>(null);
+  const [menu, setMenu] = useState<Rettangolo | null>(null);
+  const [unisci, setUnisci] = useState<EntitaBrainet | null>(null);
   const posizioni = useRef(new Map<string, number>());
   if (!dati || !pagina)
     return (
@@ -103,15 +113,32 @@ export default function PaginaEntita() {
             <Text
               allowFontScaling={false}
               accessibilityRole="header"
+              onLongPress={(ev) =>
+                setMenu({
+                  x: spazio.pannello,
+                  y: ev.nativeEvent.pageY - misura.riga / 2,
+                  larghezza: schermo.width - spazio.pannello * 2,
+                  altezza: misura.riga,
+                })
+              }
               style={[testo.notaTitolo, stili.flessibile, { color: c.testoPrimario }]}
             >
               {e.nome}
             </Text>
-            <View style={[stili.tipo, { backgroundColor: c.sfondoCampo }]}>
+            <Pressable
+              onPress={() => setTipo(e)}
+              accessibilityRole="button"
+              accessibilityLabel={`Tipo: ${TITOLO_TIPO_SINGOLARE[e.tipo ?? "nessuno"]}`}
+              style={({ pressed }) => [
+                stili.tipo,
+                { backgroundColor: pressed ? c.sfondoHover : c.sfondoCampo },
+              ]}
+            >
               <Text allowFontScaling={false} style={[testo.etichetta, { color: c.testoPrimario }]}>
                 {TITOLO_TIPO_SINGOLARE[e.tipo ?? "nessuno"]}
               </Text>
-            </View>
+              <ChevronDown size={t(14)} color={c.iconaTenue} strokeWidth={misura.tratto} />
+            </Pressable>
           </View>
           <Text allowFontScaling={false} style={[testo.dettaglio, { color: c.testoTenue }]}>
             {dettagli}
@@ -218,6 +245,37 @@ export default function PaginaEntita() {
           </View>
         )}
       </ScrollView>
+      <FoglioTipo entita={tipo} onChiudi={() => setTipo(null)} />
+      <MenuRiga
+        ancora={menu}
+        riga={
+          <Text
+            allowFontScaling={false}
+            style={[testo.controllo, stili.sollevata, { color: c.testoPrimario }]}
+          >
+            {e.nome}
+          </Text>
+        }
+        voci={[
+          { etichetta: "Unisci a…", icona: Merge, onPress: () => setUnisci(e) },
+          {
+            etichetta: "Scegli una foto…",
+            icona: ImageIcon,
+            onPress: () =>
+              void scegliFoto().then(async (f) => {
+                if (f) await archivio?.impostaFoto(e.id, f);
+                modificato();
+              }),
+          },
+        ]}
+        onChiudi={() => setMenu(null)}
+      />
+      <FoglioUnisci
+        da={unisci}
+        entita={dati.entita}
+        note={dati.note}
+        onChiudi={() => setUnisci(null)}
+      />
     </View>
   );
 }
@@ -228,6 +286,9 @@ const stili = StyleSheet.create({
   nome: { flexDirection: "row", alignItems: "center", gap: spazio.icona },
   flessibile: { flexShrink: 1 },
   tipo: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 2,
     paddingHorizontal: spazio.controlloPiccolo,
     paddingVertical: spazio.elemento,
     borderRadius: raggio.pillola,
@@ -252,4 +313,5 @@ const stili = StyleSheet.create({
     borderRadius: raggio.interno,
   },
   vuoto: { alignItems: "center", gap: spazio.icona, paddingTop: spazio.finestra },
+  sollevata: { paddingHorizontal: spazio.controllo },
 });

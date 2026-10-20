@@ -4,7 +4,15 @@
 // la nota nel Cestino. Toccando la cartella si apre Sposta in…; date e tag per ora si leggono
 // soltanto, cambiarli dal telefono arriva dopo.
 
-import { Calendar, CircleAlert, Folder, Tag, Trash2, type LucideIcon } from "lucide-react-native";
+import {
+  Brain,
+  Calendar,
+  CircleAlert,
+  Folder,
+  Tag,
+  Trash2,
+  type LucideIcon,
+} from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Foglio } from "@/componenti/Foglio";
 import { giornoDi, scriviGiorno, testoModificata } from "@/dati/date";
@@ -42,6 +50,7 @@ export function InfoNota({
   nota,
   cartella,
   onSposta,
+  onSpostaInBrainet,
   onElimina,
   onChiudi,
 }: {
@@ -51,6 +60,8 @@ export function InfoNota({
   cartella: string;
   /** La riga della cartella apre Sposta in…, come sul computer. */
   onSposta: () => void;
+  /** «Sposta in Brainet», solo con Brainet acceso e per una nota di CLOUD (RB-130, DEC-147). */
+  onSpostaInBrainet?: () => void;
   onElimina: () => void;
   onChiudi: () => void;
 }) {
@@ -105,6 +116,18 @@ export function InfoNota({
         </Text>
       </View>
       <View style={[stili.separatore, { backgroundColor: c.bordoDivisoreTenue }]} />
+      {onSpostaInBrainet ? (
+        <Pressable
+          onPress={onSpostaInBrainet}
+          accessibilityRole="button"
+          style={({ pressed }) => [stili.riga, pressed && { backgroundColor: c.sfondoHover }]}
+        >
+          <Brain size={misura.icona} color={c.iconaTenue} strokeWidth={misura.tratto} />
+          <Text allowFontScaling={false} style={[testo.controllo, { color: c.testoPrimario }]}>
+            Sposta in Brainet
+          </Text>
+        </Pressable>
+      ) : null}
       <Pressable
         onPress={onElimina}
         accessibilityRole="button"

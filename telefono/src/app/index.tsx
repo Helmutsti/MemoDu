@@ -66,6 +66,8 @@ export default function Note() {
   const [filtri, setFiltri] = useState<Filtri>(NESSUN_FILTRO);
   const [risultati, setRisultati] = useState<RisultatoRicerca[] | null>(null);
   const [tuttiTag, setTuttiTag] = useState<string[]>([]);
+  /** La nota per cui si chiede conferma di «Sposta in Brainet» (RB-130). */
+  const [versoBrainet, setVersoBrainet] = useState<string | null>(null);
   /** Un risultato nel cestino toccato: si chiede se ripristinarlo (RB-29, RB-28). */
   const [nelCestino, setNelCestino] = useState<RisultatoRicerca | null>(null);
   const [cloudAperta, setCloudAperta] = useState(true);
@@ -223,6 +225,16 @@ export default function Note() {
     return [
       { etichetta: "Info", icona: Info, onPress: () => void apriInfo(nota.id) },
       { etichetta: "Sposta in…", icona: FolderInput, onPress: () => setSposta(nota) },
+      // Solo con Brainet acceso (RB-130, DEC-147).
+      ...(brainet
+        ? [
+            {
+              etichetta: "Sposta in Brainet",
+              icona: Brain,
+              onPress: () => setVersoBrainet(nota.id),
+            },
+          ]
+        : []),
       "filo",
       { etichetta: "Elimina", icona: Trash2, errore: true, onPress: () => void elimina(nota.id) },
     ];
@@ -485,6 +497,22 @@ export default function Note() {
           onChiudi={() => setInfo(null)}
         />
       ) : null}
+      <Conferma
+        visibile={versoBrainet !== null}
+        titolo="Spostare la nota in Brainet?"
+        testo="La nota esce da CLOUD e dalla ricerca e non si riporta indietro. Nel Journal puoi collegarla a persone, oggetti e argomenti."
+        azione="Sposta"
+        onConferma={() => {
+          const n = versoBrainet;
+          setVersoBrainet(null);
+          if (n)
+            void archivio?.spostaInBrainet(n).then(() => {
+              modificato();
+              router.push("/journal");
+            });
+        }}
+        onAnnulla={() => setVersoBrainet(null)}
+      />
       <Conferma
         visibile={nelCestino !== null}
         titolo="La nota è nel cestino."

@@ -21,7 +21,8 @@ Proposta dell'agente, approvata da Manuel Cucca il 19/10/2026 («vai avanti»):
 - **Subito dopo, fatto il 20/10/2026:** Info (da leggere, con Sposta in… dalla cartella), Sposta in…, cartelle con la pressione lunga, Cestino, Impostazioni (account, nome del dispositivo, Cambia password, Dispositivi collegati, tema, ricerca), ricerca con i filtri.
 - **Da fare:** Info modificabile (date e tag) con il calendario, anche per «Scegli le date…» nei filtri.
 - **Brainet, passo 1, fatto il 20/10/2026:** Journal, Entità, pagina dell'entità e Calendario da leggere; nelle note pillole e aree si vedono e una pillola apre la sua entità.
-- **Più avanti:** Brainet passo 2 (@, aree, Sposta in Brainet, tipo, unione, foto) e passo 3 (allegati).
+- **Brainet, passo 2, fatto il 20/10/2026:** @ con i suggerimenti, aree dalla selezione, Sposta in Brainet, tipo, unione e foto delle entità.
+- **Più avanti:** Brainet passo 3 (allegati).
 
 ## Scelte tecniche
 - Base: Expo SDK 58, nella cartella `telefono/`, fuori dal workspace npm (React Native vuole la sua versione di React); Metro legge anche `client/src` e `condiviso/src` (DEC-162).
@@ -29,7 +30,7 @@ Proposta dell'agente, approvata da Manuel Cucca il 19/10/2026 («vai avanti»):
 - Navigazione a pila di expo-router senza le barre di sistema di iOS: barre e pulsanti sono componenti del design system (CMP-50 … CMP-57).
 - Righe da far scorrere e pressione lunga con Gesture Handler; tastiera e barra dei formati con Keyboard Controller; animazioni con Reanimated.
 - Icone: Lucide, come sul computer.
-- Appunti con `expo-clipboard` (DEC-166).
+- Appunti con `expo-clipboard` (DEC-166); foto delle entità con `expo-image-picker` ed `expo-image-manipulator` (DEC-167).
 
 ## Piano per portare l'intera app (richiesta di Manuel Cucca del 19/10/2026)
 Proposta dell'agente, in quest'ordine:
