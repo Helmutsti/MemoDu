@@ -771,3 +771,4 @@
 | 20/10/2026 | Manuel Cucca | Telefono: i filtri della ricerca stanno in basso sopra la ricerca; mentre si cerca la penna se ne va con una transizione | DEC-156 |
 | 20/10/2026 | Manuel Cucca | Requisiti del telefono riscritti con le scelte di oggi; risposte alle domande aperte su editor e scala | DEC-161, DEC-162 |
 | 20/10/2026 | Manuel Cucca | Accettate le proposte dell'agente sul telefono: editor del computer (DEC-162), appunti (DEC-166), ricerca e penna alte 46 e righe di Brainet spente (DEC-160), Info in sola lettura, Elimina da Info senza conferma, «Scegli le date…» rimandato | DEC-162, DEC-166 |
+| 20/10/2026 | Manuel Cucca | Telefono: Brainet da leggere (passo 1): Journal, Entità, pagina dell'entità, Calendario; nelle note pillole e aree come sul computer | DEC-156, DEC-162 |

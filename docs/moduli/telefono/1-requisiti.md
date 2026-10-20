@@ -20,7 +20,8 @@ Proposta dell'agente, approvata da Manuel Cucca il 19/10/2026 («vai avanti»):
 - **Subito, fatto:** accesso con email e password come sul computer; note sincronizzate e cifrate, che restano sul telefono anche senza rete; la lista a riquadri; aprire e scrivere una nota con la barra dei formati sopra la tastiera; nuova nota; ricerca; Elimina facendo scorrere la riga.
 - **Subito dopo, fatto il 20/10/2026:** Info (da leggere, con Sposta in… dalla cartella), Sposta in…, cartelle con la pressione lunga, Cestino, Impostazioni (account, nome del dispositivo, Cambia password, Dispositivi collegati, tema, ricerca), ricerca con i filtri.
 - **Da fare:** Info modificabile (date e tag) con il calendario, anche per «Scegli le date…» nei filtri.
-- **Più avanti:** Brainet (Journal, Entità, Calendario): oggi le righe del riquadro Brainet sono spente.
+- **Brainet, passo 1, fatto il 20/10/2026:** Journal, Entità, pagina dell'entità e Calendario da leggere; nelle note pillole e aree si vedono e una pillola apre la sua entità.
+- **Più avanti:** Brainet passo 2 (@, aree, Sposta in Brainet, tipo, unione, foto) e passo 3 (allegati).
 
 ## Scelte tecniche
 - Base: Expo SDK 58, nella cartella `telefono/`, fuori dal workspace npm (React Native vuole la sua versione di React); Metro legge anche `client/src` e `condiviso/src` (DEC-162).

@@ -8,6 +8,7 @@
 // resto va alla modifica di qui (DEC-109); tra cestino e modifica vince l'azione di qui (RB-36);
 // una nota in una cartella mandata nel cestino altrove va tra le non organizzate (RB-30).
 
+import type { Entita, NotaBrainet, Stato } from "./brainet";
 import type { Db } from "./db";
 import { cerca, type NotaDaCercare, type RichiestaRicerca, type RisultatoRicerca } from "./ricerca";
 
@@ -319,6 +320,43 @@ export class Archivio {
       return nomi.join("/");
     };
     return new Map([...tag.keys()].map((id) => [id, percorso(id)]));
+  }
+
+  // ——— Brainet da leggere (RF-18, passo 1) ———
+
+  /** Note (tutte), entità e stati di Brainet, dai blocchi sincronizzati. */
+  async datiBrainet(): Promise<{
+    note: (NotaBrainet & { tag: string[] })[];
+    entita: Map<string, Entita>;
+    stati: Stato[];
+  }> {
+    const righe = await this.db.tutte<{ id: string; tipo: string; campi: string }>(
+      "SELECT id, tipo, campi FROM elementi WHERE tipo IN ('nota', 'entita', 'stato')",
+    );
+    const note: (NotaBrainet & { tag: string[] })[] = [];
+    const entita = new Map<string, Entita>();
+    const stati: Stato[] = [];
+    for (const r of righe) {
+      const c = JSON.parse(r.campi) as Campi;
+      if (r.tipo === "nota") note.push({ ...this.daNota(r.id, c), brainet: c.brainet === true });
+      else if (r.tipo === "entita")
+        entita.set(r.id, {
+          id: r.id,
+          nome: String(c.nome ?? ""),
+          tipo: (c.tipo as Entita["tipo"]) ?? null,
+          foto: (c.foto as string | null) ?? null,
+          unitaIn: (c.unita_in as string | null) ?? null,
+        });
+      else
+        stati.push({
+          id: r.id,
+          nome: String(c.nome ?? ""),
+          colore: String(c.colore ?? "informazione"),
+          ordine: Number(c.ordine ?? 0),
+        });
+    }
+    stati.sort((a, b) => a.ordine - b.ordine || a.nome.localeCompare(b.nome));
+    return { note, entita, stati };
   }
 
   /** La nota per Info (CMP-24): i tag con il loro percorso al posto dell'id, in ordine. */

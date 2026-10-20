@@ -6,14 +6,16 @@
 
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { Info } from "lucide-react-native";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useKeyboardState } from "react-native-keyboard-controller";
 import { BarraFormati, type Voce } from "@/componenti/BarraFormati";
 import { BarraInCima } from "@/componenti/BarraInCima";
 import { InfoNota } from "@/componenti/InfoNota";
 import { SpostaIn } from "@/componenti/SpostaIn";
+import { useDatiBrainet } from "@/dati/brainet";
 import { useNegozio } from "@/dati/negozio";
+import { segui } from "@/nucleo/brainet";
 import EditorNota, { type FormatoInJson, type ManigliaEditorNota } from "@/editor/EditorNota";
 import type { Cartella, Nota } from "@/nucleo/archivio";
 import { misura, raggio, spazio, useColori } from "@/tema";
@@ -29,11 +31,26 @@ function vociAccese(f: FormatoInJson | null): Set<Voce> {
 }
 
 export default function NotaAperta() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  /** `cursore`: dove mettere il cursore all'apertura, dalla pagina dell'entità (RB-124). */
+  const { id, cursore } = useLocalSearchParams<{ id: string; cursore?: string }>();
   const { archivio, modificato } = useNegozio();
   const c = useColori();
   const [nota, setNota] = useState<{ titolo: string; contenuto: string } | null>(null);
   const [scrive, setScrive] = useState(false);
+  // Le pillole e le aree della nota con i nomi e i colori di adesso (RB-111).
+  const dati = useDatiBrainet();
+  const brainet = useMemo(
+    () => ({
+      entita: Object.fromEntries(
+        [...(dati?.entita.values() ?? [])].map((e) => {
+          const vera = dati!.entita.get(segui(dati!.entita, e.id)) ?? e;
+          return [e.id, { nome: vera.nome, foto: vera.foto }];
+        }),
+      ),
+      colori: Object.fromEntries((dati?.stati ?? []).map((s) => [s.id, s.colore])),
+    }),
+    [dati],
+  );
   // La barra dei formati c'è solo con la tastiera aperta: entrando in una nota nuova il fuoco va
   // nel titolo, ma la tastiera può non aprirsi, e la barra resterebbe appoggiata in fondo.
   const tastiera = useKeyboardState((k) => k.isVisible);
@@ -145,6 +162,12 @@ export default function NotaAperta() {
           titolo={nota.titolo}
           contenuto={nota.contenuto}
           nuova={!nota.titolo && !nota.contenuto}
+          cursore={cursore ? Number(cursore) : undefined}
+          entita={brainet.entita}
+          coloriStati={brainet.colori}
+          onPillola={async (e) => {
+            router.push({ pathname: "/entita/[id]", params: { id: e } });
+          }}
           onCambia={cambia}
           onFormato={async (f) => setFormato(f)}
           onScrive={async (s) => setScrive(s)}

@@ -431,9 +431,24 @@ export default function Note() {
                 aperto={brainetAperta}
                 onApriChiudi={() => setBrainetAperta((a) => !a)}
               >
-                <RigaVoce key="journal" nome="Journal" icona={BookOpen} />
-                <RigaVoce key="entita" nome="Entità" icona={Brain} />
-                <RigaVoce key="calendario" nome="Calendario" icona={Calendar} />
+                <RigaVoce
+                  key="journal"
+                  nome="Journal"
+                  icona={BookOpen}
+                  onPress={() => router.push("/journal")}
+                />
+                <RigaVoce
+                  key="entita"
+                  nome="Entità"
+                  icona={Brain}
+                  onPress={() => router.push("/entita")}
+                />
+                <RigaVoce
+                  key="calendario"
+                  nome="Calendario"
+                  icona={Calendar}
+                  onPress={() => router.push("/calendario")}
+                />
               </Riquadro>
             ) : null}
           </>

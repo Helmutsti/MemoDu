@@ -7,11 +7,18 @@
 
 import "@fontsource-variable/inter";
 import "../../../client/src/stili/token.css";
+import "../../../client/src/brainet/brainet.css";
 import "./editor-nota.css";
 import { useDOMImperativeHandle, type DOMImperativeFactory } from "expo/dom";
 import { useEffect, useRef, useState, type Ref } from "react";
 import type { EditorView } from "@codemirror/view";
 import type { VoceFormato } from "../../../client/src/componenti/Bollicina";
+import {
+  aggiornaColoriStati,
+  aggiornaEntita,
+  estensioneBrainet,
+  type VistaEntita,
+} from "../../../client/src/brainet/estensione";
 import { Editor, type ManigliaEditor } from "../../../client/src/editor/Editor";
 import type { FormatoDove } from "../../../client/src/editor/formati";
 
@@ -32,7 +39,11 @@ export default function EditorNota({
   titolo,
   contenuto,
   nuova,
+  cursore,
+  entita,
+  coloriStati,
   onCambia,
+  onPillola,
   onFormato,
   onScrive,
 }: {
@@ -41,6 +52,14 @@ export default function EditorNota({
   contenuto: string;
   /** Nota appena creata: il cursore va nel titolo. */
   nuova: boolean;
+  /** Dove mettere il cursore nel testo all'apertura (pagina dell'entità, RB-124). */
+  cursore?: number;
+  /** Nomi e foto delle entità, per le pillole (CMP-38). */
+  entita: Record<string, VistaEntita>;
+  /** I colori degli stati, per le aree (CMP-40). */
+  coloriStati: Record<string, string>;
+  /** Un tocco su una pillola apre la pagina dell'entità (RB-124). */
+  onPillola: (entita: string) => Promise<void>;
   onCambia: (titolo: string, contenuto: string) => Promise<void>;
   onFormato: (formato: FormatoInJson | null) => Promise<void>;
   onScrive: (scrive: boolean) => Promise<void>;
@@ -51,6 +70,27 @@ export default function EditorNota({
   const campo = useRef<HTMLTextAreaElement>(null);
   const ultimo = useRef({ titolo, contenuto });
   const [testoTitolo, setTestoTitolo] = useState(titolo);
+  const suPillola = useRef(onPillola);
+  suPillola.current = onPillola;
+  // Brainet da leggere (passo 1): pillole, aree e allegati si vedono come sul computer; @, il
+  // menu dell'area e gli allegati nuovi arrivano con il passo 2.
+  const [brainet] = useState(() =>
+    estensioneBrainet({
+      onChiocciola: () => undefined,
+      onSelezione: () => undefined,
+      onAreaSopra: () => undefined,
+      onAllegato: () => undefined,
+      onPillola: (id) => {
+        void suPillola.current(id);
+        return true;
+      },
+    }),
+  );
+  useEffect(() => {
+    vista.current?.dispatch({
+      effects: [aggiornaEntita.of(entita), aggiornaColoriStati.of(coloriStati)],
+    });
+  }, [entita, coloriStati]);
 
   useDOMImperativeHandle(
     ref as Ref<ManigliaEditorNota>,
@@ -123,11 +163,19 @@ export default function EditorNota({
       <Editor
         ref={editor}
         contenuto={contenuto}
+        cursore={cursore}
+        focus={cursore !== undefined}
         markdown
         invito="Scrivi qui"
         onModifica={(co) => cambia(ultimo.current.titolo, co)}
         onFormato={(f) => void onFormato(f ? { riga: f.riga, caratteri: [...f.caratteri] } : null)}
-        onVista={(v) => (vista.current = v)}
+        estensioni={brainet}
+        onVista={(v) => {
+          vista.current = v;
+          v?.dispatch({
+            effects: [aggiornaEntita.of(entita), aggiornaColoriStati.of(coloriStati)],
+          });
+        }}
       />
     </div>
   );

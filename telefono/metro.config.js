@@ -20,11 +20,15 @@ config.resolver.nodeModulesPaths = [
 
 const soloDelTelefono = /^(react|react-dom)(\/.*)?$/;
 const quiDentro = path.join(__dirname, "package.json");
+// Il pacchetto condiviso del workspace: i suoi sorgenti TypeScript, come per il computer.
+const condiviso = path.join(radice, "condiviso/src/index.ts");
 config.resolver.resolveRequest = (contesto, nome, piattaforma) =>
-  contesto.resolveRequest(
-    soloDelTelefono.test(nome) ? { ...contesto, originModulePath: quiDentro } : contesto,
-    nome,
-    piattaforma,
-  );
+  nome === "@memodu/condiviso"
+    ? { type: "sourceFile", filePath: condiviso }
+    : contesto.resolveRequest(
+        soloDelTelefono.test(nome) ? { ...contesto, originModulePath: quiDentro } : contesto,
+        nome,
+        piattaforma,
+      );
 
 module.exports = config;
