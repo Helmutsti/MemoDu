@@ -8,6 +8,10 @@
 // Con la bollicina (DEC-131): il sottolineato `<u>…</u>` vale come gli altri pezzi, il testo
 // scritto con un formato in attesa entra nei suoi simboli (formati.ts) e `-[]` a inizio riga
 // diventa la casella.
+// Come in Note di Apple (DEC-165): i caratteri scritti o incollati restano quelli che sono. Un
+// asterisco, un trattino basso, una tilde, un apice inverso, un «<» o un «#» a inizio riga non
+// diventano mai formato: entrano con la barra rovescia davanti, che non si vede, e Backspace la
+// toglie insieme al carattere. Il formato si mette solo con la bollicina.
 // Brainet (DEC-146): pillole e allegati sono blocchi che il cursore salta e Backspace o Canc tolgono
 // interi; i segni delle aree sono simboli nascosti come gli altri (facet `atomiciScrittura`).
 // Le funzioni lavorano sullo stato, così si provano senza il DOM.
@@ -28,7 +32,7 @@ import {
 } from "@codemirror/state";
 import { EditorView, keymap } from "@codemirror/view";
 import { calcolaSegni } from "./anteprima";
-import { formatoInAttesa, pezziFormattati, scriviConAttesa } from "./formati";
+import { formatoInAttesa, pezziFormattati, scriviConAttesa, spazioInFondo } from "./formati";
 
 interface Tratto {
   da: number;
@@ -153,6 +157,18 @@ export function doveScrivere(state: EditorState, pos: number): number {
     const f = tutti.find((t) => t.chiude.a === p) ?? tutti.find((t) => t.apre.a === p);
     if (!f) break;
     p = f.chiude.a === p ? f.chiude.da : f.apre.da;
+  }
+  return p;
+}
+
+/** Da `pos`, in fondo a uno o più pezzi formattati, il punto dopo tutti i loro simboli di chiusura. */
+function dopoLaChiusura(state: EditorState, pos: number): number {
+  const tutti = formati(state, pos, pos);
+  let p = pos;
+  for (let giri = 0; giri < 6; giri++) {
+    const f = tutti.find((t) => t.chiude.da === p);
+    if (!f) break;
+    p = f.chiude.a;
   }
   return p;
 }
@@ -355,8 +371,12 @@ export function spostaScrittura(tr: Transaction): TransactionSpec | null {
   if (da !== a || !testo || testo.includes("\n")) return null;
   const dove = doveScrivere(tr.startState, da);
   // Con un formato in attesa il testo entra già nei suoi simboli (CA-02.22).
-  const conAttesa = scriviConAttesa(tr.startState, da, dove, testo);
+  const fuori = dopoLaChiusura(tr.startState, dove);
+  const conAttesa = scriviConAttesa(tr.startState, da, dove, testo, fuori);
   if (conAttesa) return conAttesa;
+  // Uno spazio in fondo a un pezzo formattato resta fuori dai simboli (DEC-165).
+  const spazio = spazioInFondo(tr.startState, dove, fuori, testo);
+  if (spazio) return spazio;
   if (dove === da) return null;
   return {
     changes: { from: dove, insert: testo },
@@ -366,8 +386,77 @@ export function spostaScrittura(tr: Transaction): TransactionSpec | null {
   };
 }
 
+/** I caratteri che il Markdown leggerebbe come formato dentro una riga. */
+const SPECIALI = /[\\*_~`<]/g;
+
+/**
+ * Il testo come va scritto nel Markdown perché resti com'è (DEC-165): la barra rovescia davanti ai
+ * caratteri speciali e al «#» che apre la riga. `aInizioRiga`: prima del testo, nella riga, ci
+ * sono solo spazi.
+ */
+export function comeSono(testo: string, aInizioRiga: boolean): string {
+  const protetto = testo.replace(SPECIALI, "\\$&");
+  return protetto.replace(/(^|\n)([ \t]*)#/g, (tutto, a, spazi, dove: number) =>
+    dove === 0 && !aInizioRiga ? tutto : `${a}${spazi}\\#`,
+  );
+}
+
+const aInizioRiga = (state: EditorState, pos: number) =>
+  /^[ \t]*$/.test(state.sliceDoc(state.doc.lineAt(pos).from, pos));
+
+/** Scritto con la tastiera: il testo entra come è (DEC-165), poi valgono le altre regole. */
+const scritturaComeSono = EditorView.inputHandler.of((view, da, a, testo) => {
+  const protetto = comeSono(testo, aInizioRiga(view.state, da));
+  if (protetto === testo) return false;
+  view.dispatch(
+    view.state.update({
+      changes: { from: da, to: a, insert: protetto },
+      selection: EditorSelection.cursor(da + protetto.length),
+      scrollIntoView: true,
+      userEvent: "input.type",
+    }),
+  );
+  return true;
+});
+
+/** L'ultimo testo copiato da una nota: incollato di nuovo in Memodu tiene i suoi formati. */
+let copiatoQui: string | null = null;
+
+/**
+ * Incollato: il Markdown che arriva da fuori resta testo com'è (RB-07, DEC-165); quello copiato
+ * da una nota di Memodu entra con i suoi formati (CA-02.19).
+ */
+const incollaComeSono = EditorView.clipboardInputFilter.of((testo, state) =>
+  testo === copiatoQui ? testo : comeSono(testo, aInizioRiga(state, state.selection.main.from)),
+);
+
+/**
+ * Cancellando il carattere dopo una barra rovescia nascosta si porta via anche lei (DEC-165):
+ * da sola resterebbe visibile.
+ */
+export function cancellaConLaBarra(tr: Transaction): TransactionSpec | null {
+  if (!tr.docChanged || !tr.isUserEvent("delete")) return null;
+  const st = tr.startState;
+  const cambi: { da: number; a: number; testo: string }[] = [];
+  tr.changes.iterChanges((da, a, _d, _a, inserito) =>
+    cambi.push({ da, a, testo: inserito.toString() }),
+  );
+  if (cambi.length !== 1 || cambi[0].testo || cambi[0].da === 0) return null;
+  const { da, a } = cambi[0];
+  if (st.sliceDoc(da - 1, da) !== "\\" || !/[\\*_~`<#]/.test(st.sliceDoc(da, da + 1))) return null;
+  // Una barra rovescia a sua volta protetta (due di fila) non è una barra nascosta.
+  const prima = /\\+$/.exec(st.sliceDoc(Math.max(0, da - 50), da))?.[0].length ?? 0;
+  if (prima % 2 === 0) return null;
+  return {
+    changes: { from: da - 1, to: a },
+    selection: EditorSelection.cursor(da - 1),
+    scrollIntoView: true,
+    userEvent: tr.annotation(Transaction.userEvent),
+  };
+}
+
 const filtri = EditorState.transactionFilter.of((tr) => {
-  const spec = spostaScrittura(tr) ?? proteggiSimboli(tr);
+  const spec = cancellaConLaBarra(tr) ?? spostaScrittura(tr) ?? proteggiSimboli(tr);
   if (spec) return spec;
   const casella = casellaDaTrattino(tr);
   if (casella) return [tr, casella];
@@ -387,14 +476,15 @@ const filtri = EditorState.transactionFilter.of((tr) => {
 /** Si copia il Markdown con i simboli: anche quelli attorno a un pezzo selezionato tutto (CA-02.19). */
 const copiaConISimboli = EditorView.clipboardOutputFilter.of((testo, state) => {
   const sel = state.selection;
-  if (sel.ranges.length !== 1 || sel.main.empty) return testo;
+  if (sel.ranges.length !== 1 || sel.main.empty) return (copiatoQui = testo);
   let { from, to } = sel.main;
   for (const f of formati(state, from, to)) {
     if (f.apre.a === from || (f.apre.da < from && from <= f.apre.a))
       from = Math.min(from, f.apre.da);
     if (f.chiude.da === to || (f.chiude.da <= to && to < f.chiude.a)) to = Math.max(to, f.chiude.a);
   }
-  return state.sliceDoc(from, to);
+  copiatoQui = state.sliceDoc(from, to);
+  return copiatoQui;
 });
 
 /** Tutto il comportamento della scrittura in vista Markdown. */
@@ -409,6 +499,8 @@ export const scritturaComeWord: Extension = [
       { key: "ArrowRight", run: muovi(true, false), shift: muovi(true, true) },
     ]),
   ),
+  scritturaComeSono,
+  incollaComeSono,
   filtri,
   copiaConISimboli,
 ];

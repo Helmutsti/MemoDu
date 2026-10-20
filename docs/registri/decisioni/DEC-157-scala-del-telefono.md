@@ -1,6 +1,6 @@
 # DEC-157 – Scala del telefono
 
-**Data:** 2026-10-19 · **Stato:** Accettata · **Idea di origine:** ID-54
+**Data:** 2026-10-19 · **Stato:** Superata da DEC-161 · **Idea di origine:** ID-54
 
 ## Contesto
 L'app per iPhone (DEC-156) rifà in React Native i componenti del design system, che sono disegnati per il computer: righe a 13, dettagli ed etichette a 11, titolo della nota a 30. Su iPhone quelle misure si leggono piccole (le app di Apple usano 17 per le righe). La prima versione dell'app usava misure scelte dall'agente senza regola, e non somigliava ai disegni.

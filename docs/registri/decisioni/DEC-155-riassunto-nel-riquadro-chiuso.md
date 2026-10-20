@@ -1,6 +1,6 @@
 # DEC-155 – Riassunto nel riquadro chiuso
 
-**Data:** 2026-10-19 · **Stato:** Accettata · **Idea di origine:** ID-55
+**Data:** 2026-10-19 · **Stato:** Superata da DEC-159 · **Idea di origine:** ID-55
 
 ## Contesto
 Con la colonna a riquadri (DEC-154) Cloud e Locale sono riquadri che si chiudono con la freccia nell'intestazione, come oggi le sezioni. DEC-119 aveva deciso che il titolo CLOUD non ha numero. Nella proposta E il riquadro chiuso mostra accanto al nome un riassunto di cosa contiene («Locale · 2 cartelle»).

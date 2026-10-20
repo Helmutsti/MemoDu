@@ -68,7 +68,9 @@ Comportamenti ricavati da un agente e non ancora confermati. Finché restano qui
 
 - ID-50 «Scrivi» in Brainet: la pagina nuova lasciata vuota sparisce, come una nota vuota in CLOUD (RB-10). Proposta dell'agente del 17/10/2026.
 - ID-52 Eliminare un'entità: «Elimina…» col tasto destro sulla riga in Entità; le aree restano evidenziate senza quell'entità. Proposte dell'agente del 17/10/2026.
-- DEC-155 Riassunto nel riquadro chiuso: Cloud conta le sue note fuori dal Cestino, cartelle comprese («42 note»); Locale conta le cartelle aggiunte («2 cartelle»); riquadro vuoto senza riassunto. Proposta dell'agente del 19/10/2026.
+- Info sul telefono: righe solo da leggere per ora; Elimina senza conferma, come nella riga che scorre (proposta dell'agente del 20/10/2026).
+- DEC-162 Editor del computer sul telefono in un componente DOM di Expo (proposta dell'agente del 20/10/2026, da accettare); le prove a mano della scrittura sul telefono restano da fare.
+- DEC-160 Colonna del telefono: ricerca e penna in basso alte 40 alla scala del telefono (46 con DEC-161); righe di Brainet disabilitate finché le schermate di Brainet non arrivano sul telefono. Proposta dell'agente del 20/10/2026.
 - DEC-154 Colonna a riquadri: sulla tessera Journal si possono trascinare solo note di CLOUD: cartelle e file di Locale non la accendono; Proposta dell'agente del 19/10/2026.
 
 Prima: Nessuna. Il 07/10/2026 Manuel Cucca ha confermato in blocco quelle rimaste (sincronizzazione: nella fusione di un conflitto di testo l'originale prende la versione del server e la copia quella del dispositivo; SC-06; RF-08; DEC-71, DEC-76, DEC-77, DEC-93, DEC-96, DEC-119, DEC-120, DEC-121); tolte perché superate i testi provvisori della sincronizzazione e dello stato in SC-06 (DEC-122), le credenziali nel file dell'app e il gettone statico di DEC-79 (DEC-121).

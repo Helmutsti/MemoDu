@@ -9,15 +9,10 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.mcucca.memodu",
-      "appleTeamId": "5NM7586UUV"
+      "appleTeamId": "5NM7586UUV",
+      "icon": "../client/src-tauri/icons/macos/Memodu.icon"
     },
-    "plugins": [
-      "expo-router",
-      "expo-status-bar",
-      "expo-sqlite",
-      "expo-font",
-      "expo-secure-store"
-    ],
+    "plugins": ["expo-router", "expo-status-bar", "expo-sqlite", "expo-font", "expo-secure-store"],
     "scheme": "memodu",
     "experiments": {
       "typedRoutes": true

@@ -303,8 +303,6 @@ export function CampoNomeCartella({
 
 interface ProprietaSezione extends Pick<Trascinamento, "data-destinazione"> {
   titolo: string;
-  /** Da chiusa, accanto al nome: cosa c'è dentro, «42 note» o «2 cartelle» (DEC-155). */
-  riassunto?: string;
   aperta: boolean;
   onApriChiudi: () => void;
   /** Il + del titolo; con il pulsante, per aprire un menu sotto di lui (DEC-119). Brainet non
@@ -316,11 +314,10 @@ interface ProprietaSezione extends Pick<Trascinamento, "data-destinazione"> {
 
 /**
  * Intestazione dentro il riquadro di una sezione (CMP-06 Sezione, DEC-154): freccia 12, nome in
- * Interfaccia/Titolo di sezione (maiuscolo, testo tenue), da chiusa il riassunto (DEC-155), il +.
+ * Interfaccia/Titolo di sezione (maiuscolo, testo tenue), il +; niente numero (DEC-159).
  */
 export function RigaSezione({
   titolo,
-  riassunto,
   aperta,
   onApriChiudi,
   nomeAggiungi,
@@ -338,9 +335,6 @@ export function RigaSezione({
       >
         <Icona di={aperta ? ChevronDown : ChevronRight} misura={12} />
         <span className="riga-sezione-nome interfaccia-titolo-sezione">{titolo}</span>
-        {!aperta && riassunto && (
-          <span className="riga-riassunto interfaccia-dettaglio">{riassunto}</span>
-        )}
       </button>
       {nomeAggiungi && onAggiungi && (
         <Suggerimento testo={nomeAggiungi}>

@@ -1,0 +1,67 @@
+/* La nota sul telefono: i testi della nota alle misure del computer (DEC-164), i margini alla
+   scala del telefono (DEC-161). */
+
+html,
+body {
+  margin: 0;
+  background: var(--sfondo-nota);
+  color: var(--testo-primario);
+  font-family: "Inter Variable", "Inter", system-ui, sans-serif;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Margini della nota: spazio-gruppo ai lati; in fondo spazio per la barra dei formati. */
+.nota {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 9px 28px 160px;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.nota .titolo {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  resize: none;
+  overflow: hidden;
+  background: none;
+  color: var(--testo-primario);
+  font-family: inherit;
+}
+.nota .titolo::placeholder {
+  color: var(--testo-tenue);
+}
+
+.nota .editor {
+  flex: 1;
+}
+.nota .editor .cm-editor,
+.nota .editor .cm-scroller,
+.nota .editor .cm-content {
+  min-height: 100%;
+}
+
+/* Stili di testo della nota come sul computer (DEC-164). */
+.nota .nota-titolo,
+.nota .editor .md-titolo {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.nota .editor .md-sottotitolo {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.nota .nota-corpo {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+}

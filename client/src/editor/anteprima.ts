@@ -99,6 +99,9 @@ export function calcolaSegni(
         segni.push({ tipo: "tratto", da: nodo.from, a: nodo.to, classe: CLASSE_FORMATO[nome] });
       } else if (MARCHE.has(nome)) {
         simbolo(nodo.from, nodo.to);
+      } else if (nome === "Escape") {
+        // La barra rovescia che tiene un carattere com'è (DEC-165) non si vede mai.
+        segni.push({ tipo: "nascosto", da: nodo.from, a: nodo.from + 1 });
       } else if (nome === "HTMLTag") {
         const tag = state.doc.sliceString(nodo.from, nodo.to).toLowerCase();
         if (tag === "<u>") sottolineati.push(nodo.to);

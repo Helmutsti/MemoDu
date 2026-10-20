@@ -7,7 +7,7 @@
 // sotto la riga Impostazioni (DEC-91). In cima, sotto la riga della puntina, la ricerca (DEC-94).
 // Dopo Cartelle la sezione Locale, con i file del disco (RF-17).
 // Colonna a riquadri (DEC-154): sotto la ricerca la barra delle tessere di Brainet, poi CLOUD e
-// Locale in riquadri con l'intestazione dentro; chiusi dicono cosa contengono (DEC-155). In fondo
+// Locale in riquadri con l'intestazione dentro, senza numero (DEC-159). In fondo
 // il Cestino in un riquadro e Impostazioni come tondo. Una nota trascinata sulla tessera Journal
 // chiede di spostarla in Brainet (FL-28).
 
@@ -36,10 +36,6 @@ import { Menu } from "../componenti/Menu";
 import { FileText, Folder } from "lucide-react";
 import { avviaTrascinamento } from "../componenti/trascina";
 import { AreaScorrevole } from "../componenti/AreaScorrevole";
-
-/** «1 nota», «42 note»: il riassunto di CLOUD chiusa (DEC-155). */
-export const riassuntoNote = (n: number): string | undefined =>
-  n === 0 ? undefined : n === 1 ? "1 nota" : `${n} note`;
 
 /** Cosa si sta trascinando. */
 export type Trascinato =
@@ -290,8 +286,6 @@ export function Colonna(p: Proprieta): ReactElement {
   const radice: Destinazione = { tipo: "radice" };
   const vuota =
     nonOrganizzate.note.length === 0 && cartelle.length === 0 && p.campo?.tipo !== "nuova";
-  // Il numero di una cartella conta anche le sottocartelle (RB-56).
-  const noteCloud = nonOrganizzate.conteggio + cartelle.reduce((n, c) => n + c.conteggio, 0);
   const journal: RilascioJournal =
     p.trascinato?.tipo === "nota"
       ? { sopra: sopra === "journal", ...destinazione({ tipo: "journal" }) }
@@ -321,7 +315,6 @@ export function Colonna(p: Proprieta): ReactElement {
             <div className="colonna-sezione">
               <RigaSezione
                 titolo="Cloud"
-                riassunto={riassuntoNote(noteCloud)}
                 aperta={cloudAperta}
                 onApriChiudi={() => setCloudAperta((a) => !a)}
                 nomeAggiungi="Aggiungi"

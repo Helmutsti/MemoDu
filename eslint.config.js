@@ -21,6 +21,11 @@ export default tseslint.config(
     languageOptions: { globals: globals.node },
   },
   {
+    files: ["telefono/metro.config.js"],
+    languageOptions: { globals: globals.node, sourceType: "commonjs" },
+    rules: { "@typescript-eslint/no-require-imports": "off" },
+  },
+  {
     files: ["client/src/**/*.{ts,tsx}"],
     languageOptions: { globals: globals.browser },
     plugins: { "react-hooks": reactHooks },

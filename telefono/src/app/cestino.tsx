@@ -12,14 +12,12 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import ReanimatedSwipeable, {
   type SwipeableMethods,
 } from "react-native-gesture-handler/ReanimatedSwipeable";
-import Animated, {
-  LayoutAnimationConfig,
-  useAnimatedStyle,
-  type SharedValue,
-} from "react-native-reanimated";
+import Animated, { LayoutAnimationConfig } from "react-native-reanimated";
+import { BarraInCima } from "@/componenti/BarraInCima";
 import { Comparsa, transizione } from "@/componenti/Comparsa";
 import { Conferma, Foglio } from "@/componenti/Foglio";
 import { Pulsante } from "@/componenti/Pulsante";
+import { AzioniAccanto } from "@/componenti/Righe";
 import { useNegozio } from "@/dati/negozio";
 import type { ElementoCestino } from "@/nucleo/archivio";
 import { misura, raggio, spazio, t, testo, useColori } from "@/tema";
@@ -91,17 +89,6 @@ function Azione({
 }
 
 /** Le azioni sotto la riga si vedono solo mentre la riga scorre (CMP-52). */
-function AzioniNascoste({
-  progresso,
-  children,
-}: {
-  progresso: SharedValue<number>;
-  children: React.ReactNode;
-}) {
-  const visibile = useAnimatedStyle(() => ({ opacity: progresso.value > 0.02 ? 1 : 0 }));
-  return <Animated.View style={[stili.azioni, visibile]}>{children}</Animated.View>;
-}
-
 /** CMP-17 alla scala del telefono: icona 16 → 20, nome in Interfaccia/Titolo, sotto i dettagli. */
 function Elemento({
   e,
@@ -127,10 +114,10 @@ function Elemento({
       rightThreshold={spazio.gruppo * 2}
       overshootRight={false}
       renderRightActions={(progresso) => (
-        <AzioniNascoste progresso={progresso}>
+        <AzioniAccanto progresso={progresso}>
           <Azione etichetta="Ripristina" icona={RotateCcw} onPress={chiudiE(onRipristina)} />
           <Azione etichetta="Elimina" icona={Trash2} piena onPress={chiudiE(onElimina)} />
-        </AzioniNascoste>
+        </AzioniAccanto>
       )}
     >
       <Pressable
@@ -199,13 +186,8 @@ export default function Cestino() {
 
   return (
     <View style={{ flex: 1, backgroundColor: c.sfondoNota }}>
-      <Stack.Screen
-        options={{
-          title: "",
-          headerBackTitle: "Memodu",
-          headerStyle: { backgroundColor: c.sfondoNota },
-        }}
-      />
+      <Stack.Screen options={{ headerShown: false }} />
+      <BarraInCima />
       {caricato && elementi.length === 0 ? (
         // CMP-19 Stato vuoto, variante Cestino.
         <View style={stili.vuoto}>
@@ -360,7 +342,6 @@ const stili = StyleSheet.create({
     borderRadius: raggio.interno,
   },
   testi: { flex: 1, gap: 2 },
-  azioni: { flexDirection: "row", gap: spazio.elemento, marginLeft: spazio.elemento },
   azione: {
     flexDirection: "row",
     alignItems: "center",

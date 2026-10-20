@@ -5,14 +5,18 @@
 // diventa il tocco premuto; la riga della nota si fa scorrere a sinistra per Elimina (ID-55),
 // con il gesto nativo di Gesture Handler.
 
-import { Folder, FolderOpen, Trash2 } from "lucide-react-native";
-import { useRef } from "react";
+import { Folder, FolderOpen, Trash2, type LucideIcon } from "lucide-react-native";
+import { useRef, type ReactNode } from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
-import Animated, { useAnimatedStyle, type SharedValue } from "react-native-reanimated";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  type SharedValue,
+} from "react-native-reanimated";
 import ReanimatedSwipeable, {
   type SwipeableMethods,
 } from "react-native-gesture-handler/ReanimatedSwipeable";
-import { misura, raggio, spazio, testo, useColori } from "@/tema";
+import { misura, opacitaDisabilitato, raggio, spazio, testo, useColori } from "@/tema";
 
 export function RigaCartella({
   nome,
@@ -55,6 +59,56 @@ export function RigaCartella({
       >
         {conteggio}
       </Text>
+    </Pressable>
+  );
+}
+
+/**
+ * Una voce della colonna con icona e nome, come il Cestino (con il numero di elementi, CMP-30) o
+ * Journal, Entità e Calendario nel riquadro di Brainet. Senza schermata ancora è disabilitata.
+ */
+export function RigaVoce({
+  nome,
+  icona: Icona,
+  conteggio,
+  onPress,
+}: {
+  nome: string;
+  icona: LucideIcon;
+  conteggio?: number;
+  onPress?: () => void;
+}) {
+  const c = useColori();
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={!onPress}
+      accessibilityRole="button"
+      accessibilityState={{ disabled: !onPress }}
+      style={({ pressed }) => [
+        stili.riga,
+        stili.conIcona,
+        { paddingLeft: spazio.controllo },
+        pressed && { backgroundColor: c.sfondoHover },
+        !onPress && { opacity: opacitaDisabilitato },
+      ]}
+    >
+      <Icona size={misura.icona} color={c.iconaTenue} strokeWidth={misura.tratto} />
+      <Text
+        allowFontScaling={false}
+        style={[testo.controllo, stili.nome, { color: c.testoPrimario }]}
+        numberOfLines={1}
+      >
+        {nome}
+      </Text>
+      {conteggio !== undefined ? (
+        <Text
+          allowFontScaling={false}
+          style={[testo.dettaglio, stili.conteggio, { color: c.testoTenue }]}
+        >
+          {conteggio}
+        </Text>
+      ) : null}
     </Pressable>
   );
 }
@@ -116,7 +170,33 @@ export function RigaNota({
   );
 }
 
-/** Elimina sotto la riga: si vede solo mentre la riga scorre, così da ferma non spunta dagli angoli. */
+/**
+ * Le azioni di una riga che scorre (CMP-52): entrano da destra attaccate alla riga, staccate da
+ * spazio-elemento, così la riga intera si sposta e non scivola sopra le azioni. Da ferme non si
+ * vedono, nemmeno dagli angoli.
+ */
+export function AzioniAccanto({
+  progresso,
+  children,
+}: {
+  progresso: SharedValue<number>;
+  children: ReactNode;
+}) {
+  const larghezza = useSharedValue(0);
+  const accanto = useAnimatedStyle(() => ({
+    opacity: progresso.value > 0.02 ? 1 : 0,
+    transform: [{ translateX: larghezza.value * Math.max(0, 1 - progresso.value) }],
+  }));
+  return (
+    <Animated.View
+      style={[stili.azioni, accanto]}
+      onLayout={(e) => (larghezza.value = e.nativeEvent.layout.width)}
+    >
+      {children}
+    </Animated.View>
+  );
+}
+
 function AzioneElimina({
   progresso,
   onPress,
@@ -125,9 +205,8 @@ function AzioneElimina({
   onPress: () => void;
 }) {
   const c = useColori();
-  const visibile = useAnimatedStyle(() => ({ opacity: progresso.value > 0.02 ? 1 : 0 }));
   return (
-    <Animated.View style={[stili.azioneFuori, visibile]}>
+    <AzioniAccanto progresso={progresso}>
       <Pressable
         onPress={onPress}
         accessibilityRole="button"
@@ -142,12 +221,13 @@ function AzioneElimina({
           Elimina
         </Text>
       </Pressable>
-    </Animated.View>
+    </AzioniAccanto>
   );
 }
 
 const stili = StyleSheet.create({
-  scorre: { borderRadius: raggio.pillola },
+  // Alta fissa: la tendina la misura giusta già dal primo fotogramma.
+  scorre: { height: misura.riga, borderRadius: raggio.pillola },
   riga: {
     flexDirection: "row",
     alignItems: "center",
@@ -158,13 +238,12 @@ const stili = StyleSheet.create({
   conIcona: { gap: spazio.icona },
   nome: { flex: 1 },
   conteggio: { paddingRight: spazio.elemento },
-  azioneFuori: { flexDirection: "row" },
+  azioni: { flexDirection: "row", gap: spazio.elemento, paddingLeft: spazio.elemento },
   azione: {
     flexDirection: "row",
     alignItems: "center",
     gap: spazio.iconaPiccola,
     paddingHorizontal: spazio.pulsante,
-    marginLeft: spazio.elemento,
     borderRadius: raggio.pillola,
   },
 });

@@ -42,7 +42,7 @@
 }
 
 /* Intestazione dentro il riquadro della sezione (DEC-154): freccia 12, nome in Interfaccia/Titolo
-   di sezione (maiuscolo, semi grassetto) e riassunto da chiusa (DEC-155) in testo tenue, che con il
+   di sezione (maiuscolo, semi grassetto) in testo tenue, senza numero (DEC-159), che con il
    mouse sopra passa a testo-primario (regola 7); + a destra. A sinistra spazio-controllo come le
    righe; a destra finisce con il +, spazio-controllo-piccolo. */
 .riga-sezione {
@@ -70,13 +70,6 @@
 }
 .riga-sezione-nome {
   flex: none;
-}
-.riga-riassunto {
-  min-width: 0;
-  overflow: hidden;
-  color: inherit;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 .riga-conteggio {
   padding-right: var(--spazio-elemento);

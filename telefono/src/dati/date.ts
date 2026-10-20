@@ -19,3 +19,16 @@ export function orario(istante: string, adesso = new Date()): string {
   const d = new Date(istante);
   return stessoGiorno(d, adesso) ? ora(d) : `${giorno(d)} ${ora(d)}`;
 }
+
+/** «Modificata oggi alle 11:42» (CA-04.1), come sul computer. */
+export const testoModificata = (istante: string, adesso = new Date()) =>
+  `Modificata ${quando(istante, adesso)}`;
+
+/** Giorno AAAA-MM-GG scritto come GG/MM/AAAA. */
+export function scriviGiorno(valore: string): string {
+  const [a, m, g] = valore.split("-");
+  return `${g}/${m}/${a}`;
+}
+
+/** Il giorno di un istante, GG/MM/AAAA. */
+export const giornoDi = (istante: string) => giorno(new Date(istante));

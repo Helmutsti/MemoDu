@@ -49,11 +49,7 @@ interface Negozio {
   problema: Problema | null;
   /** L'ultima sincronizzazione riuscita, per il riquadro dell'account. */
   ultimaRiuscita: string | null;
-  accedi: (
-    email: string,
-    password: string,
-    onProgress?: (f: number) => void,
-  ) => Promise<string | null>;
+  accedi: (email: string, password: string) => Promise<string | null>;
   esci: () => Promise<void>;
   usaSenzaCloud: () => Promise<void>;
   /** Da chiamare dopo ogni modifica: la sincronizzazione parte poco dopo. */
@@ -147,20 +143,17 @@ export function NegozioProvider({ children }: { children: ReactNode }) {
     if (stato.current.sessione) programma(DOPO_UNA_MODIFICA_MS);
   }, [programma]);
 
-  const accedi = useCallback(
-    async (email: string, password: string, onProgress?: (f: number) => void) => {
-      try {
-        const s = await accediAlServer(email, password, fetch);
-        await SecureStore.setItemAsync(VOCE_SESSIONE, sessioneInTesto(s));
-        void mandaNome(s, "iPhone");
-        setSessione(s);
-        return null;
-      } catch (e) {
-        return e === "credenziali" ? TESTO_CREDENZIALI_ERRATE : TESTO_SERVER_IRRAGGIUNGIBILE;
-      }
-    },
-    [],
-  );
+  const accedi = useCallback(async (email: string, password: string) => {
+    try {
+      const s = await accediAlServer(email, password, fetch);
+      await SecureStore.setItemAsync(VOCE_SESSIONE, sessioneInTesto(s));
+      void mandaNome(s, "iPhone");
+      setSessione(s);
+      return null;
+    } catch (e) {
+      return e === "credenziali" ? TESTO_CREDENZIALI_ERRATE : TESTO_SERVER_IRRAGGIUNGIBILE;
+    }
+  }, []);
 
   const esci = useCallback(async () => {
     const { archivio: a, sessione: s } = stato.current;

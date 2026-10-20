@@ -1,6 +1,7 @@
-// CMP-51 Foglio dal basso e CMP-56 Conferma, alla scala del telefono (DEC-157). Il foglio sale
+// CMP-51 Foglio dal basso e CMP-56 Conferma, alla scala del telefono (DEC-161). Il foglio sale
 // sopra il velo in movimento-durata-media; si chiude con la ×, toccando il velo o trascinando la
-// maniglia verso il basso. Raggio-contenitore in alto, sfondo-flottante, spazio-pannello ai lati.
+// maniglia verso il basso. Raggio-contenitore in alto, sfondo-flottante, spazio-pannello ai lati
+// e in fondo.
 // La conferma è un foglio con il titolo, il testo e i pulsanti larghi: l'azione piena sopra,
 // Annulla sotto, con gli stessi testi della finestra di conferma del computer (CMP-16).
 
@@ -18,7 +19,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Pulsante } from "@/componenti/Pulsante";
 import { misura, movimento, raggio, spazio, t, testo, useColori } from "@/tema";
 
@@ -36,7 +36,6 @@ export function Foglio({
   children: ReactNode;
 }) {
   const c = useColori();
-  const margini = useSafeAreaInsets();
   const scesa = useSharedValue(0);
   const trascina = Gesture.Pan()
     .onUpdate((e) => {
@@ -70,14 +69,7 @@ export function Foglio({
             <Animated.View
               entering={SlideInDown.duration(movimento.durataMedia)}
               exiting={SlideOutDown.duration(movimento.durataBreve)}
-              style={[
-                stili.foglio,
-                spostato,
-                {
-                  backgroundColor: c.sfondoFlottante,
-                  paddingBottom: spazio.gruppo + margini.bottom,
-                },
-              ]}
+              style={[stili.foglio, spostato, { backgroundColor: c.sfondoFlottante }]}
               accessibilityViewIsModal
             >
               <GestureDetector gesture={trascina}>
@@ -158,6 +150,8 @@ const stili = StyleSheet.create({
     gap: spazio.blocco,
     paddingHorizontal: spazio.pannello,
     paddingTop: spazio.icona,
+    // Dal fondo lo stesso spazio-pannello dei lati, come la barra in basso: non sembra sollevato.
+    paddingBottom: spazio.pannello,
     borderTopLeftRadius: raggio.contenitore,
     borderTopRightRadius: raggio.contenitore,
   },

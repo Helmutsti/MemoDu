@@ -5,7 +5,7 @@
 Memodu sull'iPhone, in React Native (DEC-156): le stesse note del computer, sincronizzate e cifrate, con un'interfaccia nativa per il tocco. Il computer resta su Tauri.
 
 ## Già deciso
-- Prima schermata: la colonna a riquadri (DEC-154): titolo grande, ricerca, tessere di Brainet (Journal, Entità, Calendario), Cloud in un riquadro con il riassunto da chiuso (DEC-155), Impostazioni in alto, «Nuova nota» e Cestino in basso (ID-55, scelte di Manuel Cucca del 19/10/2026).
+- Prima schermata: la colonna a riquadri (DEC-154, DEC-160): Impostazioni in alto a destra, Cloud in un riquadro con il Cestino come ultima riga, sotto il riquadro Brainet (Journal, Entità, Calendario), in fondo la ricerca e la penna di Nuova nota (ID-55, scelte di Manuel Cucca del 19 e del 20/10/2026). Accanto al titolo della sezione nessun numero (DEC-159).
 - Le righe delle note si fanno scorrere a sinistra per Sposta ed Elimina; Elimina manda nel Cestino senza conferma (ID-55).
 - La nota si apre a tutto schermo con «‹ cartella» e Info in alto; i formati in una barra sopra la tastiera; Info sale dal basso come foglio (ID-54).
 - Locale non c'è sul telefono (scelta di Manuel Cucca del 19/10/2026).
@@ -22,8 +22,8 @@ Proposta dell'agente, approvata da Manuel Cucca il 19/10/2026 («vai avanti»):
 - Barra in alto, titolo grande «Memodu», ricerca e barra in basso sono quelli nativi di iOS (expo-router, Stack.Title, Stack.SearchBar, Stack.Toolbar): «Nuova nota» sta nella barra in basso, con l'icona di sistema della matita.
 - Righe da far scorrere con il gesto nativo (Gesture Handler); tastiera e barra dei formati con Keyboard Controller.
 - Icone: Lucide nella lista, come sul computer; nelle barre di sistema i simboli di iOS.
-- Editor della nota: il campo di testo nativo di iOS, con il testo in Markdown e la barra dei formati che inserisce i segni (#, **, -, - [ ]).
-- Scala dei testi del telefono in `telefono/src/tema.ts`: controlli 17, dettagli 13, titolo della nota 28.
+- Editor della nota: lo stesso editor del computer in vista Markdown (DEC-162), con i simboli nascosti e il testo formattato; la barra dei formati sopra la tastiera applica le voci come la bollicina del computer.
+- Scala dei testi del telefono in `telefono/src/tema.ts` (DEC-161): controlli 15, dettagli 13, titolo della nota 35, testo della nota 17.
 - Prima della sincronizzazione, nella versione di sviluppo, alcune note di esempio.
 
 ## Piano per portare l'intera app (richiesta di Manuel Cucca del 19/10/2026)

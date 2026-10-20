@@ -29,6 +29,10 @@ export interface Nota {
   modificata: string;
   eliminata_il: string | null;
   tag: string[];
+  /** Il giorno di creazione scelto a mano (RB-21), AAAA-MM-GG. */
+  creata_scelta: string | null;
+  /** Fine validità, AAAA-MM-GG: solo un promemoria. */
+  fine_validita: string | null;
 }
 
 export interface Cartella {
@@ -173,6 +177,8 @@ export class Archivio {
       modificata: (c.modificata as string) ?? "",
       eliminata_il: (c.eliminata_il as string | null) ?? null,
       tag: Array.isArray(c.tag) ? (c.tag as string[]) : [],
+      creata_scelta: (c.creata_scelta as string | null) ?? null,
+      fine_validita: (c.fine_validita as string | null) ?? null,
     };
   }
 
@@ -248,7 +254,7 @@ export class Archivio {
   }
 
   /** Il percorso della cartella, «Lavoro/Clienti», come la provenienza del computer. */
-  private async percorso(cartella: string | null): Promise<string> {
+  async percorso(cartella: string | null): Promise<string> {
     const nomi: string[] = [];
     let id = cartella;
     const visti = new Set<string>();

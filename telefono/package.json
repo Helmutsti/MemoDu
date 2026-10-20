@@ -4,6 +4,7 @@
   "main": "expo-router/entry",
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.2",
+    "@expo/metro-runtime": "~58.0.14",
     "@noble/ciphers": "^2.4.0",
     "@noble/hashes": "^2.4.0",
     "expo": "~58.0.16",
@@ -18,6 +19,7 @@
     "expo-status-bar": "~58.0.3",
     "expo-symbols": "~58.0.4",
     "lucide-react-native": "^1.59.0",
+    "memodu-argon2": "file:./modules/memodu-argon2",
     "react": "19.3.0",
     "react-dom": "^19.3.0",
     "react-native": "0.88.0",
@@ -28,8 +30,8 @@
     "react-native-safe-area-context": "~5.10.1",
     "react-native-screens": "~4.30.0",
     "react-native-svg": "15.16.0",
-    "react-native-worklets": "0.13.0",
-    "memodu-argon2": "file:./modules/memodu-argon2"
+    "react-native-web": "^0.21.4",
+    "react-native-worklets": "0.13.0"
   },
   "devDependencies": {
     "@types/react": "~19.3.0",

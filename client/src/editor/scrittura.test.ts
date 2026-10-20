@@ -2,7 +2,16 @@ import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { EditorSelection, EditorState, type StateCommand } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import { describe, expect, it } from "vitest";
-import { cancellaAvanti, cancellaIndietro, invio, passo, scritturaComeWord } from "./scrittura";
+import { calcolaSegni } from "./anteprima";
+import { alternaCarattere } from "./formati";
+import {
+  cancellaAvanti,
+  cancellaIndietro,
+  comeSono,
+  invio,
+  passo,
+  scritturaComeWord,
+} from "./scrittura";
 
 /** Stato in vista Markdown; "|" nel testo è il cursore. */
 const stato = (conCursore: string) => {
@@ -123,5 +132,86 @@ describe("copiare (CA-02.19)", () => {
     const s = stato("a**bc**d").update({ selection: EditorSelection.range(3, 5) }).state;
     const filtro = s.facet(EditorView.clipboardOutputFilter)[0];
     expect(filtro(s.sliceDoc(3, 5), s)).toBe("**bc**");
+  });
+});
+
+describe("i caratteri restano quelli che sono, come in Note di Apple (DEC-165)", () => {
+  it("asterischi, trattini bassi, tilde, apici inversi e «<» entrano con la barra rovescia", () => {
+    expect(comeSono("**ciao**", false)).toBe("\\*\\*ciao\\*\\*");
+    expect(comeSono("nome_file ~x~ `y` <u>", false)).toBe("nome\\_file \\~x\\~ \\`y\\` \\<u>");
+    expect(comeSono("a\\b", false)).toBe("a\\\\b");
+  });
+
+  it("il «#» si protegge solo a inizio riga", () => {
+    expect(comeSono("#", true)).toBe("\\#");
+    expect(comeSono("#", false)).toBe("#");
+    expect(comeSono("a\n# b", false)).toBe("a\n\\# b");
+  });
+
+  it("scritto così, non diventa grassetto e la barra rovescia non si vede", () => {
+    const s = stato(comeSono("**ciao**", false) + "|");
+    const segni = calcolaSegni(s, 0, s.doc.length, false);
+    expect(segni.some((x) => x.tipo === "tratto" && x.classe === "md-grassetto")).toBe(false);
+    expect(segni.filter((x) => x.tipo === "nascosto")).toHaveLength(4);
+  });
+
+  it("Backspace sul carattere protetto toglie anche la barra rovescia", () => {
+    const s = stato("a\\*|");
+    const dopo = esegui(s, cancellaIndietro);
+    expect(conCursore(dopo)).toBe("a|");
+  });
+
+  it("una barra rovescia protetta resta", () => {
+    const s = stato("a\\\\*|");
+    const dopo = s.update({ changes: { from: 3, to: 4 }, userEvent: "delete.backward" }).state;
+    expect(dopo.doc.toString()).toBe("a\\\\");
+  });
+});
+
+describe("lo spazio in fondo a un grassetto non fa comparire i simboli (DEC-165)", () => {
+  const scriviQui = (s: EditorState, testo: string) => {
+    const p = s.selection.main.head;
+    return s.update({
+      changes: { from: p, insert: testo },
+      selection: EditorSelection.cursor(p + testo.length),
+      userEvent: "input.type",
+    }).state;
+  };
+  const nascosti = (s: EditorState) =>
+    calcolaSegni(s, 0, s.doc.length, false).filter((x) => x.tipo === "nascosto").length;
+
+  it("lo spazio va dopo i simboli e il grassetto resta riconosciuto", () => {
+    const s = scriviQui(stato("**ciao**|"), " ");
+    expect(conCursore(s)).toBe("**ciao** |");
+    expect(nascosti(s)).toBe(2);
+  });
+
+  it("con il grassetto della bollicina: «ciao» e poi spazio non mostra i simboli", () => {
+    let s = stato("|");
+    s = esegui(s, alternaCarattere("grassetto"));
+    for (const ch of ["c", "i", "a", "o", " "]) s = scriviQui(s, ch);
+    expect(s.doc.toString()).toBe("**ciao** ");
+    expect(nascosti(s)).toBe(2);
+    for (const ch of ["m", "o"]) s = scriviQui(s, ch);
+    expect(s.doc.toString()).toMatch(/^\*\*ciao\*\* \*\*mo\*\*$/);
+  });
+
+  it("grassetto, «ciao», grassetto tolto, spazio: i simboli restano nascosti", () => {
+    let s = stato("|");
+    s = esegui(s, alternaCarattere("grassetto"));
+    for (const ch of ["c", "i", "a", "o"]) s = scriviQui(s, ch);
+    s = esegui(s, alternaCarattere("grassetto"));
+    s = scriviQui(s, " ");
+    expect(s.doc.toString()).toBe("**ciao** ");
+    expect(nascosti(s)).toBe(2);
+    s = scriviQui(s, "x");
+    expect(s.doc.toString()).toBe("**ciao** x");
+  });
+
+  it("la parola dopo lo spazio continua in grassetto, come in Word", () => {
+    let s = scriviQui(stato("**ciao**|"), " ");
+    s = scriviQui(s, "m");
+    expect(s.doc.toString()).toMatch(/^\*\*ciao\*\* \*\*m\*\*$/);
+    expect(nascosti(s)).toBe(4);
   });
 });

@@ -377,6 +377,31 @@ function formatiPerScrivere(state: EditorState, pos: number): Set<FormatoTesto> 
 }
 
 /**
+ * Uno spazio scritto in fondo a un pezzo formattato: dentro i simboli il Markdown non
+ * riconoscerebbe più il pezzo («**ciao **») e i simboli comparirebbero (DEC-165). Va in `fuori`,
+ * dopo i simboli di chiusura, e i formati restano in attesa per la parola che segue, come in
+ * Word. `dove` è il punto in fondo al pezzo, prima dei simboli di chiusura.
+ */
+export function spazioInFondo(
+  state: EditorState,
+  dove: number,
+  fuori: number,
+  testo: string,
+): TransactionSpec | null {
+  if (fuori <= dove || !/^[ \t]+$/.test(testo)) return null;
+  const voluti = formatiAlCursore(state, dove);
+  if (!voluti.size) return null;
+  const cursore = fuori + testo.length;
+  return {
+    changes: { from: fuori, insert: testo },
+    selection: EditorSelection.cursor(cursore),
+    effects: impostaAttesa.of({ pos: cursore, formati: voluti }),
+    scrollIntoView: true,
+    userEvent: "input.type",
+  };
+}
+
+/**
  * Il testo scritto con un formato in attesa (CA-02.22): entra già dentro i suoi simboli.
  * `dove` è il punto in cui va il testo (doveScrivere di scrittura.ts). Null se non c'è attesa.
  */
@@ -385,6 +410,8 @@ export function scriviConAttesa(
   pos: number,
   dove: number,
   testo: string,
+  /** Il punto dopo i simboli di chiusura del pezzo che finisce in `dove` (DEC-165). */
+  fuoriDaiSimboli = dove,
 ): TransactionSpec | null {
   const attesa = state.field(formatoInAttesa, false);
   if (!attesa || !stessoPosto(state, attesa.pos, pos) || !testo || testo.includes("\n"))
@@ -394,7 +421,7 @@ export function scriviConAttesa(
   // dai simboli, e il formato resta in attesa per la parola che segue.
   if (/^\s+$/.test(testo)) {
     // Dei punti equivalenti si prende quello dopo i simboli di chiusura.
-    const fuori = Math.max(pos, attesa.pos);
+    const fuori = Math.max(pos, attesa.pos, fuoriDaiSimboli);
     const cursore = fuori + testo.length;
     return {
       changes: { from: fuori, insert: testo },

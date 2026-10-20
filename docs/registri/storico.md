@@ -747,3 +747,15 @@
 | 19/10/2026 | Manuel Cucca | Telefono: cartelle e riquadri si aprono e si chiudono con un movimento (dissolvenza e righe che scorrono, 200 ms; niente con «Riduci movimento») | DEC-156 |
 | 19/10/2026 | Manuel Cucca | Telefono: Argon2id nativo con libsodium (l'accesso non carica più all'infinito), caratteri fissi alle misure del design system, pulsanti CMP-01 alla scala del telefono in accesso e impostazioni | DEC-158 |
 | 19/10/2026 | Manuel Cucca | Telefono: Cestino (SC-04) con Ripristina, Elimina definitivamente, Svuota cestino e il nome già usato di RB-31, con le regole e i testi del computer, provato anche attraverso la sincronizzazione | DEC-156 |
+| 20/10/2026 | Manuel Cucca | Telefono: le righe di cartelle e riquadri si aprono scorrendo giù da sotto la riga che le apre, non più comparendo | DEC-156 |
+| 20/10/2026 | Manuel Cucca | Colonna: accanto al titolo della sezione mai un numero, nemmeno da chiusa (tolto il riassunto); sul telefono il titolo sta fuori dal riquadro e senza il + | DEC-159 |
+| 20/10/2026 | Manuel Cucca | Telefono: tasto indietro tondo con la freccia nelle schermate interne (CMP-50) | DEC-156 |
+| 20/10/2026 | Manuel Cucca | Telefono: prima colonna con Impostazioni in alto, Cestino come ultima riga di Cloud, Brainet sotto Cloud, ricerca e penna in basso; cartelle e riquadri si aprono a tendina | DEC-160 |
+| 20/10/2026 | Manuel Cucca | Telefono: facendo scorrere una riga le azioni entrano attaccate alla riga, che si sposta intera senza passarci sopra | DEC-156 |
+| 20/10/2026 | Manuel Cucca | Telefono: scala 15/13 al posto di 17/13 e righe dei riquadri attaccate, senza spazio tra l'una e l'altra | DEC-161 |
+| 20/10/2026 | Manuel Cucca | Telefono: il testo della nota usa l'editor del computer in vista Markdown, con i simboli nascosti e il testo formattato | DEC-162 |
+| 20/10/2026 | Manuel Cucca | Telefono: icona dell'app uguale a quella del Mac, chiara o scura come il sistema | DEC-163 |
+| 20/10/2026 | Manuel Cucca | Telefono: titolo e testo della nota alle misure del computer (30 e 15) | DEC-164 |
+| 20/10/2026 | Manuel Cucca | Telefono: Info in cima alla nota, nel foglio dal basso, con cartella, date, tag, ultima modifica ed Elimina | DEC-156 |
+| 20/10/2026 | Manuel Cucca | Note: i caratteri scritti o incollati restano quelli che sono (asterischi, trattini bassi, tilde…), il formato si mette solo con la bollicina; gli elenchi nascono ancora scrivendo | DEC-165 |
+| 20/10/2026 | Manuel Cucca | Note: lo spazio in fondo a un pezzo formattato resta fuori dai simboli e la parola dopo continua nel formato (CA-02.16) | DEC-165 |

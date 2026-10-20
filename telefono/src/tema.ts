@@ -1,12 +1,12 @@
-// Token del design system sul telefono (DEC-157): colori uguali al computer
+// Token del design system sul telefono (DEC-161): colori uguali al computer
 // (client/src/stili/token.css, modi Chiaro e Scuro), e ogni misura del computer moltiplicata per
-// 17/13 e arrotondata, così ogni componente è il suo frame di Figma ingrandito. Le righe
+// 15/13 e arrotondata, così ogni componente è il suo frame di Figma ingrandito. Le righe
 // toccabili restano almeno a 44. Carattere Inter, come sul computer (base.css).
 
 import { useColorScheme, type TextStyle } from "react-native";
 
 /** Una misura del design system (computer) alla scala del telefono. */
-export const t = (misura: number) => Math.round((misura * 17) / 13);
+export const t = (misura: number) => Math.round((misura * 15) / 13);
 
 const grigio = {
   0: "#FFFFFF",
@@ -95,10 +95,10 @@ export const spazio = {
 export const raggio = { pillola: 999, contenitore: t(20), interno: t(12), casella: t(4) };
 
 export const misura = {
-  /** misura-riga 32 → 42, portata a 44 perché si tocca. */
+  /** misura-riga 32 → 37, portata a 44 perché si tocca. */
   riga: Math.max(44, t(32)),
   controlloPiccolo: t(24),
-  /** misura-icona 16 → 21: le icone della libreria esistono a 20, la misura più vicina. */
+  /** misura-icona 16 → 18: le icone della libreria esistono a 16 e 20; si tiene 20, più leggibile. */
   icona: 20,
   tratto: 1.5,
 };

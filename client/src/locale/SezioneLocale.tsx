@@ -48,10 +48,6 @@ interface Elemento {
   tipo: "cartella" | "file" | "radice" | "assente";
 }
 
-/** «1 cartella», «2 cartelle»: il riassunto di Locale chiusa (DEC-155). */
-const riassuntoCartelle = (n: number): string | undefined =>
-  n === 0 ? undefined : n === 1 ? "1 cartella" : `${n} cartelle`;
-
 export function SezioneLocale({
   locale,
   fileAperto,
@@ -402,7 +398,6 @@ export function SezioneLocale({
     <div className="colonna-sezione" onKeyDown={suTasto}>
       <RigaSezione
         titolo="Locale"
-        riassunto={riassuntoCartelle(locale.cartelle.length)}
         aperta={aperta}
         onApriChiudi={() => setAperta((a) => !a)}
         nomeAggiungi="Aggiungi cartella"

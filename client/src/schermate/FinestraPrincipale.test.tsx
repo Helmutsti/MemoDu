@@ -483,13 +483,14 @@ describe("SC-01, cartelle (RF-05)", () => {
     expect(await screen.findByRole("menuitem", { name: "Nuova nota qui" })).toBeInTheDocument();
   });
 
-  it("chiusa, CLOUD dice quante note contiene; aperta no (DEC-155)", async () => {
+  it("accanto al titolo di CLOUD non c'è mai un numero, né aperta né chiusa (DEC-159)", async () => {
     render(<FinestraPrincipale />);
     const cloud = await screen.findByRole("button", { name: /^Cloud/, expanded: true });
     expect(cloud).toHaveTextContent(/^Cloud$/);
     await userEvent.click(cloud);
-    const chiusa = screen.getByRole("button", { name: /^Cloud/, expanded: false });
-    expect(chiusa.textContent).toMatch(/^Cloud\d+ note$/);
+    expect(screen.getByRole("button", { name: /^Cloud/, expanded: false })).toHaveTextContent(
+      /^Cloud$/,
+    );
   });
 
   it("sulla tessera Journal si trascina solo una nota, mai una cartella (DEC-154)", () => {

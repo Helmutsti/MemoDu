@@ -1,4 +1,4 @@
-// Impostazioni sul telefono (SC-06), dal tondo in fondo alla colonna. Per ora il riquadro
+// Impostazioni sul telefono (SC-06), dal tondo in cima alla colonna. Per ora il riquadro
 // dell'account (CMP-32, DEC-122) con gli stessi testi e gli stessi stati del computer
 // (client/src/componenti/BoxAccount.tsx): iniziale, email, stato della sincronizzazione con il
 // pallino del suo colore, Esci; senza accesso «Non hai fatto l'accesso» e Accedi. Il resto delle
@@ -8,11 +8,12 @@ import { router, Stack } from "expo-router";
 import { User } from "lucide-react-native";
 import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { BarraInCima } from "@/componenti/BarraInCima";
 import { Pulsante } from "@/componenti/Pulsante";
 import { orario, quando } from "@/dati/date";
 import { useNegozio } from "@/dati/negozio";
 import type { Problema } from "@/nucleo/sinc";
-import { misura, raggio, spazio, t, testo, useColori, type Colori } from "@/tema";
+import { misura, raggio, spazio, t, testo, useColori } from "@/tema";
 
 type Tono = "attesa" | "successo" | "avviso" | "errore";
 
@@ -58,82 +59,87 @@ export default function Impostazioni() {
   const pallino = COLORE_TONO[stato.tono][scuro ? "scuro" : "chiaro"];
 
   return (
-    <ScrollView
-      style={{ backgroundColor: c.sfondoColonna }}
-      contentContainerStyle={stili.contenuto}
-    >
-      <Stack.Screen
-        options={{
-          title: "Impostazioni",
-          headerBackTitle: "Memodu",
-          headerStyle: { backgroundColor: c.sfondoColonna },
-        }}
-      />
-      <View style={[stili.riquadro, { backgroundColor: c.sfondoNota }]}>
-        <View style={stili.intestazione}>
-          {sessione ? (
-            <View
-              style={[stili.iniziale, { backgroundColor: c.sfondoPieno }]}
-              accessibilityElementsHidden
-            >
-              <Text
-                allowFontScaling={false}
-                style={[testo.titoloSchermata, { color: c.testoSuPieno }]}
-              >
-                {sessione.email.charAt(0).toUpperCase()}
-              </Text>
-            </View>
-          ) : (
-            <View
-              style={[stili.iniziale, { backgroundColor: c.sfondoCampo }]}
-              accessibilityElementsHidden
-            >
-              <User size={misura.icona} color={c.iconaTenue} strokeWidth={misura.tratto} />
-            </View>
-          )}
-          <View style={stili.testi}>
-            <Text
-              allowFontScaling={false}
-              style={[testo.titolo, { color: c.testoPrimario }]}
-              numberOfLines={1}
-            >
-              {sessione ? sessione.email : "Non hai fatto l'accesso"}
-            </Text>
+    <View style={{ flex: 1, backgroundColor: c.sfondoColonna }}>
+      <BarraInCima sfondo={c.sfondoColonna} />
+      <ScrollView contentContainerStyle={stili.contenuto}>
+        <Stack.Screen options={{ headerShown: false }} />
+        <Text
+          allowFontScaling={false}
+          style={[testo.titoloSchermata, { color: c.testoPrimario }]}
+          accessibilityRole="header"
+        >
+          Impostazioni
+        </Text>
+        <View style={[stili.riquadro, { backgroundColor: c.sfondoNota }]}>
+          <View style={stili.intestazione}>
             {sessione ? (
-              <View style={stili.stato}>
-                <View style={[stili.pallino, { backgroundColor: pallino }]} />
+              <View
+                style={[stili.iniziale, { backgroundColor: c.sfondoPieno }]}
+                accessibilityElementsHidden
+              >
                 <Text
                   allowFontScaling={false}
-                  style={[testo.dettaglio, stili.testoStato, { color: c.testoTenue }]}
+                  style={[testo.titoloSchermata, { color: c.testoSuPieno }]}
                 >
-                  {stato.testo}
+                  {sessione.email.charAt(0).toUpperCase()}
                 </Text>
               </View>
             ) : (
-              <Text allowFontScaling={false} style={[testo.dettaglio, { color: c.testoTenue }]}>
-                Le note restano su questo telefono.
+              <View
+                style={[stili.iniziale, { backgroundColor: c.sfondoCampo }]}
+                accessibilityElementsHidden
+              >
+                <User size={misura.icona} color={c.iconaTenue} strokeWidth={misura.tratto} />
+              </View>
+            )}
+            <View style={stili.testi}>
+              <Text
+                allowFontScaling={false}
+                style={[testo.titolo, { color: c.testoPrimario }]}
+                numberOfLines={1}
+              >
+                {sessione ? sessione.email : "Non hai fatto l'accesso"}
               </Text>
+              {sessione ? (
+                <View style={stili.stato}>
+                  <View style={[stili.pallino, { backgroundColor: pallino }]} />
+                  <Text
+                    allowFontScaling={false}
+                    style={[testo.dettaglio, stili.testoStato, { color: c.testoTenue }]}
+                  >
+                    {stato.testo}
+                  </Text>
+                </View>
+              ) : (
+                <Text allowFontScaling={false} style={[testo.dettaglio, { color: c.testoTenue }]}>
+                  Le note restano su questo telefono.
+                </Text>
+              )}
+            </View>
+            {/* Come nel box del computer: il pulsante a destra, nella stessa riga. */}
+            {sessione && problema !== "rifiutate" ? (
+              <Pulsante
+                etichetta="Esci"
+                inCorso={uscendo}
+                onPress={() => {
+                  setUscendo(true);
+                  void esci().then(() => {
+                    setUscendo(false);
+                    router.replace("/accesso");
+                  });
+                }}
+              />
+            ) : (
+              <Pulsante
+                etichetta="Accedi"
+                tipo="primario"
+                onPress={() => router.push("/accesso")}
+              />
             )}
           </View>
-          {/* Come nel box del computer: il pulsante a destra, nella stessa riga. */}
-          {sessione && problema !== "rifiutate" ? (
-            <Pulsante
-              etichetta="Esci"
-              inCorso={uscendo}
-              onPress={() => {
-                setUscendo(true);
-                void esci().then(() => {
-                  setUscendo(false);
-                  router.replace("/accesso");
-                });
-              }}
-            />
-          ) : (
-            <Pulsante etichetta="Accedi" tipo="primario" onPress={() => router.push("/accesso")} />
-          )}
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 

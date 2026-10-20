@@ -7,10 +7,27 @@ import { Search, X } from "lucide-react-native";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import { misura, raggio, spazio, testo, useColori } from "@/tema";
 
-export function Ricerca({ valore, onCambia }: { valore: string; onCambia: (v: string) => void }) {
+export function Ricerca({
+  valore,
+  onCambia,
+  alta,
+  sfondo,
+}: {
+  valore: string;
+  onCambia: (v: string) => void;
+  /** In fondo alla colonna la ricerca è alta come la penna accanto. */
+  alta?: number;
+  sfondo?: string;
+}) {
   const c = useColori();
   return (
-    <View style={[stili.campo, { backgroundColor: c.sfondoCampo }]}>
+    <View
+      style={[
+        stili.campo,
+        { backgroundColor: sfondo ?? c.sfondoCampo },
+        alta !== undefined && { height: alta },
+      ]}
+    >
       <Search size={misura.icona} color={c.iconaTenue} strokeWidth={misura.tratto} />
       <TextInput
         allowFontScaling={false}

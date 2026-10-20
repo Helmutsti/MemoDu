@@ -7,6 +7,13 @@ Queste note sono scritte per gli utenti. Lo storico interno della documentazione
 
 ## [Non rilasciato]
 
+### Corretto
+- Uno spazio scritto dopo una parola in grassetto, corsivo o barrata non fa più comparire gli asterischi
+
+### Modificato
+- Scrivendo un asterisco, un trattino basso o una tilde nel testo resta proprio quel carattere, come in Note di Apple: grassetto, corsivo e barrato si mettono con la bollicina dei formati, e nessun simbolo compare più mentre scrivi
+- Accanto ai titoli CLOUD e LOCALE non compare più il riassunto di cosa contengono: il numero resta solo nelle cartelle
+
 ## [1.2.0] – 2026-10-19
 
 ### Modificato

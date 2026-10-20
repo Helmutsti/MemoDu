@@ -21,7 +21,7 @@ import {
 import { Fragment } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { KeyboardStickyView } from "react-native-keyboard-controller";
-import type { FormatoRiga, FormatoTesto } from "@/dati/formati";
+import type { FormatoRiga, FormatoTesto } from "../../../client/src/editor/formati";
 import { misura, raggio, spazio, t, testo, useColori } from "@/tema";
 
 export type Voce = FormatoRiga | "testo" | FormatoTesto;

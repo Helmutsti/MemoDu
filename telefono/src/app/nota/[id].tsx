@@ -1,39 +1,40 @@
-// La nota a tutto schermo (ID-54) alla scala del telefono (DEC-157): in alto «‹ cartella» con il
-// gesto dal bordo per tornare; il titolo in Nota/Titolo e il testo in Nota/Corpo, in Markdown
-// con gli stessi segni del computer; il cursore resta sopra la tastiera. Mentre scrivi, sopra la
-// tastiera la bollicina dei formati aperta (CMP-10) e «Fine». Si salva da sola; una nota lasciata
-// vuota sparisce (RB-10). Editor: il campo di testo nativo di iOS (proposta dell'agente, DEC-156).
+// La nota a tutto schermo (ID-54) alla scala del telefono (DEC-161): in alto il tondo per tornare
+// alla lista (CMP-50, proposta C), anche con il gesto dal bordo, e a destra Info (CMP-24) nel
+// foglio dal basso; sotto il titolo e il testo nell'editor del computer (DEC-162), in vista
+// Markdown con i simboli nascosti, come sul computer. Mentre scrivi, sopra la tastiera la bollicina dei formati aperta (CMP-10) e «Fine».
+// Si salva da sola; una nota lasciata vuota sparisce (RB-10).
 
-import { Stack, useLocalSearchParams } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
+import { Info } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
-import { Keyboard, StyleSheet, TextInput, type TextInputInstance } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import { Pressable, StyleSheet, View } from "react-native";
 import { BarraFormati, type Voce } from "@/componenti/BarraFormati";
+import { BarraInCima } from "@/componenti/BarraInCima";
+import { InfoNota } from "@/componenti/InfoNota";
 import { useNegozio } from "@/dati/negozio";
-import {
-  applicaRiga,
-  applicaTesto,
-  attivi,
-  type FormatoTesto,
-  type Selezione,
-} from "@/dati/formati";
-import { spazio, t, testo, useColori } from "@/tema";
+import EditorNota, { type FormatoInJson, type ManigliaEditorNota } from "@/editor/EditorNota";
+import type { Nota } from "@/nucleo/archivio";
+import { misura, raggio, spazio, useColori } from "@/tema";
 
 const RITARDO_SALVATAGGIO_MS = 500;
-const CARATTERE = new Set<Voce>(["grassetto", "corsivo", "barrato", "sottolineato"]);
+
+/** Le voci da accendere nella bollicina per il formato dove sta il cursore (CA-02.4). */
+function vociAccese(f: FormatoInJson | null): Set<Voce> {
+  if (!f) return new Set();
+  const voci = new Set(f.caratteri as Voce[]);
+  if (f.riga !== "misto") voci.add(f.riga);
+  return voci;
+}
 
 export default function NotaAperta() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { archivio, modificato } = useNegozio();
   const c = useColori();
-  const [titolo, setTitolo] = useState("");
-  const [corpo, setCorpo] = useState("");
-  const [cartella, setCartella] = useState("Cloud");
-  const [pronta, setPronta] = useState(false);
+  const [nota, setNota] = useState<{ titolo: string; contenuto: string } | null>(null);
   const [scrive, setScrive] = useState(false);
-  const [sel, setSel] = useState<Selezione>({ start: 0, end: 0 });
-  const [selForzata, setSelForzata] = useState<Selezione | undefined>();
-  const corpoRef = useRef<TextInputInstance>(null);
+  const [info, setInfo] = useState<{ nota: Nota; cartella: string } | null>(null);
+  const [formato, setFormato] = useState<FormatoInJson | null>(null);
+  const editor = useRef<ManigliaEditorNota>(null);
   const ultimo = useRef({ titolo: "", corpo: "" });
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -43,11 +44,8 @@ export default function NotaAperta() {
       if (!archivio) return;
       const n = await archivio.nota(id);
       if (!vivo || !n) return;
-      setTitolo(n.titolo);
-      setCorpo(n.contenuto);
       ultimo.current = { titolo: n.titolo, corpo: n.contenuto };
-      setCartella(await archivio.nomeCartella(n.cartella));
-      setPronta(true);
+      setNota({ titolo: n.titolo, contenuto: n.contenuto });
     })();
     return () => {
       vivo = false;
@@ -60,7 +58,7 @@ export default function NotaAperta() {
     await archivio.salvaNota(id, ultimo.current.titolo, ultimo.current.corpo);
     modificato();
   };
-  const cambia = (ti: string, co: string) => {
+  const cambia = async (ti: string, co: string) => {
     ultimo.current = { titolo: ti, corpo: co };
     clearTimeout(timer.current);
     timer.current = setTimeout(() => void salvaOra(), RITARDO_SALVATAGGIO_MS);
@@ -79,87 +77,86 @@ export default function NotaAperta() {
     [archivio, id, modificato],
   );
 
-  const formato = (v: Voce) => {
-    const r = CARATTERE.has(v)
-      ? applicaTesto(corpo, sel, v as FormatoTesto)
-      : applicaRiga(corpo, sel, v as never);
-    setCorpo(r.testo);
-    cambia(titolo, r.testo);
-    setSel(r.sel);
-    setSelForzata(r.sel);
-    requestAnimationFrame(() => setSelForzata(undefined));
+  // Info si apre con i dati salvati: prima si salva quello che si è appena scritto.
+  const apriInfo = async () => {
+    if (!archivio) return;
+    editor.current?.chiudiTastiera();
+    await salvaOra();
+    const n = await archivio.nota(id);
+    if (n) setInfo({ nota: n, cartella: await archivio.percorso(n.cartella) });
+  };
+  const elimina = async () => {
+    setInfo(null);
+    await salvaOra();
+    await archivio?.cestinaNota(id);
+    modificato();
+    router.back();
   };
 
   return (
-    <>
+    <View style={{ flex: 1, backgroundColor: c.sfondoNota }}>
       <Stack.Screen
-        options={{
-          title: "",
-          headerBackTitle: cartella,
-          headerStyle: { backgroundColor: c.sfondoNota },
-          contentStyle: { backgroundColor: c.sfondoNota },
-        }}
+        options={{ headerShown: false, contentStyle: { backgroundColor: c.sfondoNota } }}
       />
-      <KeyboardAwareScrollView
-        bottomOffset={t(32) + spazio.icona * 3}
-        style={{ backgroundColor: c.sfondoNota }}
-        contentContainerStyle={stili.contenuto}
-        keyboardShouldPersistTaps="handled"
-      >
-        <TextInput
-          allowFontScaling={false}
-          value={titolo}
-          onChangeText={(ti) => {
-            setTitolo(ti);
-            cambia(ti, corpo);
+      <BarraInCima
+        destra={
+          <Pressable
+            onPress={() => void apriInfo()}
+            accessibilityRole="button"
+            accessibilityLabel="Info"
+            hitSlop={spazio.elemento}
+            style={({ pressed }) => [
+              stili.tondo,
+              { backgroundColor: pressed ? c.sfondoPremuto : c.sfondoCampo },
+            ]}
+          >
+            <Info size={misura.icona} color={c.testoPrimario} strokeWidth={misura.tratto} />
+          </Pressable>
+        }
+      />
+      {nota ? (
+        <EditorNota
+          ref={editor}
+          titolo={nota.titolo}
+          contenuto={nota.contenuto}
+          nuova={!nota.titolo && !nota.contenuto}
+          onCambia={cambia}
+          onFormato={async (f) => setFormato(f)}
+          onScrive={async (s) => setScrive(s)}
+          dom={{
+            style: { flex: 1, backgroundColor: c.sfondoNota },
+            hideKeyboardAccessoryView: true,
+            keyboardDisplayRequiresUserAction: false,
+            bounces: true,
           }}
-          placeholder="Titolo"
-          placeholderTextColor={c.testoTenue}
-          style={[testo.notaTitolo, stili.campo, { color: c.testoPrimario }]}
-          multiline
-          submitBehavior="submit"
-          returnKeyType="next"
-          onSubmitEditing={() => corpoRef.current?.focus()}
-          autoFocus={pronta && !titolo && !corpo}
         />
-        <TextInput
-          allowFontScaling={false}
-          ref={corpoRef}
-          value={corpo}
-          onChangeText={(co) => {
-            setCorpo(co);
-            cambia(titolo, co);
-          }}
-          onFocus={() => setScrive(true)}
-          onBlur={() => setScrive(false)}
-          onSelectionChange={(e) => setSel(e.nativeEvent.selection)}
-          selection={selForzata}
-          placeholder="Scrivi qui"
-          placeholderTextColor={c.testoTenue}
-          style={[testo.notaCorpo, stili.campo, stili.corpo, { color: c.testoPrimario }]}
-          multiline
-          scrollEnabled={false}
-          textAlignVertical="top"
-        />
-      </KeyboardAwareScrollView>
+      ) : null}
       <BarraFormati
         visibile={scrive}
-        attivi={attivi(corpo, sel)}
-        onFormato={formato}
-        onFine={() => Keyboard.dismiss()}
+        attivi={vociAccese(formato)}
+        onFormato={(v) => editor.current?.applica(v)}
+        onFine={() => editor.current?.chiudiTastiera()}
       />
-    </>
+      {info ? (
+        <InfoNota
+          visibile
+          nota={info.nota}
+          cartella={info.cartella}
+          onElimina={() => void elimina()}
+          onChiudi={() => setInfo(null)}
+        />
+      ) : null}
+    </View>
   );
 }
 
 const stili = StyleSheet.create({
-  // Margini della nota sul computer (SC-03): spazio-gruppo ai lati sul telefono.
-  contenuto: {
-    paddingHorizontal: spazio.gruppo,
-    paddingTop: spazio.icona,
-    paddingBottom: t(120),
-    gap: spazio.blocco,
+  // Come il tondo per tornare indietro (CMP-50): pulsante solo icona da 44 su sfondo-campo.
+  tondo: {
+    width: misura.riga,
+    height: misura.riga,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: raggio.pillola,
   },
-  campo: { padding: 0 },
-  corpo: { minHeight: t(240) },
 });
