@@ -35,6 +35,13 @@ export interface Nota {
   fine_validita: string | null;
 }
 
+const NUOVA_CARTELLA = "Nuova cartella";
+
+/** Il nome di una cartella: i caratteri vietati diventano «-», senza spazi ai lati (RB-63). */
+export function nomeCartella(nome: string): string {
+  return nome.replace(/[<>:"/\\|?*]/g, "-").trim();
+}
+
 export interface Cartella {
   id: string;
   nome: string;
@@ -299,6 +306,122 @@ export class Archivio {
       "SELECT campi FROM elementi WHERE tipo IN ('nota', 'cartella')",
     );
     return righe.filter((r) => (JSON.parse(r.campi) as Campi).eliminata_il).length;
+  }
+
+  // ——— Cartelle e Sposta in (FL-05), con le regole del computer ———
+
+  /** Sposta la nota in un'altra cartella o nella radice; la data di modifica non cambia (FL-05). */
+  async spostaNota(id: string, cartella: string | null): Promise<void> {
+    await this.db.transazione(async () => {
+      const e = await this.campi(id);
+      if (!e || e.tipo !== "nota" || (e.campi.cartella ?? null) === cartella) return;
+      await this.scrivi(id, "nota", { ...e.campi, cartella });
+    });
+  }
+
+  /** I nomi delle cartelle dentro `madre`, fuori dal cestino, in minuscolo; `tranne` esclusa. */
+  private nomiDentro(cartelle: Map<string, Campi>, madre: string | null, tranne?: string) {
+    return new Set(
+      [...cartelle]
+        .filter(([i, c]) => i !== tranne && (c.madre ?? null) === madre && !c.eliminata_il)
+        .map(([, c]) => String(c.nome).toLowerCase()),
+    );
+  }
+
+  /** Il primo nome libero: «Nome», poi «Nome (2)», «Nome (3)»… (RB-23, RB-31). */
+  private static libero(nome: string, nomi: Set<string>): string {
+    if (!nomi.has(nome.toLowerCase())) return nome;
+    let n = 2;
+    while (nomi.has(`${nome} (${n})`.toLowerCase())) n++;
+    return `${nome} (${n})`;
+  }
+
+  /** Il nome proposto per una cartella nuova dentro `madre`: «Nuova cartella», numerato (RB-48). */
+  async nomeProposto(madre: string | null): Promise<string> {
+    return Archivio.libero(NUOVA_CARTELLA, this.nomiDentro(await this.tutteLeCartelle(), madre));
+  }
+
+  /**
+   * Crea una cartella dentro `madre`. Il nome proposto prende da solo un numero (RB-48); un nome
+   * scritto già usato segue RB-31: senza scelta risponde con il conflitto, con «numero» prende
+   * «Nome (2)», con «unisci» non nasce niente (la cartella nuova è vuota).
+   */
+  async creaCartella(
+    madre: string | null,
+    nome: string,
+    proposto: boolean,
+    scelta?: "numero" | "unisci",
+  ): Promise<{ conflitto: string } | null> {
+    const pulito = nomeCartella(nome);
+    if (!pulito) return null;
+    return this.db.transazione(async () => {
+      const nomi = this.nomiDentro(await this.tutteLeCartelle(), madre);
+      let finale = pulito;
+      if (nomi.has(pulito.toLowerCase())) {
+        if (!proposto && !scelta) return { conflitto: pulito };
+        if (scelta === "unisci") return null;
+        finale = Archivio.libero(pulito, nomi);
+      }
+      await this.scrivi(this.nuovoId(), "cartella", {
+        nome: finale,
+        madre,
+        eliminata_il: null,
+        provenienza: null,
+      });
+      return null;
+    });
+  }
+
+  /**
+   * Rinomina una cartella (RB-63); un nome già usato tra le sorelle segue RB-31 (RB-23): con
+   * «unisci» la cartella entra in quella che ha già il nome.
+   */
+  async rinominaCartella(
+    id: string,
+    nome: string,
+    scelta?: "numero" | "unisci",
+  ): Promise<{ conflitto: string } | null> {
+    const pulito = nomeCartella(nome);
+    if (!pulito) return null;
+    return this.db.transazione(async () => {
+      const cartelle = await this.tutteLeCartelle();
+      const c = cartelle.get(id);
+      if (!c || c.nome === pulito) return null;
+      const madre = (c.madre as string | null) ?? null;
+      const nomi = this.nomiDentro(cartelle, madre, id);
+      let finale = pulito;
+      if (nomi.has(pulito.toLowerCase())) {
+        if (!scelta) return { conflitto: pulito };
+        if (scelta === "unisci") {
+          const arrivo = [...cartelle].find(
+            ([i, x]) =>
+              i !== id &&
+              (x.madre ?? null) === madre &&
+              !x.eliminata_il &&
+              String(x.nome).toLowerCase() === pulito.toLowerCase(),
+          )![0];
+          await this.unisci(id, arrivo, cartelle);
+          return null;
+        }
+        finale = Archivio.libero(pulito, nomi);
+      }
+      await this.scrivi(id, "cartella", { ...c, nome: finale });
+      return null;
+    });
+  }
+
+  /** Manda una cartella nel cestino con tutto il contenuto (RB-25), senza conferma (ID-55). */
+  async cestinaCartella(id: string): Promise<void> {
+    await this.db.transazione(async () => {
+      const e = await this.campi(id);
+      if (!e || e.tipo !== "cartella") return;
+      const provenienza = await this.percorso((e.campi.madre as string | null) ?? null);
+      await this.scrivi(id, "cartella", {
+        ...e.campi,
+        eliminata_il: this.adesso(),
+        provenienza,
+      });
+    });
   }
 
   // ——— Cestino (RF-15, SC-04), con le regole del computer ———

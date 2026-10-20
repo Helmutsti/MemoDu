@@ -283,4 +283,52 @@ describe("nucleo del telefono con il server (DEC-156)", () => {
     await sinc(telefono);
     expect(await telefono.a.elementiCestino()).toEqual([]);
   });
+
+  it("cartelle: nuova con il nome proposto numerato, nome scritto già usato chiede, rinomina e unisce, va nel cestino, e arriva all'altro dispositivo (RB-48, RB-31, RB-63, RB-25)", async () => {
+    const t = await dispositivo();
+    expect(await t.a.nomeProposto(null)).toBe("Nuova cartella");
+    expect(await t.a.creaCartella(null, "Nuova cartella", true)).toBeNull();
+    expect(await t.a.nomeProposto(null)).toBe("Nuova cartella (2)");
+    expect(await t.a.creaCartella(null, "Nuova cartella", true)).toBeNull();
+    expect(await t.a.creaCartella(null, "Lavoro: a/b", false)).toBeNull();
+    const nomi = async () => (await t.a.cartelle()).map((c) => c.nome).sort();
+    expect(await nomi()).toEqual(["Lavoro- a-b", "Nuova cartella", "Nuova cartella (2)"]);
+    expect(await t.a.creaCartella(null, "nuova cartella", false)).toEqual({
+      conflitto: "nuova cartella",
+    });
+    expect(await t.a.creaCartella(null, "nuova cartella", false, "unisci")).toBeNull();
+    expect(await nomi()).toHaveLength(3);
+    const id = (nome: string) => t.a.cartelle().then((c) => c.find((x) => x.nome === nome)!.id);
+    const prima = await id("Nuova cartella");
+    const seconda = await id("Nuova cartella (2)");
+    const n = await t.a.creaNota(seconda);
+    await t.a.salvaNota(n, "Dentro", "x");
+    expect(await t.a.rinominaCartella(seconda, "Nuova Cartella")).toEqual({
+      conflitto: "Nuova Cartella",
+    });
+    expect(await t.a.rinominaCartella(seconda, "Nuova Cartella", "unisci")).toBeNull();
+    expect(await t.a.nota(n)).toMatchObject({ cartella: prima });
+    expect(await nomi()).toEqual(["Lavoro- a-b", "Nuova cartella"]);
+    await t.a.spostaNota(n, null);
+    expect(await t.a.nota(n)).toMatchObject({ cartella: null });
+    await t.a.spostaNota(n, prima);
+    const altro = await dispositivo();
+    await sinc(t);
+    await sinc(altro);
+    // Nel cestino va solo la cartella: le note dentro non cambiano e restano con lei.
+    await t.a.cestinaCartella(prima);
+    expect((await t.a.elementiCestino())[0]).toMatchObject({
+      id: prima,
+      tipo: "cartella",
+      provenienza: "",
+      conteggio: 1,
+    });
+    await sinc(t);
+    await sinc(altro);
+    expect((await altro.a.cartelle()).map((c) => [c.nome, !!c.eliminata_il]).sort()).toEqual([
+      ["Lavoro- a-b", false],
+      ["Nuova cartella", true],
+    ]);
+    expect(await altro.a.nota(n)).toMatchObject({ cartella: prima, titolo: "Dentro" });
+  });
 });

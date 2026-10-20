@@ -1,8 +1,8 @@
 // CMP-24 Info sul telefono, nel foglio dal basso (CMP-51), con le righe e i testi del computer:
 // la cartella («Non organizzata» nella radice, altrimenti «Lavoro › Clienti»), la data di
 // creazione, la fine validità, i tag; sotto l'ultima modifica e, separata, «Elimina», che manda
-// la nota nel Cestino. Per ora le righe si leggono soltanto: cambiare cartella, date e tag dal
-// telefono arriva dopo (Sposta in…, calendario, tag).
+// la nota nel Cestino. Toccando la cartella si apre Sposta in…; date e tag per ora si leggono
+// soltanto, cambiarli dal telefono arriva dopo.
 
 import { Calendar, CircleAlert, Folder, Tag, Trash2, type LucideIcon } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
@@ -11,13 +11,29 @@ import { giornoDi, scriviGiorno, testoModificata } from "@/dati/date";
 import type { Nota } from "@/nucleo/archivio";
 import { misura, raggio, spazio, testo, useColori } from "@/tema";
 
-function Riga({ icona: Icona, children }: { icona: LucideIcon; children: React.ReactNode }) {
+function Riga({
+  icona: Icona,
+  onPress,
+  nome,
+  children,
+}: {
+  icona: LucideIcon;
+  onPress?: () => void;
+  nome?: string;
+  children: React.ReactNode;
+}) {
   const c = useColori();
   return (
-    <View style={stili.riga}>
+    <Pressable
+      onPress={onPress}
+      disabled={!onPress}
+      accessibilityRole={onPress ? "button" : undefined}
+      accessibilityLabel={nome}
+      style={({ pressed }) => [stili.riga, pressed && { backgroundColor: c.sfondoHover }]}
+    >
       <Icona size={misura.icona} color={c.iconaTenue} strokeWidth={misura.tratto} />
       <View style={stili.testoRiga}>{children}</View>
-    </View>
+    </Pressable>
   );
 }
 
@@ -25,6 +41,7 @@ export function InfoNota({
   visibile,
   nota,
   cartella,
+  onSposta,
   onElimina,
   onChiudi,
 }: {
@@ -32,6 +49,8 @@ export function InfoNota({
   nota: Nota;
   /** Il percorso della cartella, «Lavoro/Clienti»; vuoto nella radice. */
   cartella: string;
+  /** La riga della cartella apre Sposta in…, come sul computer. */
+  onSposta: () => void;
   onElimina: () => void;
   onChiudi: () => void;
 }) {
@@ -41,7 +60,11 @@ export function InfoNota({
   return (
     <Foglio visibile={visibile} titolo="Info" onChiudi={onChiudi}>
       <View style={stili.righe}>
-        <Riga icona={Folder}>
+        <Riga
+          icona={Folder}
+          onPress={onSposta}
+          nome={`Cartella ${cartella ? cartella.split("/").join(" › ") : "Non organizzata"}: Sposta in…`}
+        >
           <Text allowFontScaling={false} style={testoRiga} numberOfLines={2}>
             {cartella ? cartella.split("/").join(" › ") : "Non organizzata"}
           </Text>

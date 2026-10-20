@@ -6,8 +6,9 @@
 // spazio-elenco su tutti i lati, righe attaccate (DEC-161). Si apre e si chiude a tendina.
 
 import { ChevronDown, ChevronRight } from "lucide-react-native";
-import { Children, type ReactNode } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Children, useRef, type ReactNode } from "react";
+import { Pressable, StyleSheet, Text, View, type HostInstance } from "react-native";
+import type { Rettangolo } from "@/componenti/Righe";
 import { Tendina } from "@/componenti/Tendina";
 import { misura, raggio, spazio, t, testo, useColori } from "@/tema";
 
@@ -15,20 +16,33 @@ export function Riquadro({
   titolo,
   aperto,
   onApriChiudi,
+  onTieni,
   children,
 }: {
   titolo: string;
   aperto: boolean;
   onApriChiudi: () => void;
+  /** Tenendo premuto il titolo (CLOUD: Nuova nota, Nuova cartella; scelta del 20/10/2026). */
+  onTieni?: (r: Rettangolo) => void;
   children?: ReactNode;
 }) {
   const c = useColori();
+  const vista = useRef<HostInstance>(null);
   const Freccia = aperto ? ChevronDown : ChevronRight;
   const righe = Children.toArray(children);
   return (
     <View>
       <Pressable
+        ref={vista}
         onPress={onApriChiudi}
+        onLongPress={
+          onTieni
+            ? () =>
+                vista.current?.measureInWindow((x, y, larghezza, altezza) =>
+                  onTieni({ x, y, larghezza, altezza }),
+                )
+            : undefined
+        }
         accessibilityRole="button"
         accessibilityState={{ expanded: aperto }}
         accessibilityLabel={titolo}

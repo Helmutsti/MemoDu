@@ -68,6 +68,7 @@ export function BarraFormati({
     <KeyboardStickyView
       offset={{ opened: -spazio.icona }}
       style={[stili.posto, !visibile && stili.nascosta]}
+      pointerEvents={visibile ? "box-none" : "none"}
     >
       <View style={[stili.pillola, stili.cassetto, ombra, { backgroundColor: c.sfondoFlottante }]}>
         <ScrollView

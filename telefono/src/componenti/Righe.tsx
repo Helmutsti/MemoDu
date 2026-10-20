@@ -5,9 +5,17 @@
 // diventa il tocco premuto; la riga della nota si fa scorrere a sinistra per Elimina (ID-55),
 // con il gesto nativo di Gesture Handler.
 
-import { Folder, FolderOpen, Trash2, type LucideIcon } from "lucide-react-native";
-import { useRef, type ReactNode } from "react";
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Folder, FolderInput, FolderOpen, Trash2, type LucideIcon } from "lucide-react-native";
+import { useEffect, useRef, type ReactNode } from "react";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  type HostInstance,
+  type TextInputInstance,
+} from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -16,7 +24,27 @@ import Animated, {
 import ReanimatedSwipeable, {
   type SwipeableMethods,
 } from "react-native-gesture-handler/ReanimatedSwipeable";
-import { misura, opacitaDisabilitato, raggio, spazio, testo, useColori } from "@/tema";
+import { misura, movimento, opacitaDisabilitato, raggio, spazio, testo, useColori } from "@/tema";
+
+/** Dove sta una riga sullo schermo: il menu della pressione lunga le si apre accanto (CMP-53). */
+export interface Rettangolo {
+  x: number;
+  y: number;
+  larghezza: number;
+  altezza: number;
+}
+
+/** Tenendo premuta la riga, la misura e la passa a chi apre il menu. */
+function usaTieni(onTieni?: (r: Rettangolo) => void) {
+  const vista = useRef<HostInstance>(null);
+  const tieni = onTieni
+    ? () =>
+        vista.current?.measureInWindow((x, y, larghezza, altezza) =>
+          onTieni({ x, y, larghezza, altezza }),
+        )
+    : undefined;
+  return { vista, tieni };
+}
 
 export function RigaCartella({
   nome,
@@ -24,18 +52,23 @@ export function RigaCartella({
   aperta,
   livello,
   onPress,
+  onTieni,
 }: {
   nome: string;
   conteggio: number;
   aperta: boolean;
   livello: number;
   onPress: () => void;
+  onTieni?: (r: Rettangolo) => void;
 }) {
   const c = useColori();
   const Icona = aperta ? FolderOpen : Folder;
+  const { vista, tieni } = usaTieni(onTieni);
   return (
     <Pressable
+      ref={vista}
       onPress={onPress}
+      onLongPress={tieni}
       accessibilityRole="button"
       accessibilityState={{ expanded: aperta }}
       style={({ pressed }) => [
@@ -118,17 +151,22 @@ export function RigaNota({
   vuota,
   livelloCartella,
   onPress,
+  onSposta,
   onElimina,
+  onTieni,
 }: {
   titolo: string;
   vuota: boolean;
   /** Livello della cartella che la contiene; assente nella radice di Cloud. */
   livelloCartella?: number;
   onPress: () => void;
+  onSposta: () => void;
   onElimina: () => void;
+  onTieni?: (r: Rettangolo) => void;
 }) {
   const c = useColori();
   const riga = useRef<SwipeableMethods>(null);
+  const { vista, tieni } = usaTieni(onTieni);
   const sinistra =
     livelloCartella === undefined
       ? spazio.controllo
@@ -141,9 +179,13 @@ export function RigaNota({
       overshootRight={false}
       containerStyle={stili.scorre}
       renderRightActions={(progresso) => (
-        <AzioneElimina
+        <AzioniNota
           progresso={progresso}
-          onPress={() => {
+          onSposta={() => {
+            riga.current?.close();
+            onSposta();
+          }}
+          onElimina={() => {
             riga.current?.close();
             onElimina();
           }}
@@ -151,7 +193,9 @@ export function RigaNota({
       )}
     >
       <Pressable
+        ref={vista}
         onPress={onPress}
+        onLongPress={tieni}
         accessibilityRole="button"
         style={({ pressed }) => [
           stili.riga,
@@ -197,18 +241,35 @@ export function AzioniAccanto({
   );
 }
 
-function AzioneElimina({
+/** Sposta (sfondo-campo) ed Elimina (sfondo-pieno) dietro la nota che scorre (CMP-52). */
+function AzioniNota({
   progresso,
-  onPress,
+  onSposta,
+  onElimina,
 }: {
   progresso: SharedValue<number>;
-  onPress: () => void;
+  onSposta: () => void;
+  onElimina: () => void;
 }) {
   const c = useColori();
   return (
     <AzioniAccanto progresso={progresso}>
       <Pressable
-        onPress={onPress}
+        onPress={onSposta}
+        accessibilityRole="button"
+        accessibilityLabel="Sposta"
+        style={({ pressed }) => [
+          stili.azione,
+          { backgroundColor: pressed ? c.sfondoPremuto : c.sfondoCampo },
+        ]}
+      >
+        <FolderInput size={misura.icona} color={c.testoPrimario} strokeWidth={misura.tratto} />
+        <Text allowFontScaling={false} style={[testo.etichetta, { color: c.testoPrimario }]}>
+          Sposta
+        </Text>
+      </Pressable>
+      <Pressable
+        onPress={onElimina}
         accessibilityRole="button"
         accessibilityLabel="Elimina"
         style={({ pressed }) => [
@@ -222,6 +283,66 @@ function AzioneElimina({
         </Text>
       </Pressable>
     </AzioniAccanto>
+  );
+}
+
+/**
+ * Il campo nome nell'albero (CMP-14, RB-48) alla scala del telefono: al posto della riga della
+ * cartella, su sfondo-campo con il contorno, il nome già selezionato e la tastiera aperta. Invio
+ * o un tocco altrove confermano; un nome vuoto annulla.
+ */
+export function CampoNomeCartella({
+  nome,
+  livello,
+  onConferma,
+}: {
+  nome: string;
+  livello: number;
+  onConferma: (nome: string) => void;
+}) {
+  const c = useColori();
+  const testoScritto = useRef(nome);
+  const fatto = useRef(false);
+  const campo = useRef<TextInputInstance>(null);
+  // Il fuoco arriva quando la cartella ha finito di aprirsi a tendina: così la lista scorre fino
+  // al campo, sopra la tastiera, misurandolo dove sta davvero.
+  useEffect(() => {
+    const t = setTimeout(() => campo.current?.focus(), movimento.durataMedia + 50);
+    return () => clearTimeout(t);
+  }, []);
+  const conferma = () => {
+    if (fatto.current) return;
+    fatto.current = true;
+    onConferma(testoScritto.current);
+  };
+  return (
+    <View
+      style={[
+        stili.riga,
+        stili.conIcona,
+        stili.campo,
+        {
+          paddingLeft: spazio.controllo + livello * spazio.rientro,
+          backgroundColor: c.sfondoCampo,
+          borderColor: c.testoPrimario,
+        },
+      ]}
+    >
+      <Folder size={misura.icona} color={c.iconaTenue} strokeWidth={misura.tratto} />
+      <TextInput
+        ref={campo}
+        allowFontScaling={false}
+        defaultValue={nome}
+        selectTextOnFocus
+        returnKeyType="done"
+        autoCorrect={false}
+        onChangeText={(t) => (testoScritto.current = t)}
+        onSubmitEditing={conferma}
+        onBlur={conferma}
+        accessibilityLabel="Nome della cartella"
+        style={[testo.controllo, stili.nome, stili.campoTesto, { color: c.testoPrimario }]}
+      />
+    </View>
   );
 }
 
@@ -239,6 +360,8 @@ const stili = StyleSheet.create({
   nome: { flex: 1 },
   conteggio: { paddingRight: spazio.elemento },
   azioni: { flexDirection: "row", gap: spazio.elemento, paddingLeft: spazio.elemento },
+  campo: { borderWidth: 2 },
+  campoTesto: { paddingVertical: 0 },
   azione: {
     flexDirection: "row",
     alignItems: "center",

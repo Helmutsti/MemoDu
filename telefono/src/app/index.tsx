@@ -7,12 +7,34 @@
 // sottocartelle, in ordine alfabetico (RB-60, RB-64, RB-65). Le cartelle si aprono a tendina.
 import { router, Stack } from "expo-router";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { BookOpen, Brain, Calendar, Settings, Trash2 } from "lucide-react-native";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  BookOpen,
+  Brain,
+  Calendar,
+  FileText,
+  Folder,
+  FolderInput,
+  Info,
+  Pencil,
+  Settings,
+  Trash2,
+} from "lucide-react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ALTEZZA_BARRA, BarraInFondo } from "@/componenti/BarraInFondo";
 import { Riquadro } from "@/componenti/Riquadro";
-import { RigaCartella, RigaNota, RigaVoce } from "@/componenti/Righe";
+import { Conferma } from "@/componenti/Foglio";
+import { InfoNota } from "@/componenti/InfoNota";
+import { MenuRiga, type VoceMenu } from "@/componenti/MenuRiga";
+import {
+  CampoNomeCartella,
+  RigaCartella,
+  RigaNota,
+  RigaVoce,
+  type Rettangolo,
+} from "@/componenti/Righe";
+import { SpostaIn } from "@/componenti/SpostaIn";
 import { Tendina } from "@/componenti/Tendina";
 import { useNegozio } from "@/dati/negozio";
 import type { Cartella, Nota } from "@/nucleo/archivio";
@@ -36,6 +58,27 @@ export default function Note() {
   const [aperte, setAperte] = useState<Set<string>>(new Set());
   const [brainet, setBrainet] = useState(false);
   const [cestino, setCestino] = useState(0);
+  /** La riga tenuta premuta, con il suo menu (CMP-53). */
+  const [menu, setMenu] = useState<{
+    ancora: Rettangolo;
+    tipo: "nota" | "cartella" | "cloud";
+    id: string | null;
+    nome: string;
+  } | null>(null);
+  const [sposta, setSposta] = useState<Nota | null>(null);
+  const [info, setInfo] = useState<{ nota: Nota; cartella: string } | null>(null);
+  /** Il campo nome nell'albero: cartella nuova dentro `madre` o rinomina (RB-48). */
+  const [campo, setCampo] = useState<
+    | { tipo: "nuova"; madre: string | null; nome: string }
+    | { tipo: "rinomina"; id: string; nome: string }
+    | null
+  >(null);
+  /** Un nome già usato (RB-31): le tre scelte del computer. */
+  const [conflitto, setConflitto] = useState<{
+    nome: string;
+    dove: string | null;
+    risolvi: (scelta: "numero" | "unisci") => Promise<unknown>;
+  } | null>(null);
 
   // Rilegge a ogni cambio della copia di lavoro: modifiche qui e note arrivate dagli altri dispositivi.
   useEffect(() => {
@@ -85,6 +128,91 @@ export default function Note() {
     await archivio?.cestinaNota(id);
     modificato();
   };
+  const nomeDi = (id: string | null) =>
+    id ? (dati.cartelle.find((x) => x.id === id)?.nome ?? null) : null;
+
+  const nuovaCartella = async (madre: string | null) => {
+    if (!archivio) return;
+    if (madre) setAperte((s) => new Set(s).add(madre));
+    else setCloudAperta(true);
+    setCampo({ tipo: "nuova", madre, nome: await archivio.nomeProposto(madre) });
+  };
+  const confermaCampo = async (nome: string) => {
+    const attuale = campo;
+    setCampo(null);
+    if (!archivio || !attuale || !nome.trim()) return;
+    if (attuale.tipo === "nuova") {
+      const proposto = nome === attuale.nome;
+      const esito = await archivio.creaCartella(attuale.madre, nome, proposto);
+      if (esito)
+        setConflitto({
+          nome: esito.conflitto,
+          dove: nomeDi(attuale.madre),
+          risolvi: (scelta) => archivio.creaCartella(attuale.madre, nome, false, scelta),
+        });
+    } else {
+      if (nome === attuale.nome) return;
+      const esito = await archivio.rinominaCartella(attuale.id, nome);
+      const madre = dati.cartelle.find((x) => x.id === attuale.id)?.madre ?? null;
+      if (esito)
+        setConflitto({
+          nome: esito.conflitto,
+          dove: nomeDi(madre),
+          risolvi: (scelta) => archivio.rinominaCartella(attuale.id, nome, scelta),
+        });
+    }
+    modificato();
+  };
+  const apriInfo = async (id: string) => {
+    const n = await archivio?.nota(id);
+    if (archivio && n) setInfo({ nota: n, cartella: await archivio.percorso(n.cartella) });
+  };
+  const spostaIn = async (cartella: string | null) => {
+    const nota = sposta;
+    setSposta(null);
+    if (!archivio || !nota) return;
+    await archivio.spostaNota(nota.id, cartella);
+    if (cartella) setAperte((s) => new Set(s).add(cartella));
+    modificato();
+  };
+  const tieniNota = (n: Nota) => (ancora: Rettangolo) =>
+    setMenu({ ancora, tipo: "nota", id: n.id, nome: titoloDi(n) || "Nota vuota" });
+
+  const vociMenu = (): VoceMenu[] => {
+    if (!menu) return [];
+    const id = menu.id;
+    if (menu.tipo === "cloud")
+      return [
+        { etichetta: "Nuova nota", icona: FileText, onPress: () => void nuova(null) },
+        { etichetta: "Nuova cartella", icona: Folder, onPress: () => void nuovaCartella(null) },
+      ];
+    if (menu.tipo === "cartella" && id)
+      return [
+        { etichetta: "Nuova nota qui", icona: FileText, onPress: () => void nuova(id) },
+        { etichetta: "Nuova sottocartella", icona: Folder, onPress: () => void nuovaCartella(id) },
+        {
+          etichetta: "Rinomina",
+          icona: Pencil,
+          onPress: () => setCampo({ tipo: "rinomina", id, nome: menu.nome }),
+        },
+        "filo",
+        {
+          etichetta: "Elimina",
+          icona: Trash2,
+          errore: true,
+          onPress: () => void archivio?.cestinaCartella(id).then(modificato),
+        },
+      ];
+    const nota = dati.note.find((n) => n.id === id);
+    if (!nota) return [];
+    return [
+      { etichetta: "Info", icona: Info, onPress: () => void apriInfo(nota.id) },
+      { etichetta: "Sposta in…", icona: FolderInput, onPress: () => setSposta(nota) },
+      "filo",
+      { etichetta: "Elimina", icona: Trash2, errore: true, onPress: () => void elimina(nota.id) },
+    ];
+  };
+
   const apriChiudi = (id: string) =>
     setAperte((s) => {
       const n = new Set(s);
@@ -100,7 +228,9 @@ export default function Note() {
       vuota={!titoloDi(n)}
       livelloCartella={livelloCartella}
       onPress={() => apri(n.id)}
+      onSposta={() => setSposta(n)}
       onElimina={() => void elimina(n.id)}
+      onTieni={tieniNota(n)}
     />
   );
 
@@ -115,17 +245,37 @@ export default function Note() {
     const cartelle = dati.cartelle
       .filter((x) => x.madre === padre)
       .sort((a, b) => alfabetico(a.nome, b.nome));
+    const campoNuovo =
+      campo?.tipo === "nuova" && campo.madre === padre ? (
+        <CampoNomeCartella
+          key="campo-nuovo"
+          nome={campo.nome}
+          livello={livello}
+          onConferma={(nome) => void confermaCampo(nome)}
+        />
+      ) : null;
     return [
       ...note.map((n) => rigaNota(n, padre === null ? undefined : livello - 1)),
+      ...(campoNuovo ? [campoNuovo] : []),
       ...cartelle.flatMap((x) => [
-        <RigaCartella
-          key={x.id}
-          nome={x.nome}
-          conteggio={conta.get(x.id) ?? 0}
-          aperta={aperte.has(x.id)}
-          livello={livello}
-          onPress={() => apriChiudi(x.id)}
-        />,
+        campo?.tipo === "rinomina" && campo.id === x.id ? (
+          <CampoNomeCartella
+            key={x.id}
+            nome={campo.nome}
+            livello={livello}
+            onConferma={(nome) => void confermaCampo(nome)}
+          />
+        ) : (
+          <RigaCartella
+            key={x.id}
+            nome={x.nome}
+            conteggio={conta.get(x.id) ?? 0}
+            aperta={aperte.has(x.id)}
+            livello={livello}
+            onPress={() => apriChiudi(x.id)}
+            onTieni={(ancora) => setMenu({ ancora, tipo: "cartella", id: x.id, nome: x.nome })}
+          />
+        ),
         <Tendina key={`${x.id}-dentro`} aperta={aperte.has(x.id)}>
           <View>{albero(x.id, livello + 1)}</View>
         </Tendina>,
@@ -141,7 +291,8 @@ export default function Note() {
   return (
     <View style={{ flex: 1, backgroundColor: c.sfondoColonna }}>
       <Stack.Screen options={{ headerShown: false }} />
-      <ScrollView
+      <KeyboardAwareScrollView
+        bottomOffset={spazio.gruppo}
         contentContainerStyle={[
           stili.contenuto,
           {
@@ -185,6 +336,7 @@ export default function Note() {
               titolo="Cloud"
               aperto={cloudAperta}
               onApriChiudi={() => setCloudAperta((a) => !a)}
+              onTieni={(ancora) => setMenu({ ancora, tipo: "cloud", id: null, nome: "CLOUD" })}
             >
               {albero(null, 0)}
               <View
@@ -212,13 +364,101 @@ export default function Note() {
             ) : null}
           </>
         )}
-      </ScrollView>
-      <BarraInFondo cerca={cerca} onCerca={setCerca} onNuova={() => void nuova()} />
+      </KeyboardAwareScrollView>
+      <MenuRiga
+        ancora={menu?.ancora ?? null}
+        riga={menu ? <RigaSollevata nome={menu.nome} tipo={menu.tipo} /> : null}
+        voci={vociMenu()}
+        onChiudi={() => setMenu(null)}
+      />
+      {sposta ? (
+        <SpostaIn
+          visibile
+          cartelle={dati.cartelle}
+          attuale={sposta.cartella}
+          onScegli={(cartella) => void spostaIn(cartella)}
+          onChiudi={() => setSposta(null)}
+        />
+      ) : null}
+      {info ? (
+        <InfoNota
+          visibile
+          nota={info.nota}
+          cartella={info.cartella}
+          onSposta={() => {
+            setInfo(null);
+            setSposta(info.nota);
+          }}
+          onElimina={() => {
+            setInfo(null);
+            void elimina(info.nota.id);
+          }}
+          onChiudi={() => setInfo(null)}
+        />
+      ) : null}
+      {conflitto ? (
+        <Conferma
+          visibile
+          titolo={
+            conflitto.dove
+              ? `Esiste già «${conflitto.nome}» in ${conflitto.dove}`
+              : `Esiste già «${conflitto.nome}» tra le cartelle`
+          }
+          testo="Puoi aggiungere un numero al nome, unire le due cartelle o annullare."
+          azione="Aggiungi un numero"
+          altra={{
+            etichetta: "Unisci",
+            onPress: () => {
+              const c = conflitto;
+              setConflitto(null);
+              void c.risolvi("unisci").then(modificato);
+            },
+          }}
+          onConferma={() => {
+            const c = conflitto;
+            setConflitto(null);
+            void c.risolvi("numero").then(modificato);
+          }}
+          onAnnulla={() => setConflitto(null)}
+        />
+      ) : null}
+      {/* Mentre si scrive il nome di una cartella la barra non sale sopra la tastiera. */}
+      {campo ? null : (
+        <BarraInFondo cerca={cerca} onCerca={setCerca} onNuova={() => void nuova()} />
+      )}
+    </View>
+  );
+}
+
+/** La riga tenuta premuta, sollevata sopra il velo: icona e nome come nella colonna. */
+function RigaSollevata({ nome, tipo }: { nome: string; tipo: "nota" | "cartella" | "cloud" }) {
+  const c = useColori();
+  return (
+    <View style={stili.sollevata}>
+      {tipo === "cartella" ? (
+        <Folder size={misura.icona} color={c.iconaTenue} strokeWidth={misura.tratto} />
+      ) : null}
+      <Text
+        allowFontScaling={false}
+        numberOfLines={1}
+        style={[
+          tipo === "cloud" ? testo.titoloSezione : testo.controllo,
+          { color: c.testoPrimario },
+        ]}
+      >
+        {nome}
+      </Text>
     </View>
   );
 }
 
 const stili = StyleSheet.create({
+  sollevata: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spazio.icona,
+    paddingHorizontal: spazio.controllo,
+  },
   // Colonna (CMP-14): spazio-pannello ai lati, spazio-blocco tra Impostazioni e i riquadri.
   contenuto: {
     paddingHorizontal: spazio.pannello,
