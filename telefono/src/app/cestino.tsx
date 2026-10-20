@@ -17,7 +17,7 @@ import { BarraInCima } from "@/componenti/BarraInCima";
 import { Comparsa, transizione } from "@/componenti/Comparsa";
 import { Conferma, Foglio } from "@/componenti/Foglio";
 import { Pulsante } from "@/componenti/Pulsante";
-import { AzioniAccanto } from "@/componenti/Righe";
+import { AzioniAccanto, apriSoloQuesta, chiudiAlTocco, richiusa, tocco } from "@/componenti/Righe";
 import { useNegozio } from "@/dati/negozio";
 import type { ElementoCestino } from "@/nucleo/archivio";
 import { misura, raggio, spazio, t, testo, useColori } from "@/tema";
@@ -110,6 +110,9 @@ function Elemento({
   return (
     <ReanimatedSwipeable
       ref={riga}
+      onSwipeableOpenStartDrag={() => apriSoloQuesta(riga)}
+      onSwipeableWillOpen={() => apriSoloQuesta(riga)}
+      onSwipeableClose={() => richiusa(riga)}
       friction={1.5}
       rightThreshold={spazio.gruppo * 2}
       overshootRight={false}
@@ -121,7 +124,7 @@ function Elemento({
       )}
     >
       <Pressable
-        onPress={onApri}
+        onPress={tocco(onApri)}
         accessibilityRole="button"
         accessibilityHint="Apre Ripristina ed Elimina definitivamente"
         style={({ pressed }) => [
@@ -185,7 +188,7 @@ export default function Cestino() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: c.sfondoNota }}>
+    <View style={{ flex: 1, backgroundColor: c.sfondoNota }} onTouchStart={chiudiAlTocco}>
       <Stack.Screen options={{ headerShown: false }} />
       <BarraInCima />
       {caricato && elementi.length === 0 ? (

@@ -766,3 +766,4 @@
 | 20/10/2026 | Manuel Cucca | Telefono: menu della pressione lunga su note, cartelle e CLOUD; Sposta in…; nuova cartella, rinomina e cestino delle cartelle con le regole del computer; la barra dei formati solo con la tastiera aperta | DEC-156 |
 | 20/10/2026 | Manuel Cucca | Telefono: Impostazioni complete (nome del dispositivo, Cambia password, Dispositivi collegati, tema, note del cestino nei risultati) con le regole del computer | DEC-156, DEC-166 |
 | 20/10/2026 | Manuel Cucca | Dispositivi collegati: un iPhone si chiama «iPhone» (iOS); la conferma dice «Le note su quel dispositivo restano…» | DEC-156 |
+| 20/10/2026 | Manuel Cucca | Telefono: facendo scorrere una riga, quella già aperta si chiude (CMP-52) | DEC-156 |

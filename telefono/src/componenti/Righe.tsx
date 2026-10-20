@@ -26,6 +26,60 @@ import ReanimatedSwipeable, {
 } from "react-native-gesture-handler/ReanimatedSwipeable";
 import { misura, movimento, opacitaDisabilitato, raggio, spazio, testo, useColori } from "@/tema";
 
+/**
+ * La riga che scorrendo ha mostrato le sue azioni: ce n'è una sola aperta alla volta, come in
+ * Mail (CMP-52). Si chiude appena un'altra riga comincia a scorrere, al tocco di un'altra riga
+ * (che allora non si apre) e quando la lista scorre.
+ */
+type RigaScorrevole = { current: SwipeableMethods | null };
+let rigaAperta: RigaScorrevole | null = null;
+
+/** Da chiamare appena una riga comincia ad aprirsi: chiude quella aperta prima e segna questa. */
+export function apriSoloQuesta(riga: RigaScorrevole) {
+  if (rigaAperta && rigaAperta !== riga) rigaAperta.current?.close();
+  rigaAperta = riga;
+}
+
+/** Da chiamare quando una riga si è richiusa. */
+export function richiusa(riga: RigaScorrevole) {
+  if (rigaAperta === riga) rigaAperta = null;
+}
+
+/** Chiude la riga aperta, se c'è: true se l'ha chiusa (il tocco serviva solo a chiuderla). */
+export function chiudiAperta(): boolean {
+  const aperta = rigaAperta;
+  rigaAperta = null;
+  if (!aperta?.current) return false;
+  aperta.current.close();
+  return true;
+}
+
+/** Quando il tocco sullo schermo ha appena chiuso una riga aperta. */
+let chiusaAlTocco = 0;
+/** Il tocco è cominciato sulle azioni di una riga aperta: quella non va chiusa prima. */
+let suAzioni = false;
+
+/**
+ * Da mettere su onTouchStart della schermata: un tocco ovunque fuori dalle azioni chiude la riga
+ * aperta appena il dito tocca, anche se poi comincia a scorrere un'altra riga o la lista.
+ */
+export function chiudiAlTocco() {
+  if (suAzioni) {
+    suAzioni = false;
+    return;
+  }
+  if (chiudiAperta()) chiusaAlTocco = Date.now();
+}
+
+/** Un tocco su una riga: se è servito a chiudere quella aperta, la riga non fa la sua azione. */
+export const tocco = (azione?: () => void) =>
+  azione
+    ? () => {
+        if (Date.now() - chiusaAlTocco < 800 || chiudiAperta()) return;
+        azione();
+      }
+    : undefined;
+
 /** Dove sta una riga sullo schermo: il menu della pressione lunga le si apre accanto (CMP-53). */
 export interface Rettangolo {
   x: number;
@@ -39,6 +93,7 @@ function usaTieni(onTieni?: (r: Rettangolo) => void) {
   const vista = useRef<HostInstance>(null);
   const tieni = onTieni
     ? () =>
+        !chiudiAperta() &&
         vista.current?.measureInWindow((x, y, larghezza, altezza) =>
           onTieni({ x, y, larghezza, altezza }),
         )
@@ -67,7 +122,7 @@ export function RigaCartella({
   return (
     <Pressable
       ref={vista}
-      onPress={onPress}
+      onPress={tocco(onPress)}
       onLongPress={tieni}
       accessibilityRole="button"
       accessibilityState={{ expanded: aperta }}
@@ -114,7 +169,7 @@ export function RigaVoce({
   const c = useColori();
   return (
     <Pressable
-      onPress={onPress}
+      onPress={tocco(onPress)}
       disabled={!onPress}
       accessibilityRole="button"
       accessibilityState={{ disabled: !onPress }}
@@ -174,6 +229,9 @@ export function RigaNota({
   return (
     <ReanimatedSwipeable
       ref={riga}
+      onSwipeableOpenStartDrag={() => apriSoloQuesta(riga)}
+      onSwipeableWillOpen={() => apriSoloQuesta(riga)}
+      onSwipeableClose={() => richiusa(riga)}
       friction={1.5}
       rightThreshold={spazio.gruppo * 2}
       overshootRight={false}
@@ -194,7 +252,7 @@ export function RigaNota({
     >
       <Pressable
         ref={vista}
-        onPress={onPress}
+        onPress={tocco(onPress)}
         onLongPress={tieni}
         accessibilityRole="button"
         style={({ pressed }) => [
@@ -233,6 +291,7 @@ export function AzioniAccanto({
   }));
   return (
     <Animated.View
+      onTouchStart={() => (suAzioni = true)}
       style={[stili.azioni, accanto]}
       onLayout={(e) => (larghezza.value = e.nativeEvent.layout.width)}
     >

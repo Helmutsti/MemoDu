@@ -32,6 +32,7 @@ import {
   RigaCartella,
   RigaNota,
   RigaVoce,
+  chiudiAlTocco,
   type Rettangolo,
 } from "@/componenti/Righe";
 import { SpostaIn } from "@/componenti/SpostaIn";
@@ -289,7 +290,7 @@ export default function Note() {
     : [];
 
   return (
-    <View style={{ flex: 1, backgroundColor: c.sfondoColonna }}>
+    <View style={{ flex: 1, backgroundColor: c.sfondoColonna }} onTouchStart={chiudiAlTocco}>
       <Stack.Screen options={{ headerShown: false }} />
       <KeyboardAwareScrollView
         bottomOffset={spazio.gruppo}
