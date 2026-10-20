@@ -2,7 +2,7 @@
 
 <!-- Fase 9 della guida. Si scrive con il linguaggio di chi usa il prodotto. Gli scenari d'uso della Fase 1 sono un buon punto di partenza per i capitoli. -->
 
-Questa guida descrive Memodu 1.1.0. Memodu serve a scrivere note al volo, tenerle in ordine e ritrovarle su tutti i tuoi computer. Ogni nota si vede come Markdown, già formattata, o come Testo, con i caratteri come `#` o `**` così come li scrivi (vedi [Markdown o Testo](#markdown-o-testo)).
+Questa guida descrive Memodu 1.2.1. Memodu serve a scrivere note al volo, tenerle in ordine e ritrovarle su tutti i tuoi computer. Ogni nota si vede come Markdown, già formattata, o come Testo, con i caratteri come `#` o `**` così come li scrivi (vedi [Markdown o Testo](#markdown-o-testo)).
 
 Su Mac, dove la guida dice Ctrl si usa ⌘ (per esempio ⌘ + N al posto di Ctrl + N). Fa eccezione la scorciatoia della nota rapida, che sul Mac è Control + Option + N.
 
@@ -85,7 +85,7 @@ Per cambiare una data fai clic sulla riga: scrivi la data come GG/MM/AAAA oppure
 ### Markdown o Testo
 Ogni nota si mostra in uno di due modi, che scegli nella riga **Vista** di Info:
 
-- **Markdown:** i simboli non si vedono e il testo appare già formattato. All'inizio di una riga `# ` fa un titolo, `## ` un sottotitolo, `- ` un elenco puntato, `1. ` un elenco numerato e `- [ ] ` una casella, che si spunta con un clic. Dentro la riga `**…**` fa il grassetto, `*…*` il corsivo e `~~…~~` il barrato.
+- **Markdown:** il testo appare già formattato e i simboli non si vedono mai. Titoli, grassetto, corsivo, barrato e sottolineato si mettono con la bollicina del formato. I caratteri che scrivi restano quelli che sono, come in Note di Apple: un asterisco resta un asterisco, anche scritto due volte. Gli elenchi invece nascono anche scrivendo: all'inizio di una riga `- ` fa un elenco puntato, `1. ` un elenco numerato e `-[]` una casella, che si spunta con un clic.
 - **Testo:** quello che scrivi resta com'è, con i simboli in vista.
 
 Il testo salvato è lo stesso nelle due viste: cambia solo come lo vedi, e cambiare vista non conta come una modifica. Le note nuove e le note rapide nascono in Markdown; quelle scritte prima della 1.1.0 restano in Testo finché non cambi la vista. La scelta resta alla nota, anche sugli altri computer.
@@ -114,7 +114,7 @@ I formati in uso sono evidenziati; scegliendone uno che c'è già, lo togli. Il 
 - Il sottolineato si salva come `<u>…</u>`.
 - Scrivendo `-[]` all'inizio di una riga, la riga diventa una casella da spuntare.
 
-Per ora non ci sono scorciatoie per formattare; i simboli si possono sempre scrivere anche a mano. Subito dopo aver chiuso un formato scrivendone i simboli (per esempio `**forte**`), il testo che continui a scrivere resta nel formato: per spegnerlo usa la bollicina.
+Per ora non ci sono scorciatoie per formattare. Uno spazio dopo una parola in grassetto, corsivo o barrata la lascia formattata e il testo dopo continua nello stesso formato; per spegnerlo usa la bollicina.
 
 ## Organizzare le note
 
@@ -308,7 +308,7 @@ Sì, resta attiva nell'icona in basso a destra (barra dei menu sul Mac), così l
 In CLOUD, fuori dalle cartelle, in cima: le note non organizzate sono in ordine dalla più recente.
 
 **Scrivo `**grassetto**` ma non diventa grassetto.**
-La nota è in vista Testo: in Info scegli Markdown nella riga Vista (vedi [Markdown o Testo](#markdown-o-testo)). Le note scritte prima della 1.1.0 restano in Testo finché non cambi la vista.
+Dalla 1.2.1 i caratteri che scrivi restano quelli che sono, come in Note di Apple: il grassetto si mette con la bollicina del formato, in basso a destra del foglio. La bollicina c'è solo in vista Markdown: se non la vedi, in Info scegli Markdown nella riga Vista (vedi [Markdown o Testo](#markdown-o-testo)).
 
 **Ho eliminato per sbaglio una nota o una cartella.**
 È nel cestino: aprilo dal fondo della colonna e premi «Ripristina». La ritrovi anche cercandola, con l'etichetta «nel cestino».

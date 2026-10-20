@@ -1,6 +1,6 @@
 # DEC-166 – Copiare negli appunti sul telefono
 
-**Data:** 2026-10-20 · **Stato:** Proposta · **Idea di origine:** —
+**Data:** 2026-10-20 · **Stato:** Accettata · **Idea di origine:** —
 
 ## Contesto
 Dopo un cambio della password fatto con la chiave di recupero, il telefono mostra la chiave nuova una sola volta (RB-99), con «Copia» come sul computer (Chiave da conservare). React Native non ha più un modulo per gli appunti.
@@ -11,6 +11,8 @@ B) `expo-clipboard`, il modulo di Expo per gli appunti (nativo, nella versione d
 
 ## Decisione
 B, proposta dell'agente: «Copia» funziona come sul computer e diventa «Copiata». Il modulo è nativo: entra nell'app con la prossima compilazione.
+
+Accettata da Manuel Cucca il 20/10/2026.
 
 ## Conseguenze
 - `telefono/package.json`; `telefono/src/app/cambia-password.tsx`.
