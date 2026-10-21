@@ -14,3 +14,6 @@ api/.prova-js/
 
 # Utente fisso del server in locale: segreti, mai nel repository (DEC-121)
 .env
+
+# Collegamento locale a Vercel del prototipo
+.vercel

@@ -1,0 +1,1870 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-visual"
+    />
+    <meta name="theme-color" content="#f4f4f4" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1f1f1f" media="(prefers-color-scheme: dark)" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="icon" href="data:," />
+    <title>Memodu · prototipo per il telefono</title>
+    <!--
+      Prototipo dell'idea di adattamento al telefono (registro idee, ID-54; Figma, pagina
+      «Proposta · App per il telefono»). Solo interfaccia: note di esempio salvate nel browser,
+      niente server, niente accesso, niente cifratura. Colori, spazi e testi da client/src/stili.
+    -->
+    <style>
+      @font-face {
+        font-family: "Inter Variable";
+        font-style: normal;
+        font-display: swap;
+        font-weight: 100 900;
+        src: url("inter.woff2") format("woff2-variations");
+      }
+
+      /* Token: copia di client/src/stili/token.css (solo quelli usati qui). */
+      :root {
+        --grigio-0: #ffffff;
+        --grigio-50: #f4f4f4;
+        --grigio-100: #ebebeb;
+        --grigio-200: #e0e0e0;
+        --grigio-300: #c1c1c1;
+        --grigio-400: #a3a3a3;
+        --grigio-500: #696969;
+        --grigio-600: #525252;
+        --grigio-700: #3d3d3d;
+        --grigio-750: #383838;
+        --grigio-800: #2b2b2b;
+        --grigio-900: #1f1f1f;
+        --grigio-950: #141414;
+        --rosso-400: #fe6f69;
+        --rosso-500: #be232a;
+
+        --sfondo-nota: var(--grigio-0);
+        --sfondo-colonna: var(--grigio-50);
+        --sfondo-campo: var(--grigio-100);
+        --sfondo-hover: var(--grigio-200);
+        --sfondo-pieno: var(--grigio-900);
+        --sfondo-premuto: var(--grigio-300);
+        --sfondo-flottante: var(--grigio-0);
+        --testo-primario: var(--grigio-900);
+        --testo-tenue: var(--grigio-500);
+        --testo-su-pieno: var(--grigio-0);
+        --icona-tenue: var(--grigio-500);
+        --icona-su-pieno: var(--grigio-0);
+        --bordo-divisore: var(--grigio-200);
+        --bordo-divisore-tenue: rgb(0 0 0 / 6%);
+        --evidenziazione-selezione: var(--grigio-200);
+        --velo: rgb(0 0 0 / 30%);
+        --ombra-flottante: rgb(0 0 0 / 12%);
+        --testo-errore: var(--rosso-500);
+        --icona-errore: var(--rosso-500);
+
+        --spazio-elemento: 4px;
+        --spazio-icona: 8px;
+        --spazio-controllo: 12px;
+        --spazio-blocco: 16px;
+        --spazio-gruppo: 24px;
+        --spazio-pannello: 16px;
+        --spazio-rientro: 24px;
+        --raggio-pillola: 999px;
+        --raggio-contenitore: 20px;
+        --raggio-casella: 4px;
+        --misura-riga: 32px;
+        --movimento-durata-breve: 120ms;
+        --movimento-durata-media: 200ms;
+        --ombra: 0 8px 24px var(--ombra-flottante);
+
+        /* Solo telefono: righe più alte per il dito (manca nel design system). */
+        --misura-riga-tocco: 44px;
+
+        color-scheme: light dark;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --sfondo-nota: var(--grigio-950);
+          --sfondo-colonna: var(--grigio-900);
+          --sfondo-campo: var(--grigio-750);
+          --sfondo-hover: var(--grigio-700);
+          --sfondo-pieno: var(--grigio-50);
+          --sfondo-premuto: var(--grigio-600);
+          --sfondo-flottante: var(--grigio-800);
+          --testo-primario: var(--grigio-50);
+          --testo-tenue: var(--grigio-400);
+          --testo-su-pieno: var(--grigio-950);
+          --icona-tenue: var(--grigio-400);
+          --icona-su-pieno: var(--grigio-950);
+          --bordo-divisore: var(--grigio-700);
+          --bordo-divisore-tenue: rgb(255 255 255 / 5%);
+          --evidenziazione-selezione: var(--grigio-700);
+          --velo: rgb(0 0 0 / 50%);
+          --ombra-flottante: rgb(0 0 0 / 40%);
+          --testo-errore: var(--rosso-400);
+          --icona-errore: var(--rosso-400);
+        }
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        font-family: "Inter Variable", "Inter", system-ui, sans-serif;
+        background: var(--sfondo-colonna);
+        color: var(--testo-primario);
+        -webkit-font-smoothing: antialiased;
+        -webkit-tap-highlight-color: transparent;
+        overscroll-behavior: none;
+      }
+
+      button,
+      input {
+        font: inherit;
+        color: inherit;
+      }
+
+      button {
+        border: 0;
+        background: none;
+        padding: 0;
+        cursor: pointer;
+        touch-action: manipulation;
+      }
+
+      .icona {
+        width: 16px;
+        height: 16px;
+        flex: none;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .icona.grande {
+        width: 24px;
+        height: 24px;
+      }
+      .icona.media {
+        width: 20px;
+        height: 20px;
+      }
+      .icona.piccola {
+        width: 12px;
+        height: 12px;
+      }
+
+      /* Stili di testo (base.css). */
+      .interfaccia-controllo {
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 1.4;
+      }
+      .interfaccia-controllo-attivo {
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 1.4;
+      }
+      .interfaccia-titolo-sezione {
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1.3;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .interfaccia-dettaglio {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 1.3;
+      }
+
+      /* Il telefono: a tutto schermo; su un computer una cornice da 390 × 844 al centro. */
+      /* Sul telefono l'app occupa la parte visibile dello schermo: con la tastiera aperta
+         si accorcia (adattaAlloSchermo), così la barra dei formati le sta appoggiata sopra. */
+      html,
+      body {
+        overflow: hidden;
+      }
+      #app {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 100dvh;
+        overflow: hidden;
+        background: var(--sfondo-colonna);
+      }
+      @media (min-width: 600px) and (min-height: 700px) {
+        body {
+          display: grid;
+          place-items: center;
+          background: var(--sfondo-hover);
+        }
+        #app {
+          position: relative;
+          width: 390px;
+          height: min(844px, 100dvh - 32px);
+          border-radius: 44px;
+          border: 1px solid var(--bordo-divisore);
+          box-shadow: var(--ombra);
+        }
+      }
+
+      .schermata {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        padding-top: env(safe-area-inset-top);
+        transition: transform var(--movimento-durata-media) ease;
+      }
+
+      /* ---------- 1 · Le note ---------- */
+      #elenco {
+        background: var(--sfondo-colonna);
+      }
+      #nota-schermata {
+        background: var(--sfondo-nota);
+        transform: translateX(100%);
+        visibility: hidden;
+        transition:
+          transform var(--movimento-durata-media) ease,
+          visibility 0s var(--movimento-durata-media);
+      }
+      #app.nota-aperta #nota-schermata {
+        transform: translateX(0);
+        visibility: visible;
+        transition: transform var(--movimento-durata-media) ease;
+      }
+      #app.nota-aperta #elenco {
+        transform: translateX(-25%);
+      }
+
+      /* Mentre si cerca: «Annulla» accanto al campo e la barra in basso nascosta, perché la
+         tastiera la farebbe salire. */
+      .riga-ricerca {
+        display: flex;
+        align-items: center;
+        gap: var(--spazio-controllo);
+        margin: var(--spazio-controllo) var(--spazio-blocco) var(--spazio-icona);
+      }
+      .annulla-ricerca {
+        display: none;
+        font-size: 16px;
+        color: var(--testo-primario);
+      }
+      #app.cerca .annulla-ricerca {
+        display: block;
+      }
+      #app.cerca .barra-basso {
+        display: none;
+      }
+      .ricerca {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: var(--spazio-icona);
+        height: 40px;
+        padding: 0 var(--spazio-controllo);
+        border-radius: var(--raggio-pillola);
+        background: var(--sfondo-campo);
+        color: var(--icona-tenue);
+      }
+      .ricerca input {
+        flex: 1;
+        min-width: 0;
+        border: 0;
+        outline: 0;
+        background: none;
+        color: var(--testo-primario);
+        font-size: 16px; /* sotto i 16 px Safari ingrandisce la pagina */
+      }
+      .ricerca input::placeholder {
+        color: var(--testo-tenue);
+      }
+
+      .albero {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0 var(--spazio-blocco) 96px;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+      }
+
+      .riempitivo {
+        flex: none;
+        pointer-events: none;
+      }
+
+      .sezione {
+        display: flex;
+        align-items: center;
+        gap: var(--spazio-icona);
+        height: var(--misura-riga-tocco);
+        padding: 0 var(--spazio-controllo);
+        color: var(--testo-tenue);
+      }
+      .sezione span {
+        flex: 1;
+      }
+
+      .riga {
+        display: flex;
+        align-items: center;
+        gap: var(--spazio-icona);
+        width: 100%;
+        min-height: var(--misura-riga-tocco);
+        padding: 0 var(--spazio-controllo);
+        padding-left: calc(var(--spazio-controllo) + var(--livello, 0) * var(--spazio-rientro));
+        border-radius: var(--raggio-pillola);
+        text-align: left;
+        color: var(--testo-primario);
+      }
+      .riga:active {
+        background: var(--sfondo-hover);
+      }
+      .riga.selezionata {
+        background: var(--sfondo-hover);
+      }
+      .riga .nome {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .riga.tenue .nome {
+        color: var(--testo-tenue);
+      }
+      .riga .numero,
+      .riga .estratto {
+        color: var(--testo-tenue);
+      }
+      .riga.risultato {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 2px;
+        padding-top: var(--spazio-icona);
+        padding-bottom: var(--spazio-icona);
+        border-radius: var(--raggio-contenitore);
+      }
+      .riga.risultato .estratto {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .vuoto {
+        padding: var(--spazio-icona) var(--spazio-controllo);
+        color: var(--testo-tenue);
+      }
+
+      .fondo-colonna {
+        padding: var(--spazio-icona) var(--spazio-blocco)
+          calc(var(--spazio-icona) + env(safe-area-inset-bottom));
+        border-top: 1px solid var(--bordo-divisore-tenue);
+        background: var(--sfondo-colonna);
+      }
+
+      .tondo {
+        position: absolute;
+        right: var(--spazio-gruppo);
+        bottom: calc(112px + env(safe-area-inset-bottom));
+        width: 56px;
+        height: 56px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--sfondo-pieno);
+        color: var(--icona-su-pieno);
+        box-shadow: var(--ombra);
+        transition: transform var(--movimento-durata-breve) ease;
+      }
+      .tondo:active {
+        transform: scale(0.94);
+      }
+
+      /* ---------- Colonna a riquadri (DEC-154) ---------- */
+      .testata-elenco {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--spazio-controllo) var(--spazio-blocco) 0;
+      }
+      .titolo-grande {
+        margin: 0;
+        font-size: 30px;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+      .tasto-icona {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        margin-right: -10px;
+      }
+      .tessere {
+        display: flex;
+        gap: var(--spazio-icona);
+        margin: var(--spazio-icona) 0 var(--spazio-blocco);
+      }
+      .tessera {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        height: 76px;
+        border-radius: var(--raggio-contenitore);
+        background: var(--sfondo-nota);
+        font-size: 12px;
+        font-weight: 500; /* Interfaccia/Etichetta (11 Medium) come sul computer */
+      }
+      .tessera:active {
+        background: var(--sfondo-hover);
+      }
+      .riquadro {
+        margin-bottom: var(--spazio-blocco);
+        padding: var(--spazio-elemento);
+        border-radius: var(--raggio-contenitore);
+        background: var(--sfondo-nota);
+      }
+      .intestazione {
+        display: flex;
+        align-items: center;
+        gap: var(--spazio-icona);
+        height: var(--misura-riga-tocco);
+        padding: 0 var(--spazio-controllo);
+      }
+      .intestazione .apri {
+        display: flex;
+        align-items: center;
+        gap: var(--spazio-icona);
+        height: 100%;
+        flex: 1;
+        min-width: 0;
+        color: var(--testo-primario);
+      }
+      .intestazione .apri .icona {
+        color: var(--icona-tenue);
+      }
+      /* Come sul computer: Interfaccia/Titolo (13 Medium), ingrandito come gli altri testi del
+         prototipo (13 → 15). */
+      .intestazione .nome-sezione {
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 1.4;
+      }
+      .riassunto {
+        color: var(--testo-tenue);
+      }
+      /* Riga che si fa scorrere a sinistra: sotto, Sposta ed Elimina. */
+      .scorri {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--raggio-pillola);
+      }
+      .scorri .azioni-riga {
+        position: absolute;
+        inset: 0 0 0 auto;
+        display: flex;
+        gap: var(--spazio-elemento);
+        visibility: hidden;
+      }
+      .scorri.trascina .azioni-riga,
+      .scorri.aperta .azioni-riga {
+        visibility: visible;
+      }
+      .azioni-riga button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        width: 64px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 500;
+        background: var(--sfondo-campo);
+      }
+      .azioni-riga .elimina {
+        background: var(--sfondo-pieno);
+        color: var(--testo-su-pieno);
+      }
+      .scorri > .riga {
+        position: relative;
+        background: var(--sfondo-nota);
+        transition: transform var(--movimento-durata-breve) ease;
+        touch-action: pan-y;
+      }
+      .scorri.trascina > .riga {
+        transition: none;
+      }
+      .barra-basso {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--spazio-controllo) var(--spazio-gruppo)
+          calc(var(--spazio-controllo) + env(safe-area-inset-bottom)) var(--spazio-blocco);
+        background: var(--sfondo-colonna);
+      }
+      .nuova-nota {
+        display: flex;
+        align-items: center;
+        gap: var(--spazio-icona);
+        font-size: 15px;
+        font-weight: 500;
+      }
+      .tondo-piccolo {
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--sfondo-pieno);
+        color: var(--icona-su-pieno);
+      }
+      .cestino {
+        color: var(--testo-tenue);
+      }
+
+      /* ---------- 2 · La nota ---------- */
+      .barra-nota {
+        display: flex;
+        align-items: center;
+        gap: var(--spazio-icona);
+        height: 48px;
+        padding: 0 var(--spazio-controllo) 0 var(--spazio-icona);
+      }
+      .barra-nota .indietro {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        height: 44px;
+        padding-right: var(--spazio-icona);
+        max-width: 40%;
+      }
+      .barra-nota .indietro span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .barra-nota .titolo {
+        flex: 1;
+        min-width: 0;
+        text-align: center;
+        color: var(--testo-tenue);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .barra-nota .info {
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        margin-right: -10px;
+      }
+
+      .area-nota {
+        flex: 1;
+        overflow-y: auto;
+        padding: var(--spazio-controllo) 20px calc(72px + env(safe-area-inset-bottom));
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+      }
+
+      #testo {
+        min-height: 60vh;
+        outline: none;
+        font-size: 16px;
+        line-height: 1.6;
+        user-select: text;
+        -webkit-user-select: text;
+        word-wrap: break-word;
+      }
+      #testo:empty::before {
+        content: attr(data-vuoto);
+        color: var(--testo-tenue);
+      }
+      #testo p,
+      #testo div {
+        margin: 0 0 var(--spazio-icona);
+      }
+      #testo h1 {
+        font-size: 26px;
+        font-weight: 700;
+        line-height: 1.25;
+        letter-spacing: -0.01em;
+        margin: var(--spazio-blocco) 0 var(--spazio-icona);
+      }
+      #testo h2 {
+        font-size: 19px;
+        font-weight: 600;
+        line-height: 1.35;
+        margin: var(--spazio-blocco) 0 var(--spazio-icona);
+      }
+      #testo ul,
+      #testo ol {
+        margin: 0 0 var(--spazio-blocco);
+        padding-left: 22px;
+      }
+      #testo li {
+        margin: 2px 0;
+      }
+      #testo ul.checklist {
+        list-style: none;
+        padding-left: 0;
+      }
+      #testo ul.checklist > li {
+        position: relative;
+        padding-left: 26px;
+      }
+      #testo ul.checklist > li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.32em;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 1.5px solid var(--testo-primario);
+      }
+      #testo ul.checklist > li.fatta {
+        color: var(--testo-tenue);
+        text-decoration: line-through;
+      }
+      #testo ul.checklist > li.fatta::before {
+        background: var(--testo-primario)
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E")
+          center / 10px no-repeat;
+      }
+      @media (prefers-color-scheme: dark) {
+        #testo ul.checklist > li.fatta::before {
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23141414' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+        }
+      }
+
+      #markdown {
+        display: none;
+        margin: 0;
+        font:
+          14px/1.6 ui-monospace,
+          "SF Mono",
+          Menlo,
+          monospace;
+        white-space: pre-wrap;
+        user-select: text;
+        -webkit-user-select: text;
+      }
+      #app.vista-testo #markdown {
+        display: block;
+      }
+      #app.vista-testo #testo {
+        display: none;
+      }
+
+      /* ---------- 3 · I formati sopra la tastiera ---------- */
+      #formati {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 20;
+        display: none;
+        gap: 2px;
+        align-items: center;
+        height: 52px;
+        padding: 0 var(--spazio-icona);
+        overflow-x: auto;
+        scrollbar-width: none;
+        background: var(--sfondo-colonna);
+        border-top: 1px solid var(--bordo-divisore);
+      }
+      #formati::-webkit-scrollbar {
+        display: none;
+      }
+      #app.scrive #formati {
+        display: flex;
+      }
+      #formati button {
+        flex: none;
+        width: 40px;
+        height: 40px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        color: var(--icona-tenue);
+      }
+      #formati button.attivo {
+        background: var(--sfondo-pieno);
+        color: var(--icona-su-pieno);
+      }
+      #formati .divisore {
+        flex: none;
+        width: 1px;
+        height: 28px;
+        margin: 0 var(--spazio-elemento);
+        background: var(--bordo-divisore);
+      }
+
+      /* ---------- 4 · Info dal basso ---------- */
+      #velo {
+        position: absolute;
+        inset: 0;
+        z-index: 30;
+        background: var(--velo);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity var(--movimento-durata-media) ease;
+      }
+      #app.info-aperta #velo {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      #foglio {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 31;
+        max-height: 88%;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: var(--spazio-icona) var(--spazio-pannello)
+          calc(var(--spazio-gruppo) + env(safe-area-inset-bottom));
+        border-radius: var(--spazio-gruppo) var(--spazio-gruppo) 0 0;
+        background: var(--sfondo-flottante);
+        box-shadow: var(--ombra);
+        transform: translateY(110%);
+        transition: transform var(--movimento-durata-media) ease;
+      }
+      #app.info-aperta #foglio {
+        transform: translateY(0);
+      }
+      .maniglia {
+        width: 36px;
+        height: 5px;
+        margin: 0 auto var(--spazio-blocco);
+        border-radius: 3px;
+        background: var(--icona-tenue);
+        opacity: 0.6;
+      }
+      .info-titolo {
+        width: 100%;
+        height: 44px;
+        padding: 0 var(--spazio-controllo);
+        border: 0;
+        outline: 0;
+        border-radius: var(--raggio-pillola);
+        background: var(--sfondo-campo);
+        font-size: 16px;
+        font-weight: 500;
+      }
+      .info-titolo::placeholder {
+        color: var(--testo-tenue);
+      }
+      .info-righe {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spazio-elemento);
+        margin: var(--spazio-blocco) 0;
+      }
+      .info-riga {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: var(--spazio-icona);
+        min-height: 40px;
+        padding: 0 var(--spazio-controllo);
+      }
+      .info-riga .tenue {
+        color: var(--testo-tenue);
+      }
+      .info-riga .spinta {
+        flex: 1;
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+        height: 28px;
+        padding: 0 4px 0 10px;
+        border-radius: var(--raggio-pillola);
+        background: var(--sfondo-campo);
+      }
+      .tag button {
+        width: 22px;
+        height: 22px;
+        display: grid;
+        place-items: center;
+        color: var(--icona-tenue);
+      }
+      .aggiungi-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        height: 28px;
+        padding: 0 6px;
+        color: var(--testo-tenue);
+      }
+      .campo-tag {
+        width: 140px;
+        height: 28px;
+        padding: 0 10px;
+        border: 0;
+        outline: 0;
+        border-radius: var(--raggio-pillola);
+        background: var(--sfondo-campo);
+        font-size: 16px;
+      }
+      .segmenti {
+        display: inline-flex;
+        padding: 2px;
+        border-radius: var(--raggio-pillola);
+        background: var(--sfondo-campo);
+      }
+      .segmenti button {
+        height: 30px;
+        padding: 0 14px;
+        border-radius: var(--raggio-pillola);
+      }
+      .segmenti button.scelto {
+        background: var(--sfondo-pieno);
+        color: var(--testo-su-pieno);
+      }
+      .modificata {
+        padding: 0 var(--spazio-controllo);
+        color: var(--testo-tenue);
+      }
+      .info-azioni {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spazio-elemento);
+        margin-top: var(--spazio-blocco);
+        padding-top: var(--spazio-icona);
+        border-top: 1px solid var(--bordo-divisore-tenue);
+      }
+      .info-azioni .riga {
+        border-radius: var(--raggio-pillola);
+      }
+      .info-azioni .errore {
+        color: var(--testo-errore);
+      }
+
+      /* Messaggio breve in basso. */
+      #messaggio {
+        position: absolute;
+        left: 50%;
+        bottom: calc(100px + env(safe-area-inset-bottom));
+        z-index: 50;
+        max-width: calc(100% - 48px);
+        padding: 10px 16px;
+        border-radius: var(--raggio-pillola);
+        background: var(--sfondo-pieno);
+        color: var(--testo-su-pieno);
+        box-shadow: var(--ombra);
+        transform: translate(-50%, 12px);
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity var(--movimento-durata-media) ease,
+          transform var(--movimento-durata-media) ease;
+      }
+      #messaggio.visibile {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .schermata,
+        #foglio,
+        #velo,
+        #messaggio {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <!-- 1 · Le note al posto della colonna -->
+      <section id="elenco" class="schermata" aria-label="Note">
+        <div class="testata-elenco">
+          <h1 class="titolo-grande">Memodu</h1>
+          <button
+            class="tasto-icona"
+            aria-label="Impostazioni"
+            data-avviso="Le Impostazioni non sono in questo prototipo"
+          >
+            <svg class="icona grande" data-icona="settings"></svg>
+          </button>
+        </div>
+        <div class="riga-ricerca">
+          <label class="ricerca interfaccia-controllo">
+            <svg class="icona" data-icona="search"></svg>
+            <input id="cerca" type="search" placeholder="Cerca" autocomplete="off" />
+          </label>
+          <button id="annulla-ricerca" class="annulla-ricerca">Annulla</button>
+        </div>
+        <div id="albero" class="albero"></div>
+        <div class="barra-basso">
+          <button id="nuova" class="nuova-nota">
+            <span class="tondo-piccolo"><svg class="icona" data-icona="plus"></svg></span>Nuova nota
+          </button>
+          <button
+            class="cestino interfaccia-controllo"
+            data-avviso="Il Cestino non è in questo prototipo"
+          >
+            Cestino <span id="numero-cestino"></span>
+          </button>
+        </div>
+      </section>
+
+      <!-- 2 · La nota a tutto schermo -->
+      <section id="nota-schermata" class="schermata" aria-label="Nota">
+        <div class="barra-nota">
+          <button id="indietro" class="indietro interfaccia-controllo">
+            <svg class="icona grande" data-icona="chevron-left"></svg
+            ><span id="indietro-nome"></span>
+          </button>
+          <div id="titolo-barra" class="titolo interfaccia-controllo"></div>
+          <button id="apri-info" class="info" aria-label="Info">
+            <svg class="icona grande" data-icona="info"></svg>
+          </button>
+        </div>
+        <div class="area-nota">
+          <div id="testo" contenteditable="true" data-vuoto="Scrivi qui…" spellcheck="true"></div>
+          <pre id="markdown"></pre>
+        </div>
+      </section>
+
+      <!-- 3 · I formati sopra la tastiera -->
+      <div id="formati" role="toolbar" aria-label="Formati">
+        <button data-formato="p" aria-label="Testo normale">
+          <svg class="icona" data-icona="type"></svg>
+        </button>
+        <button data-formato="h1" aria-label="Titolo">
+          <svg class="icona" data-icona="heading-1"></svg>
+        </button>
+        <button data-formato="h2" aria-label="Sottotitolo">
+          <svg class="icona" data-icona="heading-2"></svg>
+        </button>
+        <button data-formato="puntato" aria-label="Elenco puntato">
+          <svg class="icona" data-icona="list"></svg>
+        </button>
+        <button data-formato="numerato" aria-label="Elenco numerato">
+          <svg class="icona" data-icona="list-ordered"></svg>
+        </button>
+        <button data-formato="checklist" aria-label="Casella">
+          <svg class="icona" data-icona="list-checks"></svg>
+        </button>
+        <span class="divisore"></span>
+        <button data-formato="bold" aria-label="Grassetto">
+          <svg class="icona" data-icona="bold"></svg>
+        </button>
+        <button data-formato="italic" aria-label="Corsivo">
+          <svg class="icona" data-icona="italic"></svg>
+        </button>
+        <button data-formato="strikeThrough" aria-label="Barrato">
+          <svg class="icona" data-icona="strikethrough"></svg>
+        </button>
+        <button data-formato="underline" aria-label="Sottolineato">
+          <svg class="icona" data-icona="underline"></svg>
+        </button>
+      </div>
+
+      <!-- 4 · Info sale dal basso -->
+      <div id="velo"></div>
+      <div id="foglio" role="dialog" aria-label="Info">
+        <div class="maniglia"></div>
+        <input id="info-titolo" class="info-titolo" placeholder="Senza titolo" autocomplete="off" />
+        <div class="info-righe interfaccia-controllo">
+          <div class="info-riga">
+            <svg class="icona" data-icona="folder"></svg><span id="info-cartella"></span>
+          </div>
+          <div class="info-riga">
+            <svg class="icona" data-icona="calendar"></svg><span id="info-creata"></span>
+          </div>
+          <div class="info-riga tenue">
+            <svg class="icona" data-icona="calendar-x"></svg
+            ><span class="tenue">Nessuna fine validità</span>
+          </div>
+          <div class="info-riga" id="info-tag"></div>
+          <div class="info-riga">
+            <svg class="icona" data-icona="eye"></svg><span class="spinta">Vista</span>
+            <span class="segmenti">
+              <button data-vista="testo">Testo</button
+              ><button data-vista="markdown">Markdown</button>
+            </span>
+          </div>
+        </div>
+        <div id="info-modificata" class="modificata interfaccia-dettaglio"></div>
+        <div class="info-azioni">
+          <button id="chiudi-nota" class="riga interfaccia-controllo">
+            <svg class="icona" data-icona="x"></svg><span class="nome">Chiudi nota</span>
+          </button>
+          <button id="elimina" class="riga interfaccia-controllo errore">
+            <svg class="icona" data-icona="trash-2"></svg><span class="nome">Elimina</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="messaggio" role="status"></div>
+    </div>
+
+    <script>
+      "use strict";
+
+      const CHIAVE = "memodu-prototipo-telefono";
+      const $ = (sel) => document.querySelector(sel);
+      const app = $("#app");
+      let ICONE = {};
+
+      // ---------- Dati di esempio, salvati solo in questo browser ----------
+      const oggi = new Date();
+      const giorni = (n) => new Date(oggi.getTime() - n * 86400000).toISOString();
+      const ESEMPIO = {
+        cartelle: [
+          { id: "c1", nome: "Lavoro", padre: null },
+          { id: "c2", nome: "Clienti", padre: "c1" },
+          { id: "c3", nome: "Progetti", padre: "c1" },
+          { id: "c4", nome: "Personale", padre: null },
+        ],
+        note: [
+          {
+            id: "n1",
+            titolo: "Riunione di lunedì",
+            cartella: null,
+            tag: [],
+            creata: giorni(6),
+            modificata: giorni(1),
+            testo: "<p>Ordine del giorno: date del rilascio, test con tre persone, nuovo sito.</p>",
+          },
+          {
+            id: "n2",
+            titolo: "Lista della spesa",
+            cartella: null,
+            tag: ["casa"],
+            creata: giorni(3),
+            modificata: giorni(0),
+            testo:
+              '<ul class="checklist"><li class="fatta">Pane</li><li>Latte</li><li>Caffè</li><li>Mele</li></ul>',
+          },
+          {
+            id: "n3",
+            titolo: "Idee per il sito",
+            cartella: null,
+            tag: [],
+            creata: giorni(9),
+            modificata: giorni(4),
+            testo:
+              "<h2>Pagina iniziale</h2><p>Una frase sola e una foto dell'app sul telefono.</p>",
+          },
+          {
+            id: "n4",
+            titolo: "Budget 2026",
+            cartella: "c1",
+            tag: ["riunioni", "lavoro/clienti"],
+            creata: giorni(36),
+            modificata: giorni(0),
+            testo:
+              "<p>Nella riunione abbiamo deciso di spostare il rilascio alla settimana dopo, così resta il tempo per il test con tre persone.</p>" +
+              "<h2>Cose da fare</h2>" +
+              '<ul class="checklist"><li class="fatta">Scrivere il riepilogo</li><li>Prenotare la sala per giovedì</li><li>Mandare il file a Luca</li></ul>' +
+              "<ul><li>Riunione con i clienti lunedì</li><li>Controllare le date del rilascio</li></ul>" +
+              "<ol><li>Aprire la nota rapida</li><li>Scrivere</li><li>Chiudere: si salva da sola</li></ol>",
+          },
+          {
+            id: "n5",
+            titolo: "Riunione con i fornitori",
+            cartella: "c1",
+            tag: [],
+            creata: giorni(12),
+            modificata: giorni(7),
+            testo: "<p>Chiedere i tempi di consegna per il secondo trimestre.</p>",
+          },
+          {
+            id: "n6",
+            titolo: "Contratti in scadenza",
+            cartella: "c2",
+            tag: [],
+            creata: giorni(20),
+            modificata: giorni(8),
+            testo: "<p>Tre contratti da rinnovare entro fine mese.</p>",
+          },
+          {
+            id: "n7",
+            titolo: "Rinnovo licenze",
+            cartella: "c2",
+            tag: [],
+            creata: giorni(22),
+            modificata: giorni(15),
+            testo: "<p>Controllare quante licenze servono davvero.</p>",
+          },
+          {
+            id: "n8",
+            titolo: "Note del cliente",
+            cartella: "c2",
+            tag: [],
+            creata: giorni(25),
+            modificata: giorni(18),
+            testo: "<p>Vuole il preventivo diviso per fasi.</p>",
+          },
+          {
+            id: "n9",
+            titolo: "Telefonate",
+            cartella: "c2",
+            tag: [],
+            creata: giorni(27),
+            modificata: giorni(20),
+            testo: "<p>Richiamare martedì mattina.</p>",
+          },
+          {
+            id: "n10",
+            titolo: "Offerta",
+            cartella: "c2",
+            tag: [],
+            creata: giorni(30),
+            modificata: giorni(21),
+            testo: "<p>Prima bozza pronta.</p>",
+          },
+          {
+            id: "n11",
+            titolo: "Nuovo sito",
+            cartella: "c3",
+            tag: [],
+            creata: giorni(14),
+            modificata: giorni(2),
+            testo: "<h1>Nuovo sito</h1><p>Struttura in quattro pagine.</p>",
+          },
+          {
+            id: "n12",
+            titolo: "App per il telefono",
+            cartella: "c3",
+            tag: ["idee"],
+            creata: giorni(1),
+            modificata: giorni(0),
+            testo:
+              "<p>La colonna diventa la prima schermata, la nota si apre a tutto schermo, i formati stanno sopra la tastiera e Info sale dal basso.</p>",
+          },
+          {
+            id: "n13",
+            titolo: "Archivio",
+            cartella: "c3",
+            tag: [],
+            creata: giorni(40),
+            modificata: giorni(30),
+            testo: "<p>Vecchi progetti chiusi.</p>",
+          },
+          {
+            id: "n14",
+            titolo: "Vacanze",
+            cartella: "c4",
+            tag: [],
+            creata: giorni(50),
+            modificata: giorni(10),
+            testo: "<ul><li>Prenotare il traghetto</li><li>Rinnovare la carta d'identità</li></ul>",
+          },
+          {
+            id: "n15",
+            titolo: "Libri da leggere",
+            cartella: "c4",
+            tag: [],
+            creata: giorni(60),
+            modificata: giorni(12),
+            testo: "<ol><li>Un romanzo</li><li>Un saggio</li></ol>",
+          },
+        ],
+        cestino: 3,
+      };
+
+      let stato;
+      try {
+        stato = JSON.parse(localStorage.getItem(CHIAVE)) || structuredClone(ESEMPIO);
+      } catch {
+        stato = structuredClone(ESEMPIO);
+      }
+      const salva = () => {
+        try {
+          localStorage.setItem(CHIAVE, JSON.stringify(stato));
+        } catch {
+          /* senza memoria del browser il prototipo funziona lo stesso, fino alla chiusura */
+        }
+      };
+
+      const aperte = new Set(["c1"]);
+      let cartellaAttuale = null;
+      let notaAperta = null;
+
+      // ---------- Icone (Lucide, come nell'app) ----------
+      function disegnaIcone(radice = document) {
+        radice.querySelectorAll("svg[data-icona]").forEach((s) => {
+          s.setAttribute("viewBox", "0 0 24 24");
+          s.setAttribute("aria-hidden", "true");
+          s.innerHTML = ICONE[s.dataset.icona] || "";
+        });
+      }
+      const icona = (nome, classe = "") =>
+        `<svg class="icona ${classe}" data-icona="${nome}"></svg>`;
+
+      const esc = (s) =>
+        s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+      // Senza titolo, nelle liste le prime parole del testo; senza testo «Nota vuota» (RB-15).
+      const titoloDi = (n) =>
+        n.titolo.trim() || testoSemplice(n.testo).split(" ").slice(0, 6).join(" ") || "Nota vuota";
+      const vuota = (n) => !n.titolo.trim() && !testoSemplice(n.testo);
+      const testoSemplice = (html) => {
+        const d = document.createElement("div");
+        d.innerHTML = html.replace(/<\/(p|li|h1|h2|div)>/g, " </$1>");
+        return d.textContent.replace(/\s+/g, " ").trim();
+      };
+      const notePiene = () => stato.note.filter((n) => !n.eliminata);
+
+      // ---------- 1 · Le note ----------
+      function contaNote(id) {
+        const dirette = notePiene().filter((n) => n.cartella === id).length;
+        return stato.cartelle
+          .filter((c) => c.padre === id)
+          .reduce((t, c) => t + contaNote(c.id), dirette);
+      }
+
+      function righeCartella(padre, livello) {
+        let html = "";
+        const note = notePiene()
+          .filter((n) => n.cartella === padre)
+          .sort((a, b) => titoloDi(a).localeCompare(titoloDi(b), "it"));
+        for (const n of note) {
+          html += `<div class="scorri"><div class="azioni-riga">
+            <button data-sposta="${n.id}">${icona("folder-input")}Sposta</button>
+            <button class="elimina" data-elimina="${n.id}">${icona("trash-2")}Elimina</button></div>
+            <button class="riga interfaccia-controllo${notaAperta === n.id ? " selezionata" : ""}${vuota(n) ? " tenue" : ""}" style="--livello:${livello}" data-nota="${n.id}">
+            <span class="nome">${esc(titoloDi(n))}</span></button></div>`;
+        }
+        for (const c of stato.cartelle.filter((c) => c.padre === padre)) {
+          const aperta = aperte.has(c.id);
+          html += `<button class="riga interfaccia-controllo" style="--livello:${livello}" data-cartella="${c.id}">
+            ${icona(aperta ? "folder-open" : "folder")}<span class="nome">${esc(c.nome)}</span>
+            <span class="numero interfaccia-dettaglio">${contaNote(c.id)}</span></button>`;
+          if (aperta) html += righeCartella(c.id, livello + 1);
+        }
+        return html;
+      }
+
+      function disegnaElenco() {
+        const q = $("#cerca").value.trim().toLowerCase();
+        const albero = $("#albero");
+        if (q) {
+          const trovate = notePiene().filter((n) =>
+            (titoloDi(n) + " " + testoSemplice(n.testo)).toLowerCase().includes(q),
+          );
+          albero.innerHTML = `<div class="riquadro">${
+            trovate.length
+              ? trovate
+                  .map((n) => {
+                    const t = testoSemplice(n.testo);
+                    const i = t.toLowerCase().indexOf(q);
+                    const estratto = i < 0 ? t : (i > 20 ? "…" : "") + t.slice(Math.max(0, i - 20));
+                    return `<button class="riga risultato" data-nota="${n.id}">
+                    <span class="nome interfaccia-controllo">${esc(titoloDi(n))}</span>
+                    <span class="estratto interfaccia-dettaglio">${esc(estratto)}</span></button>`;
+                  })
+                  .join("")
+              : `<div class="vuoto interfaccia-controllo">Nessuna nota trovata</div>`
+          }</div>`;
+        } else {
+          const quante = notePiene().length;
+          const tessera = (nome, ic) =>
+            `<button class="tessera" data-avviso="${nome} non è in questo prototipo">${icona(ic, "media")}${nome}</button>`;
+          albero.innerHTML =
+            `<div class="tessere">${tessera("Journal", "book-open")}${tessera("Entità", "brain")}${tessera("Calendario", "calendar")}</div>` +
+            `<div class="riquadro"><div class="intestazione"><button class="apri" data-sezione="cloud" aria-expanded="${cloudAperta}">${icona(cloudAperta ? "chevron-down" : "chevron-right")}<span class="nome-sezione">Cloud</span>${cloudAperta ? "" : `<span class="riassunto interfaccia-dettaglio">${quante === 1 ? "1 nota" : quante + " note"}</span>`}</button>` +
+            `<button class="tasto-icona" aria-label="Nuova nota" data-nuova>${icona("plus")}</button></div>` +
+            (cloudAperta ? righeCartella(null, 0) : "") +
+            `</div>`;
+        }
+        $("#numero-cestino").textContent = stato.cestino || "";
+        disegnaIcone(albero);
+      }
+
+      let cloudAperta = true;
+      $("#albero").addEventListener("click", (e) => {
+        const b = e.target.closest("button");
+        if (b?.dataset.avviso) return mostraMessaggio(b.dataset.avviso);
+        if (b?.dataset.sezione) {
+          cloudAperta = !cloudAperta;
+          return disegnaElenco();
+        }
+        if (b?.hasAttribute("data-nuova")) return $("#nuova").click();
+        if (b?.dataset.sposta) return mostraMessaggio("Sposta in… non è in questo prototipo");
+        if (b?.dataset.elimina) {
+          const n = stato.note.find((x) => x.id === b.dataset.elimina);
+          n.eliminata = true;
+          stato.cestino = (stato.cestino || 0) + 1;
+          salva();
+          return disegnaElenco();
+        }
+        const riga = e.target.closest(".riga");
+        if (!riga || Date.now() - finitoScorrere < 400) return;
+        if (riga.closest(".scorri")?.classList.contains("aperta")) {
+          riga.closest(".scorri").classList.remove("aperta");
+          riga.style.transform = "";
+          return;
+        }
+        if (riga.dataset.cartella) {
+          const id = riga.dataset.cartella;
+          aperte.has(id) ? aperte.delete(id) : aperte.add(id);
+          cartellaAttuale = aperte.has(id) ? id : stato.cartelle.find((c) => c.id === id).padre;
+          disegnaElenco();
+        } else if (riga.dataset.nota) {
+          apriNota(riga.dataset.nota);
+        }
+      });
+      $("#cerca").addEventListener("input", disegnaElenco);
+      $("#cerca").addEventListener("focus", () => app.classList.add("cerca"));
+      $("#cerca").addEventListener("blur", () => {
+        // Con un testo cercato resta la ricerca; vuota, torna tutto com'era.
+        if (!$("#cerca").value.trim()) app.classList.remove("cerca");
+      });
+      $("#annulla-ricerca").addEventListener("pointerdown", (e) => e.preventDefault());
+      $("#annulla-ricerca").addEventListener("click", () => {
+        $("#cerca").value = "";
+        $("#cerca").blur();
+        app.classList.remove("cerca");
+        disegnaElenco();
+      });
+
+      // Riga fatta scorrere a sinistra: compaiono Sposta ed Elimina (scelta di Manuel Cucca, 19/10/2026).
+      // Con gli eventi del tocco: dopo 8 px si decide se il dito scorre la lista o sposta la riga;
+      // spostando la riga, la lista non scorre più fino a quando si alza il dito.
+      const LARGHEZZA_AZIONI = 136;
+      let scorsa = null;
+      let finitoScorrere = 0;
+      const albero = $("#albero");
+      albero.addEventListener(
+        "touchstart",
+        (e) => {
+          const riga = e.target.closest(".scorri > .riga");
+          document.querySelectorAll(".scorri.aperta").forEach((c) => {
+            if (c !== riga?.parentElement) {
+              c.classList.remove("aperta");
+              c.querySelector(".riga").style.transform = "";
+            }
+          });
+          if (!riga || e.touches.length > 1) return (scorsa = null);
+          const t = e.touches[0];
+          const base = riga.parentElement.classList.contains("aperta") ? -LARGHEZZA_AZIONI : 0;
+          scorsa = { riga, x0: t.clientX, y0: t.clientY, base, dx: base, verso: null };
+        },
+        { passive: true },
+      );
+      albero.addEventListener(
+        "touchmove",
+        (e) => {
+          if (!scorsa) return;
+          const t = e.touches[0];
+          const dx = t.clientX - scorsa.x0;
+          const dy = t.clientY - scorsa.y0;
+          if (!scorsa.verso) {
+            if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+            scorsa.verso = Math.abs(dx) > Math.abs(dy) ? "riga" : "lista";
+            if (scorsa.verso === "riga") scorsa.riga.parentElement.classList.add("trascina");
+          }
+          if (scorsa.verso !== "riga") return;
+          e.preventDefault();
+          scorsa.dx = Math.min(0, Math.max(-LARGHEZZA_AZIONI - 24, scorsa.base + dx));
+          scorsa.riga.style.transform = `translateX(${scorsa.dx}px)`;
+        },
+        { passive: false },
+      );
+      const fineScorsa = () => {
+        if (!scorsa) return;
+        const { riga, verso, dx } = scorsa;
+        scorsa = null;
+        if (verso !== "riga") return;
+        const contenitore = riga.parentElement;
+        contenitore.classList.remove("trascina");
+        const apri = dx < -LARGHEZZA_AZIONI / 2;
+        contenitore.classList.toggle("aperta", apri);
+        riga.style.transform = apri ? `translateX(${-LARGHEZZA_AZIONI}px)` : "";
+        // Il tocco che segue lo scorrimento non apre la nota.
+        finitoScorrere = Date.now();
+      };
+      albero.addEventListener("touchend", fineScorsa);
+      albero.addEventListener("touchcancel", fineScorsa);
+
+      // La pagina non scorre mai: scorrono solo la lista, la nota, Info e i formati. Con la
+      // tastiera aperta Safari farebbe scorrere tutta la pagina, e l'app che la segue andrebbe
+      // al contrario del dito. I riquadri rimbalzano come nelle app, anche quando tutto sta nello
+      // schermo: in quel caso sotto c'è uno spazio di 1 px che li rende scorrevoli, e
+      // overscroll-behavior tiene il rimbalzo dentro il riquadro.
+      const AREE = ".area-nota, .albero, #foglio";
+      function rendiScorrevole(area) {
+        let riempi = area.querySelector(":scope > .riempitivo");
+        if (!riempi) {
+          riempi = document.createElement("div");
+          riempi.className = "riempitivo";
+          riempi.setAttribute("aria-hidden", "true");
+          area.appendChild(riempi);
+        }
+        riempi.style.height = "0px";
+        const manca = area.clientHeight - area.scrollHeight + 1;
+        if (manca > 0) riempi.style.height = manca + "px";
+      }
+      document.addEventListener(
+        "touchstart",
+        (e) => {
+          const area = e.target.closest(AREE);
+          if (area) rendiScorrevole(area);
+        },
+        { passive: true },
+      );
+      document.addEventListener(
+        "touchmove",
+        (e) => {
+          if (e.touches.length > 1 || e.target.closest("#formati")) return;
+          if (!e.target.closest(AREE)) e.preventDefault();
+        },
+        { passive: false },
+      );
+
+      $("#nuova").addEventListener("click", () => {
+        const ora = new Date().toISOString();
+        const n = {
+          id: "n" + Date.now(),
+          titolo: "",
+          cartella: cartellaAttuale,
+          tag: [],
+          creata: ora,
+          modificata: ora,
+          testo: "",
+        };
+        stato.note.push(n);
+        salva();
+        apriNota(n.id, true);
+      });
+
+      document
+        .querySelectorAll("[data-avviso]")
+        .forEach((b) => b.addEventListener("click", () => mostraMessaggio(b.dataset.avviso)));
+
+      // ---------- 2 · La nota ----------
+      const nota = () => stato.note.find((n) => n.id === notaAperta);
+
+      function apriNota(id, nuova = false) {
+        notaAperta = id;
+        const n = nota();
+        const cartella = stato.cartelle.find((c) => c.id === n.cartella);
+        $("#indietro-nome").textContent = cartella ? cartella.nome : "Note";
+        $("#titolo-barra").textContent = n.titolo.trim() || "Senza titolo";
+        $("#testo").innerHTML = n.testo;
+        impostaVista(n.vista || "markdown");
+        app.classList.add("nota-aperta");
+        history.pushState({ livello: "nota" }, "");
+        if (nuova) setTimeout(() => $("#testo").focus(), 250);
+      }
+
+      function chiudiNota() {
+        $("#testo").blur();
+        app.classList.remove("nota-aperta", "info-aperta", "scrive");
+        const n = nota();
+        // Una nota nuova lasciata vuota sparisce (come sul computer).
+        if (n && !n.titolo.trim() && !testoSemplice(n.testo)) {
+          stato.note = stato.note.filter((x) => x !== n);
+          salva();
+        }
+        notaAperta = null;
+        disegnaElenco();
+      }
+
+      $("#indietro").addEventListener("click", () => history.back());
+
+      $("#testo").addEventListener("input", () => {
+        const n = nota();
+        n.testo = $("#testo").innerHTML;
+        n.modificata = new Date().toISOString();
+        salva();
+        aggiornaFormati();
+      });
+
+      // Tocco sul cerchio della casella: spunta o toglie la spunta.
+      $("#testo").addEventListener("click", (e) => {
+        const li = e.target.closest("ul.checklist > li");
+        if (!li) return;
+        if (e.clientX - li.getBoundingClientRect().left > 22) return;
+        li.classList.toggle("fatta");
+        $("#testo").dispatchEvent(new Event("input"));
+      });
+
+      // ---------- 3 · I formati sopra la tastiera ----------
+      const formati = $("#formati");
+
+      // La tastiera non accorcia la pagina (Safari la sposta): l'app prende altezza e posizione
+      // della parte visibile, e il cursore resta sopra la barra dei formati.
+      const incorniciato = matchMedia("(min-width: 600px) and (min-height: 700px)");
+      // L'app segue la parte visibile dello schermo. Il cursore si rimette sopra la tastiera solo
+      // quando lo schermo cambia misura (si apre la tastiera) o quando si scrive: mai mentre si
+      // scorre, se no riporta giù la nota che stai scorrendo verso l'alto (sembra andare al contrario).
+      function adattaAlloSchermo(e) {
+        const vv = window.visualViewport;
+        if (!vv || incorniciato.matches) {
+          app.style.height = "";
+          app.style.top = "";
+          return;
+        }
+        app.style.height = vv.height + "px";
+        app.style.top = vv.offsetTop + "px";
+        const misura = e?.type === "resize" || e?.type === undefined;
+        if (misura && app.classList.contains("scrive")) mostraCursore();
+      }
+      function mostraCursore() {
+        const sel = getSelection();
+        if (!sel.rangeCount) return;
+        const r =
+          sel.getRangeAt(0).getClientRects()[0] ||
+          sel.anchorNode?.parentElement?.getBoundingClientRect();
+        if (!r) return;
+        const area = $(".area-nota");
+        const fondo = formati.getBoundingClientRect().top - 16;
+        if (r.bottom > fondo) area.scrollTop += r.bottom - fondo;
+      }
+      if (window.visualViewport) {
+        visualViewport.addEventListener("resize", adattaAlloSchermo);
+        visualViewport.addEventListener("scroll", adattaAlloSchermo);
+      }
+      incorniciato.addEventListener("change", adattaAlloSchermo);
+
+      $("#testo").addEventListener("input", () => mostraCursore());
+      $("#testo").addEventListener("focus", () => {
+        app.classList.add("scrive");
+        adattaAlloSchermo();
+        aggiornaFormati();
+      });
+      $("#testo").addEventListener("blur", () => {
+        // Il tocco su un formato non toglie il focus (pointerdown sotto), quindi qui si è davvero usciti.
+        app.classList.remove("scrive");
+      });
+      document.addEventListener("selectionchange", () => {
+        if (app.classList.contains("scrive")) aggiornaFormati();
+      });
+
+      function bloccoAttuale() {
+        const sel = getSelection();
+        if (!sel.rangeCount) return null;
+        let n = sel.anchorNode;
+        while (n && n !== $("#testo")) {
+          if (n.nodeType === 1 && /^(P|DIV|H1|H2|LI)$/.test(n.tagName)) return n;
+          n = n.parentNode;
+        }
+        return null;
+      }
+
+      function aggiornaFormati() {
+        const b = bloccoAttuale();
+        const lista = b && b.tagName === "LI" ? b.parentNode : null;
+        const riga = !b
+          ? "p"
+          : b.tagName === "H1"
+            ? "h1"
+            : b.tagName === "H2"
+              ? "h2"
+              : lista
+                ? lista.classList.contains("checklist")
+                  ? "checklist"
+                  : lista.tagName === "OL"
+                    ? "numerato"
+                    : "puntato"
+                : "p";
+        formati.querySelectorAll("button").forEach((btn) => {
+          const f = btn.dataset.formato;
+          let attivo = f === riga;
+          if (["bold", "italic", "strikeThrough", "underline"].includes(f)) {
+            try {
+              // Una casella spuntata è barrata dallo stile, non dal formato.
+              attivo =
+                document.queryCommandState(f) &&
+                !(f === "strikeThrough" && b && b.classList.contains("fatta"));
+            } catch {
+              attivo = false;
+            }
+          }
+          btn.classList.toggle("attivo", attivo);
+        });
+      }
+
+      function applicaFormato(f) {
+        const b = bloccoAttuale();
+        const lista = b && b.tagName === "LI" ? b.parentNode : null;
+        if (["bold", "italic", "strikeThrough", "underline"].includes(f)) {
+          document.execCommand(f);
+        } else if (f === "p" || f === "h1" || f === "h2") {
+          if (lista)
+            document.execCommand(
+              lista.tagName === "OL" ? "insertOrderedList" : "insertUnorderedList",
+            );
+          document.execCommand("formatBlock", false, `<${f}>`);
+        } else {
+          const vuole = f === "numerato" ? "OL" : "UL";
+          const giaChecklist = lista && lista.classList.contains("checklist");
+          const stessa = lista && lista.tagName === vuole && (f === "checklist") === giaChecklist;
+          if (lista && !stessa && lista.tagName === vuole) {
+            lista.classList.toggle("checklist", f === "checklist");
+          } else {
+            if (lista && lista.tagName !== vuole)
+              document.execCommand(
+                lista.tagName === "OL" ? "insertOrderedList" : "insertUnorderedList",
+              );
+            document.execCommand(vuole === "OL" ? "insertOrderedList" : "insertUnorderedList");
+            const nuova = bloccoAttuale();
+            if (nuova && nuova.tagName === "LI")
+              nuova.parentNode.classList.toggle("checklist", f === "checklist");
+          }
+        }
+        $("#testo").dispatchEvent(new Event("input"));
+      }
+
+      formati.addEventListener("pointerdown", (e) => {
+        const btn = e.target.closest("button");
+        if (!btn) return;
+        e.preventDefault(); // la tastiera resta aperta e il cursore resta nel testo
+        applicaFormato(btn.dataset.formato);
+      });
+
+      // ---------- 4 · Info dal basso ----------
+      const dataLunga = (iso) =>
+        new Date(iso).toLocaleDateString("it-IT", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        });
+      function quando(iso) {
+        const d = new Date(iso);
+        const ora = d.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
+        const g = Math.round(
+          (new Date().setHours(0, 0, 0, 0) - new Date(iso).setHours(0, 0, 0, 0)) / 86400000,
+        );
+        if (g === 0) return `Modificata oggi alle ${ora}`;
+        if (g === 1) return `Modificata ieri alle ${ora}`;
+        return `Modificata il ${dataLunga(iso)}`;
+      }
+
+      function disegnaInfo() {
+        const n = nota();
+        const cartella = stato.cartelle.find((c) => c.id === n.cartella);
+        $("#info-titolo").value = n.titolo;
+        $("#info-cartella").textContent = cartella ? cartella.nome : "Nessuna cartella";
+        $("#info-cartella").className = cartella ? "" : "tenue";
+        $("#info-creata").textContent = `Creata il ${dataLunga(n.creata)}`;
+        $("#info-modificata").textContent = quando(n.modificata);
+        $("#info-tag").innerHTML =
+          icona("tag") +
+          n.tag
+            .map(
+              (t, i) =>
+                `<span class="tag interfaccia-dettaglio">${esc(t)}<button data-togli="${i}" aria-label="Togli ${esc(t)}">${icona("x", "piccola")}</button></span>`,
+            )
+            .join("") +
+          `<button class="aggiungi-tag interfaccia-dettaglio" id="aggiungi-tag">${icona("plus", "piccola")}Tag</button>`;
+        document
+          .querySelectorAll("[data-vista]")
+          .forEach((b) =>
+            b.classList.toggle("scelto", b.dataset.vista === (n.vista || "markdown")),
+          );
+        disegnaIcone($("#foglio"));
+      }
+
+      function apriInfo() {
+        $("#testo").blur();
+        disegnaInfo();
+        app.classList.add("info-aperta");
+        history.pushState({ livello: "info" }, "");
+      }
+      $("#apri-info").addEventListener("click", apriInfo);
+      $("#velo").addEventListener("click", () => history.back());
+
+      $("#info-titolo").addEventListener("input", (e) => {
+        const n = nota();
+        n.titolo = e.target.value;
+        n.modificata = new Date().toISOString();
+        $("#titolo-barra").textContent = n.titolo.trim() || "Senza titolo";
+        salva();
+      });
+
+      $("#info-tag").addEventListener("click", (e) => {
+        const n = nota();
+        const togli = e.target.closest("[data-togli]");
+        if (togli) {
+          n.tag.splice(Number(togli.dataset.togli), 1);
+          salva();
+          disegnaInfo();
+          return;
+        }
+        if (e.target.closest("#aggiungi-tag")) {
+          const campo = document.createElement("input");
+          campo.className = "campo-tag";
+          campo.placeholder = "Aggiungi un tag";
+          e.target.closest("#aggiungi-tag").replaceWith(campo);
+          campo.focus();
+          const conferma = () => {
+            const t = campo.value.trim().toLowerCase();
+            if (t && !n.tag.includes(t)) n.tag.push(t);
+            salva();
+            disegnaInfo();
+          };
+          campo.addEventListener("keydown", (k) => k.key === "Enter" && conferma());
+          campo.addEventListener("blur", conferma);
+        }
+      });
+
+      function impostaVista(v) {
+        app.classList.toggle("vista-testo", v === "testo");
+        if (v === "testo") $("#markdown").textContent = inMarkdown($("#testo"));
+      }
+      document.querySelectorAll("[data-vista]").forEach((b) =>
+        b.addEventListener("click", () => {
+          nota().vista = b.dataset.vista;
+          salva();
+          impostaVista(b.dataset.vista);
+          disegnaInfo();
+        }),
+      );
+
+      $("#chiudi-nota").addEventListener("click", () => history.go(-2));
+      $("#elimina").addEventListener("click", () => {
+        nota().eliminata = true;
+        stato.cestino = (stato.cestino || 0) + 1;
+        salva();
+        history.go(-2);
+        mostraMessaggio("Nota spostata nel Cestino");
+      });
+
+      // Trascinando la maniglia verso il basso il foglio si chiude.
+      (() => {
+        const foglio = $("#foglio");
+        let inizio = null;
+        foglio.addEventListener(
+          "touchstart",
+          (e) => {
+            if (foglio.scrollTop > 0 || e.target.closest("input, button")) return;
+            inizio = e.touches[0].clientY;
+            foglio.style.transition = "none";
+          },
+          { passive: true },
+        );
+        foglio.addEventListener(
+          "touchmove",
+          (e) => {
+            if (inizio === null) return;
+            const dy = Math.max(0, e.touches[0].clientY - inizio);
+            foglio.style.transform = `translateY(${dy}px)`;
+          },
+          { passive: true },
+        );
+        foglio.addEventListener("touchend", (e) => {
+          if (inizio === null) return;
+          const dy = e.changedTouches[0].clientY - inizio;
+          inizio = null;
+          foglio.style.transition = "";
+          foglio.style.transform = "";
+          if (dy > 80) history.back();
+        });
+      })();
+
+      // Vista Testo: il markdown della nota.
+      function inMarkdown(radice) {
+        const linea = (el) =>
+          [...el.childNodes]
+            .map((c) => {
+              if (c.nodeType === 3) return c.textContent;
+              if (c.nodeType !== 1) return "";
+              const t = linea(c);
+              switch (c.tagName) {
+                case "B":
+                case "STRONG":
+                  return `**${t}**`;
+                case "I":
+                case "EM":
+                  return `*${t}*`;
+                case "S":
+                case "STRIKE":
+                case "DEL":
+                  return `~~${t}~~`;
+                case "U":
+                  return `<u>${t}</u>`;
+                case "BR":
+                  return "";
+                default:
+                  return t;
+              }
+            })
+            .join("");
+        const blocchi = [];
+        for (const el of radice.children) {
+          if (el.tagName === "H1") blocchi.push(`# ${linea(el)}`);
+          else if (el.tagName === "H2") blocchi.push(`## ${linea(el)}`);
+          else if (el.tagName === "UL" || el.tagName === "OL") {
+            const cl = el.classList.contains("checklist");
+            blocchi.push(
+              [...el.children]
+                .map(
+                  (li, i) =>
+                    (el.tagName === "OL"
+                      ? `${i + 1}. `
+                      : cl
+                        ? `- [${li.classList.contains("fatta") ? "x" : " "}] `
+                        : "- ") + linea(li),
+                )
+                .join("\n"),
+            );
+          } else blocchi.push(linea(el));
+        }
+        if (!radice.children.length && radice.textContent) blocchi.push(radice.textContent);
+        return blocchi.join("\n\n");
+      }
+
+      // ---------- Indietro del telefono ----------
+      window.addEventListener("popstate", () => {
+        if (app.classList.contains("info-aperta")) {
+          app.classList.remove("info-aperta");
+          if (history.state?.livello === "nota") return;
+        }
+        if (app.classList.contains("nota-aperta")) chiudiNota();
+      });
+
+      // ---------- Messaggio ----------
+      let timer;
+      function mostraMessaggio(testo) {
+        const m = $("#messaggio");
+        m.textContent = testo;
+        m.classList.add("visibile");
+        clearTimeout(timer);
+        timer = setTimeout(() => m.classList.remove("visibile"), 2200);
+      }
+
+      // ---------- Avvio ----------
+      fetch("icone.json")
+        .then((r) => r.json())
+        .then((i) => (ICONE = i))
+        .catch(() => {})
+        .finally(() => {
+          history.replaceState({ livello: "elenco" }, "");
+          disegnaIcone();
+          disegnaElenco();
+        });
+    </script>
+  </body>
+</html>
